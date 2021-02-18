@@ -7,10 +7,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
 import OthersScreen from '../screens/OthersScreen';
 
-const Tab = createBottomTabNavigator();
+import { TabParamList, OthersStackParamList } from './Types'
+
+const Tab = createBottomTabNavigator<TabParamList>();
 const MapStack = createStackNavigator();
 const ForecastStack = createStackNavigator();
-const OthersStack = createStackNavigator();
+const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
 const Navigator: React.FC = () => {

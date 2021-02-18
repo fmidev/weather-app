@@ -8,11 +8,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { StackNavigationProp } from '@react-navigation/stack'
+import { OthersStackParamList } from '../navigators/Types';
 
 interface Props {
-  navigation: {
-    navigate: (path: string) => void
-  }
+  navigation: StackNavigationProp<OthersStackParamList, "Others">,
 }
 
 const OthersScreen: React.FC<Props> = ({ navigation }) => {
