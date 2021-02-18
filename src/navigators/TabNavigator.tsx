@@ -13,7 +13,7 @@ const ForecastStack = createStackNavigator();
 const OthersStack = createStackNavigator();
 const WarningsStack = createStackNavigator();
 
-const Navigator = () => {
+const Navigator: React.FC = () => {
   // const commonHeaderOptions = {
   //   headerStyle: {
   //     borderBottomWidth: 1,

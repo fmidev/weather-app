@@ -1,7 +1,11 @@
 import React from 'react';
 import { SafeAreaView, Text, StyleSheet } from 'react-native';
 
-const PlaceholderScreen = ({ text }) => (
+interface Props {
+  text: string
+}
+
+const PlaceholderScreen: React.FC<Props> = ({ text }) => (
   <SafeAreaView style={styles.container}>
     <Text style={styles.text}>{text}</Text>
   </SafeAreaView>

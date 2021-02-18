@@ -9,7 +9,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const OthersScreen = ({ navigation }) => {
+interface Props {
+  navigation: {
+    navigate: (path: string) => void
+  }
+}
+
+const OthersScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeAreaView>
       <ScrollView
