@@ -1,5 +1,11 @@
 module.exports = {
-  extends: ['@react-native-community', 'airbnb', 'prettier', 'prettier/react'],
+  extends: [
+    '@react-native-community',
+    'airbnb-typescript',
+    'prettier',
+    'prettier/@typescript-eslint',
+    'prettier/react',
+  ],
   parser: 'babel-eslint',
   plugins: ['react', 'react-native'],
   env: {
@@ -11,7 +17,7 @@ module.exports = {
       'error',
       { functions: true, classes: true, variables: false },
     ],
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
     'react/prop-types': 'off',
     'react-native/no-unused-styles': 2,
     'react-native/no-inline-styles': 2,
