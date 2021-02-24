@@ -37,9 +37,15 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Laitteen sijaintia käytetään sijaintipohjaisten säätietojen esittämiseen.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Laitteen sijaintia käytetään sijaintipohjaisten säätietojen esittämiseen.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-  <key>UIAppFonts</key>
+	<string>Laitteen sijaintia käytetään sijaintipohjaisten säätietojen esittämiseen.</string>
+	<key>NSNotificationsUsageDescription</key>
+	<string>Sovellus käyttää ilmoituksia varoitusten lähettämiseen.</string>
+	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>
 	</array>
