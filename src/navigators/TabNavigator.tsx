@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Geolocation from 'react-native-geolocation-service';
+import Permissions, { PERMISSIONS } from 'react-native-permissions';
 
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
 import OthersScreen from '../screens/OthersScreen';
@@ -37,6 +39,15 @@ const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
 const Navigator: React.FC<Props> = ({ setGeolocation }) => {
+  useEffect(() => {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.LOCATION_ALWAYS
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+    Permissions.request(permission).then((result) => {
+      console.log('yes to location', result);
+    });
+  }, []);
   useEffect(() => {
     // TODO: adjust location when moving
     Geolocation.watchPosition(
