@@ -8,13 +8,7 @@ import {
   Location,
   SettingsActionTypes,
 } from './types';
-import {
-  getItem,
-  setItem,
-  removeItem,
-  LOCALE,
-  FAVORITES,
-} from '../../utils/async_storage';
+import { getItem, setItem, LOCALE, FAVORITES } from '../../utils/async_storage';
 
 export const setLanguage = (locale: Locale) => (
   dispatch: Dispatch<SettingsActionTypes>

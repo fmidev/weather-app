@@ -1,13 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Platform } from 'react-native';
+import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Geolocation from 'react-native-geolocation-service';
+import Permissions, { PERMISSIONS } from 'react-native-permissions';
 
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
 import OthersScreen from '../screens/OthersScreen';
+import { State } from '../store/types';
+import { selectGeolocation } from '../store/general/selectors';
+import { setGeolocation } from '../store/general/actions';
 
-import { TabParamList, OthersStackParamList } from './Types'
+import { TabParamList, OthersStackParamList } from './types';
+
+const mapStateToProps = (state: State) => {
+  return {
+    geolocation: selectGeolocation(state),
+  };
+};
+
+const mapDispatchToProps = {
+  setGeolocation,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type Props = PropsFromRedux & {};
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const MapStack = createStackNavigator();
@@ -15,7 +38,39 @@ const ForecastStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
-const Navigator: React.FC = () => {
+const Navigator: React.FC<Props> = ({ setGeolocation }) => {
+  useEffect(() => {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.LOCATION_ALWAYS
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+    Permissions.request(permission).then((result) => {
+      console.log('yes to location', result);
+    });
+  }, []);
+  useEffect(() => {
+    // TODO: adjust location when moving
+    Geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log('GELOCATION', position);
+        setGeolocation({ latitude, longitude });
+      },
+      (error) => {
+        console.error('GEOLOCATION NOT AVAILABLE', error);
+      },
+      {
+        // shows location indicator on iOS
+        showsBackgroundLocationIndicator: true,
+        // https://github.com/Agontuk/react-native-geolocation-service/blob/master/docs/accuracy.md#android
+        accuracy: {
+          android: 'low', // city level accuracy
+          ios: 'reduced', // used when app doesn't need accurate location data
+        },
+      }
+    );
+  }, []);
+
   // const commonHeaderOptions = {
   //   headerStyle: {
   //     borderBottomWidth: 1,
@@ -29,7 +84,10 @@ const Navigator: React.FC = () => {
 
   const MapScreen = () => <PlaceholderScreen text="Tähän tulisi kartta" />;
   const ForecastScreen = () => (
-    <PlaceholderScreen text="Tähän tulisi havaintoa ja ennustetta" />
+    <PlaceholderScreen
+      text="Tähän tulisi havaintoa ja ennustetta"
+      showLocation
+    />
   );
   const WarningsScreen = () => (
     <PlaceholderScreen text="Tänne tulisi varoitukset" />
@@ -161,4 +219,4 @@ const Navigator: React.FC = () => {
   );
 };
 
-export default Navigator;
+export default connector(Navigator);
