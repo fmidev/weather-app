@@ -6,7 +6,11 @@ module.exports = {
     'prettier/@typescript-eslint',
     'prettier/react',
   ],
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    sourceType: 'module',
+  },
   plugins: ['react', 'react-native'],
   env: {
     'react-native/react-native': true,
@@ -25,5 +29,6 @@ module.exports = {
     'no-trailing-spaces': ['error'],
     'no-multiple-empty-lines': ['error'],
   },
+  ignorePatterns: ['.eslintrc.js'],
   root: true,
 };
