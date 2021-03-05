@@ -4,13 +4,10 @@ import { SafeAreaView, Text, StyleSheet } from 'react-native';
 
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
-import { setGeolocation as setGeolocationAction } from '../store/general/actions';
 
-const mapStateToProps = (state: State) => {
-  return {
-    geolocation: selectGeolocation(state),
-  };
-};
+const mapStateToProps = (state: State) => ({
+  geolocation: selectGeolocation(state),
+});
 
 const connector = connect(mapStateToProps, {});
 

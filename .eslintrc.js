@@ -17,10 +17,6 @@ module.exports = {
   },
   rules: {
     'global-require': 0,
-    'no-use-before-define': [
-      'error',
-      { functions: true, classes: true, variables: false },
-    ],
     'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
     'react/prop-types': 'off',
     'react-native/no-unused-styles': 2,
@@ -28,6 +24,11 @@ module.exports = {
     'react-native/no-color-literals': 2,
     'no-trailing-spaces': ['error'],
     'no-multiple-empty-lines': ['error'],
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': [
+      'error',
+      { functions: true, classes: true, variables: false },
+    ],
   },
   ignorePatterns: ['.eslintrc.js'],
   root: true,
