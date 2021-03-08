@@ -24,3 +24,5 @@ export const fetchForecast = () => (
     })
     .catch((error: Error) => dispatch({ type: FETCH_FORECAST_ERROR, error }));
 };
+
+export default fetchForecast;

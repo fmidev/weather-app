@@ -8,8 +8,13 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
     sourceType: 'module',
+    ecmaVersion: 2020,
+    ecmaFeatures: {
+      jsx: true,
+    },
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
   },
   plugins: ['react', 'react-native'],
   env: {
@@ -30,6 +35,11 @@ module.exports = {
       { functions: true, classes: true, variables: false },
     ],
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: [
+    '.eslintrc.js',
+    'babel.config.js',
+    'metro.config.js',
+    'jest.config.js',
+  ],
   root: true,
 };

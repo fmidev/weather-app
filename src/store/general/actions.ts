@@ -6,3 +6,5 @@ export const setGeolocation = (geolocation: Geolocation) => (
 ) => {
   dispatch({ type: SET_GEOLOCATION, geolocation });
 };
+
+export default setGeolocation;

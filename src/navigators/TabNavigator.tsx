@@ -16,11 +16,9 @@ import { setGeolocation } from '../store/general/actions';
 
 import { TabParamList, OthersStackParamList } from './types';
 
-const mapStateToProps = (state: State) => {
-  return {
-    geolocation: selectGeolocation(state),
-  };
-};
+const mapStateToProps = (state: State) => ({
+  geolocation: selectGeolocation(state),
+});
 
 const mapDispatchToProps = {
   setGeolocation,
@@ -38,7 +36,7 @@ const ForecastStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
-const Navigator: React.FC<Props> = ({ setGeolocation }) => {
+const Navigator: React.FC<Props> = () => {
   useEffect(() => {
     const permission =
       Platform.OS === 'ios'

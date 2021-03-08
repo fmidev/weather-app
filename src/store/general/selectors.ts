@@ -10,3 +10,5 @@ export const selectGeolocation = createSelector<
   GeneralState,
   Geolocation | undefined
 >(selectGeneralDomain, (general) => general.geolocation);
+
+export default selectGeolocation;
