@@ -40,6 +40,7 @@ module.exports = {
     'babel.config.js',
     'metro.config.js',
     'jest.config.js',
+    'e2e/*',
   ],
   root: true,
 };
