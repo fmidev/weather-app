@@ -16,7 +16,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {
   text: string;
   showLocation?: boolean;
-  geolocation?: Geolocation;
   testIndex: number;
 };
 
