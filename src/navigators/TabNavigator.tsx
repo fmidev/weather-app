@@ -55,7 +55,7 @@ const Navigator: React.FC<Props> = () => {
         setGeolocation({ latitude, longitude });
       },
       (error) => {
-        console.error('GEOLOCATION NOT AVAILABLE', error);
+        console.log('GEOLOCATION NOT AVAILABLE', error);
       },
       {
         // shows location indicator on iOS
@@ -176,6 +176,7 @@ const Navigator: React.FC<Props> = () => {
           name="Map"
           component={MapStackScreen}
           options={{
+            tabBarTestID: 'navigation_map',
             tabBarLabel: 'Kartta',
             tabBarIcon: ({ color, size }) => (
               <Icon name="map-outline" color={color} size={size} />
@@ -186,6 +187,7 @@ const Navigator: React.FC<Props> = () => {
           name="Forecast"
           component={ForecastStackScreen}
           options={{
+            tabBarTestID: 'navigation_forecast',
             tabBarLabel: 'Ennuste',
             tabBarIcon: ({ color, size }) => (
               <Icon name="partly-sunny-outline" color={color} size={size} />
@@ -196,6 +198,7 @@ const Navigator: React.FC<Props> = () => {
           name="Warnings"
           component={WarningsStackScreen}
           options={{
+            tabBarTestID: 'navigation_warnings',
             tabBarLabel: 'Varoitukset',
             tabBarIcon: ({ color, size }) => (
               <Icon name="warning-outline" color={color} size={size} />
@@ -206,6 +209,7 @@ const Navigator: React.FC<Props> = () => {
           name="Others"
           component={OthersStackScreen}
           options={{
+            tabBarTestID: 'navigation_others',
             tabBarLabel: 'Muut',
             tabBarIcon: ({ color, size }) => (
               <Icon name="menu-outline" color={color} size={size} />

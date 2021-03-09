@@ -24,7 +24,9 @@ const PlaceholderScreen: React.FC<Props> = ({
   geolocation,
 }) => (
   <SafeAreaView style={styles.container}>
-    <Text style={styles.text}>{text}</Text>
+    <Text style={styles.text} testID="screen_placeholder_text">
+      {text}
+    </Text>
     {showLocation && (
       <Text style={styles.text}>
         Laitteen sijainti: {JSON.stringify(geolocation, null, 2)}

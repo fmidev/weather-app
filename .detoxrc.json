@@ -4,7 +4,8 @@
   "apps": {
     "ios": {
       "type": "ios.app",
-      "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+      "binaryPath": "ios/DerivedData/weather/Build/Products/Debug-iphonesimulator/weather.app",
+      "build": "react-native run-ios"
     },
     "android": {
       "type": "android.apk",
@@ -21,7 +22,7 @@
     "emulator": {
       "type": "android.emulator",
       "device": {
-        "avdName": "Pixel_3a_API_30_x86"
+        "avdName": "Pixel_2_API_29"
       }
     }
   },
