@@ -80,27 +80,39 @@ const Navigator: React.FC<Props> = () => {
   //   headerTitleAlign: 'center',
   // };
 
-  const MapScreen = () => <PlaceholderScreen text="Tähän tulisi kartta" />;
+  const MapScreen = () => (
+    <PlaceholderScreen text="Tähän tulisi kartta" testIndex={0} />
+  );
   const ForecastScreen = () => (
     <PlaceholderScreen
       text="Tähän tulisi havaintoa ja ennustetta"
       showLocation
+      testIndex={1}
     />
   );
   const WarningsScreen = () => (
-    <PlaceholderScreen text="Tänne tulisi varoitukset" />
+    <PlaceholderScreen text="Tänne tulisi varoitukset" testIndex={2} />
   );
   const AboutScreen = () => (
-    <PlaceholderScreen text="Täällä lukisi tietoja sovelluksesta lyhyesti" />
+    <PlaceholderScreen
+      text="Täällä lukisi tietoja sovelluksesta lyhyesti"
+      testIndex={3}
+    />
   );
   const SettingsScreen = () => (
-    <PlaceholderScreen text="Täällä olisi vaikka sovelluksen yleiset asetukset" />
+    <PlaceholderScreen
+      text="Täällä olisi vaikka sovelluksen yleiset asetukset"
+      testIndex={4}
+    />
   );
   const ProductScreen = () => (
-    <PlaceholderScreen text="Täällä voisi olla mitä vain" />
+    <PlaceholderScreen text="Täällä voisi olla mitä vain" testIndex={5} />
   );
   const NotificationsScreen = () => (
-    <PlaceholderScreen text="Täällä olisi jotain notifikaatioista" />
+    <PlaceholderScreen
+      text="Täällä olisi jotain notifikaatioista"
+      testIndex={6}
+    />
   );
 
   const MapStackScreen = () => (
