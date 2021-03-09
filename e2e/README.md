@@ -1,10 +1,19 @@
 # E2E testing with Detox
 
-## Intall Detox Command Line Tools (`detox-cli`)
+## Setup
+
+### 1. Install Detox Command Line tools (`detox-cli`)
 
 `npm install -g detox-cli`
 
 [Official documentation of Detox.](https://github.com/wix/Detox/tree/master/docs 'Detox documentation')
+
+### 2. Platform specific configurations
+
+Please refer to the official getting started documentation:
+
+- [iOS](https://github.com/wix/Detox/blob/master/docs/Introduction.iOSDevEnv.md)
+- [Android](https://github.com/wix/Detox/blob/master/docs/Introduction.Android.md)
 
 ## Running E2E tests
 
