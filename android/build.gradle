@@ -6,6 +6,8 @@ buildscript {
         minSdkVersion = 18
         compileSdkVersion = 29
         targetSdkVersion = 29
+        playServicesVersion = "17.0.0"
+        androidMapsUtilsVersion = "2.0.3"
         kotlinVersion = "1.4.0"
     }
     repositories {

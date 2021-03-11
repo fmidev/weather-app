@@ -58,3 +58,8 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# Miscellaneous
+.env
+.env.production
+android/app/release/
