@@ -23,7 +23,8 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => (
       <View style={[styles.rowWrapper, styles.withBorderBottom]}>
         <TouchableOpacity
           delayPressIn={100}
-          onPress={() => navigation.navigate('Product')}>
+          onPress={() => navigation.navigate('Product')}
+          testID="navigation_product">
           <View style={styles.row}>
             <Text style={styles.text}>Tuote</Text>
             <Icon name="chevron-forward" size={22} />
@@ -33,7 +34,8 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => (
       <View style={[styles.rowWrapper, styles.withBorderBottom]}>
         <TouchableOpacity
           delayPressIn={100}
-          onPress={() => navigation.navigate('Settings')}>
+          onPress={() => navigation.navigate('Settings')}
+          testID="navigation_settings">
           <View style={styles.row}>
             <Text style={styles.text}>Asetukset</Text>
             <Icon name="chevron-forward" size={22} />
@@ -43,7 +45,8 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => (
       <View style={[styles.rowWrapper, styles.withBorderBottom]}>
         <TouchableOpacity
           delayPressIn={100}
-          onPress={() => navigation.navigate('Notifications')}>
+          onPress={() => navigation.navigate('Notifications')}
+          testID="navigation_notifications">
           <View style={styles.row}>
             <Text style={styles.text}>Ilmoitusasetukset</Text>
             <Icon name="chevron-forward" size={22} />
@@ -53,7 +56,8 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => (
       <View style={styles.rowWrapper}>
         <TouchableOpacity
           delayPressIn={100}
-          onPress={() => navigation.navigate('About')}>
+          onPress={() => navigation.navigate('About')}
+          testID="navigation_about">
           <View style={styles.row}>
             <Text style={styles.text}>Tietoa sovelluksesta</Text>
             <Icon name="chevron-forward" size={22} />

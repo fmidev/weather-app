@@ -16,15 +16,19 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {
   text: string;
   showLocation?: boolean;
+  testIndex: number;
 };
 
 const PlaceholderScreen: React.FC<Props> = ({
   text,
   showLocation,
   geolocation,
+  testIndex,
 }) => (
   <SafeAreaView style={styles.container}>
-    <Text style={styles.text}>{text}</Text>
+    <Text style={styles.text} testID={`screen_placeholder_text_${testIndex}`}>
+      {text}
+    </Text>
     {showLocation && (
       <Text style={styles.text}>
         Laitteen sijainti: {JSON.stringify(geolocation, null, 2)}

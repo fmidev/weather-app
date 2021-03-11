@@ -55,7 +55,7 @@ const Navigator: React.FC<Props> = () => {
         setGeolocation({ latitude, longitude });
       },
       (error) => {
-        console.error('GEOLOCATION NOT AVAILABLE', error);
+        console.log('GEOLOCATION NOT AVAILABLE', error);
       },
       {
         // shows location indicator on iOS
@@ -80,27 +80,39 @@ const Navigator: React.FC<Props> = () => {
   //   headerTitleAlign: 'center',
   // };
 
-  const MapScreen = () => <PlaceholderScreen text="Tähän tulisi kartta" />;
+  const MapScreen = () => (
+    <PlaceholderScreen text="Tähän tulisi kartta" testIndex={0} />
+  );
   const ForecastScreen = () => (
     <PlaceholderScreen
       text="Tähän tulisi havaintoa ja ennustetta"
       showLocation
+      testIndex={1}
     />
   );
   const WarningsScreen = () => (
-    <PlaceholderScreen text="Tänne tulisi varoitukset" />
+    <PlaceholderScreen text="Tänne tulisi varoitukset" testIndex={2} />
   );
   const AboutScreen = () => (
-    <PlaceholderScreen text="Täällä lukisi tietoja sovelluksesta lyhyesti" />
+    <PlaceholderScreen
+      text="Täällä lukisi tietoja sovelluksesta lyhyesti"
+      testIndex={3}
+    />
   );
   const SettingsScreen = () => (
-    <PlaceholderScreen text="Täällä olisi vaikka sovelluksen yleiset asetukset" />
+    <PlaceholderScreen
+      text="Täällä olisi vaikka sovelluksen yleiset asetukset"
+      testIndex={4}
+    />
   );
   const ProductScreen = () => (
-    <PlaceholderScreen text="Täällä voisi olla mitä vain" />
+    <PlaceholderScreen text="Täällä voisi olla mitä vain" testIndex={5} />
   );
   const NotificationsScreen = () => (
-    <PlaceholderScreen text="Täällä olisi jotain notifikaatioista" />
+    <PlaceholderScreen
+      text="Täällä olisi jotain notifikaatioista"
+      testIndex={6}
+    />
   );
 
   const MapStackScreen = () => (
@@ -176,6 +188,7 @@ const Navigator: React.FC<Props> = () => {
           name="Map"
           component={MapStackScreen}
           options={{
+            tabBarTestID: 'navigation_map',
             tabBarLabel: 'Kartta',
             tabBarIcon: ({ color, size }) => (
               <Icon name="map-outline" color={color} size={size} />
@@ -186,6 +199,7 @@ const Navigator: React.FC<Props> = () => {
           name="Forecast"
           component={ForecastStackScreen}
           options={{
+            tabBarTestID: 'navigation_forecast',
             tabBarLabel: 'Ennuste',
             tabBarIcon: ({ color, size }) => (
               <Icon name="partly-sunny-outline" color={color} size={size} />
@@ -196,6 +210,7 @@ const Navigator: React.FC<Props> = () => {
           name="Warnings"
           component={WarningsStackScreen}
           options={{
+            tabBarTestID: 'navigation_warnings',
             tabBarLabel: 'Varoitukset',
             tabBarIcon: ({ color, size }) => (
               <Icon name="warning-outline" color={color} size={size} />
@@ -206,6 +221,7 @@ const Navigator: React.FC<Props> = () => {
           name="Others"
           component={OthersStackScreen}
           options={{
+            tabBarTestID: 'navigation_others',
             tabBarLabel: 'Muut',
             tabBarIcon: ({ color, size }) => (
               <Icon name="menu-outline" color={color} size={size} />
