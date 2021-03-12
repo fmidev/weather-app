@@ -10,9 +10,10 @@ import Permissions, { PERMISSIONS } from 'react-native-permissions';
 
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
 import OthersScreen from '../screens/OthersScreen';
+import MapScreen from '../screens/MapScreen';
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
-import { setGeolocation } from '../store/general/actions';
+import { setGeolocation as setGeolocationAction } from '../store/general/actions';
 
 import { TabParamList, OthersStackParamList } from './types';
 
@@ -21,7 +22,7 @@ const mapStateToProps = (state: State) => ({
 });
 
 const mapDispatchToProps = {
-  setGeolocation,
+  setGeolocation: setGeolocationAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -36,7 +37,7 @@ const ForecastStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
-const Navigator: React.FC<Props> = () => {
+const Navigator: React.FC<Props> = ({ setGeolocation }) => {
   useEffect(() => {
     const permission =
       Platform.OS === 'ios'
@@ -67,6 +68,7 @@ const Navigator: React.FC<Props> = () => {
         },
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // const commonHeaderOptions = {
@@ -80,9 +82,6 @@ const Navigator: React.FC<Props> = () => {
   //   headerTitleAlign: 'center',
   // };
 
-  const MapScreen = () => (
-    <PlaceholderScreen text="Tähän tulisi kartta" testIndex={0} />
-  );
   const ForecastScreen = () => (
     <PlaceholderScreen
       text="Tähän tulisi havaintoa ja ennustetta"

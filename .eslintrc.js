@@ -41,6 +41,7 @@ module.exports = {
     'metro.config.js',
     'jest.config.js',
     'e2e/*',
+    'node_modules/',
   ],
   root: true,
 };

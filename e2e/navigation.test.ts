@@ -12,9 +12,9 @@ describe('Navigation', () => {
   const navNotifications = getByID('navigation_notifications');
   const navAbout = getByID('navigation_about');
   const headerBack = getByID('header-back');
-  // palceholders
+  const map = getByID('map');
+  // placeholders
   const placeholder = 'screen_placeholder_text';
-  const mapPlaceholder = 'Tähän tulisi kartta';
   const forecastPlaceholder = 'Tähän tulisi havaintoa ja ennustetta';
   const warningsPlaceholder = 'Tänne tulisi varoitukset';
   const aboutPlaceholder = 'Täällä lukisi tietoja sovelluksesta lyhyesti';
@@ -35,7 +35,7 @@ describe('Navigation', () => {
 
   it('should navigate to map screen', async () => {
     navMap.tap();
-    await expect(getByID(`${placeholder}_0`)).toHaveText(mapPlaceholder);
+    await expect(map).toBeVisible();
   });
 
   it('should navigate to forecast screen', async () => {
