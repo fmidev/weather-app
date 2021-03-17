@@ -14,7 +14,7 @@ const SymbolsScreen: React.FC = () => {
   const symbolsArr = Object.values(images.symbols);
 
   const itemRenderer = ({ item }: { item: WeatherSymbol }) => (
-    <View style={styles.row}>
+    <View style={styles.row} testID={item.description.en}>
       <Image style={styles.image} source={item.day} />
       <Image style={styles.image} source={item.night} />
       <Text style={styles.description}>{item.description.fi}</Text>

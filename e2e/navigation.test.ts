@@ -13,6 +13,7 @@ describe('Navigation', () => {
   const navAbout = getByID('navigation_about');
   const headerBack = getByID('header-back');
   const map = getByID('map');
+  const clearSymbol = getByID('clear');
   // placeholders
   const placeholder = 'screen_placeholder_text';
   const forecastPlaceholder = 'Tähän tulisi havaintoa ja ennustetta';
@@ -20,7 +21,6 @@ describe('Navigation', () => {
   const aboutPlaceholder = 'Täällä lukisi tietoja sovelluksesta lyhyesti';
   const settingsPlaceholder =
     'Täällä olisi vaikka sovelluksen yleiset asetukset';
-  const productPlaceholder = 'Täällä voisi olla mitä vain';
   const notificationsPlacehodler = 'Täällä olisi jotain notifikaatioista';
   // test
   beforeAll(async () => {
@@ -57,7 +57,7 @@ describe('Navigation', () => {
     navOthers.tap();
     await expect(navSymbols).toExist();
     navSymbols.tap();
-    await expect(getByID(`${placeholder}_5`)).toHaveText(productPlaceholder);
+    await expect(clearSymbol).toBeVisible();
     headerBack.tap();
     await expect(navSettings).toExist();
     navSettings.tap();
