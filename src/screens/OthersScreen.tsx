@@ -23,10 +23,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => (
       <View style={[styles.rowWrapper, styles.withBorderBottom]}>
         <TouchableOpacity
           delayPressIn={100}
-          onPress={() => navigation.navigate('Product')}
-          testID="navigation_product">
+          onPress={() => navigation.navigate('Symbols')}
+          testID="navigation_symbols">
           <View style={styles.row}>
-            <Text style={styles.text}>Tuote</Text>
+            <Text style={styles.text}>Symbolit</Text>
             <Icon name="chevron-forward" size={22} />
           </View>
         </TouchableOpacity>

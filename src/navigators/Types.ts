@@ -10,5 +10,5 @@ export type OthersStackParamList = {
   About: undefined;
   Settings: undefined;
   Notifications: undefined;
-  Product: undefined;
+  Symbols: undefined;
 };

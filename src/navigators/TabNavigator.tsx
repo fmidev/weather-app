@@ -11,6 +11,7 @@ import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
 import OthersScreen from '../screens/OthersScreen';
 import MapScreen from '../screens/MapScreen';
+import SymbolsScreen from '../screens/SymbolsScreen';
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
 import { setGeolocation as setGeolocationAction } from '../store/general/actions';
@@ -104,9 +105,7 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
       testIndex={4}
     />
   );
-  const ProductScreen = () => (
-    <PlaceholderScreen text="Täällä voisi olla mitä vain" testIndex={5} />
-  );
+
   const NotificationsScreen = () => (
     <PlaceholderScreen
       text="Täällä olisi jotain notifikaatioista"
@@ -171,10 +170,10 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
         options={{ headerTitle: 'Ilmoitusasetukset' }}
       />
       <OthersStack.Screen
-        name="Product"
-        component={ProductScreen}
+        name="Symbols"
+        component={SymbolsScreen}
         options={{
-          headerTitle: 'Tuote',
+          headerTitle: 'Symbolit',
         }}
       />
     </OthersStack.Navigator>

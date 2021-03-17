@@ -7,7 +7,7 @@ describe('Navigation', () => {
   const navForecast = getByID('navigation_forecast');
   const navWarnings = getByID('navigation_warnings');
   const navOthers = getByID('navigation_others');
-  const navProduct = getByID('navigation_product');
+  const navSymbols = getByID('navigation_symbols');
   const navSettings = getByID('navigation_settings');
   const navNotifications = getByID('navigation_notifications');
   const navAbout = getByID('navigation_about');
@@ -50,13 +50,13 @@ describe('Navigation', () => {
 
   it('should navigate to others screen', async () => {
     navOthers.tap();
-    await expect(navProduct).toExist();
+    await expect(navSymbols).toExist();
   });
 
   it('should navigate to each screen on others screen', async () => {
     navOthers.tap();
-    await expect(navProduct).toExist();
-    navProduct.tap();
+    await expect(navSymbols).toExist();
+    navSymbols.tap();
     await expect(getByID(`${placeholder}_5`)).toHaveText(productPlaceholder);
     headerBack.tap();
     await expect(navSettings).toExist();
