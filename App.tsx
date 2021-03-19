@@ -3,6 +3,7 @@ import React from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
+import './i18n';
 
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';
