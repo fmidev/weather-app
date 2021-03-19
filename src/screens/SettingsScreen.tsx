@@ -19,7 +19,7 @@ const SettingsScreen: React.FC = () => {
     try {
       await setItem(LOCALE, lang);
     } catch (error) {
-      console.log('what could go wrong???', error);
+      console.error('error:', error);
     }
   };
   return (
