@@ -1,14 +1,9 @@
 import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
-import { SettingsState, Locale, Location } from './types';
+import { SettingsState, Location } from './types';
 
-const selectSettingsDomain: Selector<State, SettingsState> = (state) =>
+export const selectSettingsDomain: Selector<State, SettingsState> = (state) =>
   state.settings;
-
-export const selectLocale = createSelector<State, SettingsState, Locale>(
-  selectSettingsDomain,
-  (settings) => settings.locale
-);
 
 export const selectFavorites = createSelector<
   State,
