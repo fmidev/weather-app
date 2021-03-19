@@ -24,7 +24,7 @@ const SettingsScreen: React.FC = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleContainer}>
+      <View style={styles.titleContainer} testID="settings_language_header">
         <Text style={styles.title}>{`${t('settings:language')}`}</Text>
       </View>
       <View>

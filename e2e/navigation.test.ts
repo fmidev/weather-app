@@ -13,15 +13,14 @@ describe('Navigation', () => {
   const navAbout = getByID('navigation_about');
   const headerBack = getByID('header-back');
   const map = getByID('map');
-  const clearSymbol = getByID('clear');
+  const clearSymbol = getByID('1');
+  const languageHeader = getByID('settings_language_header');
   // placeholders
   const placeholder = 'screen_placeholder_text';
-  const forecastPlaceholder = 'Tähän tulisi havaintoa ja ennustetta';
+  const forecastPlaceholder = 'Täällä olisi havaintoa ja ennustetta';
   const warningsPlaceholder = 'Tänne tulisi varoitukset';
-  const aboutPlaceholder = 'Täällä lukisi tietoja sovelluksesta lyhyesti';
-  const settingsPlaceholder =
-    'Täällä olisi vaikka sovelluksen yleiset asetukset';
-  const notificationsPlacehodler = 'Täällä olisi jotain notifikaatioista';
+  const aboutPlaceholder = 'Täällä lukisi tietoja sovelluksesta';
+  const notificationsPlacehodler = 'Täälä olisi jotain notifikaatioista';
   // test
   beforeAll(async () => {
     await device.launchApp({
@@ -61,7 +60,7 @@ describe('Navigation', () => {
     headerBack.tap();
     await expect(navSettings).toExist();
     navSettings.tap();
-    await expect(getByID(`${placeholder}_4`)).toHaveText(settingsPlaceholder);
+    await expect(languageHeader).toExist();
     headerBack.tap();
     await expect(navNotifications).toExist();
     navNotifications.tap();
