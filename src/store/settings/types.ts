@@ -1,15 +1,6 @@
-export const SET_LANGUAGE = 'SET_LANGUAGE';
 export const GET_FAVORITES = 'GET_FAVORITES';
 export const ADD_FAVORITE = 'ADD_FAVORITE';
 export const DELETE_FAVORITE = 'DELETE_FAVORITE';
-
-export type Locale = 'FI' | 'SE' | 'EN';
-
-interface SetLanguage {
-  type: typeof SET_LANGUAGE;
-  locale: Locale;
-}
-
 interface GetFavorites {
   type: typeof GET_FAVORITES;
   favorites: Location[];
@@ -25,11 +16,7 @@ interface DeleteFavorite {
   geoid: number;
 }
 
-export type SettingsActionTypes =
-  | SetLanguage
-  | GetFavorites
-  | AddFavorite
-  | DeleteFavorite;
+export type SettingsActionTypes = GetFavorites | AddFavorite | DeleteFavorite;
 
 export interface Location {
   geoid: number;
@@ -37,6 +24,5 @@ export interface Location {
 }
 
 export interface SettingsState {
-  locale: Locale;
   favorites: Location[] | [];
 }

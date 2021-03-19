@@ -1,0 +1,13 @@
+export const PRIMARY_BLUE = '#303193';
+export const SECONDARY_BLUE = '#3A66E3';
+export const LIGHT_BLUE = '#02B8CE';
+export const LIGHT_GREEN = '#52C1A1';
+export const BLACK = '#000000';
+export const WHITE = '#FFFFFF';
+export const LIGHT_GRAY = '#F0F0F0';
+export const GRAY = '#808080';
+export const GRAYISH_BLUE = '#D8E7F2';
+export const TRANSPARENT = 'transparent';
+export const VERY_LIGHT_BLUE = '#EEF4FB';
+export const BORDER_BLUE = '#ADCCE2';
+export const UNDERLINE = '#03B8CE';

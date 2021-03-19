@@ -9,65 +9,70 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 import { OthersStackParamList } from '../navigators/types';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'Others'>;
 }
 
-const OthersScreen: React.FC<Props> = ({ navigation }) => (
-  <SafeAreaView>
-    <ScrollView
-      style={styles.scrollContainer}
-      showsVerticalScrollIndicator={false}>
-      <View style={[styles.rowWrapper, styles.withBorderBottom]}>
-        <TouchableOpacity
-          delayPressIn={100}
-          onPress={() => navigation.navigate('Product')}
-          testID="navigation_product">
-          <View style={styles.row}>
-            <Text style={styles.text}>Tuote</Text>
-            <Icon name="chevron-forward" size={22} />
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={[styles.rowWrapper, styles.withBorderBottom]}>
-        <TouchableOpacity
-          delayPressIn={100}
-          onPress={() => navigation.navigate('Settings')}
-          testID="navigation_settings">
-          <View style={styles.row}>
-            <Text style={styles.text}>Asetukset</Text>
-            <Icon name="chevron-forward" size={22} />
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={[styles.rowWrapper, styles.withBorderBottom]}>
-        <TouchableOpacity
-          delayPressIn={100}
-          onPress={() => navigation.navigate('Notifications')}
-          testID="navigation_notifications">
-          <View style={styles.row}>
-            <Text style={styles.text}>Ilmoitusasetukset</Text>
-            <Icon name="chevron-forward" size={22} />
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.rowWrapper}>
-        <TouchableOpacity
-          delayPressIn={100}
-          onPress={() => navigation.navigate('About')}
-          testID="navigation_about">
-          <View style={styles.row}>
-            <Text style={styles.text}>Tietoa sovelluksesta</Text>
-            <Icon name="chevron-forward" size={22} />
-          </View>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  </SafeAreaView>
-);
-
+const OthersScreen: React.FC<Props> = ({ navigation }) => {
+  const { t } = useTranslation('navigation');
+  return (
+    <SafeAreaView>
+      <ScrollView
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}>
+        <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+          <TouchableOpacity
+            delayPressIn={100}
+            onPress={() => navigation.navigate('Symbols')}
+            testID="navigation_symbols">
+            <View style={styles.row}>
+              <Text style={styles.text}>{`${t('navigation:symbols')}`}</Text>
+              <Icon name="chevron-forward" size={22} />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+          <TouchableOpacity
+            delayPressIn={100}
+            onPress={() => navigation.navigate('Settings')}
+            testID="navigation_settings">
+            <View style={styles.row}>
+              <Text style={styles.text}>{`${t('navigation:settings')}`}</Text>
+              <Icon name="chevron-forward" size={22} />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+          <TouchableOpacity
+            delayPressIn={100}
+            onPress={() => navigation.navigate('Notifications')}
+            testID="navigation_notifications">
+            <View style={styles.row}>
+              <Text style={styles.text}>{`${t(
+                'navigation:notifications'
+              )}`}</Text>
+              <Icon name="chevron-forward" size={22} />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.rowWrapper}>
+          <TouchableOpacity
+            delayPressIn={100}
+            onPress={() => navigation.navigate('About')}
+            testID="navigation_about">
+            <View style={styles.row}>
+              <Text style={styles.text}>{`${t('navigation:about')}`}</Text>
+              <Icon name="chevron-forward" size={22} />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 const styles = StyleSheet.create({
   text: {
     fontSize: 15,

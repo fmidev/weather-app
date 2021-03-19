@@ -1,21 +1,12 @@
 import { Dispatch } from 'redux';
 import {
-  SET_LANGUAGE,
   GET_FAVORITES,
   ADD_FAVORITE,
   DELETE_FAVORITE,
-  Locale,
   Location,
   SettingsActionTypes,
 } from './types';
-import { getItem, setItem, LOCALE, FAVORITES } from '../../utils/async_storage';
-
-export const setLanguage = (locale: Locale) => (
-  dispatch: Dispatch<SettingsActionTypes>
-) => {
-  setItem(LOCALE, locale);
-  dispatch({ type: SET_LANGUAGE, locale });
-};
+import { getItem, setItem, FAVORITES } from '../../utils/async_storage';
 
 export const getFavorites = () => (dispatch: Dispatch<SettingsActionTypes>) => {
   getItem(FAVORITES)

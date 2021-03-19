@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Platform } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,10 +7,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Geolocation from 'react-native-geolocation-service';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
+import { useTranslation } from 'react-i18next';
 
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
 import OthersScreen from '../screens/OthersScreen';
 import MapScreen from '../screens/MapScreen';
+import SymbolsScreen from '../screens/SymbolsScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
 import { setGeolocation as setGeolocationAction } from '../store/general/actions';
@@ -38,6 +41,10 @@ const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
 const Navigator: React.FC<Props> = ({ setGeolocation }) => {
+  const { t, ready } = useTranslation(['navigation', 'placeholder'], {
+    useSuspense: false,
+  });
+
   useEffect(() => {
     const permission =
       Platform.OS === 'ios'
@@ -82,34 +89,25 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
   //   headerTitleAlign: 'center',
   // };
 
+  if (!ready) return <ActivityIndicator size="large" />;
+
   const ForecastScreen = () => (
     <PlaceholderScreen
-      text="Tähän tulisi havaintoa ja ennustetta"
+      text={`${t('placeholder:weather')}`}
       showLocation
       testIndex={1}
     />
   );
   const WarningsScreen = () => (
-    <PlaceholderScreen text="Tänne tulisi varoitukset" testIndex={2} />
+    <PlaceholderScreen text={`${t('placeholder:warnings')}`} testIndex={2} />
   );
   const AboutScreen = () => (
-    <PlaceholderScreen
-      text="Täällä lukisi tietoja sovelluksesta lyhyesti"
-      testIndex={3}
-    />
+    <PlaceholderScreen text={`${t('placeholder:about')}`} testIndex={3} />
   );
-  const SettingsScreen = () => (
-    <PlaceholderScreen
-      text="Täällä olisi vaikka sovelluksen yleiset asetukset"
-      testIndex={4}
-    />
-  );
-  const ProductScreen = () => (
-    <PlaceholderScreen text="Täällä voisi olla mitä vain" testIndex={5} />
-  );
+
   const NotificationsScreen = () => (
     <PlaceholderScreen
-      text="Täällä olisi jotain notifikaatioista"
+      text={`${t('placeholder:notifications')}`}
       testIndex={6}
     />
   );
@@ -149,32 +147,32 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
       <OthersStack.Screen
         name="Others"
         component={OthersScreen}
-        options={{ headerTitle: 'Muut' }}
+        options={{ headerTitle: `${t('navigation:others')}` }}
       />
       <OthersStack.Screen
         name="About"
         component={AboutScreen}
         options={{
-          headerTitle: 'Tietoja sovelluksesta',
+          headerTitle: `${t('navigation:about')}`,
         }}
       />
       <OthersStack.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
-          headerTitle: 'Asetukset',
+          headerTitle: `${t('navigation:settings')}`,
         }}
       />
       <OthersStack.Screen
         name="Notifications"
         component={NotificationsScreen}
-        options={{ headerTitle: 'Ilmoitusasetukset' }}
+        options={{ headerTitle: `${t('navigation:notifications')}` }}
       />
       <OthersStack.Screen
-        name="Product"
-        component={ProductScreen}
+        name="Symbols"
+        component={SymbolsScreen}
         options={{
-          headerTitle: 'Tuote',
+          headerTitle: `${t('navigation:symbols')}`,
         }}
       />
     </OthersStack.Navigator>
@@ -188,7 +186,7 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
           component={MapStackScreen}
           options={{
             tabBarTestID: 'navigation_map',
-            tabBarLabel: 'Kartta',
+            tabBarLabel: `${t('navigation:map')}`,
             tabBarIcon: ({ color, size }) => (
               <Icon name="map-outline" color={color} size={size} />
             ),
@@ -199,7 +197,7 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
           component={ForecastStackScreen}
           options={{
             tabBarTestID: 'navigation_forecast',
-            tabBarLabel: 'Ennuste',
+            tabBarLabel: `${t('navigation:weather')}`,
             tabBarIcon: ({ color, size }) => (
               <Icon name="partly-sunny-outline" color={color} size={size} />
             ),
@@ -210,7 +208,7 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
           component={WarningsStackScreen}
           options={{
             tabBarTestID: 'navigation_warnings',
-            tabBarLabel: 'Varoitukset',
+            tabBarLabel: `${t('navigation:warnings')}`,
             tabBarIcon: ({ color, size }) => (
               <Icon name="warning-outline" color={color} size={size} />
             ),
@@ -221,7 +219,7 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
           component={OthersStackScreen}
           options={{
             tabBarTestID: 'navigation_others',
-            tabBarLabel: 'Muut',
+            tabBarLabel: `${t('navigation:others')}`,
             tabBarIcon: ({ color, size }) => (
               <Icon name="menu-outline" color={color} size={size} />
             ),

@@ -7,21 +7,20 @@ describe('Navigation', () => {
   const navForecast = getByID('navigation_forecast');
   const navWarnings = getByID('navigation_warnings');
   const navOthers = getByID('navigation_others');
-  const navProduct = getByID('navigation_product');
+  const navSymbols = getByID('navigation_symbols');
   const navSettings = getByID('navigation_settings');
   const navNotifications = getByID('navigation_notifications');
   const navAbout = getByID('navigation_about');
   const headerBack = getByID('header-back');
   const map = getByID('map');
+  const clearSymbol = getByID('1');
+  const languageHeader = getByID('settings_language_header');
   // placeholders
   const placeholder = 'screen_placeholder_text';
-  const forecastPlaceholder = 'Tähän tulisi havaintoa ja ennustetta';
+  const forecastPlaceholder = 'Täällä olisi havaintoa ja ennustetta';
   const warningsPlaceholder = 'Tänne tulisi varoitukset';
-  const aboutPlaceholder = 'Täällä lukisi tietoja sovelluksesta lyhyesti';
-  const settingsPlaceholder =
-    'Täällä olisi vaikka sovelluksen yleiset asetukset';
-  const productPlaceholder = 'Täällä voisi olla mitä vain';
-  const notificationsPlacehodler = 'Täällä olisi jotain notifikaatioista';
+  const aboutPlaceholder = 'Täällä lukisi tietoja sovelluksesta';
+  const notificationsPlacehodler = 'Täälä olisi jotain notifikaatioista';
   // test
   beforeAll(async () => {
     await device.launchApp({
@@ -50,18 +49,18 @@ describe('Navigation', () => {
 
   it('should navigate to others screen', async () => {
     navOthers.tap();
-    await expect(navProduct).toExist();
+    await expect(navSymbols).toExist();
   });
 
   it('should navigate to each screen on others screen', async () => {
     navOthers.tap();
-    await expect(navProduct).toExist();
-    navProduct.tap();
-    await expect(getByID(`${placeholder}_5`)).toHaveText(productPlaceholder);
+    await expect(navSymbols).toExist();
+    navSymbols.tap();
+    await expect(clearSymbol).toBeVisible();
     headerBack.tap();
     await expect(navSettings).toExist();
     navSettings.tap();
-    await expect(getByID(`${placeholder}_4`)).toHaveText(settingsPlaceholder);
+    await expect(languageHeader).toExist();
     headerBack.tap();
     await expect(navNotifications).toExist();
     navNotifications.tap();
