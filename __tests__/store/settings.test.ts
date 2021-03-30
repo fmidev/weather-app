@@ -31,7 +31,10 @@ describe('settings reducer', () => {
     ];
 
     expect(
-      reducer({ favorites }, { type: types.DELETE_FAVORITE, geoid: 123 })
+      reducer(
+        { favorites, units: undefined },
+        { type: types.DELETE_FAVORITE, geoid: 123 }
+      )
     ).toEqual({
       favorites: [
         {
@@ -39,6 +42,62 @@ describe('settings reducer', () => {
           name: 'Oulu',
         },
       ],
+    });
+  });
+
+  it('should handle UPDATE_UNITS', () => {
+    const favorites = [
+      {
+        geoid: 123,
+        name: 'Helsinki',
+      },
+      {
+        geoid: 323,
+        name: 'Oulu',
+      },
+    ];
+
+    const units = {
+      temperature: {
+        unitId: 1,
+        unitAbb: 'C',
+        unit: 'celsius',
+        unitPrecision: 0,
+      },
+      precipitation: {
+        unitId: 1,
+        unitAbb: 'mm',
+        unit: 'millimeter',
+        unitPrecision: 1,
+      },
+    };
+    expect(
+      reducer(
+        { favorites, units },
+        {
+          type: types.UPDATE_UNITS,
+          units: {
+            ...units,
+            temperature: {
+              unitId: 2,
+              unitAbb: 'F',
+              unit: 'fahrenheit',
+              unitPrecision: 0,
+            },
+          },
+        }
+      )
+    ).toEqual({
+      favorites,
+      units: {
+        ...units,
+        temperature: {
+          unitId: 2,
+          unitAbb: 'F',
+          unit: 'fahrenheit',
+          unitPrecision: 0,
+        },
+      },
     });
   });
 });

@@ -3,8 +3,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 // keys
 export const LOCALE = 'locale';
 export const FAVORITES = 'favorites';
+export const UNITS = 'units';
 
-type StorageKey = typeof LOCALE | typeof FAVORITES;
+type StorageKey = typeof LOCALE | typeof FAVORITES | typeof UNITS;
 
 export const getItem = async (key: StorageKey): Promise<string | null> => {
   try {
@@ -13,6 +14,18 @@ export const getItem = async (key: StorageKey): Promise<string | null> => {
   } catch (error) {
     console.error(error);
     throw Error(`Error getting item with key: ${key}`);
+  }
+};
+
+export const multiGet = async (
+  keys: StorageKey[]
+): Promise<[string, string | null][]> => {
+  try {
+    const values = await AsyncStorage.multiGet(keys);
+    return values;
+  } catch (error) {
+    console.error(error);
+    throw Error(`Error getting items with keys: ${keys}`);
   }
 };
 
