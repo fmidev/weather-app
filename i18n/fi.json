@@ -19,7 +19,12 @@
   "settings": {
     "language": "Kieli",
     "en": "Englanti",
-    "fi": "Suomi"
+    "fi": "Suomi",
+    "units": "Yksiköt",
+    "temperature": "Lämpötila",
+    "precipitation": "Sademäärä",
+    "wind": "Tuuli",
+    "pressure": "Ilmanpaine"
   },
   "symbols": {
     "1": "selkeää",

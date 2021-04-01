@@ -36,3 +36,32 @@ Before running iOS or Android start metro: `yarn start`
 1. `cd ios && pod install && cd ..`
 
 2. `yarn ios`
+
+## **ENV Table**
+
+Available default unit values are descriped in tables below. Array of used units is passed in ENV.UNITS (`UNITS=temperature,precipitation,wind,pressure`).
+
+| UNIT_TEMPERATURE | Description |
+| ---------------- | ----------- |
+| 1                | Celsius     |
+| 2                | Fahrenheit  |
+
+| UNIT_PRECIPITATION | Description |
+| ------------------ | ----------- |
+| 1                  | Millimeter  |
+| 2                  | Inch        |
+
+| UNIT_WIND | Description |
+| --------- | ----------- |
+| 1         | m/s         |
+| 2         | km/h        |
+| 3         | mph         |
+| 4         | Bft         |
+| 5         | kn          |
+
+| UNIT_PRESSURE | Description |
+| ------------- | ----------- |
+| 1             | hPa         |
+| 2             | inHg        |
+| 3             | mmHg        |
+| 4             | mbar        |

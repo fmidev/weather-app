@@ -19,7 +19,12 @@
   "settings": {
     "language": "Language",
     "en": "English",
-    "fi": "Finnish"
+    "fi": "Finnish",
+    "units": "Units",
+    "temperature": "Temperature",
+    "precipitation": "Precipitation",
+    "wind": "Wind",
+    "pressure": "Pressure"
   },
   "symbols": {
     "1": "clear",

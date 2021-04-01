@@ -17,6 +17,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
 import { setGeolocation as setGeolocationAction } from '../store/general/actions';
+import { initSettings as initSettingsAction } from '../store/settings/actions';
 
 import { TabParamList, OthersStackParamList } from './types';
 
@@ -26,6 +27,7 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = {
   setGeolocation: setGeolocationAction,
+  initSettings: initSettingsAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -40,10 +42,14 @@ const ForecastStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
-const Navigator: React.FC<Props> = ({ setGeolocation }) => {
+const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
   const { t, ready } = useTranslation(['navigation', 'placeholder'], {
     useSuspense: false,
   });
+
+  useEffect(() => {
+    initSettings();
+  }, [initSettings]);
 
   useEffect(() => {
     const permission =
@@ -54,6 +60,7 @@ const Navigator: React.FC<Props> = ({ setGeolocation }) => {
       console.log('yes to location', result);
     });
   }, []);
+
   useEffect(() => {
     // TODO: adjust location when moving
     Geolocation.watchPosition(
