@@ -26,6 +26,11 @@
     "wind": "Wind",
     "pressure": "Pressure"
   },
+  "map": {
+    "searchButtonAccessibilityLabel": "Search location",
+    "infoButtonAccessibilityLabel": "Show map legend",
+    "layersButtonAccessibilityLabel": "Show map layer selection"
+  },
   "symbols": {
     "1": "clear",
     "2": "mostly clear",

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
+
+import MapControls from '../components/MapControls';
 
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
@@ -36,7 +38,7 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
     }
   }, [geolocation]);
   return (
-    <View style={styles.mapContainer}>
+    <SafeAreaView style={styles.mapContainer}>
       <MapView
         testID="map"
         style={styles.map}
@@ -44,7 +46,8 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
         region={region}
         onRegionChangeComplete={(r) => setRegion(r)}
       />
-    </View>
+      <MapControls />
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

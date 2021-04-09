@@ -26,6 +26,11 @@
     "wind": "Tuuli",
     "pressure": "Ilmanpaine"
   },
+  "map": {
+    "searchButtonAccessibilityLabel": "Hae paikkaa",
+    "infoButtonAccessibilityLabel": "Näytä kartan selitteet",
+    "layersButtonAccessibilityLabel": "Näytä karttatasojen valinnat"
+  },
   "symbols": {
     "1": "selkeää",
     "2": "enimmäkseen selkeää",
