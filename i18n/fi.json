@@ -29,7 +29,9 @@
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",
     "infoButtonAccessibilityLabel": "Näytä kartan selitteet",
-    "layersButtonAccessibilityLabel": "Näytä karttatasojen valinnat"
+    "layersButtonAccessibilityLabel": "Näytä karttatasojen valinnat",
+    "playButtonAccessibilityLabel": "Animoi ajanjakso kartalla",
+    "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta"
   },
   "symbols": {
     "1": "selkeää",

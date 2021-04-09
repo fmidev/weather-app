@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import MapButton from './MapButton';
+import TimeSlider from './TimeSlider';
 
 import { PRIMARY_BLUE, WHITE } from '../utils/colors';
 
@@ -35,6 +36,7 @@ const MapControls: React.FC = () => {
         iconColor={PRIMARY_BLUE}
         iconSize={26}
       />
+      <TimeSlider />
     </>
   );
 };
