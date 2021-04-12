@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import { BLACK } from '../utils/colors';
+
 type MapButtonProps = {
   onPress: () => void;
   accessibilityLabel: string;
@@ -25,7 +27,7 @@ const MapButton: React.FC<MapButtonProps> = ({
   iconColor,
   style,
 }) => (
-  <View style={style}>
+  <View style={[styles.shadow, style]}>
     <TouchableOpacity
       onPress={onPress}
       accessibilityLabel={accessibilityLabel}
@@ -40,6 +42,17 @@ const MapButton: React.FC<MapButtonProps> = ({
 const styles = StyleSheet.create({
   iconWrapper: {
     padding: 12,
+  },
+  shadow: {
+    shadowColor: BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });
 
