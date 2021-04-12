@@ -6,6 +6,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 
 import MapControls from '../components/MapControls';
 import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
+import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
 
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
@@ -35,6 +36,7 @@ type Props = PropsFromRedux;
 const MapScreen: React.FC<Props> = ({ geolocation }) => {
   const [region, setRegion] = useState<Region | undefined>(undefined);
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   useEffect(() => {
     if (geolocation) {
       setRegion({ ...INITIAL_ZOOM, ...geolocation });
@@ -49,13 +51,25 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
         region={region}
         onRegionChangeComplete={(r) => setRegion(r)}
       />
-      <MapControls onTimeStepPressed={() => timeStepSheetRef.current.open()} />
+      <MapControls
+        onTimeStepPressed={() => timeStepSheetRef.current.open()}
+        onLayersPressed={() => mapLayersSheetRef.current.open()}
+      />
       <RBSheet
         ref={timeStepSheetRef}
         height={300}
         closeOnDragDown
         customStyles={{ container: styles.sheetContainer }}>
         <TimeStepBottomSheet onClose={() => timeStepSheetRef.current.close()} />
+      </RBSheet>
+      <RBSheet
+        ref={mapLayersSheetRef}
+        height={600}
+        closeOnDragDown
+        customStyles={{ container: styles.sheetContainer }}>
+        <MapLayersBottomSheet
+          onClose={() => mapLayersSheetRef.current.close()}
+        />
       </RBSheet>
     </SafeAreaView>
   );

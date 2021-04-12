@@ -10,7 +10,12 @@ import { State } from '../store/types';
 import { selectSliderStep } from '../store/map/selectors';
 import { updateSliderStep as updateSliderStepAction } from '../store/map/actions';
 
-import { VERY_LIGHT_BLUE, PRIMARY_BLUE } from '../utils/colors';
+import {
+  VERY_LIGHT_BLUE,
+  PRIMARY_BLUE,
+  SECONDARY_BLUE,
+  GRAY,
+} from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
   sliderStep: selectSliderStep(state),
@@ -34,24 +39,31 @@ const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
   updateSliderStep,
 }) => {
   const { t } = useTranslation();
+
+  const getIcon = (step: number) =>
+    sliderStep === step ? (
+      <Icon name="radio-button-on-outline" size={22} color={SECONDARY_BLUE} />
+    ) : (
+      <Icon name="radio-button-off-outline" size={22} color={GRAY} />
+    );
   return (
     <View style={styles.sheetListContainer}>
-      <View style={styles.sheetTitle}>
-        <Text style={styles.title}>{t('map:timeStepBottomSheetTitle')}</Text>
+      <View style={styles.closeButtonContainer}>
         <CloseButton
           onPress={onClose}
           accessibilityLabel={t(
-            'map:timeStepBottomSheetCloseAccessibilityLabel'
+            'map:timeStepBottomSheet:closeAccessibilityLabel'
           )}
         />
+      </View>
+      <View style={styles.sheetTitle}>
+        <Text style={styles.title}>{t('map:timeStepBottomSheet:title')}</Text>
       </View>
       <View style={[styles.rowWrapper, styles.withBorderBottom]}>
         <TouchableOpacity onPress={() => updateSliderStep(15)}>
           <View style={styles.row}>
             <Text style={styles.text}>15 min</Text>
-            {sliderStep === 15 && (
-              <Icon name="checkmark" size={22} color={PRIMARY_BLUE} />
-            )}
+            {getIcon(15)}
           </View>
         </TouchableOpacity>
       </View>
@@ -59,9 +71,7 @@ const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
         <TouchableOpacity onPress={() => updateSliderStep(30)}>
           <View style={styles.row}>
             <Text style={styles.text}>30 min</Text>
-            {sliderStep === 30 && (
-              <Icon name="checkmark" size={22} color={PRIMARY_BLUE} />
-            )}
+            {getIcon(30)}
           </View>
         </TouchableOpacity>
       </View>
@@ -69,9 +79,7 @@ const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
         <TouchableOpacity onPress={() => updateSliderStep(60)}>
           <View style={styles.row}>
             <Text style={styles.text}>60 min</Text>
-            {sliderStep === 60 && (
-              <Icon name="checkmark" size={22} color={PRIMARY_BLUE} />
-            )}
+            {getIcon(60)}
           </View>
         </TouchableOpacity>
       </View>
@@ -83,16 +91,20 @@ const styles = StyleSheet.create({
   sheetListContainer: {
     flex: 1,
     marginTop: -10,
+    paddingHorizontal: 20,
+  },
+  closeButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   sheetTitle: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
     paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   rowWrapper: {
-    marginHorizontal: 32,
+    marginHorizontal: 12,
   },
   withBorderBottom: {
     borderBottomWidth: 1,

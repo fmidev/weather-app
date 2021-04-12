@@ -32,8 +32,21 @@
     "layersButtonAccessibilityLabel": "Näytä karttatasojen valinnat",
     "playButtonAccessibilityLabel": "Animoi ajanjakso kartalla",
     "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta",
-    "timeStepBottomSheetTitle": "Aikajanan aika-akseli",
-    "timeStepBottomSheetCloseAccessibilityLabel": "Sulje aika-askeleen valinta"
+    "timeStepBottomSheet": {
+      "title": "Aikajanan aika-akseli",
+      "closeAccessibilityLabel": "Sulje aika-askeleen valinta"
+    },
+    "layersBottomSheet": {
+      "closeAccessibilityLabel": "Sulje karttatasojen valinnat",
+      "locationTitle": "Oma sijainti",
+      "locationHint": "Näytä oma sijainti kartalla",
+      "localWeatherTitle": "Paikkakuntasää",
+      "showOnMap": "Näytä kartalla",
+      "temperatureAndWeather": "Lämpötila ja sää",
+      "precipitationAndPropability": "Sademäärä ja todennäköisyys",
+      "mapLayersTitle": "Karttatasot",
+      "rainRadar": "Sadetutka"
+    }
   },
   "symbols": {
     "1": "selkeää",

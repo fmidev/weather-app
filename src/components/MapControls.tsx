@@ -9,9 +9,13 @@ import { PRIMARY_BLUE, WHITE } from '../utils/colors';
 
 type MapControlsProps = {
   onTimeStepPressed: () => void;
+  onLayersPressed: () => void;
 };
 
-const MapControls: React.FC<MapControlsProps> = ({ onTimeStepPressed }) => {
+const MapControls: React.FC<MapControlsProps> = ({
+  onTimeStepPressed,
+  onLayersPressed,
+}) => {
   const { t } = useTranslation();
   return (
     <>
@@ -34,7 +38,7 @@ const MapControls: React.FC<MapControlsProps> = ({ onTimeStepPressed }) => {
       <MapButton
         style={[styles.mapButton, styles.layersButton]}
         accessibilityLabel={t('map:searchButtonAccessibilityLabel')}
-        onPress={() => console.log('layers button pressed')}
+        onPress={onLayersPressed}
         icon="layers-outline"
         iconColor={PRIMARY_BLUE}
         iconSize={26}

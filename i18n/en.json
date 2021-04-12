@@ -32,8 +32,21 @@
     "layersButtonAccessibilityLabel": "Show map layer selection",
     "playButtonAccessibilityLabel": "Animate time range on map",
     "selectionButtonAccessibilityLabel": "Show slider time step selection",
-    "timeStepBottomSheetTitle": "Slider time step",
-    "timeStepBottomSheetCloseAccessibilityLabel": "Close slider time step selection"
+    "timeStepBottomSheet": {
+      "title": "Slider time step",
+      "closeAccessibilityLabel": "Close slider time step selection"
+    },
+    "layersBottomSheet": {
+      "closeAccessibilityLabel": "Close map layers selection",
+      "locationTitle": "Your location",
+      "locationHint": "Show location on map",
+      "localWeatherTitle": "Local weather",
+      "showOnMap": "Show on map",
+      "temperatureAndWeather": "Temperature and weather",
+      "precipitationAndPropability": "Precipitation and propability",
+      "mapLayersTitle": "Map layers",
+      "rainRadar": "Rain radar"
+    }
   },
   "symbols": {
     "1": "clear",
