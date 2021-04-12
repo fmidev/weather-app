@@ -46,6 +46,15 @@
       "precipitationAndPropability": "Sademäärä ja todennäköisyys",
       "mapLayersTitle": "Karttatasot",
       "rainRadar": "Sadetutka"
+    },
+    "infoBottomSheet": {
+      "closeAccessibilityLabel": "Sulje kartan selitteet",
+      "weatherSymbolsTitle": "Säämerkit",
+      "rainRadarTitle": "Sadetutka",
+      "light": "Heikkoa",
+      "strong": "Rankkaa",
+      "showMore": "Näytä lisää",
+      "showLess": "Näytä vähemmän"
     }
   },
   "symbols": {

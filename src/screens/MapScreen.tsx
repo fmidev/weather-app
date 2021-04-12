@@ -7,6 +7,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import MapControls from '../components/MapControls';
 import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
 import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
+import InfoBottomSheet from '../components/InfoBottomSheet';
 
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
@@ -37,6 +38,8 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
   const [region, setRegion] = useState<Region | undefined>(undefined);
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+
   useEffect(() => {
     if (geolocation) {
       setRegion({ ...INITIAL_ZOOM, ...geolocation });
@@ -54,14 +57,18 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
       <MapControls
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
+        onInfoPressed={() => infoSheetRef.current.open()}
       />
+
       <RBSheet
-        ref={timeStepSheetRef}
-        height={300}
+        ref={infoSheetRef}
+        height={600}
         closeOnDragDown
+        dragFromTopOnly
         customStyles={{ container: styles.sheetContainer }}>
-        <TimeStepBottomSheet onClose={() => timeStepSheetRef.current.close()} />
+        <InfoBottomSheet onClose={() => infoSheetRef.current.close()} />
       </RBSheet>
+
       <RBSheet
         ref={mapLayersSheetRef}
         height={600}
@@ -70,6 +77,14 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
         <MapLayersBottomSheet
           onClose={() => mapLayersSheetRef.current.close()}
         />
+      </RBSheet>
+
+      <RBSheet
+        ref={timeStepSheetRef}
+        height={300}
+        closeOnDragDown
+        customStyles={{ container: styles.sheetContainer }}>
+        <TimeStepBottomSheet onClose={() => timeStepSheetRef.current.close()} />
       </RBSheet>
     </SafeAreaView>
   );

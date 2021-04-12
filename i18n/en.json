@@ -46,6 +46,15 @@
       "precipitationAndPropability": "Precipitation and propability",
       "mapLayersTitle": "Map layers",
       "rainRadar": "Rain radar"
+    },
+    "infoBottomSheet": {
+      "closeAccessibilityLabel": "Close map legend",
+      "weatherSymbolsTitle": "Weather symbols",
+      "rainRadarTitle": "Rain radar",
+      "light": "Light",
+      "strong": "Heavy",
+      "showMore": "Show more",
+      "showLess": "Show less"
     }
   },
   "symbols": {
