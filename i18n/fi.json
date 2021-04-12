@@ -31,7 +31,8 @@
     "infoButtonAccessibilityLabel": "Näytä kartan selitteet",
     "layersButtonAccessibilityLabel": "Näytä karttatasojen valinnat",
     "playButtonAccessibilityLabel": "Animoi ajanjakso kartalla",
-    "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta"
+    "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta",
+    "timeStepBottomSheetTitle": "Aikajanan aika-akseli"
   },
   "symbols": {
     "1": "selkeää",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import MapButton from './MapButton';
@@ -7,9 +7,12 @@ import TimeSlider from './TimeSlider';
 
 import { PRIMARY_BLUE, WHITE } from '../utils/colors';
 
-const MapControls: React.FC = () => {
-  const { t } = useTranslation();
+type MapControlsProps = {
+  onTimeStepPressed: () => void;
+};
 
+const MapControls: React.FC<MapControlsProps> = ({ onTimeStepPressed }) => {
+  const { t } = useTranslation();
   return (
     <>
       <MapButton
@@ -36,7 +39,7 @@ const MapControls: React.FC = () => {
         iconColor={PRIMARY_BLUE}
         iconSize={26}
       />
-      <TimeSlider />
+      <TimeSlider onTimeStepPressed={onTimeStepPressed} />
     </>
   );
 };
@@ -50,16 +53,23 @@ const styles = StyleSheet.create({
     width: 50,
   },
   searchButton: {
-    top: 82,
+    ...Platform.select({
+      android: {
+        top: 30 + 12,
+      },
+      ios: {
+        top: 30 + 52,
+      },
+    }),
     right: 12,
   },
   infoButton: {
     right: 12,
-    bottom: 180,
+    bottom: 30 + 150,
   },
   layersButton: {
     right: 12,
-    bottom: 120,
+    bottom: 30 + 90,
   },
 });
 

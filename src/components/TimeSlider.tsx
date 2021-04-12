@@ -1,8 +1,12 @@
 import React from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
+
+import { State } from '../store/types';
+import { selectSliderStep } from '../store/map/selectors';
 
 import {
   WHITE,
@@ -11,7 +15,24 @@ import {
   SECONDARY_BLUE,
 } from '../utils/colors';
 
-const TimeSlider: React.FC = () => {
+const mapStateToProps = (state: State) => ({
+  sliderStep: selectSliderStep(state),
+});
+
+const mapDispatchToProps = {};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type TimeSliderProps = PropsFromRedux & {
+  onTimeStepPressed: () => void;
+};
+
+const TimeSlider: React.FC<TimeSliderProps> = ({
+  onTimeStepPressed,
+  sliderStep,
+}) => {
   const { t } = useTranslation();
 
   return (
@@ -35,13 +56,13 @@ const TimeSlider: React.FC = () => {
             minimumTrackTintColor={SECONDARY_BLUE}
           />
         </View>
-        <View style={styles.stepSelector}>
-          <TouchableOpacity
-            onPress={() => console.log('should open step selection')}
-            accessibilityLabel={t('map:selectionButtonAccessibilityLabel')}>
-            <Text style={styles.text}>60 min</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={onTimeStepPressed}
+          accessibilityLabel={t('map:selectionButtonAccessibilityLabel')}>
+          <View style={styles.stepSelector}>
+            <Text style={styles.text}>{`${sliderStep} min`}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -96,4 +117,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TimeSlider;
+export default connector(TimeSlider);
