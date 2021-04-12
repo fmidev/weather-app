@@ -32,7 +32,8 @@
     "layersButtonAccessibilityLabel": "Show map layer selection",
     "playButtonAccessibilityLabel": "Animate time range on map",
     "selectionButtonAccessibilityLabel": "Show slider time step selection",
-    "timeStepBottomSheetTitle": "Slider time step"
+    "timeStepBottomSheetTitle": "Slider time step",
+    "timeStepBottomSheetCloseAccessibilityLabel": "Close slider time step selection"
   },
   "symbols": {
     "1": "clear",

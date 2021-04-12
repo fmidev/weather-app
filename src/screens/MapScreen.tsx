@@ -55,7 +55,7 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
         height={300}
         closeOnDragDown
         customStyles={{ container: styles.sheetContainer }}>
-        <TimeStepBottomSheet />
+        <TimeStepBottomSheet onClose={() => timeStepSheetRef.current.close()} />
       </RBSheet>
     </SafeAreaView>
   );

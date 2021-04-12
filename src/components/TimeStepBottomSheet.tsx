@@ -4,6 +4,8 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import CloseButton from './CloseButton';
+
 import { State } from '../store/types';
 import { selectSliderStep } from '../store/map/selectors';
 import { updateSliderStep as updateSliderStepAction } from '../store/map/actions';
@@ -22,9 +24,12 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type Props = PropsFromRedux;
+type TimeStepBottomSheetProps = PropsFromRedux & {
+  onClose: () => void;
+};
 
-const TimeStepBottomSheet: React.FC<Props> = ({
+const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
+  onClose,
   sliderStep,
   updateSliderStep,
 }) => {
@@ -33,6 +38,12 @@ const TimeStepBottomSheet: React.FC<Props> = ({
     <View style={styles.sheetListContainer}>
       <View style={styles.sheetTitle}>
         <Text style={styles.title}>{t('map:timeStepBottomSheetTitle')}</Text>
+        <CloseButton
+          onPress={onClose}
+          accessibilityLabel={t(
+            'map:timeStepBottomSheetCloseAccessibilityLabel'
+          )}
+        />
       </View>
       <View style={[styles.rowWrapper, styles.withBorderBottom]}>
         <TouchableOpacity onPress={() => updateSliderStep(15)}>
@@ -71,12 +82,14 @@ const TimeStepBottomSheet: React.FC<Props> = ({
 const styles = StyleSheet.create({
   sheetListContainer: {
     flex: 1,
-    paddingTop: 20,
+    marginTop: -10,
   },
   sheetTitle: {
     flexDirection: 'row',
-    paddingLeft: 20,
+    paddingHorizontal: 20,
     paddingBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   rowWrapper: {
     marginHorizontal: 32,
