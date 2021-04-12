@@ -30,7 +30,7 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
     case UPDATE_SLIDER_STEP: {
       return {
         ...state,
-        sliderTime: action.step,
+        sliderStep: action.step,
       };
     }
 

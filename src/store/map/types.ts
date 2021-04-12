@@ -38,6 +38,6 @@ export interface MapLayers {
 export interface MapState {
   mapLayers: MapLayers;
   sliderTime: number;
-  sliderStep: 15 | 30 | 60;
+  sliderStep: number;
   animateToArea: boolean;
 }
