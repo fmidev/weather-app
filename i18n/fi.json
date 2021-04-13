@@ -26,6 +26,37 @@
     "wind": "Tuuli",
     "pressure": "Ilmanpaine"
   },
+  "map": {
+    "searchButtonAccessibilityLabel": "Hae paikkaa",
+    "infoButtonAccessibilityLabel": "Näytä kartan selitteet",
+    "layersButtonAccessibilityLabel": "Näytä karttatasojen valinnat",
+    "playButtonAccessibilityLabel": "Animoi ajanjakso kartalla",
+    "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta",
+    "timeStepBottomSheet": {
+      "title": "Aikajanan aika-akseli",
+      "closeAccessibilityLabel": "Sulje aika-askeleen valinta"
+    },
+    "layersBottomSheet": {
+      "closeAccessibilityLabel": "Sulje karttatasojen valinnat",
+      "locationTitle": "Oma sijainti",
+      "locationHint": "Näytä oma sijainti kartalla",
+      "localWeatherTitle": "Paikkakuntasää",
+      "showOnMap": "Näytä kartalla",
+      "temperatureAndWeather": "Lämpötila ja sää",
+      "precipitationAndPropability": "Sademäärä ja todennäköisyys",
+      "mapLayersTitle": "Karttatasot",
+      "rainRadar": "Sadetutka"
+    },
+    "infoBottomSheet": {
+      "closeAccessibilityLabel": "Sulje kartan selitteet",
+      "weatherSymbolsTitle": "Säämerkit",
+      "rainRadarTitle": "Sadetutka",
+      "light": "Heikkoa",
+      "strong": "Rankkaa",
+      "showMore": "Näytä lisää",
+      "showLess": "Näytä vähemmän"
+    }
+  },
   "symbols": {
     "1": "selkeää",
     "2": "enimmäkseen selkeää",

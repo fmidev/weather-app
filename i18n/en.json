@@ -26,6 +26,37 @@
     "wind": "Wind",
     "pressure": "Pressure"
   },
+  "map": {
+    "searchButtonAccessibilityLabel": "Search location",
+    "infoButtonAccessibilityLabel": "Show map legend",
+    "layersButtonAccessibilityLabel": "Show map layer selection",
+    "playButtonAccessibilityLabel": "Animate time range on map",
+    "selectionButtonAccessibilityLabel": "Show slider time step selection",
+    "timeStepBottomSheet": {
+      "title": "Slider time step",
+      "closeAccessibilityLabel": "Close slider time step selection"
+    },
+    "layersBottomSheet": {
+      "closeAccessibilityLabel": "Close map layers selection",
+      "locationTitle": "Your location",
+      "locationHint": "Show location on map",
+      "localWeatherTitle": "Local weather",
+      "showOnMap": "Show on map",
+      "temperatureAndWeather": "Temperature and weather",
+      "precipitationAndPropability": "Precipitation and propability",
+      "mapLayersTitle": "Map layers",
+      "rainRadar": "Rain radar"
+    },
+    "infoBottomSheet": {
+      "closeAccessibilityLabel": "Close map legend",
+      "weatherSymbolsTitle": "Weather symbols",
+      "rainRadarTitle": "Rain radar",
+      "light": "Light",
+      "strong": "Heavy",
+      "showMore": "Show more",
+      "showLess": "Show less"
+    }
+  },
   "symbols": {
     "1": "clear",
     "2": "mostly clear",
