@@ -64,7 +64,7 @@ export const UNITS: Unit[] = [
       },
       {
         unitId: 4,
-        unitAbb: 'Bft',
+        unitAbb: 'bft',
         unit: 'beaufort',
         unitPrecision: 0,
       },
@@ -132,4 +132,51 @@ export const getDefaultUnits = (): UnitMap | undefined => {
       return { ...res, [name]: unitType };
     }, {});
   return defaultUnits as UnitMap;
+};
+
+export const toPrecision = (
+  unit: string,
+  unitAbb: string,
+  value: number
+): string => {
+  const unitTypes = UNITS.find((u) => u.parameterName === unit)?.unitTypes;
+  if (!unitTypes) return value.toString();
+  const type: UnitType | undefined = unitTypes.find(
+    (t) => t.unitAbb === unitAbb
+  );
+  if (type) return value.toFixed(type.unitPrecision);
+  return value.toString();
+};
+
+// converts given numeric value to corresponding unit abbreviation
+export const converter = (unitAbb: string, value: number): number => {
+  switch (unitAbb) {
+    // temperature
+    case 'F':
+      return value * 1.8 + 32;
+    // precipitation
+    case 'in':
+      return value / 25.4;
+    // wind
+    case 'km/h':
+      return value * 3.6;
+    case 'mph':
+      return value * 2.24;
+    case 'bft':
+      return value * 1.27; // 1 [m/s] = 1.126 840 655 625 3 [Bft]
+    case 'kn':
+      return value * 1.94;
+    // pressure
+    case 'inHg':
+      return value * 0.03;
+    case 'mmHg':
+      return value * 0.75;
+    default:
+      // default values:
+      // temperature: celcius [C]
+      // precipitation: [mm]
+      // wind: meters per second [ms]
+      // pressure: hehtopascal [hPa] = millibascal [mbar]
+      return value;
+  }
 };
