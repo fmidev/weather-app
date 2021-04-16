@@ -26,7 +26,7 @@ interface AddFavorite {
 
 interface DeleteFavorite {
   type: typeof DELETE_FAVORITE;
-  geoid: number;
+  id: number;
 }
 
 interface InitSettings {
@@ -47,10 +47,13 @@ export type SettingsActionTypes =
   | InitSettings
   | UpdateUnits;
 
-export interface Location {
-  geoid: number;
+export type Location = {
   name: string;
-}
+  area: string;
+  lat: number;
+  lon: number;
+  id: number;
+};
 export interface SettingsState {
   favorites: Location[] | [];
   units: UnitMap | undefined;

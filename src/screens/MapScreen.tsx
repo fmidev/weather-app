@@ -3,14 +3,19 @@ import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
 import MapControls from '../components/MapControls';
 import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
 import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
 import InfoBottomSheet from '../components/InfoBottomSheet';
 
+import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
+import { selectAnimateToArea } from '../store/map/selectors';
+import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -26,19 +31,50 @@ const INITIAL_ZOOM = {
 
 const mapStateToProps = (state: State) => ({
   geolocation: selectGeolocation(state),
+  animateToArea: selectAnimateToArea(state),
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = {
+  setAnimateToArea: setAnimateToAreaAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type Props = PropsFromRedux;
+type MapScreenProps = PropsFromRedux & {
+  navigation: StackNavigationProp<MapStackParamList, 'Map'>;
+  route: RouteProp<MapStackParamList, 'Map'>;
+};
 
-const MapScreen: React.FC<Props> = ({ geolocation }) => {
+const MapScreen: React.FC<MapScreenProps> = ({
+  animateToArea,
+  geolocation,
+  navigation,
+  route,
+  setAnimateToArea,
+}) => {
   const [region, setRegion] = useState<Region | undefined>(undefined);
+  const mapRef = useRef() as React.MutableRefObject<MapView>;
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+
+  useEffect(() => {
+    // TODO: needs optimization
+    if (route.params) {
+      // console.log('maybe should animate to searched area', route);
+      const { lat, lon } = route.params;
+      // TODO: should compare if region is close enough, animate if NOT
+      if (animateToArea && lat && lon) {
+        console.log('animate');
+        const location = { latitude: lat, longitude: lon, ...INITIAL_ZOOM };
+        setAnimateToArea(false);
+        setRegion(location);
+        mapRef.current.animateToRegion(location);
+      }
+    }
+  }, [route, animateToArea, setAnimateToArea]);
 
   useEffect(() => {
     if (geolocation) {
@@ -48,6 +84,7 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
   return (
     <SafeAreaView style={styles.mapContainer}>
       <MapView
+        ref={mapRef}
         testID="map"
         style={styles.map}
         initialRegion={INITIAL_REGION}
@@ -58,6 +95,7 @@ const MapScreen: React.FC<Props> = ({ geolocation }) => {
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
+        onSearchPressed={() => navigation.navigate('Search')}
       />
 
       <RBSheet

@@ -29,7 +29,7 @@ export default (
     case DELETE_FAVORITE: {
       return {
         ...state,
-        favorites: state.favorites.filter((f) => f.geoid !== action.geoid),
+        favorites: state.favorites.filter((f) => f.id !== action.id),
       };
     }
 

@@ -81,7 +81,7 @@ export const addFavorite = (newFavorite: Location) => (
     });
 };
 
-export const deleteFavorite = (geoid: number) => (
+export const deleteFavorite = (id: number) => (
   dispatch: Dispatch<SettingsActionTypes>
 ) => {
   getItem(FAVORITES)
@@ -89,9 +89,9 @@ export const deleteFavorite = (geoid: number) => (
       if (data) {
         const currentFavorites = JSON.parse(data);
         const newFavorites = currentFavorites.filter(
-          (f: { geoid: number }) => f.geoid !== geoid
+          (f: { id: number }) => f.id !== id
         );
-        dispatch({ type: DELETE_FAVORITE, geoid });
+        dispatch({ type: DELETE_FAVORITE, id });
         const newFavoritesJSON = JSON.stringify(newFavorites);
         setItem(FAVORITES, newFavoritesJSON);
       }
