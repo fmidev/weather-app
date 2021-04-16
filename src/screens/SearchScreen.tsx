@@ -3,11 +3,9 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   SafeAreaView,
-  ScrollView,
   Text,
   TextInput,
   StyleSheet,
-  TouchableOpacity,
   Keyboard,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -25,15 +23,10 @@ import {
 import { Location } from '../store/settings/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
 
-import IconButton from '../components/IconButton';
+import CollapsibleAreaList from '../components/CollapsibleAreaList';
 
 import { getItem, setItem, RECENT_SEARCHES } from '../utils/async_storage';
-import {
-  PRIMARY_BLUE,
-  WHITE,
-  VERY_LIGHT_BLUE,
-  GRAYISH_BLUE,
-} from '../utils/colors';
+import { PRIMARY_BLUE, WHITE, VERY_LIGHT_BLUE } from '../utils/colors';
 
 const MAX_RECENT_SEARCHES = 10; // TODO: define max number of favorites
 
@@ -135,7 +128,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     setRecentSearches(newRecentSearches);
     setItem(RECENT_SEARCHES, JSON.stringify(newRecentSearches));
   };
-  console.log('locations', locations);
+
+  const isFavorite = (location: Location) =>
+    favorites.length > 0 && favorites.some((f) => f.id === location.id);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBoxContainer}>
@@ -158,207 +154,50 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
       </View>
       <View style={styles.results}>
         {locations.length > 0 && (
-          <>
-            <View
-              style={[
-                styles.resultsHeader,
-                styles.withBorderBottom,
-                styles.listItem,
-              ]}>
-              <Text style={styles.title}>
-                {t('map:searchScreen:searchResults')}
-              </Text>
-            </View>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps="handled">
-              {locations.map((location: Location, i) => (
-                <View
-                  key={location.id}
-                  style={
-                    i + 1 !== locations.length && [styles.withBorderBottom]
-                  }>
-                  <TouchableOpacity
-                    onPress={() => handleSelectLocation(location)}>
-                    <View style={styles.listItem}>
-                      <Text style={styles.resultText}>
-                        {location.area && location.area !== location.name
-                          ? `${location.name}, ${location.area}`
-                          : location.name}
-                      </Text>
-                      <Icon
-                        name="chevron-forward"
-                        size={22}
-                        color={PRIMARY_BLUE}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </ScrollView>
-          </>
+          <CollapsibleAreaList
+            elements={locations}
+            open
+            title={t('map:searchScreen:searchResults')}
+            onSelect={(location) => handleSelectLocation(location)}
+            onIconPress={(location) => {
+              addFavorite(location as Location);
+              setValue('');
+              Keyboard.dismiss();
+            }}
+          />
         )}
         {/^\s*$/.test(value) &&
           locations.length === 0 &&
           recentSearches.length > 0 && (
-            <>
-              <TouchableOpacity
-                onPress={() => setRecentSearchesOpen((prev) => !prev)}>
-                <View style={[styles.resultsHeader, styles.listItem]}>
-                  <Text style={styles.title}>
-                    {t('map:searchScreen:recentSearches')}
-                  </Text>
-                  {recentSearchesOpen ? (
-                    <IconButton
-                      icon="chevron-up"
-                      style={styles.iconStyle}
-                      backgroundColor={WHITE}
-                      iconColor={PRIMARY_BLUE}
-                      iconSize={20}
-                    />
-                  ) : (
-                    <IconButton
-                      icon="chevron-down"
-                      style={styles.iconStyle}
-                      backgroundColor={WHITE}
-                      iconColor={PRIMARY_BLUE}
-                      iconSize={20}
-                    />
-                  )}
-                </View>
-              </TouchableOpacity>
-              {recentSearchesOpen && (
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  style={styles.recentListContainer}>
-                  {recentSearches
-                    .slice(0)
-                    .reverse()
-                    .map((search, i) => (
-                      <View
-                        key={search.id}
-                        style={
-                          i + 1 !== recentSearches.length && [
-                            styles.withBorderBottom,
-                          ]
-                        }>
-                        <View style={styles.listItem}>
-                          <TouchableOpacity
-                            onPress={() => handleSelectLocation(search)}>
-                            <View style={styles.listItem}>
-                              <Text style={styles.resultText}>
-                                {search.area && search.area !== search.name
-                                  ? `${search.name}, ${search.area}`
-                                  : search.name}
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                          {favorites.length > 0 &&
-                          favorites.some((f) => f.id === search.id) ? (
-                            <TouchableOpacity
-                              onPress={() => deleteFavorite(search.id)}>
-                              <View style={styles.actionButtonContainer}>
-                                <IconButton
-                                  icon="remove-outline"
-                                  style={styles.iconStyle}
-                                  backgroundColor={GRAYISH_BLUE}
-                                  iconColor={PRIMARY_BLUE}
-                                  iconSize={20}
-                                />
-                              </View>
-                            </TouchableOpacity>
-                          ) : (
-                            <TouchableOpacity
-                              onPress={() => addFavorite(search)}>
-                              <View style={styles.actionButtonContainer}>
-                                <IconButton
-                                  icon="add-outline"
-                                  style={styles.iconStyle}
-                                  backgroundColor={PRIMARY_BLUE}
-                                  iconColor={WHITE}
-                                  iconSize={20}
-                                />
-                              </View>
-                            </TouchableOpacity>
-                          )}
-                        </View>
-                      </View>
-                    ))}
-                </ScrollView>
-              )}
-            </>
+            <CollapsibleAreaList
+              elements={recentSearches.slice(0).reverse()}
+              open={recentSearchesOpen}
+              onToggle={() => setRecentSearchesOpen((prev) => !prev)}
+              title={t('map:searchScreen:recentSearches')}
+              onSelect={(location) => handleSelectLocation(location)}
+              onIconPress={(location) =>
+                isFavorite(location)
+                  ? deleteFavorite(location.id)
+                  : addFavorite(location)
+              }
+              iconNameGetter={(location) =>
+                isFavorite(location) ? 'remove-outline' : 'add-outline'
+              }
+            />
           )}
-        {/^\s*$/.test(value) && locations.length === 0 && favorites.length > 0 && (
-          <>
-            <TouchableOpacity onPress={() => setFavoritesOpen((prev) => !prev)}>
-              <View
-                style={[
-                  styles.resultsHeader,
-                  styles.withBorderBottom,
-                  styles.listItem,
-                ]}>
-                <Text style={styles.title}>
-                  {t('map:searchScreen:favorites')}
-                </Text>
-                {favoritesOpen ? (
-                  <IconButton
-                    icon="chevron-up"
-                    style={styles.iconStyle}
-                    backgroundColor={WHITE}
-                    iconColor={PRIMARY_BLUE}
-                    iconSize={20}
-                  />
-                ) : (
-                  <IconButton
-                    icon="chevron-down"
-                    style={styles.iconStyle}
-                    backgroundColor={WHITE}
-                    iconColor={PRIMARY_BLUE}
-                    iconSize={20}
-                  />
-                )}
-              </View>
-            </TouchableOpacity>
-            {favoritesOpen && (
-              <ScrollView showsVerticalScrollIndicator={false}>
-                {favorites.map((favorite: Location, i: number) => (
-                  <View
-                    key={favorite.id}
-                    style={
-                      i + 1 !== recentSearches.length && [
-                        styles.withBorderBottom,
-                      ]
-                    }>
-                    <View style={styles.listItem}>
-                      <TouchableOpacity
-                        onPress={() => handleSelectLocation(favorite)}>
-                        <View style={styles.listItem}>
-                          <Text style={styles.resultText}>
-                            {favorite.area && favorite.area !== favorite.name
-                              ? `${favorite.name}, ${favorite.area}`
-                              : favorite.name}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => deleteFavorite(favorite.id)}>
-                        <View style={styles.actionButtonContainer}>
-                          <IconButton
-                            icon="remove-outline"
-                            style={styles.iconStyle}
-                            backgroundColor={GRAYISH_BLUE}
-                            iconColor={PRIMARY_BLUE}
-                            iconSize={20}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                ))}
-              </ScrollView>
-            )}
-          </>
-        )}
+        {/^\s*$/.test(value) &&
+          locations.length === 0 &&
+          favorites.length > 0 && (
+            <CollapsibleAreaList
+              elements={favorites}
+              open={favoritesOpen}
+              onToggle={() => setFavoritesOpen((prev) => !prev)}
+              title={t('map:searchScreen:favorites')}
+              onSelect={(location) => handleSelectLocation(location)}
+              onIconPress={(location) => deleteFavorite(location.id)}
+              iconName="remove-outline"
+            />
+          )}
         {!/^\s*$/.test(value) && locations.length === 0 && (
           <Text>Haku ei tuottanut tuloksia</Text>
         )}
@@ -388,53 +227,10 @@ const styles = StyleSheet.create({
   results: {
     flex: 1,
   },
-  resultsHeader: {
-    height: 48,
-    paddingHorizontal: 16,
-    marginTop: 16,
-    backgroundColor: PRIMARY_BLUE,
-    borderRadius: 8,
-    marginBottom: 2,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: WHITE,
-  },
   input: {
     height: '100%',
     flexGrow: 1,
     paddingVertical: 0,
-  },
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 44,
-  },
-  withBorderBottom: {
-    borderBottomWidth: 1,
-    borderColor: VERY_LIGHT_BLUE,
-  },
-  resultText: {
-    fontSize: 15,
-    height: 18,
-    color: PRIMARY_BLUE,
-    marginLeft: 16,
-  },
-  actionButtonContainer: {
-    width: 50,
-    borderLeftWidth: 1,
-    borderColor: VERY_LIGHT_BLUE,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  recentListContainer: {
-    maxHeight: '45%',
-  },
-  iconStyle: {
-    width: 24,
-    height: 24,
   },
 });
 
