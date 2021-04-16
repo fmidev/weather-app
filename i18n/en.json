@@ -55,6 +55,12 @@
       "strong": "Heavy",
       "showMore": "Show more",
       "showLess": "Show less"
+    },
+    "searchScreen": {
+      "placeholder": "Search location",
+      "recentSearches": "Previous searches",
+      "favorites": "My locations",
+      "searchResults": "Search results"
     }
   },
   "symbols": {

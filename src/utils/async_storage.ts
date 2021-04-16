@@ -4,8 +4,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 export const LOCALE = 'locale';
 export const FAVORITES = 'favorites';
 export const UNITS = 'units';
+export const RECENT_SEARCHES = 'recent_searches';
 
-type StorageKey = typeof LOCALE | typeof FAVORITES | typeof UNITS;
+type StorageKey =
+  | typeof LOCALE
+  | typeof FAVORITES
+  | typeof UNITS
+  | typeof RECENT_SEARCHES;
 
 export const getItem = async (key: StorageKey): Promise<string | null> => {
   try {

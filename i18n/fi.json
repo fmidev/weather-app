@@ -55,6 +55,12 @@
       "strong": "Rankkaa",
       "showMore": "Näytä lisää",
       "showLess": "Näytä vähemmän"
+    },
+    "searchScreen": {
+      "placeholder": "Hae paikkaa",
+      "recentSearches": "Edelliset haut",
+      "favorites": "Omat paikat",
+      "searchResults": "Hakutulokset"
     }
   },
   "symbols": {

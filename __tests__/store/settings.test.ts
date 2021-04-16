@@ -4,8 +4,11 @@ import * as types from '../../src/store/settings/types';
 describe('settings reducer', () => {
   it('should handle ADD_FAVORITE', () => {
     const favorite = {
-      geoid: 123,
+      id: 123,
       name: 'Helsinki',
+      area: 'Helsinki',
+      lat: 12.234,
+      lon: 13.234,
     };
 
     expect(
@@ -21,25 +24,34 @@ describe('settings reducer', () => {
   it('should handle DELETE_FAVORITE', () => {
     const favorites = [
       {
-        geoid: 123,
+        id: 123,
         name: 'Helsinki',
+        area: 'Helsinki',
+        lat: 12.234,
+        lon: 13.234,
       },
       {
-        geoid: 323,
+        id: 323,
         name: 'Oulu',
+        area: 'Oulu',
+        lat: 12.234,
+        lon: 13.234,
       },
     ];
 
     expect(
       reducer(
         { favorites, units: undefined },
-        { type: types.DELETE_FAVORITE, geoid: 123 }
+        { type: types.DELETE_FAVORITE, id: 123 }
       )
     ).toEqual({
       favorites: [
         {
-          geoid: 323,
+          id: 323,
           name: 'Oulu',
+          area: 'Oulu',
+          lat: 12.234,
+          lon: 13.234,
         },
       ],
     });
@@ -48,12 +60,18 @@ describe('settings reducer', () => {
   it('should handle UPDATE_UNITS', () => {
     const favorites = [
       {
-        geoid: 123,
+        id: 123,
         name: 'Helsinki',
+        area: 'Helsinki',
+        lat: 12.234,
+        lon: 13.234,
       },
       {
-        geoid: 323,
+        id: 323,
         name: 'Oulu',
+        area: 'Oulu',
+        lat: 12.234,
+        lon: 13.234,
       },
     ];
 

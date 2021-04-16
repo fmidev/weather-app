@@ -20,7 +20,7 @@ export const updateSliderStep = (step: number) => (
   dispatch({ type: UPDATE_SLIDER_STEP, step });
 };
 
-export const animateToArea = (animate: boolean) => (
+export const setAnimateToArea = (animate: boolean) => (
   dispatch: Dispatch<MapActionTypes>
 ) => {
   dispatch({ type: ANIMATE_TO_AREA, animate });
