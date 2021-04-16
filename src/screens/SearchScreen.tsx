@@ -164,8 +164,24 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               setValue('');
               Keyboard.dismiss();
             }}
+            iconNameGetter={(location) =>
+              isFavorite(location) ? 'remove-outline' : 'add-outline'
+            }
           />
         )}
+        {/^\s*$/.test(value) &&
+          locations.length === 0 &&
+          favorites.length > 0 && (
+            <CollapsibleAreaList
+              elements={favorites}
+              open={favoritesOpen}
+              onToggle={() => setFavoritesOpen((prev) => !prev)}
+              title={t('map:searchScreen:favorites')}
+              onSelect={(location) => handleSelectLocation(location)}
+              onIconPress={(location) => deleteFavorite(location.id)}
+              iconName="remove-outline"
+            />
+          )}
         {/^\s*$/.test(value) &&
           locations.length === 0 &&
           recentSearches.length > 0 && (
@@ -183,19 +199,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               iconNameGetter={(location) =>
                 isFavorite(location) ? 'remove-outline' : 'add-outline'
               }
-            />
-          )}
-        {/^\s*$/.test(value) &&
-          locations.length === 0 &&
-          favorites.length > 0 && (
-            <CollapsibleAreaList
-              elements={favorites}
-              open={favoritesOpen}
-              onToggle={() => setFavoritesOpen((prev) => !prev)}
-              title={t('map:searchScreen:favorites')}
-              onSelect={(location) => handleSelectLocation(location)}
-              onIconPress={(location) => deleteFavorite(location.id)}
-              iconName="remove-outline"
             />
           )}
         {!/^\s*$/.test(value) && locations.length === 0 && (
@@ -226,6 +229,7 @@ const styles = StyleSheet.create({
   },
   results: {
     flex: 1,
+    marginBottom: 10,
   },
   input: {
     height: '100%',
