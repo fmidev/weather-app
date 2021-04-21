@@ -12,16 +12,3 @@ export type OthersStackParamList = {
   Notifications: undefined;
   Symbols: undefined;
 };
-
-type Location = {
-  name: string;
-  area: string;
-  lat: number;
-  lon: number;
-  id: number;
-};
-
-export type MapStackParamList = {
-  Map: Location;
-  Search: undefined;
-};

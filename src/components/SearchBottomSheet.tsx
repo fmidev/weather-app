@@ -1,19 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  View,
-  SafeAreaView,
-  Text,
-  TextInput,
-  StyleSheet,
-  Keyboard,
-} from 'react-native';
+import { View, Text, TextInput, StyleSheet, Keyboard } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { StackNavigationProp } from '@react-navigation/stack';
 import Config from 'react-native-config';
 
-import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
 import { selectFavorites } from '../store/settings/selectors';
 import {
@@ -22,11 +13,13 @@ import {
 } from '../store/settings/actions';
 import { Location } from '../store/settings/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
+import { setActiveLocation as setActiveLocationAction } from '../store/general/actions';
 
-import CollapsibleAreaList from '../components/CollapsibleAreaList';
+import CollapsibleAreaList from './CollapsibleAreaList';
+import CloseButton from './CloseButton';
 
 import { getItem, setItem, RECENT_SEARCHES } from '../utils/async_storage';
-import { PRIMARY_BLUE, WHITE, VERY_LIGHT_BLUE } from '../utils/colors';
+import { PRIMARY_BLUE, VERY_LIGHT_BLUE } from '../utils/colors';
 
 const MAX_RECENT_SEARCHES = 10; // TODO: define max number of favorites
 
@@ -38,6 +31,7 @@ const mapDispatchToProps = {
   addFavorite: addFavoriteAction,
   deleteFavorite: deleteFavoriteAction,
   setAnimateToArea: setAnimateToAreaAction,
+  setActiveLocation: setActiveLocationAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -45,7 +39,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SearchScreenProps = PropsFromRedux & {
-  navigation: StackNavigationProp<MapStackParamList, 'Search'>;
+  onClose: () => void;
+  onLocationSelect?: () => void;
 };
 
 const SearchScreen: React.FC<SearchScreenProps> = ({
@@ -53,7 +48,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   addFavorite,
   deleteFavorite,
   setAnimateToArea,
-  navigation,
+  setActiveLocation,
+  onClose,
+  onLocationSelect,
 }) => {
   const { t } = useTranslation();
   const [value, setValue] = useState('');
@@ -81,7 +78,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   }, [value]);
 
   const locationQuery = (text: string) => {
-    if (!text) {
+    // no need to fetch if text is empty or whitespace
+    if (!text || /^\s*$/.test(text)) {
       setLocations([]);
       return;
     }
@@ -118,8 +116,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     setValue('');
     const { name, area, lat, lon, id } = location;
     const searchObj = { name, area, lat, lon, id };
-    // navigate to MapScreen with params
-    navigation.navigate('Map', searchObj);
+    setActiveLocation(searchObj);
     const newRecentSearches = recentSearches
       .filter((search) => search.id !== id)
       .concat(searchObj)
@@ -127,13 +124,23 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
 
     setRecentSearches(newRecentSearches);
     setItem(RECENT_SEARCHES, JSON.stringify(newRecentSearches));
+    if (onLocationSelect) onLocationSelect();
+    onClose();
   };
 
   const isFavorite = (location: Location) =>
     favorites.length > 0 && favorites.some((f) => f.id === location.id);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.closeButtonContainer}>
+        <CloseButton
+          onPress={onClose}
+          accessibilityLabel={t(
+            'map:searchBottomSheet:closeAccessibilityLabel'
+          )}
+        />
+      </View>
       <View style={styles.searchBoxContainer}>
         <Icon
           name="search-outline"
@@ -145,7 +152,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           style={styles.input}
           autoCorrect={false}
           maxLength={40}
-          placeholder={t('map:searchScreen:placeholder')}
+          placeholder={t('map:searchBottomSheet:placeholder')}
           placeholderTextColor={PRIMARY_BLUE}
           value={value}
           onChangeText={(text) => setValue(text)}
@@ -157,7 +164,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           <CollapsibleAreaList
             elements={locations}
             open
-            title={t('map:searchScreen:searchResults')}
+            title={t('map:searchBottomSheet:searchResults')}
             onSelect={(location) => handleSelectLocation(location)}
             onIconPress={(location) => {
               addFavorite(location as Location);
@@ -176,7 +183,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               elements={favorites}
               open={favoritesOpen}
               onToggle={() => setFavoritesOpen((prev) => !prev)}
-              title={t('map:searchScreen:favorites')}
+              title={t('map:searchBottomSheet:favorites')}
               onSelect={(location) => handleSelectLocation(location)}
               onIconPress={(location) => deleteFavorite(location.id)}
               iconName="remove-outline"
@@ -189,7 +196,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               elements={recentSearches.slice(0).reverse()}
               open={recentSearchesOpen}
               onToggle={() => setRecentSearchesOpen((prev) => !prev)}
-              title={t('map:searchScreen:recentSearches')}
+              title={t('map:searchBottomSheet:recentSearches')}
               onSelect={(location) => handleSelectLocation(location)}
               onIconPress={(location) =>
                 isFavorite(location)
@@ -205,15 +212,19 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           <Text>Haku ei tuottanut tuloksia</Text>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: WHITE,
+    marginTop: -10,
     paddingHorizontal: 20,
+  },
+  closeButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   searchBoxContainer: {
     height: 48,

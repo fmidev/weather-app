@@ -56,7 +56,8 @@
       "showMore": "Näytä lisää",
       "showLess": "Näytä vähemmän"
     },
-    "searchScreen": {
+    "searchBottomSheet": {
+      "closeAccessibilityLabel": "Sulje haku",
       "placeholder": "Hae paikkaa",
       "recentSearches": "Edelliset haut",
       "favorites": "Omat paikat",

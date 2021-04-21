@@ -3,17 +3,18 @@ import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
 
 import MapControls from '../components/MapControls';
 import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
 import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
 import InfoBottomSheet from '../components/InfoBottomSheet';
+import SearchBottomSheet from '../components/SearchBottomSheet';
 
-import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
-import { selectGeolocation } from '../store/general/selectors';
+import {
+  selectGeolocation,
+  selectActiveLocation,
+} from '../store/general/selectors';
 import { selectAnimateToArea } from '../store/map/selectors';
 import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
 
@@ -31,6 +32,7 @@ const INITIAL_ZOOM = {
 
 const mapStateToProps = (state: State) => ({
   geolocation: selectGeolocation(state),
+  activeLocation: selectActiveLocation(state),
   animateToArea: selectAnimateToArea(state),
 });
 
@@ -42,16 +44,12 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type MapScreenProps = PropsFromRedux & {
-  navigation: StackNavigationProp<MapStackParamList, 'Map'>;
-  route: RouteProp<MapStackParamList, 'Map'>;
-};
+type MapScreenProps = PropsFromRedux;
 
 const MapScreen: React.FC<MapScreenProps> = ({
+  activeLocation,
   animateToArea,
   geolocation,
-  navigation,
-  route,
   setAnimateToArea,
 }) => {
   const [region, setRegion] = useState<Region | undefined>(undefined);
@@ -59,28 +57,21 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-
-  useEffect(() => {
-    // TODO: needs optimization
-    if (route.params) {
-      // console.log('maybe should animate to searched area', route);
-      const { lat, lon } = route.params;
-      // TODO: should compare if region is close enough, animate if NOT
-      if (animateToArea && lat && lon) {
-        console.log('animate');
-        const location = { latitude: lat, longitude: lon, ...INITIAL_ZOOM };
-        setAnimateToArea(false);
-        setRegion(location);
-        mapRef.current.animateToRegion(location);
-      }
-    }
-  }, [route, animateToArea, setAnimateToArea]);
+  const searchSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   useEffect(() => {
     if (geolocation) {
       setRegion({ ...INITIAL_ZOOM, ...geolocation });
     }
   }, [geolocation]);
+
+  useEffect(() => {
+    if (activeLocation && animateToArea) {
+      const { lat, lon } = activeLocation;
+      setRegion({ ...INITIAL_ZOOM, latitude: lat, longitude: lon });
+      setAnimateToArea(false);
+    }
+  }, [activeLocation, animateToArea, setAnimateToArea]);
   return (
     <SafeAreaView style={styles.mapContainer}>
       <MapView
@@ -95,8 +86,21 @@ const MapScreen: React.FC<MapScreenProps> = ({
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
-        onSearchPressed={() => navigation.navigate('Search')}
+        onSearchPressed={() => searchSheetRef.current.open()}
       />
+
+      <RBSheet
+        ref={searchSheetRef}
+        height={800}
+        closeOnDragDown
+        dragFromTopOnly
+        customStyles={{ container: styles.sheetContainer }}
+        keyboardAvoidingViewEnabled={false}>
+        <SearchBottomSheet
+          onClose={() => searchSheetRef.current.close()}
+          onLocationSelect={() => setAnimateToArea(true)}
+        />
+      </RBSheet>
 
       <RBSheet
         ref={infoSheetRef}

@@ -1,7 +1,13 @@
-import { SET_GEOLOCATION, GeneralActionTypes, GeneralState } from './types';
+import {
+  SET_GEOLOCATION,
+  SET_ACTIVE_LOCATION,
+  GeneralActionTypes,
+  GeneralState,
+} from './types';
 
 const INITIAL_STATE: GeneralState = {
   geolocation: undefined,
+  activeLocation: undefined,
 };
 
 export default (
@@ -13,6 +19,12 @@ export default (
       return {
         ...state,
         geolocation: action.geolocation,
+      };
+
+    case SET_ACTIVE_LOCATION:
+      return {
+        ...state,
+        activeLocation: action.location,
       };
 
     default: {

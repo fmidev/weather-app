@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, Platform, StyleSheet } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -14,7 +14,6 @@ import OthersScreen from '../screens/OthersScreen';
 import MapScreen from '../screens/MapScreen';
 import SymbolsScreen from '../screens/SymbolsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import SearchScreen from '../screens/SearchScreen';
 
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
@@ -22,7 +21,6 @@ import { setGeolocation as setGeolocationAction } from '../store/general/actions
 import { initSettings as initSettingsAction } from '../store/settings/actions';
 
 import { TabParamList, OthersStackParamList } from './types';
-import { PRIMARY_BLUE } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
   geolocation: selectGeolocation(state),
@@ -128,24 +126,6 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
         name="Map"
         component={MapScreen}
         options={{ headerShown: false }}
-      />
-      <MapStack.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{
-          headerBackTitleVisible: false,
-          headerTitle: '',
-          headerStyle: { shadowColor: 'transparent' },
-          headerTintColor: PRIMARY_BLUE,
-          headerBackImage: ({ tintColor }) => (
-            <Icon
-              name="arrow-back-outline"
-              color={tintColor}
-              size={26}
-              style={styles.headerBackButton}
-            />
-          ),
-        }}
       />
     </MapStack.Navigator>
   );
@@ -257,11 +237,4 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  headerBackButton: {
-    marginLeft: 20,
-  },
-});
-
 export default connector(Navigator);
