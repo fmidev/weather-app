@@ -4,9 +4,11 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 
 import { State } from '../store/types';
-import { selectSliderStep } from '../store/map/selectors';
+import { selectSliderStep, selectSliderTime } from '../store/map/selectors';
+import { updateSliderTime as updateSliderTimeAction } from '../store/map/actions';
 
 import {
   WHITE,
@@ -17,9 +19,12 @@ import {
 
 const mapStateToProps = (state: State) => ({
   sliderStep: selectSliderStep(state),
+  sliderTime: selectSliderTime(state),
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  updateSliderTime: updateSliderTimeAction,
+};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -29,11 +34,56 @@ type TimeSliderProps = PropsFromRedux & {
   onTimeStepPressed: () => void;
 };
 
+// 60 minutes = 3600 seconds
+const STEP_60 = 3600;
+// 30 minutes = 1800 seconds
+const STEP_30 = 1800;
+// 15 minutes = 900 seconds
+const STEP_15 = 900;
+
 const TimeSlider: React.FC<TimeSliderProps> = ({
   onTimeStepPressed,
   sliderStep,
+  sliderTime,
+  updateSliderTime,
 }) => {
   const { t } = useTranslation();
+
+  const currentSliderTime = moment.unix(sliderTime).format('HH:mm');
+
+  const now = moment.utc().unix();
+
+  const getSliderMaxUnix = () => {
+    if (sliderStep === 60) {
+      return now + 5 * STEP_60;
+    }
+    if (sliderStep === 30) {
+      return now + 5 * STEP_30;
+    }
+    return now + 5 * STEP_15;
+  };
+
+  const getSliderMinUnix = () => {
+    if (sliderStep === 60) {
+      return now - 5 * STEP_60;
+    }
+    if (sliderStep === 30) {
+      return now - 5 * STEP_30;
+    }
+    return now - 18 * STEP_15;
+  };
+
+  const getStepSeconds = () => {
+    if (sliderStep === 60) return STEP_60;
+    if (sliderStep === 30) return STEP_30;
+    return STEP_15;
+  };
+
+  const min = getSliderMinUnix();
+  const max = getSliderMaxUnix();
+  const step = getStepSeconds();
+
+  const roundStep = (v: number) => Math.round(v / step) * step;
 
   return (
     <View style={styles.wrapper}>
@@ -47,13 +97,16 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         </View>
         <View style={styles.sliderWrapper}>
           <View style={styles.value}>
-            <Text style={styles.text}>9:15</Text>
+            <Text style={styles.text}>{currentSliderTime}</Text>
           </View>
           <Slider
-            onValueChange={(v) => console.log(v)}
-            onSlidingComplete={(v) => console.log(v)}
+            onValueChange={(v) => updateSliderTime(roundStep(v))}
             thumbTintColor={WHITE}
             minimumTrackTintColor={SECONDARY_BLUE}
+            step={step}
+            minimumValue={min}
+            maximumValue={max}
+            value={sliderTime}
           />
         </View>
         <TouchableOpacity

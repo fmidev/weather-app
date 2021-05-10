@@ -7,6 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
 import MapControls from '../components/MapControls';
+import RainRadarOverlay from '../components/RainRadarOverlay';
 import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
 import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
 import InfoBottomSheet from '../components/InfoBottomSheet';
@@ -14,7 +15,7 @@ import InfoBottomSheet from '../components/InfoBottomSheet';
 import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
-import { selectAnimateToArea } from '../store/map/selectors';
+import { selectAnimateToArea, selectSliderTime } from '../store/map/selectors';
 import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
 
 const INITIAL_REGION = {
@@ -32,6 +33,7 @@ const INITIAL_ZOOM = {
 const mapStateToProps = (state: State) => ({
   geolocation: selectGeolocation(state),
   animateToArea: selectAnimateToArea(state),
+  sliderTime: selectSliderTime(state),
 });
 
 const mapDispatchToProps = {
@@ -81,6 +83,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
       setRegion({ ...INITIAL_ZOOM, ...geolocation });
     }
   }, [geolocation]);
+
   return (
     <SafeAreaView style={styles.mapContainer}>
       <MapView
@@ -90,7 +93,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
         initialRegion={INITIAL_REGION}
         region={region}
         onRegionChangeComplete={(r) => setRegion(r)}
-      />
+        rotateEnabled={false}>
+        <RainRadarOverlay />
+      </MapView>
       <MapControls
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
