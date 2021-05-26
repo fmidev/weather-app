@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Image, ImageURISource, Platform } from 'react-native';
-import { Overlay, WMSTile } from 'react-native-maps';
+import { Overlay } from 'react-native-maps';
 import moment from 'moment';
 
 import Config from 'react-native-config';
