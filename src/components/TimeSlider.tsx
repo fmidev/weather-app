@@ -11,6 +11,12 @@ import { selectSliderStep, selectSliderTime } from '../store/map/selectors';
 import { updateSliderTime as updateSliderTimeAction } from '../store/map/actions';
 
 import {
+  getSliderMaxUnix,
+  getSliderMinUnix,
+  getSliderStepSeconds,
+} from '../utils/helpers';
+
+import {
   WHITE,
   VERY_LIGHT_BLUE,
   PRIMARY_BLUE,
@@ -34,13 +40,6 @@ type TimeSliderProps = PropsFromRedux & {
   onTimeStepPressed: () => void;
 };
 
-// 60 minutes = 3600 seconds
-const STEP_60 = 3600;
-// 30 minutes = 1800 seconds
-const STEP_30 = 1800;
-// 15 minutes = 900 seconds
-const STEP_15 = 900;
-
 const TimeSlider: React.FC<TimeSliderProps> = ({
   onTimeStepPressed,
   sliderStep,
@@ -51,39 +50,11 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const currentSliderTime = moment.unix(sliderTime).format('HH:mm');
 
-  const now = moment.utc().unix();
+  const min = getSliderMinUnix(sliderStep);
+  const max = getSliderMaxUnix(sliderStep);
+  const step = getSliderStepSeconds(sliderStep);
 
-  const getSliderMaxUnix = () => {
-    if (sliderStep === 60) {
-      return now + 5 * STEP_60;
-    }
-    if (sliderStep === 30) {
-      return now + 5 * STEP_30;
-    }
-    return now + 5 * STEP_15;
-  };
-
-  const getSliderMinUnix = () => {
-    if (sliderStep === 60) {
-      return now - 5 * STEP_60;
-    }
-    if (sliderStep === 30) {
-      return now - 5 * STEP_30;
-    }
-    return now - 18 * STEP_15;
-  };
-
-  const getStepSeconds = () => {
-    if (sliderStep === 60) return STEP_60;
-    if (sliderStep === 30) return STEP_30;
-    return STEP_15;
-  };
-
-  const min = getSliderMinUnix();
-  const max = getSliderMaxUnix();
-  const step = getStepSeconds();
-
-  const roundStep = (v: number) => Math.round(v / step) * step;
+  const roundStep = (v: number): number => Math.round(v / step) * step;
 
   return (
     <View style={styles.wrapper}>
