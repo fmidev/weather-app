@@ -7,6 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
 import MapControls from '../components/MapControls';
+import RainRadarOverlay from '../components/RainRadarOverlay';
 import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
 import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
 import InfoBottomSheet from '../components/InfoBottomSheet';
@@ -67,7 +68,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
       const { lat, lon } = route.params;
       // TODO: should compare if region is close enough, animate if NOT
       if (animateToArea && lat && lon) {
-        console.log('animate');
         const location = { latitude: lat, longitude: lon, ...INITIAL_ZOOM };
         setAnimateToArea(false);
         setRegion(location);
@@ -77,10 +77,16 @@ const MapScreen: React.FC<MapScreenProps> = ({
   }, [route, animateToArea, setAnimateToArea]);
 
   useEffect(() => {
-    if (geolocation) {
+    if (
+      geolocation &&
+      region?.latitude !== geolocation.latitude &&
+      region?.longitude !== geolocation.longitude
+    ) {
       setRegion({ ...INITIAL_ZOOM, ...geolocation });
     }
-  }, [geolocation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <SafeAreaView style={styles.mapContainer}>
       <MapView
@@ -89,8 +95,11 @@ const MapScreen: React.FC<MapScreenProps> = ({
         style={styles.map}
         initialRegion={INITIAL_REGION}
         region={region}
-        onRegionChangeComplete={(r) => setRegion(r)}
-      />
+        // TODO: causes weird panning behavior
+        // onRegionChangeComplete={(r) => setRegion(r)}
+        rotateEnabled={false}>
+        <RainRadarOverlay />
+      </MapView>
       <MapControls
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}

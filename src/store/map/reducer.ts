@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   UPDATE_MAP_LAYERS,
   UPDATE_SLIDER_TIME,
@@ -13,7 +14,7 @@ const INITIAL_STATE: MapState = {
     weather: true,
     radar: false,
   },
-  sliderTime: 0,
+  sliderTime: moment.utc().startOf('hour').unix(),
   sliderStep: 60,
   animateToArea: false,
 };
