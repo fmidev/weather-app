@@ -3,7 +3,7 @@ import reducer from '../../src/store/map/reducer';
 import * as types from '../../src/store/map/types';
 
 describe('map reducer', () => {
-  const sliderTime = moment.utc().unix();
+  const sliderTime = moment.utc().startOf('hour').unix();
   const initial: types.MapState = {
     mapLayers: {
       userLocation: false,
