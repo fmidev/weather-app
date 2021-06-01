@@ -49,11 +49,7 @@ const MapScreen: React.FC<MapScreenProps> = ({ geolocation, navigation }) => {
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   useEffect(() => {
-    if (
-      geolocation &&
-      region?.latitude !== geolocation.latitude &&
-      region?.longitude !== geolocation.longitude
-    ) {
+    if (geolocation) {
       setRegion({ ...INITIAL_ZOOM, ...geolocation });
     }
   }, [geolocation, region]);
