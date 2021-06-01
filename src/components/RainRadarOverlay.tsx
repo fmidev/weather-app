@@ -32,8 +32,8 @@ const BOUNDS = {
   topLeft: [70.98305999744711, 16.86743001103862], // top left, max ly, min x
 } as { [key: string]: [number, number] };
 
-const OBSERVATION_URL = `http://wms.fmi.fi/fmi-apikey/${Config.API_KEY}/geoserver/Radar/wms?service=WMS&styles=&transparent=true&version=1.1.0&request=GetMap&layers=Radar%3Asuomi_rr_eureffin&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
-const FORECAST_URL = `http://wms.fmi.fi/fmi-apikey/${Config.API_KEY}/geoserver/Radar/wms?service=WMS&styles=&transparent=true&version=1.1.0&request=GetMap&layers=Radar%3Asuomi_tuliset_rr_eureffin&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
+const OBSERVATION_URL = `https://wms.fmi.fi/fmi-apikey/${Config.API_KEY}/geoserver/Radar/wms?service=WMS&styles=&transparent=true&version=1.1.0&request=GetMap&layers=Radar%3Asuomi_rr_eureffin&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
+const FORECAST_URL = `https://wms.fmi.fi/fmi-apikey/${Config.API_KEY}/geoserver/Radar/wms?service=WMS&styles=&transparent=true&version=1.1.0&request=GetMap&layers=Radar%3Asuomi_tuliset_rr_eureffin&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
 
 const RainRadarOverlay: React.FC<RainRadarProps> = ({ sliderTime }) => {
   const [hasPrefetched, setHasPrefetched] = useState<boolean>(false);
@@ -101,8 +101,9 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({ sliderTime }) => {
 
   const image = `${baseUrl}&time=${current}` as ImageURISource;
 
+  // wait until images are cached
   if (!hasPrefetched) return null;
-  console.log(image);
+
   return <Overlay bounds={bounds} image={image} />;
 };
 

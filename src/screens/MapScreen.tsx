@@ -15,8 +15,6 @@ import InfoBottomSheet from '../components/InfoBottomSheet';
 import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
-import { selectAnimateToArea, selectSliderTime } from '../store/map/selectors';
-import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -32,15 +30,9 @@ const INITIAL_ZOOM = {
 
 const mapStateToProps = (state: State) => ({
   geolocation: selectGeolocation(state),
-  animateToArea: selectAnimateToArea(state),
-  sliderTime: selectSliderTime(state),
 });
 
-const mapDispatchToProps = {
-  setAnimateToArea: setAnimateToAreaAction,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -49,13 +41,7 @@ type MapScreenProps = PropsFromRedux & {
   route: RouteProp<MapStackParamList, 'Map'>;
 };
 
-const MapScreen: React.FC<MapScreenProps> = ({
-  animateToArea,
-  geolocation,
-  navigation,
-  route,
-  setAnimateToArea,
-}) => {
+const MapScreen: React.FC<MapScreenProps> = ({ geolocation, navigation }) => {
   const [region, setRegion] = useState<Region | undefined>(undefined);
   const mapRef = useRef() as React.MutableRefObject<MapView>;
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
@@ -63,26 +49,14 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   useEffect(() => {
-    // TODO: needs optimization
-    if (route.params) {
-      // console.log('maybe should animate to searched area', route);
-      const { lat, lon } = route.params;
-      // TODO: should compare if region is close enough, animate if NOT
-      if (animateToArea && lat && lon) {
-        console.log('animate');
-        const location = { latitude: lat, longitude: lon, ...INITIAL_ZOOM };
-        setAnimateToArea(false);
-        setRegion(location);
-        mapRef.current.animateToRegion(location);
-      }
-    }
-  }, [route, animateToArea, setAnimateToArea]);
-
-  useEffect(() => {
-    if (geolocation) {
+    if (
+      geolocation &&
+      region?.latitude !== geolocation.latitude &&
+      region?.longitude !== geolocation.longitude
+    ) {
       setRegion({ ...INITIAL_ZOOM, ...geolocation });
     }
-  }, [geolocation]);
+  }, [geolocation, region]);
 
   return (
     <SafeAreaView style={styles.mapContainer}>
@@ -92,7 +66,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
         style={styles.map}
         initialRegion={INITIAL_REGION}
         region={region}
-        onRegionChangeComplete={(r) => setRegion(r)}
+        // TODO: causes weird panning behavior
+        // onRegionChangeComplete={(r) => setRegion(r)}
         rotateEnabled={false}>
         <RainRadarOverlay />
       </MapView>

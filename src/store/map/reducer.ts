@@ -14,7 +14,7 @@ const INITIAL_STATE: MapState = {
     weather: true,
     radar: false,
   },
-  sliderTime: moment.utc().unix(),
+  sliderTime: moment.utc().startOf('hour').unix(),
   sliderStep: 60,
   animateToArea: false,
 };
