@@ -51,7 +51,6 @@ type MapScreenProps = PropsFromRedux & {
 const MapScreen: React.FC<MapScreenProps> = ({
   animateToArea,
   geolocation,
-  navigation,
   route,
   setAnimateToArea,
 }) => {
@@ -104,7 +103,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
-        onSearchPressed={() => navigation.navigate('Search')}
       />
 
       <RBSheet
