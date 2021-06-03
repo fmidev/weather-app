@@ -3,7 +3,10 @@ import { ActivityIndicator, Platform, StyleSheet } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Geolocation from 'react-native-geolocation-service';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
@@ -16,12 +19,19 @@ import SymbolsScreen from '../screens/SymbolsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SearchScreen from '../screens/SearchScreen';
 
+import HeaderButton from '../components/HeaderButton';
+
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
 import { setGeolocation as setGeolocationAction } from '../store/general/actions';
 import { initSettings as initSettingsAction } from '../store/settings/actions';
 
-import { TabParamList, OthersStackParamList } from './types';
+import {
+  TabParamList,
+  OthersStackParamList,
+  MapStackParamList,
+  ForecastStackParamList,
+} from './types';
 import { PRIMARY_BLUE } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
@@ -45,7 +55,11 @@ const ForecastStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
-const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
+const Navigator: React.FC<Props> = ({
+  initSettings,
+  setGeolocation,
+  geolocation,
+}) => {
   const { t, ready } = useTranslation(['navigation', 'placeholder'], {
     useSuspense: false,
   });
@@ -122,12 +136,44 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
     />
   );
 
+  const CommonHeaderOptions = ({
+    navigation,
+  }: {
+    navigation: StackNavigationProp<MapStackParamList | ForecastStackParamList>;
+  }) => ({
+    headerTitle: 'Helsinki',
+    headerTitleStyle: {
+      textAlign: 'center' as 'center',
+    },
+    headerStyle: {
+      shadowColor: 'transparent',
+    },
+    headerTintColor: PRIMARY_BLUE,
+    headerRight: () => (
+      <HeaderButton
+        title="Haku"
+        accessibilityLabel="Press to search"
+        icon="search-outline"
+        onPress={() => navigation.navigate('Search')}
+        right
+      />
+    ),
+    headerLeft: () => (
+      <HeaderButton
+        title="Paikanna"
+        accessibilityLabel="Press to locate"
+        icon="locate-outline"
+        onPress={() => console.log(geolocation)}
+      />
+    ),
+  });
+
   const MapStackScreen = () => (
     <MapStack.Navigator>
       <MapStack.Screen
         name="Map"
         component={MapScreen}
-        options={{ headerShown: false }}
+        options={CommonHeaderOptions}
       />
       <MapStack.Screen
         name="Search"
@@ -155,7 +201,25 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
       <ForecastStack.Screen
         name="Forecast"
         component={ForecastScreen}
-        options={{ headerShown: false }}
+        options={CommonHeaderOptions}
+      />
+      <ForecastStack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          headerBackTitleVisible: false,
+          headerTitle: '',
+          headerStyle: { shadowColor: 'transparent' },
+          headerTintColor: PRIMARY_BLUE,
+          headerBackImage: ({ tintColor }) => (
+            <Icon
+              name="arrow-back-outline"
+              color={tintColor}
+              size={26}
+              style={styles.headerBackButton}
+            />
+          ),
+        }}
       />
     </ForecastStack.Navigator>
   );
