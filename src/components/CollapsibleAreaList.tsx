@@ -43,8 +43,29 @@ const CollapsibleAreaList: React.FC<CollapsibleAreaListProps> = ({
     return 'star-outline';
   };
 
+  const TitleIcon = () => {
+    if (!onToggle) return null;
+    return open ? (
+      <IconButton
+        icon="chevron-up"
+        style={styles.iconStyle}
+        backgroundColor={WHITE}
+        iconColor={PRIMARY_BLUE}
+        iconSize={20}
+      />
+    ) : (
+      <IconButton
+        icon="chevron-down"
+        style={styles.iconStyle}
+        backgroundColor={WHITE}
+        iconColor={PRIMARY_BLUE}
+        iconSize={20}
+      />
+    );
+  };
+
   return (
-    <>
+    <View style={styles.listWrapper}>
       <TouchableOpacity onPress={onToggle}>
         <View
           style={[
@@ -53,23 +74,7 @@ const CollapsibleAreaList: React.FC<CollapsibleAreaListProps> = ({
             styles.listItem,
           ]}>
           <Text style={styles.title}>{title}</Text>
-          {open ? (
-            <IconButton
-              icon="chevron-up"
-              style={styles.iconStyle}
-              backgroundColor={WHITE}
-              iconColor={PRIMARY_BLUE}
-              iconSize={20}
-            />
-          ) : (
-            <IconButton
-              icon="chevron-down"
-              style={styles.iconStyle}
-              backgroundColor={WHITE}
-              iconColor={PRIMARY_BLUE}
-              iconSize={20}
-            />
-          )}
+          <TitleIcon />
         </View>
       </TouchableOpacity>
       {open && (
@@ -78,7 +83,7 @@ const CollapsibleAreaList: React.FC<CollapsibleAreaListProps> = ({
           keyboardShouldPersistTaps="handled">
           {elements.map((element: Location, i: number) => (
             <View
-              key={element.id}
+              key={`${title}-${element.id}`}
               style={i + 1 !== elements.length && [styles.withBorderBottom]}>
               <View style={styles.listItem}>
                 <TouchableOpacity onPress={() => onSelect(element)}>
@@ -105,10 +110,13 @@ const CollapsibleAreaList: React.FC<CollapsibleAreaListProps> = ({
           ))}
         </ScrollView>
       )}
-    </>
+    </View>
   );
 };
 const styles = StyleSheet.create({
+  listWrapper: {
+    flexShrink: 1,
+  },
   resultsHeader: {
     height: 48,
     paddingHorizontal: 16,
@@ -134,7 +142,6 @@ const styles = StyleSheet.create({
   },
   resultText: {
     fontSize: 15,
-    height: 18,
     color: PRIMARY_BLUE,
     marginLeft: 16,
   },
@@ -144,9 +151,6 @@ const styles = StyleSheet.create({
     borderColor: VERY_LIGHT_BLUE,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  recentListContainer: {
-    maxHeight: '45%',
   },
   iconStyle: {
     width: 24,

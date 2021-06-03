@@ -160,6 +160,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               setValue('');
               Keyboard.dismiss();
             }}
+            iconNameGetter={(location) =>
+              isFavorite(location) ? 'star' : 'star-outline'
+            }
           />
         )}
         {/^\s*$/.test(value) &&
@@ -222,6 +225,7 @@ const styles = StyleSheet.create({
   },
   results: {
     flex: 1,
+    marginBottom: 10,
   },
   input: {
     height: '100%',
