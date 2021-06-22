@@ -15,7 +15,7 @@
     "e2e:build:android": "detox build -c android"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/slider": "^3.0.3",
     "@react-navigation/bottom-tabs": "^5.11.7",
