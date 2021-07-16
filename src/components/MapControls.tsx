@@ -27,7 +27,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         style={[styles.mapButton, styles.searchButton]}
         accessibilityLabel={t('map:searchButtonAccessibilityLabel')}
         onPress={onSearchPressed}
-        icon="search-outline"
+        icon="search"
         iconColor={PRIMARY_BLUE}
         iconSize={26}
       />
@@ -35,7 +35,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         style={[styles.mapButton, styles.infoButton]}
         accessibilityLabel={t('map:searchButtonAccessibilityLabel')}
         onPress={onInfoPressed}
-        icon="information-circle-outline"
+        icon="info"
         iconColor={PRIMARY_BLUE}
         iconSize={26}
       />
@@ -43,7 +43,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         style={[styles.mapButton, styles.layersButton]}
         accessibilityLabel={t('map:searchButtonAccessibilityLabel')}
         onPress={onLayersPressed}
-        icon="layers-outline"
+        icon="layers"
         iconColor={PRIMARY_BLUE}
         iconSize={26}
       />

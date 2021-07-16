@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import Icon from 'react-native-vector-icons/Ionicons';
+
+import Icon from './Icon';
 
 import CloseButton from './CloseButton';
 
@@ -59,9 +60,10 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
           {viewAll ? (
             <View style={[styles.row, styles.showMoreText]}>
               <Icon
-                name="chevron-up-outline"
-                color={SECONDARY_BLUE}
-                size={22}
+                name="arrow-up"
+                style={{ color: SECONDARY_BLUE }}
+                width={22}
+                height={22}
               />
               <Text style={[styles.title, styles.showMoreText]}>
                 {t('map:infoBottomSheet:showLess')}
@@ -70,9 +72,10 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
           ) : (
             <View style={[styles.row, styles.showMoreText]}>
               <Icon
-                name="chevron-down-outline"
-                color={SECONDARY_BLUE}
-                size={22}
+                name="arrow-down"
+                style={{ color: SECONDARY_BLUE }}
+                width={22}
+                height={22}
               />
               <Text style={[styles.title, styles.showMoreText]}>
                 {t('map:infoBottomSheet:showMore')}

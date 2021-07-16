@@ -11,9 +11,10 @@ import {
   Keyboard,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Config from 'react-native-config';
+
+import Icon from '../components/Icon';
 
 import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
@@ -140,10 +141,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.searchBoxContainer}>
         <Icon
-          name="search-outline"
-          size={22}
-          color={PRIMARY_BLUE}
-          style={styles.searchIcon}
+          name="search"
+          width={22}
+          height={22}
+          style={[styles.searchIcon, { color: PRIMARY_BLUE }]}
         />
         <TextInput
           style={styles.input}
@@ -187,9 +188,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                           : location.name}
                       </Text>
                       <Icon
-                        name="chevron-forward"
-                        size={22}
-                        color={PRIMARY_BLUE}
+                        name="arrow-forward"
+                        width={22}
+                        height={22}
+                        style={{ color: PRIMARY_BLUE }}
                       />
                     </View>
                   </TouchableOpacity>
@@ -210,7 +212,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                   </Text>
                   {recentSearchesOpen ? (
                     <IconButton
-                      icon="chevron-up"
+                      icon="arrow-up"
                       style={styles.iconStyle}
                       backgroundColor={WHITE}
                       iconColor={PRIMARY_BLUE}
@@ -218,7 +220,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                     />
                   ) : (
                     <IconButton
-                      icon="chevron-down"
+                      icon="arrow-down"
                       style={styles.iconStyle}
                       backgroundColor={WHITE}
                       iconColor={PRIMARY_BLUE}
@@ -302,7 +304,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                 </Text>
                 {favoritesOpen ? (
                   <IconButton
-                    icon="chevron-up"
+                    icon="arrow-up"
                     style={styles.iconStyle}
                     backgroundColor={WHITE}
                     iconColor={PRIMARY_BLUE}
@@ -310,7 +312,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                   />
                 ) : (
                   <IconButton
-                    icon="chevron-down"
+                    icon="arrow-down"
                     style={styles.iconStyle}
                     backgroundColor={WHITE}
                     iconColor={PRIMARY_BLUE}

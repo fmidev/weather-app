@@ -7,10 +7,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 import { OthersStackParamList } from '../navigators/types';
+
+import Icon from '../components/Icon';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'Others'>;

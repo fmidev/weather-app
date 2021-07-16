@@ -6,7 +6,7 @@ import {
   ViewStyle,
   StyleSheet,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from './Icon';
 
 import { VERY_LIGHT_BLUE, PRIMARY_BLUE } from '../utils/colors';
 
@@ -23,7 +23,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   <View style={styles.button}>
     <TouchableOpacity onPress={onPress} accessibilityLabel={accessibilityLabel}>
       <View>
-        <Icon name="close-outline" color={PRIMARY_BLUE} size={22} />
+        <Icon name="close-outline" style={{ color: PRIMARY_BLUE }} size={24} />
       </View>
     </TouchableOpacity>
   </View>

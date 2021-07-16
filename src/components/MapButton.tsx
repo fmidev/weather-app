@@ -6,7 +6,8 @@ import {
   ViewStyle,
   StyleSheet,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+
+import Icon from './Icon';
 
 import { BLACK } from '../utils/colors';
 
@@ -33,7 +34,12 @@ const MapButton: React.FC<MapButtonProps> = ({
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button">
       <View style={styles.iconWrapper}>
-        <Icon name={icon} size={iconSize} color={iconColor} />
+        <Icon
+          name={icon}
+          width={iconSize}
+          height={iconSize}
+          style={{ color: iconColor }}
+        />
       </View>
     </TouchableOpacity>
   </View>

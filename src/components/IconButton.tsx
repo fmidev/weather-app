@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ColorValue,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+
+import Icon from './Icon';
 
 import { VERY_LIGHT_BLUE, PRIMARY_BLUE } from '../utils/colors';
 
@@ -45,8 +46,9 @@ const IconButton: React.FC<IconButtonProps> = ({
         <View>
           <Icon
             name={icon}
-            size={iconSize || 22}
-            color={iconColor || PRIMARY_BLUE}
+            width={iconSize || 22}
+            height={iconSize || 22}
+            style={{ color: iconColor || PRIMARY_BLUE }}
           />
         </View>
       </TouchableOpacity>
@@ -61,8 +63,9 @@ const IconButton: React.FC<IconButtonProps> = ({
       <View>
         <Icon
           name={icon}
-          size={iconSize || 22}
-          color={iconColor || PRIMARY_BLUE}
+          width={iconSize || 22}
+          height={iconSize || 22}
+          style={{ color: iconColor || PRIMARY_BLUE }}
         />
       </View>
     </View>

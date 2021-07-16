@@ -2,9 +2,10 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+
+import Icon from './Icon';
 
 import { State } from '../store/types';
 import { selectSliderStep, selectSliderTime } from '../store/map/selectors';
@@ -63,7 +64,12 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           <TouchableOpacity
             onPress={() => console.log('play button pressed')}
             accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
-            <Icon name="play-circle-outline" color={PRIMARY_BLUE} size={50} />
+            <Icon
+              name="play"
+              style={{ color: PRIMARY_BLUE }}
+              width={50}
+              height={50}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.sliderWrapper}>
