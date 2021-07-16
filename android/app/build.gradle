@@ -138,6 +138,7 @@ android {
         testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         missingDimensionStrategy 'detox', 'full'
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -212,6 +213,9 @@ dependencies {
         implementation jscFlavor
     }
     androidTestImplementation(project(path: ":detox"))
+
+    def multidex_version = "2.0.1"
+    implementation 'androidx.multidex:multidex:$multidex_version'
 }
 
 // Run this once to be able to run the application with BUCK
