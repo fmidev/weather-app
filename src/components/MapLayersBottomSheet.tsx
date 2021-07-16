@@ -2,8 +2,8 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import Icon from 'react-native-vector-icons/Ionicons';
 
+import Icon from './Icon';
 import CloseButton from './CloseButton';
 
 import { State } from '../store/types';
@@ -102,16 +102,22 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
             {t('map:layersBottomSheet:temperatureAndWeather')}
           </Text>
           <Icon
-            name="radio-button-on-outline"
-            size={22}
-            color={SECONDARY_BLUE}
+            name="radio-button-on"
+            width={22}
+            height={22}
+            style={{ color: SECONDARY_BLUE }}
           />
         </View>
         <View style={[styles.row, styles.innerRow]}>
           <Text style={styles.text}>
             {t('map:layersBottomSheet:precipitationAndPropability')}
           </Text>
-          <Icon name="radio-button-off-outline" size={22} color={GRAY} />
+          <Icon
+            name="radio-button-off"
+            width={22}
+            height={22}
+            style={{ color: GRAY }}
+          />
         </View>
       </View>
 

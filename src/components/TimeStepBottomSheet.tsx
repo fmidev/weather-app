@@ -2,8 +2,8 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import Icon from 'react-native-vector-icons/Ionicons';
 
+import Icon from './Icon';
 import CloseButton from './CloseButton';
 
 import { State } from '../store/types';
@@ -42,9 +42,19 @@ const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
 
   const getIcon = (step: number) =>
     sliderStep === step ? (
-      <Icon name="radio-button-on-outline" size={22} color={SECONDARY_BLUE} />
+      <Icon
+        name="radio-button-on"
+        width={22}
+        height={22}
+        style={{ color: SECONDARY_BLUE }}
+      />
     ) : (
-      <Icon name="radio-button-off-outline" size={22} color={GRAY} />
+      <Icon
+        name="radio-button-off"
+        width={22}
+        height={22}
+        style={{ color: GRAY }}
+      />
     );
   return (
     <View style={styles.sheetListContainer}>

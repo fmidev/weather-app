@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import Icon from 'react-native-vector-icons/Ionicons';
+
+import Icon from '../components/Icon';
 
 import { setItem, LOCALE } from '../utils/async_storage';
 import { UNITS } from '../utils/units';

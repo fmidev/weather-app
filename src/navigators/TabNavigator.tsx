@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Geolocation from 'react-native-geolocation-service';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +14,8 @@ import MapScreen from '../screens/MapScreen';
 import SymbolsScreen from '../screens/SymbolsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SearchScreen from '../screens/SearchScreen';
+
+import Icon from '../components/Icon';
 
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
@@ -139,10 +140,10 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
           headerTintColor: PRIMARY_BLUE,
           headerBackImage: ({ tintColor }) => (
             <Icon
-              name="arrow-back-outline"
-              color={tintColor}
-              size={26}
-              style={styles.headerBackButton}
+              name="arrow-back"
+              style={{ color: tintColor, ...styles.headerBackButton }}
+              width={26}
+              height={26}
             />
           ),
         }}
@@ -216,7 +217,7 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
             tabBarTestID: 'navigation_map',
             tabBarLabel: `${t('navigation:map')}`,
             tabBarIcon: ({ color, size }) => (
-              <Icon name="map-outline" color={color} size={size} />
+              <Icon name="map" style={{ color }} width={size} height={size} />
             ),
           }}
         />
@@ -227,7 +228,12 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
             tabBarTestID: 'navigation_forecast',
             tabBarLabel: `${t('navigation:weather')}`,
             tabBarIcon: ({ color, size }) => (
-              <Icon name="partly-sunny-outline" color={color} size={size} />
+              <Icon
+                name="weather"
+                style={{ color }}
+                width={size}
+                height={size}
+              />
             ),
           }}
         />
@@ -238,7 +244,12 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
             tabBarTestID: 'navigation_warnings',
             tabBarLabel: `${t('navigation:warnings')}`,
             tabBarIcon: ({ color, size }) => (
-              <Icon name="warning-outline" color={color} size={size} />
+              <Icon
+                name="warnings"
+                style={{ color }}
+                width={size}
+                height={size}
+              />
             ),
           }}
         />
@@ -249,7 +260,7 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
             tabBarTestID: 'navigation_others',
             tabBarLabel: `${t('navigation:others')}`,
             tabBarIcon: ({ color, size }) => (
-              <Icon name="menu-outline" color={color} size={size} />
+              <Icon name="menu" style={{ color }} width={size} height={size} />
             ),
           }}
         />
