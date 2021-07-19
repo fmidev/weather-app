@@ -252,7 +252,7 @@ const Navigator: React.FC<Props> = ({
       />
     </OthersStack.Navigator>
   );
-  console.log(useDarkTheme);
+
   return (
     <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
       <Tab.Navigator initialRouteName="Map">
