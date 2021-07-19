@@ -8,12 +8,14 @@ import {
   FlatList,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@react-navigation/native';
 
 import { images, WeatherSymbol } from '../assets/images';
 import { PRIMARY_BLUE, WHITE } from '../utils/colors';
 
 const SymbolsScreen: React.FC = () => {
   const { t } = useTranslation('symbols');
+  const { colors } = useTheme();
   const symbolsArr = Object.entries(images.symbols).map(([key, value]) => ({
     key,
     ...value,
@@ -23,11 +25,14 @@ const SymbolsScreen: React.FC = () => {
     <View style={styles.row} testID={item.key}>
       <Image style={styles.image} source={item.day} />
       <Image style={styles.image} source={item.night} />
-      <Text style={styles.description}>{`${t(`symbols:${item.key}`)}`}</Text>
+      <Text style={[styles.description, { color: colors.text }]}>{`${t(
+        `symbols:${item.key}`
+      )}`}</Text>
     </View>
   );
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
         style={styles.list}
         data={symbolsArr}

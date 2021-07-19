@@ -1,5 +1,12 @@
-import React, { useEffect } from 'react';
-import { ActivityIndicator, Platform, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  ActivityIndicator,
+  AppState,
+  Appearance,
+  Platform,
+  StyleSheet,
+  AppStateStatus,
+} from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -19,14 +26,18 @@ import Icon from '../components/Icon';
 
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
+import { selectTheme } from '../store/settings/selectors';
 import { setGeolocation as setGeolocationAction } from '../store/general/actions';
 import { initSettings as initSettingsAction } from '../store/settings/actions';
 
 import { TabParamList, OthersStackParamList } from './types';
 import { PRIMARY_BLUE } from '../utils/colors';
 
+import { lightTheme, darkTheme } from './themes';
+
 const mapStateToProps = (state: State) => ({
   geolocation: selectGeolocation(state),
+  theme: selectTheme(state),
 });
 
 const mapDispatchToProps = {
@@ -38,7 +49,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type Props = PropsFromRedux & {};
+type Props = PropsFromRedux & {
+  initialColorScheme?: string | null;
+};
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const MapStack = createStackNavigator();
@@ -46,10 +59,18 @@ const ForecastStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
-const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
+const Navigator: React.FC<Props> = ({
+  initSettings,
+  setGeolocation,
+  initialColorScheme,
+  theme,
+}) => {
   const { t, ready } = useTranslation(['navigation', 'placeholder'], {
     useSuspense: false,
   });
+  const [useDarkTheme, setUseDarkTheme] = useState<boolean>(
+    initialColorScheme === 'dark'
+  );
 
   useEffect(() => {
     initSettings();
@@ -89,16 +110,41 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const commonHeaderOptions = {
-  //   headerStyle: {
-  //     borderBottomWidth: 1,
-  //   },
-  //   headerTintColor: '#fff',
-  //   headerTitleStyle: {
-  //     fontSize: 16,
-  //   },
-  //   headerTitleAlign: 'center',
-  // };
+  useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleAppStateChange = (state: AppStateStatus) => {
+    if (state === 'active' && theme === 'automatic') {
+      // getColorScheme() returns 'light' on iOS debug mode
+      if (Appearance.getColorScheme() === 'dark') {
+        setUseDarkTheme(true);
+      } else {
+        setUseDarkTheme(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (theme === 'dark' && !useDarkTheme) {
+      setUseDarkTheme(true);
+    }
+    if (theme === 'light' && useDarkTheme) {
+      setUseDarkTheme(false);
+    }
+    if (theme === 'automatic') {
+      if (Appearance.getColorScheme() === 'dark') {
+        setUseDarkTheme(true);
+      } else {
+        setUseDarkTheme(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme]);
 
   if (!ready) return <ActivityIndicator size="large" />;
 
@@ -206,9 +252,9 @@ const Navigator: React.FC<Props> = ({ initSettings, setGeolocation }) => {
       />
     </OthersStack.Navigator>
   );
-
+  console.log(useDarkTheme);
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
       <Tab.Navigator initialRouteName="Map">
         <Tab.Screen
           name="Map"

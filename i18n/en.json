@@ -24,7 +24,11 @@
     "temperature": "Temperature",
     "precipitation": "Precipitation",
     "wind": "Wind",
-    "pressure": "Pressure"
+    "pressure": "Pressure",
+    "appearance": "Appearance",
+    "appearanceLight": "Light",
+    "appearanceDark": "Dark",
+    "appearanceAutomatic": "Automatic"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search location",

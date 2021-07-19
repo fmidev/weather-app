@@ -29,12 +29,7 @@ import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions
 import IconButton from '../components/IconButton';
 
 import { getItem, setItem, RECENT_SEARCHES } from '../utils/async_storage';
-import {
-  PRIMARY_BLUE,
-  WHITE,
-  VERY_LIGHT_BLUE,
-  GRAYISH_BLUE,
-} from '../utils/colors';
+import { PRIMARY_BLUE, WHITE, LIGHT_BLUE, GRAYISH_BLUE } from '../utils/colors';
 
 const MAX_RECENT_SEARCHES = 10; // TODO: define max number of favorites
 
@@ -381,7 +376,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 11,
-    backgroundColor: VERY_LIGHT_BLUE,
+    backgroundColor: LIGHT_BLUE,
     marginTop: 10,
   },
   searchIcon: {
@@ -416,7 +411,7 @@ const styles = StyleSheet.create({
   },
   withBorderBottom: {
     borderBottomWidth: 1,
-    borderColor: VERY_LIGHT_BLUE,
+    borderColor: LIGHT_BLUE,
   },
   resultText: {
     fontSize: 15,
@@ -427,7 +422,7 @@ const styles = StyleSheet.create({
   actionButtonContainer: {
     width: 50,
     borderLeftWidth: 1,
-    borderColor: VERY_LIGHT_BLUE,
+    borderColor: LIGHT_BLUE,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -10,7 +10,7 @@ import {
 
 import Icon from './Icon';
 
-import { VERY_LIGHT_BLUE, PRIMARY_BLUE } from '../utils/colors';
+import { LIGHT_BLUE, PRIMARY_BLUE } from '../utils/colors';
 
 type ButtonProps =
   | { onPress: () => void; accessibilityLabel: string }
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     padding: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: VERY_LIGHT_BLUE,
+    backgroundColor: LIGHT_BLUE,
   },
 });
 

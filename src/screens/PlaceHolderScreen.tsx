@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 import { State } from '../store/types';
 import { selectGeolocation } from '../store/general/selectors';
@@ -24,18 +25,23 @@ const PlaceholderScreen: React.FC<Props> = ({
   showLocation,
   geolocation,
   testIndex,
-}) => (
-  <SafeAreaView style={styles.container}>
-    <Text style={styles.text} testID={`screen_placeholder_text_${testIndex}`}>
-      {text}
-    </Text>
-    {showLocation && (
-      <Text style={styles.text}>
-        Laitteen sijainti: {JSON.stringify(geolocation, null, 2)}
+}) => {
+  const { colors } = useTheme();
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text
+        style={[styles.text, { color: colors.text }]}
+        testID={`screen_placeholder_text_${testIndex}`}>
+        {text}
       </Text>
-    )}
-  </SafeAreaView>
-);
+      {showLocation && (
+        <Text style={[styles.text, { color: colors.text }]}>
+          Laitteen sijainti: {JSON.stringify(geolocation, null, 2)}
+        </Text>
+      )}
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

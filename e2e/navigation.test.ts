@@ -15,6 +15,7 @@ describe('Navigation', () => {
   const map = getByID('map');
   const clearSymbol = getByID('1');
   const languageHeader = getByID('settings_language_header');
+  const themeHeader = getByID('settings_theme_header');
   // placeholders
   const placeholder = 'screen_placeholder_text';
   const forecastPlaceholder = 'Täällä olisi havaintoa ja ennustetta';
@@ -61,6 +62,7 @@ describe('Navigation', () => {
     await expect(navSettings).toExist();
     navSettings.tap();
     await expect(languageHeader).toExist();
+    await expect(themeHeader).toExist();
     headerBack.tap();
     await expect(navNotifications).toExist();
     navNotifications.tap();

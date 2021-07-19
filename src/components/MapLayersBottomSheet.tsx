@@ -2,6 +2,7 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
 import CloseButton from './CloseButton';
@@ -11,12 +12,12 @@ import { selectMapLayers } from '../store/map/selectors';
 import { updateMapLayers as updateMapLayersAction } from '../store/map/actions';
 
 import {
-  VERY_LIGHT_BLUE,
+  LIGHT_BLUE,
   PRIMARY_BLUE,
   WHITE,
   SECONDARY_BLUE,
   GRAYISH_BLUE,
-  GRAY,
+  GRAY_1,
 } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
@@ -41,6 +42,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
   updateMapLayers,
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   return (
     <View style={styles.sheetListContainer}>
       <View style={styles.closeButtonContainer}>
@@ -53,13 +55,18 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
       </View>
 
       <View style={styles.sheetTitle}>
-        <Text style={styles.title}>
+        <Text style={[styles.title, { color: colors.text }]}>
           {t('map:layersBottomSheet:locationTitle')}
         </Text>
       </View>
-      <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+      <View
+        style={[
+          styles.rowWrapper,
+          styles.withBorderBottom,
+          { borderBottomColor: colors.border },
+        ]}>
         <View style={styles.row}>
-          <Text style={styles.text}>
+          <Text style={[styles.text, { color: colors.text }]}>
             {t('map:layersBottomSheet:locationHint')}
           </Text>
           <Switch
@@ -78,13 +85,18 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
       </View>
 
       <View style={styles.sheetTitle}>
-        <Text style={styles.title}>
+        <Text style={[styles.title, { color: colors.text }]}>
           {t('map:layersBottomSheet:localWeatherTitle')}
         </Text>
       </View>
-      <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+      <View
+        style={[
+          styles.rowWrapper,
+          styles.withBorderBottom,
+          { borderBottomColor: colors.border },
+        ]}>
         <View style={styles.row}>
-          <Text style={styles.text}>
+          <Text style={[styles.text, { color: colors.text }]}>
             {t('map:layersBottomSheet:showOnMap')}
           </Text>
           <Switch
@@ -98,7 +110,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
           />
         </View>
         <View style={[styles.row, styles.innerRow]}>
-          <Text style={styles.text}>
+          <Text style={[styles.text, { color: colors.text }]}>
             {t('map:layersBottomSheet:temperatureAndWeather')}
           </Text>
           <Icon
@@ -109,26 +121,26 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
           />
         </View>
         <View style={[styles.row, styles.innerRow]}>
-          <Text style={styles.text}>
+          <Text style={[styles.text, { color: colors.text }]}>
             {t('map:layersBottomSheet:precipitationAndPropability')}
           </Text>
           <Icon
             name="radio-button-off"
             width={22}
             height={22}
-            style={{ color: GRAY }}
+            style={{ color: GRAY_1 }}
           />
         </View>
       </View>
 
       <View style={styles.sheetTitle}>
-        <Text style={styles.title}>
+        <Text style={[styles.title, { color: colors.text }]}>
           {t('map:layersBottomSheet:mapLayersTitle')}
         </Text>
       </View>
       <View style={styles.rowWrapper}>
         <View style={styles.row}>
-          <Text style={styles.text}>
+          <Text style={[styles.text, { color: colors.text }]}>
             {t('map:layersBottomSheet:rainRadar')}
           </Text>
           <Switch
@@ -169,7 +181,7 @@ const styles = StyleSheet.create({
   },
   withBorderBottom: {
     borderBottomWidth: 1,
-    borderColor: VERY_LIGHT_BLUE,
+    borderColor: LIGHT_BLUE,
   },
   row: {
     flexDirection: 'row',

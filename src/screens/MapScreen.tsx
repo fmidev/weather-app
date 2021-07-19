@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet } from 'react-native';
 import MapView, { Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useTheme } from '@react-navigation/native';
 
 import MapControls from '../components/MapControls';
 import RainRadarOverlay from '../components/RainRadarOverlay';
@@ -55,6 +55,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
   route,
   setAnimateToArea,
 }) => {
+  const { colors } = useTheme();
+
   const [region, setRegion] = useState<Region | undefined>(undefined);
   const mapRef = useRef() as React.MutableRefObject<MapView>;
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
@@ -112,7 +114,12 @@ const MapScreen: React.FC<MapScreenProps> = ({
         height={600}
         closeOnDragDown
         dragFromTopOnly
-        customStyles={{ container: styles.sheetContainer }}>
+        customStyles={{
+          container: {
+            ...styles.sheetContainer,
+            backgroundColor: colors.background,
+          },
+        }}>
         <InfoBottomSheet onClose={() => infoSheetRef.current.close()} />
       </RBSheet>
 
@@ -120,7 +127,12 @@ const MapScreen: React.FC<MapScreenProps> = ({
         ref={mapLayersSheetRef}
         height={600}
         closeOnDragDown
-        customStyles={{ container: styles.sheetContainer }}>
+        customStyles={{
+          container: {
+            ...styles.sheetContainer,
+            backgroundColor: colors.background,
+          },
+        }}>
         <MapLayersBottomSheet
           onClose={() => mapLayersSheetRef.current.close()}
         />
@@ -130,7 +142,12 @@ const MapScreen: React.FC<MapScreenProps> = ({
         ref={timeStepSheetRef}
         height={300}
         closeOnDragDown
-        customStyles={{ container: styles.sheetContainer }}>
+        customStyles={{
+          container: {
+            ...styles.sheetContainer,
+            backgroundColor: colors.background,
+          },
+        }}>
         <TimeStepBottomSheet onClose={() => timeStepSheetRef.current.close()} />
       </RBSheet>
     </SafeAreaView>

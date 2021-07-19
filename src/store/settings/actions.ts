@@ -5,10 +5,12 @@ import {
   DELETE_FAVORITE,
   INIT_SETTINGS,
   UPDATE_UNITS,
+  UPDATE_THEME,
   Location,
   SettingsActionTypes,
   UnitMap,
   UnitType,
+  Theme,
 } from './types';
 import { getDefaultUnits } from '../../utils/units';
 import {
@@ -17,6 +19,7 @@ import {
   setItem,
   FAVORITES,
   UNITS,
+  THEME,
 } from '../../utils/async_storage';
 
 export const getFavorites = () => (dispatch: Dispatch<SettingsActionTypes>) => {
@@ -36,9 +39,11 @@ export const getFavorites = () => (dispatch: Dispatch<SettingsActionTypes>) => {
 export const initSettings = () => (dispatch: Dispatch<SettingsActionTypes>) => {
   let favorites = [] as any;
   let units: UnitMap | undefined;
-  multiGet([FAVORITES, UNITS])
+  let theme: Theme;
+  multiGet([FAVORITES, UNITS, THEME])
     .then((data) => {
       if (data) {
+        console.log(data);
         // parse favorites
         if (data[0][1] !== null) {
           favorites = JSON.parse(data[0][1]);
@@ -52,7 +57,15 @@ export const initSettings = () => (dispatch: Dispatch<SettingsActionTypes>) => {
           units = getDefaultUnits();
           setItem(UNITS, JSON.stringify(units));
         }
-        dispatch({ type: INIT_SETTINGS, units, favorites: favorites || [] });
+        if (data[2][1]) {
+          theme = data[2][1] as Theme;
+        }
+        dispatch({
+          type: INIT_SETTINGS,
+          units,
+          favorites: favorites || [],
+          theme: theme || 'automatic',
+        });
       }
     })
     .catch((e) => {
@@ -117,4 +130,12 @@ export const updateUnits = (key: string, unit: UnitType) => (
     .catch((e) => {
       console.error(e);
     });
+};
+
+export const updateTheme = (theme: Theme) => (
+  dispatch: Dispatch<SettingsActionTypes>
+) => {
+  setItem(THEME, theme);
+  console.log('updateTheme action::', theme);
+  dispatch({ type: UPDATE_THEME, theme });
 };

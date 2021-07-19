@@ -4,6 +4,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import './i18n';
+import { Appearance } from 'react-native';
 
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';
@@ -18,9 +19,11 @@ const App: React.FC = () => {
     composeEnhancers(applyMiddleware(ReduxThunk))
   );
 
+  const initialColorScheme = Appearance.getColorScheme();
+
   return (
     <Provider store={store}>
-      <TabNavigator />
+      <TabNavigator initialColorScheme={initialColorScheme} />
     </Provider>
   );
 };

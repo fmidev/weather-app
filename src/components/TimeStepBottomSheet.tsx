@@ -2,6 +2,7 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
 import CloseButton from './CloseButton';
@@ -10,12 +11,7 @@ import { State } from '../store/types';
 import { selectSliderStep } from '../store/map/selectors';
 import { updateSliderStep as updateSliderStepAction } from '../store/map/actions';
 
-import {
-  VERY_LIGHT_BLUE,
-  PRIMARY_BLUE,
-  SECONDARY_BLUE,
-  GRAY,
-} from '../utils/colors';
+import { SECONDARY_BLUE, GRAY_1 } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
   sliderStep: selectSliderStep(state),
@@ -39,6 +35,7 @@ const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
   updateSliderStep,
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   const getIcon = (step: number) =>
     sliderStep === step ? (
@@ -53,11 +50,15 @@ const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
         name="radio-button-off"
         width={22}
         height={22}
-        style={{ color: GRAY }}
+        style={{ color: GRAY_1 }}
       />
     );
   return (
-    <View style={styles.sheetListContainer}>
+    <View
+      style={[
+        styles.sheetListContainer,
+        { backgroundColor: colors.background },
+      ]}>
       <View style={styles.closeButtonContainer}>
         <CloseButton
           onPress={onClose}
@@ -67,20 +68,32 @@ const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
         />
       </View>
       <View style={styles.sheetTitle}>
-        <Text style={styles.title}>{t('map:timeStepBottomSheet:title')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>
+          {t('map:timeStepBottomSheet:title')}
+        </Text>
       </View>
-      <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+      <View
+        style={[
+          styles.rowWrapper,
+          styles.withBorderBottom,
+          { borderBottomColor: colors.border },
+        ]}>
         <TouchableOpacity onPress={() => updateSliderStep(15)}>
           <View style={styles.row}>
-            <Text style={styles.text}>15 min</Text>
+            <Text style={[styles.text, { color: colors.text }]}>15 min</Text>
             {getIcon(15)}
           </View>
         </TouchableOpacity>
       </View>
-      <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+      <View
+        style={[
+          styles.rowWrapper,
+          styles.withBorderBottom,
+          { borderBottomColor: colors.border },
+        ]}>
         <TouchableOpacity onPress={() => updateSliderStep(30)}>
           <View style={styles.row}>
-            <Text style={styles.text}>30 min</Text>
+            <Text style={[styles.text, { color: colors.text }]}>30 min</Text>
             {getIcon(30)}
           </View>
         </TouchableOpacity>
@@ -88,7 +101,7 @@ const TimeStepBottomSheet: React.FC<TimeStepBottomSheetProps> = ({
       <View style={styles.rowWrapper}>
         <TouchableOpacity onPress={() => updateSliderStep(60)}>
           <View style={styles.row}>
-            <Text style={styles.text}>60 min</Text>
+            <Text style={[styles.text, { color: colors.text }]}>60 min</Text>
             {getIcon(60)}
           </View>
         </TouchableOpacity>
@@ -118,7 +131,6 @@ const styles = StyleSheet.create({
   },
   withBorderBottom: {
     borderBottomWidth: 1,
-    borderColor: VERY_LIGHT_BLUE,
   },
   row: {
     flexDirection: 'row',
@@ -128,11 +140,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: PRIMARY_BLUE,
   },
   title: {
-    fontSize: 14,
-    color: PRIMARY_BLUE,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
