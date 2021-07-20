@@ -31,7 +31,6 @@ import { setGeolocation as setGeolocationAction } from '../store/general/actions
 import { initSettings as initSettingsAction } from '../store/settings/actions';
 
 import { TabParamList, OthersStackParamList } from './types';
-import { PRIMARY_BLUE } from '../utils/colors';
 
 import { lightTheme, darkTheme } from './themes';
 
@@ -183,7 +182,6 @@ const Navigator: React.FC<Props> = ({
           headerBackTitleVisible: false,
           headerTitle: '',
           headerStyle: { shadowColor: 'transparent' },
-          headerTintColor: PRIMARY_BLUE,
           headerBackImage: ({ tintColor }) => (
             <Icon
               name="arrow-back"
@@ -236,6 +234,14 @@ const Navigator: React.FC<Props> = ({
         component={SettingsScreen}
         options={{
           headerTitle: `${t('navigation:settings')}`,
+          headerBackImage: ({ tintColor }) => (
+            <Icon
+              name="arrow-back"
+              style={{ color: tintColor, ...styles.headerBackButton }}
+              width={26}
+              height={26}
+            />
+          ),
         }}
       />
       <OthersStack.Screen

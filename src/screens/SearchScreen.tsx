@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useTheme } from '@react-navigation/native';
 import Config from 'react-native-config';
 
 import Icon from '../components/Icon';
@@ -29,7 +30,13 @@ import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions
 import IconButton from '../components/IconButton';
 
 import { getItem, setItem, RECENT_SEARCHES } from '../utils/async_storage';
-import { PRIMARY_BLUE, WHITE, LIGHT_BLUE, GRAYISH_BLUE } from '../utils/colors';
+import {
+  PRIMARY_BLUE,
+  WHITE,
+  LIGHT_BLUE,
+  GRAYISH_BLUE,
+  CustomTheme,
+} from '../utils/colors';
 
 const MAX_RECENT_SEARCHES = 10; // TODO: define max number of favorites
 
@@ -59,6 +66,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   navigation,
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
   const [locations, setLocations] = useState([]);
   const [recentSearches, setRecentSearches] = useState<Location[] | []>([]);
@@ -134,19 +142,23 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   console.log('locations', locations);
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.searchBoxContainer}>
+      <View
+        style={[
+          styles.searchBoxContainer,
+          { backgroundColor: colors.inputBackground },
+        ]}>
         <Icon
           name="search"
           width={22}
           height={22}
-          style={[styles.searchIcon, { color: PRIMARY_BLUE }]}
+          style={[styles.searchIcon, { color: colors.text }]}
         />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.text }]}
           autoCorrect={false}
           maxLength={40}
           placeholder={t('map:searchScreen:placeholder')}
-          placeholderTextColor={PRIMARY_BLUE}
+          placeholderTextColor={colors.text}
           value={value}
           onChangeText={(text) => setValue(text)}
           underlineColorAndroid="transparent"
@@ -160,8 +172,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                 styles.resultsHeader,
                 styles.withBorderBottom,
                 styles.listItem,
+                { borderBottomColor: colors.border },
               ]}>
-              <Text style={styles.title}>
+              <Text style={[styles.title, { color: colors.text }]}>
                 {t('map:searchScreen:searchResults')}
               </Text>
             </View>
@@ -172,12 +185,15 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                 <View
                   key={location.id}
                   style={
-                    i + 1 !== locations.length && [styles.withBorderBottom]
+                    i + 1 !== locations.length && [
+                      styles.withBorderBottom,
+                      { borderBottomColor: colors.border },
+                    ]
                   }>
                   <TouchableOpacity
                     onPress={() => handleSelectLocation(location)}>
                     <View style={styles.listItem}>
-                      <Text style={styles.resultText}>
+                      <Text style={[styles.resultText, { color: colors.text }]}>
                         {location.area && location.area !== location.name
                           ? `${location.name}, ${location.area}`
                           : location.name}
@@ -202,7 +218,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               <TouchableOpacity
                 onPress={() => setRecentSearchesOpen((prev) => !prev)}>
                 <View style={[styles.resultsHeader, styles.listItem]}>
-                  <Text style={styles.title}>
+                  <Text style={[styles.title, { color: colors.text }]}>
                     {t('map:searchScreen:recentSearches')}
                   </Text>
                   {recentSearchesOpen ? (
@@ -237,13 +253,18 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                         style={
                           i + 1 !== recentSearches.length && [
                             styles.withBorderBottom,
+                            { borderBottomColor: colors.border },
                           ]
                         }>
                         <View style={styles.listItem}>
                           <TouchableOpacity
                             onPress={() => handleSelectLocation(search)}>
                             <View style={styles.listItem}>
-                              <Text style={styles.resultText}>
+                              <Text
+                                style={[
+                                  styles.resultText,
+                                  { color: colors.text },
+                                ]}>
                                 {search.area && search.area !== search.name
                                   ? `${search.name}, ${search.area}`
                                   : search.name}
@@ -254,7 +275,11 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                           favorites.some((f) => f.id === search.id) ? (
                             <TouchableOpacity
                               onPress={() => deleteFavorite(search.id)}>
-                              <View style={styles.actionButtonContainer}>
+                              <View
+                                style={[
+                                  styles.actionButtonContainer,
+                                  { borderLeftColor: colors.border },
+                                ]}>
                                 <IconButton
                                   icon="remove-outline"
                                   style={styles.iconStyle}
@@ -267,7 +292,11 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                           ) : (
                             <TouchableOpacity
                               onPress={() => addFavorite(search)}>
-                              <View style={styles.actionButtonContainer}>
+                              <View
+                                style={[
+                                  styles.actionButtonContainer,
+                                  { borderLeftColor: colors.border },
+                                ]}>
                                 <IconButton
                                   icon="add-outline"
                                   style={styles.iconStyle}
@@ -293,8 +322,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                   styles.resultsHeader,
                   styles.withBorderBottom,
                   styles.listItem,
+                  { borderBottomColor: colors.border },
                 ]}>
-                <Text style={styles.title}>
+                <Text style={[styles.title, { color: colors.text }]}>
                   {t('map:searchScreen:favorites')}
                 </Text>
                 {favoritesOpen ? (
@@ -324,13 +354,15 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                     style={
                       i + 1 !== recentSearches.length && [
                         styles.withBorderBottom,
+                        { borderBottomColor: colors.border },
                       ]
                     }>
                     <View style={styles.listItem}>
                       <TouchableOpacity
                         onPress={() => handleSelectLocation(favorite)}>
                         <View style={styles.listItem}>
-                          <Text style={styles.resultText}>
+                          <Text
+                            style={[styles.resultText, { color: colors.text }]}>
                             {favorite.area && favorite.area !== favorite.name
                               ? `${favorite.name}, ${favorite.area}`
                               : favorite.name}
@@ -339,7 +371,11 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() => deleteFavorite(favorite.id)}>
-                        <View style={styles.actionButtonContainer}>
+                        <View
+                          style={[
+                            styles.actionButtonContainer,
+                            { borderLeftColor: colors.border },
+                          ]}>
                           <IconButton
                             icon="remove-outline"
                             style={styles.iconStyle}
@@ -357,7 +393,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           </>
         )}
         {!/^\s*$/.test(value) && locations.length === 0 && (
-          <Text>Haku ei tuottanut tuloksia</Text>
+          <Text style={{ color: colors.text }}>Haku ei tuottanut tuloksia</Text>
         )}
       </View>
     </SafeAreaView>
@@ -367,7 +403,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: WHITE,
     paddingHorizontal: 20,
   },
   searchBoxContainer: {
@@ -376,7 +411,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 11,
-    backgroundColor: LIGHT_BLUE,
     marginTop: 10,
   },
   searchIcon: {
@@ -389,14 +423,12 @@ const styles = StyleSheet.create({
     height: 48,
     paddingHorizontal: 16,
     marginTop: 16,
-    backgroundColor: PRIMARY_BLUE,
     borderRadius: 8,
     marginBottom: 2,
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: WHITE,
   },
   input: {
     height: '100%',
@@ -416,13 +448,11 @@ const styles = StyleSheet.create({
   resultText: {
     fontSize: 15,
     height: 18,
-    color: PRIMARY_BLUE,
     marginLeft: 16,
   },
   actionButtonContainer: {
     width: 50,
     borderLeftWidth: 1,
-    borderColor: LIGHT_BLUE,
     justifyContent: 'center',
     alignItems: 'center',
   },
