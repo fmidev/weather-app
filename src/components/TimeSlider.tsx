@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
 
@@ -19,9 +20,10 @@ import {
 
 import {
   WHITE,
-  VERY_LIGHT_BLUE,
+  LIGHT_BLUE,
   PRIMARY_BLUE,
   SECONDARY_BLUE,
+  CustomTheme,
 } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
@@ -48,6 +50,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   updateSliderTime,
 }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme() as CustomTheme;
 
   const currentSliderTime = moment.unix(sliderTime).format('HH:mm');
 
@@ -58,7 +61,11 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const roundStep = (v: number): number => Math.round(v / step) * step;
 
   return (
-    <View style={styles.wrapper}>
+    <View
+      style={[
+        styles.wrapper,
+        { backgroundColor: colors.inputButtonBackground },
+      ]}>
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -66,7 +73,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
             <Icon
               name="play"
-              style={{ color: PRIMARY_BLUE }}
+              style={{ color: colors.text }}
               width={50}
               height={50}
             />
@@ -74,7 +81,9 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         </View>
         <View style={styles.sliderWrapper}>
           <View style={styles.value}>
-            <Text style={styles.text}>{currentSliderTime}</Text>
+            <Text style={[styles.text, { color: colors.text }]}>
+              {currentSliderTime}
+            </Text>
           </View>
           <Slider
             onValueChange={(v) => updateSliderTime(roundStep(v))}
@@ -89,8 +98,16 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         <TouchableOpacity
           onPress={onTimeStepPressed}
           accessibilityLabel={t('map:selectionButtonAccessibilityLabel')}>
-          <View style={styles.stepSelector}>
-            <Text style={styles.text}>{`${sliderStep} min`}</Text>
+          <View
+            style={[
+              styles.stepSelector,
+              { backgroundColor: colors.background },
+            ]}>
+            <Text
+              style={[
+                styles.text,
+                { color: colors.text },
+              ]}>{`${sliderStep} min`}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -106,7 +123,6 @@ const styles = StyleSheet.create({
     left: 12,
     height: 72,
     borderRadius: 8,
-    backgroundColor: WHITE,
   },
   container: {
     flex: 1,
@@ -136,7 +152,7 @@ const styles = StyleSheet.create({
     height: '100%',
     borderTopRightRadius: 8,
     borderBottomRightRadius: 8,
-    backgroundColor: VERY_LIGHT_BLUE,
+    backgroundColor: LIGHT_BLUE,
     justifyContent: 'center',
     alignItems: 'center',
   },

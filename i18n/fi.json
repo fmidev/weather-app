@@ -24,7 +24,11 @@
     "temperature": "Lämpötila",
     "precipitation": "Sademäärä",
     "wind": "Tuuli",
-    "pressure": "Ilmanpaine"
+    "pressure": "Ilmanpaine",
+    "appearance": "Ulkoasu",
+    "appearanceLight": "Vaalea",
+    "appearanceDark": "Tumma",
+    "appearanceAutomatic": "Automaattinen"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",

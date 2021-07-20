@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { OthersStackParamList } from '../navigators/types';
 
@@ -19,40 +20,60 @@ interface Props {
 
 const OthersScreen: React.FC<Props> = ({ navigation }) => {
   const { t } = useTranslation('navigation');
+  const { colors } = useTheme();
   return (
     <SafeAreaView>
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
-        <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            { borderBottomColor: colors.border },
+          ]}>
           <TouchableOpacity
             delayPressIn={100}
             onPress={() => navigation.navigate('Symbols')}
             testID="navigation_symbols">
             <View style={styles.row}>
-              <Text style={styles.text}>{`${t('navigation:symbols')}`}</Text>
+              <Text style={[styles.text, { color: colors.text }]}>{`${t(
+                'navigation:symbols'
+              )}`}</Text>
               <Icon name="chevron-forward" size={22} />
             </View>
           </TouchableOpacity>
         </View>
-        <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            { borderBottomColor: colors.border },
+          ]}>
           <TouchableOpacity
             delayPressIn={100}
             onPress={() => navigation.navigate('Settings')}
             testID="navigation_settings">
             <View style={styles.row}>
-              <Text style={styles.text}>{`${t('navigation:settings')}`}</Text>
+              <Text style={[styles.text, { color: colors.text }]}>{`${t(
+                'navigation:settings'
+              )}`}</Text>
               <Icon name="chevron-forward" size={22} />
             </View>
           </TouchableOpacity>
         </View>
-        <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            { borderBottomColor: colors.border },
+          ]}>
           <TouchableOpacity
             delayPressIn={100}
             onPress={() => navigation.navigate('Notifications')}
             testID="navigation_notifications">
             <View style={styles.row}>
-              <Text style={styles.text}>{`${t(
+              <Text style={[styles.text, { color: colors.text }]}>{`${t(
                 'navigation:notifications'
               )}`}</Text>
               <Icon name="chevron-forward" size={22} />
@@ -65,7 +86,9 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             onPress={() => navigation.navigate('About')}
             testID="navigation_about">
             <View style={styles.row}>
-              <Text style={styles.text}>{`${t('navigation:about')}`}</Text>
+              <Text style={[styles.text, { color: colors.text }]}>{`${t(
+                'navigation:about'
+              )}`}</Text>
               <Icon name="chevron-forward" size={22} />
             </View>
           </TouchableOpacity>

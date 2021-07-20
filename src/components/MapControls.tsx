@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import MapButton from './MapButton';
 import TimeSlider from './TimeSlider';
 
-import { PRIMARY_BLUE, WHITE } from '../utils/colors';
+import { WHITE } from '../utils/colors';
 
 type MapControlsProps = {
   onTimeStepPressed: () => void;
@@ -28,7 +28,6 @@ const MapControls: React.FC<MapControlsProps> = ({
         accessibilityLabel={t('map:searchButtonAccessibilityLabel')}
         onPress={onSearchPressed}
         icon="search"
-        iconColor={PRIMARY_BLUE}
         iconSize={26}
       />
       <MapButton
@@ -36,7 +35,6 @@ const MapControls: React.FC<MapControlsProps> = ({
         accessibilityLabel={t('map:searchButtonAccessibilityLabel')}
         onPress={onInfoPressed}
         icon="info"
-        iconColor={PRIMARY_BLUE}
         iconSize={26}
       />
       <MapButton
@@ -44,7 +42,6 @@ const MapControls: React.FC<MapControlsProps> = ({
         accessibilityLabel={t('map:searchButtonAccessibilityLabel')}
         onPress={onLayersPressed}
         icon="layers"
-        iconColor={PRIMARY_BLUE}
         iconSize={26}
       />
       <TimeSlider onTimeStepPressed={onTimeStepPressed} />

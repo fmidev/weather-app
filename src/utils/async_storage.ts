@@ -5,12 +5,14 @@ export const LOCALE = 'locale';
 export const FAVORITES = 'favorites';
 export const UNITS = 'units';
 export const RECENT_SEARCHES = 'recent_searches';
+export const THEME = 'theme';
 
 type StorageKey =
   | typeof LOCALE
   | typeof FAVORITES
   | typeof UNITS
-  | typeof RECENT_SEARCHES;
+  | typeof RECENT_SEARCHES
+  | typeof THEME;
 
 export const getItem = async (key: StorageKey): Promise<string | null> => {
   try {

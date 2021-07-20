@@ -1,13 +1,44 @@
 export const PRIMARY_BLUE = '#303193';
 export const SECONDARY_BLUE = '#3A66E3';
-export const LIGHT_BLUE = '#02B8CE';
-export const LIGHT_GREEN = '#52C1A1';
-export const BLACK = '#000000';
+export const GRAYISH_BLUE = '#D8E7F2'; // line-light-mode
+export const LIGHT_BLUE = '#EEF4FB';
+
 export const WHITE = '#FFFFFF';
-export const LIGHT_GRAY = '#F0F0F0';
-export const GRAY = '#808080';
-export const GRAYISH_BLUE = '#D8E7F2';
 export const TRANSPARENT = 'transparent';
-export const VERY_LIGHT_BLUE = '#EEF4FB';
-export const BORDER_BLUE = '#ADCCE2';
-export const UNDERLINE = '#03B8CE';
+
+export const BLACK = '#000000';
+export const GRAY_7 = '#121212';
+export const GRAY_6 = '#1C1C1E';
+export const GRAY_5 = '#2C2C2E';
+export const GRAY_4 = '#3A3A3C';
+export const GRAY_3 = '#48484A';
+export const GRAY_2 = '#636366';
+export const GRAY_1 = '#8E8E93';
+
+export const LIGHT_RED = '#F8D7DA';
+export const DARK_RED = '#940214';
+export const LIGHT_CYAN = '#CBF1F5';
+export const DARK_CYAN = '#0B5B71';
+
+export const GREEN = '#76C81D';
+export const YELLOW = '#F8F800';
+export const ORANGE = '#FFB700';
+export const RED = '#D0021B';
+
+export type CustomTheme = {
+  dark: boolean;
+  colors: {
+    primary: string;
+    background: string;
+    card: string;
+    text: string;
+    notification: string;
+    primaryText: string;
+    secondaryText: string;
+    border: string;
+    inputBackground: string;
+    inputButtonBackground: string;
+    mapButtonBackground: string;
+    headerBackground: string;
+  };
+};

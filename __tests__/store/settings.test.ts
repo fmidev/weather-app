@@ -18,6 +18,8 @@ describe('settings reducer', () => {
       })
     ).toEqual({
       favorites: [favorite],
+      units: undefined,
+      theme: 'automatic',
     });
   });
 
@@ -41,10 +43,12 @@ describe('settings reducer', () => {
 
     expect(
       reducer(
-        { favorites, units: undefined },
+        { favorites, units: undefined, theme: 'automatic' },
         { type: types.DELETE_FAVORITE, id: 123 }
       )
     ).toEqual({
+      units: undefined,
+      theme: 'automatic',
       favorites: [
         {
           id: 323,
@@ -91,7 +95,7 @@ describe('settings reducer', () => {
     };
     expect(
       reducer(
-        { favorites, units },
+        { favorites, units, theme: 'automatic' },
         {
           type: types.UPDATE_UNITS,
           units: {
@@ -107,6 +111,7 @@ describe('settings reducer', () => {
       )
     ).toEqual({
       favorites,
+      theme: 'automatic',
       units: {
         ...units,
         temperature: {
@@ -116,6 +121,16 @@ describe('settings reducer', () => {
           unitPrecision: 0,
         },
       },
+    });
+  });
+
+  it('should handle UPDATE_THEME', () => {
+    expect(
+      reducer(undefined, { type: types.UPDATE_THEME, theme: 'light' })
+    ).toEqual({
+      favorites: [],
+      units: undefined,
+      theme: 'light',
     });
   });
 });

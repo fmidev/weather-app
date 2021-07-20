@@ -3,6 +3,7 @@ import {
   ADD_FAVORITE,
   DELETE_FAVORITE,
   UPDATE_UNITS,
+  UPDATE_THEME,
   SettingsState,
   SettingsActionTypes,
   INIT_SETTINGS,
@@ -11,6 +12,7 @@ import {
 const INITIAL_STATE: SettingsState = {
   favorites: [],
   units: undefined,
+  theme: 'automatic',
 };
 
 export default (
@@ -37,6 +39,13 @@ export default (
       return {
         ...state,
         units: action.units,
+      };
+    }
+
+    case UPDATE_THEME: {
+      return {
+        ...state,
+        theme: action.theme,
       };
     }
 

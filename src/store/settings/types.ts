@@ -3,6 +3,7 @@ export const ADD_FAVORITE = 'ADD_FAVORITE';
 export const DELETE_FAVORITE = 'DELETE_FAVORITE';
 export const INIT_SETTINGS = 'INIT_SETTINGS';
 export const UPDATE_UNITS = 'UPDATE_UNITS';
+export const UPDATE_THEME = 'UPDATE_THEME';
 
 export type UnitType = {
   unitId: number;
@@ -33,6 +34,7 @@ interface InitSettings {
   type: typeof INIT_SETTINGS;
   favorites: Location[] | undefined;
   units: UnitMap | undefined;
+  theme: Theme | undefined;
 }
 
 interface UpdateUnits {
@@ -40,12 +42,20 @@ interface UpdateUnits {
   units: UnitMap;
 }
 
+interface UpdateTheme {
+  type: typeof UPDATE_THEME;
+  theme: Theme;
+}
+
+export type Theme = 'light' | 'dark' | 'automatic';
+
 export type SettingsActionTypes =
   | GetFavorites
   | AddFavorite
   | DeleteFavorite
   | InitSettings
-  | UpdateUnits;
+  | UpdateUnits
+  | UpdateTheme;
 
 export type Location = {
   name: string;
@@ -57,4 +67,5 @@ export type Location = {
 export interface SettingsState {
   favorites: Location[] | [];
   units: UnitMap | undefined;
+  theme: Theme;
 }

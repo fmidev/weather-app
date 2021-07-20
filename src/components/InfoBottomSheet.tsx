@@ -14,7 +14,7 @@ import Icon from './Icon';
 import CloseButton from './CloseButton';
 
 import { images, WeatherSymbol } from '../assets/images';
-import { PRIMARY_BLUE, SECONDARY_BLUE, VERY_LIGHT_BLUE } from '../utils/colors';
+import { PRIMARY_BLUE, SECONDARY_BLUE, LIGHT_BLUE } from '../utils/colors';
 
 type InfoBottomSheetProps = {
   onClose: () => void;
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   withBorderBottom: {
     borderBottomWidth: 1,
-    borderColor: VERY_LIGHT_BLUE,
+    borderColor: LIGHT_BLUE,
   },
   row: {
     flexDirection: 'row',
