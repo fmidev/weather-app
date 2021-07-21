@@ -59,13 +59,17 @@
       "strong": "Heavy",
       "showMore": "Show more",
       "showLess": "Show less"
-    },
-    "searchScreen": {
-      "placeholder": "Search location",
-      "recentSearches": "Previous searches",
-      "favorites": "My locations",
-      "searchResults": "Search results"
     }
+  },
+  "searchScreen": {
+    "placeholder": "Search location",
+    "recentSearches": "Previous searches",
+    "favorites": "My locations",
+    "searchResults": "Search results",
+    "locate": "Use your location",
+    "clearFavorites": "Clear all my locations",
+    "clearRecentSearches": "Clear all previous searches",
+    "remember": "Remember"
   },
   "symbols": {
     "1": "clear",

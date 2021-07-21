@@ -2,8 +2,12 @@ import {
   GET_FAVORITES,
   ADD_FAVORITE,
   DELETE_FAVORITE,
+  DELETE_ALL_FAVORITES,
   UPDATE_UNITS,
   UPDATE_THEME,
+  GET_RECENT_SEARCHES,
+  UPDATE_RECENT_SEARCHES,
+  DELETE_ALL_RECENT_SEARCHES,
   SettingsState,
   SettingsActionTypes,
   INIT_SETTINGS,
@@ -11,6 +15,7 @@ import {
 
 const INITIAL_STATE: SettingsState = {
   favorites: [],
+  recentSearches: [],
   units: undefined,
   theme: 'automatic',
 };
@@ -35,6 +40,34 @@ export default (
       };
     }
 
+    case DELETE_ALL_FAVORITES: {
+      return {
+        ...state,
+        favorites: [],
+      };
+    }
+
+    case GET_RECENT_SEARCHES: {
+      return {
+        ...state,
+        recentSearches: action.recentSearches,
+      };
+    }
+
+    case UPDATE_RECENT_SEARCHES: {
+      return {
+        ...state,
+        recentSearches: action.recentSearches,
+      };
+    }
+
+    case DELETE_ALL_RECENT_SEARCHES: {
+      return {
+        ...state,
+        recentSearches: [],
+      };
+    }
+
     case UPDATE_UNITS: {
       return {
         ...state,
@@ -53,7 +86,9 @@ export default (
       return {
         ...state,
         favorites: action.favorites || [],
+        recentSearches: action.recentSearches || [],
         units: action.units,
+        theme: action.theme,
       };
     }
 

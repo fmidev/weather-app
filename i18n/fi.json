@@ -59,13 +59,17 @@
       "strong": "Rankkaa",
       "showMore": "Näytä lisää",
       "showLess": "Näytä vähemmän"
-    },
-    "searchScreen": {
-      "placeholder": "Hae paikkaa",
-      "recentSearches": "Edelliset haut",
-      "favorites": "Omat paikat",
-      "searchResults": "Hakutulokset"
     }
+  },
+  "searchScreen": {
+    "placeholder": "Hae paikkaa",
+    "recentSearches": "Edelliset haut",
+    "favorites": "Omat paikat",
+    "searchResults": "Hakutulokset",
+    "locate": "Paikanna oma sijainti",
+    "clearFavorites": "Poista kaikki omat paikat",
+    "clearRecentSearches": "Poista kaikki edelliset haut",
+    "remember": "Muista"
   },
   "symbols": {
     "1": "selkeää",

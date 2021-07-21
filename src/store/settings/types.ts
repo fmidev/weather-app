@@ -1,6 +1,12 @@
 export const GET_FAVORITES = 'GET_FAVORITES';
 export const ADD_FAVORITE = 'ADD_FAVORITE';
 export const DELETE_FAVORITE = 'DELETE_FAVORITE';
+export const DELETE_ALL_FAVORITES = 'DELETE_ALL_FAVORITES';
+
+export const GET_RECENT_SEARCHES = 'GET_RECENT_SEARCHES';
+export const UPDATE_RECENT_SEARCHES = 'UPDATE_RECENT_SEARCHES';
+export const DELETE_ALL_RECENT_SEARCHES = 'DELETE_ALL_RECENT_SEARCHES';
+
 export const INIT_SETTINGS = 'INIT_SETTINGS';
 export const UPDATE_UNITS = 'UPDATE_UNITS';
 export const UPDATE_THEME = 'UPDATE_THEME';
@@ -30,11 +36,30 @@ interface DeleteFavorite {
   id: number;
 }
 
+interface DeleteAllFavorites {
+  type: typeof DELETE_ALL_FAVORITES;
+}
+
+interface GetRecentSearches {
+  type: typeof GET_RECENT_SEARCHES;
+  recentSearches: Location[];
+}
+
+interface UpdateRecentSearches {
+  type: typeof UPDATE_RECENT_SEARCHES;
+  recentSearches: Location[];
+}
+
+interface DeleteAllRecentSearches {
+  type: typeof DELETE_ALL_RECENT_SEARCHES;
+}
+
 interface InitSettings {
   type: typeof INIT_SETTINGS;
   favorites: Location[] | undefined;
+  recentSearches: Location[] | undefined;
   units: UnitMap | undefined;
-  theme: Theme | undefined;
+  theme: Theme;
 }
 
 interface UpdateUnits {
@@ -55,7 +80,11 @@ export type SettingsActionTypes =
   | DeleteFavorite
   | InitSettings
   | UpdateUnits
-  | UpdateTheme;
+  | UpdateTheme
+  | DeleteAllFavorites
+  | GetRecentSearches
+  | UpdateRecentSearches
+  | DeleteAllRecentSearches;
 
 export type Location = {
   name: string;
@@ -66,6 +95,7 @@ export type Location = {
 };
 export interface SettingsState {
   favorites: Location[] | [];
+  recentSearches: Location[] | [];
   units: UnitMap | undefined;
   theme: Theme;
 }

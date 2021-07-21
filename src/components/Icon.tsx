@@ -104,7 +104,7 @@ const Icon: React.FC<IconProps> = ({ name, ...props }) => {
       return <RadioButtonOn {...props} />;
     case 'search':
       return <Search {...props} />;
-    case 'start-selected':
+    case 'star-selected':
       return <StarSelected {...props} />;
     case 'star-unselected':
       return <StarUnselected {...props} />;

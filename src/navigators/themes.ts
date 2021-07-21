@@ -29,6 +29,7 @@ export const lightTheme = {
     inputButtonBackground: WHITE,
     mapButtonBackground: WHITE,
     headerBackground: WHITE,
+    timeStepBackground: LIGHT_BLUE,
   },
 };
 
@@ -47,5 +48,6 @@ export const darkTheme = {
     inputButtonBackground: GRAY_5,
     mapButtonBackground: GRAY_6,
     headerBackground: GRAY_6,
+    timeStepBackground: GRAY_6,
   },
 };

@@ -20,6 +20,7 @@ describe('settings reducer', () => {
       favorites: [favorite],
       units: undefined,
       theme: 'automatic',
+      recentSearches: [],
     });
   });
 
@@ -43,7 +44,7 @@ describe('settings reducer', () => {
 
     expect(
       reducer(
-        { favorites, units: undefined, theme: 'automatic' },
+        { favorites, units: undefined, theme: 'automatic', recentSearches: [] },
         { type: types.DELETE_FAVORITE, id: 123 }
       )
     ).toEqual({
@@ -58,6 +59,7 @@ describe('settings reducer', () => {
           lon: 13.234,
         },
       ],
+      recentSearches: [],
     });
   });
 
@@ -95,7 +97,7 @@ describe('settings reducer', () => {
     };
     expect(
       reducer(
-        { favorites, units, theme: 'automatic' },
+        { favorites, units, theme: 'automatic', recentSearches: [] },
         {
           type: types.UPDATE_UNITS,
           units: {
@@ -121,6 +123,7 @@ describe('settings reducer', () => {
           unitPrecision: 0,
         },
       },
+      recentSearches: [],
     });
   });
 
@@ -131,6 +134,7 @@ describe('settings reducer', () => {
       favorites: [],
       units: undefined,
       theme: 'light',
+      recentSearches: [],
     });
   });
 });
