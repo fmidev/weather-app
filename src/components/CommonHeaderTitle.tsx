@@ -36,6 +36,7 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
 const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
+    alignSelf: 'center',
   },
 });
 
