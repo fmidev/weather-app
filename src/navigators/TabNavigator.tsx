@@ -4,7 +4,6 @@ import {
   AppState,
   Appearance,
   Platform,
-  StyleSheet,
   AppStateStatus,
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
@@ -239,7 +238,7 @@ const Navigator: React.FC<Props> = ({
           headerBackImage: ({ tintColor }) => (
             <Icon
               name="arrow-back"
-              style={{ color: tintColor, ...styles.headerBackButton }}
+              style={{ color: tintColor }}
               width={26}
               height={26}
             />
@@ -265,9 +264,10 @@ const Navigator: React.FC<Props> = ({
           headerStyle: { shadowColor: 'transparent' },
           headerBackImage: ({ tintColor }) => (
             <Icon
-              name="arrow-back-outline"
-              style={{ color: tintColor, ...styles.headerBackButton }}
-              size={26}
+              name="arrow-back"
+              style={{ color: tintColor }}
+              width={26}
+              height={26}
             />
           ),
         }}
@@ -307,7 +307,7 @@ const Navigator: React.FC<Props> = ({
           headerBackImage: ({ tintColor }) => (
             <Icon
               name="arrow-back"
-              style={{ color: tintColor, ...styles.headerBackButton }}
+              style={{ color: tintColor }}
               width={26}
               height={26}
             />
@@ -390,11 +390,5 @@ const Navigator: React.FC<Props> = ({
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  headerBackButton: {
-    marginLeft: 20,
-  },
-});
 
 export default connector(Navigator);

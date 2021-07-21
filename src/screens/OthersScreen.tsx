@@ -40,7 +40,12 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={[styles.text, { color: colors.text }]}>{`${t(
                 'navigation:symbols'
               )}`}</Text>
-              <Icon name="chevron-forward" size={22} />
+              <Icon
+                name="arrow-right"
+                width={22}
+                height={22}
+                style={{ color: colors.text }}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -58,7 +63,12 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={[styles.text, { color: colors.text }]}>{`${t(
                 'navigation:settings'
               )}`}</Text>
-              <Icon name="chevron-forward" size={22} />
+              <Icon
+                name="arrow-right"
+                width={22}
+                height={22}
+                style={{ color: colors.text }}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -76,7 +86,12 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={[styles.text, { color: colors.text }]}>{`${t(
                 'navigation:notifications'
               )}`}</Text>
-              <Icon name="chevron-forward" size={22} />
+              <Icon
+                name="arrow-right"
+                width={22}
+                height={22}
+                style={{ color: colors.text }}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -89,7 +104,12 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={[styles.text, { color: colors.text }]}>{`${t(
                 'navigation:about'
               )}`}</Text>
-              <Icon name="chevron-forward" size={22} />
+              <Icon
+                name="arrow-right"
+                width={22}
+                height={22}
+                style={{ color: colors.text }}
+              />
             </View>
           </TouchableOpacity>
         </View>
