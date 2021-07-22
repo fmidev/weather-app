@@ -11,15 +11,14 @@ import RainRadarOverlay from '../components/RainRadarOverlay';
 import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
 import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
 import InfoBottomSheet from '../components/InfoBottomSheet';
+import MapMarker from '../components/MapMarker';
 
 import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
 import {
-  selectGeolocation,
   selectCurrentLocation,
+  selectIsGeolocation,
 } from '../store/general/selectors';
-import { selectAnimateToArea } from '../store/map/selectors';
-import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -28,27 +27,16 @@ const INITIAL_REGION = {
   longitudeDelta: 15.729689156090728,
 };
 
-// const INITIAL_ZOOM = {
-//   latitudeDelta: 3.317838912399168,
-//   longitudeDelta: 4.762519516243344,
-// };
-
 const ANIMATE_ZOOM = {
   latitudeDelta: 0.349713388569298,
   longitudeDelta: 0.3956636710639145,
 };
 
 const mapStateToProps = (state: State) => ({
-  geolocation: selectGeolocation(state),
-  animateToArea: selectAnimateToArea(state),
   currentLocation: selectCurrentLocation(state),
+  isGeolocation: selectIsGeolocation(state),
 });
-
-const mapDispatchToProps = {
-  setAnimateToArea: setAnimateToAreaAction,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -58,11 +46,8 @@ type MapScreenProps = PropsFromRedux & {
 };
 
 const MapScreen: React.FC<MapScreenProps> = ({
-  // animateToArea,
-  geolocation,
-  // route,
-  // setAnimateToArea,
   currentLocation,
+  isGeolocation,
 }) => {
   const { colors } = useTheme();
   const mapRef = useRef() as React.MutableRefObject<MapView>;
@@ -70,34 +55,12 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
-  // useEffect(() => {
-  //   // TODO: needs optimization
-  //   if (route.params) {
-  //     // console.log('maybe should animate to searched area', route);
-  //     const { lat, lon } = route.params;
-  //     // TODO: should compare if region is close enough, animate if NOT
-  //     if (animateToArea && lat && lon) {
-  //       console.log('animating');
-  //       const location = { latitude: lat, longitude: lon, ...ANIMATE_ZOOM };
-  //       setAnimateToArea(false);
-  //       mapRef.current.animateToRegion(location);
-  //     }
-  //   }
-  // }, [route, animateToArea, setAnimateToArea]);
   useEffect(() => {
     if (currentLocation) {
       const { lat: latitude, lon: longitude } = currentLocation;
       mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
     }
   }, [currentLocation]);
-
-  useEffect(() => {
-    if (geolocation) {
-      // TODO: needs to set header title too
-      console.log('MapScreen.ts::geolocaiton', geolocation);
-      mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, ...geolocation });
-    }
-  }, [geolocation]);
 
   return (
     <SafeAreaView style={styles.mapContainer}>
@@ -109,6 +72,14 @@ const MapScreen: React.FC<MapScreenProps> = ({
         rotateEnabled={false}
         onRegionChangeComplete={(r) => console.log(r)}>
         <RainRadarOverlay />
+        {isGeolocation && currentLocation && (
+          <MapMarker
+            coordinates={{
+              latitude: currentLocation?.lat,
+              longitude: currentLocation?.lon,
+            }}
+          />
+        )}
       </MapView>
       <MapControls
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
