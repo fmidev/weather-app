@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
@@ -50,8 +50,12 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     alignItems: 'center',
+    ...Platform.select({
+      android: {
+        justifyContent: 'center',
+      },
+    }),
   },
   title: {
     fontWeight: 'bold',

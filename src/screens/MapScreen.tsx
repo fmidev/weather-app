@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, Platform } from 'react-native';
 import MapView from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -19,6 +19,8 @@ import {
   selectCurrentLocation,
   selectIsGeolocation,
 } from '../store/general/selectors';
+
+import darkMapStyle from '../utils/dark_map_style.json';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -49,7 +51,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   currentLocation,
   isGeolocation,
 }) => {
-  const { colors } = useTheme();
+  const { colors, dark } = useTheme();
   const mapRef = useRef() as React.MutableRefObject<MapView>;
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
@@ -62,12 +64,16 @@ const MapScreen: React.FC<MapScreenProps> = ({
     }
   }, [currentLocation]);
 
+  const darkGoogleMapsStyle =
+    dark && Platform.OS === 'android' ? darkMapStyle : [];
+
   return (
     <SafeAreaView style={styles.mapContainer}>
       <MapView
         ref={mapRef}
         testID="map"
         style={styles.map}
+        customMapStyle={darkGoogleMapsStyle}
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}
         onRegionChangeComplete={(r) => console.log(r)}>
