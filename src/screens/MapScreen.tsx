@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import MapView, { Region } from 'react-native-maps';
+import { SafeAreaView, StyleSheet, Platform } from 'react-native';
+import MapView from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useTheme } from '@react-navigation/native';
@@ -11,12 +11,16 @@ import RainRadarOverlay from '../components/RainRadarOverlay';
 import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
 import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
 import InfoBottomSheet from '../components/InfoBottomSheet';
+import MapMarker from '../components/MapMarker';
 
 import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
-import { selectGeolocation } from '../store/general/selectors';
-import { selectAnimateToArea } from '../store/map/selectors';
-import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
+import {
+  selectCurrentLocation,
+  selectIsGeolocation,
+} from '../store/general/selectors';
+
+import darkMapStyle from '../utils/dark_map_style.json';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -25,21 +29,16 @@ const INITIAL_REGION = {
   longitudeDelta: 15.729689156090728,
 };
 
-const INITIAL_ZOOM = {
-  latitudeDelta: 3.317838912399168,
-  longitudeDelta: 4.762519516243344,
+const ANIMATE_ZOOM = {
+  latitudeDelta: 0.349713388569298,
+  longitudeDelta: 0.3956636710639145,
 };
 
 const mapStateToProps = (state: State) => ({
-  geolocation: selectGeolocation(state),
-  animateToArea: selectAnimateToArea(state),
+  currentLocation: selectCurrentLocation(state),
+  isGeolocation: selectIsGeolocation(state),
 });
-
-const mapDispatchToProps = {
-  setAnimateToArea: setAnimateToAreaAction,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -49,45 +48,24 @@ type MapScreenProps = PropsFromRedux & {
 };
 
 const MapScreen: React.FC<MapScreenProps> = ({
-  animateToArea,
-  geolocation,
-  navigation,
-  route,
-  setAnimateToArea,
+  currentLocation,
+  isGeolocation,
 }) => {
-  const { colors } = useTheme();
-
-  const [region, setRegion] = useState<Region | undefined>(undefined);
+  const { colors, dark } = useTheme();
   const mapRef = useRef() as React.MutableRefObject<MapView>;
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   useEffect(() => {
-    // TODO: needs optimization
-    if (route.params) {
-      // console.log('maybe should animate to searched area', route);
-      const { lat, lon } = route.params;
-      // TODO: should compare if region is close enough, animate if NOT
-      if (animateToArea && lat && lon) {
-        const location = { latitude: lat, longitude: lon, ...INITIAL_ZOOM };
-        setAnimateToArea(false);
-        setRegion(location);
-        mapRef.current.animateToRegion(location);
-      }
+    if (currentLocation) {
+      const { lat: latitude, lon: longitude } = currentLocation;
+      mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
     }
-  }, [route, animateToArea, setAnimateToArea]);
+  }, [currentLocation]);
 
-  useEffect(() => {
-    if (
-      geolocation &&
-      region?.latitude !== geolocation.latitude &&
-      region?.longitude !== geolocation.longitude
-    ) {
-      setRegion({ ...INITIAL_ZOOM, ...geolocation });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const darkGoogleMapsStyle =
+    dark && Platform.OS === 'android' ? darkMapStyle : [];
 
   return (
     <SafeAreaView style={styles.mapContainer}>
@@ -95,18 +73,24 @@ const MapScreen: React.FC<MapScreenProps> = ({
         ref={mapRef}
         testID="map"
         style={styles.map}
+        customMapStyle={darkGoogleMapsStyle}
         initialRegion={INITIAL_REGION}
-        region={region}
-        // TODO: causes weird panning behavior
-        // onRegionChangeComplete={(r) => setRegion(r)}
-        rotateEnabled={false}>
+        rotateEnabled={false}
+        onRegionChangeComplete={(r) => console.log(r)}>
         <RainRadarOverlay />
+        {isGeolocation && currentLocation && (
+          <MapMarker
+            coordinates={{
+              latitude: currentLocation?.lat,
+              longitude: currentLocation?.lon,
+            }}
+          />
+        )}
       </MapView>
       <MapControls
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
-        onSearchPressed={() => navigation.navigate('Search')}
       />
 
       <RBSheet

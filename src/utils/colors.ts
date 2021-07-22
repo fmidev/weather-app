@@ -40,5 +40,6 @@ export type CustomTheme = {
     inputButtonBackground: string;
     mapButtonBackground: string;
     headerBackground: string;
+    timeStepBackground: string;
   };
 };

@@ -101,7 +101,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           <View
             style={[
               styles.stepSelector,
-              { backgroundColor: colors.background },
+              { backgroundColor: colors.timeStepBackground },
             ]}>
             <Text
               style={[

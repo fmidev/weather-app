@@ -25,3 +25,8 @@ export type MapStackParamList = {
   Map: Location;
   Search: undefined;
 };
+
+export type ForecastStackParamList = {
+  Forecast: Location;
+  Search: undefined;
+};

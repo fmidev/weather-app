@@ -11,25 +11,16 @@ type MapControlsProps = {
   onTimeStepPressed: () => void;
   onLayersPressed: () => void;
   onInfoPressed: () => void;
-  onSearchPressed: () => void;
 };
 
 const MapControls: React.FC<MapControlsProps> = ({
   onTimeStepPressed,
   onLayersPressed,
   onInfoPressed,
-  onSearchPressed,
 }) => {
   const { t } = useTranslation();
   return (
     <>
-      <MapButton
-        style={[styles.mapButton, styles.searchButton]}
-        accessibilityLabel={t('map:searchButtonAccessibilityLabel')}
-        onPress={onSearchPressed}
-        icon="search"
-        iconSize={26}
-      />
       <MapButton
         style={[styles.mapButton, styles.infoButton]}
         accessibilityLabel={t('map:searchButtonAccessibilityLabel')}

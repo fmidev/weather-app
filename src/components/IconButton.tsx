@@ -73,10 +73,10 @@ const IconButton: React.FC<IconButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    width: 28,
-    height: 28,
-    borderRadius: 20,
-    padding: 0,
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: LIGHT_BLUE,

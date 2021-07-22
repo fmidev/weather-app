@@ -11,6 +11,12 @@ export const selectFavorites = createSelector<
   Location[] | []
 >(selectSettingsDomain, (settings) => settings.favorites);
 
+export const selectRecentSearches = createSelector<
+  State,
+  SettingsState,
+  Location[] | []
+>(selectSettingsDomain, (settings) => settings.recentSearches);
+
 export const selectUnits = createSelector<
   State,
   SettingsState,

@@ -3,11 +3,9 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   SafeAreaView,
-  ScrollView,
   Text,
   TextInput,
   StyleSheet,
-  TouchableOpacity,
   Keyboard,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -17,37 +15,44 @@ import Config from 'react-native-config';
 
 import Icon from '../components/Icon';
 
-import { MapStackParamList } from '../navigators/types';
+import { MapStackParamList, ForecastStackParamList } from '../navigators/Types';
+
 import { State } from '../store/types';
-import { selectFavorites } from '../store/settings/selectors';
+import {
+  selectFavorites,
+  selectRecentSearches,
+} from '../store/settings/selectors';
 import {
   addFavorite as addFavoriteAction,
   deleteFavorite as deleteFavoriteAction,
+  deleteAllFavorites as deleteAllFavoritesAction,
+  updateRecentSearches as updateRecentSearchesAction,
+  deleteAllRecentSearches as deleteAllRecentSearchesAction,
 } from '../store/settings/actions';
 import { Location } from '../store/settings/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
+import { setCurrentLocation as setCurrentLocationAction } from '../store/general/actions';
 
+import AreaList from '../components/AreaList';
 import IconButton from '../components/IconButton';
 
-import { getItem, setItem, RECENT_SEARCHES } from '../utils/async_storage';
-import {
-  PRIMARY_BLUE,
-  WHITE,
-  LIGHT_BLUE,
-  GRAYISH_BLUE,
-  CustomTheme,
-} from '../utils/colors';
+import { CustomTheme } from '../utils/colors';
 
-const MAX_RECENT_SEARCHES = 10; // TODO: define max number of favorites
+const MAX_RECENT_SEARCHES = 3; // TODO: define max number of recent searches
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
+  recentSearches: selectRecentSearches(state),
 });
 
 const mapDispatchToProps = {
   addFavorite: addFavoriteAction,
   deleteFavorite: deleteFavoriteAction,
+  deleteAllFavorites: deleteAllFavoritesAction,
   setAnimateToArea: setAnimateToAreaAction,
+  updateRecentSearches: updateRecentSearchesAction,
+  deleteAllRecentSearches: deleteAllRecentSearchesAction,
+  setCurrentLocation: setCurrentLocationAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -55,37 +60,29 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SearchScreenProps = PropsFromRedux & {
-  navigation: StackNavigationProp<MapStackParamList, 'Search'>;
+  navigation: StackNavigationProp<
+    MapStackParamList | ForecastStackParamList,
+    'Search'
+  >;
 };
 
 const SearchScreen: React.FC<SearchScreenProps> = ({
   favorites,
+  recentSearches,
   addFavorite,
   deleteFavorite,
+  deleteAllFavorites,
   setAnimateToArea,
+  updateRecentSearches,
+  deleteAllRecentSearches,
+  setCurrentLocation,
   navigation,
 }) => {
-  const { t } = useTranslation();
+  // TODO: for some reason this renders twice...
+  const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
   const [locations, setLocations] = useState([]);
-  const [recentSearches, setRecentSearches] = useState<Location[] | []>([]);
-  const [recentSearchesOpen, setRecentSearchesOpen] = useState<boolean>(true);
-  const [favoritesOpen, setFavoritesOpen] = useState<boolean>(true);
-
-  useEffect(() => {
-    let mounted = true;
-
-    getItem(RECENT_SEARCHES).then((data) => {
-      if (data && mounted) {
-        const searches = JSON.parse(data);
-        setRecentSearches(searches);
-      }
-    });
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     locationQuery(value);
@@ -117,29 +114,39 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
       });
   };
 
-  const handleSelectLocation = (location: {
-    name: string;
-    area: string;
-    lat: number;
-    lon: number;
-    id: number;
-  }) => {
+  const handleSelectLocation = (
+    location: {
+      name: string;
+      area: string;
+      lat: number;
+      lon: number;
+      id: number; // geoid
+    },
+    update: boolean
+  ) => {
     Keyboard.dismiss();
     setAnimateToArea(true);
     setValue('');
     const { name, area, lat, lon, id } = location;
     const searchObj = { name, area, lat, lon, id };
     // navigate to MapScreen with params
-    navigation.navigate('Map', searchObj);
+    // navigation.navigate('Map', searchObj);
+    console.log('Selected location:', searchObj);
     const newRecentSearches = recentSearches
       .filter((search) => search.id !== id)
       .concat(searchObj)
       .slice(-MAX_RECENT_SEARCHES);
 
-    setRecentSearches(newRecentSearches);
-    setItem(RECENT_SEARCHES, JSON.stringify(newRecentSearches));
+    if (update) {
+      updateRecentSearches(newRecentSearches);
+    }
+    setCurrentLocation(location);
+    navigation.goBack();
   };
-  console.log('locations', locations);
+  console.log(locations);
+  const isFavorite = (location: Location) =>
+    favorites.length > 0 && favorites.some((f) => f.id === location.id);
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -157,241 +164,74 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           style={[styles.input, { color: colors.text }]}
           autoCorrect={false}
           maxLength={40}
-          placeholder={t('map:searchScreen:placeholder')}
+          placeholder={t('placeholder')}
           placeholderTextColor={colors.text}
           value={value}
           onChangeText={(text) => setValue(text)}
           underlineColorAndroid="transparent"
         />
       </View>
+      {locations.length === 0 && (
+        <View style={styles.locateRow}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {t('locate')}
+          </Text>
+          <IconButton
+            icon="locate"
+            iconColor={colors.text}
+            backgroundColor={colors.inputBackground}
+          />
+        </View>
+      )}
       <View style={styles.results}>
         {locations.length > 0 && (
-          <>
-            <View
-              style={[
-                styles.resultsHeader,
-                styles.withBorderBottom,
-                styles.listItem,
-                { borderBottomColor: colors.border },
-              ]}>
-              <Text style={[styles.title, { color: colors.text }]}>
-                {t('map:searchScreen:searchResults')}
-              </Text>
-            </View>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps="handled">
-              {locations.map((location: Location, i) => (
-                <View
-                  key={location.id}
-                  style={
-                    i + 1 !== locations.length && [
-                      styles.withBorderBottom,
-                      { borderBottomColor: colors.border },
-                    ]
-                  }>
-                  <TouchableOpacity
-                    onPress={() => handleSelectLocation(location)}>
-                    <View style={styles.listItem}>
-                      <Text style={[styles.resultText, { color: colors.text }]}>
-                        {location.area && location.area !== location.name
-                          ? `${location.name}, ${location.area}`
-                          : location.name}
-                      </Text>
-                      <Icon
-                        name="arrow-forward"
-                        width={22}
-                        height={22}
-                        style={{ color: PRIMARY_BLUE }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </ScrollView>
-          </>
+          <AreaList
+            elements={locations}
+            title={t('searchResults')}
+            onSelect={(location) => handleSelectLocation(location, true)}
+            onIconPress={(location) => {
+              addFavorite(location as Location);
+              setValue('');
+              Keyboard.dismiss();
+            }}
+            iconNameGetter={(location) =>
+              isFavorite(location) ? 'star-selected' : 'star-unselected'
+            }
+          />
         )}
         {/^\s*$/.test(value) &&
           locations.length === 0 &&
-          recentSearches.length > 0 && (
-            <>
-              <TouchableOpacity
-                onPress={() => setRecentSearchesOpen((prev) => !prev)}>
-                <View style={[styles.resultsHeader, styles.listItem]}>
-                  <Text style={[styles.title, { color: colors.text }]}>
-                    {t('map:searchScreen:recentSearches')}
-                  </Text>
-                  {recentSearchesOpen ? (
-                    <IconButton
-                      icon="arrow-up"
-                      style={styles.iconStyle}
-                      backgroundColor={WHITE}
-                      iconColor={PRIMARY_BLUE}
-                      iconSize={20}
-                    />
-                  ) : (
-                    <IconButton
-                      icon="arrow-down"
-                      style={styles.iconStyle}
-                      backgroundColor={WHITE}
-                      iconColor={PRIMARY_BLUE}
-                      iconSize={20}
-                    />
-                  )}
-                </View>
-              </TouchableOpacity>
-              {recentSearchesOpen && (
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  style={styles.recentListContainer}>
-                  {recentSearches
-                    .slice(0)
-                    .reverse()
-                    .map((search, i) => (
-                      <View
-                        key={search.id}
-                        style={
-                          i + 1 !== recentSearches.length && [
-                            styles.withBorderBottom,
-                            { borderBottomColor: colors.border },
-                          ]
-                        }>
-                        <View style={styles.listItem}>
-                          <TouchableOpacity
-                            onPress={() => handleSelectLocation(search)}>
-                            <View style={styles.listItem}>
-                              <Text
-                                style={[
-                                  styles.resultText,
-                                  { color: colors.text },
-                                ]}>
-                                {search.area && search.area !== search.name
-                                  ? `${search.name}, ${search.area}`
-                                  : search.name}
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                          {favorites.length > 0 &&
-                          favorites.some((f) => f.id === search.id) ? (
-                            <TouchableOpacity
-                              onPress={() => deleteFavorite(search.id)}>
-                              <View
-                                style={[
-                                  styles.actionButtonContainer,
-                                  { borderLeftColor: colors.border },
-                                ]}>
-                                <IconButton
-                                  icon="remove-outline"
-                                  style={styles.iconStyle}
-                                  backgroundColor={GRAYISH_BLUE}
-                                  iconColor={PRIMARY_BLUE}
-                                  iconSize={20}
-                                />
-                              </View>
-                            </TouchableOpacity>
-                          ) : (
-                            <TouchableOpacity
-                              onPress={() => addFavorite(search)}>
-                              <View
-                                style={[
-                                  styles.actionButtonContainer,
-                                  { borderLeftColor: colors.border },
-                                ]}>
-                                <IconButton
-                                  icon="add-outline"
-                                  style={styles.iconStyle}
-                                  backgroundColor={PRIMARY_BLUE}
-                                  iconColor={WHITE}
-                                  iconSize={20}
-                                />
-                              </View>
-                            </TouchableOpacity>
-                          )}
-                        </View>
-                      </View>
-                    ))}
-                </ScrollView>
-              )}
-            </>
+          favorites.length > 0 && (
+            <AreaList
+              elements={favorites}
+              title={t('favorites')}
+              onSelect={(location) => handleSelectLocation(location, false)}
+              onIconPress={(location) => deleteFavorite(location.id)}
+              iconName="star-unselected"
+              clearTitle={t('clearFavorites')}
+              onClear={() => deleteAllFavorites()}
+            />
           )}
-        {/^\s*$/.test(value) && locations.length === 0 && favorites.length > 0 && (
-          <>
-            <TouchableOpacity onPress={() => setFavoritesOpen((prev) => !prev)}>
-              <View
-                style={[
-                  styles.resultsHeader,
-                  styles.withBorderBottom,
-                  styles.listItem,
-                  { borderBottomColor: colors.border },
-                ]}>
-                <Text style={[styles.title, { color: colors.text }]}>
-                  {t('map:searchScreen:favorites')}
-                </Text>
-                {favoritesOpen ? (
-                  <IconButton
-                    icon="arrow-up"
-                    style={styles.iconStyle}
-                    backgroundColor={WHITE}
-                    iconColor={PRIMARY_BLUE}
-                    iconSize={20}
-                  />
-                ) : (
-                  <IconButton
-                    icon="arrow-down"
-                    style={styles.iconStyle}
-                    backgroundColor={WHITE}
-                    iconColor={PRIMARY_BLUE}
-                    iconSize={20}
-                  />
-                )}
-              </View>
-            </TouchableOpacity>
-            {favoritesOpen && (
-              <ScrollView showsVerticalScrollIndicator={false}>
-                {favorites.map((favorite: Location, i: number) => (
-                  <View
-                    key={favorite.id}
-                    style={
-                      i + 1 !== recentSearches.length && [
-                        styles.withBorderBottom,
-                        { borderBottomColor: colors.border },
-                      ]
-                    }>
-                    <View style={styles.listItem}>
-                      <TouchableOpacity
-                        onPress={() => handleSelectLocation(favorite)}>
-                        <View style={styles.listItem}>
-                          <Text
-                            style={[styles.resultText, { color: colors.text }]}>
-                            {favorite.area && favorite.area !== favorite.name
-                              ? `${favorite.name}, ${favorite.area}`
-                              : favorite.name}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => deleteFavorite(favorite.id)}>
-                        <View
-                          style={[
-                            styles.actionButtonContainer,
-                            { borderLeftColor: colors.border },
-                          ]}>
-                          <IconButton
-                            icon="remove-outline"
-                            style={styles.iconStyle}
-                            backgroundColor={GRAYISH_BLUE}
-                            iconColor={PRIMARY_BLUE}
-                            iconSize={20}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                ))}
-              </ScrollView>
-            )}
-          </>
-        )}
+        {/^\s*$/.test(value) &&
+          locations.length === 0 &&
+          recentSearches.length > 0 && (
+            <AreaList
+              elements={recentSearches.slice(0).reverse()}
+              title={t('recentSearches')}
+              onSelect={(location) => handleSelectLocation(location, false)}
+              onIconPress={(location) =>
+                isFavorite(location)
+                  ? deleteFavorite(location.id)
+                  : addFavorite(location)
+              }
+              iconNameGetter={(location) =>
+                isFavorite(location) ? 'star-selected' : 'star-unselected'
+              }
+              clearTitle={t('clearRecentSearches')}
+              onClear={() => deleteAllRecentSearches()}
+            />
+          )}
+
         {!/^\s*$/.test(value) && locations.length === 0 && (
           <Text style={{ color: colors.text }}>Haku ei tuottanut tuloksia</Text>
         )}
@@ -403,7 +243,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
   },
   searchBoxContainer: {
     height: 48,
@@ -413,56 +253,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
     marginTop: 10,
   },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   searchIcon: {
     marginRight: 8,
   },
   results: {
     flex: 1,
-  },
-  resultsHeader: {
-    height: 48,
-    paddingHorizontal: 16,
-    marginTop: 16,
-    borderRadius: 8,
-    marginBottom: 2,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    marginBottom: 10,
   },
   input: {
     height: '100%',
     flexGrow: 1,
     paddingVertical: 0,
   },
-  listItem: {
+  locateRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingLeft: 16,
+    marginTop: 12,
     height: 44,
-  },
-  withBorderBottom: {
-    borderBottomWidth: 1,
-    borderColor: LIGHT_BLUE,
-  },
-  resultText: {
-    fontSize: 15,
-    height: 18,
-    marginLeft: 16,
-  },
-  actionButtonContainer: {
-    width: 50,
-    borderLeftWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  recentListContainer: {
-    maxHeight: '45%',
-  },
-  iconStyle: {
-    width: 24,
-    height: 24,
   },
 });
 
-export default connector(SearchScreen);
+export default connector(React.memo(SearchScreen));

@@ -3,6 +3,10 @@ import {
   GET_FAVORITES,
   ADD_FAVORITE,
   DELETE_FAVORITE,
+  DELETE_ALL_FAVORITES,
+  GET_RECENT_SEARCHES,
+  UPDATE_RECENT_SEARCHES,
+  DELETE_ALL_RECENT_SEARCHES,
   INIT_SETTINGS,
   UPDATE_UNITS,
   UPDATE_THEME,
@@ -17,9 +21,11 @@ import {
   getItem,
   multiGet,
   setItem,
+  removeItem,
   FAVORITES,
   UNITS,
   THEME,
+  RECENT_SEARCHES,
 } from '../../utils/async_storage';
 
 export const getFavorites = () => (dispatch: Dispatch<SettingsActionTypes>) => {
@@ -39,11 +45,11 @@ export const getFavorites = () => (dispatch: Dispatch<SettingsActionTypes>) => {
 export const initSettings = () => (dispatch: Dispatch<SettingsActionTypes>) => {
   let favorites = [] as any;
   let units: UnitMap | undefined;
+  let recentSearches = [] as any;
   let theme: Theme;
-  multiGet([FAVORITES, UNITS, THEME])
+  multiGet([FAVORITES, UNITS, RECENT_SEARCHES, THEME])
     .then((data) => {
       if (data) {
-        console.log(data);
         // parse favorites
         if (data[0][1] !== null) {
           favorites = JSON.parse(data[0][1]);
@@ -52,19 +58,24 @@ export const initSettings = () => (dispatch: Dispatch<SettingsActionTypes>) => {
         if (data[1][1] !== null) {
           units = JSON.parse(data[1][1]);
         }
+        // parse recentSearches
+        if (data[2][1] !== null) {
+          recentSearches = JSON.parse(data[2][1]);
+        }
         // use .env to get defaults and populate async storage and store
         if (data[1][1] === null) {
           units = getDefaultUnits();
           setItem(UNITS, JSON.stringify(units));
         }
-        if (data[2][1]) {
-          theme = data[2][1] as Theme;
+        if (data[3][1]) {
+          theme = data[3][1] as Theme;
         }
         dispatch({
           type: INIT_SETTINGS,
           units,
           favorites: favorites || [],
           theme: theme || 'automatic',
+          recentSearches: recentSearches || [],
         });
       }
     })
@@ -107,11 +118,23 @@ export const deleteFavorite = (id: number) => (
         dispatch({ type: DELETE_FAVORITE, id });
         const newFavoritesJSON = JSON.stringify(newFavorites);
         setItem(FAVORITES, newFavoritesJSON);
+        // TODO: handle update recent searches
       }
     })
     .catch((e) => {
       console.error(e);
     });
+};
+
+export const deleteAllFavorites = () => (
+  dispatch: Dispatch<SettingsActionTypes>
+) => {
+  removeItem(FAVORITES)
+    .then((data) => {
+      console.log(data);
+      dispatch({ type: DELETE_ALL_FAVORITES });
+    })
+    .catch((e) => console.error(e));
 };
 
 export const updateUnits = (key: string, unit: UnitType) => (
@@ -138,4 +161,44 @@ export const updateTheme = (theme: Theme) => (
   setItem(THEME, theme);
   console.log('updateTheme action::', theme);
   dispatch({ type: UPDATE_THEME, theme });
+};
+
+export const getRecentSearches = () => (
+  dispatch: Dispatch<SettingsActionTypes>
+) => {
+  getItem(RECENT_SEARCHES)
+    .then((data) => {
+      if (data) {
+        const recentSearches = JSON.parse(data);
+        dispatch({ type: GET_RECENT_SEARCHES, recentSearches });
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+};
+
+export const updateRecentSearches = (searches: Location[]) => (
+  dispatch: Dispatch<SettingsActionTypes>
+) => {
+  const searchesJSON = JSON.stringify(searches);
+  setItem(RECENT_SEARCHES, searchesJSON)
+    .then((data) => {
+      console.log(data);
+      dispatch({ type: UPDATE_RECENT_SEARCHES, recentSearches: searches });
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+};
+
+export const deleteAllRecentSearches = () => (
+  dispatch: Dispatch<SettingsActionTypes>
+) => {
+  removeItem(RECENT_SEARCHES)
+    .then((data) => {
+      console.log(data);
+      dispatch({ type: DELETE_ALL_RECENT_SEARCHES });
+    })
+    .catch((e) => console.error(e));
 };
