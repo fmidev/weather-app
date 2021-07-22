@@ -8,6 +8,7 @@ import {
 const INITIAL_STATE: GeneralState = {
   geolocation: undefined,
   currentLocation: undefined,
+  isGeolocation: undefined,
 };
 
 export default (
@@ -25,6 +26,7 @@ export default (
       return {
         ...state,
         currentLocation: action.location,
+        isGeolocation: action.isGeolocation,
       };
     }
 

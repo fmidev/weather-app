@@ -113,13 +113,16 @@ const Navigator: React.FC<Props> = ({
             }[][] = Object.values(json);
 
             const { name, region } = vals[0][0];
-            setCurrentLocation({
-              lat: latitude,
-              lon: longitude,
-              name,
-              area: region,
-              id: geoid,
-            });
+            setCurrentLocation(
+              {
+                lat: latitude,
+                lon: longitude,
+                name,
+                area: region,
+                id: geoid,
+              },
+              true
+            );
           })
           .catch((e) => console.error(e));
       },

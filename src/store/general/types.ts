@@ -16,6 +16,7 @@ interface SetGeolocation {
 interface SetCurrentLocation {
   type: typeof SET_CURRENT_LOCATION;
   location: Location;
+  isGeolocation?: boolean;
 }
 
 export type GeneralActionTypes = SetGeolocation | SetCurrentLocation;
@@ -23,4 +24,5 @@ export type GeneralActionTypes = SetGeolocation | SetCurrentLocation;
 export interface GeneralState {
   geolocation?: Geolocation;
   currentLocation?: Location;
+  isGeolocation?: boolean;
 }

@@ -13,8 +13,9 @@ export const setGeolocation = (geolocation: Geolocation) => (
   dispatch({ type: SET_GEOLOCATION, geolocation });
 };
 
-export const setCurrentLocation = (location: Location) => (
-  dispatch: Dispatch<GeneralActionTypes>
-) => {
-  dispatch({ type: SET_CURRENT_LOCATION, location });
+export const setCurrentLocation = (
+  location: Location,
+  isGeolocation?: boolean
+) => (dispatch: Dispatch<GeneralActionTypes>) => {
+  dispatch({ type: SET_CURRENT_LOCATION, location, isGeolocation });
 };

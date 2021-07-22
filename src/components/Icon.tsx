@@ -14,6 +14,7 @@ import Close from '../assets/images/icons/close.svg';
 import Info from '../assets/images/icons/info.svg';
 import Layers from '../assets/images/icons/layers.svg';
 import Locate from '../assets/images/icons/locate.svg';
+import MapMarker from '../assets/images/icons/map-marker.svg';
 import Map from '../assets/images/icons/map.svg';
 import Menu from '../assets/images/icons/menu.svg';
 import Mic from '../assets/images/icons/mic.svg';
@@ -84,6 +85,8 @@ const Icon: React.FC<IconProps> = ({ name, ...props }) => {
       return <Layers {...props} />;
     case 'locate':
       return <Locate {...props} />;
+    case 'map-marker':
+      return <MapMarker {...props} />;
     case 'map':
       return <Map {...props} />;
     case 'menu':
