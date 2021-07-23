@@ -34,6 +34,8 @@
     "searchButtonAccessibilityLabel": "Search location",
     "infoButtonAccessibilityLabel": "Show map legend",
     "layersButtonAccessibilityLabel": "Show map layer selection",
+    "minusButtonAccessibilityLabel": "Zoom out map",
+    "plusButtonAccessibilityLabel": "Zoom in map",
     "playButtonAccessibilityLabel": "Animate time range on map",
     "selectionButtonAccessibilityLabel": "Show slider time step selection",
     "noLocationPermission": "The app does not have permission to use location",

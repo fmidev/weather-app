@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, StyleSheet, Platform } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { Camera } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useTheme } from '@react-navigation/native';
@@ -45,6 +45,7 @@ type MapScreenProps = PropsFromRedux & {
 
 const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
   const { colors, dark } = useTheme();
+  const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>();
   const mapRef = useRef() as React.MutableRefObject<MapView>;
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
@@ -57,6 +58,51 @@ const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
     }
   }, [currentLocation]);
 
+  const handleZoomIn = () => {
+    mapRef.current.getCamera().then((cam: Camera) => {
+      if (Platform.OS === 'ios') {
+        mapRef.current.animateCamera({ altitude: cam.altitude - 50000 });
+      } else {
+        mapRef.current.animateCamera({ zoom: cam.zoom + 1 });
+      }
+    });
+  };
+
+  const handleZoomOut = () => {
+    mapRef.current.getCamera().then((cam: Camera) => {
+      if (Platform.OS === 'ios') {
+        mapRef.current.animateCamera({ altitude: cam.altitude + 50000 });
+      } else {
+        mapRef.current.animateCamera({ zoom: cam.zoom - 1 });
+      }
+    });
+  };
+
+  // TODO: this could also use just Region
+  const handleCheckIfMarkerOutOfView = () => {
+    if (currentLocation) {
+      mapRef.current.getMapBoundaries().then((bounds) => {
+        const { lat, lon } = currentLocation;
+        const {
+          northEast: { latitude: NELat, longitude: NELon },
+          southWest: { latitude: SWLat, longitude: SWLon },
+        } = bounds;
+        if (
+          markerOutOfBounds &&
+          (SWLat <= lat || NELat >= lat || SWLon <= lon || NELon >= lon)
+        ) {
+          setMarkerOutOfBounds(false);
+        }
+        if (
+          !markerOutOfBounds &&
+          (SWLat >= lat || NELat <= lat || SWLon >= lon || NELon <= lon)
+        ) {
+          setMarkerOutOfBounds(true);
+        }
+      });
+    }
+  };
+  console.log(markerOutOfBounds);
   const darkGoogleMapsStyle =
     dark && Platform.OS === 'android' ? darkMapStyle : [];
 
@@ -69,7 +115,7 @@ const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}
-        onRegionChangeComplete={(r) => console.log(r)}>
+        onRegionChangeComplete={handleCheckIfMarkerOutOfView}>
         <RainRadarOverlay />
         {currentLocation && (
           <MapMarker
@@ -84,6 +130,8 @@ const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
+        onZoomIn={() => handleZoomIn()}
+        onZoomOut={() => handleZoomOut()}
       />
 
       <RBSheet

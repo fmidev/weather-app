@@ -34,6 +34,8 @@
     "searchButtonAccessibilityLabel": "Hae paikkaa",
     "infoButtonAccessibilityLabel": "Näytä kartan selitteet",
     "layersButtonAccessibilityLabel": "Näytä karttatasojen valinnat",
+    "minusButtonAccessibilityLabel": "Loitonna kartalla",
+    "plusButtonAccessibilityLabel": "Lähennä kartalla",
     "playButtonAccessibilityLabel": "Animoi ajanjakso kartalla",
     "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta",
     "noLocationPermission": "Sovelluksella ei ole oikeutta käyttää sijaintia",
