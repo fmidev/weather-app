@@ -11,6 +11,8 @@ type MapControlsProps = {
   onInfoPressed: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
+  relocate: () => void;
+  showRelocateButton: boolean;
 };
 
 const MapControls: React.FC<MapControlsProps> = ({
@@ -19,33 +21,44 @@ const MapControls: React.FC<MapControlsProps> = ({
   onInfoPressed,
   onZoomIn,
   onZoomOut,
+  showRelocateButton,
+  relocate,
 }) => {
   const { t } = useTranslation();
   return (
     <>
+      {showRelocateButton && (
+        <MapButton
+          style={[styles.mapButton, styles.left, styles.layersButton]}
+          accessibilityLabel={t('map:relocateButtonAccessibilityLabel')}
+          onPress={relocate}
+          icon="map-marker"
+          iconSize={26}
+        />
+      )}
       <MapButton
-        style={[styles.mapButton, styles.plusButton]}
+        style={[styles.mapButton, styles.right, styles.plusButton]}
         accessibilityLabel={t('map:plusButtonAccessibilityLabel')}
         onPress={onZoomIn}
         icon="plus"
         iconSize={26}
       />
       <MapButton
-        style={[styles.mapButton, styles.minusButton]}
+        style={[styles.mapButton, styles.right, styles.minusButton]}
         accessibilityLabel={t('map:minusButtonAccessibilityLabel')}
         onPress={onZoomOut}
         icon="minus"
         iconSize={26}
       />
       <MapButton
-        style={[styles.mapButton, styles.infoButton]}
+        style={[styles.mapButton, styles.right, styles.infoButton]}
         accessibilityLabel={t('map:infoButtonAccessibilityLabel')}
         onPress={onInfoPressed}
         icon="info"
         iconSize={26}
       />
       <MapButton
-        style={[styles.mapButton, styles.layersButton]}
+        style={[styles.mapButton, styles.right, styles.layersButton]}
         accessibilityLabel={t('map:layersButtonAccessibilityLabel')}
         onPress={onLayersPressed}
         icon="layers"
@@ -62,6 +75,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: 50,
     width: 50,
+  },
+  left: {
+    left: 12,
+  },
+  right: {
     right: 12,
   },
   plusButton: {

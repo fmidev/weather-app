@@ -37,6 +37,7 @@
     "minusButtonAccessibilityLabel": "Zoom out map",
     "plusButtonAccessibilityLabel": "Zoom in map",
     "playButtonAccessibilityLabel": "Animate time range on map",
+    "relocateButtonAccessibilityLabel": "Animate back to selected location",
     "selectionButtonAccessibilityLabel": "Show slider time step selection",
     "noLocationPermission": "The app does not have permission to use location",
     "noLocationPermissionHint": "Allow the use of location in the application settings.",
