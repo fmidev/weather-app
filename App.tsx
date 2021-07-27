@@ -1,10 +1,11 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import ReduxThunk from 'redux-thunk';
 import './i18n';
 import { Appearance } from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';
@@ -20,6 +21,11 @@ const App: React.FC = () => {
   );
 
   const initialColorScheme = Appearance.getColorScheme();
+
+  useEffect(() => {
+    // TODO: handle config here
+    SplashScreen.hide();
+  }, []);
 
   return (
     <Provider store={store}>
