@@ -1,4 +1,4 @@
-package com.weather;
+package fi.fmi.mobileweather;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;
