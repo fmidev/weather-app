@@ -34,7 +34,7 @@ Before running iOS or Android start metro: `yarn start`
 #### Run the development version in Android phone
 
 1. Do the above (Run in development environment (Android)) first!
-2. Check all relevant instructions from React Native's own page: https://reactnative.dev/docs/running-on-device. Most importantly, install adb by either the Android Studio or Android's own instructions: https://developer.android.com/studio/releases/platform-tools
+2. Check all relevant instructions from React Native's own page: https://reactnative.dev/docs/running-on-device. Most importantly, install adb by either the Android Studio or Android's own instructions: https://developer.android.com/studio/releases/platform-tools. Platform tools may not be installed to PATH. The installation path can be found in Android Studio in Tools -> SDK Manager. Example path: `/Users/oksman/Library/Android/sdk`
 3. Plug your device to the USB port.
 4. Build the APK with Android Studio: Build -> Build Bundles(s) / APK(s) -> Build APK(s).
 5. Copy the built APK to the device and install it to the device.
