@@ -16,6 +16,7 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
+import SplashScreen from 'react-native-splash-screen';
 import Config from 'react-native-config';
 
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
@@ -82,6 +83,13 @@ const Navigator: React.FC<Props> = ({
   useEffect(() => {
     initSettings();
   }, [initSettings]);
+
+  // hide splash screen only when theme is known to avoid weird behavior
+  useEffect(() => {
+    if (theme) {
+      SplashScreen.hide();
+    }
+  }, [theme]);
 
   useEffect(() => {
     const permission =

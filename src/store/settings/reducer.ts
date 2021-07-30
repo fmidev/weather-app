@@ -17,7 +17,7 @@ const INITIAL_STATE: SettingsState = {
   favorites: [],
   recentSearches: [],
   units: undefined,
-  theme: 'automatic',
+  theme: undefined,
 };
 
 export default (

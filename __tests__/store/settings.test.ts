@@ -19,7 +19,7 @@ describe('settings reducer', () => {
     ).toEqual({
       favorites: [favorite],
       units: undefined,
-      theme: 'automatic',
+      theme: undefined,
       recentSearches: [],
     });
   });
