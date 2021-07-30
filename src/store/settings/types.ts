@@ -97,5 +97,5 @@ export interface SettingsState {
   favorites: Location[] | [];
   recentSearches: Location[] | [];
   units: UnitMap | undefined;
-  theme: Theme;
+  theme?: Theme;
 }
