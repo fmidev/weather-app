@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.dev;
 
 import android.content.Intent;
 import android.os.Bundle;
