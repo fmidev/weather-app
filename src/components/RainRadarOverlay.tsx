@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Image, ImageURISource, Platform } from 'react-native';
 import { Overlay } from 'react-native-maps';
 import moment from 'moment';
+import { parse } from 'fast-xml-parser';
 
 import Config from 'react-native-config';
 
@@ -32,13 +33,24 @@ const BOUNDS = {
   topLeft: [70.98305999744711, 16.86743001103862], // top left, max ly, min x
 } as { [key: string]: [number, number] };
 
-const OBSERVATION_URL = `https://wms.fmi.fi/fmi-apikey/${Config.API_KEY}/geoserver/Radar/wms?service=WMS&styles=&transparent=true&version=1.1.0&request=GetMap&layers=Radar%3Asuomi_rr_eureffin&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
-const FORECAST_URL = `https://wms.fmi.fi/fmi-apikey/${Config.API_KEY}/geoserver/Radar/wms?service=WMS&styles=&transparent=true&version=1.1.0&request=GetMap&layers=Radar%3Asuomi_tuliset_rr_eureffin&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
+type WmsLayer = {
+  // only these properties are needed for now
+  Name: string;
+  Extent: string;
+};
+
+const BASE_URL = `https://wms.fmi.fi/fmi-apikey/${Config.API_KEY}/geoserver/Radar/wms?service=WMS&version=1.1.0`;
+const OBSERVATION_LAYER = 'suomi_rr_eureffin';
+const FORECAST_LAYER = 'suomi_tuliset_rr_eureffin';
+const OBSERVATION_URL = `${BASE_URL}&request=GetMap&styles=&transparent=true&layers=Radar%3A${OBSERVATION_LAYER}&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
+const FORECAST_URL = `${BASE_URL}&request=GetMap&styles=&transparent=true&layers=Radar%3A${FORECAST_LAYER}&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
 
 const RainRadarOverlay: React.FC<RainRadarProps> = ({ sliderTime }) => {
   const [hasPrefetched, setHasPrefetched] = useState<boolean>(false);
+  const [forecastDateStart, setForecastDateStart] = useState<string>(
+    moment.utc().toISOString()
+  );
   const current = moment.unix(sliderTime).toISOString();
-  const now = moment.utc().toISOString();
 
   const step60 = getSliderStepSeconds(60);
   const step15 = getSliderStepSeconds(15);
@@ -66,6 +78,41 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({ sliderTime }) => {
     }
   };
 
+  const getCapabilities = async () => {
+    const capabilitiesUrl = `${BASE_URL}&request=GetCapabilities`;
+    fetch(capabilitiesUrl)
+      .then((res) => res.text())
+      .then((textRes) => {
+        const obj = parse(textRes);
+        // layers array is nested in the response as Layer
+        const {
+          WMT_MS_Capabilities: {
+            Capability: {
+              Layer: { Layer },
+            },
+          },
+        } = obj;
+        const layersArr = Layer.filter(
+          (layer: WmsLayer) => layer.Name === FORECAST_LAYER
+        );
+        const forecastDateTimes = layersArr[0]?.Extent?.split('/');
+        const firstForecastDate =
+          forecastDateTimes &&
+          forecastDateTimes.length > 0 &&
+          forecastDateTimes[0];
+
+        if (firstForecastDate) {
+          console.log('settingsForecastDateStart', firstForecastDate);
+          setForecastDateStart(firstForecastDate);
+        }
+      })
+      .catch((e) => console.log(e));
+  };
+
+  useEffect(() => {
+    getCapabilities();
+  }, []);
+
   useEffect(() => {
     let allDatesUnix: number[] = [];
     let curr = minUnix;
@@ -78,7 +125,8 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({ sliderTime }) => {
     );
 
     const urls = timeStamps.map((stamp) => {
-      const baseUrl = stamp > now ? FORECAST_URL : OBSERVATION_URL;
+      const baseUrl =
+        stamp >= forecastDateStart ? FORECAST_URL : OBSERVATION_URL;
       return `${baseUrl}&time=${stamp}`;
     });
 
@@ -97,7 +145,7 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({ sliderTime }) => {
       ? [BOUNDS.bottomLeft, BOUNDS.topRight]
       : [BOUNDS.topLeft, BOUNDS.bottomRight];
 
-  const baseUrl = current > now ? FORECAST_URL : OBSERVATION_URL;
+  const baseUrl = current >= forecastDateStart ? FORECAST_URL : OBSERVATION_URL;
 
   const image = `${baseUrl}&time=${current}` as ImageURISource;
 
