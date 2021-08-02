@@ -10,7 +10,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
 
-import { LIGHT_BLUE, CustomTheme } from '../utils/colors';
+import { CustomTheme } from '../utils/colors';
 
 type CloseButtonProps = {
   onPress: () => void;
@@ -24,11 +24,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
 }) => {
   const { colors } = useTheme() as CustomTheme;
   return (
-    <View
-      style={[
-        styles.button,
-        { backgroundColor: colors.inputButtonBackground },
-      ]}>
+    <View style={[styles.button, { backgroundColor: colors.inputBackground }]}>
       <TouchableOpacity
         onPress={onPress}
         accessibilityLabel={accessibilityLabel}>
@@ -48,7 +44,6 @@ const styles = StyleSheet.create({
     padding: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: LIGHT_BLUE,
   },
 });
 

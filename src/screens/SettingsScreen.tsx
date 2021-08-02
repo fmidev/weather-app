@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Roboto-Bold',
   },
   rowWrapper: {
     marginHorizontal: 20,
@@ -318,7 +318,8 @@ const styles = StyleSheet.create({
     paddingVertical: 13,
   },
   text: {
-    fontSize: 15,
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
   sheetContainer: {
     borderTopLeftRadius: 10,

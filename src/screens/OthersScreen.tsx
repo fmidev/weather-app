@@ -119,7 +119,8 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
 };
 const styles = StyleSheet.create({
   text: {
-    fontSize: 15,
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
   row: {
     flexDirection: 'row',

@@ -58,8 +58,9 @@ const styles = StyleSheet.create({
     }),
   },
   title: {
-    fontWeight: 'bold',
+    fontSize: 16,
     alignSelf: 'center',
+    fontFamily: 'Roboto-Medium',
   },
 });
 

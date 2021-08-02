@@ -140,10 +140,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Roboto-Bold',
   },
 });
 

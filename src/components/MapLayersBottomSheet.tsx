@@ -11,14 +11,7 @@ import { State } from '../store/types';
 import { selectMapLayers } from '../store/map/selectors';
 import { updateMapLayers as updateMapLayersAction } from '../store/map/actions';
 
-import {
-  LIGHT_BLUE,
-  PRIMARY_BLUE,
-  WHITE,
-  SECONDARY_BLUE,
-  GRAYISH_BLUE,
-  GRAY_1,
-} from '../utils/colors';
+import { WHITE, SECONDARY_BLUE, GRAYISH_BLUE, GRAY_1 } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
   mapLayers: selectMapLayers(state),
@@ -181,7 +174,6 @@ const styles = StyleSheet.create({
   },
   withBorderBottom: {
     borderBottomWidth: 1,
-    borderColor: LIGHT_BLUE,
   },
   row: {
     flexDirection: 'row',
@@ -194,12 +186,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: PRIMARY_BLUE,
+    fontFamily: 'Roboto-Bold',
   },
   text: {
     fontSize: 16,
-    color: PRIMARY_BLUE,
+    fontFamily: 'Roboto-Regular',
   },
 });
 

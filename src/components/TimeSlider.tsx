@@ -18,13 +18,7 @@ import {
   getSliderStepSeconds,
 } from '../utils/helpers';
 
-import {
-  WHITE,
-  LIGHT_BLUE,
-  PRIMARY_BLUE,
-  SECONDARY_BLUE,
-  CustomTheme,
-} from '../utils/colors';
+import { WHITE, SECONDARY_BLUE, CustomTheme } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
   sliderStep: selectSliderStep(state),
@@ -81,7 +75,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         </View>
         <View style={styles.sliderWrapper}>
           <View style={styles.value}>
-            <Text style={[styles.text, { color: colors.text }]}>
+            <Text style={[styles.currentText, { color: colors.text }]}>
               {currentSliderTime}
             </Text>
           </View>
@@ -105,7 +99,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             ]}>
             <Text
               style={[
-                styles.text,
+                styles.stepText,
                 { color: colors.text },
               ]}>{`${sliderStep} min`}</Text>
           </View>
@@ -152,14 +146,16 @@ const styles = StyleSheet.create({
     height: '100%',
     borderTopRightRadius: 8,
     borderBottomRightRadius: 8,
-    backgroundColor: LIGHT_BLUE,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
-    color: PRIMARY_BLUE,
+  currentText: {
+    fontFamily: 'Roboto-Bold',
     fontSize: 14,
-    fontWeight: 'bold',
+  },
+  stepText: {
+    fontSize: 14,
+    fontFamily: 'Roboto-Medium',
   },
 });
 
