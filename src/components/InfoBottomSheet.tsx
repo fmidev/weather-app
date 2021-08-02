@@ -8,19 +8,30 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
 
 import CloseButton from './CloseButton';
 
 import { images, WeatherSymbol } from '../assets/images';
-import { PRIMARY_BLUE, SECONDARY_BLUE, LIGHT_BLUE } from '../utils/colors';
+import {
+  SECONDARY_BLUE,
+  RAIN_1,
+  RAIN_2,
+  RAIN_3,
+  RAIN_4,
+  RAIN_5,
+  RAIN_6,
+  RAIN_7,
+} from '../utils/colors';
 
 type InfoBottomSheetProps = {
   onClose: () => void;
 };
 const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
+  const { colors } = useTheme();
   const [viewAll, setViewAll] = useState(false);
 
   const symbolsArr = Object.entries(images.symbols).map(([key, value]) => ({
@@ -31,7 +42,9 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   const symbolRowRenderer = ({ item }: { item: WeatherSymbol }) => (
     <View style={styles.listRow}>
       <Image style={styles.image} source={item.day} />
-      <Text style={styles.text}>{t(`symbols:${item.key}`)}</Text>
+      <Text style={[styles.text, { color: colors.text }]}>
+        {t(`symbols:${item.key}`)}
+      </Text>
     </View>
   );
 
@@ -44,17 +57,23 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
         />
       </View>
       <View style={styles.sheetTitle}>
-        <Text style={styles.title}>
+        <Text style={[styles.title, { color: colors.text }]}>
           {t('map:infoBottomSheet:weatherSymbolsTitle')}
         </Text>
       </View>
-      <View style={[styles.rowWrapper, styles.withBorderBottom]}>
+      <View
+        style={[
+          styles.rowWrapper,
+          styles.withBorderBottom,
+          { borderBottomColor: colors.border },
+        ]}>
         <FlatList
           style={styles.list}
           // TODO: sort by real weather observations and then slice
           data={!viewAll ? symbolsArr.slice(0, 3) : symbolsArr}
           keyExtractor={({ key }) => key}
           renderItem={symbolRowRenderer}
+          showsVerticalScrollIndicator={false}
         />
         <TouchableOpacity onPress={() => setViewAll(!viewAll)}>
           {viewAll ? (
@@ -65,7 +84,12 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                 width={22}
                 height={22}
               />
-              <Text style={[styles.title, styles.showMoreText]}>
+              <Text
+                style={[
+                  styles.title,
+                  styles.showMoreText,
+                  { color: colors.text },
+                ]}>
                 {t('map:infoBottomSheet:showLess')}
               </Text>
             </View>
@@ -77,7 +101,12 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                 width={22}
                 height={22}
               />
-              <Text style={[styles.title, styles.showMoreText]}>
+              <Text
+                style={[
+                  styles.title,
+                  styles.showMoreText,
+                  { color: colors.text },
+                ]}>
                 {t('map:infoBottomSheet:showMore')}
               </Text>
             </View>
@@ -85,21 +114,31 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.sheetTitle}>
-        <Text style={styles.title}>
+        <Text style={[styles.title, { color: colors.text }]}>
           {t('map:infoBottomSheet:rainRadarTitle')}
         </Text>
       </View>
       <View style={styles.rowWrapper}>
         <View style={[styles.row, styles.rainContainer]}>
-          <View style={styles.rainBlock} />
-          <View style={styles.rainBlock} />
-          <View style={styles.rainBlock} />
-          <View style={styles.rainBlock} />
-          <View style={styles.rainBlock} />
+          <View style={[styles.rainBlock, { backgroundColor: RAIN_1 }]} />
+          <View style={[styles.rainBlock, { backgroundColor: RAIN_2 }]} />
+          <View style={[styles.rainBlock, { backgroundColor: RAIN_3 }]} />
+          <View style={[styles.rainBlock, { backgroundColor: RAIN_4 }]} />
+          <View style={[styles.rainBlock, { backgroundColor: RAIN_5 }]} />
+          <View style={[styles.rainBlock, { backgroundColor: RAIN_6 }]} />
+          <View
+            style={[
+              styles.rainBlock,
+              styles.lastBlock,
+              { backgroundColor: RAIN_7 },
+            ]}
+          />
         </View>
         <View style={styles.sheetTitle}>
-          <Text style={styles.rainTitle}>{t('map:infoBottomSheet:light')}</Text>
-          <Text style={styles.rainTitle}>
+          <Text style={[styles.rainTitle, { color: colors.text }]}>
+            {t('map:infoBottomSheet:light')}
+          </Text>
+          <Text style={[styles.rainTitle, { color: colors.text }]}>
             {t('map:infoBottomSheet:strong')}
           </Text>
         </View>
@@ -140,25 +179,22 @@ const styles = StyleSheet.create({
   },
   withBorderBottom: {
     borderBottomWidth: 1,
-    borderColor: LIGHT_BLUE,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   showMoreText: {
-    color: SECONDARY_BLUE,
     alignSelf: 'center',
   },
   text: {
     fontSize: 16,
-    color: PRIMARY_BLUE,
+    fontFamily: 'Roboto-Regular',
     maxWidth: '88%',
   },
   title: {
     fontSize: 16,
-    color: PRIMARY_BLUE,
-    fontWeight: 'bold',
+    fontFamily: 'Roboto-Bold',
   },
   image: {
     width: 40,
@@ -167,19 +203,21 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   rainContainer: {
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 5,
   },
   rainBlock: {
-    width: '19%',
+    flexGrow: 1,
     height: 8,
-    backgroundColor: SECONDARY_BLUE,
-    marginRight: 2,
+    borderWidth: 1,
+    borderRightWidth: 0,
+  },
+  lastBlock: {
+    borderRightWidth: 1,
   },
   rainTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: PRIMARY_BLUE,
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
 });
 

@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Roboto-Bold',
   },
   searchIcon: {
     marginRight: 8,
@@ -268,6 +268,8 @@ const styles = StyleSheet.create({
     height: '100%',
     flexGrow: 1,
     paddingVertical: 0,
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
   },
   locateRow: {
     flexDirection: 'row',

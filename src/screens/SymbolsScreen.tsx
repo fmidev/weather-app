@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
 import { images, WeatherSymbol } from '../assets/images';
-import { PRIMARY_BLUE, WHITE } from '../utils/colors';
+import { WHITE } from '../utils/colors';
 
 const SymbolsScreen: React.FC = () => {
   const { t } = useTranslation('symbols');
@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
   description: {
     flex: 1,
     paddingHorizontal: 15,
-    color: PRIMARY_BLUE,
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
   },
   list: {
     width: '100%',

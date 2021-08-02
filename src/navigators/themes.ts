@@ -23,7 +23,7 @@ export const lightTheme = {
     text: PRIMARY_BLUE,
     notification: WHITE,
     primaryText: PRIMARY_BLUE,
-    secondaryText: GRAY_1,
+    secondaryText: GRAY_3,
     border: GRAYISH_BLUE,
     inputBackground: LIGHT_BLUE,
     inputButtonBackground: WHITE,

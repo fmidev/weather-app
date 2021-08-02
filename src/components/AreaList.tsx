@@ -109,10 +109,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 16,
     marginBottom: 2,
+    fontFamily: 'Roboto-Bold',
   },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Roboto-Bold',
   },
   listItem: {
     flexDirection: 'row',
@@ -124,8 +125,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   resultText: {
-    fontSize: 15,
+    fontSize: 16,
     marginLeft: 16,
+    fontFamily: 'Roboto-Regular',
   },
   actionButtonContainer: {
     width: 50,

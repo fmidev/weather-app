@@ -5,6 +5,7 @@ import {
   Appearance,
   Platform,
   AppStateStatus,
+  StyleSheet,
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
@@ -342,7 +343,11 @@ const Navigator: React.FC<Props> = ({
 
   return (
     <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
-      <Tab.Navigator initialRouteName="Map">
+      <Tab.Navigator
+        initialRouteName="Map"
+        tabBarOptions={{
+          labelStyle: styles.tabText,
+        }}>
         <Tab.Screen
           name="Map"
           component={MapStackScreen}
@@ -401,5 +406,12 @@ const Navigator: React.FC<Props> = ({
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  tabText: {
+    fontFamily: 'Roboto-Medium',
+    fontSize: 14,
+  },
+});
 
 export default connector(Navigator);

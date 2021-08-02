@@ -25,6 +25,14 @@ export const YELLOW = '#F8F800';
 export const ORANGE = '#FFB700';
 export const RED = '#D0021B';
 
+export const RAIN_1 = '#0C9BFF';
+export const RAIN_2 = '#06CDAB';
+export const RAIN_3 = '#8CE614';
+export const RAIN_4 = '#F0F014';
+export const RAIN_5 = '#FFCD15';
+export const RAIN_6 = '#FF503D';
+export const RAIN_7 = '#D41B0E';
+
 export type CustomTheme = {
   dark: boolean;
   colors: {
