@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 
-import { color } from 'react-native-reanimated';
 import Icon from '../components/Icon';
 
 import { setItem, LOCALE } from '../utils/async_storage';
@@ -74,8 +73,10 @@ const SettingsScreen: React.FC<Props> = ({
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.titleContainer} testID="settings_language_header">
-          <Text style={[styles.title, { color: colors.text }]}>
+        <View style={styles.titleContainer}>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            testID="settings_language_header">
             {t('settings:language')}
           </Text>
         </View>
@@ -89,7 +90,8 @@ const SettingsScreen: React.FC<Props> = ({
             <TouchableOpacity
               onPress={() => onChangeLanguage('fi')}
               delayPressIn={100}
-              disabled={i18n.language === 'fi'}>
+              disabled={i18n.language === 'fi'}
+              testID="settings_set_language_fi">
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:fi')}
@@ -108,7 +110,8 @@ const SettingsScreen: React.FC<Props> = ({
             <TouchableOpacity
               onPress={() => onChangeLanguage('en')}
               delayPressIn={100}
-              disabled={i18n.language === 'en'}>
+              disabled={i18n.language === 'en'}
+              testID="settings_set_language_en">
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:en')}
@@ -124,8 +127,10 @@ const SettingsScreen: React.FC<Props> = ({
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.titleContainer} testID="settings_theme_header">
-          <Text style={[styles.title, { color: colors.text }]}>
+        <View style={styles.titleContainer}>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            testID="settings_theme_header">
             {t('settings:appearance')}
           </Text>
         </View>
@@ -139,7 +144,8 @@ const SettingsScreen: React.FC<Props> = ({
             <TouchableOpacity
               onPress={() => updateTheme('light')}
               delayPressIn={100}
-              disabled={theme === 'light'}>
+              disabled={theme === 'light'}
+              testID="settings_set_theme_light">
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceLight')}
@@ -163,7 +169,8 @@ const SettingsScreen: React.FC<Props> = ({
             <TouchableOpacity
               onPress={() => updateTheme('dark')}
               delayPressIn={100}
-              disabled={theme === 'dark'}>
+              disabled={theme === 'dark'}
+              testID="settings_set_theme_dark">
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceDark')}
@@ -182,7 +189,8 @@ const SettingsScreen: React.FC<Props> = ({
             <TouchableOpacity
               onPress={() => updateTheme('automatic')}
               delayPressIn={100}
-              disabled={theme === 'automatic'}>
+              disabled={theme === 'automatic'}
+              testID="settings_set_theme_automatic">
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceAutomatic')}
@@ -219,7 +227,8 @@ const SettingsScreen: React.FC<Props> = ({
                       : null,
                   ]}>
                   <TouchableOpacity
-                    onPress={() => sheetRefs[key].current.open()}>
+                    onPress={() => sheetRefs[key].current.open()}
+                    testID={`settings_set_${key}`}>
                     <View style={styles.row}>
                       <Text style={[styles.text, { color: colors.text }]}>
                         {t(`settings:${key}`)}
