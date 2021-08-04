@@ -28,17 +28,8 @@ describe('Settings', () => {
   const settingsLanguageTitleEn = 'Language';
   const settingsLanguageTitleFi = 'Kieli';
   const fahrenheitAbb = '°F';
+
   // test
-  beforeAll(async () => {
-    await device.launchApp({
-      permissions: { notifications: 'YES', location: 'always' },
-    });
-  });
-
-  beforeEach(async () => {
-    await device.reloadReactNative();
-  });
-
   it('should navigate to settings screen', async () => {
     navOthers.tap();
     await expect(navSettings).toBeVisible();
