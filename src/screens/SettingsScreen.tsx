@@ -151,11 +151,13 @@ const SettingsScreen: React.FC<Props> = ({
                   {t('settings:appearanceLight')}
                 </Text>
                 {theme === 'light' && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
+                  <View testID="settings_theme_light">
+                    <Icon
+                      name="checkmark"
+                      size={22}
+                      style={{ color: colors.text }}
+                    />
+                  </View>
                 )}
               </View>
             </TouchableOpacity>
@@ -176,11 +178,13 @@ const SettingsScreen: React.FC<Props> = ({
                   {t('settings:appearanceDark')}
                 </Text>
                 {theme === 'dark' && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
+                  <View testID="settings_theme_dark">
+                    <Icon
+                      name="checkmark"
+                      size={22}
+                      style={{ color: colors.text }}
+                    />
+                  </View>
                 )}
               </View>
             </TouchableOpacity>
@@ -196,11 +200,13 @@ const SettingsScreen: React.FC<Props> = ({
                   {t('settings:appearanceAutomatic')}
                 </Text>
                 {theme === 'automatic' && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
+                  <View testID="settings_theme_automatic">
+                    <Icon
+                      name="checkmark"
+                      size={22}
+                      style={{ color: colors.text }}
+                    />
+                  </View>
                 )}
               </View>
             </TouchableOpacity>
