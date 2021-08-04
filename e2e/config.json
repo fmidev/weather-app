@@ -6,5 +6,8 @@
   "reporters": [
     "detox/runners/jest/streamlineReporter"
   ],
-  "verbose": true
+  "verbose": true,
+  "setupFilesAfterEnv": [
+    "./init.ts"
+  ]
 }

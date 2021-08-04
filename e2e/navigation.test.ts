@@ -22,17 +22,8 @@ describe('Navigation', () => {
   const warningsPlaceholder = 'Tänne tulisi varoitukset';
   const aboutPlaceholder = 'Täällä lukisi tietoja sovelluksesta';
   const notificationsPlacehodler = 'Täälä olisi jotain notifikaatioista';
+
   // test
-  beforeAll(async () => {
-    await device.launchApp({
-      permissions: { notifications: 'YES', location: 'always' },
-    });
-  });
-
-  beforeEach(async () => {
-    await device.reloadReactNative();
-  });
-
   it('should navigate to map screen', async () => {
     navMap.tap();
     await expect(map).toBeVisible();
