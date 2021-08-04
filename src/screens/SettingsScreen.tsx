@@ -239,7 +239,9 @@ const SettingsScreen: React.FC<Props> = ({
                       <Text style={[styles.text, { color: colors.text }]}>
                         {t(`settings:${key}`)}
                       </Text>
-                      <Text style={[styles.text, { color: colors.text }]}>
+                      <Text
+                        style={[styles.text, { color: colors.text }]}
+                        testID={`${key}_unitAbb`}>
                         {key === 'temperature' ? '°' : ''}
                         {units[key].unitAbb}
                       </Text>
@@ -255,8 +257,12 @@ const SettingsScreen: React.FC<Props> = ({
                             backgroundColor: colors.background,
                           },
                         }}>
-                        <View style={styles.sheetListContainer}>
-                          <View style={styles.sheetTitle}>
+                        <View
+                          style={styles.sheetListContainer}
+                          testID="unit_sheet_container">
+                          <View
+                            style={styles.sheetTitle}
+                            testID={`${key}_unit_sheet_title`}>
                             <Text
                               style={[styles.title, { color: colors.text }]}>
                               {t(`settings:${key}`)}
@@ -271,7 +277,8 @@ const SettingsScreen: React.FC<Props> = ({
                                 { borderBottomColor: colors.border },
                               ]}>
                               <TouchableOpacity
-                                onPress={() => updateUnits(key, type)}>
+                                onPress={() => updateUnits(key, type)}
+                                testID={`settings_units_${key}_${type.unit}`}>
                                 <View style={styles.row}>
                                   <Text
                                     style={[
