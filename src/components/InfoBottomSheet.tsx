@@ -16,7 +16,6 @@ import CloseButton from './CloseButton';
 
 import { images, WeatherSymbol } from '../assets/images';
 import {
-  SECONDARY_BLUE,
   RAIN_1,
   RAIN_2,
   RAIN_3,
@@ -80,7 +79,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
             <View style={[styles.row, styles.showMoreText]}>
               <Icon
                 name="arrow-up"
-                style={{ color: SECONDARY_BLUE }}
+                style={{ color: colors.text }}
                 width={22}
                 height={22}
               />
@@ -97,7 +96,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
             <View style={[styles.row, styles.showMoreText]}>
               <Icon
                 name="arrow-down"
-                style={{ color: SECONDARY_BLUE }}
+                style={{ color: colors.text }}
                 width={22}
                 height={22}
               />
