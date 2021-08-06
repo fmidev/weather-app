@@ -16,7 +16,6 @@ import CloseButton from './CloseButton';
 
 import { images, WeatherSymbol } from '../assets/images';
 import {
-  SECONDARY_BLUE,
   RAIN_1,
   RAIN_2,
   RAIN_3,
@@ -78,12 +77,6 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
         <TouchableOpacity onPress={() => setViewAll(!viewAll)}>
           {viewAll ? (
             <View style={[styles.row, styles.showMoreText]}>
-              <Icon
-                name="arrow-up"
-                style={{ color: SECONDARY_BLUE }}
-                width={22}
-                height={22}
-              />
               <Text
                 style={[
                   styles.title,
@@ -92,15 +85,15 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                 ]}>
                 {t('map:infoBottomSheet:showLess')}
               </Text>
-            </View>
-          ) : (
-            <View style={[styles.row, styles.showMoreText]}>
               <Icon
-                name="arrow-down"
-                style={{ color: SECONDARY_BLUE }}
+                name="arrow-up"
+                style={{ color: colors.text }}
                 width={22}
                 height={22}
               />
+            </View>
+          ) : (
+            <View style={[styles.row, styles.showMoreText]}>
               <Text
                 style={[
                   styles.title,
@@ -109,6 +102,12 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                 ]}>
                 {t('map:infoBottomSheet:showMore')}
               </Text>
+              <Icon
+                name="arrow-down"
+                style={{ color: colors.text }}
+                width={22}
+                height={22}
+              />
             </View>
           )}
         </TouchableOpacity>
@@ -137,6 +136,9 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
         <View style={styles.sheetTitle}>
           <Text style={[styles.rainTitle, { color: colors.text }]}>
             {t('map:infoBottomSheet:light')}
+          </Text>
+          <Text style={[styles.rainTitle, { color: colors.text }]}>
+            {t('map:infoBottomSheet:moderate')}
           </Text>
           <Text style={[styles.rainTitle, { color: colors.text }]}>
             {t('map:infoBottomSheet:strong')}

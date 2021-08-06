@@ -12,9 +12,7 @@ import Icon from './Icon';
 
 import { LIGHT_BLUE, PRIMARY_BLUE } from '../utils/colors';
 
-type ButtonProps =
-  | { onPress: () => void; accessibilityLabel: string }
-  | { onPress?: never; accessibilityLabel?: never };
+type ButtonProps = { onPress: () => void; accessibilityLabel: string };
 
 type IconButtonProps = ButtonProps & {
   style?: StyleProp<ViewStyle>;

@@ -36,6 +36,8 @@
     "layersButtonAccessibilityLabel": "Näytä karttatasojen valinnat",
     "playButtonAccessibilityLabel": "Animoi ajanjakso kartalla",
     "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta",
+    "noLocationPermission": "Sovelluksella ei ole oikeutta käyttää sijaintia",
+    "noLocationPermissionHint": "Anna sovellukselle oikeus sijainnin käyttöön asetuksissa.",
     "timeStepBottomSheet": {
       "title": "Aikajanan aika-akseli",
       "closeAccessibilityLabel": "Sulje aika-askeleen valinta"
@@ -56,6 +58,7 @@
       "weatherSymbolsTitle": "Säämerkit",
       "rainRadarTitle": "Sadetutka",
       "light": "Heikkoa",
+      "moderate": "Kohtalaista",
       "strong": "Rankkaa",
       "showMore": "Näytä lisää",
       "showLess": "Näytä vähemmän"

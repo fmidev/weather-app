@@ -15,10 +15,7 @@ import MapMarker from '../components/MapMarker';
 
 import { MapStackParamList } from '../navigators/types';
 import { State } from '../store/types';
-import {
-  selectCurrentLocation,
-  selectIsGeolocation,
-} from '../store/general/selectors';
+import { selectCurrentLocation } from '../store/general/selectors';
 
 import darkMapStyle from '../utils/dark_map_style.json';
 
@@ -36,7 +33,6 @@ const ANIMATE_ZOOM = {
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrentLocation(state),
-  isGeolocation: selectIsGeolocation(state),
 });
 const connector = connect(mapStateToProps, {});
 
@@ -47,10 +43,7 @@ type MapScreenProps = PropsFromRedux & {
   route: RouteProp<MapStackParamList, 'Map'>;
 };
 
-const MapScreen: React.FC<MapScreenProps> = ({
-  currentLocation,
-  isGeolocation,
-}) => {
+const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
   const { colors, dark } = useTheme();
   const mapRef = useRef() as React.MutableRefObject<MapView>;
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
@@ -78,7 +71,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         rotateEnabled={false}
         onRegionChangeComplete={(r) => console.log(r)}>
         <RainRadarOverlay />
-        {isGeolocation && currentLocation && (
+        {currentLocation && (
           <MapMarker
             coordinates={{
               latitude: currentLocation?.lat,

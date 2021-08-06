@@ -26,6 +26,7 @@
 		A45BF92026B41657000BF75C /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91B26B41657000BF75C /* Roboto-Regular.ttf */; };
 		A45BF92126B41657000BF75C /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91C26B41657000BF75C /* Roboto-Thin.ttf */; };
 		A4A2B97526BAC3E9003ADC95 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
+		A4BAA1A926BD1F040096B054 /* symbols in Resources */ = {isa = PBXBuildFile; fileRef = A4BAA1A826BD1F040096B054 /* symbols */; };
 		FEE13B61B252617E1D7DC881 /* libPods-weather-weatherTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACC48F76DFCE388A6448EF3 /* libPods-weather-weatherTests.a */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,7 @@
 		A45BF91A26B41657000BF75C /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Medium.ttf"; path = "../src/assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		A45BF91B26B41657000BF75C /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../src/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		A45BF91C26B41657000BF75C /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Thin.ttf"; path = "../src/assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
+		A4BAA1A826BD1F040096B054 /* symbols */ = {isa = PBXFileReference; lastKnownFileType = folder; name = symbols; path = ../src/assets/images/symbols; sourceTree = "<group>"; };
 		DEE0349772CC202A85DB35F0 /* Pods-weather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather.release.xcconfig"; path = "Target Support Files/Pods-weather/Pods-weather.release.xcconfig"; sourceTree = "<group>"; };
 		E13DAF318E9C323024F3301B /* Pods-weather-weatherTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weather-weatherTests.release.xcconfig"; path = "Target Support Files/Pods-weather-weatherTests/Pods-weather-weatherTests.release.xcconfig"; sourceTree = "<group>"; };
 		E1D917DC0F3CA0774B6706F7 /* libPods-weather.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-weather.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -194,6 +196,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				A4BAA1A826BD1F040096B054 /* symbols */,
 				A45BF91826B41657000BF75C /* Roboto-Bold.ttf */,
 				A45BF91926B41657000BF75C /* Roboto-Light.ttf */,
 				A45BF91A26B41657000BF75C /* Roboto-Medium.ttf */,
@@ -374,6 +377,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4BAA1A926BD1F040096B054 /* symbols in Resources */,
 				A4A2B97526BAC3E9003ADC95 /* main.jsbundle in Resources */,
 				A45BF92126B41657000BF75C /* Roboto-Thin.ttf in Resources */,
 				A45BF92026B41657000BF75C /* Roboto-Regular.ttf in Resources */,
