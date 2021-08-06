@@ -1,5 +1,7 @@
+import { Alert } from 'react-native';
 import moment from 'moment';
 import Geolocation from 'react-native-geolocation-service';
+import { TFunction } from 'react-i18next';
 import Config from 'react-native-config';
 
 import { Location } from '../store/settings/types';
@@ -44,7 +46,8 @@ export const getSliderStepSeconds = (sliderStep: number): number => {
 const timeSeriesUrl = `https://data.fmi.fi/fmi-apikey/${Config.API_KEY}/timeseries?param=geoid,name,latitude,longitude,region,country&timesteps=2&format=json&attributes=geoid`;
 
 export const getGeolocation = (
-  callback: (arg0: Location, arg1: boolean) => void
+  callback: (arg0: Location, arg1: boolean) => void,
+  t: TFunction<string[] | string>
 ) =>
   Geolocation.getCurrentPosition(
     (position) => {
@@ -76,6 +79,18 @@ export const getGeolocation = (
     },
     (error) => {
       console.log('GEOLOCATION NOT AVAILABLE', error);
+      if (error.code === 1) {
+        Alert.alert(
+          t('map:noLocationPermission'),
+          t('map:noLocationPermissionHint'),
+          [
+            {
+              text: 'OK',
+              onPress: () => {},
+            },
+          ]
+        );
+      }
     },
     {
       enableHighAccuracy: true,

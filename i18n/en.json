@@ -36,6 +36,8 @@
     "layersButtonAccessibilityLabel": "Show map layer selection",
     "playButtonAccessibilityLabel": "Animate time range on map",
     "selectionButtonAccessibilityLabel": "Show slider time step selection",
+    "noLocationPermission": "The app does not have permission to use location",
+    "noLocationPermissionHint": "Allow the use of location in the application settings.",
     "timeStepBottomSheet": {
       "title": "Slider time step",
       "closeAccessibilityLabel": "Close slider time step selection"

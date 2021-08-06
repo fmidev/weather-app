@@ -183,7 +183,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             backgroundColor={colors.inputBackground}
             accessibilityLabel={t('locate')}
             onPress={() => {
-              getGeolocation(setCurrentLocation);
+              getGeolocation(setCurrentLocation, t);
               navigation.goBack();
             }}
           />

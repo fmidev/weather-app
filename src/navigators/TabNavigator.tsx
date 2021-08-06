@@ -186,7 +186,7 @@ const Navigator: React.FC<Props> = ({
         title="Paikanna"
         accessibilityLabel="Press to locate"
         icon="locate"
-        onPress={() => getGeolocation(setCurrentLocation)}
+        onPress={() => getGeolocation(setCurrentLocation, t)}
       />
     ),
   });
