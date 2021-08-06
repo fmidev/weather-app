@@ -14,11 +14,9 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
-import Geolocation from 'react-native-geolocation-service';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
-import Config from 'react-native-config';
 
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
 import OthersScreen from '../screens/OthersScreen';
@@ -37,6 +35,7 @@ import CommonHeaderTitle from '../components/CommonHeaderTitle';
 
 import { initSettings as initSettingsAction } from '../store/settings/actions';
 
+import { getGeolocation } from '../utils/helpers';
 import { lightTheme, darkTheme } from './themes';
 import {
   TabParamList,
@@ -103,47 +102,6 @@ const Navigator: React.FC<Props> = ({
       }
     });
   }, []);
-
-  const url = `https://data.fmi.fi/fmi-apikey/${Config.API_KEY}/timeseries?param=geoid,name,latitude,longitude,region,country&timesteps=2&format=json&attributes=geoid`;
-
-  const getCurrentPosition = () =>
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        fetch(`${url}&latlon=${latitude},${longitude}`)
-          .then((res) => res.json())
-          .then((json) => {
-            const geoid = Number(Object.keys(json)[0]);
-            const vals: {
-              name: string;
-              latitude: number;
-              longitude: number;
-              region: string;
-            }[][] = Object.values(json);
-
-            const { name, region } = vals[0][0];
-            setCurrentLocation(
-              {
-                lat: latitude,
-                lon: longitude,
-                name,
-                area: region,
-                id: geoid,
-              },
-              true
-            );
-          })
-          .catch((e) => console.error(e));
-      },
-      (error) => {
-        console.log('GEOLOCATION NOT AVAILABLE', error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 10000,
-      }
-    );
 
   useEffect(() => {
     AppState.addEventListener('change', handleAppStateChange);
@@ -228,7 +186,7 @@ const Navigator: React.FC<Props> = ({
         title="Paikanna"
         accessibilityLabel="Press to locate"
         icon="locate"
-        onPress={() => getCurrentPosition()}
+        onPress={() => getGeolocation(setCurrentLocation)}
       />
     ),
   });
@@ -309,6 +267,14 @@ const Navigator: React.FC<Props> = ({
         component={AboutScreen}
         options={{
           headerTitle: `${t('navigation:about')}`,
+          headerBackImage: ({ tintColor }) => (
+            <Icon
+              name="arrow-back"
+              style={{ color: tintColor }}
+              width={26}
+              height={26}
+            />
+          ),
         }}
       />
       <OthersStack.Screen
@@ -329,13 +295,31 @@ const Navigator: React.FC<Props> = ({
       <OthersStack.Screen
         name="Notifications"
         component={NotificationsScreen}
-        options={{ headerTitle: `${t('navigation:notifications')}` }}
+        options={{
+          headerTitle: `${t('navigation:notifications')}`,
+          headerBackImage: ({ tintColor }) => (
+            <Icon
+              name="arrow-back"
+              style={{ color: tintColor }}
+              width={26}
+              height={26}
+            />
+          ),
+        }}
       />
       <OthersStack.Screen
         name="Symbols"
         component={SymbolsScreen}
         options={{
           headerTitle: `${t('navigation:symbols')}`,
+          headerBackImage: ({ tintColor }) => (
+            <Icon
+              name="arrow-back"
+              style={{ color: tintColor }}
+              width={26}
+              height={26}
+            />
+          ),
         }}
       />
     </OthersStack.Navigator>

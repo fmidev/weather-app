@@ -36,6 +36,7 @@ import { setCurrentLocation as setCurrentLocationAction } from '../store/general
 import AreaList from '../components/AreaList';
 import IconButton from '../components/IconButton';
 
+import { getGeolocation } from '../utils/helpers';
 import { CustomTheme } from '../utils/colors';
 
 const MAX_RECENT_SEARCHES = 3; // TODO: define max number of recent searches
@@ -180,6 +181,11 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             icon="locate"
             iconColor={colors.text}
             backgroundColor={colors.inputBackground}
+            accessibilityLabel={t('locate')}
+            onPress={() => {
+              getGeolocation(setCurrentLocation);
+              navigation.goBack();
+            }}
           />
         </View>
       )}
@@ -207,7 +213,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               title={t('favorites')}
               onSelect={(location) => handleSelectLocation(location, false)}
               onIconPress={(location) => deleteFavorite(location.id)}
-              iconName="star-unselected"
+              iconName="star-selected"
               clearTitle={t('clearFavorites')}
               onClear={() => deleteAllFavorites()}
             />
