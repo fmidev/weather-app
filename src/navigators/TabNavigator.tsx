@@ -6,6 +6,7 @@ import {
   Platform,
   AppStateStatus,
   StyleSheet,
+  StatusBar,
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
@@ -326,68 +327,85 @@ const Navigator: React.FC<Props> = ({
   );
 
   return (
-    <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
-      <Tab.Navigator
-        initialRouteName="Map"
-        tabBarOptions={{
-          labelStyle: styles.tabText,
-        }}>
-        <Tab.Screen
-          name="Map"
-          component={MapStackScreen}
-          options={{
-            tabBarTestID: 'navigation_map',
-            tabBarLabel: `${t('navigation:map')}`,
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="map" style={{ color }} width={size} height={size} />
-            ),
-          }}
+    <>
+      {Platform.OS === 'android' && (
+        <StatusBar
+          backgroundColor={
+            useDarkTheme
+              ? darkTheme.colors.headerBackground
+              : lightTheme.colors.headerBackground
+          }
+          barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
         />
-        <Tab.Screen
-          name="Forecast"
-          component={ForecastStackScreen}
-          options={{
-            tabBarTestID: 'navigation_forecast',
-            tabBarLabel: `${t('navigation:weather')}`,
-            tabBarIcon: ({ color, size }) => (
-              <Icon
-                name="weather"
-                style={{ color }}
-                width={size}
-                height={size}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Warnings"
-          component={WarningsStackScreen}
-          options={{
-            tabBarTestID: 'navigation_warnings',
-            tabBarLabel: `${t('navigation:warnings')}`,
-            tabBarIcon: ({ color, size }) => (
-              <Icon
-                name="warnings"
-                style={{ color }}
-                width={size}
-                height={size}
-              />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Others"
-          component={OthersStackScreen}
-          options={{
-            tabBarTestID: 'navigation_others',
-            tabBarLabel: `${t('navigation:others')}`,
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="menu" style={{ color }} width={size} height={size} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+      )}
+      <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
+        <Tab.Navigator
+          initialRouteName="Map"
+          tabBarOptions={{
+            labelStyle: styles.tabText,
+          }}>
+          <Tab.Screen
+            name="Map"
+            component={MapStackScreen}
+            options={{
+              tabBarTestID: 'navigation_map',
+              tabBarLabel: `${t('navigation:map')}`,
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="map" style={{ color }} width={size} height={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Forecast"
+            component={ForecastStackScreen}
+            options={{
+              tabBarTestID: 'navigation_forecast',
+              tabBarLabel: `${t('navigation:weather')}`,
+              tabBarIcon: ({ color, size }) => (
+                <Icon
+                  name="weather"
+                  style={{ color }}
+                  width={size}
+                  height={size}
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Warnings"
+            component={WarningsStackScreen}
+            options={{
+              tabBarTestID: 'navigation_warnings',
+              tabBarLabel: `${t('navigation:warnings')}`,
+              tabBarIcon: ({ color, size }) => (
+                <Icon
+                  name="warnings"
+                  style={{ color }}
+                  width={size}
+                  height={size}
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Others"
+            component={OthersStackScreen}
+            options={{
+              tabBarTestID: 'navigation_others',
+              tabBarLabel: `${t('navigation:others')}`,
+              tabBarIcon: ({ color, size }) => (
+                <Icon
+                  name="menu"
+                  style={{ color }}
+                  width={size}
+                  height={size}
+                />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </>
   );
 };
 
