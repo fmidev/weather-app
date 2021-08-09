@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "Mobile Weather Dev-tvOS.app"
-               BlueprintName = "Mobile Weather Dev-tvOS"
-               ReferencedContainer = "container:Mobile Weather Dev.xcodeproj">
+               BuildableName = "MobileWeatherDev-tvOS.app"
+               BlueprintName = "MobileWeatherDev-tvOS"
+               ReferencedContainer = "container:MobileWeatherDev.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "Mobile Weather Dev-tvOSTests.xctest"
-               BlueprintName = "Mobile Weather Dev-tvOSTests"
-               ReferencedContainer = "container:Mobile Weather Dev.xcodeproj">
+               BuildableName = "MobileWeatherDev-tvOSTests.xctest"
+               BlueprintName = "MobileWeatherDev-tvOSTests"
+               ReferencedContainer = "container:MobileWeatherDev.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Mobile Weather Dev-tvOS.app"
-            BlueprintName = "Mobile Weather Dev-tvOS"
-            ReferencedContainer = "container:Mobile Weather Dev.xcodeproj">
+            BuildableName = "MobileWeatherDev-tvOS.app"
+            BlueprintName = "MobileWeatherDev-tvOS"
+            ReferencedContainer = "container:MobileWeatherDev.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Mobile Weather Dev-tvOS.app"
-            BlueprintName = "Mobile Weather Dev-tvOS"
-            ReferencedContainer = "container:Mobile Weather Dev.xcodeproj">
+            BuildableName = "MobileWeatherDev-tvOS.app"
+            BlueprintName = "MobileWeatherDev-tvOS"
+            ReferencedContainer = "container:MobileWeatherDev.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
