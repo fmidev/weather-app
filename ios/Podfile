@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'weather' do
+target 'MobileWeatherDev' do
   permissions_path = '../node_modules/react-native-permissions/ios'
   config = use_native_modules!
 
@@ -12,7 +12,7 @@ target 'weather' do
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
 
-  target 'weatherTests' do
+  target 'MobileWeatherDevTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -27,10 +27,10 @@ target 'weather' do
   # end
 end
 
-target 'weather-tvOS' do
-  # Pods for weather-tvOS
+target 'MobileWeatherDev-tvOS' do
+  # Pods for MobileWeatherDev-tvOS
 
-  target 'weather-tvOSTests' do
+  target 'MobileWeatherDev-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
