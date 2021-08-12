@@ -26,12 +26,3 @@ target 'MobileWeatherDev' do
   #   flipper_post_install(installer)
   # end
 end
-
-target 'MobileWeatherDev-tvOS' do
-  # Pods for MobileWeatherDev-tvOS
-
-  target 'MobileWeatherDev-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-end
