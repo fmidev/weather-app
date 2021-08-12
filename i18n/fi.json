@@ -16,6 +16,9 @@
     "settings": "Täällä olisi vaikka sovelluksen yleiset asetukset",
     "notifications": "Täälä olisi jotain notifikaatioista"
   },
+  "about": {
+    "versionInfo": "Sovelluksen versio"
+  },
   "settings": {
     "language": "Kieli",
     "en": "Englanti",
