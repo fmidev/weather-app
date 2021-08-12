@@ -1,0 +1,54 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+PROJECT_NAME = "MobileWeatherDev"
+XCODE_PROJECT = "./#{PROJECT_NAME}.xcodeproj"
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Increment build and version number and push to repository"
+  lane :increment_version do |options|
+    should_commit = options.fetch(:should_commit, false)
+    commit_message = options.fetch(:commit_message, "ios: bump build and version number (version code) [skip ci]")
+    should_push = options.fetch(:should_push, false)
+
+    package = load_json(json_path: '../package.json')
+
+    ensure_git_status_clean if should_commit
+
+    increment_build_number(xcodeproj: XCODE_PROJECT)
+
+    increment_version_number(
+      xcodeproj: XCODE_PROJECT,
+      version_number: package['version']
+    )
+
+    new_build_number = Actions.lane_context[Actions::SharedValues::BUILD_NUMBER]
+    UI.important("Incremented ios build number to #{new_build_number}")
+
+    new_version_number = Actions.lane_context[Actions::SharedValues::VERSION_NUMBER]
+    UI.important("Incremented ios version number to #{new_version_number}")
+
+    if should_commit
+      plist_path = "./#{PROJECT_NAME}/Info.plist"
+      project_path = XCODE_PROJECT
+      git_add(path: [plist_path, project_path])
+      git_commit(path: [plist_path, project_path], message: commit_message)
+      # Push the new commit and tag back to git remote
+      push_to_git_remote if should_push
+    end
+  end
+end

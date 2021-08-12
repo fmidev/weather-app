@@ -1,0 +1,61 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Increment build and version number and push to repository - Build number = version code, version number = version name"
+  lane :increment_version do |options|
+    should_commit = options.fetch(:should_commit, false)
+    commit_message = options.fetch(:commit_message, "android: bump build and version number (version code) [skip ci]")
+    should_push = options.fetch(:should_push, false)
+
+    package = load_json(json_path: '../package.json')
+
+    ensure_git_status_clean if should_commit
+
+    vc_params = {
+      :app_project_dir => 'app'
+    }
+
+    if options[:build_number]
+      params[:version_code] = options[:build_number].to_i
+    end
+
+    android_increment_version_code(vc_params)
+
+    vn_params = {
+      app_project_dir: 'app',
+      version_name: package['version']
+    }
+
+    android_increment_version_name(vn_params)
+
+
+    new_version_code = Actions.lane_context[Actions::SharedValues::ANDROID_VERSION_CODE]
+    UI.important("Incremented android version code to #{new_version_code}")
+
+    new_version_name = Actions.lane_context[Actions::SharedValues::ANDROID_VERSION_NAME]
+    UI.important("Incremented android version name to #{new_version_name}")
+
+    if should_commit
+      path = "./app/build.gradle"
+      git_add(path: path)
+      git_commit(path: path, message: commit_message)
+      # Push the new commit and tag back to your git remote
+      push_to_git_remote if should_push
+    end
+  end
+end
