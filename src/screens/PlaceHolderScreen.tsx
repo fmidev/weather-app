@@ -4,10 +4,10 @@ import { SafeAreaView, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import { State } from '../store/types';
-import { selectGeolocation } from '../store/general/selectors';
+import { selectCurrentLocation } from '../store/general/selectors';
 
 const mapStateToProps = (state: State) => ({
-  geolocation: selectGeolocation(state),
+  currentLocation: selectCurrentLocation(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -21,9 +21,9 @@ type Props = PropsFromRedux & {
 };
 
 const PlaceholderScreen: React.FC<Props> = ({
+  currentLocation,
   text,
   showLocation,
-  geolocation,
   testIndex,
 }) => {
   const { colors } = useTheme();
@@ -36,7 +36,7 @@ const PlaceholderScreen: React.FC<Props> = ({
       </Text>
       {showLocation && (
         <Text style={[styles.text, { color: colors.text }]}>
-          Laitteen sijainti: {JSON.stringify(geolocation, null, 2)}
+          {JSON.stringify(currentLocation, null, 2)}
         </Text>
       )}
     </SafeAreaView>
