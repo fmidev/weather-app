@@ -49,5 +49,6 @@ export type CustomTheme = {
     mapButtonBackground: string;
     headerBackground: string;
     timeStepBackground: string;
+    shadow: string;
   };
 };

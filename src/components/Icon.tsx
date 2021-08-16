@@ -18,6 +18,7 @@ import MapMarker from '../assets/images/icons/map-marker.svg';
 import Map from '../assets/images/icons/map.svg';
 import Menu from '../assets/images/icons/menu.svg';
 import Mic from '../assets/images/icons/mic.svg';
+import Minus from '../assets/images/icons/minus.svg';
 import OpenInNew from '../assets/images/icons/open-in-new.svg';
 import Pause from '../assets/images/icons/pause.svg';
 import Play from '../assets/images/icons/play.svg';
@@ -93,6 +94,8 @@ const Icon: React.FC<IconProps> = ({ name, ...props }) => {
       return <Menu {...props} />;
     case 'mic':
       return <Mic {...props} />;
+    case 'minus':
+      return <Minus {...props} />;
     case 'open-in-new':
       return <OpenInNew {...props} />;
     case 'pause':

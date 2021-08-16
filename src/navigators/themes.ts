@@ -4,7 +4,7 @@ import {
   GRAYISH_BLUE,
   LIGHT_BLUE,
   WHITE,
-  // BLACK,
+  BLACK,
   GRAY_7,
   GRAY_6,
   GRAY_5,
@@ -30,6 +30,7 @@ export const lightTheme = {
     mapButtonBackground: WHITE,
     headerBackground: WHITE,
     timeStepBackground: LIGHT_BLUE,
+    shadow: BLACK,
   },
 };
 
@@ -49,5 +50,6 @@ export const darkTheme = {
     mapButtonBackground: GRAY_6,
     headerBackground: GRAY_6,
     timeStepBackground: GRAY_6,
+    shadow: WHITE,
   },
 };

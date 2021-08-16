@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, StyleSheet, Platform } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { Camera, Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useTheme } from '@react-navigation/native';
+import { getDistance } from 'geolib';
 
 import MapControls from '../components/MapControls';
 import RainRadarOverlay from '../components/RainRadarOverlay';
@@ -45,6 +46,7 @@ type MapScreenProps = PropsFromRedux & {
 
 const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
   const { colors, dark } = useTheme();
+  const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const mapRef = useRef() as React.MutableRefObject<MapView>;
   const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
@@ -56,6 +58,45 @@ const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
       mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
     }
   }, [currentLocation]);
+
+  const handleZoomIn = () => {
+    mapRef.current.getCamera().then((cam: Camera) => {
+      if (Platform.OS === 'ios') {
+        mapRef.current.animateCamera({ altitude: cam.altitude - 50000 });
+      } else {
+        mapRef.current.animateCamera({ zoom: cam.zoom + 1 });
+      }
+    });
+  };
+
+  const handleZoomOut = () => {
+    mapRef.current.getCamera().then((cam: Camera) => {
+      if (Platform.OS === 'ios') {
+        mapRef.current.animateCamera({ altitude: cam.altitude + 50000 });
+      } else {
+        mapRef.current.animateCamera({ zoom: cam.zoom - 1 });
+      }
+    });
+  };
+
+  const checkDistanceToLocation = (region: Region) => {
+    if (currentLocation) {
+      const { lat: latitude, lon: longitude } = currentLocation;
+      const distance = getDistance(region, { latitude, longitude });
+      if (distance >= 10000) {
+        setMarkerOutOfBounds(true);
+      } else {
+        setMarkerOutOfBounds(false);
+      }
+    }
+  };
+
+  const animateToCurrentLocation = () => {
+    if (currentLocation) {
+      const { lat: latitude, lon: longitude } = currentLocation;
+      mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
+    }
+  };
 
   const darkGoogleMapsStyle =
     dark && Platform.OS === 'android' ? darkMapStyle : [];
@@ -69,7 +110,7 @@ const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}
-        onRegionChangeComplete={(r) => console.log(r)}>
+        onRegionChangeComplete={checkDistanceToLocation}>
         <RainRadarOverlay />
         {currentLocation && (
           <MapMarker
@@ -84,6 +125,10 @@ const MapScreen: React.FC<MapScreenProps> = ({ currentLocation }) => {
         onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
+        onZoomIn={() => handleZoomIn()}
+        onZoomOut={() => handleZoomOut()}
+        showRelocateButton={markerOutOfBounds}
+        relocate={() => animateToCurrentLocation()}
       />
 
       <RBSheet
