@@ -1,30 +1,26 @@
 import React from 'react';
-import {
-  View,
-  SafeAreaView,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-} from 'react-native';
+import { View, SafeAreaView, Text, StyleSheet, FlatList } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import { images, WeatherSymbol } from '../assets/images';
+import { symbolsLight, symbolsDark, WeatherSymbol } from '../assets/images';
 import { WHITE } from '../utils/colors';
 
 const SymbolsScreen: React.FC = () => {
   const { t } = useTranslation('symbols');
-  const { colors } = useTheme();
-  const symbolsArr = Object.entries(images.symbols).map(([key, value]) => ({
+  const { colors, dark } = useTheme();
+
+  const symbols = dark ? symbolsDark : symbolsLight;
+
+  const symbolsArr = Object.entries(symbols).map(([key, value]) => ({
     key,
     ...value,
   }));
 
   const itemRenderer = ({ item }: { item: WeatherSymbol }) => (
     <View style={styles.row} testID={item.key}>
-      <Image style={styles.image} source={item.day} />
-      <Image style={styles.image} source={item.night} />
+      <View style={styles.image}>{item.day({ width: 40, height: 40 })}</View>
+      <View style={styles.image}>{item.night({ width: 40, height: 40 })}</View>
       <Text style={[styles.description, { color: colors.text }]}>{`${t(
         `symbols:${item.key}`
       )}`}</Text>
@@ -52,9 +48,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: 50,
-    height: 50,
-    resizeMode: 'contain',
     margin: 8,
   },
   description: {

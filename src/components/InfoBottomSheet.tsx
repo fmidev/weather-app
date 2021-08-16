@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Text,
-  Image,
   FlatList,
   TouchableOpacity,
 } from 'react-native';
@@ -14,7 +13,7 @@ import Icon from './Icon';
 
 import CloseButton from './CloseButton';
 
-import { images, WeatherSymbol } from '../assets/images';
+import { symbolsLight, symbolsDark, WeatherSymbol } from '../assets/images';
 import {
   RAIN_1,
   RAIN_2,
@@ -30,17 +29,19 @@ type InfoBottomSheetProps = {
 };
 const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
-  const { colors } = useTheme();
+  const { colors, dark } = useTheme();
   const [viewAll, setViewAll] = useState(false);
 
-  const symbolsArr = Object.entries(images.symbols).map(([key, value]) => ({
+  const symbols = dark ? symbolsDark : symbolsLight;
+
+  const symbolsArr = Object.entries(symbols).map(([key, value]) => ({
     key,
     ...value,
   }));
 
   const symbolRowRenderer = ({ item }: { item: WeatherSymbol }) => (
     <View style={styles.listRow}>
-      <Image style={styles.image} source={item.day} />
+      <View style={styles.image}>{item.day({ width: 40, height: 40 })}</View>
       <Text style={[styles.text, { color: colors.text }]}>
         {t(`symbols:${item.key}`)}
       </Text>
@@ -199,9 +200,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
   },
   image: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
     margin: 8,
   },
   rainContainer: {
