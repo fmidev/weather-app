@@ -16,12 +16,9 @@ describe('Navigation', () => {
   const clearSymbol = getByID('1');
   const languageHeader = getByID('settings_language_header');
   const themeHeader = getByID('settings_theme_header');
+  const versionInfo = getByID('about_version_info');
   // placeholders
   const placeholder = 'screen_placeholder_text';
-  const forecastPlaceholder = 'Täällä olisi havaintoa ja ennustetta';
-  const warningsPlaceholder = 'Tänne tulisi varoitukset';
-  const aboutPlaceholder = 'Täällä lukisi tietoja sovelluksesta';
-  const notificationsPlacehodler = 'Täälä olisi jotain notifikaatioista';
 
   // test
   it('should navigate to map screen', async () => {
@@ -31,12 +28,12 @@ describe('Navigation', () => {
 
   it('should navigate to forecast screen', async () => {
     navForecast.tap();
-    await expect(getByID(`${placeholder}_1`)).toHaveText(forecastPlaceholder);
+    await expect(getByID(`${placeholder}_1`)).toBeVisible();
   });
 
   it('should navigate to warnings screen', async () => {
     navWarnings.tap();
-    await expect(getByID(`${placeholder}_2`)).toHaveText(warningsPlaceholder);
+    await expect(getByID(`${placeholder}_2`)).toBevisible();
   });
 
   it('should navigate to others screen', async () => {
@@ -52,18 +49,16 @@ describe('Navigation', () => {
     headerBack.tap();
     await expect(navSettings).toExist();
     navSettings.tap();
-    await expect(languageHeader).toExist();
-    await expect(themeHeader).toExist();
+    await expect(languageHeader).toBeVisible();
+    await expect(themeHeader).toBeVisible();
     headerBack.tap();
     await expect(navNotifications).toExist();
     navNotifications.tap();
-    await expect(getByID(`${placeholder}_6`)).toHaveText(
-      notificationsPlacehodler
-    );
+    await expect(getByID(`${placeholder}_6`)).toBeVisible();
     headerBack.tap();
     await expect(navAbout).toExist();
     navAbout.tap();
-    await expect(getByID(`${placeholder}_3`)).toHaveText(aboutPlaceholder);
+    await expect(versionInfo).toBeVisible();
   });
 });
 

@@ -25,6 +25,7 @@ import MapScreen from '../screens/MapScreen';
 import SymbolsScreen from '../screens/SymbolsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SearchScreen from '../screens/SearchScreen';
+import AboutScreen from '../screens/AboutScreen';
 
 import Icon from '../components/Icon';
 import HeaderButton from '../components/HeaderButton';
@@ -151,9 +152,6 @@ const Navigator: React.FC<Props> = ({
   );
   const WarningsScreen = () => (
     <PlaceholderScreen text={`${t('placeholder:warnings')}`} testIndex={2} />
-  );
-  const AboutScreen = () => (
-    <PlaceholderScreen text={`${t('placeholder:about')}`} testIndex={3} />
   );
 
   const NotificationsScreen = () => (

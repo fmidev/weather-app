@@ -12,9 +12,11 @@
   "placeholder": {
     "weather": "Some forecast here",
     "warnings": "Warnings will be here, eventually",
-    "about": "Information about the application",
     "settings": "General settings of the application",
     "notifications": "Something about notification settings"
+  },
+  "about": {
+    "versionInfo": "Application version"
   },
   "settings": {
     "language": "Language",
