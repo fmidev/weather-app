@@ -42,8 +42,8 @@ type WmsLayer = {
 const BASE_URL = `https://wms.fmi.fi/fmi-apikey/${Config.API_KEY}/geoserver/Radar/wms?service=WMS&version=1.1.0`;
 const OBSERVATION_LAYER = 'suomi_rr_eureffin';
 const FORECAST_LAYER = 'suomi_tuliset_rr_eureffin';
-const OBSERVATION_URL = `${BASE_URL}&request=GetMap&styles=&transparent=true&layers=Radar%3A${OBSERVATION_LAYER}&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
-const FORECAST_URL = `${BASE_URL}&request=GetMap&styles=&transparent=true&layers=Radar%3A${FORECAST_LAYER}&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=485&height=768&srs=EPSG%3A3857&format=image%2Fpng`;
+const OBSERVATION_URL = `${BASE_URL}&request=GetMap&styles=&transparent=true&layers=Radar%3A${OBSERVATION_LAYER}&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=1455&height=2304&srs=EPSG%3A3857&format=image%2Fpng`;
+const FORECAST_URL = `${BASE_URL}&request=GetMap&styles=&transparent=true&layers=Radar%3A${FORECAST_LAYER}&bbox=1877673.71982%2C7709459.58195%2C4160194.16058%2C11396482.4557&width=1455&height=2304&srs=EPSG%3A3857&format=image%2Fpng`;
 
 const RainRadarOverlay: React.FC<RainRadarProps> = ({ sliderTime }) => {
   const [hasPrefetched, setHasPrefetched] = useState<boolean>(false);
@@ -102,7 +102,6 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({ sliderTime }) => {
           forecastDateTimes[0];
 
         if (firstForecastDate) {
-          console.log('settingsForecastDateStart', firstForecastDate);
           setForecastDateStart(firstForecastDate);
         }
       })
