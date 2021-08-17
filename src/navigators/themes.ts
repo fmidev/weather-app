@@ -50,6 +50,6 @@ export const darkTheme = {
     mapButtonBackground: GRAY_6,
     headerBackground: GRAY_6,
     timeStepBackground: GRAY_6,
-    shadow: WHITE,
+    shadow: GRAY_1,
   },
 };
