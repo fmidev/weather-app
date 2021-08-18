@@ -4,14 +4,13 @@ import {
   GRAYISH_BLUE,
   LIGHT_BLUE,
   WHITE,
-  BLACK,
   GRAY_7,
   GRAY_6,
   GRAY_5,
   GRAY_4,
   GRAY_3,
-  // GRAY_2,
   GRAY_1,
+  BLACK,
 } from '../utils/colors';
 
 export const lightTheme = {
@@ -28,6 +27,7 @@ export const lightTheme = {
     inputBackground: LIGHT_BLUE,
     inputButtonBackground: WHITE,
     mapButtonBackground: WHITE,
+    mapButtonBorder: GRAYISH_BLUE,
     headerBackground: WHITE,
     timeStepBackground: LIGHT_BLUE,
     shadow: BLACK,
@@ -53,6 +53,7 @@ export const darkTheme = {
     inputBackground: GRAY_4,
     inputButtonBackground: GRAY_5,
     mapButtonBackground: GRAY_6,
+    mapButtonBorder: GRAY_7,
     headerBackground: GRAY_6,
     timeStepBackground: GRAY_6,
     shadow: WHITE,

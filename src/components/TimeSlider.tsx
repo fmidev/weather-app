@@ -62,6 +62,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         {
           backgroundColor: colors.inputButtonBackground,
           shadowColor: colors.shadow,
+          borderColor: colors.mapButtonBorder,
         },
       ]}>
       <View style={styles.container}>
@@ -121,6 +122,7 @@ const styles = StyleSheet.create({
     left: 12,
     height: 72,
     borderRadius: 8,
+    borderWidth: 1,
   },
   shadow: {
     shadowOffset: {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-
 import MapButton from './MapButton';
 import TimeSlider from './TimeSlider';
+import RelocateButton from './RelocateButton';
 
 type MapControlsProps = {
   onTimeStepPressed: () => void;
@@ -28,12 +28,9 @@ const MapControls: React.FC<MapControlsProps> = ({
   return (
     <>
       {showRelocateButton && (
-        <MapButton
-          style={[styles.mapButton, styles.left, styles.layersButton]}
-          accessibilityLabel={t('map:relocateButtonAccessibilityLabel')}
+        <RelocateButton
           onPress={relocate}
-          icon="map-marker"
-          iconSize={26}
+          style={[styles.mapButton, styles.center, styles.plusButton]}
         />
       )}
       <MapButton
@@ -76,8 +73,8 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
   },
-  left: {
-    left: 12,
+  center: {
+    alignSelf: 'center',
   },
   right: {
     right: 12,

@@ -51,6 +51,7 @@
     "plusButtonAccessibilityLabel": "Lähennä kartalla",
     "playButtonAccessibilityLabel": "Animoi ajanjakso kartalla",
     "relocateButtonAccessibilityLabel": "Siirry takaisin valittuun paikkaan",
+    "relocateButtonText": "Keskitä takaisin",
     "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta",
     "noLocationPermission": "Sovelluksella ei ole oikeutta käyttää sijaintia",
     "noLocationPermissionHint": "Anna sovellukselle oikeus sijainnin käyttöön asetuksissa.",
