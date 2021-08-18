@@ -23,3 +23,8 @@ export const selectMapLayers = createSelector<State, MapState, MapLayers>(
   selectMapDomain,
   (map) => map.mapLayers
 );
+
+export const selectDisplayLocation = createSelector<State, MapLayers, boolean>(
+  selectMapLayers,
+  (layers) => layers.location
+);

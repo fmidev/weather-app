@@ -10,7 +10,7 @@ import {
 
 const INITIAL_STATE: MapState = {
   mapLayers: {
-    userLocation: false,
+    location: false,
     weather: true,
     radar: false,
   },
