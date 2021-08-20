@@ -22,6 +22,7 @@ import SplashScreen from 'react-native-splash-screen';
 import PlaceholderScreen from '../screens/PlaceHolderScreen';
 import OthersScreen from '../screens/OthersScreen';
 import MapScreen from '../screens/MapScreen';
+import WeatherScreen from '../screens/WeatherScreen';
 import SymbolsScreen from '../screens/SymbolsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SearchScreen from '../screens/SearchScreen';
@@ -143,13 +144,6 @@ const Navigator: React.FC<Props> = ({
 
   if (!ready) return <ActivityIndicator size="large" />;
 
-  const ForecastScreen = () => (
-    <PlaceholderScreen
-      text={`${t('placeholder:weather')}`}
-      showLocation
-      testIndex={1}
-    />
-  );
   const WarningsScreen = () => (
     <PlaceholderScreen text={`${t('placeholder:warnings')}`} testIndex={2} />
   );
@@ -221,7 +215,7 @@ const Navigator: React.FC<Props> = ({
     <ForecastStack.Navigator>
       <ForecastStack.Screen
         name="Forecast"
-        component={ForecastScreen}
+        component={WeatherScreen}
         options={CommonHeaderOptions}
       />
       <ForecastStack.Screen

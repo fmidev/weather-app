@@ -1,6 +1,7 @@
 import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
 import { ForecastState, Error, WeatherData } from './types';
+import { selectGeoid } from '../general/selectors';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
@@ -15,9 +16,6 @@ export const selectError = createSelector<
   ForecastState,
   Error | boolean | string
 >(selectForecastDomain, (forecast) => forecast.error);
-
-// TODO replace with favorites selectedGeoid selector
-export const selectGeoid = () => 843429;
 
 const selectData = createSelector<State, ForecastState, WeatherData>(
   selectForecastDomain,

@@ -54,13 +54,9 @@ export interface Location {
   geoid?: number;
   latlon?: string;
 }
-export interface DataInfo {
-  // cacheTime: number;
-  timesteps: TimestepData[];
-}
 
 export interface WeatherData {
-  [geoid: string]: DataInfo;
+  [geoid: string]: TimestepData[];
 }
 
 export interface Error {

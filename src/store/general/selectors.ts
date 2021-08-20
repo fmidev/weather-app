@@ -23,3 +23,8 @@ export const selectIsGeolocation = createSelector<
   GeneralState,
   boolean | undefined
 >(selectGeneralDomain, (general) => general.isGeolocation);
+
+export const selectGeoid = createSelector(
+  [selectCurrentLocation],
+  (location) => location?.id || 843429
+);
