@@ -1,6 +1,7 @@
 import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
-import { ForecastState, Error, Item } from './types';
+import { ForecastState, Error, WeatherData } from './types';
+import { selectGeoid } from '../general/selectors';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
@@ -16,7 +17,12 @@ export const selectError = createSelector<
   Error | boolean | string
 >(selectForecastDomain, (forecast) => forecast.error);
 
-export const selectItems = createSelector<State, ForecastState, Item[] | []>(
+const selectData = createSelector<State, ForecastState, WeatherData>(
   selectForecastDomain,
   (forecast) => forecast.data
+);
+
+export const selectForecast = createSelector(
+  [selectData, selectGeoid],
+  (items, geoid) => items[geoid] || []
 );

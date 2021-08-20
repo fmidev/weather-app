@@ -8,7 +8,10 @@ interface FetchForecast {
 
 interface FetchForecastSuccess {
   type: typeof FETCH_FORECAST_SUCCESS;
-  data: Item[] | [];
+  data: {
+    data: WeatherData;
+    favorites: number[];
+  };
 }
 
 interface FetchForecastError {
@@ -22,24 +25,38 @@ export type ForecastActionTypes =
   | FetchForecastError;
 
 // copied almost as is from https://github.com/fmidev/mobileweather/blob/2b15990947985506a7b0711eef6df5c5826078b5/www/js/main.js#L554
-export interface Item {
-  temperature: string;
-  feelsLike: string;
-  feelsLikeIcon: string;
-  timeString: string;
-  symbol: string;
-  windcopass: string;
-  pop: string;
-  precipation1h: string;
-  geoId: string;
+export interface TimestepData {
+  epochtime: number;
+  name: string;
   latitude: number;
   longitude: number;
-  name: string;
+  region: string;
+  country: string;
   iso2: string;
-  sunInfo: string;
-  polarNight: string;
-  modTime: string;
-  cached: boolean;
+  localtz: string;
+  sunrise: string;
+  sunset: string;
+  sunrisetoday: string;
+  sunsettoday: string;
+  origintime: string;
+  modtime: string;
+  temperature: number;
+  smartSymbol: number;
+  pop: number;
+  windspeedms: number;
+  winddirection: number;
+  windcompass8: string;
+  precipitation1h: number;
+  feelsLike: number;
+  dark: number;
+}
+export interface Location {
+  geoid?: number;
+  latlon?: string;
+}
+
+export interface WeatherData {
+  [geoid: string]: TimestepData[];
 }
 
 export interface Error {
@@ -48,7 +65,7 @@ export interface Error {
 }
 
 export interface ForecastState {
-  data: Item[] | [];
+  data: WeatherData | {};
   loading: boolean;
   error: boolean | Error | string;
 }
