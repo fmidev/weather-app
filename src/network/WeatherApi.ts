@@ -40,7 +40,7 @@ export const getForecast = async (location: Location): Promise<WeatherData> => {
     attributes: 'geoid',
   };
 
-  const { data } = await axios.get(Config.WEEATHER_API_URL, {
+  const { data } = await axios.get(Config.WEATHER_API_URL, {
     params,
   });
   return data;
