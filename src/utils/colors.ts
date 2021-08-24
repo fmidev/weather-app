@@ -50,5 +50,10 @@ export type CustomTheme = {
     headerBackground: string;
     timeStepBackground: string;
     shadow: string;
+    screenBackground: string;
+    cardHeader: string;
+    cardShadow: string;
+    warningsIconFill: string;
+    selectedDayBackground: string;
   };
 };

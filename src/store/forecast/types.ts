@@ -36,8 +36,6 @@ export interface TimestepData {
   localtz: string;
   sunrise: string;
   sunset: string;
-  sunrisetoday: string;
-  sunsettoday: string;
   origintime: string;
   modtime: string;
   temperature: number;

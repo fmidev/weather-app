@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import { IconProps } from 'react-native-vector-icons/Icon';
 
 import ArrowBack from '../assets/images/icons/arrow-back.svg';
 import ArrowDown from '../assets/images/icons/arrow-down.svg';
@@ -25,9 +26,12 @@ import Play from '../assets/images/icons/play.svg';
 import Plus from '../assets/images/icons/plus.svg';
 import RadioButtonOff from '../assets/images/icons/radio-button-off.svg';
 import RadioButtonOn from '../assets/images/icons/radio-button-on.svg';
+import RainDark from '../assets/images/icons/rain-dark.svg';
+import RainLight from '../assets/images/icons/rain-light.svg';
 import Search from '../assets/images/icons/search.svg';
 import StarSelected from '../assets/images/icons/star-selected.svg';
 import StarUnselected from '../assets/images/icons/star-unselected.svg';
+import Sunrise from '../assets/images/icons/sunrise.svg';
 import WarningsFloodLevel2 from '../assets/images/icons/warnings-flood-level-2.svg';
 import WarningsFloodLevel3 from '../assets/images/icons/warnings-flood-level-3.svg';
 import WarningsFloodLevel4 from '../assets/images/icons/warnings-flood-level-4.svg';
@@ -52,11 +56,12 @@ import WarningsUvNote from '../assets/images/icons/warnings-uv-note.svg';
 import WarningsWindOrange from '../assets/images/icons/warnings-wind-orange.svg';
 import WarningsWindRed from '../assets/images/icons/warnings-wind-red.svg';
 import WarningsWindYellow from '../assets/images/icons/warnings-wind-yellow.svg';
-
 import Warnings from '../assets/images/icons/warnings.svg';
 import Weather from '../assets/images/icons/weather.svg';
+import WindDark from '../assets/images/icons/wind-dark.svg';
+import WindLight from '../assets/images/icons/wind-light.svg';
 
-type IconProps = {
+type CustomIconProps = IconProps & {
   name: string;
   width?: number;
   height?: number;
@@ -64,7 +69,7 @@ type IconProps = {
   style?: StyleProp<ViewStyle & TextStyle>;
 };
 
-const Icon: React.FC<IconProps> = ({ name, ...props }) => {
+const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
   switch (name) {
     case 'arrow-back':
       return <ArrowBack {...props} />;
@@ -108,12 +113,18 @@ const Icon: React.FC<IconProps> = ({ name, ...props }) => {
       return <RadioButtonOff {...props} />;
     case 'radio-button-on':
       return <RadioButtonOn {...props} />;
+    case 'rain-dark':
+      return <RainDark {...props} />;
+    case 'rain-light':
+      return <RainLight {...props} />;
     case 'search':
       return <Search {...props} />;
     case 'star-selected':
       return <StarSelected {...props} />;
     case 'star-unselected':
       return <StarUnselected {...props} />;
+    case 'sunrise':
+      return <Sunrise {...props} />;
     case 'warnings-flood-level-2':
       return <WarningsFloodLevel2 {...props} />;
     case 'warnings-flood-level-3':
@@ -169,6 +180,10 @@ const Icon: React.FC<IconProps> = ({ name, ...props }) => {
       return <Warnings {...props} />;
     case 'weather':
       return <Weather {...props} />;
+    case 'wind-dark':
+      return <WindDark {...props} />;
+    case 'wind-light':
+      return <WindLight {...props} />;
     default:
       return <IonIcon name={name} {...props} />;
   }
