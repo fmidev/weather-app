@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import moment from 'moment';
 import 'moment/locale/fi';
 import { useTheme } from '@react-navigation/native';
@@ -9,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { State } from '../store/types';
 
 import {
+  selectLoading,
   selectForecastByDay,
   selectHeaderLevelForecast,
   selectForecastLastUpdatedMoment,
@@ -21,6 +28,7 @@ import { weatherSymbolGetter } from '../assets/images';
 import { WHITE, CustomTheme } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
+  loading: selectLoading(state),
   forecastByDay: selectForecastByDay(state),
   headerLevelForecast: selectHeaderLevelForecast(state),
   forecastLastUpdatedMoment: selectForecastLastUpdatedMoment(state),
@@ -32,6 +40,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ForecastPanelProps = PropsFromRedux;
 
 const ForecastPanel: React.FC<ForecastPanelProps> = ({
+  loading,
   forecastByDay,
   forecastLastUpdatedMoment,
   headerLevelForecast,
@@ -67,6 +76,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         </Text>
       </View>
       <View style={[styles.forecastContainer]}>
+        {loading && <ActivityIndicator />}
         {headerLevelForecast &&
           headerLevelForecast.length > 0 &&
           headerLevelForecast.map((dayStep, index) => {
