@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import 'moment/locale/fi';
+import 'moment/locale/en-gb';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -46,7 +47,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   headerLevelForecast,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
-  const { t } = useTranslation('forecast');
+  const { t, i18n } = useTranslation('forecast');
+  const locale = i18n.language;
   const [dayOpenIndex, setDayOpenIndex] = useState<number | undefined>(
     undefined
   );
@@ -97,37 +99,47 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                       backgroundColor: colors.inputBackground,
                     },
                   ]}>
-                  <Text
-                    style={[
-                      styles.headerTitle,
-                      {
-                        color: colors.primaryText,
-                      },
-                    ]}>
-                    {stepMoment.format('ddd D.M.')}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.forecastText,
-                      { color: colors.primaryText },
-                    ]}>
-                    {stepMoment.format('HH:mm')}
-                  </Text>
-                  <View>{smartSymbol?.({ width: 40, height: 40 })}</View>
-                  <Text
-                    style={[
-                      styles.temperature,
-                      { color: colors.primaryText },
-                    ]}>{`${temperaturePrefix}${dayStep.temperature}°`}</Text>
+                  <View style={styles.rowColumn}>
+                    <Text
+                      style={[
+                        styles.headerTitle,
+                        {
+                          color: colors.primaryText,
+                        },
+                      ]}>
+                      {stepMoment.locale(locale).format('ddd D.M.')}
+                    </Text>
+                  </View>
+                  <View style={styles.rowColumn}>
+                    <Text
+                      style={[
+                        styles.forecastText,
+                        { color: colors.primaryText },
+                      ]}>
+                      {i18n.language === 'fi'
+                        ? stepMoment.format('HH:mm')
+                        : stepMoment.locale(locale).format('LT')}
+                    </Text>
+                  </View>
+                  <View style={styles.rowColumn}>
+                    <View>{smartSymbol?.({ width: 40, height: 40 })}</View>
+                  </View>
+                  <View style={styles.rowColumn}>
+                    <Text
+                      style={[
+                        styles.temperature,
+                        { color: colors.primaryText },
+                      ]}>{`${temperaturePrefix}${dayStep.temperature}°`}</Text>
+                  </View>
                   <TouchableOpacity
                     accessibilityLabel={
                       dayOpenIndex !== index
                         ? `${t(
                             'hourListOpenAccessibilityLabel'
-                          )} ${stepMoment.format('ddd D.M.')}`
+                          )} ${stepMoment.locale(locale).format('ddd D.M.')}`
                         : `${t(
                             'hourListCloseAccessibilityLabel'
-                          )} ${stepMoment.format('ddd D.M.')}`
+                          )} ${stepMoment.locale(locale).format('ddd D.M.')}`
                     }
                     onPress={() => {
                       if (dayOpenIndex === index) {
@@ -197,6 +209,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flex: 1,
+  },
+  rowColumn: {
+    flex: 1,
+    alignItems: 'center',
   },
   forecastContainer: {
     marginHorizontal: 8,
