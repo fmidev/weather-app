@@ -1,4 +1,14 @@
 {
+  "forecast": {
+    "panelHeader": "Sääennuste",
+    "lastUpdated": "Päivitetty viimeksi",
+    "sunrise": "Aurinko nousee",
+    "sunset": "Laskee",
+    "dayLength": "Päivän pituus",
+    "feelsLike": "Tuntuu",
+    "hourListOpenAccessibilityLabel": "Avaa tuntiennuste päivälle",
+    "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle"
+  },
   "navigation": {
     "map": "Kartta",
     "weather": "Sää",

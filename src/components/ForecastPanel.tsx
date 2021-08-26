@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import 'moment/locale/fi';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import { State } from '../store/types';
 
@@ -36,6 +37,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   headerLevelForecast,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
+  const { t } = useTranslation('forecast');
   const [dayOpenIndex, setDayOpenIndex] = useState<number | undefined>(
     undefined
   );
@@ -54,11 +56,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       ]}>
       <View
         style={[styles.panelHeader, { backgroundColor: colors.cardHeader }]}>
-        <Text style={[styles.headerTitle, { color: WHITE }]}>Sääennuste</Text>
+        <Text style={[styles.headerTitle, { color: WHITE }]}>
+          {t('panelHeader')}
+        </Text>
       </View>
       <View style={styles.panelContainer}>
         <Text style={[styles.panelText, { color: colors.primaryText }]}>
-          Päivitetty viimeksi{' '}
+          {t('lastUpdated')}{' '}
           <Text style={styles.bold}>{forecastLastUpdated}</Text>
         </Text>
       </View>
@@ -99,13 +103,22 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                     ]}>
                     {stepMoment.format('HH:mm')}
                   </Text>
-                  <Text>{smartSymbol?.({ width: 40, height: 40 })}</Text>
+                  <View>{smartSymbol?.({ width: 40, height: 40 })}</View>
                   <Text
                     style={[
                       styles.temperature,
                       { color: colors.primaryText },
                     ]}>{`${temperaturePrefix}${dayStep.temperature}°`}</Text>
                   <TouchableOpacity
+                    accessibilityLabel={
+                      dayOpenIndex !== index
+                        ? `${t(
+                            'hourListOpenAccessibilityLabel'
+                          )} ${stepMoment.format('ddd D.M.')}`
+                        : `${t(
+                            'hourListCloseAccessibilityLabel'
+                          )} ${stepMoment.format('ddd D.M.')}`
+                    }
                     onPress={() => {
                       if (dayOpenIndex === index) {
                         setDayOpenIndex(undefined);

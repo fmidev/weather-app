@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import Icon from './Icon';
@@ -20,7 +21,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   isOpen,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
-  console.log('ForecastByHourList rendering');
+  const { t } = useTranslation('forecast');
   const DayDurationRow = () => {
     const step = dayForecast[0];
     const sunrise = moment(step.sunrise);
@@ -54,12 +55,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
         </View>
         <View>
           <Text style={[styles.panelText, { color: colors.text }]}>
-            Aurinko nousee{' '}
-            <Text style={styles.bold}>{sunrise.format('HH:mm')}</Text> Laskee{' '}
+            {t('sunrise')}{' '}
+            <Text style={styles.bold}>{sunrise.format('HH:mm')}</Text>{' '}
+            {t('sunset')}{' '}
             <Text style={styles.bold}>{sunset.format('HH:mm')}</Text>
           </Text>
           <Text style={[styles.panelText, { color: colors.text }]}>
-            Päivän pituus <Text style={styles.bold}>{dayLength}</Text>
+            {t('dayLength')} <Text style={styles.bold}>{dayLength}</Text>
           </Text>
         </View>
       </View>
@@ -122,7 +124,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}>{`${dayTempPrefix}${item.temperature}°`}</Text>
               </View>
               <View style={[styles.row, styles.alignStart]}>
-                <View>
+                <View style={styles.withSmallMarginRight}>
                   <Icon
                     name={dark ? 'rain-dark' : 'rain-light'}
                     width={24}
@@ -141,7 +143,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   <Icon size={22} name="person" color={colors.text} />
                 </View>
                 <Text style={[styles.hourText, { color: colors.primaryText }]}>
-                  Tuntuu{' '}
+                  {t('feelsLike')}{' '}
                   <Text
                     style={
                       styles.bold
@@ -149,7 +151,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 </Text>
               </View>
               <View style={[styles.row, styles.alignStart]}>
-                <View>
+                <View style={styles.withSmallMarginRight}>
                   <Icon
                     name={dark ? 'wind-dark' : 'wind-light'}
                     width={24}
@@ -204,6 +206,9 @@ const styles = StyleSheet.create({
   },
   withMarginRight: {
     marginRight: 9,
+  },
+  withSmallMarginRight: {
+    marginRight: 4,
   },
   withPaddingLeft: {
     paddingLeft: 8,
