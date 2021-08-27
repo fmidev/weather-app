@@ -6,7 +6,7 @@ describe('map reducer', () => {
   const sliderTime = moment.utc().startOf('hour').unix();
   const initial: types.MapState = {
     mapLayers: {
-      userLocation: false,
+      location: false,
       weather: true,
       radar: false,
     },
@@ -50,7 +50,7 @@ describe('map reducer', () => {
       reducer(initial, {
         type: types.UPDATE_MAP_LAYERS,
         layers: {
-          userLocation: true,
+          location: true,
           weather: true,
           radar: false,
         },
@@ -58,7 +58,7 @@ describe('map reducer', () => {
     ).toEqual({
       ...initial,
       mapLayers: {
-        userLocation: true,
+        location: true,
         weather: true,
         radar: false,
       },

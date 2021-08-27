@@ -15,6 +15,8 @@ export const GRAY_3 = '#48484A';
 export const GRAY_2 = '#636366';
 export const GRAY_1 = '#8E8E93';
 
+export const SHADOW = 'rgba(0,0,0,0.3)';
+
 export const LIGHT_RED = '#F8D7DA';
 export const DARK_RED = '#940214';
 export const LIGHT_CYAN = '#CBF1F5';
@@ -47,6 +49,7 @@ export type CustomTheme = {
     inputBackground: string;
     inputButtonBackground: string;
     mapButtonBackground: string;
+    mapButtonBorder: string;
     headerBackground: string;
     timeStepBackground: string;
     shadow: string;

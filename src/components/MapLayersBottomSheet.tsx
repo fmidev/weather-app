@@ -66,11 +66,11 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
             trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
             thumbColor={WHITE}
             ios_backgroundColor={GRAYISH_BLUE}
-            value={mapLayers.userLocation}
+            value={mapLayers.location}
             onValueChange={() =>
               updateMapLayers({
                 ...mapLayers,
-                userLocation: !mapLayers.userLocation,
+                location: !mapLayers.location,
               })
             }
           />

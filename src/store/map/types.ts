@@ -30,7 +30,7 @@ export type MapActionTypes =
   | UpdateMapLayers;
 
 export interface MapLayers {
-  userLocation: boolean;
+  location: boolean;
   weather: boolean;
   radar: boolean;
 }
