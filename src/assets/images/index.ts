@@ -149,7 +149,7 @@ import Dark164 from './symbols/dark/164.svg';
 import Dark171 from './symbols/dark/171.svg';
 import Dark174 from './symbols/dark/174.svg';
 
-export const symbolsLight = {
+export const symbolsLight: WeatherSymbol = {
   '1': {
     day: Light1,
     night: Light101,
@@ -332,7 +332,7 @@ export const symbolsLight = {
   },
 };
 
-export const symbolsDark = {
+export const symbolsDark: WeatherSymbol = {
   '1': {
     day: Dark1,
     night: Dark101,
@@ -516,7 +516,28 @@ export const symbolsDark = {
 };
 
 export type WeatherSymbol = {
-  day: React.FC<SvgProps>;
-  night: React.FC<SvgProps>;
-  key: string;
+  [key: string]: {
+    day: React.FC<SvgProps>;
+    night: React.FC<SvgProps>;
+  };
+};
+
+export const weatherSymbolGetter = (key: string, dark: boolean) => {
+  const symbolSet = dark ? symbolsDark : symbolsLight;
+  let parsedKey = key;
+
+  if (parsedKey.length === 3) {
+    // expected to return night symbol
+    parsedKey = key.slice(1, 3);
+    if (parsedKey[0] === '0') {
+      parsedKey = parsedKey.slice(1, 2);
+    }
+  }
+  // TODO: fix
+  const toReturn =
+    key !== parsedKey ? symbolSet[parsedKey].night : symbolSet[parsedKey].day;
+  if (toReturn) {
+    return toReturn;
+  }
+  return null;
 };

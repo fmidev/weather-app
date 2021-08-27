@@ -1,4 +1,14 @@
 {
+  "forecast": {
+    "panelHeader": "Weather forecast",
+    "lastUpdated": "Last updated",
+    "sunrise": "Sunrise",
+    "sunset": "Sunset",
+    "dayLength": "Length of day",
+    "feelsLike": "Feels like",
+    "hourListOpenAccessibilityLabel": "Open forecast by hour list for day",
+    "hourListCloseAccessibilityLabel": "Close forecast by hour list for day"
+  },
   "navigation": {
     "map": "Map",
     "weather": "Weather",

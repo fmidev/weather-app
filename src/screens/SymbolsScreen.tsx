@@ -3,7 +3,8 @@ import { View, SafeAreaView, Text, StyleSheet, FlatList } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import { symbolsLight, symbolsDark, WeatherSymbol } from '../assets/images';
+import { SvgProps } from 'react-native-svg';
+import { symbolsLight, symbolsDark } from '../assets/images';
 import { WHITE } from '../utils/colors';
 
 const SymbolsScreen: React.FC = () => {
@@ -17,8 +18,12 @@ const SymbolsScreen: React.FC = () => {
     ...value,
   }));
 
-  const itemRenderer = ({ item }: { item: WeatherSymbol }) => (
-    <View style={styles.row} testID={item.key}>
+  const itemRenderer = ({
+    item,
+  }: {
+    item: { key: string; day: React.FC<SvgProps>; night: React.FC<SvgProps> };
+  }) => (
+    <View style={styles.row}>
       <View style={styles.image}>{item.day({ width: 40, height: 40 })}</View>
       <View style={styles.image}>{item.night({ width: 40, height: 40 })}</View>
       <Text style={[styles.description, { color: colors.text }]}>{`${t(

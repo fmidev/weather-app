@@ -8,12 +8,13 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
+import { SvgProps } from 'react-native-svg';
 
 import Icon from './Icon';
 
 import CloseButton from './CloseButton';
 
-import { symbolsLight, symbolsDark, WeatherSymbol } from '../assets/images';
+import { symbolsLight, symbolsDark } from '../assets/images';
 import {
   RAIN_1,
   RAIN_2,
@@ -39,7 +40,11 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
     ...value,
   }));
 
-  const symbolRowRenderer = ({ item }: { item: WeatherSymbol }) => (
+  const symbolRowRenderer = ({
+    item,
+  }: {
+    item: { key: string; day: React.FC<SvgProps>; night: React.FC<SvgProps> };
+  }) => (
     <View style={styles.listRow}>
       <View style={styles.image}>{item.day({ width: 40, height: 40 })}</View>
       <Text style={[styles.text, { color: colors.text }]}>

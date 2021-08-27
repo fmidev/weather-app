@@ -31,6 +31,11 @@ export const lightTheme = {
     headerBackground: WHITE,
     timeStepBackground: LIGHT_BLUE,
     shadow: BLACK,
+    screenBackground: GRAYISH_BLUE,
+    cardHeader: PRIMARY_BLUE,
+    cardShadow: GRAYISH_BLUE,
+    warningsIconFill: PRIMARY_BLUE,
+    selectedDayBackground: PRIMARY_BLUE,
   },
 };
 
@@ -50,6 +55,11 @@ export const darkTheme = {
     mapButtonBackground: GRAY_6,
     headerBackground: GRAY_6,
     timeStepBackground: GRAY_6,
-    shadow: GRAY_1,
+    shadow: WHITE,
+    screenBackground: GRAY_7,
+    cardHeader: GRAY_3,
+    cardShadow: BLACK,
+    warningsIconFill: BLACK,
+    selectedDayBackground: GRAY_4,
   },
 };

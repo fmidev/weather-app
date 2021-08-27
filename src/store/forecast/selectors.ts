@@ -1,6 +1,9 @@
 import { Selector, createSelector } from 'reselect';
+import moment from 'moment';
+import 'moment/locale/fi';
+
 import { State } from '../types';
-import { ForecastState, Error, WeatherData } from './types';
+import { ForecastState, Error, WeatherData, TimestepData } from './types';
 import { selectGeoid } from '../general/selectors';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
@@ -25,4 +28,39 @@ const selectData = createSelector<State, ForecastState, WeatherData>(
 export const selectForecast = createSelector(
   [selectData, selectGeoid],
   (items, geoid) => items[geoid] || []
+);
+
+export const selectForecastByDay = createSelector(
+  selectForecast,
+  (forecast) =>
+    forecast &&
+    forecast.length > 0 &&
+    forecast.reduce((acc: { [key: string]: any }, curr: TimestepData): {
+      [key: string]: TimestepData[];
+    } => {
+      const day = moment.unix(curr.epochtime).format('D.M.');
+      if (acc[day]) {
+        return { ...acc, [day]: acc[day].concat(curr) };
+      }
+      return { ...acc, [day]: [curr] };
+    }, {})
+);
+
+export const selectHeaderLevelForecast = createSelector(
+  selectForecastByDay,
+  (forecastByDay) =>
+    forecastByDay &&
+    Object.keys(forecastByDay).map((key: string, index: number) => {
+      const dayArr = forecastByDay[key];
+      if (dayArr.length >= 16) {
+        return dayArr[15];
+      }
+      return index === 0 ? dayArr[0] : dayArr[dayArr.length - 1];
+    })
+);
+
+export const selectForecastLastUpdatedMoment = createSelector(
+  selectForecast,
+  (forecast) =>
+    forecast[0] && forecast[0].modtime && moment(forecast[0].modtime)
 );
