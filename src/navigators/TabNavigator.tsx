@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  ActivityIndicator,
   AppState,
   Appearance,
   Platform,
@@ -82,17 +81,22 @@ const Navigator: React.FC<Props> = ({
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(
     initialColorScheme === 'dark'
   );
-
+  console.log(
+    'TabNavigator rendering',
+    initialColorScheme,
+    theme,
+    useDarkTheme
+  );
   useEffect(() => {
     initSettings();
   }, [initSettings]);
 
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
-    if (theme) {
+    if (theme && !!ready) {
       SplashScreen.hide();
     }
-  }, [theme]);
+  }, [theme, ready]);
 
   useEffect(() => {
     const permission =
@@ -141,8 +145,6 @@ const Navigator: React.FC<Props> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
-
-  if (!ready) return <ActivityIndicator size="large" />;
 
   const WarningsScreen = () => (
     <PlaceholderScreen text={`${t('placeholder:warnings')}`} testIndex={2} />
@@ -317,6 +319,12 @@ const Navigator: React.FC<Props> = ({
       />
     </OthersStack.Navigator>
   );
+
+  // TODO: this is never shown as SplashScreen is visible with the condition
+  // however, this prevents unnecessary child component rendering
+  if (!ready || !theme) {
+    return null;
+  }
 
   return (
     <>
