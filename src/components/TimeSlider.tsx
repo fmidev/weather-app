@@ -18,7 +18,7 @@ import {
   getSliderStepSeconds,
 } from '../utils/helpers';
 
-import { WHITE, SECONDARY_BLUE, CustomTheme } from '../utils/colors';
+import { WHITE, SECONDARY_BLUE, SHADOW, CustomTheme } from '../utils/colors';
 
 const mapStateToProps = (state: State) => ({
   sliderStep: selectSliderStep(state),
@@ -61,7 +61,6 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         styles.shadow,
         {
           backgroundColor: colors.inputButtonBackground,
-          shadowColor: colors.shadow,
           borderColor: colors.mapButtonBorder,
         },
       ]}>
@@ -131,6 +130,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    shadowColor: SHADOW,
 
     elevation: 5,
   },
