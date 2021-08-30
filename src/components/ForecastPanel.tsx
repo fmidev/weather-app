@@ -49,9 +49,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
-  const [dayOpenIndex, setDayOpenIndex] = useState<number | undefined>(
-    undefined
-  );
+  const [dayOpenIndexes, setDayOpenIndexes] = useState<number[]>([]);
   const forecastLastUpdated =
     forecastLastUpdatedMoment &&
     forecastLastUpdatedMoment.format('D.M. [klo] HH:mm');
@@ -90,78 +88,87 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             );
             return (
               <View key={dayStep.epochtime}>
-                <View
-                  style={[
-                    styles.row,
-                    styles.forecastHeader,
-                    {
-                      borderBottomColor: colors.border,
-                      backgroundColor: colors.inputBackground,
-                    },
-                  ]}>
-                  <View style={styles.rowColumn}>
-                    <Text
-                      style={[
-                        styles.headerTitle,
-                        {
-                          color: colors.primaryText,
-                        },
-                      ]}>
-                      {stepMoment.locale(locale).format('ddd D.M.')}
-                    </Text>
-                  </View>
-                  <View style={styles.rowColumn}>
-                    <Text
-                      style={[
-                        styles.forecastText,
-                        { color: colors.primaryText },
-                      ]}>
-                      {i18n.language === 'fi'
-                        ? stepMoment.format('HH:mm')
-                        : stepMoment.locale(locale).format('LT')}
-                    </Text>
-                  </View>
-                  <View style={styles.rowColumn}>
-                    <View>{smartSymbol?.({ width: 40, height: 40 })}</View>
-                  </View>
-                  <View style={styles.rowColumn}>
-                    <Text
-                      style={[
-                        styles.temperature,
-                        { color: colors.primaryText },
-                      ]}>{`${temperaturePrefix}${dayStep.temperature}°`}</Text>
-                  </View>
-                  <TouchableOpacity
-                    accessibilityLabel={
-                      dayOpenIndex !== index
-                        ? `${t(
-                            'hourListOpenAccessibilityLabel'
-                          )} ${stepMoment.locale(locale).format('ddd D.M.')}`
-                        : `${t(
-                            'hourListCloseAccessibilityLabel'
-                          )} ${stepMoment.locale(locale).format('ddd D.M.')}`
+                <TouchableOpacity
+                  activeOpacity={1}
+                  // delayPressIn={100}
+                  accessibilityLabel={
+                    !dayOpenIndexes.includes(index)
+                      ? `${t(
+                          'hourListOpenAccessibilityLabel'
+                        )} ${stepMoment.locale(locale).format('ddd D.M.')}`
+                      : `${t(
+                          'hourListCloseAccessibilityLabel'
+                        )} ${stepMoment.locale(locale).format('ddd D.M.')}`
+                  }
+                  onPress={() => {
+                    if (dayOpenIndexes.includes(index)) {
+                      setDayOpenIndexes(
+                        dayOpenIndexes.filter((i) => i !== index)
+                      );
+                    } else {
+                      setDayOpenIndexes(dayOpenIndexes.concat(index));
                     }
-                    onPress={() => {
-                      if (dayOpenIndex === index) {
-                        setDayOpenIndex(undefined);
-                      } else {
-                        setDayOpenIndex(index);
-                      }
-                    }}>
+                  }}>
+                  <View
+                    style={[
+                      styles.row,
+                      styles.forecastHeader,
+                      {
+                        borderBottomColor: colors.border,
+                        backgroundColor: colors.inputBackground,
+                      },
+                    ]}>
+                    <View style={styles.rowColumn}>
+                      <Text
+                        style={[
+                          styles.headerTitle,
+                          {
+                            color: colors.primaryText,
+                          },
+                        ]}>
+                        {stepMoment.locale(locale).format('ddd D.M.')}
+                      </Text>
+                    </View>
+                    <View style={styles.rowColumn}>
+                      <Text
+                        style={[
+                          styles.forecastText,
+                          { color: colors.primaryText },
+                        ]}>
+                        {i18n.language === 'fi'
+                          ? stepMoment.format('HH:mm')
+                          : stepMoment.locale(locale).format('LT')}
+                      </Text>
+                    </View>
+                    <View style={styles.rowColumn}>
+                      <View>{smartSymbol?.({ width: 40, height: 40 })}</View>
+                    </View>
+                    <View style={styles.rowColumn}>
+                      <Text
+                        style={[
+                          styles.temperature,
+                          { color: colors.primaryText },
+                        ]}>{`${temperaturePrefix}${dayStep.temperature}°`}</Text>
+                    </View>
+
                     <Icon
                       width={24}
                       height={24}
-                      name={dayOpenIndex === index ? 'arrow-up' : 'arrow-down'}
+                      name={
+                        dayOpenIndexes.includes(index)
+                          ? 'arrow-up'
+                          : 'arrow-down'
+                      }
                       style={{ color: colors.primaryText }}
                     />
-                  </TouchableOpacity>
-                </View>
-                {forecastByDay && dayOpenIndex === index && (
-                  <ForecastByHourList
-                    dayForecast={forecastByDay[stepMoment.format('D.M.')]}
-                    isOpen={dayOpenIndex === index}
-                  />
-                )}
+                  </View>
+                  {forecastByDay && dayOpenIndexes.includes(index) && (
+                    <ForecastByHourList
+                      dayForecast={forecastByDay[stepMoment.format('D.M.')]}
+                      isOpen={dayOpenIndexes.includes(index)}
+                    />
+                  )}
+                </TouchableOpacity>
               </View>
             );
           })}
