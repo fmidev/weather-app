@@ -22,6 +22,7 @@ import { fetchForecast as fetchForecastAction } from '../store/forecast/actions'
 
 import Icon from '../components/Icon';
 import ForecastPanel from '../components/ForecastPanel';
+import ObservationPanel from '../components/ObservationPanel';
 
 import { GREEN, WHITE, CustomTheme } from '../utils/colors';
 import { TimestepData } from '../store/forecast/types';
@@ -217,6 +218,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           </View>
         </View>
         <ForecastPanel />
+        <ObservationPanel />
       </ScrollView>
     </SafeAreaView>
   );
