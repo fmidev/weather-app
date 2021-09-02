@@ -24,7 +24,6 @@
 		A45BF91F26B41657000BF75C /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91A26B41657000BF75C /* Roboto-Medium.ttf */; };
 		A45BF92026B41657000BF75C /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91B26B41657000BF75C /* Roboto-Regular.ttf */; };
 		A45BF92126B41657000BF75C /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91C26B41657000BF75C /* Roboto-Thin.ttf */; };
-		A4A0C74E26DCD063004ECA41 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = A4A0C74D26DCD063004ECA41 /* main.jsbundle */; };
 		A4C8322726C6896900FEC2EB /* icons in Resources */ = {isa = PBXBuildFile; fileRef = A4C8322626C6896900FEC2EB /* icons */; };
 		A4C8322926C6897A00FEC2EB /* symbols in Resources */ = {isa = PBXBuildFile; fileRef = A4C8322826C6897A00FEC2EB /* symbols */; };
 /* End PBXBuildFile section */
@@ -71,13 +70,12 @@
 		A443E2B525DBFF4700B0BCF9 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		A454032A25E66E860005997E /* weather-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "weather-Bridging-Header.h"; path = "../weather-Bridging-Header.h"; sourceTree = "<group>"; };
 		A454032B25E66E860005997E /* SwiftEnabler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftEnabler.swift; path = ../SwiftEnabler.swift; sourceTree = "<group>"; };
-		A454033125E6830C0005997E /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		A454033125E6830C0005997E /* main.jsbundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = main.jsbundle; sourceTree = "<group>"; };
 		A45BF91826B41657000BF75C /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		A45BF91926B41657000BF75C /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Light.ttf"; path = "../src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		A45BF91A26B41657000BF75C /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Medium.ttf"; path = "../src/assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		A45BF91B26B41657000BF75C /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../src/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		A45BF91C26B41657000BF75C /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Thin.ttf"; path = "../src/assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
-		A4A0C74D26DCD063004ECA41 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		A4BAA1A826BD1F040096B054 /* symbols */ = {isa = PBXFileReference; lastKnownFileType = folder; name = symbols; path = ../src/assets/images/symbols; sourceTree = "<group>"; };
 		A4C8322426C685A700FEC2EB /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../src/assets/images; sourceTree = "<group>"; };
 		A4C8322626C6896900FEC2EB /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../src/assets/images/icons; sourceTree = "<group>"; };
@@ -150,7 +148,7 @@
 				A443E2B425DBFF2200B0BCF9 /* Fonts */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				A454033125E6830C0005997E /* Settings.bundle */,
+				A454033125E6830C0005997E /* main.jsbundle */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				A454032B25E66E860005997E /* SwiftEnabler.swift */,
@@ -199,7 +197,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				A4A0C74D26DCD063004ECA41 /* main.jsbundle */,
 				A4C8322826C6897A00FEC2EB /* symbols */,
 				A4C8322626C6896900FEC2EB /* icons */,
 				A4C8322426C685A700FEC2EB /* images */,
@@ -389,7 +386,6 @@
 				A45BF91F26B41657000BF75C /* Roboto-Medium.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				A4A0C74E26DCD063004ECA41 /* main.jsbundle in Resources */,
 				A45BF91E26B41657000BF75C /* Roboto-Light.ttf in Resources */,
 				A45BF91D26B41657000BF75C /* Roboto-Bold.ttf in Resources */,
 			);
