@@ -15,7 +15,7 @@
       "temperature": "Lämpötila",
       "temperatureAccessibilityLabel": "Avaa lämpötilagraafi",
       "precipitation": "Sademäärä",
-      "precipitationAccesssibilityLabel": "Avaa sademäärägraafi",
+      "precipitationAccessibilityLabel": "Avaa sademäärägraafi",
       "wind": "Tuuli",
       "windAccessibilityLabel": "Avaa tuuligraafi",
       "feelsLike": "Tuntuu kuin",

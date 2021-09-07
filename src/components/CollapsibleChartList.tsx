@@ -79,7 +79,7 @@ const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
       )}
       <TouchableOpacity
         accessibilityLabel={t(
-          'forecast:charts:precipitationAccesssibilityLabel'
+          'forecast:charts:precipitationAccessibilityLabel'
         )}
         onPress={() =>
           openIndex === 1 ? setOpenIndex(undefined) : setOpenIndex(1)
