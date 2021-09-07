@@ -44,6 +44,7 @@ export interface TimestepData {
   windspeedms: number;
   winddirection: number;
   windcompass8: string;
+  hourlymaximumgust: number;
   precipitation1h: number;
   feelsLike: number;
   dark: number;

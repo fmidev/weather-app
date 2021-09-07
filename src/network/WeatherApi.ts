@@ -32,6 +32,7 @@ export const getForecast = async (location: Location): Promise<WeatherData> => {
       'pop',
       'windspeedms',
       'winddirection',
+      'hourlymaximumgust',
       'windcompass8',
       'precipitation1h',
       'feelsLike',

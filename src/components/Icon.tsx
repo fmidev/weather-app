@@ -58,6 +58,7 @@ import WarningsWindRed from '../assets/images/icons/warnings-wind-red.svg';
 import WarningsWindYellow from '../assets/images/icons/warnings-wind-yellow.svg';
 import Warnings from '../assets/images/icons/warnings.svg';
 import Weather from '../assets/images/icons/weather.svg';
+import WindArrow from '../assets/images/icons/wind-arrow.svg';
 import WindDark from '../assets/images/icons/wind-dark.svg';
 import WindLight from '../assets/images/icons/wind-light.svg';
 
@@ -180,6 +181,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Warnings {...props} />;
     case 'weather':
       return <Weather {...props} />;
+    case 'wind-arrow':
+      return <WindArrow {...props} />;
     case 'wind-dark':
       return <WindDark {...props} />;
     case 'wind-light':

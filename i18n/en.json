@@ -7,7 +7,26 @@
     "dayLength": "Length of day",
     "feelsLike": "Feels like",
     "hourListOpenAccessibilityLabel": "Open forecast by hour list for day",
-    "hourListCloseAccessibilityLabel": "Close forecast by hour list for day"
+    "hourListCloseAccessibilityLabel": "Close forecast by hour list for day",
+    "at": "at",
+    "table": "Table",
+    "chart": "Chart",
+    "charts": {
+      "temperature": "Temperature",
+      "temperatureAccessibilityLabel": "Open temperature chart",
+      "precipitation": "Precipitation",
+      "precipitationAccesssibilityLabel": "Open precipitation chart",
+      "wind": "Wind",
+      "windAccessibilityLabel": "Open wind chart",
+      "feelsLike": "Feels like",
+      "windSpeed": "Wind speed",
+      "windGust": "Wind gust",
+      "windDirection": "Wind direction",
+      "previous24h": "Previous 24 h",
+      "previous24hAccessibilityLabel": "Show previous 24 hours",
+      "next24h": "Next 24 h",
+      "next24hAccessibilityLabel": "Show next 24 hours"
+    }
   },
   "navigation": {
     "map": "Map",
