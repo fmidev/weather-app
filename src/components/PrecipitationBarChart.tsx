@@ -33,7 +33,7 @@ const PrecipitationBarChart: React.FC<PrecipitationBarChartProps> = ({
     y: hour.precipitation1h,
   }));
 
-  const hasPrecipitation = precipitationData.some((datum) => datum.y > 0);
+  // const hasPrecipitation = precipitationData.some((datum) => datum.y > 0);
 
   // TODO: use hasPrecipitation somehow to indicate no rain
 
@@ -64,14 +64,12 @@ const PrecipitationBarChart: React.FC<PrecipitationBarChartProps> = ({
             },
           }}
         />
-        {hasPrecipitation && (
-          <VictoryBar
-            data={precipitationData}
-            animate={{ duration: 500, onLoad: { duration: 250 } }}
-            style={{ data: { fill: colors.primaryText } }}
-            x={hourGetter}
-          />
-        )}
+        <VictoryBar
+          data={precipitationData}
+          animate={{ duration: 500, onLoad: { duration: 250 } }}
+          style={{ data: { fill: colors.primaryText } }}
+          x={hourGetter}
+        />
         <VictoryLabel
           text="mm"
           x={30}
