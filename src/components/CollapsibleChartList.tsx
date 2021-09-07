@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import Icon from './Icon';
+import CollapsibleListHeader from './CollapsibleListHeader';
 import DaySelectorWrapper from './DaySelectorWrapper';
 import TemperatureLineChart from './TemperatureLineChart';
 import PrecipitationBarChart from './PrecipitationBarChart';
 import WindLineChart from './WindLineChart';
 
 import { TimestepData } from '../store/forecast/types';
-
-import { CustomTheme } from '../utils/colors';
 
 type CollapsibleChartListProps = {
   data: TimestepData[] | false;
@@ -30,43 +27,19 @@ const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
   showNextDay,
   showNextDisabled,
 }) => {
-  const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
   const [openIndex, setOpenIndex] = useState<number | undefined>(undefined);
 
   return (
-    <View style={styles.headerContainer}>
-      <TouchableOpacity
+    <View>
+      <CollapsibleListHeader
         accessibilityLabel={t('forecast:charts:temperatureAccessibilityLabel')}
+        title={t('forecast:charts:temperature')}
         onPress={() =>
           openIndex === 0 ? setOpenIndex(undefined) : setOpenIndex(0)
-        }>
-        <View
-          style={[
-            styles.row,
-            styles.forecastHeader,
-            {
-              borderBottomColor: colors.border,
-              backgroundColor: colors.inputBackground,
-            },
-          ]}>
-          <Text
-            style={[
-              styles.headerTitle,
-              {
-                color: colors.primaryText,
-              },
-            ]}>
-            {t('forecast:charts:temperature')}
-          </Text>
-          <Icon
-            width={24}
-            height={24}
-            name={openIndex === 0 ? 'arrow-up' : 'arrow-down'}
-            style={{ color: colors.primaryText }}
-          />
-        </View>
-      </TouchableOpacity>
+        }
+        open={openIndex === 0}
+      />
       {data && openIndex === 0 && (
         <DaySelectorWrapper
           selectedDate={selectedDate}
@@ -77,39 +50,16 @@ const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
           <TemperatureLineChart data={data} />
         </DaySelectorWrapper>
       )}
-      <TouchableOpacity
+      <CollapsibleListHeader
         accessibilityLabel={t(
           'forecast:charts:precipitationAccessibilityLabel'
         )}
+        title={t('forecast:charts:precipitation')}
         onPress={() =>
           openIndex === 1 ? setOpenIndex(undefined) : setOpenIndex(1)
-        }>
-        <View
-          style={[
-            styles.row,
-            styles.forecastHeader,
-            {
-              borderBottomColor: colors.border,
-              backgroundColor: colors.inputBackground,
-            },
-          ]}>
-          <Text
-            style={[
-              styles.headerTitle,
-              {
-                color: colors.primaryText,
-              },
-            ]}>
-            {t('forecast:charts:precipitation')}
-          </Text>
-          <Icon
-            width={24}
-            height={24}
-            name={openIndex === 1 ? 'arrow-up' : 'arrow-down'}
-            style={{ color: colors.primaryText }}
-          />
-        </View>
-      </TouchableOpacity>
+        }
+        open={openIndex === 1}
+      />
       {data && openIndex === 1 && (
         <DaySelectorWrapper
           selectedDate={selectedDate}
@@ -120,37 +70,14 @@ const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
           <PrecipitationBarChart data={data} />
         </DaySelectorWrapper>
       )}
-      <TouchableOpacity
+      <CollapsibleListHeader
         accessibilityLabel={t('forecast:charts:windAccessibilityLabel')}
+        title={t('forecast:charts:wind')}
         onPress={() =>
           openIndex === 2 ? setOpenIndex(undefined) : setOpenIndex(2)
-        }>
-        <View
-          style={[
-            styles.row,
-            styles.forecastHeader,
-            {
-              borderBottomColor: colors.border,
-              backgroundColor: colors.inputBackground,
-            },
-          ]}>
-          <Text
-            style={[
-              styles.headerTitle,
-              {
-                color: colors.primaryText,
-              },
-            ]}>
-            {t('forecast:charts:wind')}
-          </Text>
-          <Icon
-            width={24}
-            height={24}
-            name={openIndex === 2 ? 'arrow-up' : 'arrow-down'}
-            style={{ color: colors.primaryText }}
-          />
-        </View>
-      </TouchableOpacity>
+        }
+        open={openIndex === 2}
+      />
       {data && openIndex === 2 && (
         <DaySelectorWrapper
           selectedDate={selectedDate}
@@ -164,28 +91,5 @@ const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  headerContainer: {
-    marginHorizontal: 8,
-    marginBottom: 8,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-  forecastHeader: {
-    height: 56,
-    borderBottomWidth: 1,
-    paddingHorizontal: 16,
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
-  },
-});
 
 export default CollapsibleChartList;
