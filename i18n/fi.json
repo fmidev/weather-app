@@ -7,7 +7,26 @@
     "dayLength": "Päivän pituus",
     "feelsLike": "Tuntuu",
     "hourListOpenAccessibilityLabel": "Avaa tuntiennuste päivälle",
-    "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle"
+    "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle",
+    "at": "klo",
+    "table": "Taulukko",
+    "chart": "Graafi",
+    "charts": {
+      "temperature": "Lämpötila",
+      "temperatureAccessibilityLabel": "Avaa lämpötilagraafi",
+      "precipitation": "Sademäärä",
+      "precipitationAccesssibilityLabel": "Avaa sademäärägraafi",
+      "wind": "Tuuli",
+      "windAccessibilityLabel": "Avaa tuuligraafi",
+      "feelsLike": "Tuntuu kuin",
+      "windSpeed": "Tuulen nopeus",
+      "windGust": "Tuulen puuska",
+      "windDirection": "Tuulen suunta",
+      "previous24h": "Edelliset 24 h",
+      "previous24hAccessibilityLabel": "Näytä edelliset 24 tuntia",
+      "next24h": "Seuraavat 24 h",
+      "next24hAccessibilityLabel": "Näytä seuraavat 24 tuntia"
+    }
   },
   "navigation": {
     "map": "Kartta",

@@ -58,5 +58,6 @@ export type CustomTheme = {
     cardShadow: string;
     warningsIconFill: string;
     selectedDayBackground: string;
+    chartSecondaryLine: string;
   };
 };

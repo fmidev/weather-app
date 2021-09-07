@@ -36,6 +36,7 @@ export const lightTheme = {
     cardShadow: GRAYISH_BLUE,
     warningsIconFill: PRIMARY_BLUE,
     selectedDayBackground: PRIMARY_BLUE,
+    chartSecondaryLine: SECONDARY_BLUE,
   },
 };
 
@@ -62,5 +63,6 @@ export const darkTheme = {
     cardShadow: BLACK,
     warningsIconFill: BLACK,
     selectedDayBackground: GRAY_4,
+    chartSecondaryLine: GRAYISH_BLUE, // TODO: needs design
   },
 };

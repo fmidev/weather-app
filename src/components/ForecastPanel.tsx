@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   ActivityIndicator,
@@ -24,9 +24,13 @@ import {
 
 import ForecastByHourList from './ForecastByHourList';
 import Icon from './Icon';
+import CollapsibleChartList from './CollapsibleChartList';
 
 import { weatherSymbolGetter } from '../assets/images';
 import { WHITE, CustomTheme } from '../utils/colors';
+
+const TABLE = 'table';
+const CHART = 'chart';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -50,9 +54,26 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
   const [dayOpenIndexes, setDayOpenIndexes] = useState<number[]>([]);
+  const [toDisplay, setToDisplay] = useState<typeof TABLE | typeof CHART>(
+    TABLE
+  );
+  const [selectedDate, setSelectedDate] = useState<string | undefined>(
+    undefined
+  );
+
+  const dateKeys = Object.keys(forecastByDay);
+
+  useEffect(() => {
+    if (forecastByDay) {
+      if (dateKeys.length > 0 && !selectedDate) {
+        setSelectedDate(dateKeys[0]);
+      }
+    }
+  }, [forecastByDay, dateKeys, selectedDate]);
+
   const forecastLastUpdated =
     forecastLastUpdatedMoment &&
-    forecastLastUpdatedMoment.format('D.M. [klo] HH:mm');
+    forecastLastUpdatedMoment.format(`D.M. [${t('at')}] HH:mm`);
 
   return (
     <View
@@ -75,10 +96,44 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           <Text style={styles.bold}>{forecastLastUpdated}</Text>
         </Text>
       </View>
+      <View style={styles.panelContainer}>
+        <View style={[styles.row, styles.justifyStart]}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => setToDisplay(TABLE)}>
+            <Text
+              style={[
+                styles.forecastText,
+                styles.medium,
+                styles.withMarginRight,
+                toDisplay === TABLE && styles.selectedText,
+                {
+                  color: colors.primaryText,
+                },
+              ]}>
+              {t('table')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => setToDisplay(CHART)}>
+            <Text
+              style={[
+                styles.forecastText,
+                styles.medium,
+                toDisplay === CHART && styles.selectedText,
+                { color: colors.primaryText },
+              ]}>
+              {t('chart')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <View style={[styles.forecastContainer]}>
         {loading && <ActivityIndicator />}
         {headerLevelForecast &&
           headerLevelForecast.length > 0 &&
+          toDisplay === TABLE &&
           headerLevelForecast.map((dayStep, index) => {
             const stepMoment = moment.unix(dayStep.epochtime);
             const temperaturePrefix = dayStep.temperature > 0 && '+';
@@ -118,7 +173,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                         backgroundColor: colors.inputBackground,
                       },
                     ]}>
-                    <View style={styles.rowColumn}>
+                    <View style={[styles.rowColumn, styles.alignStart]}>
                       <Text
                         style={[
                           styles.headerTitle,
@@ -172,6 +227,41 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               </View>
             );
           })}
+        {headerLevelForecast &&
+          headerLevelForecast.length > 0 &&
+          toDisplay === CHART && (
+            <CollapsibleChartList
+              data={forecastByDay && forecastByDay[selectedDate!]}
+              selectedDate={
+                forecastByDay &&
+                moment
+                  .unix(forecastByDay[selectedDate!][0]?.epochtime)
+                  .locale(locale)
+                  .format('dddd D.M.')
+              }
+              showPreviousDay={() => {
+                const index =
+                  (!!selectedDate && dateKeys.indexOf(selectedDate) - 1) || 0;
+                if (index >= 0 && dateKeys[index]) {
+                  setSelectedDate(dateKeys[index]);
+                }
+              }}
+              showNextDay={() => {
+                const index =
+                  !!selectedDate && dateKeys.indexOf(selectedDate) + 1;
+                if (index && dateKeys[index]) {
+                  setSelectedDate(dateKeys[index]);
+                }
+              }}
+              showPreviousDisabled={
+                !!selectedDate && dateKeys.indexOf(selectedDate) === 0
+              }
+              showNextDisabled={
+                !!selectedDate &&
+                dateKeys.indexOf(selectedDate) === dateKeys.length - 1
+              }
+            />
+          )}
       </View>
     </View>
   );
@@ -202,6 +292,9 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontFamily: 'Roboto-Bold',
+  },
+  medium: {
+    fontFamily: 'Roboto-Medium',
   },
   panelContainer: {
     paddingVertical: 12,
@@ -237,6 +330,19 @@ const styles = StyleSheet.create({
   temperature: {
     fontSize: 18,
     fontFamily: 'Roboto-Bold',
+  },
+  alignStart: {
+    alignItems: 'flex-start',
+  },
+  justifyStart: {
+    justifyContent: 'flex-start',
+  },
+  selectedText: {
+    fontFamily: 'Roboto-Bold',
+    textDecorationLine: 'underline',
+  },
+  withMarginRight: {
+    marginRight: 16,
   },
 });
 
