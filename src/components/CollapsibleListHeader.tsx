@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+
+import { SvgProps } from 'react-native-svg';
 
 import Icon from './Icon';
 
@@ -11,6 +13,9 @@ type CollapsiblePanelHeaderProps = {
   title: string;
   accessibilityLabel: string;
   onPress: () => void;
+  time?: string;
+  smartSymbol?: ReactElement<SvgProps> | null;
+  temperature?: string;
 };
 
 const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
@@ -18,6 +23,9 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   onPress,
   open,
   title,
+  time,
+  smartSymbol,
+  temperature,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   return (
@@ -33,9 +41,26 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
             backgroundColor: colors.inputBackground,
           },
         ]}>
-        <Text style={[styles.title, { color: colors.primaryText }]}>
-          {title}
-        </Text>
+        <View style={[styles.rowColumn, styles.alignStart]}>
+          <Text style={[styles.title, { color: colors.primaryText }]}>
+            {title}
+          </Text>
+        </View>
+        {time && (
+          <View style={styles.rowColumn}>
+            <Text style={[styles.text, { color: colors.primaryText }]}>
+              {time}
+            </Text>
+          </View>
+        )}
+        {smartSymbol && <View style={styles.rowColumn}>{smartSymbol}</View>}
+        {temperature && (
+          <View style={styles.rowColumn}>
+            <Text style={[styles.temperature, { color: colors.primaryText }]}>
+              {temperature}
+            </Text>
+          </View>
+        )}
         <Icon
           width={24}
           height={24}
@@ -61,6 +86,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
     textTransform: 'capitalize',
+  },
+  text: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+  },
+  temperature: {
+    fontSize: 18,
+    fontFamily: 'Roboto-Bold',
+  },
+  alignStart: {
+    alignItems: 'flex-start',
+  },
+  rowColumn: {
+    flex: 1,
+    alignItems: 'center',
   },
 });
 
