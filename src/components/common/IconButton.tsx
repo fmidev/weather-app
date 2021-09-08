@@ -10,7 +10,7 @@ import {
 
 import Icon from './Icon';
 
-import { LIGHT_BLUE, PRIMARY_BLUE } from '../utils/colors';
+import { LIGHT_BLUE, PRIMARY_BLUE } from '../../utils/colors';
 
 type ButtonProps = { onPress: () => void; accessibilityLabel: string };
 

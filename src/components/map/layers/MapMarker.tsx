@@ -2,7 +2,7 @@ import React from 'react';
 import { Marker } from 'react-native-maps';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from './Icon';
+import Icon from '../../common/Icon';
 
 type MarkerProps = {
   coordinates: {

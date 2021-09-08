@@ -27,13 +27,13 @@ import SettingsScreen from '../screens/SettingsScreen';
 import SearchScreen from '../screens/SearchScreen';
 import AboutScreen from '../screens/AboutScreen';
 
-import Icon from '../components/Icon';
-import HeaderButton from '../components/HeaderButton';
+import Icon from '../components/common/Icon';
+import HeaderButton from '../components/common/HeaderButton';
 
 import { State } from '../store/types';
 import { selectTheme } from '../store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '../store/general/actions';
-import CommonHeaderTitle from '../components/CommonHeaderTitle';
+import CommonHeaderTitle from '../components/common/CommonHeaderTitle';
 
 import { initSettings as initSettingsAction } from '../store/settings/actions';
 

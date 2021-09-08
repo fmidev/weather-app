@@ -2,35 +2,42 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import {
   VictoryChart,
-  VictoryLine,
   VictoryAxis,
+  VictoryLine,
+  VictoryArea,
   VictoryLabel,
 } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme } from '../utils/colors';
-import { TimestepData } from '../store/forecast/types';
-import chartTheme from '../utils/chartTheme';
+import Icon from '../../common/Icon';
 
-type TemperatureLineChartProps = {
+import { CustomTheme } from '../../../utils/colors';
+import chartTheme from '../../../utils/chartTheme';
+import { TimestepData } from '../../../store/forecast/types';
+
+type WindLineChartProps = {
   data: TimestepData[];
 };
 
-const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
-  data,
-}) => {
+const WindLineChart: React.FC<WindLineChartProps> = ({ data }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
 
-  const temperatureData = data.map((hour) => ({
+  const windData = data.map((hour) => ({
     x: hour.epochtime,
-    y: hour.temperature,
+    y: hour.windspeedms,
   }));
 
-  const feelsLikeData = data.map((hour) => ({
+  const gustData = data.map((hour) => ({
     x: hour.epochtime,
-    y: hour.feelsLike,
+    y: hour.hourlymaximumgust,
+  }));
+
+  const combinedData = data.map((hour) => ({
+    x: hour.epochtime,
+    y0: hour.windspeedms,
+    y: hour.hourlymaximumgust,
   }));
 
   const hourGetter = (datum: any): string => {
@@ -38,20 +45,36 @@ const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
     return `${date.getHours()}`;
   };
 
-  const max = Math.max(
-    ...temperatureData.concat(feelsLikeData).map((d) => d.y)
-  );
-  const min = Math.min(
-    ...temperatureData.concat(feelsLikeData).map((d) => d.y)
-  );
+  const max = Math.max(...windData.map((d) => d.y));
 
-  // TODO: refine logic
-  const domainMax = max >= 25 ? max + 5 : 25;
-  const domainMin = min <= -5 ? min - 5 : -5;
+  const WindLabel = (asd: any) => {
+    const index = Number(asd.index);
+    const windDir = data[index]?.winddirection;
+    return (
+      <View style={[styles.arrowStyle, { left: asd.x - 10 }]}>
+        <Icon
+          name="wind-arrow"
+          width={20}
+          height={20}
+          style={{
+            color: colors.primaryText,
+            transform: [
+              {
+                rotate: `${windDir + 45 - 180}deg`,
+              },
+            ],
+          }}
+        />
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <VictoryChart height={300} theme={chartTheme}>
+      <VictoryChart
+        height={300}
+        theme={chartTheme}
+        padding={{ top: 50, right: 50, left: 50, bottom: 35 }}>
         <VictoryAxis
           fixLabelOverlap
           style={{
@@ -60,39 +83,47 @@ const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
                 Number(index) === 0 ? 'none' : colors.primaryText,
             },
           }}
-          offsetY={50}
         />
         <VictoryAxis
           dependentAxis
-          crossAxis={false}
-          domain={[domainMin, domainMax]}
+          domain={[0, max + 2]}
           style={{
             tickLabels: {
               fill: colors.primaryText,
             },
           }}
         />
+        <VictoryArea
+          data={combinedData}
+          x={hourGetter}
+          style={{ data: { fill: '#d8d8d8' } }}
+          animate={{ duration: 500, onLoad: { duration: 250 } }}
+        />
         <VictoryLine
-          data={temperatureData}
-          domain={{ y: [0, 25] }}
+          data={windData}
+          labels={({ datum }) => `${datum}`}
+          labelComponent={<WindLabel />}
+          domain={{ y: [0, 8] }}
           animate={{ duration: 500, onLoad: { duration: 250 } }}
           style={{ data: { stroke: colors.primaryText } }}
           x={hourGetter}
           interpolation="natural"
         />
-
         <VictoryLine
-          data={feelsLikeData}
+          data={gustData}
           domain={{ y: [0, 25] }}
           animate={{ duration: 500, onLoad: { duration: 250 } }}
           style={{
-            data: { stroke: colors.chartSecondaryLine, strokeDasharray: '4' },
+            data: {
+              stroke: colors.chartSecondaryLine,
+              strokeDasharray: '4',
+            },
           }}
           x={hourGetter}
           interpolation="natural"
         />
         <VictoryLabel
-          text="°C"
+          text="m/s"
           x={30}
           y={20}
           style={{ fill: colors.primaryText }}
@@ -109,7 +140,7 @@ const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
             ]}
           />
           <Text style={[styles.legendText, { color: colors.primaryText }]}>
-            {t('forecast:charts:temperature')} (°C)
+            {t('forecast:charts:windSpeed')} (m/s)
           </Text>
         </View>
         <View style={styles.legendRow}>
@@ -136,7 +167,23 @@ const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
             />
           </View>
           <Text style={[styles.legendText, { color: colors.primaryText }]}>
-            {t('forecast:charts:feelsLike')} (°C)
+            {t('forecast:charts:windGust')} (m/s)
+          </Text>
+        </View>
+        <View style={styles.legendRow}>
+          <Icon
+            name="wind-arrow"
+            width={20}
+            height={20}
+            style={[
+              styles.iconMargin,
+              {
+                color: colors.primaryText,
+              },
+            ]}
+          />
+          <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            {t('forecast:charts:windDirection')}
           </Text>
         </View>
       </View>
@@ -149,6 +196,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  arrowStyle: {
+    position: 'absolute',
+    top: 25,
   },
   legendContainer: {
     flex: 1,
@@ -175,6 +226,9 @@ const styles = StyleSheet.create({
   withMarginRight: {
     marginRight: 2,
   },
+  iconMargin: {
+    marginLeft: -4,
+  },
 });
 
-export default TemperatureLineChart;
+export default WindLineChart;

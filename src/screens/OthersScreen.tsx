@@ -12,7 +12,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { OthersStackParamList } from '../navigators/types';
 
-import Icon from '../components/Icon';
+import Icon from '../components/common/Icon';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'Others'>;

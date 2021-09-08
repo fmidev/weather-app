@@ -20,9 +20,9 @@ import { selectCurrentLocation, selectGeoid } from '../store/general/selectors';
 import { selectForecast } from '../store/forecast/selectors';
 import { fetchForecast as fetchForecastAction } from '../store/forecast/actions';
 
-import Icon from '../components/Icon';
-import ForecastPanel from '../components/ForecastPanel';
-import ObservationPanel from '../components/ObservationPanel';
+import Icon from '../components/common/Icon';
+import ForecastPanel from '../components/weather/panels/ForecastPanel';
+import ObservationPanel from '../components/weather/panels/ObservationPanel';
 
 import { GREEN, WHITE, CustomTheme } from '../utils/colors';
 import { TimestepData } from '../store/forecast/types';

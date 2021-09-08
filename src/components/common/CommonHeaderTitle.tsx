@@ -5,11 +5,11 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
 
-import { State } from '../store/types';
+import { State } from '../../store/types';
 import {
   selectCurrentLocation,
   selectIsGeolocation,
-} from '../store/general/selectors';
+} from '../../store/general/selectors';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrentLocation(state),

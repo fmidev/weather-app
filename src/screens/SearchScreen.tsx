@@ -13,7 +13,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 import Config from 'react-native-config';
 
-import Icon from '../components/Icon';
+import Icon from '../components/common/Icon';
 
 import { MapStackParamList, ForecastStackParamList } from '../navigators/Types';
 
@@ -33,8 +33,8 @@ import { Location } from '../store/settings/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '../store/map/actions';
 import { setCurrentLocation as setCurrentLocationAction } from '../store/general/actions';
 
-import AreaList from '../components/AreaList';
-import IconButton from '../components/IconButton';
+import AreaList from '../components/search/AreaList';
+import IconButton from '../components/common/IconButton';
 
 import { getGeolocation } from '../utils/helpers';
 import { CustomTheme } from '../utils/colors';

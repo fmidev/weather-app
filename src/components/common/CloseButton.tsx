@@ -10,7 +10,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
 
-import { CustomTheme } from '../utils/colors';
+import { CustomTheme } from '../../utils/colors';
 
 type CloseButtonProps = {
   onPress: () => void;

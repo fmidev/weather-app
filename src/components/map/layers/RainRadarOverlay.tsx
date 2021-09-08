@@ -7,14 +7,14 @@ import { parse } from 'fast-xml-parser';
 
 import Config from 'react-native-config';
 
-import { State } from '../store/types';
-import { selectSliderTime } from '../store/map/selectors';
+import { State } from '../../../store/types';
+import { selectSliderTime } from '../../../store/map/selectors';
 
 import {
   getSliderMaxUnix,
   getSliderMinUnix,
   getSliderStepSeconds,
-} from '../utils/helpers';
+} from '../../../utils/helpers';
 
 const mapStateToProps = (state: State) => ({
   sliderTime: selectSliderTime(state),

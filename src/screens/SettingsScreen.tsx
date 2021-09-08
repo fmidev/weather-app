@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '../components/Icon';
+import Icon from '../components/common/Icon';
 
 import { setItem, LOCALE } from '../utils/async_storage';
 import { UNITS } from '../utils/units';
