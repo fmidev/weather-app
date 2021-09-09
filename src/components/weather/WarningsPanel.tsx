@@ -3,8 +3,8 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
-
 import { WHITE, GREEN, CustomTheme } from '@utils/colors';
+import PanelHeader from './common/PanelHeader';
 
 type WarningsPanelProps = {
   headers: string[];
@@ -27,11 +27,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           shadowColor: colors.cardShadow,
         },
       ]}>
-      <View style={[styles.cardHeader, { backgroundColor: colors.cardHeader }]}>
-        <Text style={[styles.headerTitle, { color: WHITE }]}>
-          Varoitukset maa-alueilla
-        </Text>
-      </View>
+      <PanelHeader title="Varoitukset Maa-alueilla" />
       <View style={styles.cardContainer}>
         <View style={styles.row}>
           <Text style={[styles.cardText, { color: colors.primaryText }]}>
@@ -151,13 +147,6 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 16,
     shadowOpacity: 1,
-  },
-  cardHeader: {
-    height: 44,
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
-    paddingVertical: 12,
-    paddingLeft: 16,
   },
   headerTitle: {
     fontSize: 16,

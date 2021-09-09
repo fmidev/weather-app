@@ -23,9 +23,10 @@ import {
 } from '@store/forecast/selectors';
 
 import { weatherSymbolGetter } from '@assets/images';
-import { WHITE, CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 
 import CollapsibleListHeader from './common/CollapsibleListHeader';
+import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
 import CollapsibleChartList from './forecast/CollapsibleChartList';
 
@@ -84,12 +85,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           shadowColor: colors.cardShadow,
         },
       ]}>
-      <View
-        style={[styles.panelHeader, { backgroundColor: colors.cardHeader }]}>
-        <Text style={[styles.headerTitle, { color: WHITE }]}>
-          {t('panelHeader')}
-        </Text>
-      </View>
+      <PanelHeader title={t('panelHeader')} />
       <View style={styles.panelContainer}>
         <Text style={[styles.panelText, { color: colors.primaryText }]}>
           {t('lastUpdated')}{' '}
@@ -234,18 +230,6 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 16,
     shadowOpacity: 1,
-  },
-  panelHeader: {
-    height: 44,
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
-    paddingVertical: 12,
-    paddingLeft: 16,
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
   },
   bold: {
     fontFamily: 'Roboto-Bold',
