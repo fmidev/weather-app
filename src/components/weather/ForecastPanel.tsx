@@ -25,9 +25,9 @@ import {
 import { weatherSymbolGetter } from '@assets/images';
 import { WHITE, CustomTheme } from '@utils/colors';
 
-import CollapsibleListHeader from '../lists/CollapsibleListHeader';
-import ForecastByHourList from '../lists/ForecastByHourList';
-import CollapsibleChartList from '../lists/CollapsibleChartList';
+import CollapsibleListHeader from './common/CollapsibleListHeader';
+import ForecastByHourList from './forecast/ForecastByHourList';
+import CollapsibleChartList from './forecast/CollapsibleChartList';
 
 const TABLE = 'table';
 const CHART = 'chart';

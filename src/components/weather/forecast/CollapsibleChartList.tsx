@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { TimestepData } from '@store/forecast/types';
-import CollapsibleListHeader from './CollapsibleListHeader';
-import DaySelectorWrapper from '../wrappers/DaySelectorWrapper';
+import CollapsibleListHeader from '../common/CollapsibleListHeader';
+import DaySelectorWrapper from '../charts/DaySelectorWrapper';
 import TemperatureLineChart from '../charts/TemperatureLineChart';
 import PrecipitationBarChart from '../charts/PrecipitationBarChart';
 

@@ -21,8 +21,8 @@ import { selectForecast } from '@store/forecast/selectors';
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 
 import Icon from '@components/common/Icon';
-import ForecastPanel from '@components/weather/panels/ForecastPanel';
-import ObservationPanel from '@components/weather/panels/ObservationPanel';
+import ForecastPanel from '@components/weather/ForecastPanel';
+import ObservationPanel from '@components/weather/ObservationPanel';
 
 import { GREEN, WHITE, CustomTheme } from '@utils/colors';
 import { TimestepData } from '@store/forecast/types';
