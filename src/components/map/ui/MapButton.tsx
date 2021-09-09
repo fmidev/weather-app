@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from './Icon';
+import Icon from '@components/common/Icon';
 
-import { SHADOW, CustomTheme } from '../utils/colors';
+import { SHADOW, CustomTheme } from '@utils/colors';
 
 type MapButtonProps = {
   onPress: () => void;

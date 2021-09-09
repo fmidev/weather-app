@@ -11,7 +11,17 @@
     "noEmit": true,
     "target": "ES6",
     "noImplicitAny": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@navigators/*": ["./src/navigators/*"],
+      "@network/*": ["./src/network/*"],
+      "@screens/*": ["./src/screens/*"],
+      "@store/*": ["./src/store/*"],
+      "@utils/*": ["./src/utils/*"]
+    }
   },
   "exclude": ["node_modules"]
 }

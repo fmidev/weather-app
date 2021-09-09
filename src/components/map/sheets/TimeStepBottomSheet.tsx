@@ -4,14 +4,14 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from './Icon';
-import CloseButton from './CloseButton';
+import Icon from '@components/common/Icon';
+import CloseButton from '@components/common/CloseButton';
 
-import { State } from '../store/types';
-import { selectSliderStep } from '../store/map/selectors';
-import { updateSliderStep as updateSliderStepAction } from '../store/map/actions';
+import { State } from '@store/types';
+import { selectSliderStep } from '@store/map/selectors';
+import { updateSliderStep as updateSliderStepAction } from '@store/map/actions';
 
-import { SECONDARY_BLUE, GRAY_1 } from '../utils/colors';
+import { SECONDARY_BLUE, GRAY_1 } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
   sliderStep: selectSliderStep(state),

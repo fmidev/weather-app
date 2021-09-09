@@ -18,26 +18,26 @@ import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
 
-import PlaceholderScreen from '../screens/PlaceHolderScreen';
-import OthersScreen from '../screens/OthersScreen';
-import MapScreen from '../screens/MapScreen';
-import WeatherScreen from '../screens/WeatherScreen';
-import SymbolsScreen from '../screens/SymbolsScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import SearchScreen from '../screens/SearchScreen';
-import AboutScreen from '../screens/AboutScreen';
+import PlaceholderScreen from '@screens/PlaceHolderScreen';
+import OthersScreen from '@screens/OthersScreen';
+import MapScreen from '@screens/MapScreen';
+import WeatherScreen from '@screens/WeatherScreen';
+import SymbolsScreen from '@screens/SymbolsScreen';
+import SettingsScreen from '@screens/SettingsScreen';
+import SearchScreen from '@screens/SearchScreen';
+import AboutScreen from '@screens/AboutScreen';
 
-import Icon from '../components/Icon';
-import HeaderButton from '../components/HeaderButton';
+import Icon from '@components/common/Icon';
+import HeaderButton from '@components/common/HeaderButton';
 
-import { State } from '../store/types';
-import { selectTheme } from '../store/settings/selectors';
-import { setCurrentLocation as setCurrentLocationAction } from '../store/general/actions';
-import CommonHeaderTitle from '../components/CommonHeaderTitle';
+import { State } from '@store/types';
+import { selectTheme } from '@store/settings/selectors';
+import { setCurrentLocation as setCurrentLocationAction } from '@store/general/actions';
+import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
-import { initSettings as initSettingsAction } from '../store/settings/actions';
+import { initSettings as initSettingsAction } from '@store/settings/actions';
 
-import { getGeolocation } from '../utils/helpers';
+import { getGeolocation } from '@utils/helpers';
 import { lightTheme, darkTheme } from './themes';
 import {
   TabParamList,

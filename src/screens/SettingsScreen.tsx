@@ -13,17 +13,17 @@ import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '../components/Icon';
+import Icon from '@components/common/Icon';
 
-import { setItem, LOCALE } from '../utils/async_storage';
-import { UNITS } from '../utils/units';
-import { State } from '../store/types';
-import { selectUnits, selectTheme } from '../store/settings/selectors';
+import { setItem, LOCALE } from '@utils/async_storage';
+import { UNITS } from '@utils/units';
+import { State } from '@store/types';
+import { selectUnits, selectTheme } from '@store/settings/selectors';
 import {
   updateUnits as updateUnitsAction,
   updateTheme as updateThemeAction,
-} from '../store/settings/actions';
-import { UnitType } from '../store/settings/types';
+} from '@store/settings/actions';
+import { UnitType } from '@store/settings/types';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),

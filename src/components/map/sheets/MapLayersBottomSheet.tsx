@@ -4,14 +4,14 @@ import { View, StyleSheet, Text, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from './Icon';
-import CloseButton from './CloseButton';
+import Icon from '@components/common/Icon';
+import CloseButton from '@components/common/CloseButton';
 
-import { State } from '../store/types';
-import { selectMapLayers } from '../store/map/selectors';
-import { updateMapLayers as updateMapLayersAction } from '../store/map/actions';
+import { State } from '@store/types';
+import { selectMapLayers } from '@store/map/selectors';
+import { updateMapLayers as updateMapLayersAction } from '@store/map/actions';
 
-import { WHITE, SECONDARY_BLUE, GRAYISH_BLUE, GRAY_1 } from '../utils/colors';
+import { WHITE, SECONDARY_BLUE, GRAYISH_BLUE, GRAY_1 } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
   mapLayers: selectMapLayers(state),

@@ -1,5 +1,5 @@
 import Config from 'react-native-config';
-import { UnitType, UnitMap } from '../store/settings/types';
+import { UnitType, UnitMap } from '@store/settings/types';
 
 export type Unit = {
   parameterName: string;

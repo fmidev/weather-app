@@ -7,19 +7,19 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useTheme } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 
-import MapControls from '../components/MapControls';
-import RainRadarOverlay from '../components/RainRadarOverlay';
-import TimeStepBottomSheet from '../components/TimeStepBottomSheet';
-import MapLayersBottomSheet from '../components/MapLayersBottomSheet';
-import InfoBottomSheet from '../components/InfoBottomSheet';
-import MapMarker from '../components/MapMarker';
+import MapControls from '@components/map/ui/MapControls';
+import RainRadarOverlay from '@components/map/layers/RainRadarOverlay';
+import TimeStepBottomSheet from '@components/map/sheets/TimeStepBottomSheet';
+import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
+import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
+import MapMarker from '@components/map/layers/MapMarker';
 
-import { MapStackParamList } from '../navigators/types';
-import { State } from '../store/types';
-import { selectCurrentLocation } from '../store/general/selectors';
-import { selectDisplayLocation } from '../store/map/selectors';
+import { MapStackParamList } from '@navigators/types';
+import { State } from '@store/types';
+import { selectCurrentLocation } from '@store/general/selectors';
+import { selectDisplayLocation } from '@store/map/selectors';
 
-import darkMapStyle from '../utils/dark_map_style.json';
+import darkMapStyle from '@utils/dark_map_style.json';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,

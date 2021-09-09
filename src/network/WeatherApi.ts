@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Config from 'react-native-config';
 
-import { Location, WeatherData } from '../store/forecast/types';
-import { ObservationDataRaw } from '../store/observation/types';
+import { Location, WeatherData } from '@store/forecast/types';
+import { ObservationDataRaw } from '@store/observation/types';
 
 export const getForecast = async (location: Location): Promise<WeatherData> => {
   const params = {

@@ -10,11 +10,11 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { SvgProps } from 'react-native-svg';
 
-import Icon from './Icon';
+import Icon from '@components/common/Icon';
 
-import CloseButton from './CloseButton';
+import CloseButton from '@components/common/CloseButton';
 
-import { symbolsLight, symbolsDark } from '../assets/images';
+import { symbolsLight, symbolsDark } from '@assets/images';
 import {
   RAIN_1,
   RAIN_2,
@@ -23,7 +23,7 @@ import {
   RAIN_5,
   RAIN_6,
   RAIN_7,
-} from '../utils/colors';
+} from '@utils/colors';
 
 type InfoBottomSheetProps = {
   onClose: () => void;

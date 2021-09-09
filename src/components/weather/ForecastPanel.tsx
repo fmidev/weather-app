@@ -13,21 +13,22 @@ import 'moment/locale/en-gb';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { State } from '../store/types';
+import { State } from '@store/types';
 
 import {
   selectLoading,
   selectForecastByDay,
   selectHeaderLevelForecast,
   selectForecastLastUpdatedMoment,
-} from '../store/forecast/selectors';
+} from '@store/forecast/selectors';
 
-import ForecastByHourList from './ForecastByHourList';
-import Icon from './Icon';
-import CollapsibleChartList from './CollapsibleChartList';
+import { weatherSymbolGetter } from '@assets/images';
+import { CustomTheme } from '@utils/colors';
 
-import { weatherSymbolGetter } from '../assets/images';
-import { WHITE, CustomTheme } from '../utils/colors';
+import CollapsibleListHeader from './common/CollapsibleListHeader';
+import PanelHeader from './common/PanelHeader';
+import ForecastByHourList from './forecast/ForecastByHourList';
+import CollapsibleChartList from './forecast/CollapsibleChartList';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -84,12 +85,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           shadowColor: colors.cardShadow,
         },
       ]}>
-      <View
-        style={[styles.panelHeader, { backgroundColor: colors.cardHeader }]}>
-        <Text style={[styles.headerTitle, { color: WHITE }]}>
-          {t('panelHeader')}
-        </Text>
-      </View>
+      <PanelHeader title={t('panelHeader')} />
       <View style={styles.panelContainer}>
         <Text style={[styles.panelText, { color: colors.primaryText }]}>
           {t('lastUpdated')}{' '}
@@ -143,9 +139,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             );
             return (
               <View key={dayStep.epochtime}>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  // delayPressIn={100}
+                <CollapsibleListHeader
                   accessibilityLabel={
                     !dayOpenIndexes.includes(index)
                       ? `${t(
@@ -163,67 +157,26 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                     } else {
                       setDayOpenIndexes(dayOpenIndexes.concat(index));
                     }
-                  }}>
-                  <View
-                    style={[
-                      styles.row,
-                      styles.forecastHeader,
-                      {
-                        borderBottomColor: colors.border,
-                        backgroundColor: colors.inputBackground,
-                      },
-                    ]}>
-                    <View style={[styles.rowColumn, styles.alignStart]}>
-                      <Text
-                        style={[
-                          styles.headerTitle,
-                          {
-                            color: colors.primaryText,
-                          },
-                        ]}>
-                        {stepMoment.locale(locale).format('ddd D.M.')}
-                      </Text>
-                    </View>
-                    <View style={styles.rowColumn}>
-                      <Text
-                        style={[
-                          styles.forecastText,
-                          { color: colors.primaryText },
-                        ]}>
-                        {i18n.language === 'fi'
-                          ? stepMoment.format('HH:mm')
-                          : stepMoment.locale(locale).format('LT')}
-                      </Text>
-                    </View>
-                    <View style={styles.rowColumn}>
-                      <View>{smartSymbol?.({ width: 40, height: 40 })}</View>
-                    </View>
-                    <View style={styles.rowColumn}>
-                      <Text
-                        style={[
-                          styles.temperature,
-                          { color: colors.primaryText },
-                        ]}>{`${temperaturePrefix}${dayStep.temperature}°`}</Text>
-                    </View>
-
-                    <Icon
-                      width={24}
-                      height={24}
-                      name={
-                        dayOpenIndexes.includes(index)
-                          ? 'arrow-up'
-                          : 'arrow-down'
-                      }
-                      style={{ color: colors.primaryText }}
-                    />
-                  </View>
-                  {forecastByDay && dayOpenIndexes.includes(index) && (
-                    <ForecastByHourList
-                      dayForecast={forecastByDay[stepMoment.format('D.M.')]}
-                      isOpen={dayOpenIndexes.includes(index)}
-                    />
-                  )}
-                </TouchableOpacity>
+                  }}
+                  open={dayOpenIndexes.includes(index)}
+                  title={stepMoment.locale(locale).format('ddd D.M.')}
+                  time={
+                    i18n.language === 'fi'
+                      ? stepMoment.format('HH:mm')
+                      : stepMoment.locale(locale).format('LT')
+                  }
+                  smartSymbol={smartSymbol?.({
+                    width: 40,
+                    height: 40,
+                  })}
+                  temperature={`${temperaturePrefix}${dayStep.temperature}°`}
+                />
+                {forecastByDay && dayOpenIndexes.includes(index) && (
+                  <ForecastByHourList
+                    dayForecast={forecastByDay[stepMoment.format('D.M.')]}
+                    isOpen={dayOpenIndexes.includes(index)}
+                  />
+                )}
               </View>
             );
           })}
@@ -278,18 +231,6 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOpacity: 1,
   },
-  panelHeader: {
-    height: 44,
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
-    paddingVertical: 12,
-    paddingLeft: 16,
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
-  },
   bold: {
     fontFamily: 'Roboto-Bold',
   },
@@ -310,29 +251,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flex: 1,
   },
-  rowColumn: {
-    flex: 1,
-    alignItems: 'center',
-  },
   forecastContainer: {
     marginHorizontal: 8,
     marginBottom: 8,
   },
-  forecastHeader: {
-    height: 56,
-    borderBottomWidth: 1,
-    paddingHorizontal: 16,
-  },
   forecastText: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
-  },
-  temperature: {
-    fontSize: 18,
-    fontFamily: 'Roboto-Bold',
-  },
-  alignStart: {
-    alignItems: 'flex-start',
   },
   justifyStart: {
     justifyContent: 'flex-start',

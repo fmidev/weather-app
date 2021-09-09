@@ -8,9 +8,9 @@ import {
   ColorValue,
 } from 'react-native';
 
-import Icon from './Icon';
+import { LIGHT_BLUE, PRIMARY_BLUE } from '@utils/colors';
 
-import { LIGHT_BLUE, PRIMARY_BLUE } from '../utils/colors';
+import Icon from './Icon';
 
 type ButtonProps = { onPress: () => void; accessibilityLabel: string };
 

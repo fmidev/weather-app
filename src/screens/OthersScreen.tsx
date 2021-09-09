@@ -10,9 +10,9 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { OthersStackParamList } from '../navigators/types';
 
-import Icon from '../components/Icon';
+import Icon from '@components/common/Icon';
+import { OthersStackParamList } from '@navigators/types';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'Others'>;

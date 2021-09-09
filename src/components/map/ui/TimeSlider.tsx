@@ -6,19 +6,19 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from './Icon';
+import Icon from '@components/common/Icon';
 
-import { State } from '../store/types';
-import { selectSliderStep, selectSliderTime } from '../store/map/selectors';
-import { updateSliderTime as updateSliderTimeAction } from '../store/map/actions';
+import { State } from '@store/types';
+import { selectSliderStep, selectSliderTime } from '@store/map/selectors';
+import { updateSliderTime as updateSliderTimeAction } from '@store/map/actions';
 
 import {
   getSliderMaxUnix,
   getSliderMinUnix,
   getSliderStepSeconds,
-} from '../utils/helpers';
+} from '@utils/helpers';
 
-import { WHITE, SECONDARY_BLUE, SHADOW, CustomTheme } from '../utils/colors';
+import { WHITE, SECONDARY_BLUE, SHADOW, CustomTheme } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
   sliderStep: selectSliderStep(state),

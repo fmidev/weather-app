@@ -4,7 +4,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { TFunction } from 'react-i18next';
 import Config from 'react-native-config';
 
-import { Location } from '../store/settings/types';
+import { Location } from '@store/settings/types';
 
 // 60 minutes = 3600 seconds
 const STEP_60 = 3600;

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text } from 'react-native';
-import { selectGeoid } from '../store/general/selectors';
+import { selectGeoid } from '@store/general/selectors';
 
 import {
   selectData,
@@ -9,14 +9,14 @@ import {
   selectLoading,
   selectStationId,
   selectStationList,
-} from '../store/observation/selector';
+} from '@store/observation/selector';
 
 import {
   fetchObservation as fetchObservationAction,
   setStationId as setStationIdAction,
-} from '../store/observation/actions';
+} from '@store/observation/actions';
 
-import { State } from '../store/types';
+import { State } from '@store/types';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),

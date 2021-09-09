@@ -3,8 +3,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import { State } from '../store/types';
-import { selectCurrentLocation } from '../store/general/selectors';
+import { State } from '@store/types';
+import { selectCurrentLocation } from '@store/general/selectors';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrentLocation(state),

@@ -3,9 +3,9 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from './Icon';
-import { CustomTheme } from '../utils/colors';
-import { Location } from '../store/settings/types';
+import Icon from '@components/common/Icon';
+import { CustomTheme } from '@utils/colors';
+import { Location } from '@store/settings/types';
 
 type ClearProps =
   | { clearTitle?: undefined; onClear?: never }

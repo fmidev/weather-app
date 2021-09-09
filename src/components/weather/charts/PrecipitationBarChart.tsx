@@ -9,9 +9,9 @@ import {
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme } from '../utils/colors';
-import chartTheme from '../utils/chartTheme';
-import { TimestepData } from '../store/forecast/types';
+import { CustomTheme } from '@utils/colors';
+import chartTheme from '@utils/chartTheme';
+import { TimestepData } from '@store/forecast/types';
 
 type PrecipitationBarChartProps = {
   data: TimestepData[];

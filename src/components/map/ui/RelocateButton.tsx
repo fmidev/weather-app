@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { SHADOW, SECONDARY_BLUE, WHITE } from '../utils/colors';
+import { SHADOW, SECONDARY_BLUE, WHITE } from '@utils/colors';
 
 type RelocateButtonProps = {
   onPress: () => void;
