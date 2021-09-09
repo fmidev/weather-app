@@ -4,9 +4,9 @@ import { useTheme } from '@react-navigation/native';
 
 import { SvgProps } from 'react-native-svg';
 
-import Icon from '../../common/Icon';
+import Icon from '@components/common/Icon';
 
-import { CustomTheme } from '../../../utils/colors';
+import { CustomTheme } from '@utils/colors';
 
 type CollapsiblePanelHeaderProps = {
   open: boolean;

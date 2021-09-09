@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { getForecast } from '@network/WeatherApi';
 import {
   Error,
   FETCH_FORECAST,
@@ -7,8 +8,6 @@ import {
   ForecastActionTypes,
   Location,
 } from './types';
-
-import { getForecast } from '../../network/WeatherApi';
 
 export const fetchForecast = (
   location: Location,

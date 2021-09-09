@@ -9,9 +9,9 @@ import {
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme } from '../../../utils/colors';
-import { TimestepData } from '../../../store/forecast/types';
-import chartTheme from '../../../utils/chartTheme';
+import { CustomTheme } from '@utils/colors';
+import { TimestepData } from '@store/forecast/types';
+import chartTheme from '@utils/chartTheme';
 
 type TemperatureLineChartProps = {
   data: TimestepData[];

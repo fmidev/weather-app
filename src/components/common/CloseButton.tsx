@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from './Icon';
+import { CustomTheme } from '@utils/colors';
 
-import { CustomTheme } from '../../utils/colors';
+import Icon from './Icon';
 
 type CloseButtonProps = {
   onPress: () => void;

@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
 import { SvgProps } from 'react-native-svg';
-import { symbolsLight, symbolsDark } from '../assets/images';
-import { WHITE } from '../utils/colors';
+import { symbolsLight, symbolsDark } from '@assets/images';
+import { WHITE } from '@utils/colors';
 
 const SymbolsScreen: React.FC = () => {
   const { t } = useTranslation('symbols');

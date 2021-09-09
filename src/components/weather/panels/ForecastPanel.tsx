@@ -13,21 +13,21 @@ import 'moment/locale/en-gb';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { State } from '../../../store/types';
+import { State } from '@store/types';
 
 import {
   selectLoading,
   selectForecastByDay,
   selectHeaderLevelForecast,
   selectForecastLastUpdatedMoment,
-} from '../../../store/forecast/selectors';
+} from '@store/forecast/selectors';
+
+import { weatherSymbolGetter } from '@assets/images';
+import { WHITE, CustomTheme } from '@utils/colors';
 
 import CollapsibleListHeader from '../lists/CollapsibleListHeader';
 import ForecastByHourList from '../lists/ForecastByHourList';
 import CollapsibleChartList from '../lists/CollapsibleChartList';
-
-import { weatherSymbolGetter } from '../../../assets/images';
-import { WHITE, CustomTheme } from '../../../utils/colors';
 
 const TABLE = 'table';
 const CHART = 'chart';

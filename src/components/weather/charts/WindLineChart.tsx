@@ -10,11 +10,11 @@ import {
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import Icon from '../../common/Icon';
+import Icon from '@components/common/Icon';
 
-import { CustomTheme } from '../../../utils/colors';
-import chartTheme from '../../../utils/chartTheme';
-import { TimestepData } from '../../../store/forecast/types';
+import { CustomTheme } from '@utils/colors';
+import chartTheme from '@utils/chartTheme';
+import { TimestepData } from '@store/forecast/types';
 
 type WindLineChartProps = {
   data: TimestepData[];

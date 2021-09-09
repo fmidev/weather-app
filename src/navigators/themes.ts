@@ -11,7 +11,7 @@ import {
   GRAY_3,
   GRAY_1,
   BLACK,
-} from '../utils/colors';
+} from '@utils/colors';
 
 export const lightTheme = {
   dark: false,

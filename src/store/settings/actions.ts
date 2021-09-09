@@ -1,4 +1,15 @@
 import { Dispatch } from 'redux';
+import { getDefaultUnits } from '@utils/units';
+import {
+  getItem,
+  multiGet,
+  setItem,
+  removeItem,
+  FAVORITES,
+  UNITS,
+  THEME,
+  RECENT_SEARCHES,
+} from '@utils/async_storage';
 import {
   GET_FAVORITES,
   ADD_FAVORITE,
@@ -16,17 +27,6 @@ import {
   UnitType,
   Theme,
 } from './types';
-import { getDefaultUnits } from '../../utils/units';
-import {
-  getItem,
-  multiGet,
-  setItem,
-  removeItem,
-  FAVORITES,
-  UNITS,
-  THEME,
-  RECENT_SEARCHES,
-} from '../../utils/async_storage';
 
 export const getFavorites = () => (dispatch: Dispatch<SettingsActionTypes>) => {
   getItem(FAVORITES)

@@ -4,12 +4,12 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
-import Icon from '../../common/Icon';
+import Icon from '@components/common/Icon';
 
-import { TimestepData } from '../../../store/forecast/types';
+import { TimestepData } from '@store/forecast/types';
 
-import { weatherSymbolGetter } from '../../../assets/images';
-import { CustomTheme } from '../../../utils/colors';
+import { weatherSymbolGetter } from '@assets/images';
+import { CustomTheme } from '@utils/colors';
 
 type ForecastByHourListProps = {
   dayForecast: TimestepData[];

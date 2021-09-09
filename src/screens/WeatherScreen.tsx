@@ -13,19 +13,19 @@ import 'moment/locale/fi';
 import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { ForecastStackParamList } from '../navigators/types';
+import { ForecastStackParamList } from '@navigators/types';
 
-import { State } from '../store/types';
-import { selectCurrentLocation, selectGeoid } from '../store/general/selectors';
-import { selectForecast } from '../store/forecast/selectors';
-import { fetchForecast as fetchForecastAction } from '../store/forecast/actions';
+import { State } from '@store/types';
+import { selectCurrentLocation, selectGeoid } from '@store/general/selectors';
+import { selectForecast } from '@store/forecast/selectors';
+import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 
-import Icon from '../components/common/Icon';
-import ForecastPanel from '../components/weather/panels/ForecastPanel';
-import ObservationPanel from '../components/weather/panels/ObservationPanel';
+import Icon from '@components/common/Icon';
+import ForecastPanel from '@components/weather/panels/ForecastPanel';
+import ObservationPanel from '@components/weather/panels/ObservationPanel';
 
-import { GREEN, WHITE, CustomTheme } from '../utils/colors';
-import { TimestepData } from '../store/forecast/types';
+import { GREEN, WHITE, CustomTheme } from '@utils/colors';
+import { TimestepData } from '@store/forecast/types';
 
 const mapStateToProps = (state: State) => ({
   forecast: selectForecast(state),

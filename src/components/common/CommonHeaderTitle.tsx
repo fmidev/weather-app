@@ -3,13 +3,13 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Text, View, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from './Icon';
-
-import { State } from '../../store/types';
+import { State } from '@store/types';
 import {
   selectCurrentLocation,
   selectIsGeolocation,
-} from '../../store/general/selectors';
+} from '@store/general/selectors';
+
+import Icon from './Icon';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrentLocation(state),

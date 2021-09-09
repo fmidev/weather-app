@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { TimestepData } from '@store/forecast/types';
 import CollapsibleListHeader from './CollapsibleListHeader';
 import DaySelectorWrapper from '../wrappers/DaySelectorWrapper';
 import TemperatureLineChart from '../charts/TemperatureLineChart';
 import PrecipitationBarChart from '../charts/PrecipitationBarChart';
-import WindLineChart from '../charts/WindLineChart';
 
-import { TimestepData } from '../../../store/forecast/types';
+import WindLineChart from '../charts/WindLineChart';
 
 type CollapsibleChartListProps = {
   data: TimestepData[] | false;

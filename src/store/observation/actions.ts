@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { getObservation } from '../../network/WeatherApi';
+import { getObservation } from '@network/WeatherApi';
 import {
   FETCH_OBSERVATION,
   FETCH_OBSERVATION_SUCCESS,
