@@ -64,3 +64,11 @@ export const selectForecastLastUpdatedMoment = createSelector(
   (forecast) =>
     forecast[0] && forecast[0].modtime && moment(forecast[0].modtime)
 );
+
+export const selectMaxTemp = createSelector(selectForecast, (forecast) =>
+  Math.max(...forecast.map((f) => [f.temperature, f.feelsLike]).flat())
+);
+
+export const selectMinTemp = createSelector(selectForecast, (forecast) =>
+  Math.min(...forecast.map((f) => [f.temperature, f.feelsLike]).flat())
+);
