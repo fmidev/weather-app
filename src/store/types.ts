@@ -11,3 +11,8 @@ export interface State {
   general: GeneralState;
   map: MapState;
 }
+
+export interface PersistConfig {
+  key: string;
+  whitelist: string[];
+}
