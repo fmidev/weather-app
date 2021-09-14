@@ -142,6 +142,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               dayStep.smartSymbol.toString(),
               dark
             );
+
             return (
               <View key={dayStep.epochtime}>
                 <CollapsibleListHeader
@@ -175,6 +176,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                     height: 40,
                   })}
                   temperature={`${temperaturePrefix}${dayStep.temperature}°`}
+                  precipitationDay={
+                    forecastByDay &&
+                    forecastByDay[stepMoment.format('D.M.')].map((f) => ({
+                      precipitation: f.precipitation1h,
+                      timestamp: f.epochtime,
+                    }))
+                  }
                 />
                 {forecastByDay && dayOpenIndexes.includes(index) && (
                   <ForecastByHourList
