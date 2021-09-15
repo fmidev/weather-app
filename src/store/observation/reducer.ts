@@ -1,3 +1,4 @@
+import { PersistConfig } from '@store/types';
 import {
   ObservationState,
   ObservationActionTypes,
@@ -36,6 +37,7 @@ const formatData = (
 
   return { data, stations };
 };
+
 export default (
   state = INITIAL_STATE,
   action: ObservationActionTypes
@@ -78,4 +80,9 @@ export default (
       return state;
     }
   }
+};
+
+export const observationPersist: PersistConfig = {
+  key: 'observation',
+  whitelist: ['stationId'],
 };

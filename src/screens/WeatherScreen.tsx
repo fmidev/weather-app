@@ -9,7 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ForecastStackParamList } from '@navigators/types';
 
 import { State } from '@store/types';
-import { selectCurrentLocation, selectGeoid } from '@store/general/selectors';
+import { selectCurrent, selectGeoid } from '@store/location/selector';
 import { selectForecast } from '@store/forecast/selectors';
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 
@@ -22,7 +22,7 @@ import { TimestepData } from '@store/forecast/types';
 
 const mapStateToProps = (state: State) => ({
   forecast: selectForecast(state),
-  currentLocation: selectCurrentLocation(state),
+  currentLocation: selectCurrent(state),
   geoid: selectGeoid(state),
 });
 

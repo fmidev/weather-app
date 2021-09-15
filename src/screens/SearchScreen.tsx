@@ -11,27 +11,34 @@ import {
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
-import Config from 'react-native-config';
+//
 
 import Icon from '@components/common/Icon';
 
 import { MapStackParamList, ForecastStackParamList } from '@navigators/Types';
 
 import { State } from '@store/types';
+
 import {
+  selectRecent,
   selectFavorites,
-  selectRecentSearches,
-} from '@store/settings/selectors';
+  selectSearch,
+} from '@store/location/selector';
+
 import {
   addFavorite as addFavoriteAction,
   deleteFavorite as deleteFavoriteAction,
   deleteAllFavorites as deleteAllFavoritesAction,
   updateRecentSearches as updateRecentSearchesAction,
   deleteAllRecentSearches as deleteAllRecentSearchesAction,
-} from '@store/settings/actions';
-import { Location } from '@store/settings/types';
+  setCurrentLocation as setCurrentLocationAction,
+  searchLocation as searchLocationAction,
+  resetSearch as resetSearchAction,
+} from '@store/location/actions';
+import { Location } from '@store/location/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '@store/map/actions';
-import { setCurrentLocation as setCurrentLocationAction } from '@store/general/actions';
+
+// import getAutocomplete from '@network/AutocompleteApi';
 
 import AreaList from '@components/search/AreaList';
 import IconButton from '@components/common/IconButton';
@@ -43,7 +50,8 @@ const MAX_RECENT_SEARCHES = 3; // TODO: define max number of recent searches
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
-  recentSearches: selectRecentSearches(state),
+  recent: selectRecent(state),
+  search: selectSearch(state),
 });
 
 const mapDispatchToProps = {
@@ -54,6 +62,8 @@ const mapDispatchToProps = {
   updateRecentSearches: updateRecentSearchesAction,
   deleteAllRecentSearches: deleteAllRecentSearchesAction,
   setCurrentLocation: setCurrentLocationAction,
+  searchLocation: searchLocationAction,
+  resetSearch: resetSearchAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -69,7 +79,8 @@ type SearchScreenProps = PropsFromRedux & {
 
 const SearchScreen: React.FC<SearchScreenProps> = ({
   favorites,
-  recentSearches,
+  recent,
+  search,
   addFavorite,
   deleteFavorite,
   deleteAllFavorites,
@@ -77,76 +88,39 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   updateRecentSearches,
   deleteAllRecentSearches,
   setCurrentLocation,
+  searchLocation,
+  resetSearch,
   navigation,
 }) => {
   // TODO: for some reason this renders twice...
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
-  const [locations, setLocations] = useState([]);
+  // const [locations, setLocations] = useState([]);
 
   useEffect(() => {
-    locationQuery(value);
-  }, [value]);
-
-  const locationQuery = (text: string) => {
-    if (!text) {
-      setLocations([]);
-      return;
+    if (value) {
+      searchLocation(value);
+    } else {
+      resetSearch();
     }
+  }, [value, searchLocation, resetSearch]);
 
-    const queryParams = new URLSearchParams({
-      keyword: 'ajax_fi_fi',
-      language: 'fi',
-      pattern: text,
-    });
-
-    // TODO: replace with correct api url (for Smartmet)
-    const url = `https://data.fmi.fi/fmi-apikey/${Config.API_KEY}/autocomplete?${queryParams}`;
-
-    fetch(url)
-      .then((res) => res.json())
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .then((json) => {
-        setLocations(json?.autocomplete?.result || []);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const handleSelectLocation = (
-    location: {
-      name: string;
-      area: string;
-      lat: number;
-      lon: number;
-      id: number; // geoid
-    },
-    update: boolean
-  ) => {
+  const handleSelectLocation = (location: Location, update: boolean) => {
     Keyboard.dismiss();
     setAnimateToArea(true);
     setValue('');
-    const { name, area, lat, lon, id } = location;
-    const searchObj = { name, area, lat, lon, id };
-    // navigate to MapScreen with params
-    // navigation.navigate('Map', searchObj);
-    console.log('Selected location:', searchObj);
-    const newRecentSearches = recentSearches
-      .filter((search) => search.id !== id)
-      .concat(searchObj)
-      .slice(-MAX_RECENT_SEARCHES);
 
     if (update) {
-      updateRecentSearches(newRecentSearches);
+      updateRecentSearches(location, MAX_RECENT_SEARCHES);
     }
+
     setCurrentLocation(location);
     navigation.goBack();
   };
-  console.log(locations);
+
   const isFavorite = (location: Location) =>
-    favorites.length > 0 && favorites.some((f) => f.id === location.id);
+    favorites.length > 0 && favorites.some(({ id }) => id === location.id);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -172,7 +146,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           underlineColorAndroid="transparent"
         />
       </View>
-      {locations.length === 0 && (
+      {search.length === 0 && (
         <View style={styles.locateRow}>
           <Text style={[styles.title, { color: colors.text }]}>
             {t('locate')}
@@ -190,9 +164,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         </View>
       )}
       <View style={styles.results}>
-        {locations.length > 0 && (
+        {search.length > 0 && (
           <AreaList
-            elements={locations}
+            elements={search}
             title={t('searchResults')}
             onSelect={(location) => handleSelectLocation(location, true)}
             onIconPress={(location) => {
@@ -205,40 +179,36 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             }
           />
         )}
-        {/^\s*$/.test(value) &&
-          locations.length === 0 &&
-          favorites.length > 0 && (
-            <AreaList
-              elements={favorites}
-              title={t('favorites')}
-              onSelect={(location) => handleSelectLocation(location, false)}
-              onIconPress={(location) => deleteFavorite(location.id)}
-              iconName="star-selected"
-              clearTitle={t('clearFavorites')}
-              onClear={() => deleteAllFavorites()}
-            />
-          )}
-        {/^\s*$/.test(value) &&
-          locations.length === 0 &&
-          recentSearches.length > 0 && (
-            <AreaList
-              elements={recentSearches.slice(0).reverse()}
-              title={t('recentSearches')}
-              onSelect={(location) => handleSelectLocation(location, false)}
-              onIconPress={(location) =>
-                isFavorite(location)
-                  ? deleteFavorite(location.id)
-                  : addFavorite(location)
-              }
-              iconNameGetter={(location) =>
-                isFavorite(location) ? 'star-selected' : 'star-unselected'
-              }
-              clearTitle={t('clearRecentSearches')}
-              onClear={() => deleteAllRecentSearches()}
-            />
-          )}
+        {/^\s*$/.test(value) && search.length === 0 && favorites.length > 0 && (
+          <AreaList
+            elements={favorites}
+            title={t('favorites')}
+            onSelect={(location) => handleSelectLocation(location, false)}
+            onIconPress={(location) => deleteFavorite(location.id)}
+            iconName="star-selected"
+            clearTitle={t('clearFavorites')}
+            onClear={() => deleteAllFavorites()}
+          />
+        )}
+        {/^\s*$/.test(value) && search.length === 0 && recent.length > 0 && (
+          <AreaList
+            elements={recent.slice(0).reverse()}
+            title={t('recentSearches')}
+            onSelect={(location) => handleSelectLocation(location, false)}
+            onIconPress={(location) =>
+              isFavorite(location)
+                ? deleteFavorite(location.id)
+                : addFavorite(location)
+            }
+            iconNameGetter={(location) =>
+              isFavorite(location) ? 'star-selected' : 'star-unselected'
+            }
+            clearTitle={t('clearRecentSearches')}
+            onClear={() => deleteAllRecentSearches()}
+          />
+        )}
 
-        {!/^\s*$/.test(value) && locations.length === 0 && (
+        {!/^\s*$/.test(value) && search.length === 0 && (
           <Text style={{ color: colors.text }}>Haku ei tuottanut tuloksia</Text>
         )}
       </View>

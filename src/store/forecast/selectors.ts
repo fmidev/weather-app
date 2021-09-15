@@ -2,9 +2,9 @@ import { Selector, createSelector } from 'reselect';
 import moment from 'moment';
 import 'moment/locale/fi';
 
+import { selectGeoid } from '@store/location/selector';
 import { State } from '../types';
 import { ForecastState, Error, WeatherData, TimestepData } from './types';
-import { selectGeoid } from '../general/selectors';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;

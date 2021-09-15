@@ -4,10 +4,10 @@ import { SafeAreaView, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import { State } from '@store/types';
-import { selectCurrentLocation } from '@store/general/selectors';
+import { selectCurrent } from '@store/location/selector';
 
 const mapStateToProps = (state: State) => ({
-  currentLocation: selectCurrentLocation(state),
+  currentLocation: selectCurrent(state),
 });
 
 const connector = connect(mapStateToProps, {});

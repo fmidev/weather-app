@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text } from 'react-native';
-import { selectGeoid } from '@store/general/selectors';
+import { selectGeoid } from '@store/location/selector';
 
 import {
   selectData,

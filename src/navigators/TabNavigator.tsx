@@ -32,7 +32,7 @@ import HeaderButton from '@components/common/HeaderButton';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
-import { setCurrentLocation as setCurrentLocationAction } from '@store/general/actions';
+import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
 import { initSettings as initSettingsAction } from '@store/settings/actions';

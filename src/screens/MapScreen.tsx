@@ -16,7 +16,7 @@ import MapMarker from '@components/map/layers/MapMarker';
 
 import { MapStackParamList } from '@navigators/types';
 import { State } from '@store/types';
-import { selectCurrentLocation } from '@store/general/selectors';
+import { selectCurrent } from '@store/location/selector';
 import { selectDisplayLocation } from '@store/map/selectors';
 
 import darkMapStyle from '@utils/dark_map_style.json';
@@ -34,7 +34,7 @@ const ANIMATE_ZOOM = {
 };
 
 const mapStateToProps = (state: State) => ({
-  currentLocation: selectCurrentLocation(state),
+  currentLocation: selectCurrent(state),
   displayLocation: selectDisplayLocation(state),
 });
 const connector = connect(mapStateToProps, {});
