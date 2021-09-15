@@ -9,7 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ForecastStackParamList } from '@navigators/types';
 
 import { State } from '@store/types';
-import { selectCurrent, selectGeoid } from '@store/location/selector';
+import { selectGeoid } from '@store/location/selector';
 import { selectForecast } from '@store/forecast/selectors';
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 
@@ -22,7 +22,6 @@ import { TimestepData } from '@store/forecast/types';
 
 const mapStateToProps = (state: State) => ({
   forecast: selectForecast(state),
-  currentLocation: selectCurrent(state),
   geoid: selectGeoid(state),
 });
 
@@ -41,7 +40,6 @@ type WeatherScreenProps = {
 const WeatherScreen: React.FC<WeatherScreenProps> = ({
   forecast,
   fetchForecast,
-  // currentLocation,
   geoid,
   navigation,
 }) => {

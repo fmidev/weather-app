@@ -57,7 +57,6 @@ export const searchLocation = (pattern: string) => (
       });
     })
     .catch(() => {
-      // dispatch({ type: FETCH_AUTOCOMPLETE, data: undefined });
       dispatch({ type: RESET_AUTOCOMPLETE });
     });
 };
@@ -77,5 +76,3 @@ export const deleteAllRecentSearches = () => (
 ) => {
   dispatch({ type: DELETE_ALL_RECENT_SEARCHES });
 };
-
-// export const getFavorites = () => (dispatch: Dispatch<LocationActionTypes>) => {

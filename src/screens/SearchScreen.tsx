@@ -11,7 +11,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
-//
 
 import Icon from '@components/common/Icon';
 
@@ -37,8 +36,6 @@ import {
 } from '@store/location/actions';
 import { Location } from '@store/location/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '@store/map/actions';
-
-// import getAutocomplete from '@network/AutocompleteApi';
 
 import AreaList from '@components/search/AreaList';
 import IconButton from '@components/common/IconButton';
@@ -96,7 +93,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
-  // const [locations, setLocations] = useState([]);
 
   useEffect(() => {
     if (value) {

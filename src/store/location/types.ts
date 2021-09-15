@@ -45,7 +45,6 @@ interface GetFavorites {
 interface AddFavorite {
   type: typeof ADD_FAVORITE;
   location: Location;
-  // favorites: Location[];
 }
 
 interface DeleteFavorite {
@@ -108,6 +107,5 @@ export interface LocationState {
   search: Location[] | [];
   current?: Location;
   geolocation?: Geolocation;
-  // currentLocation: Location;
   isGeoLocation?: boolean;
 }
