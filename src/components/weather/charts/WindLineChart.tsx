@@ -44,9 +44,6 @@ const WindLineChart: React.FC<WindLineChartProps> = ({ data }) => {
     const date = new Date(datum.x * 1000);
     return `${date.getHours()}`;
   };
-
-  const max = Math.max(...windData.map((d) => d.y));
-
   const WindLabel = (asd: any) => {
     const index = Number(asd.index);
     const windDir = data[index]?.winddirection;
@@ -74,7 +71,8 @@ const WindLineChart: React.FC<WindLineChartProps> = ({ data }) => {
       <VictoryChart
         height={300}
         theme={chartTheme}
-        padding={{ top: 50, right: 50, left: 50, bottom: 35 }}>
+        padding={{ top: 50, right: 50, left: 50, bottom: 35 }}
+        domainPadding={{ y: 5 }}>
         <VictoryAxis
           fixLabelOverlap
           style={{
@@ -86,7 +84,7 @@ const WindLineChart: React.FC<WindLineChartProps> = ({ data }) => {
         />
         <VictoryAxis
           dependentAxis
-          domain={[0, max + 2]}
+          domain={[0, 16]}
           style={{
             tickLabels: {
               fill: colors.primaryText,
@@ -103,7 +101,6 @@ const WindLineChart: React.FC<WindLineChartProps> = ({ data }) => {
           data={windData}
           labels={({ datum }) => `${datum}`}
           labelComponent={<WindLabel />}
-          domain={{ y: [0, 8] }}
           animate={{ duration: 500, onLoad: { duration: 250 } }}
           style={{ data: { stroke: colors.primaryText } }}
           x={hourGetter}
@@ -111,7 +108,6 @@ const WindLineChart: React.FC<WindLineChartProps> = ({ data }) => {
         />
         <VictoryLine
           data={gustData}
-          domain={{ y: [0, 25] }}
           animate={{ duration: 500, onLoad: { duration: 250 } }}
           style={{
             data: {
