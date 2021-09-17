@@ -2,18 +2,8 @@ import React from 'react';
 import { View, StyleSheet, Text, ViewStyle } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import {
-  CustomTheme,
-  RAIN_1,
-  RAIN_2,
-  RAIN_3,
-  RAIN_4,
-  RAIN_5,
-  RAIN_6,
-  RAIN_7,
-  GRAY_1,
-  TRANSPARENT,
-} from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { getPrecipitationColorOrTransparent } from '@utils/helpers';
 
 type PrecipitationStripProps = {
   precipitationData: { precipitation: number; timestamp: number }[] | false;
@@ -64,14 +54,7 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
 
   const backgroundStyleGetter = (val: number | undefined): ViewStyle => {
     if (val === undefined) return { backgroundColor: GRAY_1, opacity: 0.5 };
-    if (val >= 0.1 && val < 0.2) return { backgroundColor: RAIN_1 };
-    if (val >= 0.2 && val < 0.5) return { backgroundColor: RAIN_2 };
-    if (val >= 0.5 && val < 1) return { backgroundColor: RAIN_3 };
-    if (val >= 1 && val < 2) return { backgroundColor: RAIN_4 };
-    if (val >= 2 && val < 5) return { backgroundColor: RAIN_5 };
-    if (val >= 5 && val < 10) return { backgroundColor: RAIN_6 };
-    if (val >= 10) return { backgroundColor: RAIN_7 };
-    return { backgroundColor: TRANSPARENT };
+    return { backgroundColor: getPrecipitationColorOrTransparent(val) };
   };
 
   return (

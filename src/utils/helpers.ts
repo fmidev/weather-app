@@ -5,6 +5,16 @@ import { TFunction } from 'react-i18next';
 import Config from 'react-native-config';
 
 import { Location } from '@store/settings/types';
+import {
+  RAIN_1,
+  RAIN_2,
+  RAIN_3,
+  RAIN_4,
+  RAIN_5,
+  RAIN_6,
+  RAIN_7,
+  TRANSPARENT,
+} from './colors';
 
 // 60 minutes = 3600 seconds
 const STEP_60 = 3600;
@@ -98,3 +108,13 @@ export const getGeolocation = (
       maximumAge: 10000,
     }
   );
+export const getPrecipitationColorOrTransparent = (amount: number): string => {
+  if (amount >= 0.1 && amount < 0.2) return RAIN_1;
+  if (amount >= 0.2 && amount < 0.5) return RAIN_2;
+  if (amount >= 0.5 && amount < 1) return RAIN_3;
+  if (amount >= 1 && amount < 2) return RAIN_4;
+  if (amount >= 2 && amount < 5) return RAIN_5;
+  if (amount >= 5 && amount < 10) return RAIN_6;
+  if (amount >= 10) return RAIN_7;
+  return TRANSPARENT;
+};

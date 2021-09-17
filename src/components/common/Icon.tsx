@@ -32,6 +32,8 @@ import Search from '@assets/images/icons/search.svg';
 import StarSelected from '@assets/images/icons/star-selected.svg';
 import StarUnselected from '@assets/images/icons/star-unselected.svg';
 import Sunrise from '@assets/images/icons/sunrise.svg';
+import TemperatureDark from '@assets/images/icons/temperature-dark.svg';
+import TemperatureLight from '@assets/images/icons/temperature-light.svg';
 import WarningsFloodLevel2 from '@assets/images/icons/warnings-flood-level-2.svg';
 import WarningsFloodLevel3 from '@assets/images/icons/warnings-flood-level-3.svg';
 import WarningsFloodLevel4 from '@assets/images/icons/warnings-flood-level-4.svg';
@@ -126,6 +128,12 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <StarUnselected {...props} />;
     case 'sunrise':
       return <Sunrise {...props} />;
+    case 'temperature-dark':
+      return <TemperatureDark {...props} />;
+    case 'temperature-light': {
+      console.log(props);
+      return <TemperatureLight {...props} />;
+    }
     case 'warnings-flood-level-2':
       return <WarningsFloodLevel2 {...props} />;
     case 'warnings-flood-level-3':
