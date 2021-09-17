@@ -15,10 +15,14 @@ import chartTheme from '@utils/chartTheme';
 
 type TemperatureLineChartProps = {
   data: TimestepData[];
+  max?: number;
+  min?: number;
 };
 
 const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
   data,
+  max = 25,
+  min = -5,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
@@ -38,17 +42,9 @@ const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
     return `${date.getHours()}`;
   };
 
-  const max = Math.max(
-    ...temperatureData.concat(feelsLikeData).map((d) => d.y)
-  );
-  const min = Math.min(
-    ...temperatureData.concat(feelsLikeData).map((d) => d.y)
-  );
-
-  // TODO: refine logic
-  const domainMax = max >= 25 ? max + 5 : 25;
-  const domainMin = min <= -5 ? min - 5 : -5;
-
+  const domainMax = Math.ceil((max + 1) / 5) * 5;
+  const domainMin = Math.floor((min - 1) / 5) * 5;
+  console.log(domainMax, domainMin);
   return (
     <View style={styles.container}>
       <VictoryChart height={300} theme={chartTheme}>
@@ -74,7 +70,7 @@ const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
         />
         <VictoryLine
           data={temperatureData}
-          domain={{ y: [0, 25] }}
+          domain={{ y: [domainMin, domainMax] }}
           animate={{ duration: 500, onLoad: { duration: 250 } }}
           style={{ data: { stroke: colors.primaryText } }}
           x={hourGetter}
@@ -83,7 +79,7 @@ const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
 
         <VictoryLine
           data={feelsLikeData}
-          domain={{ y: [0, 25] }}
+          domain={{ y: [domainMin, domainMax] }}
           animate={{ duration: 500, onLoad: { duration: 250 } }}
           style={{
             data: { stroke: colors.chartSecondaryLine, strokeDasharray: '4' },

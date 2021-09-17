@@ -6,7 +6,7 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "jsx": "react",
-    "lib": ["ES6", "DOM"],
+    "lib": ["ES6", "DOM", "ES2019"],
     "moduleResolution": "node",
     "noEmit": true,
     "target": "ES6",

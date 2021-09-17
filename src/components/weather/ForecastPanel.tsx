@@ -20,6 +20,7 @@ import {
   selectForecastByDay,
   selectHeaderLevelForecast,
   selectForecastLastUpdatedMoment,
+  selectMinimumsAndMaximums,
 } from '@store/forecast/selectors';
 
 import { weatherSymbolGetter } from '@assets/images';
@@ -38,6 +39,7 @@ const mapStateToProps = (state: State) => ({
   forecastByDay: selectForecastByDay(state),
   headerLevelForecast: selectHeaderLevelForecast(state),
   forecastLastUpdatedMoment: selectForecastLastUpdatedMoment(state),
+  minimumsAndMaximums: selectMinimumsAndMaximums(state),
 });
 const connector = connect(mapStateToProps, {});
 
@@ -50,6 +52,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   forecastByDay,
   forecastLastUpdatedMoment,
   headerLevelForecast,
+  minimumsAndMaximums,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
@@ -61,6 +64,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
+
+  console.log(minimumsAndMaximums);
 
   const dateKeys = Object.keys(forecastByDay);
 
@@ -213,6 +218,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                 !!selectedDate &&
                 dateKeys.indexOf(selectedDate) === dateKeys.length - 1
               }
+              maxTemp={minimumsAndMaximums?.totalTempMax}
+              minTemp={minimumsAndMaximums?.totalTempMin}
             />
           )}
       </View>

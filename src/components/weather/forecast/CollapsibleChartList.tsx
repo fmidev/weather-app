@@ -17,6 +17,8 @@ type CollapsibleChartListProps = {
   showPreviousDisabled: boolean;
   showNextDay: () => void;
   showNextDisabled: boolean;
+  maxTemp?: number;
+  minTemp?: number;
 };
 
 const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
@@ -26,6 +28,8 @@ const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
   showPreviousDisabled,
   showNextDay,
   showNextDisabled,
+  maxTemp,
+  minTemp,
 }) => {
   const { t } = useTranslation();
   const [openIndex, setOpenIndex] = useState<number | undefined>(undefined);
@@ -47,7 +51,7 @@ const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
           previousDisabled={showPreviousDisabled}
           handleNext={showNextDay}
           nextDisabled={showNextDisabled}>
-          <TemperatureLineChart data={data} />
+          <TemperatureLineChart data={data} max={maxTemp} min={minTemp} />
         </DaySelectorWrapper>
       )}
       <CollapsibleListHeader

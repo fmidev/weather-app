@@ -37,14 +37,13 @@ const PrecipitationBarChart: React.FC<PrecipitationBarChartProps> = ({
 
   // TODO: use hasPrecipitation somehow to indicate no rain
 
-  const max = Math.max(...precipitationData.map((d) => d.y));
-
   return (
     <View style={styles.container}>
       <VictoryChart
         height={300}
         padding={{ top: 50, right: 50, left: 50, bottom: 35 }}
-        theme={chartTheme}>
+        theme={chartTheme}
+        domainPadding={{ y: 5 }}>
         <VictoryAxis
           fixLabelOverlap
           style={{
@@ -57,7 +56,7 @@ const PrecipitationBarChart: React.FC<PrecipitationBarChartProps> = ({
 
         <VictoryAxis
           dependentAxis
-          domain={[0, max + 0.1]}
+          domain={[0, 8]}
           style={{
             tickLabels: {
               fill: colors.primaryText,
