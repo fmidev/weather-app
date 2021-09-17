@@ -3,6 +3,7 @@ import { ObservationState } from './observation/types';
 import { SettingsState } from './settings/types';
 import { MapState } from './map/types';
 import { LocationState } from './location/types';
+import { NavigationState } from './navigation/types';
 
 export interface State {
   settings: SettingsState;
@@ -10,6 +11,7 @@ export interface State {
   observation: ObservationState;
   map: MapState;
   location: LocationState;
+  navigation: NavigationState;
 }
 
 export interface PersistConfig {

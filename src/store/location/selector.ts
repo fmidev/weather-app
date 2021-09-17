@@ -4,6 +4,7 @@ import { Geolocation, Location, LocationState } from './types';
 
 const selectLocationDomain: Selector<State, LocationState> = (state) =>
   state.location;
+
 export const selectGeolocation = createSelector<
   State,
   LocationState,

@@ -6,7 +6,7 @@ import 'moment/locale/fi';
 import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { ForecastStackParamList } from '@navigators/types';
+import { WeatherStackParamList } from '@navigators/types';
 
 import { State } from '@store/types';
 import { selectGeoid } from '@store/location/selector';
@@ -34,7 +34,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type WeatherScreenProps = {
-  navigation: StackNavigationProp<ForecastStackParamList, 'Forecast'>;
+  navigation: StackNavigationProp<WeatherStackParamList, 'Weather'>;
 } & PropsFromRedux;
 
 const WeatherScreen: React.FC<WeatherScreenProps> = ({

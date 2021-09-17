@@ -1,6 +1,6 @@
 export type TabParamList = {
   Map: undefined;
-  Forecast: undefined;
+  Weather: undefined;
   Warnings: undefined;
   Others: undefined;
 };
@@ -26,7 +26,7 @@ export type MapStackParamList = {
   Search: undefined;
 };
 
-export type ForecastStackParamList = {
-  Forecast: Location;
+export type WeatherStackParamList = {
+  Weather: Location;
   Search: undefined;
 };

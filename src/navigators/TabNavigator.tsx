@@ -14,6 +14,8 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
+import type { NavigationState } from '@react-navigation/routers';
+
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
@@ -35,24 +37,26 @@ import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
-import { initSettings as initSettingsAction } from '@store/settings/actions';
-
 import { getGeolocation } from '@utils/helpers';
+import { selectInitialTab } from '@store/navigation/selectors';
+import { setNavigationTab as setNavigationTabAction } from '@store/navigation/actions';
+import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
 import { lightTheme, darkTheme } from './themes';
 import {
   TabParamList,
   OthersStackParamList,
   MapStackParamList,
-  ForecastStackParamList,
+  WeatherStackParamList,
 } from './types';
 
 const mapStateToProps = (state: State) => ({
+  initialTab: selectInitialTab(state),
   theme: selectTheme(state),
 });
 
 const mapDispatchToProps = {
-  initSettings: initSettingsAction,
   setCurrentLocation: setCurrentLocationAction,
+  setNavigationTab: setNavigationTabAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -65,31 +69,36 @@ type Props = PropsFromRedux & {
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const MapStack = createStackNavigator();
-const ForecastStack = createStackNavigator();
+const WeatherStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
 
 const Navigator: React.FC<Props> = ({
-  initSettings,
   setCurrentLocation,
+  setNavigationTab,
   initialColorScheme,
   theme,
+  initialTab,
 }) => {
   const { t, ready } = useTranslation(['navigation', 'placeholder'], {
     useSuspense: false,
   });
-  const [useDarkTheme, setUseDarkTheme] = useState<boolean>(
-    initialColorScheme === 'dark'
-  );
+
+  const isDark = (): boolean =>
+    theme === 'dark' ||
+    // (theme === 'automatic' && initialColorScheme === 'dark');
+    (theme === 'automatic' &&
+      (initialColorScheme === 'dark' ||
+        Appearance.getColorScheme() === 'dark'));
+
+  const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark());
+
   console.log(
     'TabNavigator rendering',
     initialColorScheme,
     theme,
     useDarkTheme
   );
-  useEffect(() => {
-    initSettings();
-  }, [initSettings]);
 
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
@@ -129,19 +138,17 @@ const Navigator: React.FC<Props> = ({
     }
   };
 
+  const navigationTabChanged = (state: NavigationState | undefined) => {
+    const navigationTab = state?.routeNames[state?.index] as NavigationTab;
+    if (Number.isInteger(NavigationTabValues[navigationTab])) {
+      setNavigationTab(navigationTab);
+    }
+  };
+
   useEffect(() => {
-    if (theme === 'dark' && !useDarkTheme) {
-      setUseDarkTheme(true);
-    }
-    if (theme === 'light' && useDarkTheme) {
-      setUseDarkTheme(false);
-    }
-    if (theme === 'automatic') {
-      if (Appearance.getColorScheme() === 'dark') {
-        setUseDarkTheme(true);
-      } else {
-        setUseDarkTheme(false);
-      }
+    const dark = isDark();
+    if (dark !== useDarkTheme) {
+      setUseDarkTheme(dark);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
@@ -160,7 +167,7 @@ const Navigator: React.FC<Props> = ({
   const CommonHeaderOptions = ({
     navigation,
   }: {
-    navigation: StackNavigationProp<MapStackParamList | ForecastStackParamList>;
+    navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
   }) => ({
     headerTitle: () => <CommonHeaderTitle />,
 
@@ -213,14 +220,14 @@ const Navigator: React.FC<Props> = ({
     </MapStack.Navigator>
   );
 
-  const ForecastStackScreen = () => (
-    <ForecastStack.Navigator>
-      <ForecastStack.Screen
-        name="Forecast"
+  const WeatherStackScreen = () => (
+    <WeatherStack.Navigator>
+      <WeatherStack.Screen
+        name="Weather"
         component={WeatherScreen}
         options={CommonHeaderOptions}
       />
-      <ForecastStack.Screen
+      <WeatherStack.Screen
         name="Search"
         component={SearchScreen}
         options={{
@@ -237,7 +244,7 @@ const Navigator: React.FC<Props> = ({
           ),
         }}
       />
-    </ForecastStack.Navigator>
+    </WeatherStack.Navigator>
   );
 
   const WarningsStackScreen = () => (
@@ -338,9 +345,11 @@ const Navigator: React.FC<Props> = ({
           barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
         />
       )}
-      <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
+      <NavigationContainer
+        onStateChange={navigationTabChanged}
+        theme={useDarkTheme ? darkTheme : lightTheme}>
         <Tab.Navigator
-          initialRouteName="Map"
+          initialRouteName={initialTab}
           tabBarOptions={{
             labelStyle: styles.tabText,
           }}>
@@ -356,10 +365,10 @@ const Navigator: React.FC<Props> = ({
             }}
           />
           <Tab.Screen
-            name="Forecast"
-            component={ForecastStackScreen}
+            name="Weather"
+            component={WeatherStackScreen}
             options={{
-              tabBarTestID: 'navigation_forecast',
+              tabBarTestID: 'navigation_weather',
               tabBarLabel: `${t('navigation:weather')}`,
               tabBarIcon: ({ color, size }) => (
                 <Icon

@@ -14,7 +14,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
 
-import { MapStackParamList, ForecastStackParamList } from '@navigators/Types';
+import { MapStackParamList, WeatherStackParamList } from '@navigators/Types';
 
 import { State } from '@store/types';
 
@@ -69,7 +69,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type SearchScreenProps = PropsFromRedux & {
   navigation: StackNavigationProp<
-    MapStackParamList | ForecastStackParamList,
+    MapStackParamList | WeatherStackParamList,
     'Search'
   >;
 };

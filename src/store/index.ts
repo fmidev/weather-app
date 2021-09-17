@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistReducer } from 'redux-persist';
-import SettingsReducer from './settings/reducer';
+import SettingsReducer, { settingsPersist } from './settings/reducer';
 import ForecastReducer from './forecast/reducer';
 import ObservationReducer, { observationPersist } from './observation/reducer';
 import MapReducer from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
 import { PersistConfig } from './types';
+import NavigationReducer, { navigationPersist } from './navigation/reducer';
 
 const persistReducerConfig = (config: PersistConfig) => ({
   ...config,
@@ -14,7 +15,10 @@ const persistReducerConfig = (config: PersistConfig) => ({
 });
 
 export default combineReducers({
-  settings: SettingsReducer,
+  settings: persistReducer(
+    persistReducerConfig(settingsPersist),
+    SettingsReducer
+  ),
   forecast: ForecastReducer,
   observation: persistReducer(
     persistReducerConfig(observationPersist),
@@ -25,4 +29,8 @@ export default combineReducers({
     LocationReducer
   ),
   map: MapReducer,
+  navigation: persistReducer(
+    persistReducerConfig(navigationPersist),
+    NavigationReducer
+  ),
 });
