@@ -65,10 +65,34 @@ export const selectForecastLastUpdatedMoment = createSelector(
     forecast[0] && forecast[0].modtime && moment(forecast[0].modtime)
 );
 
-export const selectMaxTemp = createSelector(selectForecast, (forecast) =>
-  Math.max(...forecast.map((f) => [f.temperature, f.feelsLike]).flat())
-);
+export const selectMinimumsAndMaximums = createSelector(
+  selectForecast,
+  (forecast) => {
+    if (forecast.length === 0) return {};
+    let totalTempArray = [] as number[];
+    let tempArray = [] as number[];
+    let precipitationArray = [] as number[];
 
-export const selectMinTemp = createSelector(selectForecast, (forecast) =>
-  Math.min(...forecast.map((f) => [f.temperature, f.feelsLike]).flat())
+    forecast.forEach((f) => {
+      totalTempArray = totalTempArray.concat([f.temperature, f.feelsLike]);
+      tempArray = tempArray.concat(f.temperature);
+      precipitationArray = precipitationArray.concat(f.precipitation1h);
+    });
+
+    const totalTempMax = Math.max(...totalTempArray);
+    const totalTempMin = Math.min(...totalTempArray);
+    const tempMax = Math.max(...tempArray);
+    const tempMin = Math.min(...tempArray);
+    const precipitationMax = Math.max(...precipitationArray);
+    const precipitationMin = Math.min(...precipitationArray);
+
+    return {
+      totalTempMax,
+      totalTempMin,
+      tempMax,
+      tempMin,
+      precipitationMax,
+      precipitationMin,
+    };
+  }
 );

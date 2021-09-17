@@ -15,8 +15,8 @@ import chartTheme from '@utils/chartTheme';
 
 type TemperatureLineChartProps = {
   data: TimestepData[];
-  max: number;
-  min: number;
+  max?: number;
+  min?: number;
 };
 
 const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
@@ -44,7 +44,7 @@ const TemperatureLineChart: React.FC<TemperatureLineChartProps> = ({
 
   const domainMax = Math.ceil((max + 1) / 5) * 5;
   const domainMin = Math.floor((min - 1) / 5) * 5;
-
+  console.log(domainMax, domainMin);
   return (
     <View style={styles.container}>
       <VictoryChart height={300} theme={chartTheme}>

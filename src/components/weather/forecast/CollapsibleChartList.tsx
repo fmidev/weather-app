@@ -17,8 +17,8 @@ type CollapsibleChartListProps = {
   showPreviousDisabled: boolean;
   showNextDay: () => void;
   showNextDisabled: boolean;
-  maxTemp: number;
-  minTemp: number;
+  maxTemp?: number;
+  minTemp?: number;
 };
 
 const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
