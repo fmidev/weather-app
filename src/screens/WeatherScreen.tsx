@@ -6,10 +6,10 @@ import 'moment/locale/fi';
 import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { ForecastStackParamList } from '@navigators/types';
+import { WeatherStackParamList } from '@navigators/types';
 
 import { State } from '@store/types';
-import { selectCurrentLocation, selectGeoid } from '@store/general/selectors';
+import { selectGeoid } from '@store/location/selector';
 import { selectForecast } from '@store/forecast/selectors';
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 
@@ -22,7 +22,6 @@ import { TimestepData } from '@store/forecast/types';
 
 const mapStateToProps = (state: State) => ({
   forecast: selectForecast(state),
-  currentLocation: selectCurrentLocation(state),
   geoid: selectGeoid(state),
 });
 
@@ -35,13 +34,12 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type WeatherScreenProps = {
-  navigation: StackNavigationProp<ForecastStackParamList, 'Forecast'>;
+  navigation: StackNavigationProp<WeatherStackParamList, 'Weather'>;
 } & PropsFromRedux;
 
 const WeatherScreen: React.FC<WeatherScreenProps> = ({
   forecast,
   fetchForecast,
-  // currentLocation,
   geoid,
   navigation,
 }) => {
