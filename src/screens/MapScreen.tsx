@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, StyleSheet, Platform } from 'react-native';
-import MapView, { Camera, Region } from 'react-native-maps';
+import MapView, { Camera, Region, Geojson } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp, useTheme } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 
 import MapControls from '@components/map/ui/MapControls';
-import RainRadarOverlay from '@components/map/layers/RainRadarOverlay';
+// import RainRadarOverlay from '@components/map/layers/RainRadarOverlay';
+import GeoJsonOverlay from '@components/map/layers/GeoJsonOverlay';
 import TimeStepBottomSheet from '@components/map/sheets/TimeStepBottomSheet';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
@@ -20,6 +21,7 @@ import { selectCurrent } from '@store/location/selector';
 import { selectDisplayLocation } from '@store/map/selectors';
 
 import darkMapStyle from '@utils/dark_map_style.json';
+import geoJSON from '../geo.json';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -116,7 +118,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}
         onRegionChangeComplete={checkDistanceToLocation}>
-        <RainRadarOverlay />
+        {/* <RainRadarOverlay /> */}
+        {/* <Geojson geojson={geoJSON} /> */}
+        <GeoJsonOverlay />
         {displayLocation && currentLocation && (
           <MapMarker
             coordinates={{
