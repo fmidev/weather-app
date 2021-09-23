@@ -52,10 +52,21 @@ export const selectHeaderLevelForecast = createSelector(
     forecastByDay &&
     Object.keys(forecastByDay).map((key: string, index: number) => {
       const dayArr = forecastByDay[key];
+      const dayMax = Math.max(...dayArr.map((h) => h.temperature));
+      const dayMin = Math.min(...dayArr.map((h) => h.temperature));
+      const sumPrecipitation = dayArr
+        .map((h) => h.precipitation1h)
+        .reduce((acc, curr) => acc + curr, 0);
+
+      const totalPrecipitation =
+        Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
+
       if (dayArr.length >= 16) {
-        return dayArr[15];
+        return { ...dayArr[15], dayMax, dayMin, totalPrecipitation };
       }
-      return index === 0 ? dayArr[0] : dayArr[dayArr.length - 1];
+      return index === 0
+        ? { ...dayArr[0], dayMax, dayMin, totalPrecipitation }
+        : { ...dayArr[dayArr.length - 1], dayMax, dayMin, totalPrecipitation };
     })
 );
 
