@@ -121,10 +121,10 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             <View style={styles.hourColumn}>
               <View style={[styles.row, styles.alignStart]}>
                 <View style={styles.withSmallMarginRight}>
-                  <Icon // TODO: weird behavior with this svg icon
+                  <Icon
                     name={dark ? 'temperature-dark' : 'temperature-light'}
-                    width={21}
-                    height={21}
+                    width={18}
+                    height={18}
                   />
                 </View>
                 <Text
@@ -137,8 +137,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 <View style={styles.withSmallMarginRight}>
                   <Icon
                     name={dark ? 'wind-dark' : 'wind-light'}
-                    width={24}
-                    height={24}
+                    width={18}
+                    height={18}
                     style={{
                       transform: [
                         {
@@ -156,7 +156,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             <View style={styles.feelsLikeColumn}>
               <View style={[styles.row, styles.alignStart]}>
                 <View>
-                  <Icon size={22} name="person" color={colors.text} />
+                  <Icon size={18} name="person" color={colors.text} />
                 </View>
                 <Text style={[styles.hourText, { color: colors.primaryText }]}>
                   {t('feelsLike')}{' '}
@@ -171,8 +171,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 <View style={styles.withSmallMarginRight}>
                   <Icon
                     name={dark ? 'rain-dark' : 'rain-light'}
-                    width={24}
-                    height={24}
+                    width={18}
+                    height={18}
                   />
                 </View>
                 <Text style={[styles.hourText, { color: colors.text }]}>
@@ -201,8 +201,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
   return (
     <View style={[!isOpen && styles.displayNone]}>
-      <DayDurationRow />
       {dayForecast.map(rowRenderer)}
+      <DayDurationRow />
     </View>
   );
 };
