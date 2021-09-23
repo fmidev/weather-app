@@ -133,11 +133,12 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           headerLevelForecast.length > 0 &&
           toDisplay === TABLE &&
           headerLevelForecast.map((dayStep, index) => {
-            const stepMoment = moment.unix(dayStep.epochtime);
-            const temperaturePrefix = dayStep.temperature > 0 && '+';
+            const stepMoment = moment.unix(dayStep.timeStamp);
+            const maxTemperaturePrefix = dayStep.maxTemperature > 0 && '+';
+            const minTemperaturePrefix = dayStep.minTemperature > 0 && '+';
 
             return (
-              <View key={dayStep.epochtime}>
+              <View key={dayStep.timeStamp}>
                 <CollapsibleListHeader
                   accessibilityLabel={
                     !dayOpenIndexes.includes(index)
@@ -159,8 +160,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                   }}
                   open={dayOpenIndexes.includes(index)}
                   title={stepMoment.locale(locale).format('ddd D.M.')}
-                  maxTemp={`${temperaturePrefix}${dayStep.dayMax}°`}
-                  minTemp={`${temperaturePrefix}${dayStep.dayMin}°`}
+                  maxTemp={`${maxTemperaturePrefix}${dayStep.maxTemperature}°`}
+                  minTemp={`${minTemperaturePrefix}${dayStep.minTemperature}°`}
                   totalPrecipitation={dayStep.totalPrecipitation}
                   precipitationDay={
                     forecastByDay &&
