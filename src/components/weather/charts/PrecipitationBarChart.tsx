@@ -10,6 +10,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { CustomTheme } from '@utils/colors';
+import { getPrecipitationColorOrTransparent } from '@utils/helpers';
 import chartTheme from '@utils/chartTheme';
 import { TimestepData } from '@store/forecast/types';
 
@@ -66,7 +67,11 @@ const PrecipitationBarChart: React.FC<PrecipitationBarChartProps> = ({
         <VictoryBar
           data={precipitationData}
           animate={{ duration: 500, onLoad: { duration: 250 } }}
-          style={{ data: { fill: colors.primaryText } }}
+          style={{
+            data: {
+              fill: ({ datum }) => getPrecipitationColorOrTransparent(datum.y),
+            },
+          }}
           x={hourGetter}
         />
         <VictoryLabel
