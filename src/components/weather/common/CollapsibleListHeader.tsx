@@ -1,21 +1,21 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import { SvgProps } from 'react-native-svg';
-
 import Icon from '@components/common/Icon';
-
 import { CustomTheme } from '@utils/colors';
+import { toStringWithDecimal } from '@utils/helpers';
+import PrecipitationStrip from '../forecast/PrecipitationStrip';
 
 type CollapsiblePanelHeaderProps = {
   open: boolean;
   title: string;
   accessibilityLabel: string;
   onPress: () => void;
-  time?: string;
-  smartSymbol?: ReactElement<SvgProps> | null;
-  temperature?: string;
+  maxTemp?: string;
+  minTemp?: string;
+  totalPrecipitation?: number;
+  precipitationDay?: { precipitation: number; timestamp: number }[] | false;
 };
 
 const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
@@ -23,11 +23,13 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   onPress,
   open,
   title,
-  time,
-  smartSymbol,
-  temperature,
+  maxTemp,
+  minTemp,
+  totalPrecipitation,
+  precipitationDay,
 }) => {
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
+
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -46,27 +48,78 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
             {title}
           </Text>
         </View>
-        {time && (
-          <View style={styles.rowColumn}>
-            <Text style={[styles.text, { color: colors.primaryText }]}>
-              {time}
-            </Text>
+        <View style={[precipitationDay && styles.middleContainer]}>
+          <View style={styles.symbolsContainer}>
+            {!!maxTemp && (
+              <View style={styles.rowColumn}>
+                <Icon
+                  height={16}
+                  width={16}
+                  name={
+                    dark
+                      ? 'temperature-highest-dark'
+                      : 'temperature-highest-light'
+                  }
+                  style={styles.withMarginRight}
+                />
+                <Text style={[styles.text, { color: colors.primaryText }]}>
+                  {maxTemp}
+                </Text>
+              </View>
+            )}
+            {!!minTemp && (
+              <View style={styles.rowColumn}>
+                <Icon
+                  height={16}
+                  width={16}
+                  name={
+                    dark
+                      ? 'temperature-lowest-dark'
+                      : 'temperature-lowest-light'
+                  }
+                  style={styles.withMarginRight}
+                />
+                <Text style={[styles.text, { color: colors.primaryText }]}>
+                  {minTemp}
+                </Text>
+              </View>
+            )}
+            {!Number.isNaN(totalPrecipitation) &&
+              totalPrecipitation !== undefined && (
+                <View style={styles.rowColumn}>
+                  <Icon
+                    height={16}
+                    width={16}
+                    name={dark ? 'rain-dark' : 'rain-white'}
+                    style={styles.withMarginRight}
+                  />
+                  <Text style={[styles.text, { color: colors.primaryText }]}>
+                    {toStringWithDecimal(totalPrecipitation, ',')}{' '}
+                    <Text
+                      style={[
+                        styles.text,
+                        styles.regular,
+                        { color: colors.primaryText },
+                      ]}>
+                      mm
+                    </Text>
+                  </Text>
+                </View>
+              )}
           </View>
-        )}
-        {smartSymbol && <View style={styles.rowColumn}>{smartSymbol}</View>}
-        {temperature && (
-          <View style={styles.rowColumn}>
-            <Text style={[styles.temperature, { color: colors.primaryText }]}>
-              {temperature}
-            </Text>
-          </View>
-        )}
-        <Icon
-          width={24}
-          height={24}
-          name={open ? 'arrow-up' : 'arrow-down'}
-          style={{ color: colors.primaryText }}
-        />
+          {precipitationDay && (
+            <PrecipitationStrip precipitationData={precipitationDay} />
+          )}
+        </View>
+        <View
+          style={[styles.iconContainer, { borderLeftColor: colors.border }]}>
+          <Icon
+            width={24}
+            height={24}
+            name={open ? 'arrow-up' : 'arrow-down'}
+            style={{ color: colors.primaryText }}
+          />
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -78,9 +131,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flex: 1,
-    height: 56,
+    height: 72,
     borderBottomWidth: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
+  },
+  middleContainer: {
+    flex: 5,
+    paddingHorizontal: 12,
   },
   title: {
     fontSize: 16,
@@ -89,18 +146,34 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-  },
-  temperature: {
-    fontSize: 18,
     fontFamily: 'Roboto-Bold',
+  },
+  regular: {
+    fontFamily: 'Roboto-Regular',
   },
   alignStart: {
     alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   rowColumn: {
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  symbolsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 16,
+  },
+  iconContainer: {
+    paddingLeft: 10,
+    borderLeftWidth: 1,
+    height: '100%',
+    justifyContent: 'center',
+  },
+  withMarginRight: {
+    marginRight: 4,
   },
 });
 

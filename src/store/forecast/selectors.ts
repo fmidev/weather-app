@@ -50,12 +50,28 @@ export const selectHeaderLevelForecast = createSelector(
   selectForecastByDay,
   (forecastByDay) =>
     forecastByDay &&
-    Object.keys(forecastByDay).map((key: string, index: number) => {
+    Object.keys(forecastByDay).map((key: string) => {
       const dayArr = forecastByDay[key];
-      if (dayArr.length >= 16) {
-        return dayArr[15];
-      }
-      return index === 0 ? dayArr[0] : dayArr[dayArr.length - 1];
+      const tempArray = dayArr.map((h) => h.temperature);
+      // get forecasted min and max temps for current day
+      const maxTemperature = Math.max(...tempArray);
+      const minTemperature = Math.min(...tempArray);
+      // calculate total precipitation
+      const sumPrecipitation = dayArr
+        .map((h) => h.precipitation1h)
+        .reduce((acc, curr) => acc + curr, 0);
+
+      const roundedTotalPrecipitation =
+        Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
+
+      const timeStamp = dayArr[0].epochtime;
+
+      return {
+        maxTemperature,
+        minTemperature,
+        totalPrecipitation: roundedTotalPrecipitation,
+        timeStamp,
+      };
     })
 );
 

@@ -10,6 +10,7 @@ import { TimestepData } from '@store/forecast/types';
 
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
+import { getPrecipitationColorOrTransparent } from '@utils/helpers';
 
 type ForecastByHourListProps = {
   dayForecast: TimestepData[];
@@ -109,13 +110,22 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             </Text>
           </View>
           <View style={[styles.row, styles.alignStart, styles.withPaddingLeft]}>
+            <View style={styles.symbolColumn}>
+              <View>
+                {hourSmartSymbol?.({
+                  width: 40,
+                  height: 40,
+                })}
+              </View>
+            </View>
             <View style={styles.hourColumn}>
               <View style={[styles.row, styles.alignStart]}>
-                <View style={styles.withMarginRight}>
-                  {hourSmartSymbol?.({
-                    width: 40,
-                    height: 40,
-                  })}
+                <View style={styles.withSmallMarginRight}>
+                  <Icon
+                    name={dark ? 'temperature-dark' : 'temperature-light'}
+                    width={18}
+                    height={18}
+                  />
                 </View>
                 <Text
                   style={[
@@ -126,36 +136,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               <View style={[styles.row, styles.alignStart]}>
                 <View style={styles.withSmallMarginRight}>
                   <Icon
-                    name={dark ? 'rain-dark' : 'rain-light'}
-                    width={24}
-                    height={24}
-                  />
-                </View>
-                <Text style={[styles.hourText, { color: colors.text }]}>
-                  <Text style={styles.bold}>{item.pop}</Text> %{' '}
-                  <Text style={styles.bold}>{item.precipitation1h}</Text> mm
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.withPaddingLeft, styles.hourColumn]}>
-              <View style={[styles.row, styles.alignStart]}>
-                <View>
-                  <Icon size={22} name="person" color={colors.text} />
-                </View>
-                <Text style={[styles.hourText, { color: colors.primaryText }]}>
-                  {t('feelsLike')}{' '}
-                  <Text
-                    style={
-                      styles.bold
-                    }>{`${dayTempPrefix}${item.feelsLike}°`}</Text>
-                </Text>
-              </View>
-              <View style={[styles.row, styles.alignStart]}>
-                <View style={styles.withSmallMarginRight}>
-                  <Icon
                     name={dark ? 'wind-dark' : 'wind-light'}
-                    width={24}
-                    height={24}
+                    width={18}
+                    height={18}
                     style={{
                       transform: [
                         {
@@ -170,6 +153,46 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 </Text>
               </View>
             </View>
+            <View style={styles.feelsLikeColumn}>
+              <View style={[styles.row, styles.alignStart]}>
+                <View>
+                  <Icon size={18} name="person" color={colors.text} />
+                </View>
+                <Text style={[styles.hourText, { color: colors.primaryText }]}>
+                  {t('feelsLike')}{' '}
+                  <Text
+                    style={
+                      styles.bold
+                    }>{`${dayTempPrefix}${item.feelsLike}°`}</Text>
+                </Text>
+              </View>
+
+              <View style={[styles.row, styles.alignStart]}>
+                <View style={styles.withSmallMarginRight}>
+                  <Icon
+                    name={dark ? 'rain-dark' : 'rain-light'}
+                    width={18}
+                    height={18}
+                  />
+                </View>
+                <Text style={[styles.hourText, { color: colors.text }]}>
+                  <Text style={styles.bold}>{item.pop}</Text> %
+                </Text>
+                <View
+                  style={[
+                    styles.precipitationColorDot,
+                    {
+                      backgroundColor: getPrecipitationColorOrTransparent(
+                        item.precipitation1h
+                      ),
+                    },
+                  ]}
+                />
+                <Text style={[styles.hourText, { color: colors.text }]}>
+                  <Text style={styles.bold}>{item.precipitation1h}</Text> mm
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
       </View>
@@ -178,8 +201,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
   return (
     <View style={[!isOpen && styles.displayNone]}>
-      <DayDurationRow />
       {dayForecast.map(rowRenderer)}
+      <DayDurationRow />
     </View>
   );
 };
@@ -228,7 +251,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
   },
   hourTemperature: {
-    fontSize: 24,
+    fontSize: 18,
     fontFamily: 'Roboto-Bold',
   },
   hourText: {
@@ -236,6 +259,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
   },
   hourColumn: {
+    flex: 2,
+  },
+  feelsLikeColumn: {
+    flex: 3,
+  },
+  symbolColumn: {
     flex: 1,
   },
   timeContainer: {
@@ -246,6 +275,12 @@ const styles = StyleSheet.create({
   },
   displayNone: {
     display: 'none',
+  },
+  precipitationColorDot: {
+    height: 8,
+    width: 8,
+    borderRadius: 25,
+    marginHorizontal: 4,
   },
 });
 

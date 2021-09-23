@@ -23,7 +23,6 @@ import {
   selectMinimumsAndMaximums,
 } from '@store/forecast/selectors';
 
-import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
 
 import CollapsibleListHeader from './common/CollapsibleListHeader';
@@ -54,7 +53,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   headerLevelForecast,
   minimumsAndMaximums,
 }) => {
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
   const [dayOpenIndexes, setDayOpenIndexes] = useState<number[]>([]);
@@ -64,8 +63,6 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
-
-  console.log(minimumsAndMaximums);
 
   const dateKeys = Object.keys(forecastByDay);
 
@@ -136,14 +133,12 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           headerLevelForecast.length > 0 &&
           toDisplay === TABLE &&
           headerLevelForecast.map((dayStep, index) => {
-            const stepMoment = moment.unix(dayStep.epochtime);
-            const temperaturePrefix = dayStep.temperature > 0 && '+';
-            const smartSymbol = weatherSymbolGetter(
-              dayStep.smartSymbol.toString(),
-              dark
-            );
+            const stepMoment = moment.unix(dayStep.timeStamp);
+            const maxTemperaturePrefix = dayStep.maxTemperature > 0 && '+';
+            const minTemperaturePrefix = dayStep.minTemperature > 0 && '+';
+
             return (
-              <View key={dayStep.epochtime}>
+              <View key={dayStep.timeStamp}>
                 <CollapsibleListHeader
                   accessibilityLabel={
                     !dayOpenIndexes.includes(index)
@@ -165,16 +160,16 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                   }}
                   open={dayOpenIndexes.includes(index)}
                   title={stepMoment.locale(locale).format('ddd D.M.')}
-                  time={
-                    i18n.language === 'fi'
-                      ? stepMoment.format('HH:mm')
-                      : stepMoment.locale(locale).format('LT')
+                  maxTemp={`${maxTemperaturePrefix}${dayStep.maxTemperature}°`}
+                  minTemp={`${minTemperaturePrefix}${dayStep.minTemperature}°`}
+                  totalPrecipitation={dayStep.totalPrecipitation}
+                  precipitationDay={
+                    forecastByDay &&
+                    forecastByDay[stepMoment.format('D.M.')].map((f) => ({
+                      precipitation: f.precipitation1h,
+                      timestamp: f.epochtime,
+                    }))
                   }
-                  smartSymbol={smartSymbol?.({
-                    width: 40,
-                    height: 40,
-                  })}
-                  temperature={`${temperaturePrefix}${dayStep.temperature}°`}
                 />
                 {forecastByDay && dayOpenIndexes.includes(index) && (
                   <ForecastByHourList
