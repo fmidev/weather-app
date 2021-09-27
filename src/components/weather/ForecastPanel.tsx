@@ -171,12 +171,12 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                     }))
                   }
                 />
-                {forecastByDay && dayOpenIndexes.includes(index) && (
-                  <ForecastByHourList
-                    dayForecast={forecastByDay[stepMoment.format('D.M.')]}
-                    isOpen={dayOpenIndexes.includes(index)}
-                  />
-                )}
+                <ForecastByHourList
+                  dayForecast={
+                    forecastByDay && forecastByDay[stepMoment.format('D.M.')]
+                  }
+                  isOpen={dayOpenIndexes.includes(index)}
+                />
               </View>
             );
           })}

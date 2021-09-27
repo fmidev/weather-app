@@ -13,7 +13,7 @@ import { CustomTheme } from '@utils/colors';
 import { getPrecipitationColorOrTransparent } from '@utils/helpers';
 
 type ForecastByHourListProps = {
-  dayForecast: TimestepData[];
+  dayForecast: TimestepData[] | false;
   isOpen: boolean;
 };
 
@@ -23,6 +23,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
+
+  if (!dayForecast) return null;
+
   const DayDurationRow = () => {
     const step = dayForecast[0];
     const sunrise = moment(step.sunrise);
