@@ -1,19 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <filter id="taj0pmahla">
+        <filter id="a">
             <feColorMatrix in="SourceGraphic" values="0 0 0 0 0.188235 0 0 0 0 0.192157 0 0 0 0 0.576471 0 0 0 1.000000 0"/>
         </filter>
     </defs>
     <g fill="none" fill-rule="evenodd">
-        <g>
-            <g fill="#EEF4FB">
-                <path d="M10 0c5.523 0 10 4.477 10 10s-4.477 10-10 10S0 15.523 0 10 4.477 0 10 0z" transform="translate(2.000000, 2.000000)"/>
-            </g>
-            <g filter="url(#taj0pmahla)" transform="translate(2.000000, 2.000000)">
-                <g>
-                    <path fill="#303193" fill-rule="nonzero" d="M6 6.645C6 8.3 4.657 9.643 3 9.643S0 8.3 0 6.645c0-.46.103-.894.288-1.283l1.68-4.274c.57-1.45 1.492-1.451 2.063 0l1.672 4.254c.19.393.296.835.296 1.303H6z" transform="translate(7.000000, 5.500000)"/>
-                </g>
-            </g>
+        <path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z" fill="#EEF4FB"/>
+        <g filter="url(#a)" transform="translate(2 2)">
+            <path d="M13 12.145a3 3 0 1 1-5.712-1.283l1.68-4.274c.57-1.45 1.492-1.451 2.063 0l1.672 4.254c.19.393.296.835.296 1.303H13z" fill="#303193" fill-rule="nonzero"/>
         </g>
     </g>
 </svg>
