@@ -53,8 +53,8 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
             {!!maxTemp && (
               <View style={styles.rowColumn}>
                 <Icon
-                  height={16}
-                  width={16}
+                  height={18}
+                  width={18}
                   name={
                     dark
                       ? 'temperature-highest-dark'
@@ -70,8 +70,8 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
             {!!minTemp && (
               <View style={styles.rowColumn}>
                 <Icon
-                  height={16}
-                  width={16}
+                  height={18}
+                  width={18}
                   name={
                     dark
                       ? 'temperature-lowest-dark'
@@ -88,8 +88,8 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
               totalPrecipitation !== undefined && (
                 <View style={styles.rowColumn}>
                   <Icon
-                    height={16}
-                    width={16}
+                    height={18}
+                    width={18}
                     name={dark ? 'rain-dark' : 'rain-white'}
                     style={styles.withMarginRight}
                   />
