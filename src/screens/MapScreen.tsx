@@ -17,7 +17,7 @@ import MapMarker from '@components/map/layers/MapMarker';
 import { MapStackParamList } from '@navigators/types';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
-import { selectDisplayLocation } from '@store/map/selectors';
+import { selectDisplayLocation, selectOverlay } from '@store/map/selectors';
 
 import darkMapStyle from '@utils/dark_map_style.json';
 
@@ -36,6 +36,7 @@ const ANIMATE_ZOOM = {
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
   displayLocation: selectDisplayLocation(state),
+  overlay: selectOverlay(state),
 });
 const connector = connect(mapStateToProps, {});
 
@@ -49,6 +50,7 @@ type MapScreenProps = PropsFromRedux & {
 const MapScreen: React.FC<MapScreenProps> = ({
   currentLocation,
   displayLocation,
+  overlay,
 }) => {
   const { colors, dark } = useTheme();
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
@@ -116,7 +118,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}
         onRegionChangeComplete={checkDistanceToLocation}>
-        <RainRadarOverlay />
+        {overlay && <RainRadarOverlay overlay={overlay} />}
         {displayLocation && currentLocation && (
           <MapMarker
             coordinates={{

@@ -1,0 +1,44 @@
+{
+  "map": {
+    "latitudeDelta": 0.34,
+    "sources": {
+      "geoserver": "https://wms.fmi.fi/fmi-apikey/a1a31360-00ae-4a60-ac0a-3d4519ef7e1c/geoserver/wms?"
+    },
+    "layers": [
+      {
+        "type": "rain",
+        "name": {
+          "en": "Rain radar",
+          "fi": "Sadetutka"
+        },
+        "legend": "joku urli",
+        "sources": [
+          {
+            "source": "geoserver",
+            "layer": "Radar:suomi_dbz_eureffin",
+            "type": "observation"
+          },
+          {
+            "source": "geoserver",
+            "layer": "Radar:suomi_tuliset_rr_eureffin",
+            "type": "forecast"
+          }
+        ]
+      }
+    ],
+    "times": {
+      "15": {
+        "forecast": 8,
+        "observation": 8
+      },
+      "30": {
+        "forecast": 8,
+        "observation": 8
+      },
+      "60": {
+        "forecast": 8,
+        "observation": 8
+      }
+    }
+  }
+}

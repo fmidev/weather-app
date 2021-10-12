@@ -1,6 +1,6 @@
 import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
-import { MapState, MapLayers } from './types';
+import { MapState, MapLayers, MapOverlay } from './types';
 
 const selectMapDomain: Selector<State, MapState> = (state) => state.map;
 
@@ -27,4 +27,9 @@ export const selectMapLayers = createSelector<State, MapState, MapLayers>(
 export const selectDisplayLocation = createSelector<State, MapLayers, boolean>(
   selectMapLayers,
   (layers) => layers.location
+);
+
+export const selectOverlay = createSelector<State, MapState, MapOverlay>(
+  selectMapDomain,
+  (map) => map.overlays[0] // TODO: should select overlay with key
 );

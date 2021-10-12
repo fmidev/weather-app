@@ -51,6 +51,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const min = getSliderMinUnix(sliderStep);
   const max = getSliderMaxUnix(sliderStep);
   const step = getSliderStepSeconds(sliderStep);
+  const initialTime = moment.utc().startOf('hour').unix();
 
   const roundStep = (v: number): number => Math.round(v / step) * step;
 
@@ -90,7 +91,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             step={step}
             minimumValue={min}
             maximumValue={max}
-            value={sliderTime}
+            value={initialTime} // provide initial slider value
           />
         </View>
         <TouchableOpacity

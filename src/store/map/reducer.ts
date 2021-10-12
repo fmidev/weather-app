@@ -6,6 +6,7 @@ import {
   ANIMATE_TO_AREA,
   MapActionTypes,
   MapState,
+  INITIALIZE_OVERLAYS,
 } from './types';
 
 const INITIAL_STATE: MapState = {
@@ -17,6 +18,7 @@ const INITIAL_STATE: MapState = {
   sliderTime: moment.utc().startOf('hour').unix(),
   sliderStep: 60,
   animateToArea: false,
+  overlays: [],
 };
 
 export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
@@ -48,6 +50,14 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
         animateToArea: action.animate,
       };
     }
+
+    case INITIALIZE_OVERLAYS: {
+      return {
+        ...state,
+        overlays: action.overlays,
+      };
+    }
+
     default: {
       return state;
     }
