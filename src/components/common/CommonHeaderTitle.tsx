@@ -31,7 +31,7 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
         ? `${currentLocation.name}, ${currentLocation.area}`
         : currentLocation.name;
     }
-    return 'Helsinki';
+    return 'Null';
   };
 
   return (

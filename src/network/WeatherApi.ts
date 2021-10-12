@@ -1,14 +1,19 @@
 import axios from 'axios';
-import Config from 'react-native-config';
 
 import { Location, WeatherData } from '@store/forecast/types';
 import { ObservationDataRaw } from '@store/observation/types';
+import { Config } from '@config';
 
 export const getForecast = async (location: Location): Promise<WeatherData> => {
+  const {
+    apiUrl,
+    forecast: { timePeriod, producer },
+  } = Config.get('weather');
+
   const params = {
     ...location,
     starttime: 0,
-    endtime: 'data',
+    endtime: timePeriod,
     param: [
       'geoid',
       'epochtime',
@@ -39,11 +44,12 @@ export const getForecast = async (location: Location): Promise<WeatherData> => {
       'dark',
     ].join(','),
     format: 'json',
+    producer,
     attributes: 'geoid',
     lang: 'fi', // TODO: Fix
   };
 
-  const { data } = await axios.get(Config.WEATHER_API_URL, {
+  const { data } = await axios.get(apiUrl, {
     params,
   });
   return data;
@@ -52,9 +58,18 @@ export const getForecast = async (location: Location): Promise<WeatherData> => {
 export const getObservation = async (
   location: Location
 ): Promise<ObservationDataRaw> => {
+  const {
+    apiUrl,
+    observation: { enabled, numberOfStations, producer },
+  } = Config.get('weather');
+
+  if (!enabled) {
+    return {};
+  }
+
   const params = {
     ...location,
-    numberofstations: Config.NUMBEROFSTATIONS,
+    numberofstations: numberOfStations,
     starttime: '-24h',
     endtime: '0',
     param: [
@@ -78,13 +93,13 @@ export const getObservation = async (
       'ww_aws', // iso2 = 'fi'
     ].join(','),
     format: 'json',
-    producer: Config.OBSERVATION_PRODUCER,
+    producer,
     precision: 'double',
     lang: 'fi', // TODO: Fix
     attributes: 'fmisid,stationname,distance',
   };
 
-  const { data } = await axios.get(Config.WEATHER_API_URL, {
+  const { data } = await axios.get(apiUrl, {
     params,
   });
 

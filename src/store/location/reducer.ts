@@ -1,4 +1,5 @@
 import { PersistConfig } from '@store/types';
+import { Config } from '@config';
 import {
   ADD_FAVORITE,
   DELETE_ALL_FAVORITES,
@@ -17,7 +18,7 @@ const INITIAL_STATE: LocationState = {
   favorites: [],
   recent: [],
   search: [],
-  current: undefined,
+  current: Config.get('location').default,
 };
 
 export default (

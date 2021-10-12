@@ -105,7 +105,7 @@ export interface LocationState {
   favorites: Location[] | [];
   recent: Location[] | [];
   search: Location[] | [];
-  current?: Location;
+  current: Location;
   geolocation?: Geolocation;
   isGeoLocation?: boolean;
 }
