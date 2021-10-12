@@ -13,6 +13,7 @@ describe('map reducer', () => {
     sliderTime,
     sliderStep: 60,
     animateToArea: false,
+    overlays: [],
   };
 
   it('should handle ANIMATE_TO_AREA', () => {
@@ -62,6 +63,40 @@ describe('map reducer', () => {
         weather: true,
         radar: false,
       },
+    });
+  });
+
+  it('should handle INITIALIZE_OVERLAYS', () => {
+    const dummyOverlay = {
+      observation: {
+        url: 'example.test.observation',
+        bounds: {
+          bottomLeft: [12, 13],
+          bottomRight: [12, 16],
+          topLeft: [14, 13],
+          topRight: [14, 16],
+        },
+      },
+      forecast: {
+        url: 'example.test.forecast',
+        bounds: {
+          bottomLeft: [12, 13],
+          bottomRight: [12, 16],
+          topLeft: [14, 13],
+          topRight: [14, 16],
+        },
+        start: '2021-01-01T01:00:00Z',
+      },
+    } as types.MapOverlay;
+
+    expect(
+      reducer(initial, {
+        type: types.INITIALIZE_OVERLAYS,
+        overlays: [dummyOverlay],
+      })
+    ).toEqual({
+      ...initial,
+      overlays: [dummyOverlay],
     });
   });
 });
