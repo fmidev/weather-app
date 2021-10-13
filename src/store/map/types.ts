@@ -46,6 +46,7 @@ export interface Layer {
   url: string | undefined;
   bounds: { [key: string]: [number, number] } | undefined;
   start?: string;
+  end?: string;
 }
 
 export interface MapOverlay {

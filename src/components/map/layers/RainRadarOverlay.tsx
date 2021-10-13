@@ -8,7 +8,7 @@ import {
   getSliderMaxUnix,
   getSliderMinUnix,
   getSliderStepSeconds,
-} from '@utils/helpers';
+} from '@utils/map';
 
 import { State } from '@store/types';
 import { MapOverlay } from '@store/map/types';

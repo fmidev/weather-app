@@ -9,20 +9,25 @@ import { useTheme } from '@react-navigation/native';
 import Icon from '@components/common/Icon';
 
 import { State } from '@store/types';
-import { selectSliderStep, selectSliderTime } from '@store/map/selectors';
+import {
+  selectSliderStep,
+  selectSliderTime,
+  selectObservationEnd,
+} from '@store/map/selectors';
 import { updateSliderTime as updateSliderTimeAction } from '@store/map/actions';
 
 import {
   getSliderMaxUnix,
   getSliderMinUnix,
   getSliderStepSeconds,
-} from '@utils/helpers';
+} from '@utils/map';
 
 import { WHITE, SECONDARY_BLUE, SHADOW, CustomTheme } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
   sliderStep: selectSliderStep(state),
   sliderTime: selectSliderTime(state),
+  layerObservationEnd: selectObservationEnd(state),
 });
 
 const mapDispatchToProps = {
@@ -42,6 +47,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   sliderStep,
   sliderTime,
   updateSliderTime,
+  layerObservationEnd,
 }) => {
   const { t } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
@@ -51,7 +57,9 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const min = getSliderMinUnix(sliderStep);
   const max = getSliderMaxUnix(sliderStep);
   const step = getSliderStepSeconds(sliderStep);
-  const initialTime = moment.utc().startOf('hour').unix();
+
+  // note: moment treats moment(undefined) as moment()
+  const initialTime = moment(layerObservationEnd).utc().startOf('hour').unix();
 
   const roundStep = (v: number): number => Math.round(v / step) * step;
 

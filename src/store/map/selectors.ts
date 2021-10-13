@@ -33,3 +33,9 @@ export const selectOverlay = createSelector<State, MapState, MapOverlay>(
   selectMapDomain,
   (map) => map.overlays[0] // TODO: should select overlay with key
 );
+
+export const selectObservationEnd = createSelector<
+  State,
+  MapOverlay,
+  string | undefined
+>(selectOverlay, (overlay) => overlay?.observation.end);

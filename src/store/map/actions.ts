@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { getRainRadarUrlsAndBounds } from '@utils/helpers';
+import { getRainRadarUrlsAndBounds } from '@utils/map';
 import {
   MapLayers,
   MapActionTypes,
