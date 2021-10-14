@@ -64,6 +64,8 @@ class DynamicConfig {
           }
         } else if (typeof target[key] === typeof source[key]) {
           Object.assign(target, { [key]: source[key] });
+        } else if (typeof target[key] === 'undefined') {
+          Object.assign(target, { [key]: source[key] });
         }
       });
     }

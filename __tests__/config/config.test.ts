@@ -159,7 +159,7 @@ describe('Modify arrays', () => {
 });
 
 describe('Modify Objects', () => {
-  it('First level', () => {
+  it('Edit first level', () => {
     expect(
       DynamicConfig.mergeObject(JSON.parse(JSON.stringify(defaultConfig)), {
         dynamicConfig: { interval: 300 },
@@ -169,13 +169,25 @@ describe('Modify Objects', () => {
     });
   });
 
-  it('Second level', () => {
+  it('Edit second level', () => {
     expect(
       DynamicConfig.mergeObject(JSON.parse(JSON.stringify(defaultConfig)), {
         weather: { observation: { enabled: false } },
       })
     ).toMatchObject({
       weather: { observation: { enabled: false } },
+    });
+  });
+
+  it('Add new key', () => {
+    expect(
+      DynamicConfig.mergeObject(JSON.parse(JSON.stringify(defaultConfig)), {
+        map: { sources: { server3: 'server3Url' } },
+      })
+    ).toMatchObject({
+      map: {
+        sources: { ...defaultConfig.map.sources, ...{ server3: 'server3Url' } },
+      },
     });
   });
 });
@@ -191,7 +203,7 @@ describe('Merge checks', () => {
         },
         settings: { languages: {} },
       })
-    ).toMatchObject(defaultConfig);
+    ).toEqual(defaultConfig);
   });
 
   it('Set array to object', () => {
@@ -199,7 +211,7 @@ describe('Merge checks', () => {
       DynamicConfig.mergeObject(JSON.parse(JSON.stringify(defaultConfig)), {
         map: [],
       })
-    ).toMatchObject(defaultConfig);
+    ).toEqual(defaultConfig);
   });
 
   it('Set empty object', () => {
@@ -212,7 +224,7 @@ describe('Merge checks', () => {
           ],
         },
       })
-    ).toMatchObject(defaultConfig);
+    ).toEqual(defaultConfig);
   });
 
   it('Set empty array', () => {
@@ -220,7 +232,7 @@ describe('Merge checks', () => {
       DynamicConfig.mergeObject(JSON.parse(JSON.stringify(defaultConfig)), {
         settings: { languages: [] },
       })
-    ).toMatchObject(defaultConfig);
+    ).toEqual(defaultConfig);
   });
 
   it('Set wrong value type', () => {
@@ -232,6 +244,6 @@ describe('Merge checks', () => {
           interval: '1',
         },
       })
-    ).toMatchObject(defaultConfig);
+    ).toEqual(defaultConfig);
   });
 });
