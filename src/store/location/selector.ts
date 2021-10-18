@@ -1,3 +1,4 @@
+import { Config } from '@config';
 import { State } from '@store/types';
 import { createSelector, Selector } from 'reselect';
 import { Geolocation, Location, LocationState } from './types';
@@ -19,7 +20,7 @@ export const selectIsGeolocation = createSelector<
 
 export const selectCurrent = createSelector<State, LocationState, Location>(
   selectLocationDomain,
-  (location) => location.current
+  (location) => location.current || Config.get('location').default
 );
 
 export const selectGeoid = createSelector(
