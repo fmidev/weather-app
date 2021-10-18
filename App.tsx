@@ -12,6 +12,10 @@ import { ConfigProvider } from '@config';
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';
 
+// @ts-ignore
+// eslint-disable-next-line import/extensions
+import defaultConfig from './defaultConfig';
+
 const App: React.FC = () => {
   const composeEnhancers =
     (window && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
@@ -29,7 +33,7 @@ const App: React.FC = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ConfigProvider>
+        <ConfigProvider defaultConfig={defaultConfig}>
           <TabNavigator initialColorScheme={initialColorScheme} />
         </ConfigProvider>
       </PersistGate>

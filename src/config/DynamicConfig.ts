@@ -1,15 +1,49 @@
 import axios from 'axios';
 
 import { ConfigType } from '@config';
-// eslint-disable-next-line import/extensions
-import defaultConfig from '../../defaultConfig';
 
 class DynamicConfig {
-  private config = { ...defaultConfig };
+  private config!: ConfigType;
 
-  private apiUrl = defaultConfig.dynamicConfig?.apiUrl || undefined;
+  private apiUrl: string | undefined;
 
-  private updating: boolean = false;
+  private timeout: number;
+
+  private updating: boolean;
+
+  private updated: number;
+
+  constructor() {
+    this.apiUrl = undefined;
+    this.updating = false;
+    this.updated = 0;
+    this.timeout = 5000;
+  }
+
+  public setDefaultConfig(defaultConfig: ConfigType) {
+    this.config = defaultConfig;
+    if (defaultConfig.dynamicConfig.enabled) {
+      this.setApiUrl(defaultConfig.dynamicConfig?.apiUrl);
+    }
+  }
+
+  private setApiUrl(ulr: string | undefined) {
+    if (ulr) {
+      this.apiUrl = ulr;
+    }
+  }
+
+  public setApiTimeout(milliseconds: number) {
+    this.timeout = milliseconds;
+  }
+
+  public setUpdated(time: number) {
+    this.updated = time;
+  }
+
+  public getUpdated() {
+    return this.updated;
+  }
 
   public getUpdatingStatus() {
     return this.updating;
@@ -31,12 +65,14 @@ class DynamicConfig {
     this.updating = true;
 
     try {
-      const { data }: { data: ConfigType } = await axios.get(this.apiUrl);
+      const { data }: { data: ConfigType } = await axios.get(this.apiUrl, {
+        timeout: this.timeout,
+      });
       if (data) {
         this.config = DynamicConfig.mergeObject(this.config, data);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
 
     this.updating = false;

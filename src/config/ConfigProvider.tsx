@@ -1,9 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AppState } from 'react-native';
-import { Config } from '@config';
+import { Config, ConfigType } from '@config';
 
-const ConfigProvider: React.FC = ({ children }) => {
+type ConfigProviderProps = {
+  defaultConfig: ConfigType;
+  children: React.ReactNode;
+  timeout?: number;
+};
+
+const ConfigProvider: React.FC<ConfigProviderProps> = ({
+  children,
+  defaultConfig,
+  timeout,
+}) => {
   const [updated, setUpdated] = useState<number>(0);
+  Config.setDefaultConfig(defaultConfig);
+  if (timeout) {
+    Config.setApiTimeout(timeout);
+  }
   const { enabled, interval } = Config.get('dynamicConfig');
 
   const checkUpdates = useCallback(async () => {
@@ -21,6 +35,7 @@ const ConfigProvider: React.FC = ({ children }) => {
     if (!enabled) {
       return () => null;
     }
+
     const handleAppStateChange = (nextAppState: string) => {
       if (nextAppState === 'active') {
         checkUpdates();
