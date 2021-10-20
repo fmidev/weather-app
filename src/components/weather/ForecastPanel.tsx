@@ -134,8 +134,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           toDisplay === TABLE &&
           headerLevelForecast.map((dayStep, index) => {
             const stepMoment = moment.unix(dayStep.timeStamp);
-            const maxTemperaturePrefix = dayStep.maxTemperature > 0 && '+';
-            const minTemperaturePrefix = dayStep.minTemperature > 0 && '+';
+            const maxTemperaturePrefix = dayStep.maxTemperature > 0 ? '+' : '';
+            const minTemperaturePrefix = dayStep.minTemperature > 0 ? '+' : '';
 
             return (
               <View key={dayStep.timeStamp}>
