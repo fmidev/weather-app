@@ -71,7 +71,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
   const rowRenderer = (item: TimestepData) => {
     const dayStepMoment = moment.unix(item.epochtime);
-    const dayTempPrefix = item.temperature > 0 && '+';
+    const dayTempPrefix = item.temperature > 0 ? '+' : '';
+    const feelsLikePrefix = item.feelsLike > 0 ? '+' : '';
     const hourSmartSymbol = weatherSymbolGetter(
       item.smartSymbol.toString(),
       dark
@@ -163,7 +164,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   <Text
                     style={
                       styles.bold
-                    }>{`${dayTempPrefix}${item.feelsLike}°`}</Text>
+                    }>{`${feelsLikePrefix}${item.feelsLike}°`}</Text>
                 </Text>
               </View>
 
