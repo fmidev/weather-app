@@ -1,0 +1,76 @@
+import { ConfigType } from '@config';
+
+const defaultConfig: ConfigType = {
+  dynamicConfig: {
+    enabled: true,
+    apiUrl: 'url',
+    interval: 1,
+  },
+  location: {
+    default: {
+      name: 'Helsinki',
+      area: 'Suomi',
+      lat: 60.16952,
+      lon: 24.93545,
+      id: 658225,
+    },
+    apiUrl: 'url',
+    keyword: 'string',
+    maxRecent: 5,
+    maxFavorite: 10,
+  },
+  map: {
+    latitudeDelta: 0.15,
+    sources: {
+      key: 'url',
+      key2: 'url',
+    },
+    layers: [
+      {
+        id: 1,
+        name: { languageString: 'name' },
+        legend: 'urlString',
+        sources: [
+          {
+            source: 'sourceKey',
+            layer: 'layerName',
+            type: 'forecast|observation',
+          },
+        ],
+        times: {
+          60: { forecast: 8 },
+          30: { forecast: 4 },
+        },
+      },
+    ],
+  },
+  weather: {
+    apiUrl:
+      'url',
+    forecast: {
+      timePeriod: 'data',
+      producer: 'default',
+      parameters: ['Temperature'],
+    },
+    observation: {
+      enabled: true,
+      numberOfStations: 10,
+      producer: 'observation_producer',
+      timePeriod: 24,
+      parameters: ['Temperature'],
+    },
+  },
+  warnings: {
+    enabled: true,
+    apiUrl:
+      'url',
+  },
+  settings: {
+    languages: ['fi', 'en', 'sv'],
+    units: {
+      Temperature: ['C', 'F'],
+    },
+  },
+};
+
+export default defaultConfig;

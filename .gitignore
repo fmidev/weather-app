@@ -64,3 +64,4 @@ buck-out/
 .env
 .env.production
 android/app/release/
+defaultConfig.ts

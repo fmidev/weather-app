@@ -8,8 +8,13 @@ import ReduxThunk from 'redux-thunk';
 
 import './i18n';
 import { Appearance } from 'react-native';
+import { ConfigProvider } from '@config';
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';
+
+// @ts-ignore
+// eslint-disable-next-line import/extensions
+import defaultConfig from './defaultConfig';
 
 const App: React.FC = () => {
   const composeEnhancers =
@@ -28,7 +33,9 @@ const App: React.FC = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <TabNavigator initialColorScheme={initialColorScheme} />
+        <ConfigProvider defaultConfig={defaultConfig}>
+          <TabNavigator initialColorScheme={initialColorScheme} />
+        </ConfigProvider>
       </PersistGate>
     </Provider>
   );

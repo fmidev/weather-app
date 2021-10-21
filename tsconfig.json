@@ -20,7 +20,8 @@
       "@network/*": ["./src/network/*"],
       "@screens/*": ["./src/screens/*"],
       "@store/*": ["./src/store/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@config": ["./src/config/index.ts"]
     }
   },
   "exclude": ["node_modules"]
