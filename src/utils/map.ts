@@ -27,8 +27,14 @@ type WmsLayer = {
   };
 };
 
-type TimesMap = {
-  [key: string]: { observation: number; forecast: number } | undefined;
+type Layer = {
+  id: number;
+  type: string;
+  name: { [lang: string]: string };
+  times: {
+    observation?: { timeStep: number; stepAmount: number };
+    forecast?: { timeStep: number; stepAmount: number };
+  };
 };
 
 // 60 minutes = 3600 seconds
@@ -38,32 +44,44 @@ const STEP_30 = 1800;
 // 15 minutes = 900 seconds
 const STEP_15 = 900;
 
-export const getSliderMaxUnix = (sliderStep: number): number => {
+export const getSliderMaxUnix = (layerId: number | undefined): number => {
   const now = moment.utc().unix();
-  const times = configJSON?.map?.times as TimesMap;
-  const forecastSteps = times[sliderStep.toString()]?.forecast || 5;
+  const layer: Layer | undefined = configJSON?.map?.layers.find(
+    (l) => l.id === layerId
+  );
+  if (!layerId || !layer) return now;
 
-  if (sliderStep === 60) {
-    return now + forecastSteps * STEP_60;
-  }
-  if (sliderStep === 30) {
-    return now + forecastSteps * STEP_30;
-  }
-  return now + forecastSteps * STEP_15;
+  const stepObj =
+    'observation' in layer.times
+      ? layer?.times.observation
+      : layer?.times.forecast;
+
+  if (!stepObj) return now;
+  const stepSeconds = getSliderStepSeconds(stepObj.timeStep);
+
+  const steps = stepObj.stepAmount || 5;
+
+  return now + steps * stepSeconds;
 };
 
-export const getSliderMinUnix = (sliderStep: number): number => {
+export const getSliderMinUnix = (layerId: number | undefined): number => {
   const now = moment.utc().unix();
-  const times = configJSON?.map?.times as TimesMap;
-  const observationSteps = times[sliderStep.toString()]?.observation || 5;
+  const layer: Layer | undefined = configJSON?.map?.layers.find(
+    (l) => l.id === layerId
+  );
+  if (!layerId || !layer) return now;
 
-  if (sliderStep === 60) {
-    return now - observationSteps * STEP_60;
-  }
-  if (sliderStep === 30) {
-    return now - observationSteps * STEP_30;
-  }
-  return now - observationSteps * STEP_15;
+  const stepObj =
+    'forecast' in layer.times
+      ? layer?.times.forecast
+      : layer?.times.observation;
+
+  if (!stepObj) return now;
+  const stepSeconds = getSliderStepSeconds(stepObj.timeStep);
+
+  const steps = stepObj.stepAmount || 5;
+
+  return now - steps * stepSeconds;
 };
 
 export const getSliderStepSeconds = (sliderStep: number): number => {
@@ -71,113 +89,125 @@ export const getSliderStepSeconds = (sliderStep: number): number => {
   if (sliderStep === 30) return STEP_30;
   return STEP_15;
 };
-export const getRainRadarUrlsAndBounds = async (): Promise<
-  MapOverlay | undefined
+
+export const getWMSLayerUrlsAndBounds = async (): Promise<
+  Map<number, MapOverlay> | undefined
 > => {
-  const toReturn = {
-    observation: {
-      bounds: undefined,
-      url: undefined,
-      end: undefined,
-    },
-    forecast: {
-      bounds: undefined,
-      url: undefined,
-      start: undefined,
-    },
-  } as MapOverlay;
+  const capabilitiesData = new Map();
+  const overlayMap = new Map();
 
   const sources = configJSON.map?.sources as { [key: string]: string };
-  const layers = configJSON.map?.layers?.find((layer) => layer.type === 'rain')
-    ?.sources as {
-    source: string;
-    layer: string;
-    type: string;
-  }[];
-
-  const rainRadarSources = Object.entries(sources)
-    .map(([key, value]) => layers.some((l) => l.source === key) && value)
-    .filter((x) => !!x);
+  const layers = configJSON.map?.layers.filter((layer) => layer.type === 'WMS');
+  const allLayerNames = layers
+    .map((layer) => layer.sources.map((lSrc) => lSrc.layer))
+    .flat();
 
   await Promise.all(
-    rainRadarSources.map(async (url) => {
+    Object.entries(sources).map(async ([src, url]) => {
       const capabilitiesUrl = `${url}&request=GetCapabilities`;
+
       const textRes = await fetch(capabilitiesUrl).then((res) => res.text());
 
-      const obj = parse(textRes, {
+      const parsedResponse = parse(textRes, {
         attributeNamePrefix: '',
         ignoreAttributes: false,
         ignoreNameSpace: false,
         textNodeName: 'text',
       });
 
-      // layers array is nested in the response as Layer
       const {
         WMS_Capabilities: {
           Capability: {
             Layer: { Layer },
           },
         },
-      } = obj;
+      } = parsedResponse;
 
-      layers.forEach((layer) => {
-        const rainRadarLayer = Layer.find(
-          (l: WmsLayer) => l.Name === layer.layer
-        );
+      const filteredLayers = Layer.filter((L: WmsLayer) =>
+        allLayerNames.includes(L.Name)
+      );
 
-        const { BoundingBox } = rainRadarLayer;
-        const [layerStart, layerEnd] = rainRadarLayer.Dimension.text.split('/');
-        console.log('LAYER:START-END', layer.type, layerStart, layerEnd);
-        const boundingBox84 = BoundingBox.find(
-          (box: BoundingBox) => box.CRS === 'CRS:84'
-        );
-        const { minx, miny, maxx, maxy } = boundingBox84;
-        const [numMinX, numMinY, numMaxX, numMaxY] = [
-          Number(minx),
-          Number(miny),
-          Number(maxx),
-          Number(maxy),
-        ];
-        const [minX, minY] = proj4('WGS84', 'EPSG:3857', [numMinX, numMinY]);
-        const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [numMaxX, numMaxY]);
-
-        const bbox = `${minX},${minY},${maxX},${maxY}`;
-
-        const overlayBounds = {
-          bottomLeft: [numMinY, numMinX],
-          bottomRight: [numMinY, numMaxX],
-          topLeft: [numMaxY, numMinX],
-          topRight: [numMaxY, numMaxX],
-        } as { [key: string]: [number, number] };
-
-        const query = new URLSearchParams({
-          service: 'WMS',
-          version: '1.3.0',
-          request: 'GetMap',
-          transparent: 'true',
-          layers: layer.layer,
-          bbox,
-          width: '727',
-          height: '1152',
-          format: 'image/png',
-          srs: 'EPSG:3857',
-        });
-
-        const overlayUrl = `${url}${query.toString()}`;
-
-        if (layer.type === 'observation') {
-          toReturn.observation.bounds = overlayBounds;
-          toReturn.observation.url = overlayUrl;
-          toReturn.observation.end = layerEnd;
-        }
-        if (layer.type === 'forecast') {
-          toReturn.forecast.bounds = overlayBounds;
-          toReturn.forecast.url = overlayUrl;
-          toReturn.forecast.start = layerStart;
-        }
-      });
+      capabilitiesData.set(src, filteredLayers);
     })
   );
 
-  return toReturn;
+  layers.forEach((layer) => {
+    const toReturn = {} as MapOverlay;
+
+    layer.sources.forEach((layerSrc) => {
+      const wmsLayer = capabilitiesData
+        .get(layerSrc.source)
+        .find((src: WmsLayer) => src.Name === layerSrc.layer);
+
+      const { BoundingBox } = wmsLayer;
+      const [layerStart, layerEnd] = Array.isArray(wmsLayer.Dimension)
+        ? wmsLayer.Dimension[0].text.split('/')
+        : wmsLayer.Dimension.text.split('/');
+
+      const boundingBox84 = BoundingBox.find(
+        (box: BoundingBox) => box.CRS === 'CRS:84'
+      );
+      const { minx, miny, maxx, maxy } = boundingBox84;
+      const [numMinX, numMinY, numMaxX, numMaxY] = [
+        Number(minx),
+        Number(miny),
+        Number(maxx),
+        Number(maxy),
+      ];
+      const [minX, minY] = proj4('WGS84', 'EPSG:3857', [numMinX, numMinY]);
+      const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [numMaxX, numMaxY]);
+
+      const bbox = `${minX},${minY},${maxX},${maxY}`;
+
+      const overlayBounds = {
+        bottomLeft: [numMinY, numMinX],
+        bottomRight: [numMinY, numMaxX],
+        topLeft: [numMaxY, numMinX],
+        topRight: [numMaxY, numMaxX],
+      } as { [key: string]: [number, number] };
+
+      const url = sources[layerSrc.source];
+
+      const query = new URLSearchParams({
+        service: 'WMS',
+        version: '1.3.0',
+        request: 'GetMap',
+        transparent: 'true',
+        layers: layerSrc.layer,
+        bbox,
+        width: '727',
+        height: '1152',
+        format: 'image/png',
+        srs: 'EPSG:3857',
+        opacity: '60',
+      });
+
+      const overlayUrl = `${url}${query.toString()}`;
+
+      if (layerSrc.type === 'observation') {
+        Object.assign(toReturn, {
+          observation: {
+            bounds: overlayBounds,
+            url: overlayUrl,
+            start: layerStart,
+            end: layerEnd,
+          },
+        });
+      }
+      if (layerSrc.type === 'forecast') {
+        Object.assign(toReturn, {
+          forecast: {
+            bounds: overlayBounds,
+            url: overlayUrl,
+            start: layerStart,
+            end: layerEnd,
+          },
+        });
+      }
+    });
+
+    overlayMap.set(layer.id, toReturn);
+  });
+
+  return overlayMap;
 };

@@ -9,7 +9,7 @@ import { getDistance } from 'geolib';
 
 import MapControls from '@components/map/ui/MapControls';
 import RainRadarOverlay from '@components/map/layers/RainRadarOverlay';
-import TimeStepBottomSheet from '@components/map/sheets/TimeStepBottomSheet';
+// import TimeStepBottomSheet from '@components/map/sheets/TimeStepBottomSheet';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapMarker from '@components/map/layers/MapMarker';
@@ -45,6 +45,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type MapScreenProps = PropsFromRedux & {
   navigation: StackNavigationProp<MapStackParamList, 'Map'>;
   route: RouteProp<MapStackParamList, 'Map'>;
+  id: number;
 };
 
 const MapScreen: React.FC<MapScreenProps> = ({
@@ -55,7 +56,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const { colors, dark } = useTheme();
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const mapRef = useRef() as React.MutableRefObject<MapView>;
-  const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  // const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
@@ -129,7 +130,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
         )}
       </MapView>
       <MapControls
-        onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
         onZoomIn={() => handleZoomIn()}
@@ -167,7 +167,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         />
       </RBSheet>
 
-      <RBSheet
+      {/* <RBSheet
         ref={timeStepSheetRef}
         height={300}
         closeOnDragDown
@@ -178,7 +178,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
           },
         }}>
         <TimeStepBottomSheet onClose={() => timeStepSheetRef.current.close()} />
-      </RBSheet>
+      </RBSheet> */}
     </SafeAreaView>
   );
 };

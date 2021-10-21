@@ -4,21 +4,28 @@ import { View, StyleSheet, Text, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@components/common/Icon';
 import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
-import { selectMapLayers } from '@store/map/selectors';
-import { updateMapLayers as updateMapLayersAction } from '@store/map/actions';
+import { selectMapLayers, selectActiveOverlay } from '@store/map/selectors';
+import {
+  updateMapLayers as updateMapLayersAction,
+  updateActiveOverlay as updateActiveOverlayAction,
+  updateSliderStep as updateSliderStepAction,
+} from '@store/map/actions';
 
-import { WHITE, SECONDARY_BLUE, GRAYISH_BLUE, GRAY_1 } from '@utils/colors';
+import { WHITE, SECONDARY_BLUE, GRAYISH_BLUE } from '@utils/colors';
+import configJSON from '@utils/config.json';
 
 const mapStateToProps = (state: State) => ({
+  activeOverlay: selectActiveOverlay(state),
   mapLayers: selectMapLayers(state),
 });
 
 const mapDispatchToProps = {
   updateMapLayers: updateMapLayersAction,
+  updateActiveOverlay: updateActiveOverlayAction,
+  updateSliderStep: updateSliderStepAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -30,11 +37,16 @@ type MapLayersBottomSheetProps = PropsFromRedux & {
 };
 
 const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
+  activeOverlay,
   onClose,
   mapLayers,
   updateMapLayers,
+  updateActiveOverlay,
+  updateSliderStep,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+
   const { colors } = useTheme();
   return (
     <View style={styles.sheetListContainer}>
@@ -79,74 +91,42 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
 
       <View style={styles.sheetTitle}>
         <Text style={[styles.title, { color: colors.text }]}>
-          {t('map:layersBottomSheet:localWeatherTitle')}
-        </Text>
-      </View>
-      <View
-        style={[
-          styles.rowWrapper,
-          styles.withBorderBottom,
-          { borderBottomColor: colors.border },
-        ]}>
-        <View style={styles.row}>
-          <Text style={[styles.text, { color: colors.text }]}>
-            {t('map:layersBottomSheet:showOnMap')}
-          </Text>
-          <Switch
-            trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-            thumbColor={WHITE}
-            ios_backgroundColor={GRAYISH_BLUE}
-            value={mapLayers.weather}
-            onValueChange={() =>
-              updateMapLayers({ ...mapLayers, weather: !mapLayers.weather })
-            }
-          />
-        </View>
-        <View style={[styles.row, styles.innerRow]}>
-          <Text style={[styles.text, { color: colors.text }]}>
-            {t('map:layersBottomSheet:temperatureAndWeather')}
-          </Text>
-          <Icon
-            name="radio-button-on"
-            width={22}
-            height={22}
-            style={{ color: SECONDARY_BLUE }}
-          />
-        </View>
-        <View style={[styles.row, styles.innerRow]}>
-          <Text style={[styles.text, { color: colors.text }]}>
-            {t('map:layersBottomSheet:precipitationAndPropability')}
-          </Text>
-          <Icon
-            name="radio-button-off"
-            width={22}
-            height={22}
-            style={{ color: GRAY_1 }}
-          />
-        </View>
-      </View>
-
-      <View style={styles.sheetTitle}>
-        <Text style={[styles.title, { color: colors.text }]}>
           {t('map:layersBottomSheet:mapLayersTitle')}
         </Text>
       </View>
-      <View style={styles.rowWrapper}>
-        <View style={styles.row}>
-          <Text style={[styles.text, { color: colors.text }]}>
-            {t('map:layersBottomSheet:rainRadar')}
-          </Text>
-          <Switch
-            trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-            thumbColor={WHITE}
-            ios_backgroundColor={GRAYISH_BLUE}
-            value={mapLayers.radar}
-            onValueChange={() =>
-              updateMapLayers({ ...mapLayers, radar: !mapLayers.radar })
-            }
-          />
-        </View>
-      </View>
+      {configJSON &&
+        configJSON.map.layers.length > 0 &&
+        configJSON.map.layers.map(
+          (layer: {
+            id: number;
+            type: string;
+            name: { [lang: string]: string };
+            times: {
+              observation?: { timeStep: number; stepAmount: number };
+              forecast?: { timeStep: number; stepAmount: number };
+            };
+          }) => (
+            <View key={layer.id} style={styles.row}>
+              <Text style={[styles.text, { color: colors.text }]}>
+                {(layer?.name && layer?.name[locale]) || ''}
+              </Text>
+              <Switch
+                trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
+                thumbColor={WHITE}
+                ios_backgroundColor={GRAYISH_BLUE}
+                value={activeOverlay === layer.id}
+                onValueChange={() => {
+                  updateActiveOverlay(layer.id);
+                  const step =
+                    layer.times.observation?.timeStep ||
+                    layer.times.forecast?.timeStep;
+                  console.log(layer.times);
+                  updateSliderStep(step || 15);
+                }}
+              />
+            </View>
+          )
+        )}
     </View>
   );
 };
@@ -180,9 +160,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: 10,
-  },
-  innerRow: {
-    paddingHorizontal: 12,
   },
   title: {
     fontSize: 16,

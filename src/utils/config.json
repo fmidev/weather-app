@@ -6,7 +6,8 @@
     },
     "layers": [
       {
-        "type": "rain",
+        "id": 1,
+        "type": "WMS",
         "name": {
           "en": "Rain radar",
           "fi": "Sadetutka"
@@ -23,22 +24,62 @@
             "layer": "Radar:suomi_tuliset_rr_eureffin",
             "type": "forecast"
           }
-        ]
-      }
-    ],
-    "times": {
-      "15": {
-        "forecast": 8,
-        "observation": 8
+        ],
+        "times": {
+          "observation": {
+            "timeStep": 30,
+            "stepAmount": 10
+          },
+          "forecast": {
+            "timeStep": 60,
+            "stepAmount": 8
+          }
+        }
       },
-      "30": {
-        "forecast": 8,
-        "observation": 8
+      {
+        "id": 2,
+        "type": "WMS",
+        "name": {
+          "en": "Surgavere",
+          "fi": "Surgavere cappi 500"
+        },
+        "legend": "joku urli 2",
+        "sources": [
+          {
+            "source": "geoserver",
+            "layer": "Radar:surgavere_cappi_500",
+            "type": "observation"
+          }
+        ],
+        "times": {
+          "observation": {
+            "timeStep": 15,
+            "stepAmount": 10
+          }
+        }
       },
-      "60": {
-        "forecast": 8,
-        "observation": 8
+      {
+        "id": 3,
+        "type": "WMS",
+        "name": {
+          "en": "Utajärvi radar",
+          "fi": "Utajärvi tutka"
+        },
+        "legend": "joku urli 2",
+        "sources": [
+          {
+            "source": "geoserver",
+            "layer": "Radar:utajarvi_dbzh",
+            "type": "observation"
+          }
+        ],
+        "times": {
+          "observation": {
+            "timeStep": 30,
+            "stepAmount": 10
+          }
+        }
       }
-    }
+    ]
   }
 }

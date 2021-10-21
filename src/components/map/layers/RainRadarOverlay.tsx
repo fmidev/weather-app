@@ -4,6 +4,8 @@ import { Image, ImageURISource, Platform } from 'react-native';
 import { Overlay } from 'react-native-maps';
 import moment from 'moment';
 
+import configJSON from '@utils/config.json';
+
 import {
   getSliderMaxUnix,
   getSliderMinUnix,
@@ -12,14 +14,30 @@ import {
 
 import { State } from '@store/types';
 import { MapOverlay } from '@store/map/types';
-import { selectSliderTime, selectSliderStep } from '@store/map/selectors';
+import {
+  selectActiveOverlay,
+  selectSliderTime,
+  selectSliderStep,
+  selectIsObservation,
+} from '@store/map/selectors';
+import {
+  updateIsObservation as updateIsObservationAction,
+  updateSliderStep as updateSliderStepAction,
+} from '@store/map/actions';
 
 const mapStateToProps = (state: State) => ({
+  activeOverlayId: selectActiveOverlay(state),
   sliderTime: selectSliderTime(state),
   sliderStep: selectSliderStep(state),
+  isObservation: selectIsObservation(state),
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = {
+  updateIsObservation: updateIsObservationAction,
+  updateSliderStep: updateSliderStepAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -28,9 +46,13 @@ type RainRadarProps = PropsFromRedux & {
 };
 
 const RainRadarOverlay: React.FC<RainRadarProps> = ({
+  activeOverlayId,
   sliderTime,
   sliderStep,
   overlay,
+  isObservation,
+  updateIsObservation,
+  updateSliderStep,
 }) => {
   const { observation, forecast } = overlay;
   const [hasPrefetched, setHasPrefetched] = useState<boolean>(false);
@@ -43,8 +65,8 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({
   const currentStep = getSliderStepSeconds(sliderStep);
   const roundStep = (v: number) => Math.round(v / step60) * step60;
 
-  const minUnix = roundStep(getSliderMinUnix(60));
-  const maxUnix = roundStep(getSliderMaxUnix(60));
+  const minUnix = roundStep(getSliderMinUnix(activeOverlayId));
+  const maxUnix = roundStep(getSliderMaxUnix(activeOverlayId));
 
   const prefetchImages = async (urls: string[]) => {
     try {
@@ -66,13 +88,49 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({
   };
 
   useEffect(() => {
+    if (activeOverlayId) {
+      const layer = configJSON.map.layers.find((l) => l.id === activeOverlayId);
+      if (
+        current < forecastDateStart &&
+        !!layer?.times.forecast &&
+        !!layer.times.observation &&
+        !isObservation
+      ) {
+        updateIsObservation(true);
+        if (sliderStep !== layer.times.observation.timeStep) {
+          updateSliderStep(layer.times.observation.timeStep);
+        }
+      }
+      if (
+        current >= forecastDateStart &&
+        !!layer?.times.forecast &&
+        !!layer.times.observation &&
+        isObservation
+      ) {
+        updateIsObservation(false);
+        if (sliderStep !== layer.times.forecast.timeStep) {
+          updateSliderStep(layer.times.forecast.timeStep);
+        }
+      }
+    }
+  }, [
+    activeOverlayId,
+    isObservation,
+    updateIsObservation,
+    forecastDateStart,
+    current,
+    updateSliderStep,
+    sliderStep,
+  ]);
+
+  useEffect(() => {
     if (forecast && forecast.start) {
       setForecastDateStart(forecast.start);
     }
   }, [forecast]);
 
   useEffect(() => {
-    if (!!observation && !!forecast && !!observation.url && !!forecast.url) {
+    if (!!observation?.url || !!forecast?.url) {
       let allDatesUnix: number[] = [];
       let curr = minUnix;
       while (curr <= maxUnix) {
@@ -85,16 +143,21 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({
 
       const urls = timeStamps.map((stamp) => {
         const baseUrl =
-          stamp >= forecastDateStart
-            ? overlay.forecast.url
-            : overlay.observation.url;
+          stamp >= forecastDateStart ? forecast?.url : observation?.url;
+        if (!baseUrl) return false;
         return `${baseUrl}&time=${stamp}`;
       });
 
-      prefetchImages(urls).then((data) => console.log('prefetch', data));
+      const filteredUrls = urls.filter((x) => !!x) as string[];
+
+      prefetchImages(filteredUrls).then((data) => {
+        if (data) console.log('prefetch done');
+      });
 
       // DEV: only to check if prefetch was succesful
-      checkCache(urls).then((data) => console.log('cache', data));
+      checkCache(filteredUrls).then((data) => {
+        if (data) console.log('cache hit');
+      });
 
       setHasPrefetched(true);
     }
@@ -104,20 +167,20 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({
 
   const layerBounds =
     current >= forecastDateStart
-      ? (forecast.bounds as { [key: string]: [number, number] })
-      : (observation.bounds as { [key: string]: [number, number] });
+      ? (forecast?.bounds as { [key: string]: [number, number] })
+      : (observation?.bounds as { [key: string]: [number, number] });
 
   const bounds: [[number, number], [number, number]] =
     Platform.OS === 'ios'
-      ? [layerBounds.bottomLeft, layerBounds.topRight]
-      : [layerBounds.topLeft, layerBounds.bottomRight];
+      ? [layerBounds?.bottomLeft, layerBounds?.topRight]
+      : [layerBounds?.topLeft, layerBounds?.bottomRight];
 
-  const baseUrl = current >= forecastDateStart ? forecast.url : observation.url;
+  const baseUrl =
+    current >= forecastDateStart ? forecast?.url : observation?.url;
 
   const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
 
-  // console.log('IMG', image, hasPrefetched);
-  // wait until images are cached
+  // return null until something to return
   if (!hasPrefetched || !image || !bounds) return null;
 
   return <Overlay bounds={bounds} image={image} />;

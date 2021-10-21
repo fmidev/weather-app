@@ -12,7 +12,8 @@ import { State } from '@store/types';
 import {
   selectSliderStep,
   selectSliderTime,
-  selectObservationEnd,
+  selectActiveOverlay,
+  selectOverlay,
 } from '@store/map/selectors';
 import { updateSliderTime as updateSliderTimeAction } from '@store/map/actions';
 
@@ -25,9 +26,10 @@ import {
 import { WHITE, SECONDARY_BLUE, SHADOW, CustomTheme } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
+  activeOverlayId: selectActiveOverlay(state),
   sliderStep: selectSliderStep(state),
   sliderTime: selectSliderTime(state),
-  layerObservationEnd: selectObservationEnd(state),
+  overlay: selectOverlay(state),
 });
 
 const mapDispatchToProps = {
@@ -38,28 +40,59 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type TimeSliderProps = PropsFromRedux & {
-  onTimeStepPressed: () => void;
-};
+type TimeSliderProps = PropsFromRedux & {};
 
 const TimeSlider: React.FC<TimeSliderProps> = ({
-  onTimeStepPressed,
+  activeOverlayId,
   sliderStep,
   sliderTime,
   updateSliderTime,
-  layerObservationEnd,
+  overlay,
 }) => {
   const { t } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
 
   const currentSliderTime = moment.unix(sliderTime).format('HH:mm');
 
-  const min = getSliderMinUnix(sliderStep);
-  const max = getSliderMaxUnix(sliderStep);
+  const observationStart = moment(overlay?.observation?.start).unix();
+  const observationEnd = moment(overlay?.observation?.end).unix();
+  const forecastStart = moment(overlay?.forecast?.start).unix();
+  const forecastEnd = moment(overlay?.forecast?.end).unix();
+
+  const sliderMinUnix = getSliderMinUnix(activeOverlayId);
+  const sliderMaxUnix = getSliderMaxUnix(activeOverlayId);
+
+  const getSliderMinValue = () => {
+    if (overlay?.observation) {
+      return observationStart > sliderMinUnix
+        ? observationStart
+        : sliderMinUnix;
+    }
+    if (!overlay?.observation && !!overlay?.forecast) {
+      return forecastStart > sliderMinUnix ? forecastStart : sliderMinUnix;
+    }
+    return sliderMinUnix;
+  };
+
+  const getSliderMaxValue = () => {
+    if (overlay?.forecast) {
+      return forecastEnd < sliderMaxUnix ? forecastEnd : sliderMaxUnix;
+    }
+    if (!overlay?.forecast && !!overlay?.observation) {
+      return observationEnd < sliderMaxUnix ? observationEnd : sliderMaxUnix;
+    }
+    return sliderMaxUnix;
+  };
+
+  const min = getSliderMinValue();
+  const max = getSliderMaxValue();
   const step = getSliderStepSeconds(sliderStep);
 
   // note: moment treats moment(undefined) as moment()
-  const initialTime = moment(layerObservationEnd).utc().startOf('hour').unix();
+  const initialTime = moment(overlay?.observation?.end)
+    .utc()
+    .startOf('hour')
+    .unix();
 
   const roundStep = (v: number): number => Math.round(v / step) * step;
 
@@ -102,21 +135,17 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             value={initialTime} // provide initial slider value
           />
         </View>
-        <TouchableOpacity
-          onPress={onTimeStepPressed}
-          accessibilityLabel={t('map:selectionButtonAccessibilityLabel')}>
-          <View
+        <View
+          style={[
+            styles.stepSelector,
+            { backgroundColor: colors.timeStepBackground },
+          ]}>
+          <Text
             style={[
-              styles.stepSelector,
-              { backgroundColor: colors.timeStepBackground },
-            ]}>
-            <Text
-              style={[
-                styles.stepText,
-                { color: colors.text },
-              ]}>{`${sliderStep} min`}</Text>
-          </View>
-        </TouchableOpacity>
+              styles.stepText,
+              { color: colors.text },
+            ]}>{`${sliderStep} min`}</Text>
+        </View>
       </View>
     </View>
   );

@@ -6,7 +6,6 @@ import TimeSlider from './TimeSlider';
 import RelocateButton from './RelocateButton';
 
 type MapControlsProps = {
-  onTimeStepPressed: () => void;
   onLayersPressed: () => void;
   onInfoPressed: () => void;
   onZoomIn: () => void;
@@ -16,7 +15,6 @@ type MapControlsProps = {
 };
 
 const MapControls: React.FC<MapControlsProps> = ({
-  onTimeStepPressed,
   onLayersPressed,
   onInfoPressed,
   onZoomIn,
@@ -61,7 +59,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         icon="layers"
         iconSize={26}
       />
-      <TimeSlider onTimeStepPressed={onTimeStepPressed} />
+      <TimeSlider />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { getRainRadarUrlsAndBounds } from '@utils/map';
+import { getWMSLayerUrlsAndBounds } from '@utils/map';
 import {
   MapLayers,
   MapActionTypes,
@@ -8,6 +8,8 @@ import {
   ANIMATE_TO_AREA,
   UPDATE_MAP_LAYERS,
   INITIALIZE_OVERLAYS,
+  UPDATE_ACTIVE_OVERLAY,
+  UPDATE_IS_OBSERVATION,
 } from './types';
 
 export const updateSliderTime = (time: number) => (
@@ -37,11 +39,23 @@ export const updateMapLayers = (layers: MapLayers) => (
 export const initializeOverlays = () => (
   dispatch: Dispatch<MapActionTypes>
 ) => {
-  getRainRadarUrlsAndBounds()
-    .then((rainOverlay) => {
-      if (rainOverlay) {
-        dispatch({ type: INITIALIZE_OVERLAYS, overlays: [rainOverlay] });
+  let overlays;
+  getWMSLayerUrlsAndBounds()
+    .then((overlayMap) => {
+      if (overlayMap) {
+        overlays = overlayMap;
+        const activeId = overlayMap.keys().next().value;
+        dispatch({ type: INITIALIZE_OVERLAYS, overlays });
+        dispatch({ type: UPDATE_ACTIVE_OVERLAY, activeId });
       }
     })
     .catch((e) => console.error(e));
 };
+
+export const updateActiveOverlay = (id: number) => (
+  dispatch: Dispatch<MapActionTypes>
+) => dispatch({ type: UPDATE_ACTIVE_OVERLAY, activeId: id });
+
+export const updateIsObservation = (value: boolean) => (
+  dispatch: Dispatch<MapActionTypes>
+) => dispatch({ type: UPDATE_IS_OBSERVATION, value });

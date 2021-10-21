@@ -13,7 +13,9 @@ describe('map reducer', () => {
     sliderTime,
     sliderStep: 60,
     animateToArea: false,
-    overlays: [],
+    overlays: undefined,
+    activeOverlay: 0,
+    isObservation: false,
   };
 
   it('should handle ANIMATE_TO_AREA', () => {
@@ -89,14 +91,16 @@ describe('map reducer', () => {
       },
     } as types.MapOverlay;
 
+    const overlayMap = new Map([[1, dummyOverlay]]);
+
     expect(
       reducer(initial, {
         type: types.INITIALIZE_OVERLAYS,
-        overlays: [dummyOverlay],
+        overlays: overlayMap,
       })
     ).toEqual({
       ...initial,
-      overlays: [dummyOverlay],
+      overlays: overlayMap,
     });
   });
 });

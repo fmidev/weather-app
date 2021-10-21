@@ -29,13 +29,24 @@ export const selectDisplayLocation = createSelector<State, MapLayers, boolean>(
   (layers) => layers.location
 );
 
-export const selectOverlay = createSelector<State, MapState, MapOverlay>(
+export const selectActiveOverlay = createSelector<State, MapState, number>(
   selectMapDomain,
-  (map) => map.overlays[0] // TODO: should select overlay with key
+  (map) => map.activeOverlay
 );
 
-export const selectObservationEnd = createSelector<
+export const selectOverlay = createSelector<
   State,
-  MapOverlay,
-  string | undefined
->(selectOverlay, (overlay) => overlay?.observation.end);
+  MapState,
+  number | undefined,
+  MapOverlay | undefined
+>([selectMapDomain, selectActiveOverlay], (map, activeOverlay) => {
+  if (map.overlays && activeOverlay) {
+    return map.overlays.get(activeOverlay);
+  }
+  return undefined;
+});
+
+export const selectIsObservation = createSelector<State, MapState, boolean>(
+  selectMapDomain,
+  (map) => map.isObservation
+);
