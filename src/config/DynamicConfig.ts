@@ -1,6 +1,5 @@
-import axios from 'axios';
-
 import { ConfigType } from '@config';
+import axiosClient from '@utils/axiosClient';
 
 class DynamicConfig {
   private config!: ConfigType;
@@ -65,7 +64,8 @@ class DynamicConfig {
     this.updating = true;
 
     try {
-      const { data }: { data: ConfigType } = await axios.get(this.apiUrl, {
+      const { data } = await axiosClient({
+        url: this.apiUrl,
         timeout: this.timeout,
       });
       if (data) {

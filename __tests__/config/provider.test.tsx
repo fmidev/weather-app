@@ -7,6 +7,14 @@ import { Config, ConfigProvider } from '@config';
 import defaultConfig from './testConfig';
 
 jest.mock('axios');
+jest.spyOn(axios.CancelToken, 'source').mockReturnValue({
+  cancel: jest.fn(),
+  token: {
+    promise: Promise.resolve({ message: 'test' }),
+    reason: { message: 'timeout' },
+    throwIfRequested: jest.fn(),
+  },
+});
 
 const TestComponent = () => <Text>{Config.get('weather').apiUrl}</Text>;
 
@@ -31,7 +39,7 @@ describe('ConfigProvider children renders', () => {
     const config = JSON.parse(JSON.stringify(defaultConfig));
     const data = {};
     // @ts-ignore
-    axios.get.mockImplementationOnce(() => Promise.resolve({ data }));
+    axios.mockImplementationOnce(() => Promise.resolve({ data }));
 
     const container = render(
       <ConfigProvider defaultConfig={config}>
@@ -52,7 +60,7 @@ describe('ConfigProvider children renders', () => {
     const config = JSON.parse(JSON.stringify(defaultConfig));
     const data = { weather: { apiUrl: 'newUrl' } };
     // @ts-ignore
-    axios.get.mockImplementationOnce(() => Promise.resolve({ data }));
+    axios.mockImplementationOnce(() => Promise.resolve({ data }));
 
     const container = render(
       <ConfigProvider defaultConfig={config}>
@@ -72,7 +80,7 @@ describe('ConfigProvider children renders', () => {
   it('Api call ( reject )', async () => {
     const config = JSON.parse(JSON.stringify(defaultConfig));
     // @ts-ignore
-    axios.get.mockImplementationOnce(() =>
+    axios.mockImplementationOnce(() =>
       Promise.reject(new TypeError('Network Error'))
     );
 
@@ -94,7 +102,7 @@ describe('ConfigProvider children renders', () => {
   it('Api call ( timeout )', async () => {
     const config = JSON.parse(JSON.stringify(defaultConfig));
     // @ts-ignore
-    axios.get.mockImplementationOnce(
+    axios.mockImplementationOnce(
       () =>
         new Promise((reject) => {
           const timeout = setTimeout(() => {
