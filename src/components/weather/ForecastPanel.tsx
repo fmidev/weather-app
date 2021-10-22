@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
   forecastContainer: {
     marginHorizontal: 8,
     marginBottom: 8,
+    flex: 1,
   },
   forecastText: {
     fontSize: 16,

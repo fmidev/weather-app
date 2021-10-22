@@ -59,5 +59,6 @@ export type CustomTheme = {
     warningsIconFill: string;
     selectedDayBackground: string;
     chartSecondaryLine: string;
+    hourListText: string;
   };
 };
