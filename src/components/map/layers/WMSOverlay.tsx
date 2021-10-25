@@ -28,11 +28,11 @@ const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type RainRadarProps = PropsFromRedux & {
+type WMSOverlayProps = PropsFromRedux & {
   overlay: MapOverlay;
 };
 
-const RainRadarOverlay: React.FC<RainRadarProps> = ({
+const WMSOverlay: React.FC<WMSOverlayProps> = ({
   activeOverlayId,
   sliderTime,
   sliderStep,
@@ -134,4 +134,4 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({
   return <Overlay bounds={bounds} image={image} />;
 };
 
-export default connector(RainRadarOverlay);
+export default connector(WMSOverlay);

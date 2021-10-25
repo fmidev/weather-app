@@ -8,8 +8,7 @@ import { RouteProp, useTheme } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 
 import MapControls from '@components/map/ui/MapControls';
-import RainRadarOverlay from '@components/map/layers/RainRadarOverlay';
-// import TimeStepBottomSheet from '@components/map/sheets/TimeStepBottomSheet';
+import WMSOverlay from '@components/map/layers/WMSOverlay';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapMarker from '@components/map/layers/MapMarker';
@@ -62,7 +61,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const { colors, dark } = useTheme();
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const mapRef = useRef() as React.MutableRefObject<MapView>;
-  // const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
@@ -130,7 +128,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}
         onRegionChangeComplete={checkDistanceToLocation}>
-        {overlay && <RainRadarOverlay overlay={overlay} />}
+        {overlay && <WMSOverlay overlay={overlay} />}
         {displayLocation && currentLocation && (
           <MapMarker
             coordinates={{
@@ -177,19 +175,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
           onClose={() => mapLayersSheetRef.current.close()}
         />
       </RBSheet>
-
-      {/* <RBSheet
-        ref={timeStepSheetRef}
-        height={300}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-        }}>
-        <TimeStepBottomSheet onClose={() => timeStepSheetRef.current.close()} />
-      </RBSheet> */}
     </SafeAreaView>
   );
 };
