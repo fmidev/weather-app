@@ -26,15 +26,27 @@ type WmsLayer = {
     units: string;
   };
 };
+type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
+  T,
+  Exclude<keyof T, Keys>
+> &
+  {
+    [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
+  }[Keys];
+
+type BaseTimes = {
+  timeStep: number;
+  observation?: number;
+  forecast?: number;
+};
+
+type Times = RequireAtLeastOne<BaseTimes, 'forecast' | 'observation'>;
 
 type Layer = {
   id: number;
   type: string;
   name: { [lang: string]: string };
-  times: {
-    observation?: { timeStep: number; stepAmount: number };
-    forecast?: { timeStep: number; stepAmount: number };
-  };
+  times: Times;
 };
 
 // 60 minutes = 3600 seconds
@@ -51,15 +63,11 @@ export const getSliderMaxUnix = (layerId: number | undefined): number => {
   );
   if (!layerId || !layer) return now;
 
-  const stepObj =
-    'observation' in layer.times
-      ? layer?.times.observation
-      : layer?.times.forecast;
+  const { times } = layer;
 
-  if (!stepObj) return now;
-  const stepSeconds = getSliderStepSeconds(stepObj.timeStep);
+  const stepSeconds = getSliderStepSeconds(times.timeStep);
 
-  const steps = stepObj.stepAmount || 5;
+  const steps = times.forecast || 0;
 
   return now + steps * stepSeconds;
 };
@@ -71,15 +79,11 @@ export const getSliderMinUnix = (layerId: number | undefined): number => {
   );
   if (!layerId || !layer) return now;
 
-  const stepObj =
-    'forecast' in layer.times
-      ? layer?.times.forecast
-      : layer?.times.observation;
+  const { times } = layer;
 
-  if (!stepObj) return now;
-  const stepSeconds = getSliderStepSeconds(stepObj.timeStep);
+  const stepSeconds = getSliderStepSeconds(times.timeStep);
 
-  const steps = stepObj.stepAmount || 5;
+  const steps = times.observation || 0;
 
   return now - steps * stepSeconds;
 };

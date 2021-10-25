@@ -8,7 +8,6 @@ import {
   MapActionTypes,
   MapState,
   UPDATE_ACTIVE_OVERLAY,
-  UPDATE_IS_OBSERVATION,
 } from './types';
 
 const INITIAL_STATE: MapState = {
@@ -22,7 +21,6 @@ const INITIAL_STATE: MapState = {
   animateToArea: false,
   overlays: undefined,
   activeOverlay: 0,
-  isObservation: false,
 };
 
 export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
@@ -66,13 +64,6 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       return {
         ...state,
         activeOverlay: action.activeId,
-      };
-    }
-
-    case UPDATE_IS_OBSERVATION: {
-      return {
-        ...state,
-        isObservation: action.value,
       };
     }
 

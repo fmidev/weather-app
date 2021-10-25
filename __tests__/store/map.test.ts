@@ -15,7 +15,6 @@ describe('map reducer', () => {
     animateToArea: false,
     overlays: undefined,
     activeOverlay: 0,
-    isObservation: false,
   };
 
   it('should handle ANIMATE_TO_AREA', () => {

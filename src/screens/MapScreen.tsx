@@ -108,7 +108,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const darkGoogleMapsStyle =
     dark && Platform.OS === 'android' ? darkMapStyle : [];
-
+  console.log('MapScreen:overlay', overlay);
   return (
     <SafeAreaView style={styles.mapContainer}>
       <MapView

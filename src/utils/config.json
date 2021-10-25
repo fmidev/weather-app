@@ -26,14 +26,9 @@
           }
         ],
         "times": {
-          "observation": {
-            "timeStep": 30,
-            "stepAmount": 10
-          },
-          "forecast": {
-            "timeStep": 60,
-            "stepAmount": 8
-          }
+          "timeStep": 60,
+          "observation": 10,
+          "forecast": 7
         }
       },
       {
@@ -52,10 +47,8 @@
           }
         ],
         "times": {
-          "observation": {
-            "timeStep": 15,
-            "stepAmount": 10
-          }
+          "timeStep": 15,
+          "observation": 10
         }
       },
       {
@@ -74,10 +67,8 @@
           }
         ],
         "times": {
-          "observation": {
-            "timeStep": 30,
-            "stepAmount": 10
-          }
+          "timeStep": 30,
+          "observation": 10
         }
       }
     ]

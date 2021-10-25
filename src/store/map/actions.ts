@@ -9,7 +9,6 @@ import {
   UPDATE_MAP_LAYERS,
   INITIALIZE_OVERLAYS,
   UPDATE_ACTIVE_OVERLAY,
-  UPDATE_IS_OBSERVATION,
 } from './types';
 
 export const updateSliderTime = (time: number) => (
@@ -55,7 +54,3 @@ export const initializeOverlays = () => (
 export const updateActiveOverlay = (id: number) => (
   dispatch: Dispatch<MapActionTypes>
 ) => dispatch({ type: UPDATE_ACTIVE_OVERLAY, activeId: id });
-
-export const updateIsObservation = (value: boolean) => (
-  dispatch: Dispatch<MapActionTypes>
-) => dispatch({ type: UPDATE_IS_OBSERVATION, value });

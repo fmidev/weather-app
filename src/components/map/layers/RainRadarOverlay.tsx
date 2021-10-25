@@ -4,8 +4,6 @@ import { Image, ImageURISource, Platform } from 'react-native';
 import { Overlay } from 'react-native-maps';
 import moment from 'moment';
 
-import configJSON from '@utils/config.json';
-
 import {
   getSliderMaxUnix,
   getSliderMinUnix,
@@ -18,26 +16,15 @@ import {
   selectActiveOverlay,
   selectSliderTime,
   selectSliderStep,
-  selectIsObservation,
 } from '@store/map/selectors';
-import {
-  updateIsObservation as updateIsObservationAction,
-  updateSliderStep as updateSliderStepAction,
-} from '@store/map/actions';
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
   sliderTime: selectSliderTime(state),
   sliderStep: selectSliderStep(state),
-  isObservation: selectIsObservation(state),
 });
 
-const mapDispatchToProps = {
-  updateIsObservation: updateIsObservationAction,
-  updateSliderStep: updateSliderStepAction,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -50,9 +37,6 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({
   sliderTime,
   sliderStep,
   overlay,
-  isObservation,
-  updateIsObservation,
-  updateSliderStep,
 }) => {
   const { observation, forecast } = overlay;
   const [hasPrefetched, setHasPrefetched] = useState<boolean>(false);
@@ -86,42 +70,6 @@ const RainRadarOverlay: React.FC<RainRadarProps> = ({
       return false;
     }
   };
-
-  useEffect(() => {
-    if (activeOverlayId) {
-      const layer = configJSON.map.layers.find((l) => l.id === activeOverlayId);
-      if (
-        current < forecastDateStart &&
-        !!layer?.times.forecast &&
-        !!layer.times.observation &&
-        !isObservation
-      ) {
-        updateIsObservation(true);
-        if (sliderStep !== layer.times.observation.timeStep) {
-          updateSliderStep(layer.times.observation.timeStep);
-        }
-      }
-      if (
-        current >= forecastDateStart &&
-        !!layer?.times.forecast &&
-        !!layer.times.observation &&
-        isObservation
-      ) {
-        updateIsObservation(false);
-        if (sliderStep !== layer.times.forecast.timeStep) {
-          updateSliderStep(layer.times.forecast.timeStep);
-        }
-      }
-    }
-  }, [
-    activeOverlayId,
-    isObservation,
-    updateIsObservation,
-    forecastDateStart,
-    current,
-    updateSliderStep,
-    sliderStep,
-  ]);
 
   useEffect(() => {
     if (forecast && forecast.start) {

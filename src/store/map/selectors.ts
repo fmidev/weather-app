@@ -45,8 +45,3 @@ export const selectOverlay = createSelector<
   }
   return undefined;
 });
-
-export const selectIsObservation = createSelector<State, MapState, boolean>(
-  selectMapDomain,
-  (map) => map.isObservation
-);

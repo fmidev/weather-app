@@ -102,8 +102,9 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
             type: string;
             name: { [lang: string]: string };
             times: {
-              observation?: { timeStep: number; stepAmount: number };
-              forecast?: { timeStep: number; stepAmount: number };
+              timeStep: number;
+              observation?: number;
+              forecast?: number;
             };
           }) => (
             <View key={layer.id} style={styles.row}>
@@ -117,11 +118,8 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 value={activeOverlay === layer.id}
                 onValueChange={() => {
                   updateActiveOverlay(layer.id);
-                  const step =
-                    layer.times.observation?.timeStep ||
-                    layer.times.forecast?.timeStep;
-                  console.log(layer.times);
-                  updateSliderStep(step || 15);
+                  const step = layer.times.timeStep;
+                  updateSliderStep(step);
                 }}
               />
             </View>

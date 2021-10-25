@@ -4,7 +4,6 @@ export const ANIMATE_TO_AREA = 'ANIMATE_TO_AREA';
 export const UPDATE_MAP_LAYERS = 'UPDATE_MAP_LAYERS';
 export const INITIALIZE_OVERLAYS = 'INITIALIZE_OVERLAYS';
 export const UPDATE_ACTIVE_OVERLAY = 'UPDATE_ACTIVE_OVERLAY';
-export const UPDATE_IS_OBSERVATION = 'UPDATE_IS_OBSERVATION';
 
 interface UpdateSliderTime {
   type: typeof UPDATE_SLIDER_TIME;
@@ -35,20 +34,13 @@ interface UpdateActiveOverlay {
   type: typeof UPDATE_ACTIVE_OVERLAY;
   activeId: number;
 }
-
-interface UpdateIsObservation {
-  type: typeof UPDATE_IS_OBSERVATION;
-  value: boolean;
-}
-
 export type MapActionTypes =
   | UpdateSliderTime
   | UpdateSliderStep
   | AnimateToArea
   | UpdateMapLayers
   | InitializeOverlays
-  | UpdateActiveOverlay
-  | UpdateIsObservation;
+  | UpdateActiveOverlay;
 
 export interface MapLayers {
   location: boolean;
@@ -74,5 +66,4 @@ export interface MapState {
   animateToArea: boolean;
   overlays: Map<number, MapOverlay> | undefined;
   activeOverlay: number;
-  isObservation: boolean;
 }
