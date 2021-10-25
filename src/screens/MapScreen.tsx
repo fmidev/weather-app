@@ -18,6 +18,7 @@ import { MapStackParamList } from '@navigators/types';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { selectDisplayLocation, selectOverlay } from '@store/map/selectors';
+import { initializeOverlays as initializeOverlaysAction } from '@store/map/actions';
 
 import darkMapStyle from '@utils/dark_map_style.json';
 
@@ -38,7 +39,11 @@ const mapStateToProps = (state: State) => ({
   displayLocation: selectDisplayLocation(state),
   overlay: selectOverlay(state),
 });
-const connector = connect(mapStateToProps, {});
+
+const mapDispatchToProps = {
+  initializeOverlays: initializeOverlaysAction,
+};
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -52,6 +57,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   currentLocation,
   displayLocation,
   overlay,
+  initializeOverlays,
 }) => {
   const { colors, dark } = useTheme();
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
@@ -59,6 +65,11 @@ const MapScreen: React.FC<MapScreenProps> = ({
   // const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+
+  useEffect(() => {
+    initializeOverlays();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (currentLocation) {
@@ -108,7 +119,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const darkGoogleMapsStyle =
     dark && Platform.OS === 'android' ? darkMapStyle : [];
-  console.log('MapScreen:overlay', overlay);
+
   return (
     <SafeAreaView style={styles.mapContainer}>
       <MapView

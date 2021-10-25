@@ -36,7 +36,7 @@ import HeaderButton from '@components/common/HeaderButton';
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
-import { initializeOverlays as initializeOverlaysAction } from '@store/map/actions';
+
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
 import { getGeolocation } from '@utils/helpers';
@@ -59,7 +59,6 @@ const mapStateToProps = (state: State) => ({
 const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
   setNavigationTab: setNavigationTabAction,
-  initializeOverlays: initializeOverlaysAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -82,7 +81,6 @@ const Navigator: React.FC<Props> = ({
   initialColorScheme,
   theme,
   initialTab,
-  initializeOverlays,
 }) => {
   const { t, ready } = useTranslation(['navigation', 'placeholder'], {
     useSuspense: false,
@@ -96,18 +94,6 @@ const Navigator: React.FC<Props> = ({
         Appearance.getColorScheme() === 'dark'));
 
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark());
-
-  console.log(
-    'TabNavigator rendering',
-    initialColorScheme,
-    theme,
-    useDarkTheme
-  );
-
-  useEffect(() => {
-    initializeOverlays();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
