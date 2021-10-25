@@ -1,7 +1,23 @@
 import { Location } from '@store/location/types';
 
-interface Layer {
+type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
+  T,
+  Exclude<keyof T, Keys>
+> &
+  {
+    [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
+  }[Keys];
+
+type BaseTimes = {
+  timeStep: number;
+  observation?: number;
+  forecast?: number;
+};
+
+type Times = RequireAtLeastOne<BaseTimes, 'forecast' | 'observation'>;
+export interface Layer {
   id: string | number;
+  type: 'WMS' | 'GeoJSON';
   name: { [lang: string]: string };
   legend: string;
   sources: {
@@ -10,7 +26,7 @@ interface Layer {
     type: 'observation' | 'forecast';
   }[];
 
-  times: { [timeStep: string]: { forecast?: number; observation?: number } };
+  times: Times;
 }
 
 interface Observation {

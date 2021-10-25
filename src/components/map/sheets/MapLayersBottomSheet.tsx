@@ -15,7 +15,7 @@ import {
 } from '@store/map/actions';
 
 import { WHITE, SECONDARY_BLUE, GRAYISH_BLUE } from '@utils/colors';
-import configJSON from '@utils/config.json';
+import { Config } from '@config';
 
 const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
@@ -46,6 +46,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
+  const { layers } = Config.get('map');
 
   const { colors } = useTheme();
   return (
@@ -94,37 +95,25 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
           {t('map:layersBottomSheet:mapLayersTitle')}
         </Text>
       </View>
-      {configJSON &&
-        configJSON.map.layers.length > 0 &&
-        configJSON.map.layers.map(
-          (layer: {
-            id: number;
-            type: string;
-            name: { [lang: string]: string };
-            times: {
-              timeStep: number;
-              observation?: number;
-              forecast?: number;
-            };
-          }) => (
-            <View key={layer.id} style={styles.row}>
-              <Text style={[styles.text, { color: colors.text }]}>
-                {(layer?.name && layer?.name[locale]) || ''}
-              </Text>
-              <Switch
-                trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-                thumbColor={WHITE}
-                ios_backgroundColor={GRAYISH_BLUE}
-                value={activeOverlay === layer.id}
-                onValueChange={() => {
-                  updateActiveOverlay(layer.id);
-                  const step = layer.times.timeStep;
-                  updateSliderStep(step);
-                }}
-              />
-            </View>
-          )
-        )}
+      {layers.length > 0 &&
+        layers.map((layer) => (
+          <View key={layer.id} style={styles.row}>
+            <Text style={[styles.text, { color: colors.text }]}>
+              {(layer?.name && layer?.name[locale]) || ''}
+            </Text>
+            <Switch
+              trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
+              thumbColor={WHITE}
+              ios_backgroundColor={GRAYISH_BLUE}
+              value={activeOverlay === layer.id}
+              onValueChange={() => {
+                updateActiveOverlay(Number(layer.id));
+                const step = layer.times.timeStep;
+                updateSliderStep(step);
+              }}
+            />
+          </View>
+        ))}
     </View>
   );
 };

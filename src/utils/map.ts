@@ -3,7 +3,8 @@ import proj4 from 'proj4';
 import { parse } from 'fast-xml-parser';
 
 import { MapOverlay } from '@store/map/types';
-import configJSON from '@utils/config.json';
+
+import { Config } from '@config';
 
 type BoundingBox = {
   CRS?: string;
@@ -26,28 +27,6 @@ type WmsLayer = {
     units: string;
   };
 };
-type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
-  T,
-  Exclude<keyof T, Keys>
-> &
-  {
-    [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
-  }[Keys];
-
-type BaseTimes = {
-  timeStep: number;
-  observation?: number;
-  forecast?: number;
-};
-
-type Times = RequireAtLeastOne<BaseTimes, 'forecast' | 'observation'>;
-
-type Layer = {
-  id: number;
-  type: string;
-  name: { [lang: string]: string };
-  times: Times;
-};
 
 // 60 minutes = 3600 seconds
 const STEP_60 = 3600;
@@ -58,9 +37,8 @@ const STEP_15 = 900;
 
 export const getSliderMaxUnix = (layerId: number | undefined): number => {
   const now = moment.utc().unix();
-  const layer: Layer | undefined = configJSON?.map?.layers.find(
-    (l) => l.id === layerId
-  );
+  const { layers } = Config.get('map');
+  const layer = layers.find((l) => l.id === layerId);
   if (!layerId || !layer) return now;
 
   const { times } = layer;
@@ -74,9 +52,8 @@ export const getSliderMaxUnix = (layerId: number | undefined): number => {
 
 export const getSliderMinUnix = (layerId: number | undefined): number => {
   const now = moment.utc().unix();
-  const layer: Layer | undefined = configJSON?.map?.layers.find(
-    (l) => l.id === layerId
-  );
+  const { layers } = Config.get('map');
+  const layer = layers.find((l) => l.id === layerId);
   if (!layerId || !layer) return now;
 
   const { times } = layer;
@@ -100,9 +77,10 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
   const capabilitiesData = new Map();
   const overlayMap = new Map();
 
-  const sources = configJSON.map?.sources as { [key: string]: string };
-  const layers = configJSON.map?.layers.filter((layer) => layer.type === 'WMS');
-  const allLayerNames = layers
+  const { sources, layers } = Config.get('map');
+
+  const wmsLayers = layers.filter((layer) => layer.type === 'WMS');
+  const allLayerNames = wmsLayers
     .map((layer) => layer.sources.map((lSrc) => lSrc.layer))
     .flat();
 
