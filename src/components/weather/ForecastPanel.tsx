@@ -25,6 +25,7 @@ import {
 
 import { CustomTheme } from '@utils/colors';
 
+import Icon from '@components/common/Icon';
 import CollapsibleListHeader from './common/CollapsibleListHeader';
 import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
@@ -95,36 +96,96 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         </Text>
       </View>
       <View style={styles.panelContainer}>
-        <View style={[styles.row, styles.justifyStart]}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setToDisplay(TABLE)}>
-            <Text
+        <View style={[styles.row]}>
+          <View style={[styles.row, styles.justifyStart]}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => setToDisplay(TABLE)}
               style={[
-                styles.forecastText,
-                styles.medium,
+                styles.contentSelectionContainer,
                 styles.withMarginRight,
-                toDisplay === TABLE && styles.selectedText,
                 {
-                  color: colors.primaryText,
+                  backgroundColor:
+                    toDisplay === TABLE
+                      ? colors.timeStepBackground
+                      : colors.inputButtonBackground,
+                  borderColor:
+                    toDisplay === TABLE
+                      ? colors.chartSecondaryLine
+                      : colors.secondaryBorder,
                 },
               ]}>
-              {t('table')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setToDisplay(CHART)}>
-            <Text
+              <Text
+                style={[
+                  styles.forecastText,
+                  styles.medium,
+                  toDisplay === TABLE && styles.selectedText,
+                  {
+                    color:
+                      toDisplay === TABLE
+                        ? colors.primaryText
+                        : colors.hourListText,
+                  },
+                ]}>
+                {t('table')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => setToDisplay(CHART)}
               style={[
-                styles.forecastText,
-                styles.medium,
-                toDisplay === CHART && styles.selectedText,
-                { color: colors.primaryText },
+                styles.contentSelectionContainer,
+                {
+                  backgroundColor:
+                    toDisplay === CHART
+                      ? colors.timeStepBackground
+                      : colors.inputButtonBackground,
+                  borderColor:
+                    toDisplay === CHART
+                      ? colors.chartSecondaryLine
+                      : colors.secondaryBorder,
+                },
               ]}>
-              {t('chart')}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.forecastText,
+                  styles.medium,
+                  toDisplay === CHART && styles.selectedText,
+                  {
+                    color:
+                      toDisplay === CHART
+                        ? colors.primaryText
+                        : colors.hourListText,
+                  },
+                ]}>
+                {t('chart')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.row, styles.justifyEnd]}>
+            <View
+              style={[styles.separator, { backgroundColor: colors.border }]}
+            />
+            <TouchableOpacity
+              style={styles.bottomSheetButton}
+              onPress={() => console.log('show settings bottom sheet')}>
+              <Icon
+                name="settings-outline"
+                color={colors.primaryText}
+                size={18}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.bottomSheetButton}
+              onPress={() => console.log('show info bottom sheet')}>
+              <Icon
+                name="info"
+                color={colors.primaryText}
+                height={18}
+                width={18}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
       <View style={[styles.forecastContainer]}>
@@ -259,18 +320,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forecastText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Roboto-Regular',
   },
   justifyStart: {
     justifyContent: 'flex-start',
   },
+  justifyEnd: {
+    justifyContent: 'flex-end',
+  },
   selectedText: {
     fontFamily: 'Roboto-Bold',
-    textDecorationLine: 'underline',
   },
   withMarginRight: {
     marginRight: 16,
+  },
+  contentSelectionContainer: {
+    borderWidth: 1.5,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 16,
+  },
+  separator: {
+    minHeight: '70%',
+    width: 1,
+  },
+  bottomSheetButton: {
+    padding: 10,
   },
 });
 

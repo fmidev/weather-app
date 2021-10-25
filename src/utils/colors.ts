@@ -60,5 +60,6 @@ export type CustomTheme = {
     selectedDayBackground: string;
     chartSecondaryLine: string;
     hourListText: string;
+    secondaryBorder: string;
   };
 };

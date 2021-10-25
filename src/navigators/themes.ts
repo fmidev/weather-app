@@ -38,6 +38,7 @@ export const lightTheme = {
     selectedDayBackground: PRIMARY_BLUE,
     chartSecondaryLine: SECONDARY_BLUE,
     hourListText: GRAY_4,
+    secondaryBorder: GRAY_1,
   },
 };
 
