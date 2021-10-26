@@ -112,3 +112,10 @@ export const selectMinimumsAndMaximums = createSelector(
     };
   }
 );
+export const selectDisplayParams = createSelector<
+  State,
+  ForecastState,
+  [number, string][]
+>(selectForecastDomain, (forecast) =>
+  forecast.displayParams.sort((a, b) => a[0] - b[0])
+);

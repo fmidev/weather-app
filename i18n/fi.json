@@ -26,6 +26,23 @@
       "previous24hAccessibilityLabel": "Näytä edelliset 24 tuntia",
       "next24h": "Seuraavat 24 h",
       "next24hAccessibilityLabel": "Näytä seuraavat 24 tuntia"
+    },
+    "paramsBottomSheet": {
+      "closeAccessibilityLabel": "Sulje tuntinäkymän suureiden valinta",
+      "title": "Tuntikohtainen näkymä",
+      "subTitle": "Valitse tuntinäkymässä näytettävät suureet",
+      "restoreButtonText": "Palauta oletus",
+      "restoreAccessibilityLabel": "Palauta oletusvalinnat",
+      "smartSymbol": "Sääsymboli",
+      "temperature": "Lämpötila (°C)",
+      "feelsLike": "Tuntuu kuin (°C)",
+      "windSpeedAndDir": "Tuulen nopeus (m/s) ja suunta",
+      "hourlymaximumgust": "Puuskanopeus (m/s)",
+      "precipitation1h": "Sademäärä (mm)",
+      "pop": "Sateen todennäköisyys (%)",
+      "dewpoint": "Kastepiste (°C)",
+      "relativeHumidity": "Suhteellinen kosteus (%)",
+      "pressure": "Ilmanpaine (hPa)"
     }
   },
   "navigation": {

@@ -1,4 +1,5 @@
 import React, { memo, useState, useRef } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   Text,
@@ -13,17 +14,29 @@ import moment from 'moment';
 
 import Icon from '@components/common/Icon';
 
+import { State } from '@store/types';
 import { TimestepData } from '@store/forecast/types';
+import { selectDisplayParams } from '@store/forecast/selectors';
 
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
+import * as constants from '@store/forecast/constants';
 
-type ForecastByHourListProps = {
+const mapStateToProps = (state: State) => ({
+  displayParams: selectDisplayParams(state),
+});
+
+const connector = connect(mapStateToProps, {});
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type ForecastByHourListProps = PropsFromRedux & {
   dayForecast: TimestepData[];
   isOpen: boolean;
 };
 
 const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
+  displayParams,
   dayForecast,
   isOpen,
 }) => {
@@ -85,21 +98,14 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const columnRenderer = ({ item }: { item: TimestepData }) => {
     const dayStepMoment = moment.unix(item.epochtime);
     const dayTempPrefix = item.temperature > 0 ? '+' : '';
-    // const feelsLikePrefix = item.feelsLike > 0 ? '+' : '';
+    const feelsLikePrefix = item.feelsLike > 0 ? '+' : '';
     const hourSmartSymbol = weatherSymbolGetter(
       item.smartSymbol.toString(),
       dark
     );
 
-    const precipitation = item.precipitation1h || '-';
-
     return (
-      <View
-        style={[
-          styles.hourColumn,
-          // index === 0 && styles.withBorderLeft,
-          { borderColor: colors.border },
-        ]}>
+      <View style={[styles.hourColumn, { borderColor: colors.border }]}>
         <View style={styles.hourBlock}>
           <Text
             style={[
@@ -110,48 +116,73 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             {dayStepMoment.format('HH:mm')}
           </Text>
         </View>
-
-        <View>
-          {hourSmartSymbol?.({
-            width: 40,
-            height: 40,
-          })}
-        </View>
-        <View style={styles.hourBlock}>
-          <Text
-            style={[
-              styles.hourText,
-              { color: colors.hourListText },
-            ]}>{`${dayTempPrefix}${item.temperature}°`}</Text>
-        </View>
-        <View style={styles.windBlock}>
-          <Icon
-            name={dark ? 'wind-dark' : 'wind-light'}
-            width={20}
-            height={20}
-            style={{
-              transform: [
-                {
-                  rotate: `${item.winddirection + 45 - 180}deg`,
-                },
-              ],
-            }}
-          />
-          <Text
-            style={[
-              styles.hourText,
-              styles.withMarginTop,
-              { color: colors.hourListText },
-            ]}>
-            {item.windspeedms}
-          </Text>
-        </View>
-
-        <View style={styles.hourBlock}>
-          <Text style={[styles.hourText, { color: colors.hourListText }]}>
-            {precipitation}
-          </Text>
-        </View>
+        {displayParams.map(([i, param]) => {
+          if (param === constants.SMART_SYMBOL) {
+            return (
+              <View key={i}>
+                {hourSmartSymbol?.({
+                  width: 40,
+                  height: 40,
+                })}
+              </View>
+            );
+          }
+          if (param === constants.WIND_SPEED_AND_DIRECTION) {
+            return (
+              <View key={i} style={styles.windBlock}>
+                <Icon
+                  name={dark ? 'wind-dark' : 'wind-light'}
+                  width={20}
+                  height={20}
+                  style={{
+                    transform: [
+                      {
+                        rotate: `${item.winddirection + 45 - 180}deg`,
+                      },
+                    ],
+                  }}
+                />
+                <Text
+                  style={[
+                    styles.hourText,
+                    styles.withMarginTop,
+                    { color: colors.hourListText },
+                  ]}>
+                  {item.windspeedms}
+                </Text>
+              </View>
+            );
+          }
+          if (param === constants.TEMPERATURE) {
+            return (
+              <View key={i} style={styles.hourBlock}>
+                <Text
+                  style={[
+                    styles.hourText,
+                    { color: colors.hourListText },
+                  ]}>{`${dayTempPrefix}${item.temperature}°`}</Text>
+              </View>
+            );
+          }
+          if (param === constants.FEELS_LIKE) {
+            return (
+              <View key={i} style={styles.hourBlock}>
+                <Text
+                  style={[
+                    styles.hourText,
+                    { color: colors.hourListText },
+                  ]}>{`${feelsLikePrefix}${item.feelsLike}°`}</Text>
+              </View>
+            );
+          }
+          return (
+            <View key={i} style={styles.hourBlock}>
+              <Text style={[styles.hourText, { color: colors.hourListText }]}>
+                {item[param] || '-'}
+              </Text>
+            </View>
+          );
+        })}
       </View>
     );
   };
@@ -228,36 +259,32 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
           <View style={styles.hourBlock}>
             <Icon name="time-outline" size={16} color={colors.hourListText} />
           </View>
-          <View style={styles.hourBlock}>
-            <Icon name="cloud-outline" size={16} color={colors.hourListText} />
-          </View>
-          <View style={styles.hourBlock}>
-            <Icon
-              name="thermometer-outline"
-              size={16}
-              color={colors.hourListText}
-            />
-          </View>
-          <View style={styles.windBlock}>
-            <Icon
-              name="trending-up-outline"
-              size={16}
-              color={colors.hourListText}
-            />
-            <Text style={[styles.panelText, { color: colors.hourListText }]}>
-              m/s
-            </Text>
-          </View>
-          <View style={styles.hourBlock}>
-            <Icon
-              name="umbrella-outline"
-              size={16}
-              color={colors.hourListText}
-            />
-            <Text style={[styles.panelText, { color: colors.hourListText }]}>
-              mm
-            </Text>
-          </View>
+          {displayParams.map(([i, param]) => {
+            if (param === constants.WIND_SPEED_AND_DIRECTION) {
+              return (
+                <View key={i} style={styles.windBlock}>
+                  <Icon
+                    name="trending-up-outline"
+                    size={16}
+                    color={colors.hourListText}
+                  />
+                  <Text
+                    style={[styles.panelText, { color: colors.hourListText }]}>
+                    m/s
+                  </Text>
+                </View>
+              );
+            }
+            return (
+              <View key={i} style={styles.hourBlock}>
+                <Icon
+                  name="cloud-outline"
+                  size={16}
+                  color={colors.hourListText}
+                />
+              </View>
+            );
+          })}
         </View>
         <View style={styles.listContainer}>
           <VirtualizedList
@@ -412,4 +439,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(ForecastByHourList);
+export default memo(connector(ForecastByHourList));

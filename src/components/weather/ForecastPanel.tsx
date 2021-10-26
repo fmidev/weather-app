@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   ActivityIndicator,
@@ -12,6 +12,7 @@ import 'moment/locale/fi';
 import 'moment/locale/en-gb';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { State } from '@store/types';
 
@@ -30,6 +31,7 @@ import CollapsibleListHeader from './common/CollapsibleListHeader';
 import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
 import CollapsibleChartList from './forecast/CollapsibleChartList';
+import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -64,6 +66,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
+  const paramSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   const dateKeys = Object.keys(forecastByDay);
 
@@ -168,7 +171,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             />
             <TouchableOpacity
               style={styles.bottomSheetButton}
-              onPress={() => console.log('show settings bottom sheet')}>
+              onPress={() => paramSheetRef.current.open()}>
               <Icon
                 name="settings-outline"
                 color={colors.primaryText}
@@ -177,7 +180,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.bottomSheetButton}
-              onPress={() => console.log('show info bottom sheet')}>
+              onPress={() => console.log('should open InfoBottomSheet')}>
               <Icon
                 name="info"
                 color={colors.primaryText}
@@ -279,6 +282,18 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             />
           )}
       </View>
+      <RBSheet
+        ref={paramSheetRef}
+        height={600}
+        closeOnDragDown
+        customStyles={{
+          container: {
+            ...styles.sheetContainer,
+            backgroundColor: colors.background,
+          },
+        }}>
+        <ParamsBottomSheet onClose={() => paramSheetRef.current.close()} />
+      </RBSheet>
     </View>
   );
 };
@@ -347,6 +362,10 @@ const styles = StyleSheet.create({
   },
   bottomSheetButton: {
     padding: 10,
+  },
+  sheetContainer: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 });
 

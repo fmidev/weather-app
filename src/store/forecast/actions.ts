@@ -5,6 +5,8 @@ import {
   FETCH_FORECAST,
   FETCH_FORECAST_SUCCESS,
   FETCH_FORECAST_ERROR,
+  UPDATE_DISPLAY_PARAMS,
+  RESTORE_DEFAULT_DISPLAY_PARAMS,
   ForecastActionTypes,
   Location,
 } from './types';
@@ -44,4 +46,14 @@ export const fetchForecast = (
     });
 };
 
-export default fetchForecast;
+export const updateDisplayParams = (param: [number, string]) => (
+  dispatch: Dispatch<ForecastActionTypes>
+) => {
+  dispatch({ type: UPDATE_DISPLAY_PARAMS, param });
+};
+
+export const restoreDefaultDisplayParams = () => (
+  dispatch: Dispatch<ForecastActionTypes>
+) => {
+  dispatch({ type: RESTORE_DEFAULT_DISPLAY_PARAMS });
+};

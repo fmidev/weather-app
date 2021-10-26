@@ -67,5 +67,6 @@ export const darkTheme = {
     selectedDayBackground: GRAY_4,
     chartSecondaryLine: GRAYISH_BLUE, // TODO: needs design
     hourListText: WHITE,
+    secondaryBorder: GRAY_1,
   },
 };

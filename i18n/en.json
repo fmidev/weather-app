@@ -26,6 +26,23 @@
       "previous24hAccessibilityLabel": "Show previous 24 hours",
       "next24h": "Next 24 h",
       "next24hAccessibilityLabel": "Show next 24 hours"
+    },
+    "paramsBottomSheet": {
+      "closeAccessibilityLabel": "Close hourly parameter selection",
+      "title": "Hourly view",
+      "subTitle": "Choose parameters to display in hourly view",
+      "restoreButtonText": "Restore default",
+      "restoreAccessibilityLabel": "Restore default parameter selection",
+      "smartSymbol": "Weather symbol",
+      "temperature": "Temperature (°C)",
+      "feelsLike": "Feels like (°C)",
+      "windSpeedAndDir": "Wind speed (m/s) and direction",
+      "hourlymaximumgust": "Gust speed (m/s)",
+      "precipitation1h": "Precipitation (mm)",
+      "pop": "Precipitation probability (%)",
+      "dewpoint": "Dew point (°C)",
+      "relativeHumidity": "Relative humidity (%)",
+      "pressure": "Pressure (hPa)"
     }
   },
   "navigation": {
