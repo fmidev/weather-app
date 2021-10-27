@@ -30,6 +30,7 @@ interface ObservationDisabled extends Partial<Observation> {
 
 interface Warnings {
   apiUrl: string;
+  webViewUrl?: string;
 }
 
 interface WarningsEnabled extends Warnings {
@@ -37,7 +38,7 @@ interface WarningsEnabled extends Warnings {
 }
 
 interface WarningsDisabled extends Partial<Warnings> {
-  enabled: true;
+  enabled: false;
 }
 
 interface DynamicConfig {

@@ -28,6 +28,7 @@ import SymbolsScreen from '@screens/SymbolsScreen';
 import SettingsScreen from '@screens/SettingsScreen';
 import SearchScreen from '@screens/SearchScreen';
 import AboutScreen from '@screens/AboutScreen';
+import WarningsScreen from '@screens/WarningsScreen';
 
 import Icon from '@components/common/Icon';
 import HeaderButton from '@components/common/HeaderButton';
@@ -153,10 +154,6 @@ const Navigator: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
-  const WarningsScreen = () => (
-    <PlaceholderScreen text={`${t('placeholder:warnings')}`} testIndex={2} />
-  );
-
   const NotificationsScreen = () => (
     <PlaceholderScreen
       text={`${t('placeholder:notifications')}`}
@@ -252,7 +249,10 @@ const Navigator: React.FC<Props> = ({
       <WarningsStack.Screen
         name="Warnings"
         component={WarningsScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerTitle: `${t('navigation:warnings')}`,
+          headerShown: true,
+        }}
       />
     </WarningsStack.Navigator>
   );
