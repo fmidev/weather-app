@@ -1,7 +1,5 @@
 import ConfigProvider from './ConfigProvider';
-import DynamicConfig from './DynamicConfig';
-
-const Config = new DynamicConfig();
+import { Config } from './DynamicConfig';
 
 export { ConfigProvider, Config };
 export * from './types';

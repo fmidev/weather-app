@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AppState } from 'react-native';
-import { Config, ConfigType } from '@config';
+import { Config } from './DynamicConfig';
+import { ConfigType } from './types';
 
 type ConfigProviderProps = {
   defaultConfig: ConfigType;
