@@ -35,36 +35,57 @@ const STEP_30 = 1800;
 // 15 minutes = 900 seconds
 const STEP_15 = 900;
 
-export const getSliderMaxUnix = (layerId: number | undefined): number => {
-  const now = moment.utc().unix();
+export const getSliderMinUnix = (
+  layerId: number | undefined,
+  overlay: MapOverlay | undefined
+): number => {
+  let reference = moment.utc().unix();
+  if (!overlay || !overlay.observation) return reference;
+  const { observation } = overlay;
+  const observationStart = moment(observation?.start).unix();
+  const observationEnd = moment(observation?.end).unix();
+
+  if (observationEnd < reference) {
+    reference = observationEnd;
+  }
   const { layers } = Config.get('map');
   const layer = layers.find((l) => l.id === layerId);
-  if (!layerId || !layer) return now;
+  if (!layerId || !layer) return reference;
 
   const { times } = layer;
-
+  if (!times.observation) return reference;
   const stepSeconds = getSliderStepSeconds(times.timeStep);
+  const steps = times.observation;
+  const min = reference - steps * stepSeconds;
 
-  const steps = times.forecast || 0;
-
-  return now + steps * stepSeconds;
+  return min < observationStart ? observationStart : min;
 };
 
-export const getSliderMinUnix = (layerId: number | undefined): number => {
-  const now = moment.utc().unix();
+export const getSliderMaxUnix = (
+  layerId: number | undefined,
+  overlay: MapOverlay | undefined
+): number => {
+  let reference = moment.utc().unix();
+  if (!overlay) return reference;
+  const { observation, forecast } = overlay;
+  const observationEnd = moment(observation?.end).unix();
+  const forecastEnd = moment(forecast?.end).unix();
+
+  if (observationEnd < reference) {
+    reference = observationEnd;
+  }
   const { layers } = Config.get('map');
   const layer = layers.find((l) => l.id === layerId);
-  if (!layerId || !layer) return now;
-
+  if (!layerId || !layer) return reference;
   const { times } = layer;
+  if (!times.forecast) return reference;
 
   const stepSeconds = getSliderStepSeconds(times.timeStep);
+  const steps = times.forecast - 1;
+  const max = reference + steps * stepSeconds;
 
-  const steps = times.observation || 0;
-
-  return now - steps * stepSeconds;
+  return max > forecastEnd ? forecastEnd : max;
 };
-
 export const getSliderStepSeconds = (sliderStep: number): number => {
   if (sliderStep === 60) return STEP_60;
   if (sliderStep === 30) return STEP_30;

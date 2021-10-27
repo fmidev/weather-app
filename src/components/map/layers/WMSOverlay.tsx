@@ -46,12 +46,10 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   );
 
   const current = moment.unix(sliderTime).toISOString();
-  const step60 = getSliderStepSeconds(60);
   const currentStep = getSliderStepSeconds(sliderStep);
-  const roundStep = (v: number) => Math.round(v / step60) * step60;
 
-  const minUnix = roundStep(getSliderMinUnix(activeOverlayId));
-  const maxUnix = roundStep(getSliderMaxUnix(activeOverlayId));
+  const minUnix = getSliderMinUnix(activeOverlayId, overlay);
+  const maxUnix = getSliderMaxUnix(activeOverlayId, overlay);
 
   const prefetchImages = async (urls: string[]) => {
     try {
@@ -74,7 +72,11 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   useEffect(() => {
     if (forecast && forecast.start) {
-      setBorderTime(forecast.start);
+      if (observation && observation.end && observation.end > forecast.start) {
+        setBorderTime(observation.end);
+      } else {
+        setBorderTime(forecast.start);
+      }
     }
     if (!forecast && observation && observation.end) {
       setBorderTime(observation.end);

@@ -54,38 +54,9 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const currentSliderTime = moment.unix(sliderTime).format('HH:mm');
 
-  const observationStart = moment(overlay?.observation?.start).unix();
-  const observationEnd = moment(overlay?.observation?.end).unix();
-  const forecastStart = moment(overlay?.forecast?.start).unix();
-  const forecastEnd = moment(overlay?.forecast?.end).unix();
+  const sliderMinUnix = getSliderMinUnix(activeOverlayId, overlay);
+  const sliderMaxUnix = getSliderMaxUnix(activeOverlayId, overlay);
 
-  const sliderMinUnix = getSliderMinUnix(activeOverlayId);
-  const sliderMaxUnix = getSliderMaxUnix(activeOverlayId);
-
-  const getSliderMinValue = () => {
-    if (overlay?.observation) {
-      return observationStart > sliderMinUnix
-        ? observationStart
-        : sliderMinUnix;
-    }
-    if (!overlay?.observation && !!overlay?.forecast) {
-      return forecastStart > sliderMinUnix ? forecastStart : sliderMinUnix;
-    }
-    return sliderMinUnix;
-  };
-
-  const getSliderMaxValue = () => {
-    if (overlay?.forecast) {
-      return forecastEnd < sliderMaxUnix ? forecastEnd : sliderMaxUnix;
-    }
-    if (!overlay?.forecast && !!overlay?.observation) {
-      return observationEnd < sliderMaxUnix ? observationEnd : sliderMaxUnix;
-    }
-    return sliderMaxUnix;
-  };
-
-  const min = getSliderMinValue();
-  const max = getSliderMaxValue();
   const step = getSliderStepSeconds(sliderStep);
 
   // note: moment treats moment(undefined) as moment()
@@ -130,8 +101,8 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             thumbTintColor={WHITE}
             minimumTrackTintColor={SECONDARY_BLUE}
             step={step}
-            minimumValue={min}
-            maximumValue={max}
+            minimumValue={sliderMinUnix}
+            maximumValue={sliderMaxUnix}
             value={initialTime} // provide initial slider value
           />
         </View>
