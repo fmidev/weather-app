@@ -39,8 +39,9 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   overlay,
 }) => {
   const { observation, forecast } = overlay;
+
   const [hasPrefetched, setHasPrefetched] = useState<boolean>(false);
-  const [forecastDateStart, setForecastDateStart] = useState<string>(
+  const [borderTime, setBorderTime] = useState<string>(
     moment.utc().toISOString()
   );
 
@@ -73,9 +74,12 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   useEffect(() => {
     if (forecast && forecast.start) {
-      setForecastDateStart(forecast.start);
+      setBorderTime(forecast.start);
     }
-  }, [forecast]);
+    if (!forecast && observation && observation.end) {
+      setBorderTime(observation.end);
+    }
+  }, [forecast, observation]);
 
   useEffect(() => {
     if (!!observation?.url || !!forecast?.url) {
@@ -90,8 +94,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       );
 
       const urls = timeStamps.map((stamp) => {
-        const baseUrl =
-          stamp >= forecastDateStart ? forecast?.url : observation?.url;
+        const baseUrl = stamp >= borderTime ? forecast?.url : observation?.url;
         if (!baseUrl) return false;
         return `${baseUrl}&time=${stamp}`;
       });
@@ -114,7 +117,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   if (!overlay.observation && !overlay.forecast) return null;
 
   const layerBounds =
-    current >= forecastDateStart
+    current >= borderTime
       ? (forecast?.bounds as { [key: string]: [number, number] })
       : (observation?.bounds as { [key: string]: [number, number] });
 
@@ -123,11 +126,10 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       ? [layerBounds?.bottomLeft, layerBounds?.topRight]
       : [layerBounds?.topLeft, layerBounds?.bottomRight];
 
-  const baseUrl =
-    current >= forecastDateStart ? forecast?.url : observation?.url;
+  const baseUrl = current >= borderTime ? forecast?.url : observation?.url;
 
   const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
-
+  console.log(image);
   // return null until something to return
   if (!hasPrefetched || !image || !bounds) return null;
 

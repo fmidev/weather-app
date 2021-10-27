@@ -86,7 +86,7 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
 
   await Promise.all(
     Object.entries(sources).map(async ([src, url]) => {
-      const capabilitiesUrl = `${url}&request=GetCapabilities`;
+      const capabilitiesUrl = `${url}/wms?service=WMS&request=GetCapabilities`;
 
       const textRes = await fetch(capabilitiesUrl).then((res) => res.text());
 
@@ -161,10 +161,11 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
         height: '1152',
         format: 'image/png',
         srs: 'EPSG:3857',
-        opacity: '60',
+        crs: 'EPSG:3857',
+        styles: '',
       });
 
-      const overlayUrl = `${url}${query.toString()}`;
+      const overlayUrl = `${url}/wms?${query.toString()}`;
 
       if (layerSrc.type === 'observation') {
         Object.assign(toReturn, {
