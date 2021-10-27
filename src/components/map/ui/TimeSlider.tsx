@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
@@ -54,8 +54,14 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const currentSliderTime = moment.unix(sliderTime).format('HH:mm');
 
-  const sliderMinUnix = getSliderMinUnix(activeOverlayId, overlay);
-  const sliderMaxUnix = getSliderMaxUnix(activeOverlayId, overlay);
+  const sliderMinUnix = useMemo(
+    () => getSliderMinUnix(activeOverlayId, overlay),
+    [activeOverlayId, overlay]
+  );
+  const sliderMaxUnix = useMemo(
+    () => getSliderMaxUnix(activeOverlayId, overlay),
+    [activeOverlayId, overlay]
+  );
 
   const step = getSliderStepSeconds(sliderStep);
 

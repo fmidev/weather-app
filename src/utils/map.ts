@@ -39,22 +39,20 @@ export const getSliderMinUnix = (
   layerId: number | undefined,
   overlay: MapOverlay | undefined
 ): number => {
-  let reference = moment.utc().unix();
+  const reference = moment.utc().unix();
   if (!overlay || !overlay.observation) return reference;
   const { observation } = overlay;
   const observationStart = moment(observation?.start).unix();
-  const observationEnd = moment(observation?.end).unix();
 
-  if (observationEnd < reference) {
-    reference = observationEnd;
-  }
   const { layers } = Config.get('map');
   const layer = layers.find((l) => l.id === layerId);
   if (!layerId || !layer) return reference;
 
   const { times } = layer;
   if (!times.observation) return reference;
+
   const stepSeconds = getSliderStepSeconds(times.timeStep);
+
   const steps = times.observation;
   const min = reference - steps * stepSeconds;
 
@@ -81,7 +79,7 @@ export const getSliderMaxUnix = (
   if (!times.forecast) return reference;
 
   const stepSeconds = getSliderStepSeconds(times.timeStep);
-  const steps = times.forecast - 1;
+  const steps = times.forecast;
   const max = reference + steps * stepSeconds;
 
   return max > forecastEnd ? forecastEnd : max;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Image, ImageURISource, Platform } from 'react-native';
 import { Overlay } from 'react-native-maps';
@@ -48,8 +48,14 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const current = moment.unix(sliderTime).toISOString();
   const currentStep = getSliderStepSeconds(sliderStep);
 
-  const minUnix = getSliderMinUnix(activeOverlayId, overlay);
-  const maxUnix = getSliderMaxUnix(activeOverlayId, overlay);
+  const memoizedMinUnix = useMemo(
+    () => getSliderMinUnix(activeOverlayId, overlay),
+    [activeOverlayId, overlay]
+  );
+  const memoizedMaxUnix = useMemo(
+    () => getSliderMaxUnix(activeOverlayId, overlay),
+    [activeOverlayId, overlay]
+  );
 
   const prefetchImages = async (urls: string[]) => {
     try {
@@ -72,7 +78,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   useEffect(() => {
     if (forecast && forecast.start) {
-      if (observation && observation.end && observation.end > forecast.start) {
+      if (observation && observation.end) {
         setBorderTime(observation.end);
       } else {
         setBorderTime(forecast.start);
@@ -86,8 +92,8 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   useEffect(() => {
     if (!!observation?.url || !!forecast?.url) {
       let allDatesUnix: number[] = [];
-      let curr = minUnix;
-      while (curr <= maxUnix) {
+      let curr = memoizedMinUnix;
+      while (curr <= memoizedMaxUnix) {
         allDatesUnix = allDatesUnix.concat(curr);
         curr += currentStep;
       }
@@ -131,7 +137,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const baseUrl = current >= borderTime ? forecast?.url : observation?.url;
 
   const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
-  console.log(image);
+
   // return null until something to return
   if (!hasPrefetched || !image || !bounds) return null;
 
