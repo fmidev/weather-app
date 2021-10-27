@@ -2,9 +2,9 @@ import { Alert } from 'react-native';
 import moment from 'moment';
 import Geolocation from 'react-native-geolocation-service';
 import { TFunction } from 'react-i18next';
-import Config from 'react-native-config';
 
 import { Location } from '@store/location/types';
+import { getCurrentPosition } from '@network/WeatherApi';
 import {
   RAIN_1,
   RAIN_2,
@@ -53,8 +53,6 @@ export const getSliderStepSeconds = (sliderStep: number): number => {
   return STEP_15;
 };
 
-const timeSeriesUrl = `https://data.fmi.fi/fmi-apikey/${Config.API_KEY}/timeseries?param=geoid,name,latitude,longitude,region,country&timesteps=2&format=json&attributes=geoid`;
-
 export const getGeolocation = (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>
@@ -62,8 +60,7 @@ export const getGeolocation = (
   Geolocation.getCurrentPosition(
     (position) => {
       const { latitude, longitude } = position.coords;
-      fetch(`${timeSeriesUrl}&latlon=${latitude},${longitude}`)
-        .then((res) => res.json())
+      getCurrentPosition(latitude, longitude)
         .then((json) => {
           const geoid = Number(Object.keys(json)[0]);
           const vals: {
