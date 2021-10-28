@@ -1,5 +1,5 @@
-import { ConfigType } from '@config';
 import axiosClient from '@utils/axiosClient';
+import { ConfigType } from './types';
 
 class DynamicConfig {
   private config!: ConfigType;
@@ -149,4 +149,7 @@ const isObject = (item: any): Boolean => {
 
 const isArray = (item: any): Boolean => Array.isArray(item);
 
+const Config = new DynamicConfig();
+
+export { Config };
 export default DynamicConfig;
