@@ -173,9 +173,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               style={styles.bottomSheetButton}
               onPress={() => paramSheetRef.current.open()}>
               <Icon
-                name="settings-outline"
+                name="settings"
                 color={colors.primaryText}
-                size={18}
+                width={24}
+                height={24}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -184,8 +185,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               <Icon
                 name="info"
                 color={colors.primaryText}
-                height={18}
-                width={18}
+                height={24}
+                width={24}
               />
             </TouchableOpacity>
           </View>
