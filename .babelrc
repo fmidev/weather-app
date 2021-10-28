@@ -14,7 +14,8 @@
           "@screens": "./src/screens",
           "@store": "./src/store",
           "@utils": "./src/utils",
-          "@config": "./src/config"
+          "@config": "./src/config",
+          "@i18n": "./i18n"
         }
       }
     ]

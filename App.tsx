@@ -6,7 +6,7 @@ import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import ReduxThunk from 'redux-thunk';
 
-import './i18n';
+import '@i18n';
 import { Appearance } from 'react-native';
 import { ConfigProvider } from '@config';
 import reducers from './src/store';

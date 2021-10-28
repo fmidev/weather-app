@@ -1,10 +1,11 @@
-import axios from 'axios';
-
 import { Location, WeatherData } from '@store/forecast/types';
 import { ObservationDataRaw } from '@store/observation/types';
 import { Config } from '@config';
+import i18n from '@i18n';
+import axiosClient from '@utils/axiosClient';
 
 export const getForecast = async (location: Location): Promise<WeatherData> => {
+  const { language } = i18n;
   const {
     apiUrl,
     forecast: { timePeriod, producer },
@@ -46,12 +47,11 @@ export const getForecast = async (location: Location): Promise<WeatherData> => {
     format: 'json',
     producer,
     attributes: 'geoid',
-    lang: 'fi', // TODO: Fix
+    lang: language,
   };
 
-  const { data } = await axios.get(apiUrl, {
-    params,
-  });
+  const { data } = await axiosClient({ url: apiUrl, params });
+
   return data;
 };
 
@@ -62,6 +62,7 @@ export const getObservation = async (
     apiUrl,
     observation: { enabled, numberOfStations, producer },
   } = Config.get('weather');
+  const { language } = i18n;
 
   if (!enabled) {
     return {};
@@ -95,13 +96,34 @@ export const getObservation = async (
     format: 'json',
     producer,
     precision: 'double',
-    lang: 'fi', // TODO: Fix
+    lang: language,
     attributes: 'fmisid,stationname,distance',
   };
 
-  const { data } = await axios.get(apiUrl, {
-    params,
-  });
+  const { data } = await axiosClient({ url: apiUrl, params });
+
+  return data;
+};
+
+export const getCurrentPosition = async (
+  latitude: number,
+  longitude: number
+): Promise<Object> => {
+  const { apiUrl } = Config.get('weather');
+  const { language } = i18n;
+
+  const params = {
+    latlon: `${latitude},${longitude}`,
+    param: ['geoid', 'name', 'latitude', 'longitude', 'region', 'country'].join(
+      ','
+    ),
+    timesteps: 2,
+    format: 'json',
+    lang: language,
+    attributes: 'geoid',
+  };
+
+  const { data } = await axiosClient({ url: apiUrl, params });
 
   return data;
 };
