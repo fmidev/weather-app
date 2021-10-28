@@ -50,6 +50,7 @@ const WarningsScreen: React.FC = () => {
       .nav-tabs > .nav-item:first-of-type .date-selector-text { border-top-left-radius: 10px !important; } \
       .nav-tabs > .nav-item:last-of-type .date-selector-text { border-top-right-radius: 10px !important; } \
       .header-region, .symbol-list { padding-left: 5px !important} \
+      .data-providers > span { font-size: 12px !important } \
     ';
     document.getElementsByTagName('head')[0].appendChild(style);
     })();`;
@@ -62,6 +63,7 @@ const WarningsScreen: React.FC = () => {
       <WebView
         ref={webViewRef}
         source={{ uri }}
+        showsVerticalScrollIndicator={false}
         injectedJavaScript={injectedJavaScript}
         onMessage={() => {}}
       />
