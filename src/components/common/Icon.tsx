@@ -30,15 +30,18 @@ import RainDark from '@assets/images/icons/rain-dark.svg';
 import RainLight from '@assets/images/icons/rain-light.svg';
 import RainWhite from '@assets/images/icons/rain-white.svg';
 import Search from '@assets/images/icons/search.svg';
+import Settings from '@assets/images/icons/settings.svg';
 import StarSelected from '@assets/images/icons/star-selected.svg';
 import StarUnselected from '@assets/images/icons/star-unselected.svg';
 import Sunrise from '@assets/images/icons/sunrise.svg';
+import Sunset from '@assets/images/icons/sunset.svg';
 import TemperatureDark from '@assets/images/icons/temperature-dark.svg';
 import TemperatureLight from '@assets/images/icons/temperature-light.svg';
 import TemperatureHighestDark from '@assets/images/icons/temperature-highest-dark.svg';
 import TemperatureHighestLight from '@assets/images/icons/temperature-highest-light.svg';
 import TemperatureLowestDark from '@assets/images/icons/temperature-lowest-dark.svg';
 import TemperatureLowestLight from '@assets/images/icons/temperature-lowest-light.svg';
+import Time from '@assets/images/icons/time.svg';
 import WarningsFloodLevel2 from '@assets/images/icons/warnings-flood-level-2.svg';
 import WarningsFloodLevel3 from '@assets/images/icons/warnings-flood-level-3.svg';
 import WarningsFloodLevel4 from '@assets/images/icons/warnings-flood-level-4.svg';
@@ -129,12 +132,16 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <RainWhite {...props} />;
     case 'search':
       return <Search {...props} />;
+    case 'settings':
+      return <Settings {...props} />;
     case 'star-selected':
       return <StarSelected {...props} />;
     case 'star-unselected':
       return <StarUnselected {...props} />;
     case 'sunrise':
       return <Sunrise {...props} />;
+    case 'sunset':
+      return <Sunset {...props} />;
     case 'temperature-dark':
       return <TemperatureDark {...props} />;
     case 'temperature-light':
@@ -147,6 +154,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <TemperatureLowestDark {...props} />;
     case 'temperature-lowest-light':
       return <TemperatureLowestLight {...props} />;
+    case 'time':
+      return <Time {...props} />;
     case 'warnings-flood-level-2':
       return <WarningsFloodLevel2 {...props} />;
     case 'warnings-flood-level-3':

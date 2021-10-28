@@ -9,7 +9,6 @@ import {
   ViewToken,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import Icon from '@components/common/Icon';
@@ -42,7 +41,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
-  const { t } = useTranslation('forecast');
+
   const virtualizedList = useRef() as React.MutableRefObject<
     VirtualizedList<TimestepData>
   >;
@@ -64,10 +63,10 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
           styles.row,
           styles.dayLengthContainer,
           styles.forecastHeader,
-          styles.alignStart,
+          styles.justifySpaceAround,
           { borderBottomColor: colors.border },
         ]}>
-        <View style={styles.withMarginRight}>
+        <View style={[styles.row, styles.alignCenter]}>
           <Icon
             width={24}
             height={24}
@@ -75,20 +74,49 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             style={[
               styles.withMarginRight,
               {
-                color: colors.text,
+                color: colors.hourListText,
               },
             ]}
           />
-        </View>
-        <View>
-          <Text style={[styles.panelText, { color: colors.text }]}>
-            {t('sunrise')}{' '}
-            <Text style={styles.bold}>{sunrise.format('HH:mm')}</Text>{' '}
-            {t('sunset')}{' '}
-            <Text style={styles.bold}>{sunset.format('HH:mm')}</Text>
+          <Text
+            style={[
+              styles.panelText,
+              styles.bold,
+              { color: colors.hourListText },
+            ]}>
+            {sunrise.format('HH:mm')}
           </Text>
-          <Text style={[styles.panelText, { color: colors.text }]}>
-            {t('dayLength')} <Text style={styles.bold}>{dayLength}</Text>
+        </View>
+        <View style={[styles.row, styles.alignCenter]}>
+          <Icon
+            width={24}
+            height={24}
+            name="sunset"
+            style={[styles.withMarginRight, { color: colors.hourListText }]}
+          />
+          <Text
+            style={[
+              styles.panelText,
+              styles.bold,
+              { color: colors.hourListText },
+            ]}>
+            {sunset.format('HH:mm')}
+          </Text>
+        </View>
+        <View style={[styles.row, styles.alignCenter]}>
+          <Icon
+            width={24}
+            height={24}
+            name="time"
+            style={[styles.withMarginRight, { color: colors.hourListText }]}
+          />
+          <Text
+            style={[
+              styles.panelText,
+              styles.bold,
+              { color: colors.hourListText },
+            ]}>
+            {dayLength}
           </Text>
         </View>
       </View>
@@ -378,9 +406,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Roboto-Regular',
   },
-  alignStart: {
-    justifyContent: 'flex-start',
-  },
   withMarginRight: {
     marginRight: 9,
   },
@@ -436,6 +461,12 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.5,
+  },
+  alignCenter: {
+    alignItems: 'center',
+  },
+  justifySpaceAround: {
+    justifyContent: 'space-around',
   },
 });
 
