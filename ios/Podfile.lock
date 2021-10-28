@@ -203,6 +203,8 @@ PODS:
     - React
   - react-native-splash-screen (3.2.0):
     - React
+  - react-native-webview (11.14.1):
+    - React-Core
   - React-RCTActionSheet (0.63.4):
     - React-Core/RCTActionSheetHeaders (= 0.63.4)
   - React-RCTAnimation (0.63.4):
@@ -307,6 +309,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -378,6 +381,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/slider"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -442,6 +447,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
+  react-native-webview: db22ab831b8c5f7697957a67f7a7ac1cecfed18d
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
@@ -464,4 +470,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: dd6f65175d0a390469ca186411e363cee62400a1
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.11.2
