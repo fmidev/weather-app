@@ -41,9 +41,10 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const { observation, forecast } = overlay;
 
   const [hasPrefetched, setHasPrefetched] = useState<boolean>(false);
-  const [borderTime, setBorderTime] = useState<string>(
-    moment.utc().toISOString()
-  );
+  const [borderTime, setBorderTime] = useState<{
+    time: string;
+    type: 'observation' | 'forecast';
+  }>({ time: moment.utc().toISOString(), type: 'observation' });
 
   const current = moment.unix(sliderTime).toISOString();
   const currentStep = getSliderStepSeconds(sliderStep);
@@ -76,16 +77,21 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     }
   };
 
+  const borderTimeComparer = (time: string): boolean =>
+    borderTime.type === 'forecast'
+      ? time >= borderTime.time
+      : time > borderTime.time;
+
   useEffect(() => {
     if (forecast && forecast.start) {
       if (observation && observation.end) {
-        setBorderTime(observation.end);
+        setBorderTime({ time: observation.end, type: 'observation' });
       } else {
-        setBorderTime(forecast.start);
+        setBorderTime({ time: forecast.start, type: 'forecast' });
       }
     }
     if (!forecast && observation && observation.end) {
-      setBorderTime(observation.end);
+      setBorderTime({ time: observation.end, type: 'observation' });
     }
   }, [forecast, observation]);
 
@@ -102,7 +108,9 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       );
 
       const urls = timeStamps.map((stamp) => {
-        const baseUrl = stamp >= borderTime ? forecast?.url : observation?.url;
+        const baseUrl = borderTimeComparer(stamp)
+          ? forecast?.url
+          : observation?.url;
         if (!baseUrl) return false;
         return `${baseUrl}&time=${stamp}`;
       });
@@ -124,18 +132,19 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   }, [observation, forecast]);
   if (!overlay.observation && !overlay.forecast) return null;
 
-  const layerBounds =
-    current >= borderTime
-      ? (forecast?.bounds as { [key: string]: [number, number] })
-      : (observation?.bounds as { [key: string]: [number, number] });
+  const layerBounds = borderTimeComparer(current)
+    ? (forecast?.bounds as { [key: string]: [number, number] })
+    : (observation?.bounds as { [key: string]: [number, number] });
 
   const bounds: [[number, number], [number, number]] =
     Platform.OS === 'ios'
       ? [layerBounds?.bottomLeft, layerBounds?.topRight]
       : [layerBounds?.topLeft, layerBounds?.bottomRight];
 
-  const baseUrl = current >= borderTime ? forecast?.url : observation?.url;
-
+  const baseUrl = borderTimeComparer(current)
+    ? forecast?.url
+    : observation?.url;
+  console.log(borderTimeComparer(current) ? 'forecast' : 'observation');
   const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
 
   // return null until something to return

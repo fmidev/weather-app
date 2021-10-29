@@ -35,6 +35,8 @@ const STEP_30 = 1800;
 // 15 minutes = 900 seconds
 const STEP_15 = 900;
 
+const round = (unix: number, step: number): number =>
+  Math.floor(unix / step) * step;
 export const getSliderMinUnix = (
   layerId: number | undefined,
   overlay: MapOverlay | undefined
@@ -56,7 +58,7 @@ export const getSliderMinUnix = (
   const steps = times.observation;
   const min = reference - steps * stepSeconds;
 
-  return min < observationStart ? observationStart : min;
+  return min < observationStart ? observationStart : round(min, stepSeconds);
 };
 
 export const getSliderMaxUnix = (
@@ -68,8 +70,9 @@ export const getSliderMaxUnix = (
   const { observation, forecast } = overlay;
   const observationEnd = moment(observation?.end).unix();
   const forecastEnd = moment(forecast?.end).unix();
-
+  console.log(observation?.end);
   if (observationEnd < reference) {
+    console.log('observationEnd < reference');
     reference = observationEnd;
   }
   const { layers } = Config.get('map');
@@ -81,8 +84,7 @@ export const getSliderMaxUnix = (
   const stepSeconds = getSliderStepSeconds(times.timeStep);
   const steps = times.forecast;
   const max = reference + steps * stepSeconds;
-
-  return max > forecastEnd ? forecastEnd : max;
+  return max > forecastEnd ? forecastEnd : round(max, stepSeconds);
 };
 export const getSliderStepSeconds = (sliderStep: number): number => {
   if (sliderStep === 60) return STEP_60;
