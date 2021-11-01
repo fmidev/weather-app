@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ViewToken,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 
@@ -41,6 +42,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
+  const { t } = useTranslation('forecast');
 
   const virtualizedList = useRef() as React.MutableRefObject<
     VirtualizedList<TimestepData>
@@ -339,6 +341,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               { borderColor: colors.border },
             ]}>
             <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('hourList.moveBackAccessibilityLabel')}
               style={[
                 styles.listActionButton,
                 currentIndex === 0 && styles.disabled,
@@ -361,6 +365,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               ]}
             />
             <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('hourList.moveForwardAccessibilityLabel')}
               style={[
                 styles.listActionButton,
                 currentIndex + 7 > dayForecast.length - 1 && styles.disabled,

@@ -90,6 +90,10 @@
       "description": "kuvaus",
       "showRest": "Näytä loput säämerkit",
       "showLess": "Näytä vähemmän"
+    },
+    "hourList": {
+      "moveBackAccessibilityLabel": "siirry taaksepäin",
+      "moveForwardAccessibilityLabel": "siirry eteenpäin"
     }
   },
   "navigation": {

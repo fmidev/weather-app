@@ -90,6 +90,10 @@
       "description": "description",
       "showRest": "Show rest of the weather symbols",
       "showLess": "Show less"
+    },
+    "hourList": {
+      "moveBackAccessibilityLabel": "move back",
+      "moveForwardAccessibilityLabel": "move forward"
     }
   },
   "navigation": {
