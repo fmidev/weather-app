@@ -25,10 +25,12 @@ const selectData = createSelector<State, ForecastState, WeatherData>(
   (forecast) => forecast.data
 );
 
-export const selectForecast = createSelector(
-  [selectData, selectGeoid],
-  (items, geoid) => items[geoid] || []
-);
+export const selectForecast = createSelector<
+  State,
+  WeatherData,
+  number,
+  TimestepData[]
+>([selectData, selectGeoid], (items, geoid) => items[geoid] || []);
 
 export const selectForecastByDay = createSelector(
   selectForecast,
@@ -119,3 +121,11 @@ export const selectDisplayParams = createSelector<
 >(selectForecastDomain, (forecast) =>
   forecast.displayParams.sort((a, b) => a[0] - b[0])
 );
+
+export const selectUniqueSmartSymbols = createSelector<
+  State,
+  TimestepData[],
+  number[]
+>(selectForecast, (forecast) => [
+  ...new Set(forecast.map((f) => f.smartSymbol)),
+]);

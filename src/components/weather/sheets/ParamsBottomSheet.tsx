@@ -60,7 +60,12 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
       key={param}
       style={[styles.row, { borderBottomColor: colors.border }]}>
       <View style={styles.innerRow}>
-        <Icon name="cloud-outline" size={16} style={styles.withMarginRight} />
+        <Icon
+          name="cloud-outline"
+          size={16}
+          style={styles.withMarginRight}
+          color={colors.hourListText}
+        />
         <Text style={[styles.text, { color: colors.hourListText }]}>
           {t(`paramsBottomSheet.${param}`)}
         </Text>

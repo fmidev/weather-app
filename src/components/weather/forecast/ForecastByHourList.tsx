@@ -206,7 +206,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
           return (
             <View key={i} style={styles.hourBlock}>
               <Text style={[styles.hourText, { color: colors.hourListText }]}>
-                {item[param] || '-'}
+                {item[param]}
               </Text>
             </View>
           );

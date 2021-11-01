@@ -32,6 +32,7 @@ import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
 import CollapsibleChartList from './forecast/CollapsibleChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
+import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -67,6 +68,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
     undefined
   );
   const paramSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   const dateKeys = Object.keys(forecastByDay);
 
@@ -181,7 +183,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.bottomSheetButton}
-              onPress={() => console.log('should open InfoBottomSheet')}>
+              onPress={() => weatherInfoSheetRef.current.open()}>
               <Icon
                 name="info"
                 color={colors.primaryText}
@@ -294,6 +296,20 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           },
         }}>
         <ParamsBottomSheet onClose={() => paramSheetRef.current.close()} />
+      </RBSheet>
+      <RBSheet
+        ref={weatherInfoSheetRef}
+        height={600}
+        closeOnDragDown
+        customStyles={{
+          container: {
+            ...styles.sheetContainer,
+            backgroundColor: colors.background,
+          },
+        }}>
+        <WeatherInfoBottomSheet
+          onClose={() => weatherInfoSheetRef.current.close()}
+        />
       </RBSheet>
     </View>
   );

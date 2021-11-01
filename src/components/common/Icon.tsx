@@ -12,6 +12,8 @@ import ArrowLeft from '@assets/images/icons/arrow-left.svg';
 import ArrowRight from '@assets/images/icons/arrow-right.svg';
 import ArrowUp from '@assets/images/icons/arrow-up.svg';
 import Close from '@assets/images/icons/close.svg';
+import FeelsLikeColder from '@assets/images/icons/feels-like-colder.svg';
+import FeelsLikeWarmer from '@assets/images/icons/feels-like-warmer.svg';
 import Info from '@assets/images/icons/info.svg';
 import Layers from '@assets/images/icons/layers.svg';
 import Locate from '@assets/images/icons/locate.svg';
@@ -96,6 +98,10 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <ArrowUp {...props} />;
     case 'close':
       return <Close {...props} />;
+    case 'feels-like-colder':
+      return <FeelsLikeColder {...props} />;
+    case 'feels-like-warmer':
+      return <FeelsLikeWarmer {...props} />;
     case 'info':
       return <Info {...props} />;
     case 'layers':
