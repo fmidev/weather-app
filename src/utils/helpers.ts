@@ -15,51 +15,6 @@ import {
   TRANSPARENT,
 } from './colors';
 
-type TimesMap = {
-  [key: string]: { observation: number; forecast: number } | undefined;
-};
-
-// 60 minutes = 3600 seconds
-const STEP_60 = 3600;
-// 30 minutes = 1800 seconds
-const STEP_30 = 1800;
-// 15 minutes = 900 seconds
-const STEP_15 = 900;
-
-export const getSliderMaxUnix = (sliderStep: number): number => {
-  const now = moment.utc().unix();
-  const times = configJSON?.map?.times as TimesMap;
-  const forecastSteps = times[sliderStep.toString()]?.forecast || 5;
-
-  if (sliderStep === 60) {
-    return now + forecastSteps * STEP_60;
-  }
-  if (sliderStep === 30) {
-    return now + forecastSteps * STEP_30;
-  }
-  return now + forecastSteps * STEP_15;
-};
-
-export const getSliderMinUnix = (sliderStep: number): number => {
-  const now = moment.utc().unix();
-  const times = configJSON?.map?.times as TimesMap;
-  const observationSteps = times[sliderStep.toString()]?.observation || 5;
-
-  if (sliderStep === 60) {
-    return now - observationSteps * STEP_60;
-  }
-  if (sliderStep === 30) {
-    return now - observationSteps * STEP_30;
-  }
-  return now - observationSteps * STEP_15;
-};
-
-export const getSliderStepSeconds = (sliderStep: number): number => {
-  if (sliderStep === 60) return STEP_60;
-  if (sliderStep === 30) return STEP_30;
-  return STEP_15;
-};
-
 export const getGeolocation = (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>
