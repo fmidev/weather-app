@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   ActivityIndicator,
@@ -12,6 +12,7 @@ import 'moment/locale/fi';
 import 'moment/locale/en-gb';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { State } from '@store/types';
 
@@ -25,10 +26,13 @@ import {
 
 import { CustomTheme } from '@utils/colors';
 
+import Icon from '@components/common/Icon';
 import CollapsibleListHeader from './common/CollapsibleListHeader';
 import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
 import CollapsibleChartList from './forecast/CollapsibleChartList';
+import ParamsBottomSheet from './sheets/ParamsBottomSheet';
+import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -63,6 +67,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
+  const paramSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   const dateKeys = Object.keys(forecastByDay);
 
@@ -95,36 +101,97 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         </Text>
       </View>
       <View style={styles.panelContainer}>
-        <View style={[styles.row, styles.justifyStart]}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setToDisplay(TABLE)}>
-            <Text
+        <View style={[styles.row]}>
+          <View style={[styles.row, styles.justifyStart]}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => setToDisplay(TABLE)}
               style={[
-                styles.forecastText,
-                styles.medium,
+                styles.contentSelectionContainer,
                 styles.withMarginRight,
-                toDisplay === TABLE && styles.selectedText,
                 {
-                  color: colors.primaryText,
+                  backgroundColor:
+                    toDisplay === TABLE
+                      ? colors.timeStepBackground
+                      : colors.inputButtonBackground,
+                  borderColor:
+                    toDisplay === TABLE
+                      ? colors.chartSecondaryLine
+                      : colors.secondaryBorder,
                 },
               ]}>
-              {t('table')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setToDisplay(CHART)}>
-            <Text
+              <Text
+                style={[
+                  styles.forecastText,
+                  styles.medium,
+                  toDisplay === TABLE && styles.selectedText,
+                  {
+                    color:
+                      toDisplay === TABLE
+                        ? colors.primaryText
+                        : colors.hourListText,
+                  },
+                ]}>
+                {t('table')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => setToDisplay(CHART)}
               style={[
-                styles.forecastText,
-                styles.medium,
-                toDisplay === CHART && styles.selectedText,
-                { color: colors.primaryText },
+                styles.contentSelectionContainer,
+                {
+                  backgroundColor:
+                    toDisplay === CHART
+                      ? colors.timeStepBackground
+                      : colors.inputButtonBackground,
+                  borderColor:
+                    toDisplay === CHART
+                      ? colors.chartSecondaryLine
+                      : colors.secondaryBorder,
+                },
               ]}>
-              {t('chart')}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  styles.forecastText,
+                  styles.medium,
+                  toDisplay === CHART && styles.selectedText,
+                  {
+                    color:
+                      toDisplay === CHART
+                        ? colors.primaryText
+                        : colors.hourListText,
+                  },
+                ]}>
+                {t('chart')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.row, styles.justifyEnd]}>
+            <View
+              style={[styles.separator, { backgroundColor: colors.border }]}
+            />
+            <TouchableOpacity
+              style={styles.bottomSheetButton}
+              onPress={() => paramSheetRef.current.open()}>
+              <Icon
+                name="settings"
+                color={colors.primaryText}
+                width={24}
+                height={24}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.bottomSheetButton}
+              onPress={() => weatherInfoSheetRef.current.open()}>
+              <Icon
+                name="info"
+                color={colors.primaryText}
+                height={24}
+                width={24}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
       <View style={[styles.forecastContainer]}>
@@ -218,6 +285,32 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             />
           )}
       </View>
+      <RBSheet
+        ref={paramSheetRef}
+        height={600}
+        closeOnDragDown
+        customStyles={{
+          container: {
+            ...styles.sheetContainer,
+            backgroundColor: colors.background,
+          },
+        }}>
+        <ParamsBottomSheet onClose={() => paramSheetRef.current.close()} />
+      </RBSheet>
+      <RBSheet
+        ref={weatherInfoSheetRef}
+        height={600}
+        closeOnDragDown
+        customStyles={{
+          container: {
+            ...styles.sheetContainer,
+            backgroundColor: colors.background,
+          },
+        }}>
+        <WeatherInfoBottomSheet
+          onClose={() => weatherInfoSheetRef.current.close()}
+        />
+      </RBSheet>
     </View>
   );
 };
@@ -256,20 +349,40 @@ const styles = StyleSheet.create({
   forecastContainer: {
     marginHorizontal: 8,
     marginBottom: 8,
+    flex: 1,
   },
   forecastText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Roboto-Regular',
   },
   justifyStart: {
     justifyContent: 'flex-start',
   },
+  justifyEnd: {
+    justifyContent: 'flex-end',
+  },
   selectedText: {
     fontFamily: 'Roboto-Bold',
-    textDecorationLine: 'underline',
   },
   withMarginRight: {
     marginRight: 16,
+  },
+  contentSelectionContainer: {
+    borderWidth: 1.5,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 16,
+  },
+  separator: {
+    minHeight: '70%',
+    width: 1,
+  },
+  bottomSheetButton: {
+    padding: 10,
+  },
+  sheetContainer: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 });
 

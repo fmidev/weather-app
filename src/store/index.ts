@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistReducer } from 'redux-persist';
 import SettingsReducer, { settingsPersist } from './settings/reducer';
-import ForecastReducer from './forecast/reducer';
+import ForecastReducer, { forecastPersist } from './forecast/reducer';
 import ObservationReducer, { observationPersist } from './observation/reducer';
 import MapReducer from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
@@ -19,7 +19,10 @@ export default combineReducers({
     persistReducerConfig(settingsPersist),
     SettingsReducer
   ),
-  forecast: ForecastReducer,
+  forecast: persistReducer(
+    persistReducerConfig(forecastPersist),
+    ForecastReducer
+  ),
   observation: persistReducer(
     persistReducerConfig(observationPersist),
     ObservationReducer

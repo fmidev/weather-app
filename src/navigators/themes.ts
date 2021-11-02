@@ -37,6 +37,8 @@ export const lightTheme = {
     warningsIconFill: PRIMARY_BLUE,
     selectedDayBackground: PRIMARY_BLUE,
     chartSecondaryLine: SECONDARY_BLUE,
+    hourListText: GRAY_4,
+    secondaryBorder: GRAY_1,
   },
 };
 
@@ -64,5 +66,7 @@ export const darkTheme = {
     warningsIconFill: BLACK,
     selectedDayBackground: GRAY_4,
     chartSecondaryLine: GRAYISH_BLUE, // TODO: needs design
+    hourListText: WHITE,
+    secondaryBorder: GRAY_1,
   },
 };

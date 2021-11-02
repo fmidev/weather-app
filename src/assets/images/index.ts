@@ -522,17 +522,21 @@ export type WeatherSymbol = {
   };
 };
 
-export const weatherSymbolGetter = (key: string, dark: boolean) => {
-  const symbolSet = dark ? symbolsDark : symbolsLight;
+export const weatherSymbolKeyParser = (key: string) => {
   let parsedKey = key;
-
-  if (parsedKey.length === 3) {
-    // expected to return night symbol
+  if (key.length === 3) {
     parsedKey = key.slice(1, 3);
     if (parsedKey[0] === '0') {
       parsedKey = parsedKey.slice(1, 2);
     }
   }
+  return parsedKey;
+};
+
+export const weatherSymbolGetter = (key: string, dark: boolean) => {
+  const symbolSet = dark ? symbolsDark : symbolsLight;
+  const parsedKey = weatherSymbolKeyParser(key);
+
   // TODO: fix
   const toReturn =
     key !== parsedKey ? symbolSet[parsedKey].night : symbolSet[parsedKey].day;
