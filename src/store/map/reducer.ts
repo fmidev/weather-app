@@ -4,8 +4,10 @@ import {
   UPDATE_SLIDER_TIME,
   UPDATE_SLIDER_STEP,
   ANIMATE_TO_AREA,
+  INITIALIZE_OVERLAYS,
   MapActionTypes,
   MapState,
+  UPDATE_ACTIVE_OVERLAY,
 } from './types';
 
 const INITIAL_STATE: MapState = {
@@ -17,6 +19,8 @@ const INITIAL_STATE: MapState = {
   sliderTime: moment.utc().startOf('hour').unix(),
   sliderStep: 60,
   animateToArea: false,
+  overlays: undefined,
+  activeOverlay: 0,
 };
 
 export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
@@ -48,6 +52,21 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
         animateToArea: action.animate,
       };
     }
+
+    case INITIALIZE_OVERLAYS: {
+      return {
+        ...state,
+        overlays: action.overlays,
+      };
+    }
+
+    case UPDATE_ACTIVE_OVERLAY: {
+      return {
+        ...state,
+        activeOverlay: action.activeId,
+      };
+    }
+
     default: {
       return state;
     }

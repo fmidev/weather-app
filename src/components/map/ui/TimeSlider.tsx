@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
@@ -9,20 +9,27 @@ import { useTheme } from '@react-navigation/native';
 import Icon from '@components/common/Icon';
 
 import { State } from '@store/types';
-import { selectSliderStep, selectSliderTime } from '@store/map/selectors';
+import {
+  selectSliderStep,
+  selectSliderTime,
+  selectActiveOverlay,
+  selectOverlay,
+} from '@store/map/selectors';
 import { updateSliderTime as updateSliderTimeAction } from '@store/map/actions';
 
 import {
   getSliderMaxUnix,
   getSliderMinUnix,
   getSliderStepSeconds,
-} from '@utils/helpers';
+} from '@utils/map';
 
 import { WHITE, SECONDARY_BLUE, SHADOW, CustomTheme } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
+  activeOverlayId: selectActiveOverlay(state),
   sliderStep: selectSliderStep(state),
   sliderTime: selectSliderTime(state),
+  overlay: selectOverlay(state),
 });
 
 const mapDispatchToProps = {
@@ -33,24 +40,36 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type TimeSliderProps = PropsFromRedux & {
-  onTimeStepPressed: () => void;
-};
+type TimeSliderProps = PropsFromRedux & {};
 
 const TimeSlider: React.FC<TimeSliderProps> = ({
-  onTimeStepPressed,
+  activeOverlayId,
   sliderStep,
   sliderTime,
   updateSliderTime,
+  overlay,
 }) => {
   const { t } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
 
   const currentSliderTime = moment.unix(sliderTime).format('HH:mm');
 
-  const min = getSliderMinUnix(sliderStep);
-  const max = getSliderMaxUnix(sliderStep);
+  const sliderMinUnix = useMemo(
+    () => getSliderMinUnix(activeOverlayId, overlay),
+    [activeOverlayId, overlay]
+  );
+  const sliderMaxUnix = useMemo(
+    () => getSliderMaxUnix(activeOverlayId, overlay),
+    [activeOverlayId, overlay]
+  );
+
   const step = getSliderStepSeconds(sliderStep);
+
+  // note: moment treats moment(undefined) as moment()
+  const initialTime = moment(overlay?.observation?.end)
+    .utc()
+    .startOf('hour')
+    .unix();
 
   const roundStep = (v: number): number => Math.round(v / step) * step;
 
@@ -88,26 +107,22 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             thumbTintColor={WHITE}
             minimumTrackTintColor={SECONDARY_BLUE}
             step={step}
-            minimumValue={min}
-            maximumValue={max}
-            value={sliderTime}
+            minimumValue={sliderMinUnix}
+            maximumValue={sliderMaxUnix}
+            value={initialTime} // provide initial slider value
           />
         </View>
-        <TouchableOpacity
-          onPress={onTimeStepPressed}
-          accessibilityLabel={t('map:selectionButtonAccessibilityLabel')}>
-          <View
+        <View
+          style={[
+            styles.stepSelector,
+            { backgroundColor: colors.timeStepBackground },
+          ]}>
+          <Text
             style={[
-              styles.stepSelector,
-              { backgroundColor: colors.timeStepBackground },
-            ]}>
-            <Text
-              style={[
-                styles.stepText,
-                { color: colors.text },
-              ]}>{`${sliderStep} min`}</Text>
-          </View>
-        </TouchableOpacity>
+              styles.stepText,
+              { color: colors.text },
+            ]}>{`${sliderStep} min`}</Text>
+        </View>
       </View>
     </View>
   );

@@ -8,8 +8,7 @@ import { RouteProp, useTheme } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 
 import MapControls from '@components/map/ui/MapControls';
-import RainRadarOverlay from '@components/map/layers/RainRadarOverlay';
-import TimeStepBottomSheet from '@components/map/sheets/TimeStepBottomSheet';
+import WMSOverlay from '@components/map/layers/WMSOverlay';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapMarker from '@components/map/layers/MapMarker';
@@ -17,7 +16,8 @@ import MapMarker from '@components/map/layers/MapMarker';
 import { MapStackParamList } from '@navigators/types';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
-import { selectDisplayLocation } from '@store/map/selectors';
+import { selectDisplayLocation, selectOverlay } from '@store/map/selectors';
+import { initializeOverlays as initializeOverlaysAction } from '@store/map/actions';
 
 import darkMapStyle from '@utils/dark_map_style.json';
 
@@ -36,26 +36,38 @@ const ANIMATE_ZOOM = {
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
   displayLocation: selectDisplayLocation(state),
+  overlay: selectOverlay(state),
 });
-const connector = connect(mapStateToProps, {});
+
+const mapDispatchToProps = {
+  initializeOverlays: initializeOverlaysAction,
+};
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MapScreenProps = PropsFromRedux & {
   navigation: StackNavigationProp<MapStackParamList, 'Map'>;
   route: RouteProp<MapStackParamList, 'Map'>;
+  id: number;
 };
 
 const MapScreen: React.FC<MapScreenProps> = ({
   currentLocation,
   displayLocation,
+  overlay,
+  initializeOverlays,
 }) => {
   const { colors, dark } = useTheme();
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const mapRef = useRef() as React.MutableRefObject<MapView>;
-  const timeStepSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+
+  useEffect(() => {
+    initializeOverlays();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (currentLocation) {
@@ -112,11 +124,12 @@ const MapScreen: React.FC<MapScreenProps> = ({
         ref={mapRef}
         testID="map"
         style={styles.map}
+        userInterfaceStyle={dark ? 'dark' : 'light'}
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}
         onRegionChangeComplete={checkDistanceToLocation}>
-        <RainRadarOverlay />
+        {overlay && <WMSOverlay overlay={overlay} />}
         {displayLocation && currentLocation && (
           <MapMarker
             coordinates={{
@@ -127,7 +140,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
         )}
       </MapView>
       <MapControls
-        onTimeStepPressed={() => timeStepSheetRef.current.open()}
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
         onZoomIn={() => handleZoomIn()}
@@ -163,19 +175,6 @@ const MapScreen: React.FC<MapScreenProps> = ({
         <MapLayersBottomSheet
           onClose={() => mapLayersSheetRef.current.close()}
         />
-      </RBSheet>
-
-      <RBSheet
-        ref={timeStepSheetRef}
-        height={300}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-        }}>
-        <TimeStepBottomSheet onClose={() => timeStepSheetRef.current.close()} />
       </RBSheet>
     </SafeAreaView>
   );

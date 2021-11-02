@@ -36,6 +36,7 @@ import HeaderButton from '@components/common/HeaderButton';
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
+
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
 import { getGeolocation } from '@utils/helpers';
@@ -93,13 +94,6 @@ const Navigator: React.FC<Props> = ({
         Appearance.getColorScheme() === 'dark'));
 
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark());
-
-  console.log(
-    'TabNavigator rendering',
-    initialColorScheme,
-    theme,
-    useDarkTheme
-  );
 
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
