@@ -1,7 +1,9 @@
 import { Dispatch } from 'redux';
 import { getWMSLayerUrlsAndBounds } from '@utils/map';
+import { Config } from '@config';
 import {
   MapLayers,
+  MapOverlay,
   MapActionTypes,
   UPDATE_SLIDER_TIME,
   UPDATE_SLIDER_STEP,
@@ -40,11 +42,16 @@ export const initializeOverlays = () => (
 ) => {
   let overlays;
   getWMSLayerUrlsAndBounds()
-    .then((overlayMap) => {
+    .then((overlayMap: Map<number, MapOverlay> | undefined) => {
       if (overlayMap) {
         overlays = overlayMap;
         const activeId = overlayMap.keys().next().value;
+        const activeLayer = Config.get('map').layers.find(
+          (l) => l.id === activeId
+        );
+        const timeStep = activeLayer?.times.timeStep;
         dispatch({ type: INITIALIZE_OVERLAYS, overlays });
+        if (timeStep) dispatch({ type: UPDATE_SLIDER_STEP, step: timeStep });
         dispatch({ type: UPDATE_ACTIVE_OVERLAY, activeId });
       }
     })
