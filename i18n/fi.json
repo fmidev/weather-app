@@ -104,7 +104,9 @@
     "notifications": "Ilmoitusasetukset",
     "warnings": "Varoitukset",
     "settings": "Asetukset",
-    "symbols": "Sääsymbolit"
+    "symbols": "Sääsymbolit",
+    "locate": "Paikanna",
+    "search": "Haku"
   },
   "placeholder": {
     "weather": "Täällä olisi havaintoa ja ennustetta",

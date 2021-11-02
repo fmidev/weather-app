@@ -167,7 +167,7 @@ const Navigator: React.FC<Props> = ({
     },
     headerRight: () => (
       <HeaderButton
-        title="Haku"
+        title={t('navigation:search')}
         accessibilityLabel="Press to search"
         icon="search"
         onPress={() => navigation.navigate('Search')}
@@ -176,7 +176,7 @@ const Navigator: React.FC<Props> = ({
     ),
     headerLeft: () => (
       <HeaderButton
-        title="Paikanna"
+        title={t('navigation:locate')}
         accessibilityLabel="Press to locate"
         icon="locate"
         onPress={() => getGeolocation(setCurrentLocation, t)}

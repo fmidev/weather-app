@@ -104,7 +104,9 @@
     "notifications": "Notifications",
     "warnings": "Warnings",
     "settings": "Settings",
-    "symbols": "Weather symbols"
+    "symbols": "Weather symbols",
+    "locate": "Locate",
+    "search": "Search"
   },
   "placeholder": {
     "weather": "Some forecast here",
