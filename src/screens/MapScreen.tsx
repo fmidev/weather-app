@@ -124,6 +124,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         ref={mapRef}
         testID="map"
         style={styles.map}
+        userInterfaceStyle={dark ? 'dark' : 'light'}
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}

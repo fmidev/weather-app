@@ -144,7 +144,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const baseUrl = borderTimeComparer(current)
     ? forecast?.url
     : observation?.url;
-  console.log(borderTimeComparer(current) ? 'forecast' : 'observation');
+
   const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
 
   // return null until something to return
