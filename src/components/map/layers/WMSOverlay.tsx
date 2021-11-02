@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Image, ImageURISource, Platform } from 'react-native';
+import { Image, ImageURISource } from 'react-native';
 import { Overlay } from 'react-native-maps';
 import moment from 'moment';
 
@@ -40,7 +40,6 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 }) => {
   const { observation, forecast } = overlay;
 
-  const [hasPrefetched, setHasPrefetched] = useState<boolean>(false);
   const [borderTime, setBorderTime] = useState<{
     time: string;
     type: 'observation' | 'forecast';
@@ -125,8 +124,6 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       checkCache(filteredUrls).then((data) => {
         if (data) console.log('cache hit');
       });
-
-      setHasPrefetched(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [observation, forecast]);
@@ -136,10 +133,10 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     ? (forecast?.bounds as { [key: string]: [number, number] })
     : (observation?.bounds as { [key: string]: [number, number] });
 
-  const bounds: [[number, number], [number, number]] =
-    Platform.OS === 'ios'
-      ? [layerBounds?.bottomLeft, layerBounds?.topRight]
-      : [layerBounds?.topLeft, layerBounds?.bottomRight];
+  const bounds: [[number, number], [number, number]] = [
+    layerBounds?.bottomLeft,
+    layerBounds?.topRight,
+  ];
 
   const baseUrl = borderTimeComparer(current)
     ? forecast?.url
@@ -148,7 +145,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
 
   // return null until something to return
-  if (!hasPrefetched || !image || !bounds) return null;
+  if (!image || !bounds) return null;
 
   return <Overlay bounds={bounds} image={image} />;
 };
