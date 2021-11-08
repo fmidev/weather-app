@@ -107,5 +107,5 @@ export interface LocationState {
   search: Location[] | [];
   current: Location | undefined;
   geolocation?: Geolocation;
-  isGeoLocation?: boolean;
+  isGeolocation?: boolean;
 }

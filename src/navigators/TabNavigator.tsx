@@ -40,6 +40,7 @@ import { setCurrentLocation as setCurrentLocationAction } from '@store/location/
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
 import { getGeolocation } from '@utils/helpers';
+import { PRIMARY_BLUE, WHITE } from '@utils/colors';
 import { selectInitialTab } from '@store/navigation/selectors';
 import { setNavigationTab as setNavigationTabAction } from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
@@ -160,7 +161,9 @@ const Navigator: React.FC<Props> = ({
   }: {
     navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
   }) => ({
-    headerTitle: () => <CommonHeaderTitle />,
+    headerTitle: () => (
+      <CommonHeaderTitle onPress={() => navigation.navigate('Search')} />
+    ),
 
     headerStyle: {
       shadowColor: 'transparent',
@@ -197,11 +200,12 @@ const Navigator: React.FC<Props> = ({
         options={{
           headerBackTitleVisible: false,
           headerTitle: '',
+          headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
           headerStyle: { shadowColor: 'transparent' },
           headerBackImage: ({ tintColor }) => (
             <Icon
               name="arrow-back"
-              style={{ color: tintColor }}
+              style={[styles.headerBackImage, { color: tintColor }]}
               width={26}
               height={26}
             />
@@ -224,11 +228,12 @@ const Navigator: React.FC<Props> = ({
         options={{
           headerBackTitleVisible: false,
           headerTitle: '',
+          headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
           headerStyle: { shadowColor: 'transparent' },
           headerBackImage: ({ tintColor }) => (
             <Icon
               name="arrow-back"
-              style={{ color: tintColor }}
+              style={[styles.headerBackImage, { color: tintColor }]}
               width={26}
               height={26}
             />
@@ -416,6 +421,9 @@ const styles = StyleSheet.create({
   tabText: {
     fontFamily: 'Roboto-Medium',
     fontSize: 14,
+  },
+  headerBackImage: {
+    marginLeft: 22,
   },
 });
 

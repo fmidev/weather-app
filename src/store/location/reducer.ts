@@ -18,6 +18,7 @@ const INITIAL_STATE: LocationState = {
   recent: [],
   search: [],
   current: undefined,
+  isGeolocation: undefined,
 };
 
 export default (
@@ -67,6 +68,7 @@ export default (
       return {
         ...state,
         current: action.location,
+        isGeolocation: action.isGeolocation || false,
       };
     }
 

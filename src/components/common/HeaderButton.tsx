@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   },
   right: {
     alignItems: 'flex-end',
+    paddingLeft: 60,
   },
   text: {
     fontSize: 14,

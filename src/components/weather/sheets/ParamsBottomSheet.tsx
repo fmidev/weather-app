@@ -20,7 +20,7 @@ import {
   updateDisplayParams as updateDisplayParamsAction,
   restoreDefaultDisplayParams as restoreDefaultDisplayParamsAction,
 } from '@store/forecast/actions';
-import constants from '@store/forecast/constants';
+import constants, { SMART_SYMBOL } from '@store/forecast/constants';
 
 import {
   WHITE,
@@ -77,6 +77,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         ios_backgroundColor={GRAYISH_BLUE}
         value={displayParams.some((arr) => arr.includes(param))}
         onValueChange={() => updateDisplayParams([index, param])}
+        disabled={param === SMART_SYMBOL}
       />
     </View>
   );
