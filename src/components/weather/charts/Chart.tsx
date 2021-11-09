@@ -124,7 +124,7 @@ const Chart: React.FC<ChartProps> = ({
         }
         return { x, y };
       })
-      .filter(({ y }) => y !== undefined && y !== null);
+      .filter(({ y }) => y !== undefined);
   });
 
   const tickValues = chartTickValues(data, observation, tickInterval);
