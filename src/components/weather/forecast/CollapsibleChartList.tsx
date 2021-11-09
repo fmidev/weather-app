@@ -4,94 +4,48 @@ import { useTranslation } from 'react-i18next';
 
 import { TimestepData } from '@store/forecast/types';
 import CollapsibleListHeader from '../common/CollapsibleListHeader';
-import DaySelectorWrapper from '../charts/DaySelectorWrapper';
-import TemperatureLineChart from '../charts/TemperatureLineChart';
-import PrecipitationBarChart from '../charts/PrecipitationBarChart';
 
-import WindLineChart from '../charts/WindLineChart';
+import Chart from '../charts/Chart';
+import { ChartDomain, ChartType } from '../charts/types';
 
 type CollapsibleChartListProps = {
   data: TimestepData[] | false;
-  selectedDate: string | undefined | false;
-  showPreviousDay: () => void;
-  showPreviousDisabled: boolean;
-  showNextDay: () => void;
-  showNextDisabled: boolean;
-  maxTemp?: number;
-  minTemp?: number;
 };
 
 const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
   data,
-  selectedDate,
-  showPreviousDay,
-  showPreviousDisabled,
-  showNextDay,
-  showNextDisabled,
-  maxTemp,
-  minTemp,
 }) => {
   const { t } = useTranslation();
   const [openIndex, setOpenIndex] = useState<number | undefined>(undefined);
+  const [chartDomain, setChartDomain] = useState<ChartDomain>({ x: [0, 0] });
+  const charts: ChartType[] = ['temperatureFeels', 'precipitation', 'wind'];
 
   return (
     <View>
-      <CollapsibleListHeader
-        accessibilityLabel={t('forecast:charts:temperatureAccessibilityLabel')}
-        title={t('forecast:charts:temperature')}
-        onPress={() =>
-          openIndex === 0 ? setOpenIndex(undefined) : setOpenIndex(0)
-        }
-        open={openIndex === 0}
-      />
-      {data && openIndex === 0 && (
-        <DaySelectorWrapper
-          selectedDate={selectedDate}
-          handlePrevious={showPreviousDay}
-          previousDisabled={showPreviousDisabled}
-          handleNext={showNextDay}
-          nextDisabled={showNextDisabled}>
-          <TemperatureLineChart data={data} max={maxTemp} min={minTemp} />
-        </DaySelectorWrapper>
-      )}
-      <CollapsibleListHeader
-        accessibilityLabel={t(
-          'forecast:charts:precipitationAccessibilityLabel'
-        )}
-        title={t('forecast:charts:precipitation')}
-        onPress={() =>
-          openIndex === 1 ? setOpenIndex(undefined) : setOpenIndex(1)
-        }
-        open={openIndex === 1}
-      />
-      {data && openIndex === 1 && (
-        <DaySelectorWrapper
-          selectedDate={selectedDate}
-          handlePrevious={showPreviousDay}
-          previousDisabled={showPreviousDisabled}
-          handleNext={showNextDay}
-          nextDisabled={showNextDisabled}>
-          <PrecipitationBarChart data={data} />
-        </DaySelectorWrapper>
-      )}
-      <CollapsibleListHeader
-        accessibilityLabel={t('forecast:charts:windAccessibilityLabel')}
-        title={t('forecast:charts:wind')}
-        onPress={() =>
-          openIndex === 2 ? setOpenIndex(undefined) : setOpenIndex(2)
-        }
-        open={openIndex === 2}
-      />
-      {data && openIndex === 2 && (
-        <DaySelectorWrapper
-          selectedDate={selectedDate}
-          handlePrevious={showPreviousDay}
-          previousDisabled={showPreviousDisabled}
-          handleNext={showNextDay}
-          nextDisabled={showNextDisabled}>
-          <WindLineChart data={data} />
-        </DaySelectorWrapper>
-      )}
+      {charts.map((chartType, index) => (
+        <View key={`forecast-${chartType}`}>
+          <CollapsibleListHeader
+            accessibilityLabel={t(
+              `weather:charts:${chartType}AccessibilityLabel`
+            )}
+            title={t(`weather:charts:${chartType}`)}
+            onPress={() =>
+              openIndex === index
+                ? setOpenIndex(undefined)
+                : setOpenIndex(index)
+            }
+            open={openIndex === index}
+          />
+          {openIndex === index && (
+            <Chart
+              data={data}
+              chartType={chartType}
+              domain={chartDomain}
+              setDomain={setChartDomain}
+            />
+          )}
+        </View>
+      ))}
     </View>
   );
 };

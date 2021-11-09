@@ -92,6 +92,7 @@ export const getObservation = async (
       'totalcloudcover',
       'visibility',
       'windcompass8',
+      'winddirection',
       'windgust',
       'windspeedms',
       'ww_aws', // iso2 = 'fi'

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -6,44 +6,84 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@components/common/Icon';
 
 import { CustomTheme } from '@utils/colors';
+import { ChartDomain } from './types';
 
-type DaySelectorWrapperProps = {
-  selectedDate: string | false | undefined;
-  handlePrevious: () => void;
-  previousDisabled: boolean;
-  handleNext: () => void;
-  nextDisabled: boolean;
-  children: React.ReactNode;
+type TimeSelectorProps = {
+  domain: ChartDomain;
+  setDomain: any;
+  tickValues: number[];
 };
 
-const DaySelectorWrapper: React.FC<DaySelectorWrapperProps> = ({
-  selectedDate,
-  handlePrevious,
-  previousDisabled,
-  handleNext,
-  nextDisabled,
-  children,
+const TimeSelector: React.FC<TimeSelectorProps> = ({
+  domain,
+  setDomain,
+  tickValues,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
+  const [previousDisabled, setPreviousDisabled] = useState(false);
+  const [nextDisabled, setNextDisabled] = useState(false);
+
+  const timeView = 24 * 60 * 60 * 1000; // 86400000;
+
+  const checkButtonStatus = useCallback(() => {
+    if (!domain || !domain.x) {
+      return;
+    }
+    if (!previousDisabled && domain.x[0] === tickValues[0]) {
+      setPreviousDisabled(true);
+    } else if (previousDisabled && domain.x[0] > tickValues[0]) {
+      setPreviousDisabled(false);
+    } else if (
+      !nextDisabled &&
+      domain.x[1] === tickValues[tickValues.length - 1]
+    ) {
+      setNextDisabled(true);
+    } else if (
+      nextDisabled &&
+      domain.x[1] < tickValues[tickValues.length - 1]
+    ) {
+      setNextDisabled(false);
+    }
+  }, [previousDisabled, nextDisabled, domain, tickValues]);
+
+  useEffect(() => {
+    checkButtonStatus();
+  }, [domain, checkButtonStatus]);
+
+  const handlePrevious = () => {
+    if (!domain || !domain.x) {
+      return;
+    }
+    const max = domain.x[0];
+    const min = max - timeView;
+    const firstStep = tickValues[0];
+    if (min < firstStep) {
+      setDomain({ x: [firstStep, firstStep + timeView] });
+    } else {
+      setDomain({ x: [min, max] });
+    }
+  };
+
+  const handleNext = () => {
+    if (!domain || !domain.x) {
+      return;
+    }
+    const min = domain.x[1];
+    const max = min + timeView;
+    const lastStep = tickValues[tickValues.length - 1];
+    if (max > lastStep) {
+      setDomain({ x: [lastStep - timeView, lastStep] });
+    } else {
+      setDomain({ x: [min, max] });
+    }
+  };
 
   return (
-    <View style={styles.constainer}>
-      <Text
-        style={[
-          styles.headerTitle,
-          {
-            color: colors.primaryText,
-          },
-        ]}>
-        {selectedDate}
-      </Text>
-      {children}
+    <View style={styles.container}>
       <View style={styles.row}>
         <TouchableOpacity
-          accessibilityLabel={t(
-            'forecast:charts:previous24hAccessibilityLabel'
-          )}
+          accessibilityLabel={t('weather:charts:previous24hAccessibilityLabel')}
           style={previousDisabled && styles.disabled}
           disabled={previousDisabled}
           onPress={() => handlePrevious()}>
@@ -61,7 +101,7 @@ const DaySelectorWrapper: React.FC<DaySelectorWrapperProps> = ({
                 styles.medium,
                 { color: colors.primaryText },
               ]}>
-              {t('forecast:charts:previous24h')}
+              {t('weather:charts:previous24h')}
             </Text>
           </View>
         </TouchableOpacity>
@@ -74,7 +114,7 @@ const DaySelectorWrapper: React.FC<DaySelectorWrapperProps> = ({
           ]}
         />
         <TouchableOpacity
-          accessibilityLabel={t('forecast:charts:next24hAccessibilityLabel')}
+          accessibilityLabel={t('weather:charts:next24hAccessibilityLabel')}
           style={nextDisabled && styles.disabled}
           disabled={nextDisabled}
           onPress={() => handleNext()}>
@@ -85,7 +125,7 @@ const DaySelectorWrapper: React.FC<DaySelectorWrapperProps> = ({
                 styles.medium,
                 { color: colors.primaryText },
               ]}>
-              {t('forecast:charts:next24h')}
+              {t('weather:charts:next24h')}
             </Text>
             <Icon
               width={24}
@@ -101,8 +141,9 @@ const DaySelectorWrapper: React.FC<DaySelectorWrapperProps> = ({
 };
 
 const styles = StyleSheet.create({
-  constainer: {
-    paddingVertical: 16,
+  container: {
+    flex: 1,
+    alignSelf: 'stretch',
   },
   row: {
     flexDirection: 'row',
@@ -122,11 +163,6 @@ const styles = StyleSheet.create({
   medium: {
     fontFamily: 'Roboto-Medium',
   },
-  headerTitle: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
-  },
   separator: {
     height: 44,
     width: 1,
@@ -136,4 +172,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DaySelectorWrapper;
+export default TimeSelector;

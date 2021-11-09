@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text } from 'react-native';
 import { selectGeoid } from '@store/location/selector';
-
+import { useTranslation } from 'react-i18next';
 import {
   selectData,
   selectDataId,
@@ -17,6 +17,11 @@ import {
 } from '@store/observation/actions';
 
 import { State } from '@store/types';
+import { useTheme } from '@react-navigation/native';
+import { CustomTheme } from '@utils/colors';
+import Chart from './charts/Chart';
+import { ChartDomain, ChartType } from './charts/types';
+import CollapsibleListHeader from './common/CollapsibleListHeader';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -48,6 +53,10 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   fetchObservation,
   setStationId,
 }) => {
+  const { colors } = useTheme() as CustomTheme;
+  const { t } = useTranslation();
+  const [chartDomain, setChartDomain] = useState<ChartDomain>({ x: [0, 0] });
+  const [openIndex, setOpenIndex] = useState<number | undefined>(undefined);
   useEffect(() => {
     fetchObservation({ geoid });
   }, [geoid, fetchObservation]);
@@ -59,10 +68,21 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     }
   }, [stationList, stationId, dataId, setStationId]);
 
+  const charts: ChartType[] = [
+    'cloud',
+    'visCloud',
+    'pressure',
+    'humidity',
+    'wind',
+    'temperature',
+    'precipitation',
+  ];
+
   return (
-    <View>
+    <View style={{ backgroundColor: colors.background }}>
       {stationList.map((station) => (
         <Text
+          style={{ color: colors.primaryText }}
           key={station.id}
           onPress={() => {
             setStationId(dataId, station.id);
@@ -70,12 +90,34 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           {station.name} -- {station.distance}
         </Text>
       ))}
-      {data.map((timeStep) => (
-        <Text key={timeStep.epochtime}>
-          {timeStep.epochtime} -- {timeStep.temperature}
-        </Text>
+
+      {charts.map((chartType, index) => (
+        <View key={`observation-${chartType}`}>
+          <CollapsibleListHeader
+            accessibilityLabel={t(
+              `weather:charts:${chartType}AccessibilityLabel`
+            )}
+            title={t(`weather:charts:${chartType}`)}
+            onPress={() =>
+              openIndex === index
+                ? setOpenIndex(undefined)
+                : setOpenIndex(index)
+            }
+            open={openIndex === index}
+          />
+          {openIndex === index && (
+            <Chart
+              data={data}
+              chartType={chartType}
+              domain={chartDomain}
+              setDomain={setChartDomain}
+              observation
+            />
+          )}
+        </View>
       ))}
     </View>
   );
 };
+
 export default connector(ObservationPanel);
