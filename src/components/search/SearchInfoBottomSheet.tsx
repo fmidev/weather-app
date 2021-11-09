@@ -26,7 +26,7 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
       <View style={styles.closeButtonContainer}>
         <CloseButton
           onPress={onClose}
-          accessibilityLabel={t('infoSheet:closeButtonAccessibilityLabel')}
+          accessibilityLabel={t('infoSheet.closeButtonAccessibilityLabel')}
         />
       </View>
 

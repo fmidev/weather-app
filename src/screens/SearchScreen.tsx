@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -42,8 +43,6 @@ import IconButton from '@components/common/IconButton';
 
 import { getGeolocation } from '@utils/helpers';
 import { CustomTheme } from '@utils/colors';
-
-const MAX_RECENT_SEARCHES = 5; // TODO: define max number of recent searches
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
@@ -89,7 +88,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   resetSearch,
   navigation,
 }) => {
-  // TODO: for some reason this renders twice...
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
@@ -108,7 +106,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     setValue('');
 
     if (update) {
-      updateRecentSearches(location, MAX_RECENT_SEARCHES);
+      updateRecentSearches(location);
     }
 
     setCurrentLocation(location);
@@ -142,75 +140,77 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           underlineColorAndroid="transparent"
         />
       </View>
-      {search.length === 0 && (
-        <View style={styles.locateRow}>
-          <Text style={[styles.title, { color: colors.text }]}>
-            {t('locate')}
-          </Text>
-          <IconButton
-            icon="locate"
-            iconColor={colors.text}
-            backgroundColor={colors.inputBackground}
-            accessibilityLabel={t('locate')}
-            onPress={() => {
-              getGeolocation(setCurrentLocation, t);
-              navigation.goBack();
-            }}
-          />
-        </View>
-      )}
-      <View style={styles.results}>
-        {search.length > 0 && (
-          <AreaList
-            elements={search}
-            title={t('searchResults')}
-            onSelect={(location) => handleSelectLocation(location, true)}
-            onIconPress={(location) => {
-              addFavorite(location as Location);
-              setValue('');
-              Keyboard.dismiss();
-            }}
-            iconNameGetter={(location) =>
-              isFavorite(location) ? 'star-selected' : 'star-unselected'
-            }
-          />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {search.length === 0 && (
+          <View style={styles.locateRow}>
+            <Text style={[styles.title, { color: colors.text }]}>
+              {t('locate')}
+            </Text>
+            <IconButton
+              icon="locate"
+              iconColor={colors.text}
+              backgroundColor={colors.inputBackground}
+              accessibilityLabel={t('locate')}
+              onPress={() => {
+                getGeolocation(setCurrentLocation, t);
+                navigation.goBack();
+              }}
+            />
+          </View>
         )}
-        {/^\s*$/.test(value) && search.length === 0 && favorites.length > 0 && (
-          <AreaList
-            elements={favorites}
-            title={t('favorites')}
-            onSelect={(location) => handleSelectLocation(location, false)}
-            onIconPress={(location) => {
-              deleteFavorite(location.id);
-              updateRecentSearches(location, MAX_RECENT_SEARCHES);
-            }}
-            iconName="star-selected"
-            clearTitle={t('clearFavorites')}
-            onClear={() => deleteAllFavorites()}
-          />
-        )}
-        {/^\s*$/.test(value) && search.length === 0 && recent.length > 0 && (
-          <AreaList
-            elements={recent.slice(0).reverse()}
-            title={t('recentSearches')}
-            onSelect={(location) => handleSelectLocation(location, false)}
-            onIconPress={(location) =>
-              isFavorite(location)
-                ? deleteFavorite(location.id)
-                : addFavorite(location)
-            }
-            iconNameGetter={(location) =>
-              isFavorite(location) ? 'star-selected' : 'star-unselected'
-            }
-            clearTitle={t('clearRecentSearches')}
-            onClear={() => deleteAllRecentSearches()}
-          />
-        )}
+        <View style={styles.results}>
+          {search.length > 0 && (
+            <AreaList
+              elements={search}
+              title={t('searchResults')}
+              onSelect={(location) => handleSelectLocation(location, true)}
+              onIconPress={(location) => {
+                addFavorite(location as Location);
+                setValue('');
+                Keyboard.dismiss();
+              }}
+              iconNameGetter={(location) =>
+                isFavorite(location) ? 'star-selected' : 'star-unselected'
+              }
+            />
+          )}
+          {/^\s*$/.test(value) && search.length === 0 && favorites.length > 0 && (
+            <AreaList
+              elements={favorites}
+              title={t('favorites')}
+              onSelect={(location) => handleSelectLocation(location, false)}
+              onIconPress={(location) => {
+                deleteFavorite(location.id);
+                updateRecentSearches(location);
+              }}
+              iconName="star-selected"
+              clearTitle={t('clearFavorites')}
+              onClear={() => deleteAllFavorites()}
+            />
+          )}
+          {/^\s*$/.test(value) && search.length === 0 && recent.length > 0 && (
+            <AreaList
+              elements={recent.slice(0).reverse()}
+              title={t('recentSearches')}
+              onSelect={(location) => handleSelectLocation(location, false)}
+              onIconPress={(location) =>
+                isFavorite(location)
+                  ? deleteFavorite(location.id)
+                  : addFavorite(location)
+              }
+              iconNameGetter={(location) =>
+                isFavorite(location) ? 'star-selected' : 'star-unselected'
+              }
+              clearTitle={t('clearRecentSearches')}
+              onClear={() => deleteAllRecentSearches()}
+            />
+          )}
 
-        {!/^\s*$/.test(value) && search.length === 0 && (
-          <Text style={{ color: colors.text }}>{t('noResults')}</Text>
-        )}
-      </View>
+          {!/^\s*$/.test(value) && search.length === 0 && (
+            <Text style={{ color: colors.text }}>{t('noResults')}</Text>
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
