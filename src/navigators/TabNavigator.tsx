@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   AppState,
   Appearance,
@@ -15,12 +15,12 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 import type { NavigationState } from '@react-navigation/routers';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
 
-import PlaceholderScreen from '@screens/PlaceHolderScreen';
 import OthersScreen from '@screens/OthersScreen';
 import MapScreen from '@screens/MapScreen';
 import WeatherScreen from '@screens/WeatherScreen';
@@ -29,6 +29,8 @@ import SettingsScreen from '@screens/SettingsScreen';
 import SearchScreen from '@screens/SearchScreen';
 import AboutScreen from '@screens/AboutScreen';
 import WarningsScreen from '@screens/WarningsScreen';
+
+import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
 import Icon from '@components/common/Icon';
 import HeaderButton from '@components/common/HeaderButton';
@@ -86,6 +88,7 @@ const Navigator: React.FC<Props> = ({
   const { t, ready } = useTranslation(['navigation', 'placeholder'], {
     useSuspense: false,
   });
+  const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   const isDark = (): boolean =>
     theme === 'dark' ||
@@ -149,29 +152,34 @@ const Navigator: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
-  const NotificationsScreen = () => (
-    <PlaceholderScreen
-      text={`${t('placeholder:notifications')}`}
-      testIndex={6}
-    />
-  );
+  const CommonHeaderOptions = {
+    headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
+    headerStyle: {
+      shadowColor: 'transparent',
+    },
+    headerBackImage: ({ tintColor }: { tintColor: string }) => (
+      <Icon
+        name="arrow-back"
+        style={[styles.headerBackImage, { color: tintColor }]}
+        width={26}
+        height={26}
+      />
+    ),
+  };
 
-  const CommonHeaderOptions = ({
+  const LocationHeaderOptions = ({
     navigation,
   }: {
     navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
   }) => ({
+    ...CommonHeaderOptions,
     headerTitle: () => (
       <CommonHeaderTitle onPress={() => navigation.navigate('Search')} />
     ),
-
-    headerStyle: {
-      shadowColor: 'transparent',
-    },
     headerRight: () => (
       <HeaderButton
         title={t('navigation:search')}
-        accessibilityLabel="Press to search"
+        accessibilityLabel={t('navigation:searchAccessibilityLabel')}
         icon="search"
         onPress={() => navigation.navigate('Search')}
         right
@@ -180,37 +188,37 @@ const Navigator: React.FC<Props> = ({
     headerLeft: () => (
       <HeaderButton
         title={t('navigation:locate')}
-        accessibilityLabel="Press to locate"
+        accessibilityLabel={t('navigation:locateAccessibilityLabel')}
         icon="locate"
         onPress={() => getGeolocation(setCurrentLocation, t)}
       />
     ),
   });
 
+  const SearchScreenOptions = {
+    ...CommonHeaderOptions,
+    headerBackTitleVisible: false,
+    headerTitle: t('navigation:search'),
+    headerRight: () => (
+      <HeaderButton
+        accessibilityLabel="Press to show info"
+        icon="info"
+        onPress={() => searchInfoSheetRef.current.open()}
+      />
+    ),
+  };
+
   const MapStackScreen = () => (
     <MapStack.Navigator>
       <MapStack.Screen
         name="Map"
         component={MapScreen}
-        options={CommonHeaderOptions}
+        options={LocationHeaderOptions}
       />
       <MapStack.Screen
         name="Search"
         component={SearchScreen}
-        options={{
-          headerBackTitleVisible: false,
-          headerTitle: '',
-          headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
-          headerStyle: { shadowColor: 'transparent' },
-          headerBackImage: ({ tintColor }) => (
-            <Icon
-              name="arrow-back"
-              style={[styles.headerBackImage, { color: tintColor }]}
-              width={26}
-              height={26}
-            />
-          ),
-        }}
+        options={SearchScreenOptions}
       />
     </MapStack.Navigator>
   );
@@ -220,25 +228,12 @@ const Navigator: React.FC<Props> = ({
       <WeatherStack.Screen
         name="Weather"
         component={WeatherScreen}
-        options={CommonHeaderOptions}
+        options={LocationHeaderOptions}
       />
       <WeatherStack.Screen
         name="Search"
         component={SearchScreen}
-        options={{
-          headerBackTitleVisible: false,
-          headerTitle: '',
-          headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
-          headerStyle: { shadowColor: 'transparent' },
-          headerBackImage: ({ tintColor }) => (
-            <Icon
-              name="arrow-back"
-              style={[styles.headerBackImage, { color: tintColor }]}
-              width={26}
-              height={26}
-            />
-          ),
-        }}
+        options={SearchScreenOptions}
       />
     </WeatherStack.Navigator>
   );
@@ -267,60 +262,24 @@ const Navigator: React.FC<Props> = ({
         name="About"
         component={AboutScreen}
         options={{
+          ...CommonHeaderOptions,
           headerTitle: `${t('navigation:about')}`,
-          headerBackImage: ({ tintColor }) => (
-            <Icon
-              name="arrow-back"
-              style={{ color: tintColor }}
-              width={26}
-              height={26}
-            />
-          ),
         }}
       />
       <OthersStack.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
+          ...CommonHeaderOptions,
           headerTitle: `${t('navigation:settings')}`,
-          headerBackImage: ({ tintColor }) => (
-            <Icon
-              name="arrow-back"
-              style={{ color: tintColor }}
-              width={26}
-              height={26}
-            />
-          ),
-        }}
-      />
-      <OthersStack.Screen
-        name="Notifications"
-        component={NotificationsScreen}
-        options={{
-          headerTitle: `${t('navigation:notifications')}`,
-          headerBackImage: ({ tintColor }) => (
-            <Icon
-              name="arrow-back"
-              style={{ color: tintColor }}
-              width={26}
-              height={26}
-            />
-          ),
         }}
       />
       <OthersStack.Screen
         name="Symbols"
         component={SymbolsScreen}
         options={{
+          ...CommonHeaderOptions,
           headerTitle: `${t('navigation:symbols')}`,
-          headerBackImage: ({ tintColor }) => (
-            <Icon
-              name="arrow-back"
-              style={{ color: tintColor }}
-              width={26}
-              height={26}
-            />
-          ),
         }}
       />
     </OthersStack.Navigator>
@@ -412,6 +371,15 @@ const Navigator: React.FC<Props> = ({
             }}
           />
         </Tab.Navigator>
+        <RBSheet
+          ref={searchInfoSheetRef}
+          height={700}
+          closeOnDragDown
+          customStyles={{ container: styles.sheetContainer }}>
+          <SearchInfoBottomSheet
+            onClose={() => searchInfoSheetRef.current.close()}
+          />
+        </RBSheet>
       </NavigationContainer>
     </>
   );
@@ -424,6 +392,10 @@ const styles = StyleSheet.create({
   },
   headerBackImage: {
     marginLeft: 22,
+  },
+  sheetContainer: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 });
 

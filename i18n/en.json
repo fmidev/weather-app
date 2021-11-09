@@ -106,7 +106,9 @@
     "settings": "Settings",
     "symbols": "Weather symbols",
     "locate": "Locate",
-    "search": "Search"
+    "search": "Search",
+    "locateAccessibilityLabel": "Use current location",
+    "searchAccessibilityLabel": "Open search screen"
   },
   "placeholder": {
     "weather": "Some forecast here",
@@ -177,7 +179,20 @@
     "locate": "Use your location",
     "clearFavorites": "Clear all my locations",
     "clearRecentSearches": "Clear all previous searches",
-    "remember": "Remember"
+    "noResults": "Search returned no results",
+    "remember": "Remember",
+    "infoSheet": {
+      "closeButtonAccessibilityLabel": "Close search screen info",
+      "saveAndDeleteTitle": "Saving and deleting my locations",
+      "savedLocation": "saved location",
+      "unsavedLocation": "unsaved location",
+      "saveHint": "Save location to app's memory.",
+      "deleteHint": "Delete saved location.",
+      "deleteElaboration": "Latest deleted locations show up in Recent searches.",
+      "locateTitle": "Using your location",
+      "locateHint": "Use device location.",
+      "locateElaboration": "The app attempts to locate users device and fetch weather data based on that location. The accuracy of the location depends on the device, not the app itself."
+    }
   },
   "symbols": {
     "1": "Clear",

@@ -43,7 +43,7 @@ import IconButton from '@components/common/IconButton';
 import { getGeolocation } from '@utils/helpers';
 import { CustomTheme } from '@utils/colors';
 
-const MAX_RECENT_SEARCHES = 3; // TODO: define max number of recent searches
+const MAX_RECENT_SEARCHES = 5; // TODO: define max number of recent searches
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
@@ -180,7 +180,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             elements={favorites}
             title={t('favorites')}
             onSelect={(location) => handleSelectLocation(location, false)}
-            onIconPress={(location) => deleteFavorite(location.id)}
+            onIconPress={(location) => {
+              deleteFavorite(location.id);
+              updateRecentSearches(location, MAX_RECENT_SEARCHES);
+            }}
             iconName="star-selected"
             clearTitle={t('clearFavorites')}
             onClear={() => deleteAllFavorites()}
@@ -205,7 +208,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         )}
 
         {!/^\s*$/.test(value) && search.length === 0 && (
-          <Text style={{ color: colors.text }}>Haku ei tuottanut tuloksia</Text>
+          <Text style={{ color: colors.text }}>{t('noResults')}</Text>
         )}
       </View>
     </SafeAreaView>

@@ -6,7 +6,7 @@ import {
   ViewStyle,
   StyleSheet,
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { Theme, useTheme } from '@react-navigation/native';
 
 import { CustomTheme } from '@utils/colors';
 
@@ -16,6 +16,7 @@ type CloseButtonProps = {
   onPress: () => void;
   accessibilityLabel: string;
   style?: StyleProp<ViewStyle>;
+  theme?: Theme;
 };
 
 const CloseButton: React.FC<CloseButtonProps> = ({
@@ -23,6 +24,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   accessibilityLabel,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+
   return (
     <View style={[styles.button, { backgroundColor: colors.inputBackground }]}>
       <TouchableOpacity
