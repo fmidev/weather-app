@@ -1,5 +1,4 @@
 import { PersistConfig } from '@store/types';
-import { Config } from '@config';
 import {
   ADD_FAVORITE,
   DELETE_ALL_FAVORITES,
@@ -25,12 +24,11 @@ export default (
   state = INITIAL_STATE,
   action: LocationActionTypes
 ): LocationState => {
-  const { maxRecent, maxFavorite } = Config.get('location');
   switch (action.type) {
     case ADD_FAVORITE: {
       return {
         ...state,
-        favorites: [...state.favorites, action.location].slice(-maxFavorite),
+        favorites: [...state.favorites, action.location].slice(-action.max),
       };
     }
 
@@ -54,7 +52,7 @@ export default (
         recent: state.recent
           .filter(({ id }) => id !== action.location.id)
           .concat(action.location)
-          .slice(-maxRecent),
+          .slice(-action.max),
       };
     }
 

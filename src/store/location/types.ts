@@ -45,6 +45,7 @@ interface GetFavorites {
 interface AddFavorite {
   type: typeof ADD_FAVORITE;
   location: Location;
+  max: number;
 }
 
 interface DeleteFavorite {
@@ -64,6 +65,7 @@ interface GetRecentSearches {
 interface UpdateRecentSearches {
   type: typeof UPDATE_RECENT_SEARCHES;
   location: Location;
+  max: number;
 }
 
 interface DeleteAllRecentSearches {

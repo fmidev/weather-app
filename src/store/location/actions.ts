@@ -1,5 +1,6 @@
 import getAutocomplete from '@network/AutocompleteApi';
 import { Dispatch } from 'react';
+import { Config } from '@config';
 import {
   SET_GEOLOCATION,
   SET_CURRENT_LOCATION,
@@ -31,7 +32,8 @@ export const setCurrentLocation = (
 export const addFavorite = (location: Location) => (
   dispatch: Dispatch<LocationActionTypes>
 ) => {
-  dispatch({ type: ADD_FAVORITE, location });
+  const max = Config.get('location').maxFavorite;
+  dispatch({ type: ADD_FAVORITE, location, max });
 };
 
 export const deleteFavorite = (id: number) => (
@@ -68,7 +70,8 @@ export const resetSearch = () => (dispatch: Dispatch<LocationActionTypes>) => {
 export const updateRecentSearches = (location: Location) => (
   dispatch: Dispatch<LocationActionTypes>
 ) => {
-  dispatch({ type: UPDATE_RECENT_SEARCHES, location });
+  const max = Config.get('location').maxRecent;
+  dispatch({ type: UPDATE_RECENT_SEARCHES, location, max });
 };
 
 export const deleteAllRecentSearches = () => (
