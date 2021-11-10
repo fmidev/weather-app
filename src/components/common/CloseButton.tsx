@@ -23,6 +23,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   accessibilityLabel,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+
   return (
     <View style={[styles.button, { backgroundColor: colors.inputBackground }]}>
       <TouchableOpacity

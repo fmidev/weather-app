@@ -106,7 +106,9 @@
     "settings": "Asetukset",
     "symbols": "Sääsymbolit",
     "locate": "Paikanna",
-    "search": "Haku"
+    "search": "Haku",
+    "locateAccessibilityLabel": "Käytä nykyistä sijaintiasi",
+    "searchAccessibilityLabel": "Avaa hakusivu"
   },
   "placeholder": {
     "weather": "Täällä olisi havaintoa ja ennustetta",
@@ -178,7 +180,20 @@
     "locate": "Paikanna oma sijainti",
     "clearFavorites": "Poista kaikki omat paikat",
     "clearRecentSearches": "Poista kaikki edelliset haut",
-    "remember": "Muista"
+    "noResults": "Haku ei tuottanut tuloksia",
+    "remember": "Muista",
+    "infoSheet": {
+      "closeButtonAccessibilityLabel": "Sulje hakusivun selitteet",
+      "saveAndDeleteTitle": "Oman paikan tallennus ja poistaminen",
+      "savedLocation": "tallennettu paikka",
+      "unsavedLocation": "tallentamaton paikka",
+      "saveHint": "Tallenna paikka sovelluksen muistiin.",
+      "deleteHint": "Poista tallennettu paikka.",
+      "deleteElaboration": "Viimeisimmät poistetut paikat näkyvät Edellisissä paikoissa.",
+      "locateTitle": "Oman sijainnin paikannus",
+      "locateHint": "Paikanna oma sijainti.",
+      "locateElaboration": "Sovellus pyrkii paikantamaan käyttäjän laitteen ja etsimään tiedot löydetyn sijainnin perusteella. Paikannuksen tarkkuus riippuu käyttäjän laitteesta, ei sovelluksesta."
+    }
   },
   "symbols": {
     "1": "Selkeää",

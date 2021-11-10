@@ -5,7 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import Icon from './Icon';
 
 type HeaderButtonProps = {
-  title: string;
+  title?: string;
   onPress: () => void;
   accessibilityLabel: string;
   icon: string;
@@ -26,10 +26,12 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
         <Icon
           name={icon}
           style={{ color: colors.text }}
-          width={22}
-          height={22}
+          width={24}
+          height={24}
         />
-        <Text style={[styles.text, { color: colors.text }]}>{title}</Text>
+        {!!title && (
+          <Text style={[styles.text, { color: colors.text }]}>{title}</Text>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -40,6 +42,7 @@ const styles = StyleSheet.create({
   },
   right: {
     alignItems: 'flex-end',
+    paddingLeft: 60,
   },
   text: {
     fontSize: 14,

@@ -16,7 +16,7 @@ export const selectIsGeolocation = createSelector<
   State,
   LocationState,
   boolean | undefined
->(selectLocationDomain, (location) => location.isGeoLocation);
+>(selectLocationDomain, (location) => location.isGeolocation);
 
 export const selectCurrent = createSelector<State, LocationState, Location>(
   selectLocationDomain,

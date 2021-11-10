@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Text, View, StyleSheet, Platform } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import { State } from '@store/types';
@@ -17,11 +17,14 @@ const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type CommonHeaderProps = PropsFromRedux & {};
+type CommonHeaderProps = PropsFromRedux & {
+  onPress: () => void;
+};
 
 const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
   currentLocation,
   isGeolocation,
+  onPress,
 }) => {
   const { colors } = useTheme();
   const title = (): string => {
@@ -35,12 +38,14 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      {isGeolocation && (
-        <Icon name="map-marker" style={{ color: colors.text }} height={12} />
-      )}
-      <Text style={[styles.title, { color: colors.text }]}>{title()}</Text>
-    </View>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.container}>
+        {isGeolocation && (
+          <Icon name="map-marker" style={{ color: colors.text }} height={12} />
+        )}
+        <Text style={[styles.title, { color: colors.text }]}>{title()}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -48,11 +53,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    ...Platform.select({
-      android: {
-        justifyContent: 'center',
-      },
-    }),
+    justifyContent: 'center',
+    height: '100%',
+    minWidth: '100%',
   },
   title: {
     fontSize: 16,

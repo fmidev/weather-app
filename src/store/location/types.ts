@@ -64,7 +64,6 @@ interface GetRecentSearches {
 interface UpdateRecentSearches {
   type: typeof UPDATE_RECENT_SEARCHES;
   location: Location;
-  max: number;
 }
 
 interface DeleteAllRecentSearches {
@@ -107,5 +106,5 @@ export interface LocationState {
   search: Location[] | [];
   current: Location | undefined;
   geolocation?: Geolocation;
-  isGeoLocation?: boolean;
+  isGeolocation?: boolean;
 }

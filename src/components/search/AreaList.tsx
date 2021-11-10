@@ -5,7 +5,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
 import { CustomTheme } from '@utils/colors';
-import { Location } from '@store/settings/types';
+import { Location } from '@store/location/types';
 
 type ClearProps =
   | { clearTitle?: undefined; onClear?: never }
@@ -62,7 +62,9 @@ const AreaList: React.FC<AreaListProps> = ({
               { borderBottomColor: colors.border },
             ]}>
             <View style={styles.listItem}>
-              <TouchableOpacity onPress={() => onSelect(element)}>
+              <TouchableOpacity
+                onPress={() => onSelect(element)}
+                style={styles.locationContainer}>
                 <View style={styles.listItem}>
                   <Text style={[styles.resultText, { color: colors.text }]}>
                     {element.area && element.area !== element.name
@@ -120,6 +122,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 44,
+  },
+  locationContainer: {
+    flex: 1,
   },
   withBorderBottom: {
     borderBottomWidth: 1,

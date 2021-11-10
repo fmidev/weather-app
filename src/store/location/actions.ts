@@ -65,10 +65,10 @@ export const resetSearch = () => (dispatch: Dispatch<LocationActionTypes>) => {
   dispatch({ type: RESET_AUTOCOMPLETE });
 };
 
-export const updateRecentSearches = (location: Location, max: number) => (
+export const updateRecentSearches = (location: Location) => (
   dispatch: Dispatch<LocationActionTypes>
 ) => {
-  dispatch({ type: UPDATE_RECENT_SEARCHES, location, max });
+  dispatch({ type: UPDATE_RECENT_SEARCHES, location });
 };
 
 export const deleteAllRecentSearches = () => (

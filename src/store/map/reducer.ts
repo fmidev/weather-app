@@ -12,7 +12,7 @@ import {
 
 const INITIAL_STATE: MapState = {
   mapLayers: {
-    location: false,
+    location: true,
     weather: true,
     radar: false,
   },

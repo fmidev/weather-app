@@ -14,6 +14,9 @@ import ArrowUp from '@assets/images/icons/arrow-up.svg';
 import Close from '@assets/images/icons/close.svg';
 import FeelsLikeColder from '@assets/images/icons/feels-like-colder.svg';
 import FeelsLikeWarmer from '@assets/images/icons/feels-like-warmer.svg';
+import InfoDeleteLocation from '@assets/images/icons/info-delete-location.svg';
+import InfoLocate from '@assets/images/icons/info-locate.svg';
+import InfoSaveLocation from '@assets/images/icons/info-save-location.svg';
 import Info from '@assets/images/icons/info.svg';
 import Layers from '@assets/images/icons/layers.svg';
 import Locate from '@assets/images/icons/locate.svg';
@@ -102,6 +105,12 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <FeelsLikeColder {...props} />;
     case 'feels-like-warmer':
       return <FeelsLikeWarmer {...props} />;
+    case 'info-delete-location':
+      return <InfoDeleteLocation {...props} />;
+    case 'info-locate':
+      return <InfoLocate {...props} />;
+    case 'info-save-location':
+      return <InfoSaveLocation {...props} />;
     case 'info':
       return <Info {...props} />;
     case 'layers':
