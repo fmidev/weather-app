@@ -1,7 +1,5 @@
 import reducer from '@store/location/reducer';
 import * as types from '@store/location/types';
-import { Config } from '@config';
-import defaultConfig from '../config/testConfig';
 
 const location: types.Location = {
   name: 'Test',
@@ -21,11 +19,6 @@ const defaultState: types.LocationState = {
 };
 
 describe('location reducer', () => {
-  Config.setDefaultConfig({
-    ...defaultConfig,
-    location: { ...defaultConfig.location, maxRecent: 3 },
-  });
-
   it('should handle SET_GEOLOCATION', () => {
     const helsinkiCoordinates = {
       latitude: 60.1733244,
@@ -47,6 +40,7 @@ describe('location reducer', () => {
       reducer(defaultState, {
         type: types.ADD_FAVORITE,
         location,
+        max: 10,
       })
     ).toMatchObject({
       favorites: [...defaultState.favorites, location],
@@ -79,6 +73,7 @@ describe('location reducer', () => {
       reducer(defaultState, {
         type: types.UPDATE_RECENT_SEARCHES,
         location: { ...location, id: 2 },
+        max: 3,
       })
     ).toMatchObject({
       recent: defaultState.recent,
@@ -87,6 +82,7 @@ describe('location reducer', () => {
     const updateReducer = reducer(defaultState, {
       type: types.UPDATE_RECENT_SEARCHES,
       location,
+      max: 3,
     });
 
     expect(updateReducer).toMatchObject({
