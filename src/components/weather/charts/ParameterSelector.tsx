@@ -8,7 +8,7 @@ import { ChartType } from './types';
 type ParameterSelectorProps = {
   chartTypes: ChartType[];
   parameter: ChartType;
-  setParameter: any;
+  setParameter: (chartType: ChartType) => void;
 };
 
 const ParameterSelector: React.FC<ParameterSelectorProps> = ({

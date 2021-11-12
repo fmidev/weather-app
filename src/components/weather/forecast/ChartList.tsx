@@ -7,13 +7,11 @@ import Chart from '../charts/Chart';
 import { ChartType } from '../charts/types';
 import ParameterSelector from '../charts/ParameterSelector';
 
-type CollapsibleChartListProps = {
+type ChartListProps = {
   data: TimestepData[] | false;
 };
 
-const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
-  data,
-}) => {
+const ChartList: React.FC<ChartListProps> = ({ data }) => {
   const [parameter, setParameter] = useState<ChartType>('temperatureFeels');
   const charts: ChartType[] = ['temperatureFeels', 'precipitation', 'wind'];
 
@@ -29,4 +27,4 @@ const CollapsibleChartList: React.FC<CollapsibleChartListProps> = ({
   );
 };
 
-export default CollapsibleChartList;
+export default ChartList;

@@ -50,7 +50,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
   const [initialized, setInitialized] = useState<boolean>(false);
   const [timeSelectorButtons, setTimeSelectorButtons] = useState<
     [boolean, boolean]
-  >([false, true]);
+  >([true, false]);
   const { colors } = useTheme() as CustomTheme;
   const { i18n } = useTranslation();
   const config = Config.get('weather');

@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -8,9 +14,9 @@ import Icon from '@components/common/Icon';
 import { CustomTheme } from '@utils/colors';
 
 type TimeSelectorProps = {
-  scrollRef: any;
+  scrollRef: React.MutableRefObject<ScrollView>;
   scrollIndex: number;
-  setScrollIndex: any;
+  setScrollIndex: (index: number) => void;
   stepLength: number;
   buttonStatus: [boolean, boolean];
 };

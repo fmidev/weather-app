@@ -31,7 +31,7 @@ import Icon from '@components/common/Icon';
 import CollapsibleListHeader from './common/CollapsibleListHeader';
 import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
-import CollapsibleChartList from './forecast/CollapsibleChartList';
+import ChartList from './forecast/ChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 
@@ -252,7 +252,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           })}
         {headerLevelForecast &&
           headerLevelForecast.length > 0 &&
-          toDisplay === CHART && <CollapsibleChartList data={data} />}
+          toDisplay === CHART && <ChartList data={data} />}
       </View>
       <RBSheet
         ref={paramSheetRef}
