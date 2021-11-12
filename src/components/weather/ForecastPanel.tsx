@@ -89,7 +89,6 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
 
   useEffect(() => {
     moment.tz.setDefault(timezone);
-    // time.moment.tz.setDefault(timezone);
   }, [timezone]);
 
   const forecastLastUpdated =
