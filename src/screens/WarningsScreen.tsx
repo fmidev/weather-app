@@ -46,7 +46,7 @@ const WarningsScreen: React.FC = () => {
     style.innerHTML = '\
       body { background-color: ${colors.screenBackground} !important; margin: 0px !important; margin-top: 12px !important; } \
       #fmi-warnings { padding: 0px !important; margin:  0px !important; } \
-      .date-selector-cell-header { background-color: ${colors.screenBackground} !important; } \
+      @media (max-width: 575px) {.date-selector-cell-header { background-color: ${colors.screenBackground} !important; } } \
       .nav-tabs > .nav-item:first-of-type .date-selector-text { border-top-left-radius: 10px !important; } \
       .nav-tabs > .nav-item:last-of-type .date-selector-text { border-top-right-radius: 10px !important; } \
       .header-region, .symbol-list { padding-left: 5px !important} \
