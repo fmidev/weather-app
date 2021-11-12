@@ -6,23 +6,9 @@ import {
 } from '@components/weather/charts/types';
 import moment from 'moment';
 
-export const chartXDomain = (
-  domain: ChartDomain,
-  observation: boolean | undefined,
-  tickValues: number[]
-): ChartDomain => {
-  if (domain.x && domain.x[0] !== 0 && domain.x[1] !== 0) {
-    return domain;
-  }
-  if (observation) {
-    return {
-      x: [tickValues[0], tickValues[tickValues.length - 1]],
-    };
-  }
-  return {
-    x: [tickValues[0], tickValues[9]],
-  };
-};
+export const chartXDomain = (tickValues: number[]): ChartDomain => ({
+  x: [tickValues[0], tickValues[tickValues.length - 1]],
+});
 
 export const chartYDomain = (
   minMax: ChartMinMax,
@@ -62,7 +48,8 @@ export const chartTickValues = (
 ) => {
   const unfiltered = data.map(({ epochtime }, index) => {
     const time = moment.unix(epochtime);
-    return (!observation && index === 0) ||
+    return index === 0 ||
+      index === data.length - 1 ||
       (time.hour() % tickInterval === 0 && time.minutes() === 0)
       ? epochtime * 1000
       : false;
@@ -71,32 +58,15 @@ export const chartTickValues = (
     <(t: number | false) => t is number>((t) => typeof t === 'number')
   );
 
-  if (observation) {
-    tickValues.push(
-      tickValues[tickValues.length - 1] + tickInterval * 60 * 60 * 1000
-    );
-  }
   return tickValues;
 };
 
-export const tickFormat = (
-  tick: any,
-  index: number,
-  ticks: any[]
-): string | number => {
+export const tickFormat = (tick: any): string | number => {
   const time = moment(tick);
   const hour = time.hour();
+  const minutes = time.minutes();
 
-  if (ticks.length > 30 && ![0].includes(hour)) {
-    return '';
-  }
-  if (ticks.length > 20 && ![0, 12].includes(hour)) {
-    return '';
-  }
-  if (ticks.length > 10 && ![0, 6, 12, 18].includes(hour)) {
-    return '';
-  }
-  if (hour % 3 !== 0) {
+  if (hour % 3 !== 0 || minutes !== 0) {
     return '';
   }
   if (hour === 0) {
@@ -104,4 +74,29 @@ export const tickFormat = (
 ${time.format('D.M')}`;
   }
   return hour;
+};
+
+export const chartYLabelText = (chartType: ChartType) => {
+  if (['temperatureFeels', 'temperature'].includes(chartType)) {
+    return '°C';
+  }
+  if (['cloud'].includes(chartType)) {
+    return 'm';
+  }
+  if (['humidity'].includes(chartType)) {
+    return '%';
+  }
+  if (['precipitation'].includes(chartType)) {
+    return 'mm';
+  }
+  if (['pressure'].includes(chartType)) {
+    return 'hPa';
+  }
+  if (['visCloud'].includes(chartType)) {
+    return 'km';
+  }
+  if (['wind'].includes(chartType)) {
+    return 'm/s';
+  }
+  return '';
 };

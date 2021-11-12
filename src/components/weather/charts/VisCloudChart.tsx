@@ -1,18 +1,14 @@
 import React from 'react';
-import {
-  VictoryLine,
-  VictoryBar,
-  VictoryLabel,
-  VictoryGroup,
-} from 'victory-native';
+import { VictoryLine, VictoryBar, VictoryGroup } from 'victory-native';
 import { CustomTheme } from '@utils/colors';
 import { useTheme } from '@react-navigation/native';
+import chartTheme from '@utils/chartTheme';
 import { ChartDataProps } from './types';
 
 const VisCloudChart: React.FC<ChartDataProps> = ({
   chartValues,
   domain,
-  animate,
+  width,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { totalcloudcover, visibility } = chartValues;
@@ -24,13 +20,12 @@ const VisCloudChart: React.FC<ChartDataProps> = ({
   }));
 
   return (
-    <VictoryGroup>
+    <VictoryGroup theme={chartTheme} width={width}>
       {normalizedCloudCover && normalizedCloudCover.length > 0 && (
         <VictoryBar
           data={normalizedCloudCover}
-          key="secondary"
           domain={domain}
-          animate={animate}
+          key="secondary"
           alignment="middle"
           barWidth={3}
           style={{
@@ -44,18 +39,10 @@ const VisCloudChart: React.FC<ChartDataProps> = ({
         <VictoryLine
           data={visibility}
           domain={domain}
-          animate={animate}
           style={{ data: { stroke: colors.primaryText } }}
           interpolation="natural"
         />
       )}
-
-      <VictoryLabel
-        text="km"
-        x={30}
-        y={20}
-        style={{ fill: colors.primaryText }}
-      />
     </VictoryGroup>
   );
 };

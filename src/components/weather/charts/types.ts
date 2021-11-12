@@ -50,5 +50,5 @@ export type ChartData = ForDataStep[] | ObsDataStep[];
 export type ChartDataProps = {
   chartValues: ChartValues;
   domain: ChartDomain;
-  animate: boolean | any;
+  width: number;
 };

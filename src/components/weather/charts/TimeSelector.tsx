@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -6,77 +6,38 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@components/common/Icon';
 
 import { CustomTheme } from '@utils/colors';
-import { ChartDomain } from './types';
 
 type TimeSelectorProps = {
-  domain: ChartDomain;
-  setDomain: any;
-  tickValues: number[];
+  scrollRef: any;
+  scrollIndex: number;
+  setScrollIndex: any;
+  stepLength: number;
+  buttonStatus: [boolean, boolean];
 };
 
 const TimeSelector: React.FC<TimeSelectorProps> = ({
-  domain,
-  setDomain,
-  tickValues,
+  scrollRef,
+  setScrollIndex,
+  scrollIndex,
+  stepLength,
+  buttonStatus,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
-  const [previousDisabled, setPreviousDisabled] = useState(false);
-  const [nextDisabled, setNextDisabled] = useState(false);
+  const [previousDisabled, nextDisabled] = buttonStatus;
 
-  const timeView = 24 * 60 * 60 * 1000; // 86400000;
-
-  const checkButtonStatus = useCallback(() => {
-    if (!domain || !domain.x) {
-      return;
-    }
-    if (!previousDisabled && domain.x[0] === tickValues[0]) {
-      setPreviousDisabled(true);
-    } else if (previousDisabled && domain.x[0] > tickValues[0]) {
-      setPreviousDisabled(false);
-    } else if (
-      !nextDisabled &&
-      domain.x[1] === tickValues[tickValues.length - 1]
-    ) {
-      setNextDisabled(true);
-    } else if (
-      nextDisabled &&
-      domain.x[1] < tickValues[tickValues.length - 1]
-    ) {
-      setNextDisabled(false);
-    }
-  }, [previousDisabled, nextDisabled, domain, tickValues]);
-
-  useEffect(() => {
-    checkButtonStatus();
-  }, [domain, checkButtonStatus]);
+  const step = 24 * stepLength;
 
   const handlePrevious = () => {
-    if (!domain || !domain.x) {
-      return;
-    }
-    const max = domain.x[0];
-    const min = max - timeView;
-    const firstStep = tickValues[0];
-    if (min < firstStep) {
-      setDomain({ x: [firstStep, firstStep + timeView] });
-    } else {
-      setDomain({ x: [min, max] });
-    }
+    const x = scrollIndex - step > 0 ? scrollIndex - step : 0;
+    setScrollIndex(x);
+    scrollRef.current.scrollTo({ x, animated: true });
   };
 
   const handleNext = () => {
-    if (!domain || !domain.x) {
-      return;
-    }
-    const min = domain.x[1];
-    const max = min + timeView;
-    const lastStep = tickValues[tickValues.length - 1];
-    if (max > lastStep) {
-      setDomain({ x: [lastStep - timeView, lastStep] });
-    } else {
-      setDomain({ x: [min, max] });
-    }
+    const x = scrollIndex + step;
+    setScrollIndex(x);
+    scrollRef.current.scrollTo({ x, animated: true });
   };
 
   return (
@@ -97,7 +58,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
 
             <Text
               style={[
-                styles.forecastText,
+                styles.buttonText,
                 styles.medium,
                 { color: colors.primaryText },
               ]}>
@@ -121,7 +82,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
           <View style={[styles.row, styles.rowColumn]}>
             <Text
               style={[
-                styles.forecastText,
+                styles.buttonText,
                 styles.medium,
                 { color: colors.primaryText },
               ]}>
@@ -156,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 45,
   },
-  forecastText: {
+  buttonText: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
   },

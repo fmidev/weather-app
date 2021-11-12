@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { selectGeoid } from '@store/location/selector';
-import { useTranslation } from 'react-i18next';
 import {
   selectData,
   selectDataId,
@@ -20,8 +19,8 @@ import { State } from '@store/types';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 import Chart from './charts/Chart';
-import { ChartDomain, ChartType } from './charts/types';
-import CollapsibleListHeader from './common/CollapsibleListHeader';
+import { ChartType } from './charts/types';
+import ParameterSelector from './charts/ParameterSelector';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -54,9 +53,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   setStationId,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation();
-  const [chartDomain, setChartDomain] = useState<ChartDomain>({ x: [0, 0] });
-  const [openIndex, setOpenIndex] = useState<number | undefined>(undefined);
+  const [parameter, setParameter] = useState<ChartType>('temperature');
   useEffect(() => {
     fetchObservation({ geoid });
   }, [geoid, fetchObservation]);
@@ -79,7 +76,13 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   ];
 
   return (
-    <View style={{ backgroundColor: colors.background }}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+        },
+      ]}>
       {stationList.map((station) => (
         <Text
           style={{ color: colors.primaryText }}
@@ -90,34 +93,21 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           {station.name} -- {station.distance}
         </Text>
       ))}
-
-      {charts.map((chartType, index) => (
-        <View key={`observation-${chartType}`}>
-          <CollapsibleListHeader
-            accessibilityLabel={t(
-              `weather:charts:${chartType}AccessibilityLabel`
-            )}
-            title={t(`weather:charts:${chartType}`)}
-            onPress={() =>
-              openIndex === index
-                ? setOpenIndex(undefined)
-                : setOpenIndex(index)
-            }
-            open={openIndex === index}
-          />
-          {openIndex === index && (
-            <Chart
-              data={data}
-              chartType={chartType}
-              domain={chartDomain}
-              setDomain={setChartDomain}
-              observation
-            />
-          )}
-        </View>
-      ))}
+      <ParameterSelector
+        chartTypes={charts}
+        parameter={parameter}
+        setParameter={setParameter}
+      />
+      <Chart chartType={parameter} data={data} observation />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+});
 
 export default connector(ObservationPanel);

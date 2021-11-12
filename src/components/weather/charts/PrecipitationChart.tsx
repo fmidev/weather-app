@@ -1,25 +1,22 @@
 import React from 'react';
-import { VictoryBar, VictoryLabel, VictoryGroup } from 'victory-native';
-import { CustomTheme } from '@utils/colors';
-import { useTheme } from '@react-navigation/native';
+import { VictoryBar, VictoryGroup } from 'victory-native';
 import { getPrecipitationColorOrTransparent } from '@utils/helpers';
+import chartTheme from '@utils/chartTheme';
 import { ChartDataProps } from './types';
 
 const PrecipitationChart: React.FC<ChartDataProps> = ({
   chartValues,
   domain,
-  animate,
+  width,
 }) => {
-  const { colors } = useTheme() as CustomTheme;
   const { precipitation1h } = chartValues;
 
   return (
-    <VictoryGroup>
+    <VictoryGroup theme={chartTheme} width={width}>
       {precipitation1h && precipitation1h.length > 0 && (
         <VictoryBar
           data={precipitation1h}
           domain={domain}
-          animate={animate}
           alignment="middle"
           barWidth={6}
           style={{
@@ -29,12 +26,6 @@ const PrecipitationChart: React.FC<ChartDataProps> = ({
           }}
         />
       )}
-      <VictoryLabel
-        text="mm"
-        x={30}
-        y={20}
-        style={{ fill: colors.primaryText }}
-      />
     </VictoryGroup>
   );
 };

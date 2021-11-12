@@ -1,23 +1,21 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 
-import { View, StyleSheet, Text } from 'react-native';
-import {
-  VictoryChart,
-  VictoryAxis,
-  VictoryZoomContainer,
-} from 'victory-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
+import { VictoryChart, VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { CustomTheme, GRAY_2 } from '@utils/colors';
 
 import chartTheme from '@utils/chartTheme';
+import { Config } from '@config';
 import moment from 'moment';
 
 import {
   chartTickValues,
   chartXDomain,
   chartYDomain,
+  chartYLabelText,
   tickFormat,
 } from '@utils/chart';
 
@@ -25,7 +23,6 @@ import {
   ChartData,
   ChartType,
   ChartValues,
-  ChartDomain,
   ChartMinMax,
   ChartSettings,
 } from './types';
@@ -42,33 +39,35 @@ import CloudHeightChart from './CloudHeightChart';
 type ChartProps = {
   data: ChartData | false;
   chartType: ChartType;
-  domain?: ChartDomain;
-  setDomain?: any;
   observation?: boolean;
 };
 
-const Chart: React.FC<ChartProps> = ({
-  data,
-  chartType,
-  domain = { x: [0, 0] },
-  setDomain,
-  observation,
-}) => {
+const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
+  const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
+  const [scrollIndex, setScrollIndex] = useState<number>(
+    observation ? 24 * 20 : 0
+  );
+  const [initialized, setInitialized] = useState<boolean>(false);
+  const [timeSelectorButtons, setTimeSelectorButtons] = useState<
+    [boolean, boolean]
+  >([false, true]);
   const { colors } = useTheme() as CustomTheme;
   const { i18n } = useTranslation();
+  const config = Config.get('weather');
   moment.locale(i18n.language);
 
   if (!data || data.length === 0) {
     return null;
   }
 
+  const stepLength = 20;
+
+  const chartWidth =
+    observation && config.observation.timePeriod
+      ? config.observation.timePeriod * stepLength
+      : data.length * stepLength;
+
   const tickInterval = 3;
-  const allowPan = true;
-  const allowZoom = true;
-  const animate = false;
-  // const animate = observation
-  //   ? false
-  //   : { duration: 500, onLoad: { duration: 250 } };
 
   const chartSettings: ChartSettings = {
     precipitation: {
@@ -128,105 +127,145 @@ const Chart: React.FC<ChartProps> = ({
   });
 
   const tickValues = chartTickValues(data, observation, tickInterval);
-
-  const xDomain = chartXDomain(domain, observation, tickValues);
+  const xDomain = chartXDomain(tickValues);
   const yDomain = chartYDomain(minMax, chartType);
+  const yLabelText = chartYLabelText(chartType);
 
-  const currentDay = () =>
-    !xDomain.x ? null : moment(xDomain.x[0]).format('dddd D.M');
+  const onMomentumScrollEnd = ({ nativeEvent }: any) => {
+    const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
+    if (contentOffset.x === 0) {
+      setTimeSelectorButtons([true, false]);
+    } else if (
+      contentSize.width - (contentOffset.x + layoutMeasurement.width) ===
+      0
+    ) {
+      setTimeSelectorButtons([false, true]);
+    } else {
+      setTimeSelectorButtons([false, false]);
+    }
+    setScrollIndex(contentOffset.x);
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text
-          style={[
-            styles.headerTitle,
-            {
-              color: colors.primaryText,
-            },
-          ]}>
-          {currentDay()}
-        </Text>
-      </View>
-
-      <VictoryChart
-        height={300}
-        theme={chartTheme}
-        scale={{ x: 'linear' }}
-        containerComponent={
-          <VictoryZoomContainer
-            zoomDimension="x"
-            allowZoom={allowZoom}
-            allowPan={allowPan}
-            zoomDomain={{ x: xDomain.x }}
-            minimumZoom={{ x: 12 * 60 * 60 * 1000 }}
-            onZoomDomainChange={(d) => {
-              if (setDomain) {
-                setDomain({ x: d.x });
+      <View style={styles.chartRowContainer}>
+        <View style={styles.yAxisContainer}>
+          <VictoryChart height={300} width={50}>
+            <VictoryAxis
+              dependentAxis
+              crossAxis={false}
+              tickFormat={(t) => (t >= 10000 ? t / 1000 : t)}
+              domain={yDomain}
+              style={{
+                tickLabels: {
+                  fill: colors.primaryText,
+                },
+              }}
+            />
+            <VictoryLabel
+              text={yLabelText}
+              x={30}
+              y={20}
+              style={{ fill: colors.primaryText }}
+            />
+          </VictoryChart>
+        </View>
+        <ScrollView
+          ref={scrollRef}
+          onLayout={() => {
+            if (!initialized) {
+              if (observation) {
+                scrollRef.current.scrollToEnd();
               }
-            }}
-          />
-        }>
-        <VictoryAxis
-          scale={{ x: 'linear' }}
-          tickFormat={tickFormat}
-          animate={animate}
-          tickValues={tickValues}
-          style={{
-            grid: {
-              stroke: ({ tick }) =>
-                moment(tick).hour() === 0 ? GRAY_2 : '#E6E6E6',
-              strokeWidth: ({ tick }) =>
-                moment(tick).hour() === 0
-                  ? chartTheme.axis.style.axis.strokeWidth + 1
-                  : chartTheme.axis.style.axis.strokeWidth,
-              strokeDasharray: ({ tick }) =>
-                moment(tick).hour() === 0 ? 3 : 0,
-            },
-            tickLabels: { fill: colors.primaryText },
+              setInitialized(true);
+            }
           }}
-          offsetY={50}
-        />
-        <VictoryAxis
-          dependentAxis
-          crossAxis={false}
-          tickFormat={(t) => (t >= 10000 ? t / 1000 : t)}
-          domain={yDomain}
-          style={{
-            tickLabels: {
-              fill: colors.primaryText,
-            },
-          }}
-        />
+          onMomentumScrollEnd={onMomentumScrollEnd}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.chartContainer}>
+          <VictoryChart
+            height={300}
+            width={chartWidth}
+            theme={chartTheme}
+            scale={{ x: 'linear' }}>
+            <VictoryAxis
+              scale={{ x: 'linear' }}
+              tickFormat={tickFormat}
+              tickValues={tickValues}
+              style={{
+                grid: {
+                  stroke: ({ tick }) =>
+                    moment(tick).hour() === 0 ? GRAY_2 : '#E6E6E6',
+                  strokeWidth: ({ tick }) =>
+                    moment(tick).hour() === 0
+                      ? chartTheme.axis.style.axis.strokeWidth + 1
+                      : chartTheme.axis.style.axis.strokeWidth,
+                  strokeDasharray: ({ tick }) =>
+                    moment(tick).hour() === 0 ? 3 : 0,
+                },
+                tickLabels: { fill: colors.primaryText },
+              }}
+              offsetY={50}
+            />
+            <VictoryAxis
+              dependentAxis
+              crossAxis={false}
+              tickFormat={() => ''}
+              domain={yDomain}
+            />
+            {chartType === 'visCloud' && (
+              <VictoryAxis
+                dependentAxis
+                crossAxis={false}
+                orientation="right"
+                tickCount={4}
+                tickFormat={() => ''}
+                tickValues={[15000, 30000, 45000, 60000]}
+                style={{
+                  tickLabels: {
+                    fill: colors.primaryText,
+                  },
+                }}
+              />
+            )}
+
+            <ChartComponent
+              chartValues={chartValues}
+              width={chartWidth}
+              domain={xDomain}
+            />
+          </VictoryChart>
+        </ScrollView>
         {chartType === 'visCloud' && (
-          <VictoryAxis
-            dependentAxis
-            crossAxis={false}
-            orientation="right"
-            tickCount={4}
-            tickFormat={(t) => `${(t / 60000) * 8}/8`}
-            tickValues={[15000, 30000, 45000, 60000]}
-            style={{
-              tickLabels: {
-                fill: colors.primaryText,
-              },
-            }}
-          />
+          <View style={styles.yAxisContainer}>
+            <VictoryChart height={300} width={50}>
+              <VictoryAxis
+                dependentAxis
+                crossAxis={false}
+                orientation="right"
+                tickCount={4}
+                tickFormat={(t) => `${(t / 60000) * 8}/8`}
+                tickValues={[15000, 30000, 45000, 60000]}
+                domain={yDomain}
+                style={{
+                  tickLabels: {
+                    fill: colors.primaryText,
+                  },
+                }}
+              />
+            </VictoryChart>
+          </View>
         )}
-        <ChartComponent
-          chartValues={chartValues}
-          domain={xDomain}
-          animate={animate}
-        />
-      </VictoryChart>
-
+      </View>
       <ChartLegend chartType={chartType} />
-
       {!observation && (
         <TimeSelector
-          domain={xDomain}
-          setDomain={setDomain}
-          tickValues={tickValues}
+          scrollRef={scrollRef}
+          scrollIndex={scrollIndex}
+          setScrollIndex={setScrollIndex}
+          buttonStatus={timeSelectorButtons}
+          stepLength={stepLength}
         />
       )}
     </View>
@@ -234,23 +273,16 @@ const Chart: React.FC<ChartProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: {},
+  chartRowContainer: {
+    flexDirection: 'row',
+  },
+  yAxisContainer: {},
+  chartContainer: {
+    paddingStart: 0,
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 10,
-  },
-  headerContainer: {
-    paddingLeft: 16,
-    paddingTop: 16,
-    flex: 1,
-    alignSelf: 'flex-start',
-  },
-  headerTitle: {
-    justifyContent: 'flex-start',
-    fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
   },
 });
 

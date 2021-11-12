@@ -63,7 +63,7 @@ export const getObservation = async (
 ): Promise<ObservationDataRaw> => {
   const {
     apiUrl,
-    observation: { enabled, numberOfStations, producer },
+    observation: { enabled, numberOfStations, producer, timePeriod },
   } = Config.get('weather');
   const { language } = i18n;
 
@@ -74,7 +74,7 @@ export const getObservation = async (
   const params = {
     ...location,
     numberofstations: numberOfStations,
-    starttime: '-24h',
+    starttime: `-${timePeriod}h`,
     endtime: '0',
     param: [
       'cloudheight',

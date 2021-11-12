@@ -1,22 +1,18 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import {
-  VictoryLine,
-  VictoryLabel,
-  VictoryGroup,
-  VictoryArea,
-} from 'victory-native';
+import { VictoryLine, VictoryGroup, VictoryArea } from 'victory-native';
 import { CustomTheme } from '@utils/colors';
 import { useTheme } from '@react-navigation/native';
 import Icon from '@components/common/Icon';
 import moment from 'moment';
+import chartTheme from '@utils/chartTheme';
 import { ChartDataProps } from './types';
 
 const WindChart: React.FC<ChartDataProps> = ({
   chartValues,
   domain,
-  animate,
+  width,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const {
@@ -50,22 +46,6 @@ const WindChart: React.FC<ChartDataProps> = ({
       return null;
     }
 
-    if (domain.x) {
-      if (x > domain.x[1] || x < domain.x[0]) {
-        return null;
-      }
-      if (domain.x[1] - domain.x[0] > 30 * 60 * 60 * 1000) {
-        if (time.hour() % 3 !== 0) {
-          return null;
-        }
-      }
-      if (domain.x[1] - domain.x[0] > 40 * 60 * 60 * 1000) {
-        if (time.hour() % 6 !== 0) {
-          return null;
-        }
-      }
-    }
-
     return (
       <View style={[styles.arrowStyle, { left: asd.x - 10 }]}>
         <Icon
@@ -86,12 +66,11 @@ const WindChart: React.FC<ChartDataProps> = ({
   };
 
   return (
-    <VictoryGroup>
+    <VictoryGroup theme={chartTheme} width={width}>
       {combinedData && (
         <VictoryArea
           data={combinedData}
           domain={domain}
-          animate={animate}
           style={{ data: { fill: '#d8d8d8' } }}
         />
       )}
@@ -99,10 +78,9 @@ const WindChart: React.FC<ChartDataProps> = ({
       {windspeedms && windspeedms.length > 0 && (
         <VictoryLine
           data={windspeedms}
+          domain={domain}
           labels={({ datum }) => `${datum}`}
           labelComponent={<WindLabel />}
-          domain={domain}
-          animate={animate}
           style={{ data: { stroke: colors.primaryText } }}
           interpolation="natural"
         />
@@ -112,7 +90,6 @@ const WindChart: React.FC<ChartDataProps> = ({
         <VictoryLine
           data={gustParameter}
           domain={domain}
-          animate={animate}
           style={{
             data: {
               stroke: colors.chartSecondaryLine,
@@ -122,13 +99,6 @@ const WindChart: React.FC<ChartDataProps> = ({
           interpolation="natural"
         />
       )}
-
-      <VictoryLabel
-        text="m/s"
-        x={30}
-        y={20}
-        style={{ fill: colors.primaryText }}
-      />
     </VictoryGroup>
   );
 };
