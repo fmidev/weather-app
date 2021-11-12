@@ -156,6 +156,7 @@ const Navigator: React.FC<Props> = ({
     headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
     headerStyle: {
       shadowColor: 'transparent',
+      // flexWrap: 'wrap',
     },
     headerBackImage: ({ tintColor }: { tintColor: string }) => (
       <Icon
@@ -211,7 +212,7 @@ const Navigator: React.FC<Props> = ({
   const MapStackScreen = () => (
     <MapStack.Navigator>
       <MapStack.Screen
-        name="Map"
+        name="StackMap"
         component={MapScreen}
         options={LocationHeaderOptions}
       />
@@ -226,7 +227,7 @@ const Navigator: React.FC<Props> = ({
   const WeatherStackScreen = () => (
     <WeatherStack.Navigator>
       <WeatherStack.Screen
-        name="Weather"
+        name="StackWeather"
         component={WeatherScreen}
         options={LocationHeaderOptions}
       />
@@ -241,7 +242,7 @@ const Navigator: React.FC<Props> = ({
   const WarningsStackScreen = () => (
     <WarningsStack.Navigator>
       <WarningsStack.Screen
-        name="Warnings"
+        name="StackWarnings"
         component={WarningsScreen}
         options={{
           headerTitle: `${t('navigation:warnings')}`,
@@ -252,9 +253,9 @@ const Navigator: React.FC<Props> = ({
   );
 
   const OthersStackScreen = () => (
-    <OthersStack.Navigator initialRouteName="Others">
+    <OthersStack.Navigator initialRouteName="StackOthers">
       <OthersStack.Screen
-        name="Others"
+        name="StackOthers"
         component={OthersScreen}
         options={{ headerTitle: `${t('navigation:others')}` }}
       />
@@ -306,17 +307,15 @@ const Navigator: React.FC<Props> = ({
       <NavigationContainer
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}>
-        <Tab.Navigator
-          initialRouteName={initialTab}
-          tabBarOptions={{
-            labelStyle: styles.tabText,
-          }}>
+        <Tab.Navigator initialRouteName={initialTab}>
           <Tab.Screen
             name="Map"
             component={MapStackScreen}
             options={{
+              headerShown: false,
               tabBarTestID: 'navigation_map',
               tabBarLabel: `${t('navigation:map')}`,
+              tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
                 <Icon name="map" style={{ color }} width={size} height={size} />
               ),
@@ -326,8 +325,10 @@ const Navigator: React.FC<Props> = ({
             name="Weather"
             component={WeatherStackScreen}
             options={{
+              headerShown: false,
               tabBarTestID: 'navigation_weather',
               tabBarLabel: `${t('navigation:weather')}`,
+              tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="weather"
@@ -342,8 +343,10 @@ const Navigator: React.FC<Props> = ({
             name="Warnings"
             component={WarningsStackScreen}
             options={{
+              headerShown: false,
               tabBarTestID: 'navigation_warnings',
               tabBarLabel: `${t('navigation:warnings')}`,
+              tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="warnings"
@@ -358,8 +361,10 @@ const Navigator: React.FC<Props> = ({
             name="Others"
             component={OthersStackScreen}
             options={{
+              headerShown: false,
               tabBarTestID: 'navigation_others',
               tabBarLabel: `${t('navigation:others')}`,
+              tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="menu"

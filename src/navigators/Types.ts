@@ -6,7 +6,7 @@ export type TabParamList = {
 };
 
 export type OthersStackParamList = {
-  Others: undefined;
+  StackOthers: undefined;
   About: undefined;
   Settings: undefined;
   Notifications: undefined;

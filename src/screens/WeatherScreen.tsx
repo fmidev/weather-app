@@ -84,9 +84,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         showsVerticalScrollIndicator={false}>
         <WarningsPanel
           headers={warningsHeaders5Days}
-          onNavigate={() =>
-            navigation.dangerouslyGetParent()?.navigate('Warnings')
-          }
+          onNavigate={() => navigation.getParent()?.navigate('Warnings')}
         />
         <ForecastPanel />
         <ObservationPanel />
