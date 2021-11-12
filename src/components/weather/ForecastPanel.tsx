@@ -21,7 +21,8 @@ import {
   selectForecastByDay,
   selectHeaderLevelForecast,
   selectForecastLastUpdatedMoment,
-  selectMinimumsAndMaximums,
+  // selectMinimumsAndMaximums,
+  selectForecast,
 } from '@store/forecast/selectors';
 
 import { CustomTheme } from '@utils/colors';
@@ -30,7 +31,7 @@ import Icon from '@components/common/Icon';
 import CollapsibleListHeader from './common/CollapsibleListHeader';
 import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
-import CollapsibleChartList from './forecast/CollapsibleChartList';
+import ChartList from './forecast/ChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 
@@ -40,9 +41,10 @@ const CHART = 'chart';
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
   forecastByDay: selectForecastByDay(state),
+  data: selectForecast(state),
   headerLevelForecast: selectHeaderLevelForecast(state),
   forecastLastUpdatedMoment: selectForecastLastUpdatedMoment(state),
-  minimumsAndMaximums: selectMinimumsAndMaximums(state),
+  // minimumsAndMaximums: selectMinimumsAndMaximums(state),
 });
 const connector = connect(mapStateToProps, {});
 
@@ -53,9 +55,10 @@ type ForecastPanelProps = PropsFromRedux;
 const ForecastPanel: React.FC<ForecastPanelProps> = ({
   loading,
   forecastByDay,
+  data,
   forecastLastUpdatedMoment,
   headerLevelForecast,
-  minimumsAndMaximums,
+  // minimumsAndMaximums,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
@@ -249,41 +252,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           })}
         {headerLevelForecast &&
           headerLevelForecast.length > 0 &&
-          toDisplay === CHART && (
-            <CollapsibleChartList
-              data={forecastByDay && forecastByDay[selectedDate!]}
-              selectedDate={
-                forecastByDay &&
-                moment
-                  .unix(forecastByDay[selectedDate!][0]?.epochtime)
-                  .locale(locale)
-                  .format('dddd D.M.')
-              }
-              showPreviousDay={() => {
-                const index =
-                  (!!selectedDate && dateKeys.indexOf(selectedDate) - 1) || 0;
-                if (index >= 0 && dateKeys[index]) {
-                  setSelectedDate(dateKeys[index]);
-                }
-              }}
-              showNextDay={() => {
-                const index =
-                  !!selectedDate && dateKeys.indexOf(selectedDate) + 1;
-                if (index && dateKeys[index]) {
-                  setSelectedDate(dateKeys[index]);
-                }
-              }}
-              showPreviousDisabled={
-                !!selectedDate && dateKeys.indexOf(selectedDate) === 0
-              }
-              showNextDisabled={
-                !!selectedDate &&
-                dateKeys.indexOf(selectedDate) === dateKeys.length - 1
-              }
-              maxTemp={minimumsAndMaximums?.totalTempMax}
-              minTemp={minimumsAndMaximums?.totalTempMin}
-            />
-          )}
+          toDisplay === CHART && <ChartList data={data} />}
       </View>
       <RBSheet
         ref={paramSheetRef}

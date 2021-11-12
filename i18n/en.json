@@ -1,4 +1,34 @@
 {
+  "weather": {
+    "charts": {
+      "cloud": "Cloud height",
+      "cloudAccessibilityLabel": "Open cloud height chart",
+      "humidity": "Humidity",
+      "humidityAccessibilityLabel": "Open humidity chart",
+      "visCloud": "Visibility and cloud cover",
+      "visCloudAccessibilityLabel": "Open visibility and cloud cover chart",
+      "visibility": "Visibility",
+      "totalcloudcover": "Cloud cover",
+      "pressure": "Pressure",
+      "pressureAccessibilityLabel": "Open pressure chart",
+      "temperature": "Temperature",
+      "temperatureAccessibilityLabel": "Open temperature chart",
+      "temperatureFeels": "Temperature",
+      "temperatureFeelsAccessibilityLabel": "Open temperature chart",
+      "precipitation": "Precipitation",
+      "precipitationAccessibilityLabel": "Open precipitation chart",
+      "wind": "Wind",
+      "windAccessibilityLabel": "Open wind chart",
+      "feelsLike": "Feels like",
+      "windSpeed": "Wind speed",
+      "windGust": "Wind gust",
+      "windDirection": "Wind direction",
+      "previous24h": "Previous 24 h",
+      "previous24hAccessibilityLabel": "Show previous 24 hours",
+      "next24h": "Next 24 h",
+      "next24hAccessibilityLabel": "Show next 24 hours"
+    }
+  },
   "forecast": {
     "panelHeader": "Weather forecast",
     "lastUpdated": "Last updated",
@@ -11,22 +41,6 @@
     "at": "at",
     "table": "Table",
     "chart": "Chart",
-    "charts": {
-      "temperature": "Temperature",
-      "temperatureAccessibilityLabel": "Open temperature chart",
-      "precipitation": "Precipitation",
-      "precipitationAccesssibilityLabel": "Open precipitation chart",
-      "wind": "Wind",
-      "windAccessibilityLabel": "Open wind chart",
-      "feelsLike": "Feels like",
-      "windSpeed": "Wind speed",
-      "windGust": "Wind gust",
-      "windDirection": "Wind direction",
-      "previous24h": "Previous 24 h",
-      "previous24hAccessibilityLabel": "Show previous 24 hours",
-      "next24h": "Next 24 h",
-      "next24hAccessibilityLabel": "Show next 24 hours"
-    },
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Close hourly parameter selection",
       "title": "Hourly view",

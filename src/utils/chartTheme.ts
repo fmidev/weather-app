@@ -33,7 +33,7 @@ const padding = 8;
 const baseProps = {
   width: 300,
   height: 350,
-  padding: 50,
+  padding: { top: 50, bottom: 50, left: 5, right: 10 },
 };
 // *
 // * Labels
@@ -157,10 +157,9 @@ export default {
   //   },
   //   ...baseProps,
   // },
-  // group: {
-  //   colorScale: colors,
-  //   ...baseProps,
-  // },
+  group: {
+    padding: baseProps.padding,
+  },
   // histogram: {
   //   style: {
   //     data: {

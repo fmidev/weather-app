@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { selectGeoid } from '@store/location/selector';
-
 import {
   selectData,
   selectDataId,
@@ -17,6 +16,11 @@ import {
 } from '@store/observation/actions';
 
 import { State } from '@store/types';
+import { useTheme } from '@react-navigation/native';
+import { CustomTheme } from '@utils/colors';
+import Chart from './charts/Chart';
+import { ChartType } from './charts/types';
+import ParameterSelector from './charts/ParameterSelector';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -48,6 +52,8 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   fetchObservation,
   setStationId,
 }) => {
+  const { colors } = useTheme() as CustomTheme;
+  const [parameter, setParameter] = useState<ChartType>('temperature');
   useEffect(() => {
     fetchObservation({ geoid });
   }, [geoid, fetchObservation]);
@@ -59,10 +65,27 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     }
   }, [stationList, stationId, dataId, setStationId]);
 
+  const charts: ChartType[] = [
+    'cloud',
+    'visCloud',
+    'pressure',
+    'humidity',
+    'wind',
+    'temperature',
+    'precipitation',
+  ];
+
   return (
-    <View>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+        },
+      ]}>
       {stationList.map((station) => (
         <Text
+          style={{ color: colors.primaryText }}
           key={station.id}
           onPress={() => {
             setStationId(dataId, station.id);
@@ -70,12 +93,21 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           {station.name} -- {station.distance}
         </Text>
       ))}
-      {data.map((timeStep) => (
-        <Text key={timeStep.epochtime}>
-          {timeStep.epochtime} -- {timeStep.temperature}
-        </Text>
-      ))}
+      <ParameterSelector
+        chartTypes={charts}
+        parameter={parameter}
+        setParameter={setParameter}
+      />
+      <Chart chartType={parameter} data={data} observation />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+});
+
 export default connector(ObservationPanel);
