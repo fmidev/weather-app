@@ -14,6 +14,13 @@ export const chartYDomain = (
   minMax: ChartMinMax,
   chartType: ChartType
 ): ChartDomain => {
+  if (chartType === 'visCloud') {
+    return { y: [0, 60000] };
+  }
+  if (chartType === 'humidity') {
+    return { y: [0, 100] };
+  }
+
   const values: number[] = minMax.filter(
     (v): v is number => v !== undefined && v !== null
   );
@@ -26,11 +33,7 @@ export const chartYDomain = (
   const min = Math.min(...values);
 
   if (chartType === 'wind') {
-    return { y: [0, max > 16 ? Math.ceil((max + 1) / 5) * 5 : 16] };
-  }
-
-  if (chartType === 'visCloud') {
-    return { y: [0, 60000] };
+    return { y: [0, max > 15 ? Math.ceil((max + 1) / 5) * 5 : 16] };
   }
 
   return {

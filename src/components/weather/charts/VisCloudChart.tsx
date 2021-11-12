@@ -16,7 +16,7 @@ const VisCloudChart: React.FC<ChartDataProps> = ({
 
   const normalizedCloudCover = totalcloudcover.map(({ x, y }) => ({
     x,
-    y: y ? (y / 8) * max : 0,
+    y: y ? (y / 8) * max : null,
   }));
 
   return (
