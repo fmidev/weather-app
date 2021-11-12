@@ -11,7 +11,7 @@ interface FetchObservationSuccess {
   type: typeof FETCH_OBSERVATION_SUCCESS;
   payload: {
     data: ObservationDataRaw;
-    location: Location;
+    location: ObservationLocation;
   };
 }
 
@@ -50,7 +50,7 @@ export interface TimeStepData {
   ww_aws: number | null;
 }
 
-export interface Location {
+export interface ObservationLocation {
   geoid?: number;
   latlon?: string;
 }

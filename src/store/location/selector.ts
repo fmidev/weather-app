@@ -28,6 +28,11 @@ export const selectGeoid = createSelector(
   (location) => location.id
 );
 
+export const selectTimeZone = createSelector(
+  [selectCurrent],
+  (location) => location.timezone
+);
+
 export const selectRecent = createSelector<
   State,
   LocationState,

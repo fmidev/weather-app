@@ -1,10 +1,15 @@
-import { Location, WeatherData } from '@store/forecast/types';
-import { ObservationDataRaw } from '@store/observation/types';
+import { ForecastLocation, WeatherData } from '@store/forecast/types';
+import {
+  ObservationLocation,
+  ObservationDataRaw,
+} from '@store/observation/types';
 import { Config } from '@config';
 import i18n from '@i18n';
 import axiosClient from '@utils/axiosClient';
 
-export const getForecast = async (location: Location): Promise<WeatherData> => {
+export const getForecast = async (
+  location: ForecastLocation
+): Promise<WeatherData> => {
   const { language } = i18n;
   const {
     apiUrl,
@@ -59,7 +64,8 @@ export const getForecast = async (location: Location): Promise<WeatherData> => {
 };
 
 export const getObservation = async (
-  location: Location
+  location: ObservationLocation,
+  country: string
 ): Promise<ObservationDataRaw> => {
   const {
     apiUrl,
@@ -69,6 +75,13 @@ export const getObservation = async (
 
   if (!enabled) {
     return {};
+  }
+
+  let observationProducer = producer;
+  if (typeof producer === 'object') {
+    observationProducer = producer[country]
+      ? producer[country]
+      : producer.default;
   }
 
   const params = {
@@ -98,7 +111,7 @@ export const getObservation = async (
       'ww_aws', // iso2 = 'fi'
     ].join(','),
     format: 'json',
-    producer,
+    producer: observationProducer,
     precision: 'double',
     lang: language,
     attributes: 'fmisid,stationname,distance',
@@ -118,9 +131,15 @@ export const getCurrentPosition = async (
 
   const params = {
     latlon: `${latitude},${longitude}`,
-    param: ['geoid', 'name', 'latitude', 'longitude', 'region', 'country'].join(
-      ','
-    ),
+    param: [
+      'geoid',
+      'name',
+      'latitude',
+      'longitude',
+      'region',
+      'iso2',
+      'localtz',
+    ].join(','),
     timesteps: 2,
     format: 'json',
     lang: language,

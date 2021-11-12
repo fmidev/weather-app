@@ -5,17 +5,18 @@ import {
   FETCH_OBSERVATION_SUCCESS,
   FETCH_OBSERVATION_ERROR,
   SET_STATION_ID,
-  Location,
+  ObservationLocation,
   ObservationActionTypes,
   Error,
 } from './types';
 
-export const fetchObservation = (location: Location) => (
-  dispatch: Dispatch<ObservationActionTypes>
-) => {
+export const fetchObservation = (
+  location: ObservationLocation,
+  country: string
+) => (dispatch: Dispatch<ObservationActionTypes>) => {
   dispatch({ type: FETCH_OBSERVATION });
 
-  getObservation(location)
+  getObservation(location, country)
     .then((data) => {
       dispatch({
         type: FETCH_OBSERVATION_SUCCESS,

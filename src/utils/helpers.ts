@@ -30,9 +30,11 @@ export const getGeolocation = (
             latitude: number;
             longitude: number;
             region: string;
+            iso2: string;
+            localtz: string;
           }[][] = Object.values(json);
 
-          const { name, region } = vals[0][0];
+          const { name, region, localtz, iso2 } = vals[0][0];
           callback(
             {
               lat: latitude,
@@ -40,6 +42,8 @@ export const getGeolocation = (
               name,
               area: region,
               id: geoid,
+              timezone: localtz,
+              country: iso2,
             },
             true
           );

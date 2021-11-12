@@ -19,6 +19,8 @@ export type Location = {
   lat: number;
   lon: number;
   id: number;
+  timezone: string;
+  country: string;
 };
 
 export type Geolocation = {

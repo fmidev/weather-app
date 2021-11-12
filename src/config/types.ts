@@ -31,7 +31,7 @@ export interface Layer {
 
 interface Observation {
   numberOfStations: number;
-  producer: string;
+  producer: string | { default: string; [name: string]: string };
   timePeriod: number;
   parameters: string[];
 }

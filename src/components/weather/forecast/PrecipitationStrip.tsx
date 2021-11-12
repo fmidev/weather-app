@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, ViewStyle } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import moment from 'moment';
 
 import { CustomTheme, GRAY_1 } from '@utils/colors';
 import { getPrecipitationColorOrTransparent } from '@utils/helpers';
@@ -17,7 +18,7 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
   const precipitationHourArr =
     precipitationData &&
     precipitationData.map((item) => ({
-      hour: new Date(item.timestamp * 1000).getHours(),
+      hour: moment(item.timestamp * 1000).hours(),
       precipitation: item.precipitation,
     }));
 

@@ -64,7 +64,7 @@ export interface TimestepData {
   dark: number;
   [key: string]: string | number;
 }
-export interface Location {
+export interface ForecastLocation {
   geoid?: number;
   latlon?: string;
 }

@@ -8,11 +8,11 @@ import {
   UPDATE_DISPLAY_PARAMS,
   RESTORE_DEFAULT_DISPLAY_PARAMS,
   ForecastActionTypes,
-  Location,
+  ForecastLocation,
 } from './types';
 
 export const fetchForecast = (
-  location: Location,
+  location: ForecastLocation,
   filterLocations: number[] = []
 ) => (dispatch: Dispatch<ForecastActionTypes>) => {
   dispatch({ type: FETCH_FORECAST });
