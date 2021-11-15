@@ -110,6 +110,35 @@
       "moveForwardAccessibilityLabel": "move forward"
     }
   },
+  "observation": {
+    "observationStation" : "Station",
+    "latestObservation" : "Latest observation",
+    "distanceFromStation" : "km from forecast location",
+    "panelHeader" : "Past weather",
+    "measurements": {
+      "temperature" : "Temperature",
+      "dewPoint" : "Dewpoint",
+      "precipitation1h" : "Precipitation",
+      "windSpeedMS" : "Wind",
+      "windDirection" : "Wind direction",
+      "windGust" : "Wind gusts",
+      "pressure" : "Pressure",
+      "humidity" : "Humidity",
+      "visibility" : "Visibility",
+      "totalCloudCover" : "Cloud cover"
+    },
+    "cloudcover" : {
+      "1" : "Clear",
+      "2" : "Clear",
+      "3" : "Clear",
+      "4" : "Partly cloudy",
+      "5" : "Partly cloudy",
+      "6" : "Partly cloudy",
+      "7" : "Cloudy",
+      "8" : "Cloudy",
+      "9" : "Cloudy"
+    }
+  },
   "navigation": {
     "map": "Map",
     "weather": "Weather",
