@@ -20,7 +20,12 @@ import {
   updateDisplayParams as updateDisplayParamsAction,
   restoreDefaultDisplayParams as restoreDefaultDisplayParamsAction,
 } from '@store/forecast/actions';
-import constants, { SMART_SYMBOL } from '@store/forecast/constants';
+import constants, {
+  SMART_SYMBOL,
+  RELATIVE_HUMIDITY,
+  PRESSURE,
+  PARAMS_TO_ICONS,
+} from '@store/forecast/constants';
 
 import {
   WHITE,
@@ -60,12 +65,33 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
       key={param}
       style={[styles.row, { borderBottomColor: colors.border }]}>
       <View style={styles.innerRow}>
-        <Icon
-          name="cloud-outline"
-          size={16}
-          style={styles.withMarginRight}
-          color={colors.hourListText}
-        />
+        {param !== RELATIVE_HUMIDITY && param !== PRESSURE && (
+          <Icon
+            name={PARAMS_TO_ICONS[param]}
+            style={styles.withMarginRight}
+            color={colors.hourListText}
+          />
+        )}
+        {param === RELATIVE_HUMIDITY && (
+          <Text
+            style={[
+              styles.iconText,
+              styles.withMarginRight,
+              { color: colors.hourListText },
+            ]}>
+            RH%
+          </Text>
+        )}
+        {param === PRESSURE && (
+          <Text
+            style={[
+              styles.iconText,
+              styles.withMarginRight,
+              { color: colors.hourListText },
+            ]}>
+            hPa
+          </Text>
+        )}
         <Text style={[styles.text, { color: colors.hourListText }]}>
           {t(`paramsBottomSheet.${param}`)}
         </Text>
@@ -168,6 +194,10 @@ const styles = StyleSheet.create({
   },
   restoreText: {
     fontSize: 16,
+    fontFamily: 'Roboto-Medium',
+  },
+  iconText: {
+    fontSize: 14,
     fontFamily: 'Roboto-Medium',
   },
   lastRow: {

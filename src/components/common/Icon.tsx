@@ -12,8 +12,11 @@ import ArrowLeft from '@assets/images/icons/arrow-left.svg';
 import ArrowRight from '@assets/images/icons/arrow-right.svg';
 import ArrowUp from '@assets/images/icons/arrow-up.svg';
 import Close from '@assets/images/icons/close.svg';
+import DewPoint from '@assets/images/icons/dew-point.svg';
 import FeelsLikeColder from '@assets/images/icons/feels-like-colder.svg';
 import FeelsLikeWarmer from '@assets/images/icons/feels-like-warmer.svg';
+import FeelsLike from '@assets/images/icons/feels-like.svg';
+import Gust from '@assets/images/icons/gust.svg';
 import InfoDeleteLocation from '@assets/images/icons/info-delete-location.svg';
 import InfoLocate from '@assets/images/icons/info-locate.svg';
 import InfoSaveLocation from '@assets/images/icons/info-save-location.svg';
@@ -24,11 +27,14 @@ import MapMarker from '@assets/images/icons/map-marker.svg';
 import Map from '@assets/images/icons/map.svg';
 import Menu from '@assets/images/icons/menu.svg';
 import Mic from '@assets/images/icons/mic.svg';
+import MidnightSun from '@assets/images/icons/midnight-sun.svg';
 import Minus from '@assets/images/icons/minus.svg';
 import OpenInNew from '@assets/images/icons/open-in-new.svg';
 import Pause from '@assets/images/icons/pause.svg';
 import Play from '@assets/images/icons/play.svg';
 import Plus from '@assets/images/icons/plus.svg';
+import PolarNight from '@assets/images/icons/polar-night.svg';
+import Precipitation from '@assets/images/icons/precipitation.svg';
 import RadioButtonOff from '@assets/images/icons/radio-button-off.svg';
 import RadioButtonOn from '@assets/images/icons/radio-button-on.svg';
 import RainDark from '@assets/images/icons/rain-dark.svg';
@@ -36,6 +42,7 @@ import RainLight from '@assets/images/icons/rain-light.svg';
 import RainWhite from '@assets/images/icons/rain-white.svg';
 import Search from '@assets/images/icons/search.svg';
 import Settings from '@assets/images/icons/settings.svg';
+import Snow from '@assets/images/icons/snow.svg';
 import StarSelected from '@assets/images/icons/star-selected.svg';
 import StarUnselected from '@assets/images/icons/star-unselected.svg';
 import Sunrise from '@assets/images/icons/sunrise.svg';
@@ -46,6 +53,8 @@ import TemperatureHighestDark from '@assets/images/icons/temperature-highest-dar
 import TemperatureHighestLight from '@assets/images/icons/temperature-highest-light.svg';
 import TemperatureLowestDark from '@assets/images/icons/temperature-lowest-dark.svg';
 import TemperatureLowestLight from '@assets/images/icons/temperature-lowest-light.svg';
+import Temperature from '@assets/images/icons/temperature.svg';
+import Thunder from '@assets/images/icons/thunder.svg';
 import Time from '@assets/images/icons/time.svg';
 import WarningsFloodLevel2 from '@assets/images/icons/warnings-flood-level-2.svg';
 import WarningsFloodLevel3 from '@assets/images/icons/warnings-flood-level-3.svg';
@@ -72,10 +81,12 @@ import WarningsWindOrange from '@assets/images/icons/warnings-wind-orange.svg';
 import WarningsWindRed from '@assets/images/icons/warnings-wind-red.svg';
 import WarningsWindYellow from '@assets/images/icons/warnings-wind-yellow.svg';
 import Warnings from '@assets/images/icons/warnings.svg';
+import WeatherSymbol from '@assets/images/icons/weather-symbol.svg';
 import Weather from '@assets/images/icons/weather.svg';
 import WindArrow from '@assets/images/icons/wind-arrow.svg';
 import WindDark from '@assets/images/icons/wind-dark.svg';
 import WindLight from '@assets/images/icons/wind-light.svg';
+import Wind from '@assets/images/icons/wind.svg';
 
 type CustomIconProps = IconProps & {
   name: string;
@@ -101,10 +112,16 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <ArrowUp {...props} />;
     case 'close':
       return <Close {...props} />;
+    case 'dew-point':
+      return <DewPoint {...props} />;
     case 'feels-like-colder':
       return <FeelsLikeColder {...props} />;
     case 'feels-like-warmer':
       return <FeelsLikeWarmer {...props} />;
+    case 'feels-like':
+      return <FeelsLike {...props} />;
+    case 'gust':
+      return <Gust {...props} />;
     case 'info-delete-location':
       return <InfoDeleteLocation {...props} />;
     case 'info-locate':
@@ -125,6 +142,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Menu {...props} />;
     case 'mic':
       return <Mic {...props} />;
+    case 'midnight-sun':
+      return <MidnightSun {...props} />;
     case 'minus':
       return <Minus {...props} />;
     case 'open-in-new':
@@ -135,6 +154,10 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Play {...props} />;
     case 'plus':
       return <Plus {...props} />;
+    case 'polar-night':
+      return <PolarNight {...props} />;
+    case 'precipitation':
+      return <Precipitation {...props} />;
     case 'radio-button-off':
       return <RadioButtonOff {...props} />;
     case 'radio-button-on':
@@ -149,6 +172,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Search {...props} />;
     case 'settings':
       return <Settings {...props} />;
+    case 'snow':
+      return <Snow {...props} />;
     case 'star-selected':
       return <StarSelected {...props} />;
     case 'star-unselected':
@@ -169,6 +194,10 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <TemperatureLowestDark {...props} />;
     case 'temperature-lowest-light':
       return <TemperatureLowestLight {...props} />;
+    case 'temperature':
+      return <Temperature {...props} />;
+    case 'thunder':
+      return <Thunder {...props} />;
     case 'time':
       return <Time {...props} />;
     case 'warnings-flood-level-2':
@@ -224,6 +253,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WarningsWindYellow {...props} />;
     case 'warnings':
       return <Warnings {...props} />;
+    case 'weather-symbol':
+      return <WeatherSymbol {...props} />;
     case 'weather':
       return <Weather {...props} />;
     case 'wind-arrow':
@@ -232,6 +263,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WindDark {...props} />;
     case 'wind-light':
       return <WindLight {...props} />;
+    case 'wind':
+      return <Wind {...props} />;
     default:
       return <IonIcon name={name} {...props} />;
   }

@@ -10,6 +10,17 @@ export const DEW_POINT = 'dewpoint';
 export const RELATIVE_HUMIDITY = 'relativeHumidity';
 export const PRESSURE = 'pressure';
 
+export const PARAMS_TO_ICONS = {
+  smartSymbol: 'weather-symbol',
+  temperature: 'temperature',
+  feelsLike: 'feels-like',
+  windSpeedAndDir: 'wind',
+  hourlymaximumgust: 'gust',
+  precipitation1h: 'precipitation',
+  pop: 'precipitation',
+  dewpoint: 'dew-point',
+} as { [key: string]: string };
+
 export default [
   SMART_SYMBOL,
   TEMPERATURE,

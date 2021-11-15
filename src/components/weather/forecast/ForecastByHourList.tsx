@@ -206,7 +206,14 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             );
           }
           return (
-            <View key={i} style={styles.hourBlock}>
+            <View
+              key={i}
+              style={
+                param === constants.PRECIPITATION_1H ||
+                param === constants.WIND_GUST
+                  ? styles.windBlock
+                  : styles.hourBlock
+              }>
               <Text style={[styles.hourText, { color: colors.hourListText }]}>
                 {item[param]}
               </Text>
@@ -293,11 +300,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             if (param === constants.WIND_SPEED_AND_DIRECTION) {
               return (
                 <View key={i} style={styles.windBlock}>
-                  <Icon
-                    name="trending-up-outline"
-                    size={16}
-                    color={colors.hourListText}
-                  />
+                  <Icon name="wind" color={colors.hourListText} />
                   <Text
                     style={[styles.panelText, { color: colors.hourListText }]}>
                     m/s
@@ -305,11 +308,66 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 </View>
               );
             }
+            if (param === constants.WIND_GUST) {
+              return (
+                <View key={i} style={styles.windBlock}>
+                  <Icon name="gust" color={colors.hourListText} />
+                  <Text
+                    style={[styles.panelText, { color: colors.hourListText }]}>
+                    m/s
+                  </Text>
+                </View>
+              );
+            }
+            if (param === constants.PRECIPITATION_1H) {
+              return (
+                <View key={i} style={styles.windBlock}>
+                  <Icon name="precipitation" color={colors.hourListText} />
+                  <Text
+                    style={[styles.panelText, { color: colors.hourListText }]}>
+                    mm
+                  </Text>
+                </View>
+              );
+            }
+
+            if (param === constants.PRECIPITATION_PROBABILITY) {
+              return (
+                <View key={i} style={[styles.hourBlock, styles.row]}>
+                  <Icon name="precipitation" color={colors.hourListText} />
+                  <Text
+                    style={[styles.panelText, { color: colors.hourListText }]}>
+                    %
+                  </Text>
+                </View>
+              );
+            }
+
+            if (param === constants.RELATIVE_HUMIDITY) {
+              return (
+                <View key={i} style={styles.hourBlock}>
+                  <Text
+                    style={[styles.panelText, { color: colors.hourListText }]}>
+                    RH%
+                  </Text>
+                </View>
+              );
+            }
+
+            if (param === constants.PRESSURE) {
+              return (
+                <View key={i} style={styles.hourBlock}>
+                  <Text
+                    style={[styles.panelText, { color: colors.hourListText }]}>
+                    hPa
+                  </Text>
+                </View>
+              );
+            }
             return (
               <View key={i} style={styles.hourBlock}>
                 <Icon
-                  name="cloud-outline"
-                  size={16}
+                  name={constants.PARAMS_TO_ICONS[param]}
                   color={colors.hourListText}
                 />
               </View>
@@ -410,7 +468,7 @@ const styles = StyleSheet.create({
   },
   panelText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Medium',
   },
   withMarginRight: {
     marginRight: 9,
