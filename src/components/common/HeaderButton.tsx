@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from './Icon';
@@ -19,10 +25,18 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
   onPress,
   right,
 }) => {
+  const { width, height } = useWindowDimensions();
   const { colors } = useTheme();
   return (
     <TouchableOpacity onPress={onPress} accessibilityLabel={accessibilityLabel}>
-      <View style={[styles.container, right && styles.right]}>
+      <View
+        style={[
+          styles.container,
+          right && styles.right,
+          !title && styles.right,
+          width > height ? styles.row : undefined,
+          width > height && right ? styles.rowReverse : undefined,
+        ]}>
         <Icon
           name={icon}
           style={{ color: colors.text }}
@@ -38,11 +52,22 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
 };
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    flex: 1,
+    paddingHorizontal: 16,
+    minWidth: 100,
+    justifyContent: 'center',
+    paddingVertical: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rowReverse: {
+    flexDirection: 'row-reverse',
   },
   right: {
     alignItems: 'flex-end',
-    paddingLeft: 60,
   },
   text: {
     fontSize: 14,
