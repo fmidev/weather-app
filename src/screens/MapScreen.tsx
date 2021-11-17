@@ -29,8 +29,8 @@ const INITIAL_REGION = {
 };
 
 const ANIMATE_ZOOM = {
-  latitudeDelta: 0.349713388569298,
-  longitudeDelta: 0.3956636710639145,
+  latitudeDelta: 1.3447962255539707,
+  longitudeDelta: 1.4189536248254342,
 };
 
 const mapStateToProps = (state: State) => ({

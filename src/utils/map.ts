@@ -163,8 +163,14 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
         Number(maxx),
         Number(maxy),
       ];
-      const [minX, minY] = proj4('WGS84', 'EPSG:3857', [numMinX, numMinY]);
-      const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [numMaxX, numMaxY]);
+      const [minX, minY] = proj4('WGS84', 'EPSG:3857', [
+        numMinX,
+        numMinY < -85 ? 85 : numMinY,
+      ]);
+      const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [
+        numMaxX,
+        numMaxY > 85 ? 85 : numMaxY,
+      ]);
 
       const bbox = `${minX},${minY},${maxX},${maxY}`;
 
@@ -184,8 +190,8 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
         transparent: 'true',
         layers: layerSrc.layer,
         bbox,
-        width: '727',
-        height: '1152',
+        width: '1454',
+        height: '2304',
         format: 'image/png',
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',

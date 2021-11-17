@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import Icon from '@components/common/Icon';
 import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
@@ -14,8 +15,15 @@ import {
   updateSliderStep as updateSliderStepAction,
 } from '@store/map/actions';
 
-import { WHITE, SECONDARY_BLUE, GRAYISH_BLUE } from '@utils/colors';
+import {
+  WHITE,
+  SECONDARY_BLUE,
+  GRAYISH_BLUE,
+  GRAY_1,
+  CustomTheme,
+} from '@utils/colors';
 import { Config } from '@config';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
@@ -48,7 +56,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
   const locale = i18n.language;
   const { layers } = Config.get('map');
 
-  const { colors } = useTheme();
+  const { colors } = useTheme() as CustomTheme;
   return (
     <View style={styles.sheetListContainer}>
       <View style={styles.closeButtonContainer}>
@@ -97,22 +105,30 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
       </View>
       {layers.length > 0 &&
         layers.map((layer) => (
-          <View key={layer.id} style={styles.row}>
-            <Text style={[styles.text, { color: colors.text }]}>
-              {(layer?.name && layer?.name[locale]) || ''}
-            </Text>
-            <Switch
-              trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-              thumbColor={WHITE}
-              ios_backgroundColor={GRAYISH_BLUE}
-              value={activeOverlay === layer.id}
-              onValueChange={() => {
-                updateActiveOverlay(Number(layer.id));
-                const step = layer.times.timeStep;
-                updateSliderStep(step);
-              }}
-            />
-          </View>
+          <TouchableOpacity
+            key={layer.id}
+            disabled={layer.id === activeOverlay}
+            onPress={() => {
+              updateActiveOverlay(Number(layer.id));
+              const step = layer.times.timeStep;
+              updateSliderStep(step);
+            }}>
+            <View style={styles.row}>
+              <Text style={[styles.text, { color: colors.text }]}>
+                {(layer?.name && layer?.name[locale]) || ''}
+              </Text>
+              <Icon
+                name={
+                  activeOverlay === layer.id
+                    ? 'radio-button-on'
+                    : 'radio-button-off'
+                }
+                style={{
+                  color: activeOverlay === layer.id ? colors.primary : GRAY_1,
+                }}
+              />
+            </View>
+          </TouchableOpacity>
         ))}
     </View>
   );
@@ -147,6 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: 10,
+    minHeight: 44,
   },
   title: {
     fontSize: 16,
