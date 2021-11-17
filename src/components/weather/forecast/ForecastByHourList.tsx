@@ -294,7 +294,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             },
           ]}>
           <View style={styles.hourBlock}>
-            <Icon name="time-outline" size={16} color={colors.hourListText} />
+            <Icon name="clock" color={colors.hourListText} />
           </View>
           {displayParams.map(([i, param]) => {
             if (param === constants.WIND_SPEED_AND_DIRECTION) {
@@ -396,6 +396,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             style={[
               styles.row,
               styles.listActionButtonContainer,
+              styles.noBorderLeft,
               { borderColor: colors.border },
             ]}>
             <TouchableOpacity
@@ -522,6 +523,9 @@ const styles = StyleSheet.create({
   },
   listActionButtonContainer: {
     borderWidth: 1,
+  },
+  noBorderLeft: {
+    borderLeftWidth: 0,
   },
   disabled: {
     opacity: 0.5,

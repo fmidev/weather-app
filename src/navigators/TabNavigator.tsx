@@ -43,7 +43,7 @@ import { setCurrentLocation as setCurrentLocationAction } from '@store/location/
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
 import { getGeolocation } from '@utils/helpers';
-import { PRIMARY_BLUE, WHITE } from '@utils/colors';
+import { PRIMARY_BLUE, WHITE, GRAY_1 } from '@utils/colors';
 import { selectInitialTab } from '@store/navigation/selectors';
 import { setNavigationTab as setNavigationTabAction } from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
@@ -381,7 +381,10 @@ const Navigator: React.FC<Props> = ({
           ref={searchInfoSheetRef}
           height={700}
           closeOnDragDown
-          customStyles={{ container: styles.sheetContainer }}>
+          customStyles={{
+            container: styles.sheetContainer,
+            draggableIcon: styles.draggableIcon,
+          }}>
           <SearchInfoBottomSheet
             onClose={() => searchInfoSheetRef.current.close()}
           />
@@ -402,6 +405,10 @@ const styles = StyleSheet.create({
   sheetContainer: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  draggableIcon: {
+    backgroundColor: GRAY_1,
+    width: 65,
   },
 });
 

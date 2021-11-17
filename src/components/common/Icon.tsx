@@ -11,6 +11,7 @@ import ArrowForward from '@assets/images/icons/arrow-forward.svg';
 import ArrowLeft from '@assets/images/icons/arrow-left.svg';
 import ArrowRight from '@assets/images/icons/arrow-right.svg';
 import ArrowUp from '@assets/images/icons/arrow-up.svg';
+import Clock from '@assets/images/icons/clock.svg';
 import Close from '@assets/images/icons/close.svg';
 import DewPoint from '@assets/images/icons/dew-point.svg';
 import FeelsLikeColder from '@assets/images/icons/feels-like-colder.svg';
@@ -110,6 +111,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <ArrowRight {...props} />;
     case 'arrow-up':
       return <ArrowUp {...props} />;
+    case 'clock':
+      return <Clock {...props} />;
     case 'close':
       return <Close {...props} />;
     case 'dew-point':

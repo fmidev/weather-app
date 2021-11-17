@@ -20,6 +20,7 @@ import { selectDisplayLocation, selectOverlay } from '@store/map/selectors';
 import { initializeOverlays as initializeOverlaysAction } from '@store/map/actions';
 
 import darkMapStyle from '@utils/dark_map_style.json';
+import { GRAY_1 } from '@utils/colors';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -158,6 +159,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
             ...styles.sheetContainer,
             backgroundColor: colors.background,
           },
+          draggableIcon: styles.draggableIcon,
         }}>
         <InfoBottomSheet onClose={() => infoSheetRef.current.close()} />
       </RBSheet>
@@ -171,6 +173,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
             ...styles.sheetContainer,
             backgroundColor: colors.background,
           },
+          draggableIcon: styles.draggableIcon,
         }}>
         <MapLayersBottomSheet
           onClose={() => mapLayersSheetRef.current.close()}
@@ -194,6 +197,10 @@ const styles = StyleSheet.create({
   sheetContainer: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  draggableIcon: {
+    backgroundColor: GRAY_1,
+    width: 65,
   },
 });
 

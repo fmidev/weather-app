@@ -26,7 +26,7 @@ import {
   selectForecast,
 } from '@store/forecast/selectors';
 
-import { CustomTheme } from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
 import { selectTimeZone } from '@store/location/selector';
@@ -271,6 +271,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             ...styles.sheetContainer,
             backgroundColor: colors.background,
           },
+          draggableIcon: styles.draggableIcon,
         }}>
         <ParamsBottomSheet onClose={() => paramSheetRef.current.close()} />
       </RBSheet>
@@ -283,6 +284,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             ...styles.sheetContainer,
             backgroundColor: colors.background,
           },
+          draggableIcon: styles.draggableIcon,
         }}>
         <WeatherInfoBottomSheet
           onClose={() => weatherInfoSheetRef.current.close()}
@@ -360,6 +362,10 @@ const styles = StyleSheet.create({
   sheetContainer: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  draggableIcon: {
+    backgroundColor: GRAY_1,
+    width: 65,
   },
 });
 
