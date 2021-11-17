@@ -1,3 +1,5 @@
+import { Location } from '@store/location/types';
+
 export type TabParamList = {
   Map: undefined;
   Weather: undefined;
@@ -11,14 +13,6 @@ export type OthersStackParamList = {
   Settings: undefined;
   Notifications: undefined;
   Symbols: undefined;
-};
-
-type Location = {
-  name: string;
-  area: string;
-  lat: number;
-  lon: number;
-  id: number;
 };
 
 export type MapStackParamList = {

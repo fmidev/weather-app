@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
-import { selectGeoid } from '@store/location/selector';
+import { selectCurrent } from '@store/location/selector';
 import {
   selectData,
   selectDataId,
@@ -25,7 +25,7 @@ import ParameterSelector from './charts/ParameterSelector';
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
   dataId: selectDataId(state),
-  geoid: selectGeoid(state),
+  location: selectCurrent(state),
   loading: selectLoading(state),
   stationId: selectStationId(state),
   stationList: selectStationList(state),
@@ -44,7 +44,7 @@ type ObservationPanelProps = PropsFromRedux;
 
 const ObservationPanel: React.FC<ObservationPanelProps> = ({
   // loading,
-  geoid,
+  location,
   data,
   dataId,
   stationList,
@@ -55,8 +55,8 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const [parameter, setParameter] = useState<ChartType>('temperature');
   useEffect(() => {
-    fetchObservation({ geoid });
-  }, [geoid, fetchObservation]);
+    fetchObservation({ geoid: location.id }, location.country);
+  }, [location, fetchObservation]);
 
   useEffect(() => {
     const sid = stationList[0]?.id;

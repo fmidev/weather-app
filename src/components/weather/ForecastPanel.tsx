@@ -7,9 +7,10 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/en-gb';
+// import { time } from '@utils/time';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -28,6 +29,7 @@ import {
 import { CustomTheme } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
+import { selectTimeZone } from '@store/location/selector';
 import CollapsibleListHeader from './common/CollapsibleListHeader';
 import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
@@ -44,6 +46,7 @@ const mapStateToProps = (state: State) => ({
   data: selectForecast(state),
   headerLevelForecast: selectHeaderLevelForecast(state),
   forecastLastUpdatedMoment: selectForecastLastUpdatedMoment(state),
+  timezone: selectTimeZone(state),
   // minimumsAndMaximums: selectMinimumsAndMaximums(state),
 });
 const connector = connect(mapStateToProps, {});
@@ -58,6 +61,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   data,
   forecastLastUpdatedMoment,
   headerLevelForecast,
+  timezone,
   // minimumsAndMaximums,
 }) => {
   const { colors } = useTheme() as CustomTheme;
@@ -82,6 +86,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       }
     }
   }, [forecastByDay, dateKeys, selectedDate]);
+
+  useEffect(() => {
+    moment.tz.setDefault(timezone);
+  }, [timezone]);
 
   const forecastLastUpdated =
     forecastLastUpdatedMoment &&
