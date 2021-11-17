@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   createStackNavigator,
+  StackNavigationOptions,
   StackNavigationProp,
 } from '@react-navigation/stack';
 import type { NavigationState } from '@react-navigation/routers';
@@ -152,12 +153,12 @@ const Navigator: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
-  const CommonHeaderOptions = {
+  const CommonHeaderOptions: StackNavigationOptions = {
     headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
     headerStyle: {
       shadowColor: 'transparent',
-      // flexWrap: 'wrap',
     },
+    headerTitleAlign: 'center',
     headerBackImage: ({ tintColor }: { tintColor: string }) => (
       <Icon
         name="arrow-back"
