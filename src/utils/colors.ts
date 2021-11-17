@@ -4,6 +4,7 @@ export const GRAYISH_BLUE = '#D8E7F2'; // line-light-mode
 export const LIGHT_BLUE = '#EEF4FB';
 
 export const WHITE = '#FFFFFF';
+export const WHITE_TRANSPARENT = 'rgba(255,255,255,0.0)';
 export const TRANSPARENT = 'transparent';
 
 export const BLACK = '#000000';
@@ -15,7 +16,11 @@ export const GRAY_3 = '#48484A';
 export const GRAY_2 = '#636366';
 export const GRAY_1 = '#8E8E93';
 
-export const SHADOW = 'rgba(0,0,0,0.3)';
+export const GRAY_6_TRANSPARENT = 'rgba(28,28,30,0.0)';
+export const GRAY_6_95 = 'rgba(28,28,30,0.95)';
+
+export const SHADOW_DARK = 'rgba(0,0,0,0.3)';
+export const SHADOW_LIGHT = 'rgba(48,49,147,0.1)';
 
 export const LIGHT_RED = '#F8D7DA';
 export const DARK_RED = '#940214';
@@ -49,6 +54,7 @@ export type CustomTheme = {
     inputBackground: string;
     inputButtonBackground: string;
     mapButtonBackground: string;
+    relocateButtonBackground: string;
     mapButtonBorder: string;
     headerBackground: string;
     timeStepBackground: string;

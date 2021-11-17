@@ -8,8 +8,9 @@ import {
   Text,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@react-navigation/native';
 
-import { SHADOW, SECONDARY_BLUE, WHITE } from '@utils/colors';
+import { WHITE, CustomTheme } from '@utils/colors';
 
 type RelocateButtonProps = {
   onPress: () => void;
@@ -18,8 +19,18 @@ type RelocateButtonProps = {
 
 const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
   const { t } = useTranslation();
+  const { colors } = useTheme() as CustomTheme;
   return (
-    <View style={[style, styles.button, styles.shadow]}>
+    <View
+      style={[
+        style,
+        styles.button,
+        styles.shadow,
+        {
+          shadowColor: colors.shadow,
+          backgroundColor: colors.relocateButtonBackground,
+        },
+      ]}>
       <TouchableOpacity
         onPress={onPress}
         accessibilityRole="button"
@@ -34,13 +45,11 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: SECONDARY_BLUE,
     width: 158,
     height: 50,
     borderRadius: 25,
   },
   shadow: {
-    shadowColor: SHADOW,
     shadowOffset: {
       width: 0,
       height: 6,

@@ -1,10 +1,25 @@
-import React, { useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import Slider from '@react-native-community/slider';
-import { useTranslation } from 'react-i18next';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import Icon from '@components/common/Icon';
 
@@ -23,7 +38,20 @@ import {
   getSliderStepSeconds,
 } from '@utils/map';
 
-import { WHITE, SECONDARY_BLUE, SHADOW, CustomTheme } from '@utils/colors';
+import {
+  CustomTheme,
+  WHITE,
+  WHITE_TRANSPARENT,
+  GRAY_6,
+  GRAY_6_TRANSPARENT,
+  TRANSPARENT,
+} from '@utils/colors';
+
+const QUARTER_WIDTH = 12;
+const QUARTER_SECONDS = 900;
+
+const STEP_60 = 3600;
+let interval: NodeJS.Timeout;
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
@@ -49,10 +77,28 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   updateSliderTime,
   overlay,
 }) => {
-  const { t } = useTranslation();
-  const { colors } = useTheme() as CustomTheme;
+  const { t, i18n } = useTranslation();
+  const { colors, dark } = useTheme() as CustomTheme;
+  const locale = i18n.language;
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [scrollIndex, setScrollIndex] = useState<number>(0);
+  const [times, setTimes] = useState<number[] | []>([]);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const { width } = useWindowDimensions();
 
-  const currentSliderTime = moment.unix(sliderTime).format('HH:mm');
+  const sliderRef = useRef() as React.MutableRefObject<FlatList>;
+
+  const observationEndUnix =
+    (overlay?.observation &&
+      overlay.observation.end &&
+      Number(moment(overlay.observation.end).format('X'))) ||
+    0;
+
+  const currentSliderTime = moment
+    .unix(sliderTime)
+    .locale(locale)
+    .format('ddd HH:mm');
+  const sliderWidth = width - 24;
 
   const sliderMinUnix = useMemo(
     () => getSliderMinUnix(activeOverlayId, overlay),
@@ -65,66 +111,266 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const step = getSliderStepSeconds(sliderStep);
 
-  // note: moment treats moment(undefined) as moment()
-  const initialTime = moment(overlay?.observation?.end)
-    .utc()
-    .startOf('hour')
-    .unix();
+  useEffect(() => {
+    if (sliderMaxUnix && sliderMinUnix) {
+      let newTimes: number[] = [];
+      let curr = Math.round(sliderMinUnix / QUARTER_SECONDS) * QUARTER_SECONDS;
+      while (curr <= sliderMaxUnix) {
+        newTimes = newTimes.concat(curr);
+        curr += QUARTER_SECONDS;
+      }
+      setTimes(newTimes);
+    }
+  }, [sliderMinUnix, sliderMaxUnix]);
 
-  const roundStep = (v: number): number => Math.round(v / step) * step;
+  useEffect(() => {
+    const time = times[currentIndex];
+    if (time % step === 0) {
+      if (sliderTime !== time) {
+        updateSliderTime(time);
+      }
+    }
+  }, [currentIndex, sliderTime, updateSliderTime, step, times]);
 
-  return (
-    <View
-      style={[
-        styles.wrapper,
-        styles.shadow,
-        {
-          backgroundColor: colors.inputButtonBackground,
-          borderColor: colors.mapButtonBorder,
-        },
-      ]}>
-      <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={() => console.log('play button pressed')}
-            accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
-            <Icon
-              name="play"
-              style={{ color: colors.text }}
-              width={50}
-              height={50}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.sliderWrapper}>
-          <View style={styles.value}>
-            <Text style={[styles.currentText, { color: colors.text }]}>
-              {currentSliderTime}
-            </Text>
-          </View>
-          <Slider
-            onValueChange={(v) => updateSliderTime(roundStep(v))}
-            thumbTintColor={WHITE}
-            minimumTrackTintColor={SECONDARY_BLUE}
-            step={step}
-            minimumValue={sliderMinUnix}
-            maximumValue={sliderMaxUnix}
-            value={initialTime} // provide initial slider value
-          />
-        </View>
+  const handleMomentumScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const {
+      contentOffset: { x },
+    } = e.nativeEvent;
+    setScrollIndex(x);
+  };
+
+  const handleMomentumStart = () => {
+    if (isAnimating) {
+      setIsAnimating(false);
+      clear();
+    }
+  };
+
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (isAnimating) {
+      return;
+    }
+
+    const {
+      contentOffset: { x },
+    } = e.nativeEvent;
+    resolveAndSetCurrentIndex(x);
+  };
+
+  const resolveAndSetCurrentIndex = useCallback(
+    (x: number) => {
+      const index = Math.round(x / QUARTER_WIDTH);
+      if (index >= 0 && index <= times.length) {
+        if (index === times.length) {
+          setCurrentIndex(index - 1);
+          if (isAnimating) {
+            setScrollIndex(0);
+          }
+        } else {
+          setCurrentIndex(index);
+        }
+      }
+    },
+    [times, isAnimating]
+  );
+
+  useEffect(() => {
+    if (isAnimating) {
+      sliderRef.current.scrollToOffset({
+        offset: scrollIndex,
+        animated: false,
+      });
+      resolveAndSetCurrentIndex(scrollIndex);
+    }
+  }, [scrollIndex, isAnimating, resolveAndSetCurrentIndex]);
+
+  const handleSetScrollIndex = () => setScrollIndex((prev) => prev + 1);
+
+  const animate = () => {
+    setIsAnimating(true);
+    interval = setInterval(() => {
+      handleSetScrollIndex();
+    }, 50);
+  };
+
+  const clear = () => {
+    setIsAnimating(false);
+    clearInterval(interval);
+  };
+
+  const renderStep = ({ item, index }: { item: number; index: number }) => {
+    const hour = item % STEP_60 === 0 && moment.unix(item).format('HH');
+    if (index === times.length - 1)
+      return (
         <View
           style={[
-            styles.stepSelector,
-            { backgroundColor: colors.timeStepBackground },
+            styles.lastQuarterContainer,
+            {
+              marginRight:
+                index === times.length - 1 ? sliderWidth / 2 - 1 : undefined,
+            },
           ]}>
+          {hour && (
+            <Text
+              style={[
+                styles.text,
+                styles.lastQuarterText,
+                {
+                  color: colors.hourListText,
+                },
+              ]}>
+              {hour}
+            </Text>
+          )}
+          <View
+            style={[
+              hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
+              step !== STEP_60 ? styles.withBorderLeft : undefined,
+              { borderLeftColor: colors.secondaryBorder },
+            ]}
+          />
+        </View>
+      );
+    return (
+      <View
+        key={`${item}`}
+        style={[
+          styles.quarterContainer,
+          {
+            marginLeft: index === 0 ? sliderWidth / 2 - 80 : undefined,
+          },
+        ]}>
+        {hour && (
           <Text
             style={[
-              styles.stepText,
-              { color: colors.text },
-            ]}>{`${sliderStep} min`}</Text>
+              styles.text,
+              styles.quarterText,
+              {
+                color: colors.hourListText,
+              },
+            ]}>
+            {hour}
+          </Text>
+        )}
+        <View
+          style={[
+            hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
+            styles.withBorderBottom,
+            step !== STEP_60 ? styles.withBorderLeft : undefined,
+            {
+              borderLeftColor: colors.secondaryBorder,
+              borderBottomColor:
+                item < observationEndUnix
+                  ? colors.secondaryBorder
+                  : colors.primary,
+            },
+          ]}
+        />
+      </View>
+    );
+  };
+
+  return (
+    <>
+      <View
+        style={[
+          styles.wrapper,
+          styles.shadow,
+          {
+            backgroundColor: colors.mapButtonBackground,
+            borderColor: colors.mapButtonBorder,
+            shadowColor: colors.shadow,
+          },
+        ]}>
+        <View style={styles.container}>
+          <View
+            style={[
+              styles.buttonContainer,
+              { borderRightColor: colors.border },
+            ]}>
+            <TouchableOpacity
+              onPress={() => (isAnimating ? clear() : animate())}
+              accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
+              <Icon
+                name={isAnimating ? 'pause' : 'play'}
+                style={{ color: colors.text }}
+                width={50}
+                height={50}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.sliderWrapper}>
+            <FlatList
+              decelerationRate="fast"
+              ref={sliderRef}
+              data={times}
+              keyExtractor={(item) => `${item}`}
+              renderItem={renderStep}
+              horizontal
+              style={styles.sliderContainer}
+              showsHorizontalScrollIndicator={false}
+              onScroll={handleScroll}
+              onMomentumScrollEnd={handleMomentumScroll}
+              onScrollBeginDrag={handleMomentumStart}
+            />
+            <Text
+              style={[
+                styles.currentTimeText,
+                styles.textCapitalize,
+                {
+                  color: colors.hourListText,
+                },
+              ]}>
+              {currentSliderTime}
+            </Text>
+            <Text
+              style={[
+                styles.currentTimeText,
+                styles.textRight,
+                {
+                  color:
+                    sliderTime > observationEndUnix
+                      ? colors.primary
+                      : colors.hourListText,
+                },
+              ]}>
+              {sliderTime > observationEndUnix
+                ? t('map:timeSlider:forecast')
+                : t('map:timeSlider:observation')}
+            </Text>
+            <LinearGradient
+              style={[styles.gradient, styles.gradientLeft]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              colors={
+                dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
+              }
+            />
+            <LinearGradient
+              style={[styles.gradient, styles.gradientRight]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              colors={
+                dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
+              }
+            />
+            <View
+              style={[
+                styles.tick,
+                {
+                  left: sliderWidth / 2 - 86,
+                  borderBottomColor:
+                    sliderTime > observationEndUnix
+                      ? colors.primary
+                      : colors.secondaryBorder,
+                },
+              ]}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -134,7 +380,7 @@ const styles = StyleSheet.create({
     bottom: 38,
     right: 12,
     left: 12,
-    height: 72,
+    height: 75,
     borderRadius: 8,
     borderWidth: 1,
   },
@@ -145,9 +391,23 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    shadowColor: SHADOW,
 
     elevation: 5,
+  },
+  text: {
+    fontSize: 14,
+    fontFamily: 'Roboto-Medium',
+  },
+  currentTimeText: {
+    fontSize: 14,
+    fontFamily: 'Roboto-Bold',
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 5,
+    padding: 8,
+  },
+  textCapitalize: {
+    textTransform: 'capitalize',
   },
   container: {
     flex: 1,
@@ -156,37 +416,78 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   buttonContainer: {
-    marginRight: 5,
+    width: 65,
+    marginRight: 2,
     height: '100%',
     justifyContent: 'center',
+    borderRightWidth: 1,
+  },
+  quarterContainer: {
+    width: QUARTER_WIDTH,
+    height: 32,
+    justifyContent: 'flex-end',
+  },
+  quarterText: {
+    marginRight: '20%',
+    marginLeft: '-65%',
+  },
+  lastQuarterContainer: {
+    height: 32,
+    justifyContent: 'flex-end',
+  },
+  lastQuarterText: {
+    marginRight: '50%',
+    marginLeft: '-35%',
+  },
+  quarterBottom: {
+    minHeight: 10,
+    paddingTop: 6,
+  },
+  withBorderLeft: {
+    borderLeftWidth: 1,
+  },
+  fullHourQuarterBottom: {
+    borderLeftWidth: 1,
+    minHeight: 16,
+  },
+  withBorderBottom: {
+    borderBottomWidth: 4,
   },
   sliderWrapper: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingTop: 2,
-    paddingRight: 24,
-    paddingBottom: 14,
+    flex: 1,
   },
-  value: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    justifyContent: 'center',
+  sliderContainer: {
+    paddingVertical: 8,
+    minHeight: 75,
+    zIndex: 2,
   },
-  stepSelector: {
-    width: 72,
+  tick: {
+    position: 'absolute',
+    bottom: 22,
+    width: 0,
+    height: 0,
+    borderLeftWidth: 6,
+    borderLeftColor: TRANSPARENT,
+    borderRightWidth: 6,
+    borderRightColor: TRANSPARENT,
+    borderBottomWidth: 10,
+  },
+  gradient: {
+    position: 'absolute',
+    width: 20,
     height: '100%',
+    zIndex: 3,
+  },
+  gradientLeft: {
+    left: 0,
+  },
+  gradientRight: {
+    right: 0,
     borderTopRightRadius: 8,
     borderBottomRightRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  currentText: {
-    fontFamily: 'Roboto-Bold',
-    fontSize: 14,
-  },
-  stepText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+  textRight: {
+    right: 0,
   },
 });
 

@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import MapButton from './MapButton';
-import TimeSlider from './TimeSlider';
 import RelocateButton from './RelocateButton';
+import TimeSlider from './TimeSlider';
 
 type MapControlsProps = {
   onLayersPressed: () => void;

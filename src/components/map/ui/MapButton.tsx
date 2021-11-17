@@ -10,7 +10,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
 
-import { SHADOW, CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 
 type MapButtonProps = {
   onPress: () => void;
@@ -33,10 +33,12 @@ const MapButton: React.FC<MapButtonProps> = ({
       style={[
         styles.border,
         styles.shadow,
+        styles.center,
         style,
         {
           backgroundColor: colors.mapButtonBackground,
           borderColor: colors.mapButtonBorder,
+          shadowColor: colors.shadow,
         },
       ]}>
       <TouchableOpacity
@@ -56,6 +58,10 @@ const MapButton: React.FC<MapButtonProps> = ({
   );
 };
 const styles = StyleSheet.create({
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   iconWrapper: {
     padding: 12,
   },
@@ -63,7 +69,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   shadow: {
-    shadowColor: SHADOW,
     shadowOffset: {
       width: 0,
       height: 6,

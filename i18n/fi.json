@@ -160,6 +160,10 @@
     "selectionButtonAccessibilityLabel": "Näytä aika-askeleen valinta",
     "noLocationPermission": "Sovelluksella ei ole oikeutta käyttää sijaintia",
     "noLocationPermissionHint": "Anna sovellukselle oikeus sijainnin käyttöön asetuksissa.",
+    "timeSlider": {
+      "forecast": "ennuste",
+      "observation": "havainto"
+    },
     "timeStepBottomSheet": {
       "title": "Aikajanan aika-akseli",
       "closeAccessibilityLabel": "Sulje aika-askeleen valinta"
