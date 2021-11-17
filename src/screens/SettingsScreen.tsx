@@ -24,6 +24,7 @@ import {
   updateTheme as updateThemeAction,
 } from '@store/settings/actions';
 import { UnitType } from '@store/settings/types';
+import { GRAY_1 } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -256,6 +257,7 @@ const SettingsScreen: React.FC<Props> = ({
                             ...styles.sheetContainer,
                             backgroundColor: colors.background,
                           },
+                          draggableIcon: styles.draggableIcon,
                         }}>
                         <View
                           style={styles.sheetListContainer}
@@ -355,6 +357,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingLeft: 20,
     paddingBottom: 10,
+  },
+  draggableIcon: {
+    width: 65,
+    backgroundColor: GRAY_1,
   },
 });
 
