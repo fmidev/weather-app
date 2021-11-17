@@ -11,7 +11,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
 import CloseButton from '@components/common/CloseButton';
-import { CustomTheme } from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@utils/colors';
 
 type SearchInfoSheetProps = {
   onClose: () => void;
@@ -42,7 +42,7 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
               name="star-selected"
               width={24}
               height={24}
-              style={{ color: colors.text }}
+              style={{ color: colors.primary }}
             />
             <Text
               style={[
@@ -58,7 +58,7 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
               name="star-unselected"
               width={24}
               height={24}
-              style={{ color: colors.text }}
+              style={{ color: GRAY_1 }}
             />
             <Text
               style={[
