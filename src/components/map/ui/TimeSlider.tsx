@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useIsFocused } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import Icon from '@components/common/Icon';
@@ -110,6 +110,15 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   );
 
   const step = getSliderStepSeconds(sliderStep);
+
+  const isFocused = useIsFocused();
+
+  // clear animation if user navigates off screen while animating
+  useEffect(() => {
+    if (!isFocused && isAnimating) {
+      clear();
+    }
+  }, [isFocused, isAnimating]);
 
   useEffect(() => {
     if (sliderMaxUnix && sliderMinUnix) {
