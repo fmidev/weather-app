@@ -61,11 +61,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const step = dayForecast[0];
     const sunrise = moment(step.sunrise);
     const sunset = moment(step.sunset);
-    const dayDuration = moment.duration(sunset.diff(sunrise));
-
-    const dayLength = moment
-      .utc(dayDuration.asMilliseconds())
-      .format('HH [h] mm [min]');
+    const dayHours = Math.floor(step.daylength / 60);
+    const dayMinutes = step.daylength % 60;
 
     return (
       <View
@@ -126,7 +123,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               styles.bold,
               { color: colors.hourListText },
             ]}>
-            {dayLength}
+            {`${dayHours} h ${dayMinutes} min`}
           </Text>
         </View>
       </View>
