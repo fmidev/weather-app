@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text, Switch } from 'react-native';
+import { View, StyleSheet, Text, Switch, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -23,7 +23,6 @@ import {
   CustomTheme,
 } from '@utils/colors';
 import { Config } from '@config';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
