@@ -28,6 +28,7 @@ describe('ConfigProvider children renders', () => {
       </ConfigProvider>
     );
 
+    await waitFor(() => container.getByText('weatherApiUrl'));
     expect(container.toJSON()).toMatchObject({
       type: 'Text',
       props: {},

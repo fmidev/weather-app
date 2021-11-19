@@ -10,10 +10,7 @@ import {
   selectStationList,
 } from '@store/observation/selector';
 
-import {
-  fetchObservation as fetchObservationAction,
-  setStationId as setStationIdAction,
-} from '@store/observation/actions';
+import { setStationId as setStationIdAction } from '@store/observation/actions';
 
 import { State } from '@store/types';
 import { useTheme } from '@react-navigation/native';
@@ -32,7 +29,6 @@ const mapStateToProps = (state: State) => ({
 });
 
 const mapDispatchToProps = {
-  fetchObservation: fetchObservationAction,
   setStationId: setStationIdAction,
 };
 
@@ -44,19 +40,14 @@ type ObservationPanelProps = PropsFromRedux;
 
 const ObservationPanel: React.FC<ObservationPanelProps> = ({
   // loading,
-  location,
   data,
   dataId,
   stationList,
   stationId,
-  fetchObservation,
   setStationId,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const [parameter, setParameter] = useState<ChartType>('temperature');
-  useEffect(() => {
-    fetchObservation({ geoid: location.id }, location.country);
-  }, [location, fetchObservation]);
 
   useEffect(() => {
     const sid = stationList[0]?.id;
