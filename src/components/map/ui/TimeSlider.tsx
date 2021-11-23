@@ -48,7 +48,7 @@ import {
 } from '@utils/colors';
 
 const QUARTER_WIDTH = 12;
-const QUARTER_SECONDS = 900;
+const HOUR_WIDTH = QUARTER_WIDTH * 4;
 
 const STEP_60 = 3600;
 let interval: NodeJS.Timeout;
@@ -123,14 +123,14 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   useEffect(() => {
     if (sliderMaxUnix && sliderMinUnix) {
       let newTimes: number[] = [];
-      let curr = Math.round(sliderMinUnix / QUARTER_SECONDS) * QUARTER_SECONDS;
+      let curr = Math.floor(sliderMinUnix / step) * step;
       while (curr <= sliderMaxUnix) {
         newTimes = newTimes.concat(curr);
-        curr += QUARTER_SECONDS;
+        curr += step;
       }
       setTimes(newTimes);
     }
-  }, [sliderMinUnix, sliderMaxUnix]);
+  }, [sliderMinUnix, sliderMaxUnix, step]);
 
   useEffect(() => {
     const time = times[currentIndex];
@@ -168,7 +168,8 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const resolveAndSetCurrentIndex = useCallback(
     (x: number) => {
-      const index = Math.round(x / QUARTER_WIDTH);
+      const divider = step === STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH;
+      const index = Math.floor(x / divider);
       if (index >= 0 && index <= times.length) {
         if (index === times.length) {
           setCurrentIndex(index - 1);
@@ -180,7 +181,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         }
       }
     },
-    [times, isAnimating]
+    [times, isAnimating, step]
   );
 
   useEffect(() => {
@@ -223,7 +224,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             <Text
               style={[
                 styles.text,
-                styles.lastQuarterText,
+                step === STEP_60 ? styles.lastHourText : styles.lastQuarterText,
                 {
                   color: colors.hourListText,
                 },
@@ -246,6 +247,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         style={[
           styles.quarterContainer,
           {
+            width: step === STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
             marginLeft: index === 0 ? sliderWidth / 2 - 80 : undefined,
           },
         ]}>
@@ -253,7 +255,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           <Text
             style={[
               styles.text,
-              styles.quarterText,
+              step === STEP_60 ? styles.hourText : styles.quarterText,
               {
                 color: colors.hourListText,
               },
@@ -269,7 +271,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             {
               borderLeftColor: colors.secondaryBorder,
               borderBottomColor:
-                item < observationEndUnix
+                item <= observationEndUnix
                   ? colors.secondaryBorder
                   : colors.primary,
             },
@@ -432,13 +434,16 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
   },
   quarterContainer: {
-    width: QUARTER_WIDTH,
     height: 32,
     justifyContent: 'flex-end',
   },
   quarterText: {
     marginRight: '20%',
     marginLeft: '-65%',
+  },
+  hourText: {
+    marginRight: '20%',
+    marginLeft: '-15%',
   },
   lastQuarterContainer: {
     height: 32,
@@ -447,6 +452,10 @@ const styles = StyleSheet.create({
   lastQuarterText: {
     marginRight: '50%',
     marginLeft: '-35%',
+  },
+  lastHourText: {
+    marginRight: '35%',
+    marginLeft: '-20%',
   },
   quarterBottom: {
     minHeight: 10,
