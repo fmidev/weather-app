@@ -10,7 +10,6 @@ import {
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/en-gb';
-// import { time } from '@utils/time';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -22,14 +21,15 @@ import {
   selectForecastByDay,
   selectHeaderLevelForecast,
   selectForecastLastUpdatedMoment,
-  // selectMinimumsAndMaximums,
   selectForecast,
+  selectDisplayFormat,
 } from '@store/forecast/selectors';
 
 import { GRAY_1, CustomTheme } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
 import { selectTimeZone } from '@store/location/selector';
+import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecast/actions';
 import CollapsibleListHeader from './common/CollapsibleListHeader';
 import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
@@ -47,9 +47,14 @@ const mapStateToProps = (state: State) => ({
   headerLevelForecast: selectHeaderLevelForecast(state),
   forecastLastUpdatedMoment: selectForecastLastUpdatedMoment(state),
   timezone: selectTimeZone(state),
-  // minimumsAndMaximums: selectMinimumsAndMaximums(state),
+  displayFormat: selectDisplayFormat(state),
 });
-const connector = connect(mapStateToProps, {});
+
+const mapDispatchToProps = {
+  updateDisplayFormat: updateDisplayFormatAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -62,15 +67,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   forecastLastUpdatedMoment,
   headerLevelForecast,
   timezone,
-  // minimumsAndMaximums,
+  displayFormat,
+  updateDisplayFormat,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
   const [dayOpenIndexes, setDayOpenIndexes] = useState<number[]>([]);
-  const [toDisplay, setToDisplay] = useState<typeof TABLE | typeof CHART>(
-    TABLE
-  );
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
@@ -116,17 +119,17 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           <View style={[styles.row, styles.justifyStart]}>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => setToDisplay(TABLE)}
+              onPress={() => updateDisplayFormat(TABLE)}
               style={[
                 styles.contentSelectionContainer,
                 styles.withMarginRight,
                 {
                   backgroundColor:
-                    toDisplay === TABLE
+                    displayFormat === TABLE
                       ? colors.timeStepBackground
                       : colors.inputButtonBackground,
                   borderColor:
-                    toDisplay === TABLE
+                    displayFormat === TABLE
                       ? colors.chartSecondaryLine
                       : colors.secondaryBorder,
                 },
@@ -134,11 +137,11 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               <Text
                 style={[
                   styles.forecastText,
-                  toDisplay === TABLE && styles.medium,
-                  toDisplay === TABLE && styles.selectedText,
+                  displayFormat === TABLE && styles.medium,
+                  displayFormat === TABLE && styles.selectedText,
                   {
                     color:
-                      toDisplay === TABLE
+                      displayFormat === TABLE
                         ? colors.primaryText
                         : colors.hourListText,
                   },
@@ -148,16 +151,16 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => setToDisplay(CHART)}
+              onPress={() => updateDisplayFormat(CHART)}
               style={[
                 styles.contentSelectionContainer,
                 {
                   backgroundColor:
-                    toDisplay === CHART
+                    displayFormat === CHART
                       ? colors.timeStepBackground
                       : colors.inputButtonBackground,
                   borderColor:
-                    toDisplay === CHART
+                    displayFormat === CHART
                       ? colors.chartSecondaryLine
                       : colors.secondaryBorder,
                 },
@@ -165,11 +168,11 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               <Text
                 style={[
                   styles.forecastText,
-                  toDisplay === CHART && styles.medium,
-                  toDisplay === CHART && styles.selectedText,
+                  displayFormat === CHART && styles.medium,
+                  displayFormat === CHART && styles.selectedText,
                   {
                     color:
-                      toDisplay === CHART
+                      displayFormat === CHART
                         ? colors.primaryText
                         : colors.hourListText,
                   },
@@ -209,7 +212,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         {loading && <ActivityIndicator />}
         {headerLevelForecast &&
           headerLevelForecast.length > 0 &&
-          toDisplay === TABLE &&
+          displayFormat === TABLE &&
           headerLevelForecast.map((dayStep, index) => {
             const stepMoment = moment.unix(dayStep.timeStamp);
             const maxTemperaturePrefix = dayStep.maxTemperature > 0 ? '+' : '';
@@ -260,7 +263,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           })}
         {headerLevelForecast &&
           headerLevelForecast.length > 0 &&
-          toDisplay === CHART && <ChartList data={data} />}
+          displayFormat === CHART && <ChartList data={data} />}
       </View>
       <RBSheet
         ref={paramSheetRef}

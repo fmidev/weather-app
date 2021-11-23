@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
 import { selectCurrent } from '@store/location/selector';
 import {
+  selectChartDisplayParameter,
   selectData,
   selectDataId,
   selectLoading,
@@ -10,7 +11,10 @@ import {
   selectStationList,
 } from '@store/observation/selector';
 
-import { setStationId as setStationIdAction } from '@store/observation/actions';
+import {
+  setStationId as setStationIdAction,
+  updateChartParameter as updateChartParameterAction,
+} from '@store/observation/actions';
 
 import { State } from '@store/types';
 import { useTheme } from '@react-navigation/native';
@@ -26,10 +30,12 @@ const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
   stationId: selectStationId(state),
   stationList: selectStationList(state),
+  chartParameter: selectChartDisplayParameter(state),
 });
 
 const mapDispatchToProps = {
   setStationId: setStationIdAction,
+  updateChartParameter: updateChartParameterAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -45,9 +51,10 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   stationList,
   stationId,
   setStationId,
+  chartParameter,
+  updateChartParameter,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const [parameter, setParameter] = useState<ChartType>('temperature');
 
   useEffect(() => {
     const sid = stationList[0]?.id;
@@ -65,6 +72,8 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'temperature',
     'precipitation',
   ];
+
+  const parameter = chartParameter ?? charts[0];
 
   return (
     <View
@@ -87,7 +96,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       <ParameterSelector
         chartTypes={charts}
         parameter={parameter}
-        setParameter={setParameter}
+        setParameter={updateChartParameter}
       />
       <Chart chartType={parameter} data={data} observation />
     </View>
