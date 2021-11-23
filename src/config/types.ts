@@ -30,6 +30,7 @@ export interface Layer {
 }
 
 interface Observation {
+  updateInterval: number;
   numberOfStations: number;
   producer: string | { default: string; [name: string]: string };
   timePeriod: number;
@@ -46,6 +47,7 @@ interface ObservationDisabled extends Partial<Observation> {
 
 interface Warnings {
   apiUrl: string;
+  updateInterval: number;
   webViewUrl?: string;
 }
 
@@ -87,6 +89,7 @@ export interface ConfigType {
   weather: {
     apiUrl: string;
     forecast: {
+      updateInterval: number;
       timePeriod: number | 'data';
       producer: string;
       parameters: string[];

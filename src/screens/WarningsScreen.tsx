@@ -5,9 +5,11 @@ import { WebView } from 'react-native-webview';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 import { Config } from '@config';
+import { useReloader } from '@utils/reloader';
 
 const WarningsScreen: React.FC = () => {
   const { colors } = useTheme() as CustomTheme;
+  const { shouldReload } = useReloader();
   const [updated, setUpdated] = useState<number>(Date.now());
   const webViewRef = useRef(null);
   const isFocused = useIsFocused();
@@ -16,11 +18,12 @@ const WarningsScreen: React.FC = () => {
     ? i18n.language
     : 'en';
 
-  const { webViewUrl } = Config.get('warnings');
+  const { webViewUrl, updateInterval } = Config.get('warnings');
 
   useEffect(() => {
     const now = Date.now();
-    if (isFocused && now > updated + 5 * 60 * 1000) {
+    const timeToUpdate = updated + (updateInterval ?? 5) * 60 * 1000;
+    if (isFocused && (now > timeToUpdate || shouldReload > timeToUpdate)) {
       const script = `
       document.getElementById('fmi-warnings').__vue__.update();
       true;
@@ -29,7 +32,7 @@ const WarningsScreen: React.FC = () => {
       webViewRef?.current?.injectJavaScript(script);
       setUpdated(now);
     }
-  }, [isFocused, updated]);
+  }, [isFocused, updated, shouldReload, updateInterval]);
 
   if (!webViewUrl) {
     return null;

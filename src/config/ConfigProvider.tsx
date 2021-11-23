@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AppState } from 'react-native';
+import { ReloaderContext } from '@utils/reloader';
 import { Config } from './DynamicConfig';
 import { ConfigType } from './types';
 
@@ -15,6 +16,8 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   timeout,
 }) => {
   const [updated, setUpdated] = useState<number>(0);
+  const [shouldReload, setShouldReload] = useState<number>(0);
+
   Config.setDefaultConfig(defaultConfig);
   if (timeout) {
     Config.setApiTimeout(timeout);
@@ -22,24 +25,25 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   const { enabled, interval } = Config.get('dynamicConfig');
 
   const checkUpdates = useCallback(async () => {
-    if (
-      !Config.getUpdatingStatus() &&
-      interval &&
-      updated < Date.now() - interval * 1000
-    ) {
-      await Config.update();
-      setUpdated(Date.now());
+    if (Config.getUpdatingStatus()) {
+      return;
     }
+    const now = Date.now();
+    if (interval && updated < now - interval * 1000) {
+      await Config.update();
+      setUpdated(now);
+    }
+    setShouldReload(now);
   }, [updated, interval]);
 
   useEffect(() => {
-    if (!enabled) {
-      return () => null;
-    }
-
     const handleAppStateChange = (nextAppState: string) => {
       if (nextAppState === 'active') {
-        checkUpdates();
+        if (enabled) {
+          checkUpdates();
+        } else {
+          setShouldReload(Date.now());
+        }
       }
     };
     AppState.addEventListener('change', handleAppStateChange);
@@ -48,12 +52,18 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   }, [checkUpdates, enabled]);
 
   useEffect(() => {
-    if (enabled) {
-      checkUpdates();
-    }
-  }, [checkUpdates, enabled]);
+    checkUpdates();
+  }, [checkUpdates]);
 
-  return <>{(!enabled || updated > 0) && children}</>;
+  return (
+    <>
+      {(!enabled || updated > 0) && (
+        <ReloaderContext.Provider value={{ shouldReload }}>
+          {children}
+        </ReloaderContext.Provider>
+      )}
+    </>
+  );
 };
 
 export default ConfigProvider;

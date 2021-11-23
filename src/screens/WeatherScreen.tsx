@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import moment from 'moment';
 import 'moment/locale/fi';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useIsFocused } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { WeatherStackParamList } from '@navigators/types';
 
 import { State } from '@store/types';
-import { selectGeoid } from '@store/location/selector';
+import { selectCurrent } from '@store/location/selector';
 import { selectForecast } from '@store/forecast/selectors';
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
+import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
 
 import WarningsPanel from '@components/weather/WarningsPanel';
 import ForecastPanel from '@components/weather/ForecastPanel';
@@ -20,13 +21,17 @@ import ObservationPanel from '@components/weather/ObservationPanel';
 import { CustomTheme } from '@utils/colors';
 import { TimestepData } from '@store/forecast/types';
 
+import { Config } from '@config';
+import { useReloader } from '@utils/reloader';
+
 const mapStateToProps = (state: State) => ({
   forecast: selectForecast(state),
-  geoid: selectGeoid(state),
+  location: selectCurrent(state),
 });
 
 const mapDispatchToProps = {
   fetchForecast: fetchForecastAction,
+  fetchObservation: fetchObservationAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -40,14 +45,62 @@ type WeatherScreenProps = {
 const WeatherScreen: React.FC<WeatherScreenProps> = ({
   forecast,
   fetchForecast,
-  geoid,
+  fetchObservation,
+  location,
   navigation,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+  const isFocused = useIsFocused();
+  const [forecastUpdated, setForecastUpdated] = useState<number>(Date.now());
+  const [observationUpdated, setObservationUpdated] = useState<number>(
+    Date.now()
+  );
+  const { shouldReload } = useReloader();
+
+  const weatherConfig = Config.get('weather');
+
+  const updateForecast = useCallback(() => {
+    const geoid = location.id;
+    fetchForecast({ geoid }, [geoid]);
+    setForecastUpdated(Date.now());
+  }, [fetchForecast, location, setForecastUpdated]);
+
+  const updateObservation = useCallback(() => {
+    fetchObservation({ geoid: location.id }, location.country);
+    setObservationUpdated(Date.now());
+  }, [fetchObservation, location]);
 
   useEffect(() => {
-    fetchForecast({ geoid }, [geoid]);
-  }, [geoid, fetchForecast]);
+    const now = Date.now();
+    const observationUpdateTime =
+      observationUpdated +
+      (weatherConfig.observation.updateInterval ?? 5) * 60 * 1000;
+    const forecastUpdateTime =
+      forecastUpdated +
+      (weatherConfig.forecast.updateInterval ?? 5) * 60 * 1000;
+
+    if (isFocused) {
+      if (now > forecastUpdateTime || shouldReload > forecastUpdateTime) {
+        updateForecast();
+      }
+      if (now > observationUpdateTime || shouldReload > observationUpdateTime) {
+        updateObservation();
+      }
+    }
+  }, [
+    isFocused,
+    forecastUpdated,
+    observationUpdated,
+    shouldReload,
+    weatherConfig,
+    updateForecast,
+    updateObservation,
+  ]);
+
+  useEffect(() => {
+    updateForecast();
+    updateObservation();
+  }, [location, updateForecast, updateObservation]);
 
   const forecastByDay = forecast.reduce(
     (acc: { [key: string]: any }, curr: TimestepData) => {
