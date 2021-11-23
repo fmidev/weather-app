@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  ScrollView,
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -47,29 +41,26 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          borderTopColor: colors.border,
+        },
+      ]}>
       <View style={styles.row}>
         <TouchableOpacity
           accessibilityLabel={t('weather:charts:previous24hAccessibilityLabel')}
           style={previousDisabled && styles.disabled}
           disabled={previousDisabled}
           onPress={() => handlePrevious()}>
-          <View style={[styles.row, styles.rowColumn]}>
+          <View style={styles.button}>
             <Icon
               width={24}
               height={24}
               name="arrow-left"
               style={{ color: colors.primaryText }}
             />
-
-            <Text
-              style={[
-                styles.buttonText,
-                styles.medium,
-                { color: colors.primaryText },
-              ]}>
-              {t('weather:charts:previous24h')}
-            </Text>
           </View>
         </TouchableOpacity>
         <View
@@ -85,15 +76,7 @@ const TimeSelector: React.FC<TimeSelectorProps> = ({
           style={nextDisabled && styles.disabled}
           disabled={nextDisabled}
           onPress={() => handleNext()}>
-          <View style={[styles.row, styles.rowColumn]}>
-            <Text
-              style={[
-                styles.buttonText,
-                styles.medium,
-                { color: colors.primaryText },
-              ]}>
-              {t('weather:charts:next24h')}
-            </Text>
+          <View style={styles.button}>
             <Icon
               width={24}
               height={24}
@@ -111,24 +94,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'stretch',
+    borderTopWidth: 1,
+    marginTop: 24,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     flex: 1,
+    paddingTop: 8,
   },
-  rowColumn: {
-    flex: 1,
+  button: {
+    minWidth: '50%',
+    height: '100%',
+    justifyContent: 'center',
     alignItems: 'center',
-    height: 45,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-  },
-  medium: {
-    fontFamily: 'Roboto-Medium',
   },
   separator: {
     height: 44,
