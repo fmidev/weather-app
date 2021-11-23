@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
+import LinearGradient from 'react-native-linear-gradient';
 
 import Icon from '@components/common/Icon';
 
@@ -19,7 +20,13 @@ import { TimestepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
 
 import { weatherSymbolGetter } from '@assets/images';
-import { CustomTheme } from '@utils/colors';
+import {
+  WHITE,
+  WHITE_TRANSPARENT,
+  GRAY_6,
+  GRAY_6_TRANSPARENT,
+  CustomTheme,
+} from '@utils/colors';
 import * as constants from '@store/forecast/constants';
 
 const mapStateToProps = (state: State) => ({
@@ -41,6 +48,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   isOpen,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [isLastVisible, setIsLastVisible] = useState<boolean>(false);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
 
@@ -229,6 +237,10 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   }: {
     viewableItems: ViewToken[];
   }) => {
+    const isLastItemVisible =
+      viewableItems[viewableItems.length - 1] &&
+      viewableItems[viewableItems.length - 1].index === dayForecast.length - 1;
+    setIsLastVisible(isLastItemVisible);
     const firstViewable = viewableItems[0];
     if (!firstViewable) return;
     const { index } = firstViewable;
@@ -392,6 +404,26 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             })}
             initialScrollIndex={dayForecast.length === 24 ? 9 : 0}
           />
+          {currentIndex !== 0 && (
+            <LinearGradient
+              style={[styles.gradient, styles.gradientLeft]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              colors={
+                dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
+              }
+            />
+          )}
+          {!isLastVisible && (
+            <LinearGradient
+              style={[styles.gradient, styles.gradientRight]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              colors={
+                dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
+              }
+            />
+          )}
           <View
             style={[
               styles.row,
@@ -428,10 +460,10 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               accessibilityLabel={t('hourList.moveForwardAccessibilityLabel')}
               style={[
                 styles.listActionButton,
-                currentIndex + 7 > dayForecast.length - 1 && styles.disabled,
+                isLastVisible && styles.disabled,
               ]}
               onPress={handleMoveForward}
-              disabled={currentIndex + 6 > dayForecast.length - 1}>
+              disabled={isLastVisible}>
               <Icon
                 name="arrow-right"
                 color={colors.primaryText}
@@ -523,6 +555,7 @@ const styles = StyleSheet.create({
   },
   listActionButtonContainer: {
     borderWidth: 1,
+    zIndex: 4,
   },
   noBorderLeft: {
     borderLeftWidth: 0,
@@ -535,6 +568,18 @@ const styles = StyleSheet.create({
   },
   justifySpaceAround: {
     justifyContent: 'space-around',
+  },
+  gradient: {
+    position: 'absolute',
+    width: 32,
+    height: '100%',
+    zIndex: 3,
+  },
+  gradientLeft: {
+    left: 0,
+  },
+  gradientRight: {
+    right: 0,
   },
 });
 

@@ -134,7 +134,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               <Text
                 style={[
                   styles.forecastText,
-                  styles.medium,
+                  toDisplay === TABLE && styles.medium,
                   toDisplay === TABLE && styles.selectedText,
                   {
                     color:
@@ -165,7 +165,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               <Text
                 style={[
                   styles.forecastText,
-                  styles.medium,
+                  toDisplay === CHART && styles.medium,
                   toDisplay === CHART && styles.selectedText,
                   {
                     color:
