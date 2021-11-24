@@ -238,30 +238,20 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             </View>
           )}
         </View>
-      </View>
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: colors.background,
-          },
-        ]}>
-        {stationList.map((station) => (
-          <Text
-            style={{ color: colors.primaryText }}
-            key={station.id}
-            onPress={() => {
-              setStationId(dataId, station.id);
-            }}>
-            {station.name} -- {station.distance}
-          </Text>
-        ))}
-        <ParameterSelector
-          chartTypes={charts}
-          parameter={parameter}
-          setParameter={setParameter}
-        />
-        <Chart chartType={parameter} data={data} observation />
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: colors.background,
+            },
+          ]}>
+          <ParameterSelector
+            chartTypes={charts}
+            parameter={parameter}
+            setParameter={setParameter}
+          />
+          <Chart chartType={parameter} data={data} observation />
+        </View>
       </View>
 
       <RBSheet
