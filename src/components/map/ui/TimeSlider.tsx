@@ -82,7 +82,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const locale = i18n.language;
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [scrollIndex, setScrollIndex] = useState<number>(0);
-  const [times, setTimes] = useState<number[] | []>([]);
+  const [times, setTimes] = useState<number[]>([]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const { width } = useWindowDimensions();
 
@@ -133,6 +133,16 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   }, [sliderMinUnix, sliderMaxUnix, step]);
 
   useEffect(() => {
+    if (times && times.length > 0) {
+      // try scroll closest to current time
+      const now = moment().format('X');
+      const roundedNow = Math.floor(Number(now) / step) * step;
+      const i = times.indexOf(roundedNow);
+      if (i >= 0) sliderRef.current.scrollToIndex({ index: i, animated: true });
+    }
+  }, [times, step]);
+
+  useEffect(() => {
     const time = times[currentIndex];
     if (time % step === 0) {
       if (sliderTime !== time) {
@@ -140,7 +150,6 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       }
     }
   }, [currentIndex, sliderTime, updateSliderTime, step, times]);
-
   const handleMomentumScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {
       contentOffset: { x },
@@ -324,6 +333,11 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
               onScroll={handleScroll}
               onMomentumScrollEnd={handleMomentumScroll}
               onScrollBeginDrag={handleMomentumStart}
+              getItemLayout={(data, index: number) => ({
+                length: step === STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
+                offset: index * (step === STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH),
+                index,
+              })}
             />
             <Text
               style={[
