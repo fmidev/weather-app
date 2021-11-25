@@ -44,11 +44,18 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   useEffect(() => {
     if (chartTypes && parameter && buttonList.current) {
       const i = chartTypes.findIndex((p) => p === parameter);
-      buttonList.current.scrollToIndex({
-        index: i,
-        animated: true,
-        viewPosition: 0.5,
-      });
+      if (i === 0) {
+        buttonList.current.scrollToOffset({
+          offset: 1,
+          animated: true,
+        });
+      } else {
+        buttonList.current.scrollToIndex({
+          index: i,
+          animated: true,
+          viewPosition: 0.5,
+        });
+      }
     }
   }, [chartTypes, parameter]);
 
