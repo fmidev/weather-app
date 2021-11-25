@@ -147,7 +147,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         );
       }
     }
-  }, [times, step, sliderTime, sliderRef, currentIndex]);
+  }, [times, step, sliderRef]);
 
   useEffect(() => {
     const time = times[currentIndex];
