@@ -1,3 +1,4 @@
+import { ChartType } from '@components/weather/charts/types';
 import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
 import {
@@ -53,3 +54,15 @@ export const selectData = createSelector(
   [selectDataSets, selectStationId],
   (data, id) => data[id] || []
 );
+
+export const selectDisplayFormat = createSelector<
+  State,
+  ObservationState,
+  'table' | 'chart'
+>(selectObservationDomain, (observation) => observation.displayFormat);
+
+export const selectChartDisplayParameter = createSelector<
+  State,
+  ObservationState,
+  ChartType | undefined
+>(selectObservationDomain, (observation) => observation.chartDisplayParam);

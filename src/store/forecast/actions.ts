@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import { getForecast } from '@network/WeatherApi';
+import { ChartType } from '@components/weather/charts/types';
 import {
   Error,
   FETCH_FORECAST,
@@ -9,6 +10,8 @@ import {
   RESTORE_DEFAULT_DISPLAY_PARAMS,
   ForecastActionTypes,
   ForecastLocation,
+  UPDATE_FORECAST_DISPLAY_FORMAT,
+  UPDATE_FORECAST_CHART_PARAMETER,
 } from './types';
 
 export const fetchForecast = (
@@ -56,4 +59,16 @@ export const restoreDefaultDisplayParams = () => (
   dispatch: Dispatch<ForecastActionTypes>
 ) => {
   dispatch({ type: RESTORE_DEFAULT_DISPLAY_PARAMS });
+};
+
+export const updateDisplayFormat = (value: 'table' | 'chart') => (
+  dispatch: Dispatch<ForecastActionTypes>
+) => {
+  dispatch({ type: UPDATE_FORECAST_DISPLAY_FORMAT, value });
+};
+
+export const updateChartParameter = (value: ChartType) => (
+  dispatch: Dispatch<ForecastActionTypes>
+) => {
+  dispatch({ type: UPDATE_FORECAST_CHART_PARAMETER, value });
 };

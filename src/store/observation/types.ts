@@ -1,7 +1,13 @@
+import { ChartType } from '@components/weather/charts/types';
+
 export const FETCH_OBSERVATION = 'FETCH_OBSERVATION';
 export const FETCH_OBSERVATION_SUCCESS = 'FETCH_OBSERVATION_SUCCESS';
 export const FETCH_OBSERVATION_ERROR = 'FETCH_OBSERVATION_ERROR';
 export const SET_STATION_ID = 'SET_STATION_ID';
+export const UPDATE_OBSERVATION_DISPLAY_FORMAT =
+  'UPDATE_OBSERVATION_DISPLAY_FORMAT';
+export const UPDATE_OBSERVATION_CHART_PARAMETER =
+  'UPDATE_OBSERVATION_CHART_PARAMETER';
 
 interface FetchObservation {
   type: typeof FETCH_OBSERVATION;
@@ -26,11 +32,23 @@ interface SetStationId {
   id: number;
 }
 
+interface UpdateDisplayFormat {
+  type: typeof UPDATE_OBSERVATION_DISPLAY_FORMAT;
+  value: 'table' | 'chart';
+}
+
+interface UpdateObservationChartParameter {
+  type: typeof UPDATE_OBSERVATION_CHART_PARAMETER;
+  value: ChartType;
+}
+
 export type ObservationActionTypes =
   | FetchObservation
   | FetchObservationSuccess
   | FetchObservationError
-  | SetStationId;
+  | SetStationId
+  | UpdateDisplayFormat
+  | UpdateObservationChartParameter;
 
 export interface TimeStepData {
   epochtime: number;
@@ -91,4 +109,6 @@ export interface ObservationState {
   id: Id;
   loading: boolean;
   error: boolean | Error | string;
+  displayFormat: 'table' | 'chart';
+  chartDisplayParam: ChartType | undefined;
 }
