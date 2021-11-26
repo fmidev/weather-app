@@ -77,9 +77,9 @@ export const tickFormat = (tick: any): string | number => {
   }
   if (hour === 0) {
     return `${capitalize(time.format('dd'))}
-${time.format('DD.M')}`;
+${time.format('DD.MM.')}`;
   }
-  return hour;
+  return time.format('HH');
 };
 
 export const chartYLabelText = (chartType: ChartType) => {
