@@ -146,7 +146,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
     <View style={styles.container}>
       <View style={styles.chartRowContainer}>
         <View style={styles.yAxisContainer}>
-          <VictoryChart height={300} width={50}>
+          <VictoryChart height={300} width={45}>
             <VictoryAxis
               dependentAxis
               crossAxis={false}
@@ -160,8 +160,9 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
             />
             <VictoryLabel
               text={yLabelText}
-              x={30}
+              x={40}
               y={20}
+              textAnchor="end"
               style={{ fill: colors.primaryText }}
             />
           </VictoryChart>
