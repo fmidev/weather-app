@@ -91,11 +91,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
       component: CloudHeightChart,
     },
     temperature: {
-      params: ['temperature'],
-      component: TemperatureChart,
-    },
-    temperatureFeels: {
-      params: ['temperature', 'feelsLike'],
+      params: ['temperature', observation ? 'dewpoint' : 'feelsLike'],
       component: TemperatureChart,
     },
     wind: {
@@ -197,14 +193,14 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
                 grid: {
                   stroke: ({ tick }) =>
                     moment(tick).hour() === 0 ? GRAY_2 : '#E6E6E6',
-                  strokeWidth: ({ tick }) =>
-                    moment(tick).hour() === 0
-                      ? chartTheme.axis.style.axis.strokeWidth + 1
-                      : chartTheme.axis.style.axis.strokeWidth,
                   strokeDasharray: ({ tick }) =>
                     moment(tick).hour() === 0 ? 3 : 0,
                 },
-                tickLabels: { fill: colors.primaryText },
+                tickLabels: {
+                  fill: colors.primaryText,
+                  fontWeight: ({ tick }) =>
+                    moment(tick).hour() === 0 ? 'bold' : 'regular',
+                },
               }}
               offsetY={50}
             />
@@ -258,7 +254,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
           </View>
         )}
       </View>
-      <ChartLegend chartType={chartType} />
+      <ChartLegend chartType={chartType} observation={observation} />
       {!observation && (
         <TimeSelector
           scrollRef={scrollRef}

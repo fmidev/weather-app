@@ -64,6 +64,9 @@ export const chartTickValues = (
   return tickValues;
 };
 
+const capitalize = ([first, ...rest]: string) =>
+  first.toUpperCase() + rest.join('');
+
 export const tickFormat = (tick: any): string | number => {
   const time = moment(tick);
   const hour = time.hour();
@@ -73,8 +76,8 @@ export const tickFormat = (tick: any): string | number => {
     return '';
   }
   if (hour === 0) {
-    return `${time.format('dd')}
-${time.format('D.M')}`;
+    return `${capitalize(time.format('dd'))}
+${time.format('DD.M')}`;
   }
   return hour;
 };

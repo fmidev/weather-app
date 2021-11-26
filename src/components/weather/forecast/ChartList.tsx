@@ -34,7 +34,7 @@ const ChartList: React.FC<ChartListProps> = ({
   chartParameter,
   updateChartParameter,
 }) => {
-  const charts: ChartType[] = ['temperatureFeels', 'precipitation', 'wind'];
+  const charts: ChartType[] = ['temperature', 'precipitation', 'wind'];
   const parameter = chartParameter ?? charts[0];
 
   return (
