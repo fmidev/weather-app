@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
+    flexShrink: 1,
   },
 });
 
