@@ -209,31 +209,46 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
-            <Text style={styles.rowFirstHalfText}> 0/8 - 1/8</Text>
+            <Text
+              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              0/8 - 1/8
+            </Text>
             <Text style={[styles.legendText, { color: colors.primaryText }]}>
               {t('weather:charts:cloudCover01')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
-            <Text style={styles.rowFirstHalfText}> 2/8 - 4/8</Text>
+            <Text
+              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              2/8 - 4/8
+            </Text>
             <Text style={[styles.legendText, { color: colors.primaryText }]}>
               {t('weather:charts:cloudCover24')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
-            <Text style={styles.rowFirstHalfText}> 3/8 - 6/8</Text>
+            <Text
+              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              3/8 - 6/8
+            </Text>
             <Text style={[styles.legendText, { color: colors.primaryText }]}>
               {t('weather:charts:cloudCover36')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
-            <Text style={styles.rowFirstHalfText}> 5/8 - 7/8</Text>
+            <Text
+              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              5/8 - 7/8
+            </Text>
             <Text style={[styles.legendText, { color: colors.primaryText }]}>
               {t('weather:charts:cloudCover57')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
-            <Text style={styles.rowFirstHalfText}> 7/8 - 8/8</Text>
+            <Text
+              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              7/8 - 8/8
+            </Text>
             <Text style={[styles.legendText, { color: colors.primaryText }]}>
               {t('weather:charts:cloudCover78')}
             </Text>
