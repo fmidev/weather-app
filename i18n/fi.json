@@ -112,9 +112,11 @@
   },
   "observation": {
     "observationStation" : "Havaintoasema",
-    "latestObservation" : "Lähimmät säähavainnot",
+    "latestObservation" : "Viimeisin säähavainto",
     "distanceFromStation" : "km ennustepaikasta",
     "panelHeader" : "Sää havaintoasemilla",
+    "list" : "Lista",
+    "chart" : "Graafi",
     "measurements": {
       "temperature" : "Lämpötila",
       "dewPoint" : "Kastepiste",
@@ -128,15 +130,26 @@
       "totalCloudCover" : "Pilvisyys"
     },
     "cloudcover" : {
+      "0" : "Selkeää",
       "1" : "Selkeää",
-      "2" : "Selkeää",
-      "3" : "Selkeää",
+      "2" : "Melko selkeää",
+      "3" : "Melko selkeää",
       "4" : "Puolipilvistä",
       "5" : "Puolipilvistä",
       "6" : "Puolipilvistä",
       "7" : "Pilvistä",
       "8" : "Pilvistä",
-      "9" : "Pilvistä"
+      "9" : "Pilvisyyttä ei voida määrittää"
+    },
+    "winddirection" : {
+      "N" : "Pohjoistuulta",
+      "NE" : "Koillistuulta",
+      "E" : "Itätuulta",
+      "SE" : "Kaakkoistuulta",
+      "S" : "Etelätuulta",
+      "SW" : "Lounaistuulta",
+      "W" : "Länsituulta",
+      "NW" : "Luoteistuulta"
     }
   },
   "navigation": {

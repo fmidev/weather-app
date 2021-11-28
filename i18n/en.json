@@ -115,6 +115,8 @@
     "latestObservation" : "Latest observation",
     "distanceFromStation" : "km from forecast location",
     "panelHeader" : "Past weather",
+    "list" : "List",
+    "chart" : "Chart",
     "measurements": {
       "temperature" : "Temperature",
       "dewPoint" : "Dewpoint",
@@ -128,15 +130,26 @@
       "totalCloudCover" : "Cloud cover"
     },
     "cloudcover" : {
+      "0" : "Clear",
       "1" : "Clear",
-      "2" : "Clear",
-      "3" : "Clear",
+      "2" : "Mostly clear",
+      "3" : "Mostly clear",
       "4" : "Partly cloudy",
       "5" : "Partly cloudy",
       "6" : "Partly cloudy",
       "7" : "Cloudy",
       "8" : "Cloudy",
-      "9" : "Cloudy"
+      "9" : "Cloudcover could not be determined"
+    },
+    "winddirection" : {
+      "N" : "North wind",
+      "NE" : "North-east wind",
+      "E" : "East wind",
+      "SE" : "South-east wind",
+      "S" : "South wind",
+      "SW" : "South-west wind",
+      "W" : "West wind",
+      "NW" : "North-west wind"
     }
   },
   "navigation": {
