@@ -4,4 +4,15 @@
   android:layout_height="match_parent"
   android:background="@drawable/background_splash"
   android:orientation="vertical">
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="200dp"
+      android:fontFamily="sans-serif"
+      android:textStyle="bold"
+      android:gravity="center_horizontal"
+      android:text="@string/app_name"
+      android:textColor="@color/splashscreen_bg"
+      android:textSize="20sp" />
 </LinearLayout>

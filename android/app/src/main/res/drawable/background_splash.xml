@@ -2,9 +2,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
   <item
     android:drawable="@color/splashscreen_bg" />
+
   <item
-    android:width="300dp"
-    android:height="300dp"
-    android:drawable="@mipmap/splash_icon"
-    android:gravity="center" />
+    android:drawable="@mipmap/weather_background"
+    android:gravity="top|clip_horizontal" />
+  <item
+    android:drawable="@mipmap/fmi_logo_fi"
+    android:gravity="top|center_horizontal"
+    android:top="96dp" />
 </layer-list>
