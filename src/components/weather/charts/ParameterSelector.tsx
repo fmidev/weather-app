@@ -68,16 +68,16 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
     } = e.nativeEvent;
     setCurrentOffset(x);
     if (contentWidth > width) {
-      if (x < 15) {
+      if (x < 20) {
         setFirstVisible(true);
       }
-      if (x > 15) {
+      if (x > 20) {
         setFirstVisible(false);
       }
-      if (x + 15 < contentWidth - width) {
+      if (x + 20 < contentWidth - width) {
         setLastVisible(false);
       }
-      if (x + 15 > contentWidth - width) {
+      if (x + 20 > contentWidth - width) {
         setLastVisible(true);
       }
     }
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listContentContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,
