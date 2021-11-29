@@ -15,7 +15,7 @@ import Icon from '@components/common/Icon';
 import { OthersStackParamList } from '@navigators/types';
 
 interface Props {
-  navigation: StackNavigationProp<OthersStackParamList, 'Others'>;
+  navigation: StackNavigationProp<OthersStackParamList, 'StackOthers'>;
 }
 
 const OthersScreen: React.FC<Props> = ({ navigation }) => {
@@ -72,29 +72,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             </View>
           </TouchableOpacity>
         </View>
-        <View
-          style={[
-            styles.rowWrapper,
-            styles.withBorderBottom,
-            { borderBottomColor: colors.border },
-          ]}>
-          <TouchableOpacity
-            delayPressIn={100}
-            onPress={() => navigation.navigate('Notifications')}
-            testID="navigation_notifications">
-            <View style={styles.row}>
-              <Text style={[styles.text, { color: colors.text }]}>{`${t(
-                'navigation:notifications'
-              )}`}</Text>
-              <Icon
-                name="arrow-right"
-                width={22}
-                height={22}
-                style={{ color: colors.text }}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
+
         <View style={styles.rowWrapper}>
           <TouchableOpacity
             delayPressIn={100}
