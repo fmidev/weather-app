@@ -49,7 +49,8 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
           offset: 1,
           animated: true,
         });
-      } else {
+      }
+      if (i > 0) {
         buttonList.current.scrollToIndex({
           index: i,
           animated: true,
