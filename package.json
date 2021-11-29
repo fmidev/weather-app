@@ -1,6 +1,6 @@
 {
   "name": "weather",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -12,7 +12,8 @@
     "e2e:test:ios": "detox test -c ios",
     "e2e:test:android": "detox test -c android",
     "e2e:build:ios": "detox build -c ios",
-    "e2e:build:android": "detox build -c android"
+    "e2e:build:android": "detox build -c android",
+    "buildAndroidRelease": "cd android && ./gradlew clean bundleRelease"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.5",
