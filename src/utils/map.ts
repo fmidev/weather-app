@@ -5,6 +5,7 @@ import { parse } from 'fast-xml-parser';
 import { MapOverlay } from '@store/map/types';
 
 import { Config } from '@config';
+import axiosClient from './axiosClient';
 
 type BoundingBox = {
   CRS?: string;
@@ -120,11 +121,12 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
 
   await Promise.all(
     Object.entries(sources).map(async ([src, url]) => {
-      const capabilitiesUrl = `${url}/wms?service=WMS&request=GetCapabilities`;
+      const { data } = await axiosClient({
+        url: `${url}/wms`,
+        params: { service: 'WMS', request: 'GetCapabilities' },
+      });
 
-      const textRes = await fetch(capabilitiesUrl).then((res) => res.text());
-
-      const parsedResponse = parse(textRes, {
+      const parsedResponse = parse(data, {
         attributeNamePrefix: '',
         ignoreAttributes: false,
         ignoreNameSpace: false,

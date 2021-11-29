@@ -1,10 +1,11 @@
+import { PersistConfig } from '@store/types';
 import moment from 'moment';
 import {
   UPDATE_MAP_LAYERS,
   UPDATE_SLIDER_TIME,
   UPDATE_SLIDER_STEP,
   ANIMATE_TO_AREA,
-  INITIALIZE_OVERLAYS,
+  UPDATE_OVERLAYS,
   MapActionTypes,
   MapState,
   UPDATE_ACTIVE_OVERLAY,
@@ -17,10 +18,10 @@ const INITIAL_STATE: MapState = {
     radar: false,
   },
   sliderTime: moment.utc().startOf('hour').unix(),
-  sliderStep: 60,
+  sliderStep: undefined,
   animateToArea: false,
   overlays: undefined,
-  activeOverlay: 0,
+  activeOverlay: undefined,
 };
 
 export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
@@ -53,7 +54,7 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       };
     }
 
-    case INITIALIZE_OVERLAYS: {
+    case UPDATE_OVERLAYS: {
       return {
         ...state,
         overlays: action.overlays,
@@ -71,4 +72,8 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       return state;
     }
   }
+};
+export const mapPersist: PersistConfig = {
+  key: 'map',
+  whitelist: ['activeOverlay', 'sliderStep', 'mapLayers'],
 };

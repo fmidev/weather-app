@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet, Platform } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp, useTheme } from '@react-navigation/native';
+import { RouteProp, useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 
 import MapControls from '@components/map/ui/MapControls';
@@ -17,10 +17,12 @@ import { MapStackParamList } from '@navigators/types';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { selectDisplayLocation, selectOverlay } from '@store/map/selectors';
-import { initializeOverlays as initializeOverlaysAction } from '@store/map/actions';
+import { updateOverlays as updateOverlaysAction } from '@store/map/actions';
 
 import darkMapStyle from '@utils/dark_map_style.json';
 import { GRAY_1 } from '@utils/colors';
+import { Config } from '@config';
+import { useReloader } from '@utils/reloader';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -41,7 +43,7 @@ const mapStateToProps = (state: State) => ({
 });
 
 const mapDispatchToProps = {
-  initializeOverlays: initializeOverlaysAction,
+  updateOverlays: updateOverlaysAction,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -57,18 +59,31 @@ const MapScreen: React.FC<MapScreenProps> = ({
   currentLocation,
   displayLocation,
   overlay,
-  initializeOverlays,
+  updateOverlays,
 }) => {
   const { colors, dark } = useTheme();
+  const isFocused = useIsFocused();
+  const { shouldReload } = useReloader();
+  const { updateInterval } = Config.get('map');
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const mapRef = useRef() as React.MutableRefObject<MapView>;
   const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
 
   useEffect(() => {
-    initializeOverlays();
+    updateOverlays();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const now = Date.now();
+    const mapUpdateTime = mapUpdated + (updateInterval ?? 5) * 60 * 1000;
+    if (isFocused && (now > mapUpdateTime || shouldReload > mapUpdateTime)) {
+      updateOverlays();
+      setMapUpdated(now);
+    }
+  }, [isFocused, mapUpdated, shouldReload, updateInterval, updateOverlays]);
 
   useEffect(() => {
     if (currentLocation) {

@@ -83,6 +83,7 @@ export interface ConfigType {
   };
   map: {
     latitudeDelta: number;
+    updateInterval: number;
     sources: { [name: string]: string };
     layers: Layer[];
   };
