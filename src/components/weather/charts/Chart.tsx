@@ -201,7 +201,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
                 tickLabels: {
                   fill: colors.primaryText,
                   fontWeight: ({ tick }) =>
-                    moment(tick).hour() === 0 ? 'bold' : 'regular',
+                    moment(tick).hour() === 0 ? 'bold' : 'normal',
                 },
               }}
               offsetY={50}
