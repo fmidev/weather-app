@@ -59,7 +59,6 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   stationList,
   stationId,
   setStationId,
-  onClose,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('observation');
@@ -312,52 +311,197 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             parameter={parameter}
             setParameter={setParameter}
           />
-          <View style={styles.observationListContainer}>
-            <View>
-              {data && data.length > 0 && (
-                <Text style={(styles.bold, styles.marginBottom)}>
-                  {moment(data[0].epochtime * 1000).format(`dddd D.M.`)}
-                </Text>
-              )}
-            </View>
-            <View style={styles.observationRow}>
-              <Text style={[styles.bold, styles.observationTitleMargin110]}>
-                Aika
-              </Text>
-              <Text style={[styles.bold, styles.observationTitleMargin60]}>
-                Lämpötila
-              </Text>
-              <Text style={styles.bold}>Kastepiste</Text>
-            </View>
-            <View
-              style={
-                (styles.marginBottom,
-                {
-                  borderBottomWidth: 1,
-                  borderBottomColor: 'lightgray',
-                })
-              }
-            />
-
-            {data
-              .filter((ob) => ob.epochtime % 3600 === 0)
-              .map((timeStep) => (
-                <View key={timeStep.epochtime} style={styles.observationRow}>
-                  <View style={styles.observationListMargin}>
-                    <Text style={styles.bold}>
-                      klo {moment(timeStep.epochtime * 1000).format(`HH:mm`)}
-                    </Text>
-                  </View>
-                  <View style={styles.observationListMargin}>
-                    <Text>{timeStep.temperature?.toFixed(1)} °C</Text>
-                  </View>
-                  <View>
-                    <Text>{timeStep.dewpoint?.toFixed(1)} °C</Text>
-                  </View>
+          {toDisplay === LIST && (
+            <View style={styles.observationListContainer}>
+              <View>
+                {data && data.length > 0 && (
+                  <Text style={(styles.bold, styles.marginBottom)}>
+                    {moment(data[0].epochtime * 1000).format(`dddd D.M.`)}
+                  </Text>
+                )}
+              </View>
+              {parameter === 'temperature' && (
+                <View style={styles.observationRow}>
+                  <Text style={[styles.bold, styles.observationRow]}>Aika</Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Lämpötila
+                  </Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Kastepiste
+                  </Text>
                 </View>
-              ))}
-          </View>
-          <Chart chartType={parameter} data={data} observation />
+              )}
+              {parameter === 'precipitation' && (
+                <View style={styles.observationRow}>
+                  <Text style={[styles.bold, styles.observationRow]}>Aika</Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Sademäärä
+                  </Text>
+                </View>
+              )}
+              {parameter === 'wind' && (
+                <View style={styles.observationRow}>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    {'\n'}Aika
+                  </Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Tuulen{'\n'}nopeus
+                  </Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Tuulen{'\n'}puuska
+                  </Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Tuulen{'\n'}suunta
+                  </Text>
+                </View>
+              )}
+              {parameter === 'pressure' && (
+                <View style={styles.observationRow}>
+                  <Text style={[styles.bold, styles.observationRow]}>Aika</Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Paine
+                  </Text>
+                </View>
+              )}
+              {parameter === 'humidity' && (
+                <View style={styles.observationRow}>
+                  <Text style={[styles.bold, styles.observationRow]}>Aika</Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Kosteus
+                  </Text>
+                </View>
+              )}
+              {parameter === 'visCloud' && (
+                <View style={styles.observationRow}>
+                  <Text style={[styles.bold, styles.observationRow]}>Aika</Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Näkyvyys
+                  </Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Pilvisyys
+                  </Text>
+                </View>
+              )}
+              {parameter === 'cloud' && (
+                <View style={styles.observationRow}>
+                  <Text style={[styles.bold, styles.observationRow]}>Aika</Text>
+                  <Text style={[styles.bold, styles.observationRow]}>
+                    Pilven alarajan korkeus
+                  </Text>
+                </View>
+              )}
+
+              <View
+                style={
+                  (styles.marginBottom,
+                  {
+                    borderBottomWidth: 1,
+                    borderBottomColor: 'lightgray',
+                  })
+                }
+              />
+
+              {data
+                .filter((ob) => ob.epochtime % 3600 === 0)
+                .map((timeStep) => (
+                  <View key={timeStep.epochtime} style={styles.observationRow}>
+                    {parameter === 'temperature' && (
+                      <View style={styles.observationRow}>
+                        <Text style={[styles.bold, styles.observationRow]}>
+                          klo{' '}
+                          {moment(timeStep.epochtime * 1000).format(`HH:mm`)}
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {timeStep.temperature} °C
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {timeStep.dewpoint} °C
+                        </Text>
+                      </View>
+                    )}
+                    {parameter === 'precipitation' && (
+                      <View style={styles.observationRow}>
+                        <Text style={[styles.bold, styles.observationRow]}>
+                          klo{' '}
+                          {moment(timeStep.epochtime * 1000).format(`HH:mm`)}
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {timeStep.precipitation1h} mm
+                        </Text>
+                      </View>
+                    )}
+                    {parameter === 'wind' && (
+                      <View style={[styles.observationRow]}>
+                        <Text style={[styles.bold, styles.observationRow]}>
+                          klo{' '}
+                          {moment(timeStep.epochtime * 1000).format(`HH:mm`)}
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {timeStep.windspeedms?.toFixed(0)} m/s
+                        </Text>
+
+                        <Text style={styles.observationRow}>
+                          {timeStep.windgust?.toFixed(0)} m/s
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {timeStep.windcompass8}
+                        </Text>
+                      </View>
+                    )}
+                    {parameter === 'pressure' && (
+                      <View style={styles.observationRow}>
+                        <Text style={[styles.bold, styles.observationRow]}>
+                          klo{' '}
+                          {moment(timeStep.epochtime * 1000).format(`HH:mm`)}
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {timeStep.pressure?.toFixed(0)} hPa
+                        </Text>
+                      </View>
+                    )}
+                    {parameter === 'humidity' && (
+                      <View style={styles.observationRow}>
+                        <Text style={[styles.bold, styles.observationRow]}>
+                          klo{' '}
+                          {moment(timeStep.epochtime * 1000).format(`HH:mm`)}
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {timeStep.humidity?.toFixed(0)} %
+                        </Text>
+                      </View>
+                    )}
+                    {parameter === 'visCloud' && (
+                      <View style={[styles.observationRow]}>
+                        <Text style={[styles.bold, styles.observationRow]}>
+                          klo{' '}
+                          {moment(timeStep.epochtime * 1000).format(`HH:mm`)}
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {(timeStep.visibility! / 1000)?.toFixed(0)} km
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {timeStep.totalcloudcover}/8
+                        </Text>
+                      </View>
+                    )}
+                    {parameter === 'cloud' && (
+                      <View style={styles.observationRow}>
+                        <Text style={[styles.bold, styles.observationRow]}>
+                          klo{' '}
+                          {moment(timeStep.epochtime * 1000).format(`HH:mm`)}
+                        </Text>
+                        <Text style={styles.observationRow}>
+                          {(timeStep.cloudheight! / 1000)?.toFixed(1)} km
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                ))}
+            </View>
+          )}
+          {toDisplay === CHART && (
+            <Chart chartType={parameter} data={data} observation />
+          )}
         </View>
       </View>
 
@@ -374,7 +518,9 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         }}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
-            onPress={onClose}
+            onPress={() => {
+              infoSheetRef.current.close();
+            }}
             accessibilityLabel={t('paramsBottomSheet.closeAccessibilityLabel')}
           />
         </View>
@@ -437,6 +583,7 @@ const styles = StyleSheet.create({
   closeButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    paddingRight: 20,
   },
   container: {
     paddingHorizontal: 12,
@@ -466,15 +613,6 @@ const styles = StyleSheet.create({
   },
   observationListContainer: {
     marginTop: 20,
-  },
-  observationListMargin: {
-    marginRight: 80,
-  },
-  observationTitleMargin110: {
-    marginRight: 110,
-  },
-  observationTitleMargin60: {
-    marginRight: 58,
   },
   observationPadding: {
     paddingRight: 100,
