@@ -24,7 +24,7 @@ import {
   updateTheme as updateThemeAction,
 } from '@store/settings/actions';
 import { UnitType } from '@store/settings/types';
-import { GRAY_1 } from '@utils/colors';
+// import { GRAY_1 } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -44,8 +44,8 @@ type Props = PropsFromRedux;
 
 const SettingsScreen: React.FC<Props> = ({
   theme,
-  units,
-  updateUnits,
+  // units,
+  // updateUnits,
   updateTheme,
 }) => {
   const { t, i18n } = useTranslation('settings');
@@ -213,7 +213,7 @@ const SettingsScreen: React.FC<Props> = ({
             </TouchableOpacity>
           </View>
         </View>
-        {units && (
+        {/* {units && (
           <>
             <View style={styles.titleContainer} testID="settings_units_header">
               <Text style={[styles.title, { color: colors.text }]}>
@@ -308,8 +308,8 @@ const SettingsScreen: React.FC<Props> = ({
                 </View>
               ))}
             </View>
-          </>
-        )}
+           </>
+        )} */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -345,23 +345,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
   },
-  sheetContainer: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  sheetListContainer: {
-    flex: 1,
-    paddingTop: 20,
-  },
-  sheetTitle: {
-    flexDirection: 'row',
-    paddingLeft: 20,
-    paddingBottom: 10,
-  },
-  draggableIcon: {
-    width: 65,
-    backgroundColor: GRAY_1,
-  },
+  // sheetContainer: {
+  //   borderTopLeftRadius: 10,
+  //   borderTopRightRadius: 10,
+  // },
+  // sheetListContainer: {
+  //   flex: 1,
+  //   paddingTop: 20,
+  // },
+  // sheetTitle: {
+  //   flexDirection: 'row',
+  //   paddingLeft: 20,
+  //   paddingBottom: 10,
+  // },
+  // draggableIcon: {
+  //   width: 65,
+  //   backgroundColor: GRAY_1,
+  // },
 });
 
 export default connector(SettingsScreen);
