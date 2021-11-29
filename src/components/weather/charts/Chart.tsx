@@ -190,6 +190,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
               scale={{ x: 'linear' }}
               tickFormat={tickFormat}
               tickValues={tickValues}
+              orientation="bottom"
               style={{
                 grid: {
                   stroke: ({ tick }) =>
