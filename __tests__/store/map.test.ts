@@ -11,10 +11,10 @@ describe('map reducer', () => {
       radar: false,
     },
     sliderTime,
-    sliderStep: 60,
+    sliderStep: undefined,
     animateToArea: false,
     overlays: undefined,
-    activeOverlay: 0,
+    activeOverlay: undefined,
   };
 
   it('should handle ANIMATE_TO_AREA', () => {
@@ -94,7 +94,7 @@ describe('map reducer', () => {
 
     expect(
       reducer(initial, {
-        type: types.INITIALIZE_OVERLAYS,
+        type: types.UPDATE_OVERLAYS,
         overlays: overlayMap,
       })
     ).toEqual({

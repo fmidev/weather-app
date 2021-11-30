@@ -143,7 +143,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         // for some reason this needed timeout to work on initial render
         setTimeout(
           () => sliderRef.current.scrollToIndex({ index: i, animated: false }),
-          10
+          20
         );
       }
     }
