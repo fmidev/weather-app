@@ -20,12 +20,19 @@ type WmsLayer = {
   Abstract: string;
   CRS: string[];
   BoundingBox: BoundingBox[];
-  Dimension: {
-    text: string;
-    name: string;
-    default: string;
-    units: string;
-  };
+  Dimension:
+    | {
+        text: string;
+        name: string;
+        default: string;
+        units: string;
+      }
+    | {
+        text: string;
+        name: string;
+        default: string;
+        units: string;
+      }[];
 };
 
 // 60 minutes = 3600 seconds
@@ -149,9 +156,12 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
         .find((src: WmsLayer) => src.Name === layerSrc.layer);
 
       const { BoundingBox } = wmsLayer;
-      const [layerStart, layerEnd] = Array.isArray(wmsLayer.Dimension)
-        ? wmsLayer.Dimension[0].text.split('/')
-        : wmsLayer.Dimension.text.split('/');
+      const steps = Array.isArray(wmsLayer.Dimension)
+        ? wmsLayer.Dimension[0].text.split(/[,/]/)
+        : wmsLayer.Dimension.text.split(/[,/]/);
+
+      const layerStart = steps[0];
+      const layerEnd = steps.length > 3 ? steps[steps.length - 1] : steps[1];
 
       const boundingBox84 = BoundingBox.find(
         (box: BoundingBox) => box.CRS === 'CRS:84'

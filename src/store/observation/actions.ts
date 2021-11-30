@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
 import { getObservation } from '@network/WeatherApi';
+import { ChartType } from '@components/weather/charts/types';
 import {
   FETCH_OBSERVATION,
   FETCH_OBSERVATION_SUCCESS,
@@ -8,6 +9,8 @@ import {
   ObservationLocation,
   ObservationActionTypes,
   Error,
+  UPDATE_OBSERVATION_DISPLAY_FORMAT,
+  UPDATE_OBSERVATION_CHART_PARAMETER,
 } from './types';
 
 export const fetchObservation = (
@@ -32,4 +35,16 @@ export const setStationId = (key: number | string, id: number) => (
   dispatch: Dispatch<ObservationActionTypes>
 ) => {
   dispatch({ type: SET_STATION_ID, key, id });
+};
+
+export const updateDisplayFormat = (value: 'table' | 'chart') => (
+  dispatch: Dispatch<ObservationActionTypes>
+) => {
+  dispatch({ type: UPDATE_OBSERVATION_DISPLAY_FORMAT, value });
+};
+
+export const updateChartParameter = (value: ChartType) => (
+  dispatch: Dispatch<ObservationActionTypes>
+) => {
+  dispatch({ type: UPDATE_OBSERVATION_CHART_PARAMETER, value });
 };

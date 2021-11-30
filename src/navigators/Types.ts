@@ -11,7 +11,6 @@ export type OthersStackParamList = {
   StackOthers: undefined;
   About: undefined;
   Settings: undefined;
-  Notifications: undefined;
   Symbols: undefined;
 };
 

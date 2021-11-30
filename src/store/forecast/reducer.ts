@@ -8,6 +8,8 @@ import {
   WeatherData,
   UPDATE_DISPLAY_PARAMS,
   RESTORE_DEFAULT_DISPLAY_PARAMS,
+  UPDATE_FORECAST_DISPLAY_FORMAT,
+  UPDATE_FORECAST_CHART_PARAMETER,
 } from './types';
 
 import * as constants from './constants';
@@ -24,6 +26,8 @@ const INITIAL_STATE: ForecastState = {
   loading: false,
   error: false,
   displayParams: INITIAL_PARAMS,
+  displayFormat: 'table',
+  chartDisplayParam: undefined,
 };
 
 const filterLocations = (data: WeatherData, favorites: number[]): WeatherData =>
@@ -80,6 +84,20 @@ export default (
       };
     }
 
+    case UPDATE_FORECAST_DISPLAY_FORMAT: {
+      return {
+        ...state,
+        displayFormat: action.value,
+      };
+    }
+
+    case UPDATE_FORECAST_CHART_PARAMETER: {
+      return {
+        ...state,
+        chartDisplayParam: action.value,
+      };
+    }
+
     default: {
       return state;
     }
@@ -88,5 +106,5 @@ export default (
 
 export const forecastPersist: PersistConfig = {
   key: 'forecast',
-  whitelist: ['displayParams'],
+  whitelist: ['displayParams', 'displayFormat', 'chartDisplayParam'],
 };

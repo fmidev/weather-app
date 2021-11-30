@@ -44,11 +44,19 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   useEffect(() => {
     if (chartTypes && parameter && buttonList.current) {
       const i = chartTypes.findIndex((p) => p === parameter);
-      buttonList.current.scrollToIndex({
-        index: i,
-        animated: true,
-        viewPosition: 0.5,
-      });
+      if (i === 0) {
+        buttonList.current.scrollToOffset({
+          offset: 1,
+          animated: true,
+        });
+      }
+      if (i > 0) {
+        buttonList.current.scrollToIndex({
+          index: i,
+          animated: true,
+          viewPosition: 0.5,
+        });
+      }
     }
   }, [chartTypes, parameter]);
 
@@ -60,16 +68,16 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
     } = e.nativeEvent;
     setCurrentOffset(x);
     if (contentWidth > width) {
-      if (x < 15) {
+      if (x < 20) {
         setFirstVisible(true);
       }
-      if (x > 15) {
+      if (x > 20) {
         setFirstVisible(false);
       }
-      if (x + 15 < contentWidth - width) {
+      if (x + 20 < contentWidth - width) {
         setLastVisible(false);
       }
-      if (x + 15 > contentWidth - width) {
+      if (x + 20 > contentWidth - width) {
         setLastVisible(true);
       }
     }
@@ -203,7 +211,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listContentContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,

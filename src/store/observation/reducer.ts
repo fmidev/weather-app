@@ -9,6 +9,8 @@ import {
   ObservationDataRaw,
   ObservationData,
   StationInfo,
+  UPDATE_OBSERVATION_DISPLAY_FORMAT,
+  UPDATE_OBSERVATION_CHART_PARAMETER,
 } from './types';
 
 const INITIAL_STATE: ObservationState = {
@@ -18,6 +20,8 @@ const INITIAL_STATE: ObservationState = {
   loading: false,
   stations: [],
   stationId: {},
+  displayFormat: 'table',
+  chartDisplayParam: undefined,
 };
 
 const formatData = (
@@ -76,6 +80,20 @@ export default (
       };
     }
 
+    case UPDATE_OBSERVATION_DISPLAY_FORMAT: {
+      return {
+        ...state,
+        displayFormat: action.value,
+      };
+    }
+
+    case UPDATE_OBSERVATION_CHART_PARAMETER: {
+      return {
+        ...state,
+        chartDisplayParam: action.value,
+      };
+    }
+
     default: {
       return state;
     }
@@ -84,5 +102,5 @@ export default (
 
 export const observationPersist: PersistConfig = {
   key: 'observation',
-  whitelist: ['stationId'],
+  whitelist: ['stationId', 'displayFormat', 'chartDisplayParam'],
 };
