@@ -63,6 +63,7 @@ export interface TimeStepData {
   totalcloudcover: number | null;
   visibility: number | null;
   windcompass8: string | null;
+  winddirection: string | null;
   windgust: number | null;
   windspeedms: number | null;
   ww_aws: number | null;
