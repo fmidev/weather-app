@@ -11,7 +11,7 @@ import { selectChartDisplayParameter } from '@store/forecast/selectors';
 import { updateChartParameter as updateChartParameterAction } from '@store/forecast/actions';
 import Chart from '../charts/Chart';
 import { ChartType } from '../charts/types';
-import ParameterSelector from '../charts/ParameterSelector';
+import ParameterSelector from '../common/ParameterSelector';
 
 const mapStateToProps = (state: State) => ({
   chartParameter: selectChartDisplayParameter(state),

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
@@ -7,6 +7,7 @@ import {
   selectChartDisplayParameter,
   selectData,
   selectDataId,
+  selectDisplayFormat,
   selectLoading,
   selectStationId,
   selectStationList,
@@ -15,6 +16,7 @@ import {
 import {
   setStationId as setStationIdAction,
   updateChartParameter as updateChartParameterAction,
+  updateDisplayFormat as updateDisplayFormatAction,
 } from '@store/observation/actions';
 
 import { State } from '@store/types';
@@ -22,15 +24,16 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { CustomTheme } from '@utils/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import CloseButton from '@components/common/CloseButton';
+import { toStringWithDecimal } from '@utils/helpers';
 import Chart from './charts/Chart';
 import { ChartType } from './charts/types';
-import ParameterSelector from './charts/ParameterSelector';
+import ParameterSelector from './common/ParameterSelector';
 import CollapsibleHeader from './common/CollapsibleHeader';
 import PanelHeader from './common/PanelHeader';
 
 import List from './observation/List';
 import Latest from './observation/Latest';
+import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -40,22 +43,22 @@ const mapStateToProps = (state: State) => ({
   stationId: selectStationId(state),
   stationList: selectStationList(state),
   chartParameter: selectChartDisplayParameter(state),
+  displayFormat: selectDisplayFormat(state),
 });
 
 const mapDispatchToProps = {
   setStationId: setStationIdAction,
   updateChartParameter: updateChartParameterAction,
+  updateDisplayFormat: updateDisplayFormatAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type ObservationPanelProps = PropsFromRedux & {
-  onClose: () => void;
-};
+type ObservationPanelProps = PropsFromRedux;
 
-const LIST = 'list';
+const LIST = 'table';
 const CHART = 'chart';
 
 const ObservationPanel: React.FC<ObservationPanelProps> = ({
@@ -67,10 +70,12 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   setStationId,
   chartParameter,
   updateChartParameter,
+  displayFormat,
+  updateDisplayFormat,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('observation');
-  const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   useEffect(() => {
     const sid = stationList[0]?.id;
@@ -78,8 +83,6 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       setStationId(dataId, sid);
     }
   }, [stationList, stationId, dataId, setStationId]);
-
-  const [toDisplay, setToDisplay] = useState<typeof LIST | typeof CHART>(LIST);
 
   const charts: ChartType[] = [
     'temperature',
@@ -92,138 +95,123 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   ];
 
   const parameter = chartParameter ?? charts[0];
+  const currentStation = stationList.find(
+    (station) => station.id === stationId
+  );
+  const title = `${currentStation?.name || ''} – ${t(
+    'distance'
+  )} ${toStringWithDecimal(currentStation?.distance, ',')}`;
 
   return (
-    <View>
-      <View
-        style={[
-          styles.panelWrapper,
-          {
-            backgroundColor: colors.background,
-            shadowColor: colors.cardShadow,
-          },
-        ]}>
-        <PanelHeader title={t('panelHeader')} />
-        <View style={styles.panelContainer}>
-          <Text style={[styles.panelText, { color: colors.primaryText }]}>
-            {t('observationStation')}{' '}
-          </Text>
-
-          <View style={[styles.observationDropdown]}>
-            <CollapsibleHeader
-              onPress={() => infoSheetRef.current.open()}
-              open={false}
-              title={
-                stationList.find((station) => station.id === stationId)?.name ||
-                ''
-              }
-              accessibilityLabel=""
-            />
-          </View>
-
-          <Latest data={data} />
-        </View>
-
-        <View style={styles.panelContainer}>
-          <View style={[styles.row]}>
-            <View style={[styles.row, styles.justifyStart]}>
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => setToDisplay(CHART)}
-                style={[
-                  styles.contentSelectionContainer,
-                  styles.withMarginRight,
-                  {
-                    backgroundColor:
-                      toDisplay === CHART
-                        ? colors.timeStepBackground
-                        : colors.inputButtonBackground,
-                    borderColor:
-                      toDisplay === CHART
-                        ? colors.chartSecondaryLine
-                        : colors.secondaryBorder,
-                  },
-                ]}>
-                <Text
-                  style={[
-                    styles.observationText,
-                    styles.medium,
-                    toDisplay === CHART && styles.selectedText,
-                    {
-                      color:
-                        toDisplay === CHART
-                          ? colors.primaryText
-                          : colors.hourListText,
-                    },
-                  ]}>
-                  {t('chart')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => setToDisplay(LIST)}
-                style={[
-                  styles.contentSelectionContainer,
-                  styles.withMarginRight,
-                  {
-                    backgroundColor:
-                      toDisplay === LIST
-                        ? colors.timeStepBackground
-                        : colors.inputButtonBackground,
-                    borderColor:
-                      toDisplay === LIST
-                        ? colors.chartSecondaryLine
-                        : colors.secondaryBorder,
-                  },
-                ]}>
-                <Text
-                  style={[
-                    styles.observationText,
-                    styles.medium,
-                    toDisplay === LIST && styles.selectedText,
-                    {
-                      color:
-                        toDisplay === LIST
-                          ? colors.primaryText
-                          : colors.hourListText,
-                    },
-                  ]}>
-                  {t('list')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        <Text
-          style={[
-            styles.panelText,
-            styles.withMarginLeft,
-            { color: colors.shadow },
-          ]}>
-          Suure
+    <View
+      style={[
+        styles.panelWrapper,
+        {
+          backgroundColor: colors.background,
+          shadowColor: colors.cardShadow,
+        },
+      ]}>
+      <PanelHeader title={t('panelHeader')} />
+      <View style={styles.panelContainer}>
+        <Text style={[styles.panelText, { color: colors.primaryText }]}>
+          {t('observationStation')}{' '}
         </Text>
-        <View
-          style={[
-            styles.container,
-            styles.withMarginRight,
-            {
-              backgroundColor: colors.background,
-            },
-          ]}>
-          <ParameterSelector
-            chartTypes={charts}
-            parameter={parameter}
-            setParameter={updateChartParameter}
+        <View style={[styles.observationDropdown]}>
+          <CollapsibleHeader
+            onPress={() => stationSheetRef.current.open()}
+            open={false}
+            title={title}
+            accessibilityLabel=""
           />
-          {toDisplay === LIST && <List data={data} parameter={parameter} />}
-          {toDisplay === CHART && (
-            <Chart chartType={parameter} data={data} observation />
-          )}
+        </View>
+        <Latest data={data} />
+      </View>
+
+      <View style={styles.panelContainer}>
+        <View style={[styles.row]}>
+          <View style={[styles.row, styles.justifyStart]}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => updateDisplayFormat(CHART)}
+              style={[
+                styles.contentSelectionContainer,
+                styles.withMarginRight,
+                {
+                  backgroundColor:
+                    displayFormat === CHART
+                      ? colors.timeStepBackground
+                      : colors.inputButtonBackground,
+                  borderColor:
+                    displayFormat === CHART
+                      ? colors.chartSecondaryLine
+                      : colors.secondaryBorder,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.observationText,
+                  styles.medium,
+                  displayFormat === CHART && styles.selectedText,
+                  {
+                    color:
+                      displayFormat === CHART
+                        ? colors.primaryText
+                        : colors.hourListText,
+                  },
+                ]}>
+                {t('chart')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => updateDisplayFormat(LIST)}
+              style={[
+                styles.contentSelectionContainer,
+                styles.withMarginRight,
+                {
+                  backgroundColor:
+                    displayFormat === LIST
+                      ? colors.timeStepBackground
+                      : colors.inputButtonBackground,
+                  borderColor:
+                    displayFormat === LIST
+                      ? colors.chartSecondaryLine
+                      : colors.secondaryBorder,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.observationText,
+                  styles.medium,
+                  displayFormat === LIST && styles.selectedText,
+                  {
+                    color:
+                      displayFormat === LIST
+                        ? colors.primaryText
+                        : colors.hourListText,
+                  },
+                ]}>
+                {t('list')}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
+      <View style={styles.observationContainer}>
+        <ParameterSelector
+          chartTypes={charts}
+          parameter={parameter}
+          setParameter={updateChartParameter}
+        />
+        {displayFormat === LIST && <List data={data} parameter={parameter} />}
+        {displayFormat === CHART && (
+          <Chart chartType={parameter} data={data} observation />
+        )}
+      </View>
+
       <RBSheet
-        ref={infoSheetRef}
+        ref={stationSheetRef}
         height={600}
         closeOnDragDown
         dragFromTopOnly
@@ -233,61 +221,19 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             backgroundColor: colors.background,
           },
         }}>
-        <View style={styles.closeButtonContainer}>
-          <CloseButton
-            onPress={() => {
-              infoSheetRef.current.close();
-            }}
-            accessibilityLabel={t('paramsBottomSheet.closeAccessibilityLabel')}
-          />
-        </View>
-        <View>
-          <Text
-            style={[
-              styles.bold,
-              styles.bottomSheetTitle,
-              { color: colors.primaryText },
-            ]}>
-            {t('observationStation')}
-          </Text>
-          {stationList.map((station) => (
-            <Text
-              style={[styles.bottomSheetTextRow, { color: colors.primaryText }]}
-              key={station.id}
-              onPress={() => {
-                setStationId(dataId, station.id);
-                infoSheetRef.current.close();
-              }}>
-              {station.name}, {station.distance} {t('distanceFromStation')}
-            </Text>
-          ))}
-        </View>
+        <ObservationStationListBottomSheet
+          onClose={() => stationSheetRef.current.close()}
+        />
       </RBSheet>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  bold: {
-    fontFamily: 'Roboto-Bold',
-    paddingBottom: 2,
-  },
-  bottomSheetTitle: {
-    marginLeft: 15,
-    marginBottom: 10,
-  },
-  bottomSheetTextRow: {
-    marginLeft: 20,
-    marginBottom: 20,
-  },
-  closeButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingRight: 20,
-  },
-  container: {
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+  observationContainer: {
+    marginHorizontal: 8,
+    marginBottom: 8,
+    flex: 1,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,
@@ -303,6 +249,9 @@ const styles = StyleSheet.create({
   },
   observationDropdown: {
     marginBottom: 10,
+    marginLeft: -6,
+    marginRight: -6,
+    marginTop: 2,
   },
   observationText: {
     fontSize: 14,
@@ -339,9 +288,6 @@ const styles = StyleSheet.create({
   sheetContainer: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-  },
-  withMarginLeft: {
-    marginLeft: 16,
   },
   withMarginRight: {
     marginRight: 16,

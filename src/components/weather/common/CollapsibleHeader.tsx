@@ -12,7 +12,7 @@ type CollapsiblePanelHeaderProps = {
   onPress: () => void;
 };
 
-const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
+const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   accessibilityLabel,
   onPress,
   open,
@@ -34,7 +34,9 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
           },
         ]}>
         <View style={[styles.rowColumn, styles.alignStart]}>
-          <Text style={[styles.title, { color: colors.primaryText }]}>
+          <Text
+            style={[styles.title, { color: colors.primaryText }]}
+            numberOfLines={1}>
             {title}
           </Text>
         </View>
@@ -67,8 +69,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
+    fontFamily: 'Roboto-Regular',
   },
   alignStart: {
     alignItems: 'flex-start',
@@ -87,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CollapsibleListHeader;
+export default CollapsibleHeader;

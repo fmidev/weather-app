@@ -34,7 +34,8 @@
       "previous24hAccessibilityLabel": "Show previous 24 hours",
       "next24h": "Next 24 h",
       "next24hAccessibilityLabel": "Show next 24 hours"
-    }
+    },
+    "parameter": "Parameter"
   },
   "forecast": {
     "panelHeader": "Weather forecast",
@@ -120,6 +121,7 @@
   "observation": {
     "observationStation" : "Station",
     "latestObservation" : "Latest observation",
+    "distance": "distance",
     "distanceFromStation" : "km from forecast location",
     "panelHeader" : "Past weather",
     "list" : "List",
