@@ -2,7 +2,7 @@
 
 ## **Prequisites**
 
-- Node (12.19.0)
+- Node (16.13.0)
 - Android Studio (4.2.0)
 - XCode (12.0.1)
 
@@ -57,31 +57,8 @@ R5CR207HAFP	device
 
 2. `yarn ios`
 
-## **ENV Table**
+## **Config**
 
-Available default unit values are descriped in tables below. Array of used units is passed in ENV.UNITS (`UNITS=temperature,precipitation,wind,pressure`).
+1. `cp defaultConfig.ts.example defaultConfig.ts`
 
-| UNIT_TEMPERATURE | Description |
-| ---------------- | ----------- |
-| 1                | Celsius     |
-| 2                | Fahrenheit  |
-
-| UNIT_PRECIPITATION | Description |
-| ------------------ | ----------- |
-| 1                  | Millimeter  |
-| 2                  | Inch        |
-
-| UNIT_WIND | Description |
-| --------- | ----------- |
-| 1         | m/s         |
-| 2         | km/h        |
-| 3         | mph         |
-| 4         | Bft         |
-| 5         | kn          |
-
-| UNIT_PRESSURE | Description |
-| ------------- | ----------- |
-| 1             | hPa         |
-| 2             | inHg        |
-| 3             | mmHg        |
-| 4             | mbar        |
+2. `update defaultConfig.ts`
