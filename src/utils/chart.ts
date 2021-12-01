@@ -64,7 +64,7 @@ export const chartTickValues = (
   return tickValues;
 };
 
-const capitalize = ([first, ...rest]: string) =>
+export const capitalize = ([first, ...rest]: string) =>
   first.toUpperCase() + rest.join('');
 
 export const tickFormat = (tick: any): string | number => {
