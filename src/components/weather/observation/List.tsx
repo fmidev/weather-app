@@ -15,6 +15,7 @@ type ListProps = {
   data: TimeStepData[];
   parameter: ChartType;
 };
+
 const List: React.FC<ListProps> = ({ data, parameter }) => {
   const { t, i18n } = useTranslation('observation');
   const { colors } = useTheme() as CustomTheme;
@@ -72,6 +73,24 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
         ))}
       </View>
     );
+  };
+
+  const getCellValue = (
+    item: TimeStepData,
+    param: keyof TimeStepData,
+    unit: string,
+    decimal?: number,
+    divider?: number
+  ): string => {
+    const divideWith = divider || 1;
+    if (!item || !param) return '-';
+    if (item[param] === null || item[param] === undefined) return '-';
+    if (item[param] !== null && item[param] !== undefined)
+      return `${(Number(item[param]) / divideWith)
+        .toFixed(decimal || 0)
+        .toString()
+        .replace('.', ',')} ${unit}`;
+    return '-';
   };
 
   return (
@@ -146,9 +165,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.temperature
-                        ? `${timeStep.temperature.toFixed(1)} °C`
-                        : '-'}
+                      {getCellValue(timeStep, 'temperature', '°C', 1)}
                     </Text>
                     <Text
                       style={[
@@ -156,9 +173,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.dewpoint
-                        ? `${timeStep.dewpoint.toFixed(1)} °C`
-                        : '-'}
+                      {getCellValue(timeStep, 'dewpoint', '°C', 1)}
                     </Text>
                   </View>
                 )}
@@ -170,9 +185,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.precipitation1h
-                        ? `${timeStep.precipitation1h} mm`
-                        : '-'}
+                      {getCellValue(timeStep, 'precipitation1h', 'mm', 1)}
                     </Text>
                   </View>
                 )}
@@ -184,9 +197,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.windspeedms
-                        ? `${timeStep.windspeedms.toFixed(0)} m/s`
-                        : '-'}
+                      {getCellValue(timeStep, 'windspeedms', 'm/s')}
                     </Text>
 
                     <Text
@@ -195,9 +206,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.windgust
-                        ? `${timeStep.windgust.toFixed(0)} m/s`
-                        : '-'}
+                      {getCellValue(timeStep, 'windgust', 'm/s')}
                     </Text>
                     <View style={styles.rowItem}>
                       {timeStep.winddirection ? (
@@ -228,9 +237,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.pressure
-                        ? `${timeStep.pressure.toFixed(0)} hPa`
-                        : '-'}
+                      {getCellValue(timeStep, 'pressure', 'hPa')}
                     </Text>
                   </View>
                 )}
@@ -242,9 +249,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.humidity
-                        ? `${timeStep.humidity.toFixed(0)} %`
-                        : '-'}
+                      {getCellValue(timeStep, 'humidity', '%')}
                     </Text>
                   </View>
                 )}
@@ -256,9 +261,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.visibility
-                        ? `${(timeStep.visibility! / 1000)?.toFixed(0)} km`
-                        : '-'}
+                      {getCellValue(timeStep, 'visibility', 'km', 0, 1000)}
                     </Text>
                     <Text
                       style={[
@@ -266,7 +269,8 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.totalcloudcover
+                      {timeStep.totalcloudcover !== undefined &&
+                      timeStep.totalcloudcover !== null
                         ? `${timeStep.totalcloudcover}/8`
                         : '-'}
                     </Text>
@@ -280,9 +284,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {timeStep.cloudheight
-                        ? `${(timeStep.cloudheight! / 1000)?.toFixed(1)} km`
-                        : '-'}
+                      {getCellValue(timeStep, 'cloudheight', 'km', 1, 1000)}
                     </Text>
                   </View>
                 )}
