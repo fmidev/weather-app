@@ -102,9 +102,12 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
               styles.currentDay,
               styles.bold,
               styles.marginBottom,
+              styles.capitalize,
               { color: colors.hourListText },
             ]}>
-            {moment(data[0].epochtime * 1000).format(`dddd D.M.`)}
+            {moment(data[0].epochtime * 1000)
+              .locale(locale)
+              .format(`dddd D.M.`)}
           </Text>
         )}
       </View>
@@ -326,6 +329,9 @@ const styles = StyleSheet.create({
   },
   observationRow: {
     padding: 8,
+  },
+  capitalize: {
+    textTransform: 'capitalize',
   },
 });
 
