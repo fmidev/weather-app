@@ -127,6 +127,7 @@
     "list": "Lista",
     "chart": "Graafi",
     "time": "Aika",
+    "at": "",
     "measurements": {
       "temperature": "Lämpötila",
       "dewPoint": "Kastepiste",
@@ -149,8 +150,8 @@
       "3": "Melko selkeää",
       "4": "Puolipilvistä",
       "5": "Puolipilvistä",
-      "6": "Puolipilvistä",
-      "7": "Pilvistä",
+      "6": "Melko pilvistä",
+      "7": "Melko pilvistä",
       "8": "Pilvistä",
       "9": "Pilvisyyttä ei voida määrittää"
     },

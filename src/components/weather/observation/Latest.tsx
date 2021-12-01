@@ -24,14 +24,14 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
         <View>
           <View style={[styles.row]}>
             <View style={[styles.latestObservation]}>
-              <Text style={[{ color: colors.shadow }]}>
+              <Text style={[styles.panelText, { color: colors.hourListText }]}>
                 {t('latestObservation')}
               </Text>
               <Text
                 style={[
                   styles.bold,
                   styles.justifyStart,
-                  { color: colors.shadow },
+                  { color: colors.hourListText },
                 ]}>
                 {moment(data[data.length - 1].epochtime * 1000).format(
                   `dd D.M. [${t('at')}] HH:mm`
@@ -41,81 +41,158 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
             <TouchableOpacity
               style={styles.bottomSheetButton}
               onPress={() => weatherInfoSheetRef.current.open()}>
-              <Icon name="info" color={colors.shadow} height={24} width={24} />
+              <Icon
+                name="info"
+                color={colors.primaryText}
+                height={24}
+                width={24}
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.observationRow}>
-            <View style={styles.observationPadding}>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+            <View>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.temperature')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.dewPoint')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.precipitation1h')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.windSpeedMS')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.windDirection')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.windGust')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.pressure')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.humidity')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.visibility')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.totalCloudCover')}
               </Text>
             </View>
-
-            <View>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].temperature?.toFixed(1)} °C
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].dewpoint?.toFixed(1)} °C
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].precipitation1h != null
-                  ? data[data.length - 1].precipitation1h
-                  : '0.0'}{' '}
-                mm
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].windspeedms} m/s
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {t(`winddirection.${data[data.length - 1].windcompass8}`)} (
-                {data[0].winddirection}
-                °)
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].windgust} m/s
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].pressure} hPa
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].humidity} %
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {Math.round(data[data.length - 1].visibility! / 1000)} km
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {t(`cloudcover.${data[data.length - 1].totalcloudcover}`)} (
-                {data[data.length - 1].totalcloudcover}
-                /8)
-              </Text>
+            <View style={styles.observationRow}>
+              <View>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].temperature
+                    ? `${data[data.length - 1].temperature?.toFixed(1)} °C`
+                    : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].dewpoint
+                    ? `${data[data.length - 1].dewpoint?.toFixed(1)} °C`
+                    : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].precipitation1h
+                    ? `${data[data.length - 1].precipitation1h} mm`
+                    : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].windspeedms
+                    ? `${data[data.length - 1].windspeedms?.toFixed(0)} m/s`
+                    : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].windcompass8
+                    ? t(`winddirection.${data[data.length - 1].windcompass8}`)
+                    : '-'}
+                  {data[data.length - 1].winddirection
+                    ? ` (${data[data.length - 1].winddirection}°)`
+                    : ''}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].windgust
+                    ? `${data[data.length - 1].windgust?.toFixed(0)} m/s`
+                    : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].pressure
+                    ? `${data[data.length - 1].pressure?.toFixed(0)} hPa`
+                    : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].humidity
+                    ? `${data[data.length - 1].humidity} %`
+                    : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].visibility
+                    ? `${Math.round(
+                        data[data.length - 1].visibility! / 1000
+                      )} km`
+                    : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {data[data.length - 1].totalcloudcover !== null
+                    ? t(`cloudcover.${data[data.length - 1].totalcloudcover}`)
+                    : '-'}
+                  {data[data.length - 1].totalcloudcover !== null
+                    ? ` (${data[data.length - 1].totalcloudcover}/8)`
+                    : '-'}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -140,8 +217,8 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
 
 const styles = StyleSheet.create({
   bold: {
+    fontSize: 16,
     fontFamily: 'Roboto-Bold',
-    paddingBottom: 2,
   },
   bottomSheetButton: {
     padding: 10,
@@ -151,21 +228,29 @@ const styles = StyleSheet.create({
   },
   latestObservation: {
     flexDirection: 'column',
-    paddingBottom: 5,
-  },
-  observationPadding: {
-    paddingRight: 100,
+    height: 40,
+    marginBottom: 16,
   },
   observationRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    justifyContent: 'center',
     flex: 1,
-    paddingBottom: 1,
+    marginBottom: 24,
+  },
+  panelMeasurement: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
+    marginBottom: 8,
+  },
+  panelValue: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+    marginBottom: 8,
   },
   panelText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Roboto-Regular',
-    paddingBottom: 2,
   },
   row: {
     flexDirection: 'row',
