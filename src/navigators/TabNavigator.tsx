@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   StyleProp,
   ViewStyle,
+  View,
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
@@ -155,17 +156,34 @@ const Navigator: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
+  const HeaderBackImage = ({
+    tintColor,
+    withTitle,
+  }: {
+    tintColor: string;
+    withTitle?: boolean;
+  }) => (
+    <View
+      style={[styles.headerBackImage, !withTitle && styles.headerBackNoTitle]}>
+      <Icon
+        name="arrow-back"
+        style={[{ color: tintColor }]}
+        width={26}
+        height={26}
+      />
+    </View>
+  );
+
+  HeaderBackImage.defaultProps = {
+    withTitle: false,
+  };
+
   const CommonHeaderOptions: StackNavigationOptions = {
     headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
     headerStyle: styles.header,
     headerTitleAlign: 'center',
     headerBackImage: ({ tintColor }: { tintColor: string }) => (
-      <Icon
-        name="arrow-back"
-        style={[styles.headerBackImage, { color: tintColor }]}
-        width={26}
-        height={26}
-      />
+      <HeaderBackImage tintColor={tintColor} />
     ),
   };
 
@@ -265,7 +283,11 @@ const Navigator: React.FC<Props> = ({
         component={AboutScreen}
         options={{
           ...CommonHeaderOptions,
+          headerBackImage: ({ tintColor }) => (
+            <HeaderBackImage tintColor={tintColor} withTitle />
+          ),
           headerTitle: `${t('navigation:about')}`,
+          headerBackTitleVisible: true,
         }}
       />
       <OthersStack.Screen
@@ -273,7 +295,11 @@ const Navigator: React.FC<Props> = ({
         component={SettingsScreen}
         options={{
           ...CommonHeaderOptions,
+          headerBackImage: ({ tintColor }) => (
+            <HeaderBackImage tintColor={tintColor} withTitle />
+          ),
           headerTitle: `${t('navigation:settings')}`,
+          headerBackTitleVisible: true,
         }}
       />
       <OthersStack.Screen
@@ -281,7 +307,11 @@ const Navigator: React.FC<Props> = ({
         component={SymbolsScreen}
         options={{
           ...CommonHeaderOptions,
+          headerBackImage: ({ tintColor }) => (
+            <HeaderBackImage tintColor={tintColor} withTitle />
+          ),
           headerTitle: `${t('navigation:symbols')}`,
+          headerBackTitleVisible: true,
         }}
       />
     </OthersStack.Navigator>
@@ -295,16 +325,15 @@ const Navigator: React.FC<Props> = ({
 
   return (
     <>
-      {Platform.OS === 'android' && (
-        <StatusBar
-          backgroundColor={
-            useDarkTheme
-              ? darkTheme.colors.headerBackground
-              : lightTheme.colors.headerBackground
-          }
-          barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
-        />
-      )}
+      <StatusBar
+        backgroundColor={
+          useDarkTheme
+            ? darkTheme.colors.headerBackground
+            : lightTheme.colors.headerBackground
+        }
+        barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
+      />
+
       <NavigationContainer
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}>
@@ -476,6 +505,10 @@ const styles = StyleSheet.create({
         height: 60,
       },
     }),
+  },
+  headerBackNoTitle: {
+    flex: 1,
+    paddingVertical: 10,
   },
 });
 
