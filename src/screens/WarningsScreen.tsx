@@ -54,6 +54,8 @@ const WarningsScreen: React.FC = () => {
       .nav-tabs > .nav-item:last-of-type .date-selector-text { border-top-right-radius: 10px !important; } \
       .header-region, .symbol-list { padding-left: 5px !important} \
       .data-providers > span { font-size: 12px !important } \
+      .day-region-views > h3 { display: none } \
+      .symbol-list-header-row { margin-right: 10px !important; } \
     ';
     document.getElementsByTagName('head')[0].appendChild(style);
     })();`;

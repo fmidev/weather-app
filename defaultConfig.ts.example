@@ -13,6 +13,8 @@ const defaultConfig: ConfigType = {
       lat: 60.16952,
       lon: 24.93545,
       id: 658225,
+      country: 'FI',
+      timezone: 'Europe/Helsinki',
     },
     apiUrl: 'url',
     keyword: 'string',
@@ -21,6 +23,7 @@ const defaultConfig: ConfigType = {
   },
   map: {
     latitudeDelta: 0.15,
+    updateInterval: 5,
     sources: {
       key: 'url',
       key2: 'url',
@@ -28,18 +31,19 @@ const defaultConfig: ConfigType = {
     layers: [
       {
         id: 1,
-        name: { languageString: 'name' },
+        name: { fi: 'name' },
+        type: 'WMS',
         legend: 'urlString',
         sources: [
           {
             source: 'sourceKey',
             layer: 'layerName',
-            type: 'forecast|observation',
+            type: 'observation',
           },
         ],
         times: {
-          60: { forecast: 8 },
-          30: { forecast: 4 },
+          timeStep: 15,
+          observation: 8,
         },
       },
     ],
@@ -48,12 +52,14 @@ const defaultConfig: ConfigType = {
     apiUrl:
       'url',
     forecast: {
+      updateInterval: 5,
       timePeriod: 'data',
       producer: 'default',
       parameters: ['Temperature'],
     },
     observation: {
       enabled: true,
+      updateInterval: 5,
       numberOfStations: 10,
       producer: 'observation_producer',
       timePeriod: 24,
@@ -62,6 +68,7 @@ const defaultConfig: ConfigType = {
   },
   warnings: {
     enabled: true,
+    updateInterval: 5,
     apiUrl:
       'url',
   },

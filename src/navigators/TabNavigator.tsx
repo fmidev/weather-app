@@ -382,7 +382,12 @@ const Navigator: React.FC<Props> = ({
           height={700}
           closeOnDragDown
           customStyles={{
-            container: styles.sheetContainer,
+            container: {
+              ...styles.sheetContainer,
+              backgroundColor: useDarkTheme
+                ? darkTheme.colors.headerBackground
+                : lightTheme.colors.headerBackground,
+            },
             draggableIcon: styles.draggableIcon,
           }}>
           <SearchInfoBottomSheet
