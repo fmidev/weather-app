@@ -16,6 +16,8 @@ export const GRAY_3 = '#48484A';
 export const GRAY_2 = '#636366';
 export const GRAY_1 = '#8E8E93';
 
+export const GRAY_1_OPACITY = 'rgba(142,142,147,0.08)';
+
 export const GRAY_6_TRANSPARENT = 'rgba(28,28,30,0.0)';
 export const GRAY_6_95 = 'rgba(28,28,30,0.95)';
 
