@@ -75,7 +75,7 @@ const ObservationStationListBottomSheet: React.FC<ObservationStationListBottomSh
               <Text style={[styles.text, { color: colors.text }]}>
                 {`${station.name} – ${t(
                   'observation:distance'
-                )} ${toStringWithDecimal(station.distance, ',')} `}
+                )} ${toStringWithDecimal(station.distance, ',')} km`}
               </Text>
               <Icon
                 name={

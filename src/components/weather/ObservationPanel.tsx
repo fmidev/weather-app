@@ -22,7 +22,7 @@ import {
 import { State } from '@store/types';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@utils/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { toStringWithDecimal } from '@utils/helpers';
 import Chart from './charts/Chart';
@@ -220,6 +220,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             ...styles.sheetContainer,
             backgroundColor: colors.background,
           },
+          draggableIcon: styles.draggableIcon,
         }}>
         <ObservationStationListBottomSheet
           onClose={() => stationSheetRef.current.close()}
@@ -234,6 +235,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginBottom: 8,
     flex: 1,
+    paddingBottom: 28,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,
@@ -291,6 +293,10 @@ const styles = StyleSheet.create({
   },
   withMarginRight: {
     marginRight: 16,
+  },
+  draggableIcon: {
+    backgroundColor: GRAY_1,
+    width: 65,
   },
 });
 
