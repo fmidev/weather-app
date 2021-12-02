@@ -46,7 +46,14 @@ import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { getGeolocation } from '@utils/helpers';
-import { PRIMARY_BLUE, WHITE, GRAY_1, TRANSPARENT } from '@utils/colors';
+import {
+  PRIMARY_BLUE,
+  WHITE,
+  GRAY_1,
+  TRANSPARENT,
+  SHADOW_DARK,
+  SHADOW_LIGHT,
+} from '@utils/colors';
 import { selectInitialTab } from '@store/navigation/selectors';
 import { setNavigationTab as setNavigationTabAction } from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
@@ -156,15 +163,8 @@ const Navigator: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
-  const HeaderBackImage = ({
-    tintColor,
-    withTitle,
-  }: {
-    tintColor: string;
-    withTitle?: boolean;
-  }) => (
-    <View
-      style={[styles.headerBackImage, !withTitle && styles.headerBackNoTitle]}>
+  const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
+    <View style={styles.headerBackImage}>
       <Icon
         name="arrow-back"
         style={[{ color: tintColor }]}
@@ -174,17 +174,17 @@ const Navigator: React.FC<Props> = ({
     </View>
   );
 
-  HeaderBackImage.defaultProps = {
-    withTitle: false,
-  };
-
   const CommonHeaderOptions: StackNavigationOptions = {
-    headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
-    headerStyle: styles.header,
+    headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+    headerStyle: {
+      ...styles.header,
+      shadowColor: useDarkTheme ? SHADOW_DARK : SHADOW_LIGHT,
+    },
     headerTitleAlign: 'center',
     headerBackImage: ({ tintColor }: { tintColor: string }) => (
       <HeaderBackImage tintColor={tintColor} />
     ),
+    headerBackTitleVisible: false,
   };
 
   const LocationHeaderOptions = ({
@@ -276,18 +276,17 @@ const Navigator: React.FC<Props> = ({
       <OthersStack.Screen
         name="StackOthers"
         component={OthersScreen}
-        options={{ headerTitle: `${t('navigation:others')}` }}
+        options={{
+          ...CommonHeaderOptions,
+          headerTitle: `${t('navigation:others')}`,
+        }}
       />
       <OthersStack.Screen
         name="About"
         component={AboutScreen}
         options={{
           ...CommonHeaderOptions,
-          headerBackImage: ({ tintColor }) => (
-            <HeaderBackImage tintColor={tintColor} withTitle />
-          ),
           headerTitle: `${t('navigation:about')}`,
-          headerBackTitleVisible: true,
         }}
       />
       <OthersStack.Screen
@@ -295,11 +294,7 @@ const Navigator: React.FC<Props> = ({
         component={SettingsScreen}
         options={{
           ...CommonHeaderOptions,
-          headerBackImage: ({ tintColor }) => (
-            <HeaderBackImage tintColor={tintColor} withTitle />
-          ),
           headerTitle: `${t('navigation:settings')}`,
-          headerBackTitleVisible: true,
         }}
       />
       <OthersStack.Screen
@@ -307,11 +302,7 @@ const Navigator: React.FC<Props> = ({
         component={SymbolsScreen}
         options={{
           ...CommonHeaderOptions,
-          headerBackImage: ({ tintColor }) => (
-            <HeaderBackImage tintColor={tintColor} withTitle />
-          ),
           headerTitle: `${t('navigation:symbols')}`,
-          headerBackTitleVisible: true,
         }}
       />
     </OthersStack.Navigator>
@@ -466,7 +457,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   headerBackImage: {
-    marginLeft: 22,
+    flex: 1,
+    paddingVertical: 10,
+    ...Platform.select({
+      ios: {
+        marginLeft: 22,
+      },
+    }),
   },
   sheetContainer: {
     borderTopLeftRadius: 10,
@@ -493,7 +490,12 @@ const styles = StyleSheet.create({
     }),
   },
   header: {
-    shadowColor: TRANSPARENT,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowRadius: 4,
+    shadowOpacity: 1,
     ...Platform.select({
       ios: {
         height: 102,
@@ -505,10 +507,6 @@ const styles = StyleSheet.create({
         height: 60,
       },
     }),
-  },
-  headerBackNoTitle: {
-    flex: 1,
-    paddingVertical: 10,
   },
 });
 
