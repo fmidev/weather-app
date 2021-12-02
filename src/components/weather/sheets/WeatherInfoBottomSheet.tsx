@@ -289,7 +289,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               {t('weatherInfoBottomSheet.feelsLikeTemperature')}
             </Text>
           </View>
-          <View style={[styles.row, styles.withMarginLeft]}>
+          {/* <View style={[styles.row, styles.withMarginLeft]}>
             <View style={styles.iconWrapper}>
               <Icon
                 width={27}
@@ -314,7 +314,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             <Text style={[styles.text, { color: colors.hourListText }]}>
               {t('weatherInfoBottomSheet.feelsLikeWarmer')}
             </Text>
-          </View>
+          </View> */}
 
           <View style={styles.row}>
             <View style={styles.iconWrapper}>
