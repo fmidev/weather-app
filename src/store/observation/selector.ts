@@ -28,7 +28,9 @@ export const selectStationList = createSelector<
   State,
   ObservationState,
   StationInfo[]
->(selectObservationDomain, (observation) => observation.stations);
+>(selectObservationDomain, (observation) =>
+  observation.stations.sort((a, b) => a.distance - b.distance)
+);
 
 const selectDataSets = createSelector<State, ObservationState, ObservationData>(
   selectObservationDomain,

@@ -34,7 +34,8 @@
       "previous24hAccessibilityLabel": "Näytä edelliset 24 tuntia",
       "next24h": "Seuraavat 24 h",
       "next24hAccessibilityLabel": "Näytä seuraavat 24 tuntia"
-    }
+    },
+    "parameter": "Suure"
   },
   "forecast": {
     "panelHeader": "Sääennuste",
@@ -120,6 +121,7 @@
   "observation": {
     "observationStation" : "Havaintoasema",
     "latestObservation" : "Viimeisin säähavainto",
+    "distance": "etäisyys",
     "distanceFromStation" : "km ennustepaikasta",
     "panelHeader" : "Sää havaintoasemilla",
     "list" : "Lista",

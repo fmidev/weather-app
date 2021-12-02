@@ -21,7 +21,7 @@ import {
   GRAY_6_TRANSPARENT,
   CustomTheme,
 } from '@utils/colors';
-import { ChartType } from './types';
+import { ChartType } from '../charts/types';
 
 type ParameterSelectorProps = {
   chartTypes: ChartType[];
@@ -128,85 +128,94 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   );
 
   return (
-    <View style={styles.wrapper}>
-      <FlatList
-        ref={buttonList}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={chartTypes}
-        onScroll={handleScroll}
-        onScrollToIndexFailed={() => {}}
-        renderItem={rowRenderer}
-        keyExtractor={(chartType) => `chart-${chartType}`}
-        contentContainerStyle={styles.listContentContainer}
-        scrollEnabled={!(firstVisible && lastVisible)}
-      />
-      {!firstVisible && (
-        <View
-          style={[
-            styles.scrollButton,
-            styles.scrollButtonLeft,
-            { backgroundColor: colors.background },
-          ]}>
+    <View>
+      <Text
+        style={[
+          styles.parameterSelectorHeader,
+          { color: colors.hourListText },
+        ]}>
+        {t('weather:parameter')}
+      </Text>
+      <View style={styles.wrapper}>
+        <FlatList
+          ref={buttonList}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={chartTypes}
+          onScroll={handleScroll}
+          onScrollToIndexFailed={() => {}}
+          renderItem={rowRenderer}
+          keyExtractor={(chartType) => `chart-${chartType}`}
+          contentContainerStyle={styles.listContentContainer}
+          scrollEnabled={!(firstVisible && lastVisible)}
+        />
+        {!firstVisible && (
           <View
             style={[
-              styles.separator,
-              styles.separatorLeft,
-              {
-                backgroundColor: colors.border,
-              },
-            ]}
-          />
-          <TouchableOpacity onPress={scrollBackward}>
-            <Icon name="arrow-left" color={colors.text} />
-          </TouchableOpacity>
+              styles.scrollButton,
+              styles.scrollButtonLeft,
+              { backgroundColor: colors.background },
+            ]}>
+            <View
+              style={[
+                styles.separator,
+                styles.separatorLeft,
+                {
+                  backgroundColor: colors.border,
+                },
+              ]}
+            />
+            <TouchableOpacity onPress={scrollBackward}>
+              <Icon name="arrow-left" color={colors.text} />
+            </TouchableOpacity>
 
-          <LinearGradient
-            style={[styles.gradient, styles.gradientLeft]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            colors={
-              dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
-            }
-          />
-        </View>
-      )}
-      {!lastVisible && (
-        <View
-          style={[
-            styles.scrollButton,
-            styles.scrollButtonRight,
-            { backgroundColor: colors.background },
-          ]}>
-          <TouchableOpacity onPress={scrollForward}>
-            <Icon name="arrow-right" color={colors.text} />
-          </TouchableOpacity>
+            <LinearGradient
+              style={[styles.gradient, styles.gradientLeft]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              colors={
+                dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
+              }
+            />
+          </View>
+        )}
+        {!lastVisible && (
           <View
             style={[
-              styles.separator,
-              styles.separatorRight,
-              {
-                backgroundColor: colors.border,
-              },
-            ]}
-          />
-          <LinearGradient
-            style={[styles.gradient, styles.gradientRight]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            colors={
-              dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
-            }
-          />
-        </View>
-      )}
+              styles.scrollButton,
+              styles.scrollButtonRight,
+              { backgroundColor: colors.background },
+            ]}>
+            <TouchableOpacity onPress={scrollForward}>
+              <Icon name="arrow-right" color={colors.text} />
+            </TouchableOpacity>
+            <View
+              style={[
+                styles.separator,
+                styles.separatorRight,
+                {
+                  backgroundColor: colors.border,
+                },
+              ]}
+            />
+            <LinearGradient
+              style={[styles.gradient, styles.gradientRight]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              colors={
+                dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
+              }
+            />
+          </View>
+        )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginHorizontal: -10,
+    marginHorizontal: -8,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -265,6 +274,12 @@ const styles = StyleSheet.create({
   },
   separatorRight: {
     right: 43,
+  },
+  parameterSelectorHeader: {
+    marginLeft: 4,
+    fontSize: 14,
+    fontFamily: 'Roboto-Medium',
+    paddingBottom: 11,
   },
 });
 
