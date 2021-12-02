@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   AppState,
@@ -6,6 +7,10 @@ import {
   AppStateStatus,
   StyleSheet,
   StatusBar,
+  TouchableOpacity,
+  StyleProp,
+  ViewStyle,
+  View,
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
@@ -35,15 +40,20 @@ import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
 import Icon from '@components/common/Icon';
 import HeaderButton from '@components/common/HeaderButton';
+import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
-
-import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
-
 import { getGeolocation } from '@utils/helpers';
-import { PRIMARY_BLUE, WHITE, GRAY_1 } from '@utils/colors';
+import {
+  PRIMARY_BLUE,
+  WHITE,
+  GRAY_1,
+  TRANSPARENT,
+  SHADOW_DARK,
+  SHADOW_LIGHT,
+} from '@utils/colors';
 import { selectInitialTab } from '@store/navigation/selectors';
 import { setNavigationTab as setNavigationTabAction } from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
@@ -153,20 +163,28 @@ const Navigator: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
-  const CommonHeaderOptions: StackNavigationOptions = {
-    headerTintColor: isDark() ? WHITE : PRIMARY_BLUE,
-    headerStyle: {
-      shadowColor: 'transparent',
-    },
-    headerTitleAlign: 'center',
-    headerBackImage: ({ tintColor }: { tintColor: string }) => (
+  const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
+    <View style={styles.headerBackImage}>
       <Icon
         name="arrow-back"
-        style={[styles.headerBackImage, { color: tintColor }]}
+        style={[{ color: tintColor }]}
         width={26}
         height={26}
       />
+    </View>
+  );
+
+  const CommonHeaderOptions: StackNavigationOptions = {
+    headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+    headerStyle: {
+      ...styles.header,
+      shadowColor: useDarkTheme ? SHADOW_DARK : SHADOW_LIGHT,
+    },
+    headerTitleAlign: 'center',
+    headerBackImage: ({ tintColor }: { tintColor: string }) => (
+      <HeaderBackImage tintColor={tintColor} />
     ),
+    headerBackTitleVisible: false,
   };
 
   const LocationHeaderOptions = ({
@@ -175,6 +193,14 @@ const Navigator: React.FC<Props> = ({
     navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
   }) => ({
     ...CommonHeaderOptions,
+    headerLeft: () => (
+      <HeaderButton
+        title={t('navigation:locate')}
+        accessibilityLabel={t('navigation:locateAccessibilityLabel')}
+        icon="locate"
+        onPress={() => getGeolocation(setCurrentLocation, t)}
+      />
+    ),
     headerTitle: () => (
       <CommonHeaderTitle onPress={() => navigation.navigate('Search')} />
     ),
@@ -185,14 +211,6 @@ const Navigator: React.FC<Props> = ({
         icon="search"
         onPress={() => navigation.navigate('Search')}
         right
-      />
-    ),
-    headerLeft: () => (
-      <HeaderButton
-        title={t('navigation:locate')}
-        accessibilityLabel={t('navigation:locateAccessibilityLabel')}
-        icon="locate"
-        onPress={() => getGeolocation(setCurrentLocation, t)}
       />
     ),
   });
@@ -258,7 +276,10 @@ const Navigator: React.FC<Props> = ({
       <OthersStack.Screen
         name="StackOthers"
         component={OthersScreen}
-        options={{ headerTitle: `${t('navigation:others')}` }}
+        options={{
+          ...CommonHeaderOptions,
+          headerTitle: `${t('navigation:others')}`,
+        }}
       />
       <OthersStack.Screen
         name="About"
@@ -295,20 +316,54 @@ const Navigator: React.FC<Props> = ({
 
   return (
     <>
-      {Platform.OS === 'android' && (
-        <StatusBar
-          backgroundColor={
-            useDarkTheme
-              ? darkTheme.colors.headerBackground
-              : lightTheme.colors.headerBackground
-          }
-          barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
-        />
-      )}
+      <StatusBar
+        backgroundColor={
+          useDarkTheme
+            ? darkTheme.colors.headerBackground
+            : lightTheme.colors.headerBackground
+        }
+        barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
+      />
+
       <NavigationContainer
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}>
-        <Tab.Navigator initialRouteName={initialTab}>
+        <Tab.Navigator
+          initialRouteName={initialTab}
+          screenOptions={{
+            tabBarStyle: styles.tabBar,
+            tabBarItemStyle: {
+              paddingVertical: 12,
+              minHeight: 72,
+            },
+            tabBarActiveTintColor: useDarkTheme
+              ? darkTheme.colors.tabBarActive
+              : lightTheme.colors.tabBarActive,
+            tabBarInactiveTintColor: useDarkTheme
+              ? darkTheme.colors.tabBarInactive
+              : lightTheme.colors.tabBarInactive,
+            tabBarLabelStyle: styles.tabText,
+            tabBarButton: ({ style, accessibilityState, ...rest }) => {
+              const activeColor = useDarkTheme
+                ? darkTheme.colors.tabBarActive
+                : lightTheme.colors.tabBarActive;
+
+              return (
+                <TouchableOpacity
+                  {...rest}
+                  style={[
+                    ...(style as StyleProp<ViewStyle>[]),
+                    styles.tabItem,
+                    {
+                      borderTopColor: accessibilityState?.selected
+                        ? activeColor
+                        : TRANSPARENT,
+                    },
+                  ]}
+                />
+              );
+            },
+          }}>
           <Tab.Screen
             name="Map"
             component={MapStackScreen}
@@ -329,7 +384,6 @@ const Navigator: React.FC<Props> = ({
               headerShown: false,
               tabBarTestID: 'navigation_weather',
               tabBarLabel: `${t('navigation:weather')}`,
-              tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="weather"
@@ -347,7 +401,6 @@ const Navigator: React.FC<Props> = ({
               headerShown: false,
               tabBarTestID: 'navigation_warnings',
               tabBarLabel: `${t('navigation:warnings')}`,
-              tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="warnings"
@@ -365,7 +418,6 @@ const Navigator: React.FC<Props> = ({
               headerShown: false,
               tabBarTestID: 'navigation_others',
               tabBarLabel: `${t('navigation:others')}`,
-              tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="menu"
@@ -405,7 +457,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   headerBackImage: {
-    marginLeft: 22,
+    flex: 1,
+    paddingVertical: 10,
+    ...Platform.select({
+      ios: {
+        marginLeft: 22,
+      },
+    }),
   },
   sheetContainer: {
     borderTopLeftRadius: 10,
@@ -414,6 +472,41 @@ const styles = StyleSheet.create({
   draggableIcon: {
     backgroundColor: GRAY_1,
     width: 65,
+  },
+  tabItem: {
+    borderTopWidth: 3,
+  },
+  tabBar: {
+    ...Platform.select({
+      ios: {
+        minHeight: 90,
+      },
+      android: {
+        minHeight: 72,
+      },
+      default: {
+        minHeight: 72,
+      },
+    }),
+  },
+  header: {
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowRadius: 4,
+    shadowOpacity: 1,
+    ...Platform.select({
+      ios: {
+        height: 102,
+      },
+      android: {
+        height: 60,
+      },
+      default: {
+        height: 60,
+      },
+    }),
   },
 });
 
