@@ -43,6 +43,8 @@ export const lightTheme = {
     chartSecondaryLine: SECONDARY_BLUE,
     hourListText: GRAY_4,
     secondaryBorder: GRAY_1,
+    tabBarInactive: PRIMARY_BLUE,
+    tabBarActive: SECONDARY_BLUE,
   },
 };
 
@@ -73,5 +75,7 @@ export const darkTheme = {
     chartSecondaryLine: GRAYISH_BLUE, // TODO: needs design
     hourListText: WHITE,
     secondaryBorder: GRAY_1,
+    tabBarInactive: GRAY_1,
+    tabBarActive: WHITE,
   },
 };

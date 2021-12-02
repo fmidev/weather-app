@@ -69,5 +69,7 @@ export type CustomTheme = {
     chartSecondaryLine: string;
     hourListText: string;
     secondaryBorder: string;
+    tabBarInactive: string;
+    tabBarActive: string;
   };
 };
