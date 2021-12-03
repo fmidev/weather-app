@@ -3,9 +3,11 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment';
+
 import { CustomTheme } from '@utils/colors';
 import { TimeStepData } from '@store/observation/types';
-import moment from 'moment';
+import { getObservationCellValue } from '@utils/helpers';
 
 import Icon from '@components/common/Icon';
 import WeatherInfoBottomSheet from '../sheets/WeatherInfoBottomSheet';
@@ -15,12 +17,15 @@ type LatestProps = {
 };
 const Latest: React.FC<LatestProps> = ({ data }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation('observation');
+  const { t, i18n } = useTranslation('observation');
+  const locale = i18n.language;
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+
+  const latestObservation = data && data.length > 0 && data[data.length - 1];
 
   return (
     <>
-      {data && data.length > 0 && (
+      {!!latestObservation && (
         <View>
           <View style={[styles.row]}>
             <View style={[styles.latestObservation]}>
@@ -33,9 +38,9 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
                   styles.justifyStart,
                   { color: colors.hourListText },
                 ]}>
-                {moment(data[data.length - 1].epochtime * 1000).format(
-                  `dd D.M. [${t('at')}] HH:mm`
-                )}
+                {moment(data[data.length - 1].epochtime * 1000)
+                  .locale(locale)
+                  .format(`dd D.M. [${t('at')}] HH:mm`)}
               </Text>
             </View>
             <TouchableOpacity
@@ -126,70 +131,85 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
               <View>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].temperature
-                    ? `${data[data.length - 1].temperature?.toFixed(1)} °C`
-                    : '-'}
+                  {getObservationCellValue(
+                    latestObservation,
+                    'temperature',
+                    '°C',
+                    1
+                  )}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].dewpoint
-                    ? `${data[data.length - 1].dewpoint?.toFixed(1)} °C`
-                    : '-'}
+                  {getObservationCellValue(
+                    latestObservation,
+                    'dewpoint',
+                    '°C',
+                    1
+                  )}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].precipitation1h
-                    ? `${data[data.length - 1].precipitation1h} mm`
-                    : '-'}
+                  {getObservationCellValue(
+                    latestObservation,
+                    'precipitation1h',
+                    'mm',
+                    0
+                  )}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].windspeedms
-                    ? `${data[data.length - 1].windspeedms?.toFixed(0)} m/s`
-                    : '-'}
+                  {getObservationCellValue(
+                    latestObservation,
+                    'windspeedms',
+                    'm/s'
+                  )}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].windcompass8
+                  {latestObservation.windcompass8
                     ? t(`winddirection.${data[data.length - 1].windcompass8}`)
                     : '-'}
-                  {data[data.length - 1].winddirection
+                  {latestObservation.winddirection
                     ? ` (${data[data.length - 1].winddirection}°)`
                     : ''}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].windgust
-                    ? `${data[data.length - 1].windgust?.toFixed(0)} m/s`
-                    : '-'}
+                  {getObservationCellValue(
+                    latestObservation,
+                    'windgust',
+                    'm/s'
+                  )}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].pressure
-                    ? `${data[data.length - 1].pressure?.toFixed(0)} hPa`
-                    : '-'}
+                  {getObservationCellValue(
+                    latestObservation,
+                    'pressure',
+                    'hPa'
+                  )}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].humidity
-                    ? `${data[data.length - 1].humidity} %`
-                    : '-'}
+                  {getObservationCellValue(latestObservation, 'humidity', '%')}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].visibility
-                    ? `${Math.round(
-                        data[data.length - 1].visibility! / 1000
-                      )} km`
-                    : '-'}
+                  {getObservationCellValue(
+                    latestObservation,
+                    'visibility',
+                    'km',
+                    0,
+                    1000
+                  )}
                 </Text>
                 <Text
                   style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {data[data.length - 1].totalcloudcover !== null
-                    ? t(`cloudcover.${data[data.length - 1].totalcloudcover}`)
-                    : '-'}
-                  {data[data.length - 1].totalcloudcover !== null
-                    ? ` (${data[data.length - 1].totalcloudcover}/8)`
+                  {latestObservation.totalcloudcover !== null &&
+                  latestObservation.totalcloudcover !== undefined
+                    ? `${t(
+                        `cloudcover.${latestObservation.totalcloudcover}`
+                      )} (${latestObservation.totalcloudcover}/8)`
                     : '-'}
                 </Text>
               </View>
