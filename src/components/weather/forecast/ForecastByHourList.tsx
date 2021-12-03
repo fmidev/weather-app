@@ -320,7 +320,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   : styles.hourBlock
               }>
               <Text style={[styles.hourText, { color: colors.hourListText }]}>
-                {item[param]}
+                {param === constants.PRECIPITATION_1H
+                  ? `${item[param].toFixed(1)}`.replace('.', ',')
+                  : item[param]}
               </Text>
             </View>
           );

@@ -109,7 +109,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       ]}>
       <PanelHeader title={t('panelHeader')} />
       <View style={styles.panelContainer}>
-        <Text style={[styles.panelText, { color: colors.primaryText }]}>
+        <Text style={[styles.panelText, { color: colors.hourListText }]}>
           {t('lastUpdated')}{' '}
           <Text style={styles.bold}>{forecastLastUpdated}</Text>
         </Text>
