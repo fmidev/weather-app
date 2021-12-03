@@ -20,7 +20,7 @@ const TemperatureChart: React.FC<ChartDataProps> = ({
         <VictoryLine
           data={temperature}
           domain={domain}
-          style={{ data: { stroke: colors.primaryText } }}
+          style={{ data: { stroke: colors.chartPrimaryLine } }}
           interpolation="natural"
         />
       )}
