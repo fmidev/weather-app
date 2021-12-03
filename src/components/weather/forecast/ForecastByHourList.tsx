@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ViewToken,
+  useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -51,6 +52,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const [isLastVisible, setIsLastVisible] = useState<boolean>(false);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
+  const { width } = useWindowDimensions();
+
+  const renderSteps = Math.round(width / 48);
 
   const virtualizedList = useRef() as React.MutableRefObject<
     VirtualizedList<TimestepData>
@@ -499,6 +503,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             getItem={(data, index) => data[index]}
             getItemCount={(data) => data && data.length}
             keyExtractor={(item) => `${item.epochtime}`}
+            maxToRenderPerBatch={renderSteps}
+            initialNumToRender={renderSteps}
             renderItem={columnRenderer}
             horizontal
             showsHorizontalScrollIndicator={false}
