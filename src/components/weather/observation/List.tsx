@@ -9,6 +9,7 @@ import Icon from '@components/common/Icon';
 import { TimeStepData } from '@store/observation/types';
 import { GRAY_1_OPACITY, CustomTheme } from '@utils/colors';
 import { capitalize } from '@utils/chart';
+import { getObservationCellValue } from '@utils/helpers';
 import { ChartType } from '../charts/types';
 
 type ListProps = {
@@ -73,24 +74,6 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
         ))}
       </View>
     );
-  };
-
-  const getCellValue = (
-    item: TimeStepData,
-    param: keyof TimeStepData,
-    unit: string,
-    decimal?: number,
-    divider?: number
-  ): string => {
-    const divideWith = divider || 1;
-    if (!item || !param) return '-';
-    if (item[param] === null || item[param] === undefined) return '-';
-    if (item[param] !== null && item[param] !== undefined)
-      return `${(Number(item[param]) / divideWith)
-        .toFixed(decimal || 0)
-        .toString()
-        .replace('.', ',')} ${unit}`;
-    return '-';
   };
 
   return (
@@ -168,7 +151,12 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'temperature', '°C', 1)}
+                      {getObservationCellValue(
+                        timeStep,
+                        'temperature',
+                        '°C',
+                        1
+                      )}
                     </Text>
                     <Text
                       style={[
@@ -176,7 +164,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'dewpoint', '°C', 1)}
+                      {getObservationCellValue(timeStep, 'dewpoint', '°C', 1)}
                     </Text>
                   </View>
                 )}
@@ -188,7 +176,12 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'precipitation1h', 'mm', 1)}
+                      {getObservationCellValue(
+                        timeStep,
+                        'precipitation1h',
+                        'mm',
+                        1
+                      )}
                     </Text>
                   </View>
                 )}
@@ -200,7 +193,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'windspeedms', 'm/s')}
+                      {getObservationCellValue(timeStep, 'windspeedms', 'm/s')}
                     </Text>
 
                     <Text
@@ -209,7 +202,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'windgust', 'm/s')}
+                      {getObservationCellValue(timeStep, 'windgust', 'm/s')}
                     </Text>
                     <View style={styles.rowItem}>
                       {timeStep.winddirection ? (
@@ -240,7 +233,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'pressure', 'hPa')}
+                      {getObservationCellValue(timeStep, 'pressure', 'hPa')}
                     </Text>
                   </View>
                 )}
@@ -252,7 +245,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'humidity', '%')}
+                      {getObservationCellValue(timeStep, 'humidity', '%')}
                     </Text>
                   </View>
                 )}
@@ -264,7 +257,13 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'visibility', 'km', 0, 1000)}
+                      {getObservationCellValue(
+                        timeStep,
+                        'visibility',
+                        'km',
+                        0,
+                        1000
+                      )}
                     </Text>
                     <Text
                       style={[
@@ -287,7 +286,13 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.rowItem,
                         { color: colors.hourListText },
                       ]}>
-                      {getCellValue(timeStep, 'cloudheight', 'km', 1, 1000)}
+                      {getObservationCellValue(
+                        timeStep,
+                        'cloudheight',
+                        'km',
+                        1,
+                        1000
+                      )}
                     </Text>
                   </View>
                 )}

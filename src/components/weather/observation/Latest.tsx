@@ -3,11 +3,14 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { CustomTheme } from '@utils/colors';
-import { TimeStepData } from '@store/observation/types';
 import moment from 'moment';
 
+import { CustomTheme } from '@utils/colors';
+import { TimeStepData } from '@store/observation/types';
+import { getObservationCellValue } from '@utils/helpers';
+
 import Icon from '@components/common/Icon';
+import { capitalize } from '@utils/chart';
 import WeatherInfoBottomSheet from '../sheets/WeatherInfoBottomSheet';
 
 type LatestProps = {
@@ -15,107 +18,206 @@ type LatestProps = {
 };
 const Latest: React.FC<LatestProps> = ({ data }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation('observation');
+  const { t, i18n } = useTranslation('observation');
+  const locale = i18n.language;
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
+  const latestObservation = data && data.length > 0 && data[data.length - 1];
+  const latestObservationTime =
+    latestObservation &&
+    moment(latestObservation.epochtime * 1000)
+      .locale(locale)
+      .format(`dd D.M. [${t('at')}] HH:mm`);
   return (
     <>
-      {data && data.length > 0 && (
+      {!!latestObservation && (
         <View>
           <View style={[styles.row]}>
             <View style={[styles.latestObservation]}>
-              <Text style={[{ color: colors.shadow }]}>
+              <Text style={[styles.panelText, { color: colors.hourListText }]}>
                 {t('latestObservation')}
               </Text>
               <Text
                 style={[
                   styles.bold,
                   styles.justifyStart,
-                  { color: colors.shadow },
+                  { color: colors.hourListText },
                 ]}>
-                {moment(data[data.length - 1].epochtime * 1000).format(
-                  `dd D.M. [${t('at')}] HH:mm`
-                )}
+                {latestObservationTime
+                  ? capitalize(latestObservationTime)
+                  : '-'}
               </Text>
             </View>
             <TouchableOpacity
               style={styles.bottomSheetButton}
               onPress={() => weatherInfoSheetRef.current.open()}>
-              <Icon name="info" color={colors.shadow} height={24} width={24} />
+              <Icon
+                name="info"
+                color={colors.primaryText}
+                height={24}
+                width={24}
+              />
             </TouchableOpacity>
           </View>
           <View style={styles.observationRow}>
-            <View style={styles.observationPadding}>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+            <View>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.temperature')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.dewPoint')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.precipitation1h')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.windSpeedMS')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.windDirection')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.windGust')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.pressure')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.humidity')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.visibility')}
               </Text>
-              <Text style={[styles.bold, { color: colors.shadow }]}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
                 {t('measurements.totalCloudCover')}
               </Text>
             </View>
-
-            <View>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].temperature?.toFixed(1)} °C
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].dewpoint?.toFixed(1)} °C
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].precipitation1h != null
-                  ? data[data.length - 1].precipitation1h
-                  : '0.0'}{' '}
-                mm
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].windspeedms} m/s
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {t(`winddirection.${data[data.length - 1].windcompass8}`)} (
-                {data[0].winddirection}
-                °)
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].windgust} m/s
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].pressure} hPa
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {data[data.length - 1].humidity} %
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {Math.round(data[data.length - 1].visibility! / 1000)} km
-              </Text>
-              <Text style={[styles.panelText, { color: colors.shadow }]}>
-                {t(`cloudcover.${data[data.length - 1].totalcloudcover}`)} (
-                {data[data.length - 1].totalcloudcover}
-                /8)
-              </Text>
+            <View style={styles.observationRow}>
+              <View>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(
+                    latestObservation,
+                    'temperature',
+                    '°C',
+                    1
+                  )}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(
+                    latestObservation,
+                    'dewpoint',
+                    '°C',
+                    1
+                  )}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(
+                    latestObservation,
+                    'ri_10min',
+                    'mm',
+                    1
+                  )}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(
+                    latestObservation,
+                    'windspeedms',
+                    'm/s'
+                  )}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {latestObservation.windcompass8
+                    ? t(`winddirection.${data[data.length - 1].windcompass8}`)
+                    : '-'}
+                  {latestObservation.winddirection
+                    ? ` (${data[data.length - 1].winddirection}°)`
+                    : ''}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(
+                    latestObservation,
+                    'windgust',
+                    'm/s'
+                  )}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(
+                    latestObservation,
+                    'pressure',
+                    'hPa'
+                  )}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(latestObservation, 'humidity', '%')}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(
+                    latestObservation,
+                    'visibility',
+                    'km',
+                    0,
+                    1000
+                  )}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {latestObservation.totalcloudcover !== null &&
+                  latestObservation.totalcloudcover !== undefined
+                    ? `${t(
+                        `cloudcover.${latestObservation.totalcloudcover}`
+                      )} (${latestObservation.totalcloudcover}/8)`
+                    : '-'}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -140,8 +242,8 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
 
 const styles = StyleSheet.create({
   bold: {
+    fontSize: 16,
     fontFamily: 'Roboto-Bold',
-    paddingBottom: 2,
   },
   bottomSheetButton: {
     padding: 10,
@@ -151,21 +253,28 @@ const styles = StyleSheet.create({
   },
   latestObservation: {
     flexDirection: 'column',
-    paddingBottom: 5,
-  },
-  observationPadding: {
-    paddingRight: 100,
+    height: 40,
+    marginBottom: 16,
   },
   observationRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    justifyContent: 'center',
     flex: 1,
-    paddingBottom: 1,
+  },
+  panelMeasurement: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
+    marginBottom: 8,
+  },
+  panelValue: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+    marginBottom: 8,
   },
   panelText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Roboto-Regular',
-    paddingBottom: 2,
   },
   row: {
     flexDirection: 'row',

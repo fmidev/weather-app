@@ -3,6 +3,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { TFunction } from 'react-i18next';
 
 import { Location } from '@store/location/types';
+import { TimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import {
   RAIN_1,
@@ -92,4 +93,22 @@ export const toStringWithDecimal = (
   if (Number.isNaN(input) || input === 0 || !input) return `0${separator}0`;
   if (Number.isInteger(input)) return `${input}${separator}0`;
   return input.toString().replace('.', separator);
+};
+
+export const getObservationCellValue = (
+  item: TimeStepData,
+  param: keyof TimeStepData,
+  unit: string,
+  decimal?: number,
+  divider?: number
+): string => {
+  const divideWith = divider || 1;
+  if (!item || !param) return '-';
+  if (item[param] === null || item[param] === undefined) return '-';
+  if (item[param] !== null && item[param] !== undefined)
+    return `${(Number(item[param]) / divideWith)
+      .toFixed(decimal || 0)
+      .toString()
+      .replace('.', ',')} ${unit}`;
+  return '-';
 };

@@ -127,6 +127,7 @@
     "list": "List",
     "chart": "Chart",
     "time": "Time",
+    "at": "at",
     "measurements": {
       "temperature": "Temperature",
       "dewPoint": "Dewpoint",
