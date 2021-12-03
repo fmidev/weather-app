@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   TouchableOpacity,
-  StyleProp,
   View,
-  ViewStyle,
   StyleSheet,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
@@ -16,16 +16,24 @@ type CloseButtonProps = {
   onPress: () => void;
   accessibilityLabel: string;
   style?: StyleProp<ViewStyle>;
+  backgroundColor?: string;
 };
 
 const CloseButton: React.FC<CloseButtonProps> = ({
   onPress,
   accessibilityLabel,
+  backgroundColor,
+  style,
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
   return (
-    <View style={[styles.button, { backgroundColor: colors.inputBackground }]}>
+    <View
+      style={[
+        style,
+        styles.button,
+        { backgroundColor: backgroundColor || colors.inputBackground },
+      ]}>
       <TouchableOpacity
         onPress={onPress}
         accessibilityLabel={accessibilityLabel}>
