@@ -18,9 +18,12 @@ import FeelsLikeColder from '@assets/images/icons/feels-like-colder.svg';
 import FeelsLikeWarmer from '@assets/images/icons/feels-like-warmer.svg';
 import FeelsLike from '@assets/images/icons/feels-like.svg';
 import Gust from '@assets/images/icons/gust.svg';
-import InfoDeleteLocation from '@assets/images/icons/info-delete-location.svg';
-import InfoLocate from '@assets/images/icons/info-locate.svg';
-import InfoSaveLocation from '@assets/images/icons/info-save-location.svg';
+import InfoDeleteLocationDark from '@assets/images/icons/info-delete-location-dark.svg';
+import InfoLocateDark from '@assets/images/icons/info-locate-dark.svg';
+import InfoSaveLocationDark from '@assets/images/icons/info-save-location-dark.svg';
+import InfoDeleteLocationLight from '@assets/images/icons/info-delete-location-light.svg';
+import InfoLocateLight from '@assets/images/icons/info-locate-light.svg';
+import InfoSaveLocationLight from '@assets/images/icons/info-save-location-light.svg';
 import Info from '@assets/images/icons/info.svg';
 import Layers from '@assets/images/icons/layers.svg';
 import Locate from '@assets/images/icons/locate.svg';
@@ -125,12 +128,18 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <FeelsLike {...props} />;
     case 'gust':
       return <Gust {...props} />;
-    case 'info-delete-location':
-      return <InfoDeleteLocation {...props} />;
-    case 'info-locate':
-      return <InfoLocate {...props} />;
-    case 'info-save-location':
-      return <InfoSaveLocation {...props} />;
+    case 'info-delete-location-dark':
+      return <InfoDeleteLocationDark {...props} />;
+    case 'info-locate-dark':
+      return <InfoLocateDark {...props} />;
+    case 'info-save-location-dark':
+      return <InfoSaveLocationDark {...props} />;
+    case 'info-delete-location-light':
+      return <InfoDeleteLocationLight {...props} />;
+    case 'info-locate-light':
+      return <InfoLocateLight {...props} />;
+    case 'info-save-location-light':
+      return <InfoSaveLocationLight {...props} />;
     case 'info':
       return <Info {...props} />;
     case 'layers':

@@ -14,6 +14,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
+import CloseButton from '@components/common/CloseButton';
 
 import { MapStackParamList, WeatherStackParamList } from '@navigators/Types';
 
@@ -139,8 +140,18 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           onChangeText={(text) => setValue(text)}
           underlineColorAndroid="transparent"
         />
+        {value.length > 0 && (
+          <CloseButton
+            style={styles.closeButton}
+            backgroundColor={colors.inputButtonBackground}
+            accessibilityLabel="clear search"
+            onPress={() => setValue('')}
+          />
+        )}
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
         {search.length === 0 && (
           <View style={styles.locateRow}>
             <Text style={[styles.title, { color: colors.text }]}>
@@ -253,6 +264,9 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     marginTop: 12,
     height: 44,
+  },
+  closeButton: {
+    marginLeft: 11,
   },
 });
 

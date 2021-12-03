@@ -48,7 +48,7 @@ const AreaList: React.FC<AreaListProps> = ({
           { borderBottomColor: colors.border },
         ]}>
         <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
-        <Text style={[styles.title, { color: colors.secondaryText }]}>
+        <Text style={[styles.regular, { color: colors.hourListText }]}>
           {t('remember')}
         </Text>
       </View>
@@ -124,6 +124,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
+  },
+  regular: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
   listItem: {
     flexDirection: 'row',

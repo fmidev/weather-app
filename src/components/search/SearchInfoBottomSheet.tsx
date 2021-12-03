@@ -19,7 +19,7 @@ type SearchInfoSheetProps = {
 
 const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('searchScreen');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
 
   return (
     <View style={styles.sheetListContainer}>
@@ -70,13 +70,23 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
             </Text>
           </View>
           <View style={styles.largeIconContainer}>
-            <Icon name="info-save-location" />
+            <Icon
+              name={
+                dark ? 'info-save-location-dark' : 'info-save-location-light'
+              }
+            />
           </View>
           <Text style={[styles.text, { color: colors.hourListText }]}>
             {t('infoSheet.saveHint')}
           </Text>
           <View style={styles.largeIconContainer}>
-            <Icon name="info-delete-location" />
+            <Icon
+              name={
+                dark
+                  ? 'info-delete-location-dark'
+                  : 'info-delete-location-light'
+              }
+            />
           </View>
           <Text style={[styles.text, { color: colors.hourListText }]}>
             {t('infoSheet.deleteHint')}
@@ -98,7 +108,7 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
             </Text>
           </View>
           <View style={styles.largeIconContainer}>
-            <Icon name="info-locate" />
+            <Icon name={dark ? 'info-locate-dark' : 'info-locate-light'} />
           </View>
           <Text style={[styles.text, { color: colors.hourListText }]}>
             {t('infoSheet.locateHint')}
