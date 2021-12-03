@@ -35,6 +35,9 @@ export const chartYDomain = (
   if (chartType === 'wind') {
     return { y: [0, max > 15 ? Math.ceil((max + 1) / 5) * 5 : 16] };
   }
+  if (chartType === 'cloud') {
+    return { y: [0, Math.ceil((max + 1) / 500) * 500] };
+  }
 
   return {
     y: [

@@ -30,12 +30,13 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
 
-  const Line = () => (
+  type LineProps = { color?: string };
+  const Line = ({ color = colors.primaryText }: LineProps) => (
     <View
       style={[
         styles.legendLine,
         {
-          backgroundColor: colors.primaryText,
+          backgroundColor: color,
         },
       ]}
     />
@@ -96,14 +97,14 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
       {chartType === 'temperature' && (
         <>
           <View style={styles.legendRow}>
-            <Line />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Line color={colors.chartPrimaryLine} />
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:temperature')} (°C)
             </Text>
           </View>
           <View style={styles.legendRow}>
             <DashLine />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t(`weather:charts:${observation ? 'dewpoint' : 'feelsLike'}`)}{' '}
               (°C)
             </Text>
@@ -116,7 +117,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={RAIN_1} />
             <Bar color={RAIN_2} />
             <Bar color={TRANSPARENT} />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationLight')}
             </Text>
           </View>
@@ -124,7 +125,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={RAIN_3} />
             <Bar color={RAIN_4} />
             <Bar color={RAIN_5} />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationModerate')}
             </Text>
           </View>
@@ -132,7 +133,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={RAIN_6} />
             <Bar color={RAIN_7} />
             <Bar color={TRANSPARENT} />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationHeavy')}
             </Text>
           </View>
@@ -142,19 +143,19 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         <>
           <View style={styles.legendRow}>
             <Line />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:windSpeed')} (m/s)
             </Text>
           </View>
           <View style={styles.legendRow}>
             <DashLine />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:windGust')} (m/s)
             </Text>
           </View>
           <View style={styles.legendRow}>
             <Arrow />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:windDirection')}
             </Text>
           </View>
@@ -164,7 +165,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         <>
           <View style={styles.legendRow}>
             <Line />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:cloud')} (m)
             </Text>
           </View>
@@ -174,7 +175,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         <>
           <View style={styles.legendRow}>
             <Line />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:pressure')} (hpa)
             </Text>
           </View>
@@ -184,7 +185,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         <>
           <View style={styles.legendRow}>
             <Line />
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:humidity')} (%)
             </Text>
           </View>
@@ -196,7 +197,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <View style={styles.rowFirstHalf}>
               <DashLine />
             </View>
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:visibility')} (m)
             </Text>
           </View>
@@ -204,52 +205,52 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <View style={styles.rowFirstHalf}>
               <Bar color={colors.primaryText} />
             </View>
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:totalcloudcover')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
             <Text
-              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
               0/8 - 1/8
             </Text>
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:cloudCover01')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
             <Text
-              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
               2/8 - 4/8
             </Text>
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:cloudCover24')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
             <Text
-              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
               3/8 - 6/8
             </Text>
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:cloudCover36')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
             <Text
-              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
               5/8 - 7/8
             </Text>
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:cloudCover57')}
             </Text>
           </View>
           <View style={styles.legendRowNoMargin}>
             <Text
-              style={[styles.rowFirstHalfText, { color: colors.primaryText }]}>
+              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
               7/8 - 8/8
             </Text>
-            <Text style={[styles.legendText, { color: colors.primaryText }]}>
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:cloudCover78')}
             </Text>
           </View>

@@ -8,6 +8,7 @@ export const WHITE_TRANSPARENT = 'rgba(255,255,255,0.0)';
 export const TRANSPARENT = 'transparent';
 
 export const BLACK = '#000000';
+export const GRAY_8 = '#E6E6E6';
 export const GRAY_7 = '#121212';
 export const GRAY_6 = '#1C1C1E';
 export const GRAY_5 = '#2C2C2E';
@@ -42,6 +43,8 @@ export const RAIN_5 = '#FFCD15';
 export const RAIN_6 = '#FF503D';
 export const RAIN_7 = '#D41B0E';
 
+export const CHART_BLUE = '#7594EB';
+
 export type CustomTheme = {
   dark: boolean;
   colors: {
@@ -66,7 +69,10 @@ export type CustomTheme = {
     cardShadow: string;
     warningsIconFill: string;
     selectedDayBackground: string;
+    chartPrimaryLine: string;
     chartSecondaryLine: string;
+    chartGrid: string;
+    chartGridDay: string;
     hourListText: string;
     secondaryBorder: string;
     tabBarInactive: string;

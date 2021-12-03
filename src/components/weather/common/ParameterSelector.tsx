@@ -117,6 +117,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
         style={[
           styles.text,
           parameter === item && styles.medium,
+          parameter === item && styles.selectedText,
           {
             color:
               parameter === item ? colors.primaryText : colors.hourListText,
@@ -234,6 +235,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontFamily: 'Roboto-Regular',
+  },
+  selectedText: {
+    fontFamily: 'Roboto-Bold',
   },
   medium: {
     fontFamily: 'Roboto-Medium',

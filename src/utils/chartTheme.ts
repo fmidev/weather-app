@@ -72,7 +72,7 @@ export default {
       axis: {
         fill: 'transparent',
         stroke: border,
-        strokeWidth: 2,
+        strokeWidth: 1,
         strokeLinecap,
         strokeLinejoin,
       },

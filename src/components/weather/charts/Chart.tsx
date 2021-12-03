@@ -5,7 +5,7 @@ import { VictoryChart, VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme, GRAY_2 } from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 
 import chartTheme from '@utils/chartTheme';
 import { Config } from '@config';
@@ -60,15 +60,13 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
     return null;
   }
 
-  const stepLength = 20;
+  const tickInterval = 3;
+  const stepLength = (15 / tickInterval) * 3;
 
   const chartWidth =
     observation && config.observation.timePeriod
       ? config.observation.timePeriod * stepLength
       : data.length * stepLength;
-
-  const tickInterval = 3;
-
   const chartSettings: ChartSettings = {
     precipitation: {
       params: ['precipitation1h'],
@@ -154,7 +152,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
               domain={yDomain}
               style={{
                 tickLabels: {
-                  fill: colors.primaryText,
+                  fill: colors.hourListText,
                 },
               }}
             />
@@ -163,7 +161,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
               x={40}
               y={20}
               textAnchor="end"
-              style={{ fill: colors.primaryText }}
+              style={{ fill: colors.hourListText }}
             />
           </VictoryChart>
         </View>
@@ -194,12 +192,14 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
               style={{
                 grid: {
                   stroke: ({ tick }) =>
-                    moment(tick).hour() === 0 ? GRAY_2 : '#E6E6E6',
+                    moment(tick).hour() === 0
+                      ? colors.chartGridDay
+                      : colors.chartGrid,
                   strokeDasharray: ({ tick }) =>
                     moment(tick).hour() === 0 ? 3 : 0,
                 },
                 tickLabels: {
-                  fill: colors.primaryText,
+                  fill: colors.hourListText,
                   fontWeight: ({ tick }) =>
                     moment(tick).hour() === 0 ? 'bold' : 'normal',
                 },
@@ -211,6 +211,14 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
               crossAxis={false}
               tickFormat={() => ''}
               domain={yDomain}
+              style={{
+                axis: {
+                  stroke: colors.chartGrid,
+                },
+                grid: {
+                  stroke: colors.chartGrid,
+                },
+              }}
             />
             {chartType === 'visCloud' && (
               <VictoryAxis
@@ -221,8 +229,11 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
                 tickFormat={() => ''}
                 tickValues={[15000, 30000, 45000, 60000]}
                 style={{
-                  tickLabels: {
-                    fill: colors.primaryText,
+                  axis: {
+                    stroke: colors.chartGrid,
+                  },
+                  grid: {
+                    stroke: colors.chartGrid,
                   },
                 }}
               />
@@ -237,7 +248,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
         </ScrollView>
         {chartType === 'visCloud' && (
           <View style={styles.yAxisContainer}>
-            <VictoryChart height={300} width={50}>
+            <VictoryChart height={300} width={45}>
               <VictoryAxis
                 dependentAxis
                 crossAxis={false}
@@ -248,7 +259,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
                 domain={yDomain}
                 style={{
                   tickLabels: {
-                    fill: colors.primaryText,
+                    fill: colors.hourListText,
                   },
                 }}
               />
