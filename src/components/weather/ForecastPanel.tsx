@@ -73,7 +73,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
-  const [dayOpenIndexes, setDayOpenIndexes] = useState<number[]>([]);
+  const [dayOpenIndexes, setDayOpenIndexes] = useState<number[]>([0]);
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
