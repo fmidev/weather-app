@@ -125,7 +125,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableOpacity activeOpacity={1}>
           <View style={styles.descriptionContainer}>
-            <Text style={(styles.title, { color: colors.hourListText })}>
+            <Text style={[styles.text, { color: colors.hourListText }]}>
               {t('paramsBottomSheet.subTitle')}
             </Text>
           </View>

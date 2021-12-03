@@ -310,6 +310,11 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               </View>
             );
           }
+
+          const toDisplay =
+            item[param] !== null && item[param] !== undefined
+              ? item[param]
+              : '-';
           return (
             <View
               key={i}
@@ -320,7 +325,11 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   : styles.hourBlock
               }>
               <Text style={[styles.hourText, { color: colors.hourListText }]}>
-                {item[param]}
+                {param === constants.PRECIPITATION_1H &&
+                toDisplay >= 0 &&
+                typeof toDisplay === 'number'
+                  ? `${toDisplay.toFixed(1)}`.replace('.', ',')
+                  : toDisplay}
               </Text>
             </View>
           );

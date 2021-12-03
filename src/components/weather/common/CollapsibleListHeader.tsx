@@ -113,12 +113,20 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
         </View>
         <View
           style={[styles.iconContainer, { borderLeftColor: colors.border }]}>
-          <Icon
-            width={24}
-            height={24}
-            name={open ? 'arrow-up' : 'arrow-down'}
-            style={{ color: colors.primaryText }}
-          />
+          <View
+            style={[
+              styles.iconOutline,
+              {
+                backgroundColor: colors.inputButtonBackground,
+              },
+            ]}>
+            <Icon
+              width={24}
+              height={24}
+              name={open ? 'arrow-up' : 'arrow-down'}
+              style={{ color: colors.primaryText }}
+            />
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -170,6 +178,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     borderLeftWidth: 1,
     height: '100%',
+    justifyContent: 'center',
+  },
+  iconOutline: {
+    width: 24,
+    height: 24,
+    borderRadius: 20,
+    padding: 0,
+    alignItems: 'center',
     justifyContent: 'center',
   },
   withMarginRight: {
