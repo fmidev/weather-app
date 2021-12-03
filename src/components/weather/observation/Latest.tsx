@@ -10,6 +10,7 @@ import { TimeStepData } from '@store/observation/types';
 import { getObservationCellValue } from '@utils/helpers';
 
 import Icon from '@components/common/Icon';
+import { capitalize } from '@utils/chart';
 import WeatherInfoBottomSheet from '../sheets/WeatherInfoBottomSheet';
 
 type LatestProps = {
@@ -22,7 +23,11 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   const latestObservation = data && data.length > 0 && data[data.length - 1];
-
+  const latestObservationTime =
+    latestObservation &&
+    moment(latestObservation.epochtime * 1000)
+      .locale(locale)
+      .format(`dd D.M. [${t('at')}] HH:mm`);
   return (
     <>
       {!!latestObservation && (
@@ -38,9 +43,9 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
                   styles.justifyStart,
                   { color: colors.hourListText },
                 ]}>
-                {moment(data[data.length - 1].epochtime * 1000)
-                  .locale(locale)
-                  .format(`dd D.M. [${t('at')}] HH:mm`)}
+                {latestObservationTime
+                  ? capitalize(latestObservationTime)
+                  : '-'}
               </Text>
             </View>
             <TouchableOpacity
@@ -151,9 +156,9 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
                   style={[styles.panelValue, { color: colors.hourListText }]}>
                   {getObservationCellValue(
                     latestObservation,
-                    'precipitation1h',
+                    'ri_10min',
                     'mm',
-                    0
+                    1
                   )}
                 </Text>
                 <Text
@@ -256,7 +261,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     flex: 1,
-    marginBottom: 24,
   },
   panelMeasurement: {
     fontSize: 16,

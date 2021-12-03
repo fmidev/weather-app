@@ -127,7 +127,7 @@
     "list": "Lista",
     "chart": "Graafi",
     "time": "Aika",
-    "at": "",
+    "at": "klo",
     "measurements": {
       "temperature": "Lämpötila",
       "dewPoint": "Kastepiste",
