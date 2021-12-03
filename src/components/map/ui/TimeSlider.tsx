@@ -217,7 +217,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     setIsAnimating(true);
     interval = setInterval(() => {
       handleSetScrollIndex();
-    }, 50);
+    }, (80 / sliderStep) * 15);
   };
 
   const clear = () => {
