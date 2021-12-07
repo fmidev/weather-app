@@ -1,6 +1,11 @@
 import React, { useRef, useState } from 'react';
 
-import { View, ScrollView, StyleSheet } from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import { VictoryChart, VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { CustomTheme } from '@utils/colors';
 
 import chartTheme from '@utils/chartTheme';
-import { Config } from '@config';
 import moment from 'moment';
 
 import {
@@ -53,7 +57,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
   >([true, false]);
   const { colors } = useTheme() as CustomTheme;
   const { i18n } = useTranslation();
-  const config = Config.get('weather');
+  const { width } = useWindowDimensions();
   moment.locale(i18n.language);
 
   if (!data || data.length === 0) {
@@ -63,10 +67,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
   const tickInterval = 3;
   const stepLength = (15 / tickInterval) * 3;
 
-  const chartWidth =
-    observation && config.observation.timePeriod
-      ? config.observation.timePeriod * stepLength
-      : data.length * stepLength;
+  const chartWidth = observation ? width - 100 : data.length * stepLength;
   const chartSettings: ChartSettings = {
     precipitation: {
       params: ['precipitation1h'],
