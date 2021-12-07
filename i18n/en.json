@@ -359,5 +359,11 @@
     "171": "$t(symbols.71)",
     "174": "$t(symbols.74)",
     "177": "$t(symbols.77)"
+  },
+  "warnings": {
+    "panelTitle": "Warnings on land",
+    "lastUpdated": "Last updated",
+    "viewAllWarnings": "See all warnings for Finland",
+    "placeholder": "This is a placeholder"
   }
 }
