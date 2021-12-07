@@ -168,7 +168,8 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
       const boundingBox84 = BoundingBox.find(
         (box: BoundingBox) => box.CRS === 'CRS:84'
       );
-      const { minx, miny, maxx, maxy } = boundingBox84;
+
+      const { minx, miny, maxx, maxy } = layerSrc.boundingBox || boundingBox84;
       const [numMinX, numMinY, numMaxX, numMaxY] = [
         Number(minx),
         Number(miny),
