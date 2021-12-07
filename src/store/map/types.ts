@@ -53,6 +53,7 @@ export interface Layer {
   bounds: { [key: string]: [number, number] } | undefined;
   start?: string;
   end?: string;
+  customParameters?: { [key: string]: number | string };
 }
 
 export interface MapOverlay {

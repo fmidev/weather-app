@@ -209,6 +209,7 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
         styles: '',
+        ...layerSrc.customParameters,
       });
 
       const overlayUrl = `${url}/wms?${query.toString()}`;

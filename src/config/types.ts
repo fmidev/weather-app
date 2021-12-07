@@ -32,6 +32,9 @@ export interface Layer {
     layer: string;
     type: 'observation' | 'forecast';
     boundingBox?: BoundingBox;
+    customParameters?: {
+      [name: string]: string | number;
+    };
   }[];
 
   times: Times;
