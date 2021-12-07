@@ -39,6 +39,12 @@ const defaultConfig: ConfigType = {
             source: 'sourceKey',
             layer: 'layerName',
             type: 'observation',
+             boundingBox: {
+              minx: -10.908,
+              miny: 51.113,
+              maxx: 37.162,
+              maxy: 72.002,
+            },
           },
         ],
         times: {

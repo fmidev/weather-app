@@ -14,6 +14,13 @@ type BaseTimes = {
   forecast?: number;
 };
 
+type BoundingBox = {
+  minx: number;
+  miny: number;
+  maxx: number;
+  maxy: number;
+};
+
 type Times = RequireAtLeastOne<BaseTimes, 'forecast' | 'observation'>;
 export interface Layer {
   id: string | number;
@@ -24,6 +31,7 @@ export interface Layer {
     source: string;
     layer: string;
     type: 'observation' | 'forecast';
+    boundingBox?: BoundingBox;
   }[];
 
   times: Times;
