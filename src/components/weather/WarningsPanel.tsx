@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import Icon from '@components/common/Icon';
 import { WHITE, GREEN, CustomTheme } from '@utils/colors';
@@ -17,6 +18,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   headers,
   onNavigate,
 }) => {
+  const { t } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
   return (
     <View
@@ -27,11 +29,17 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           shadowColor: colors.cardShadow,
         },
       ]}>
-      <PanelHeader title="Varoitukset Maa-alueilla" />
+      <PanelHeader title={t('panelTitle')} />
       <View style={styles.cardContainer}>
         <View style={styles.row}>
-          <Text style={[styles.cardText, { color: colors.primaryText }]}>
-            Tämä on placeholder
+          <Text
+            style={[
+              styles.cardText,
+              {
+                color: colors.primaryText,
+              },
+            ]}>
+            {t('placeholder')}
           </Text>
         </View>
         <View
@@ -112,7 +120,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                 styles.withMarginRight,
                 { color: colors.primaryText },
               ]}>
-              Katso koko Suomen varoitukset
+              {t('viewAllWarnings')}
             </Text>
             <Icon
               width={24}
@@ -151,7 +159,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
   },
   bold: {
     fontFamily: 'Roboto-Bold',

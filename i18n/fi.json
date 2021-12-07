@@ -360,5 +360,11 @@
     "171": "$t(symbols.71)",
     "174": "$t(symbols.74)",
     "177": "$t(symbols.77)"
+  },
+  "warnings": {
+    "panelTitle": "Varoitukset maa-alueilla",
+    "lastUpdated": "Päivitetty viimeksi",
+    "viewAllWarnings": "Katso koko Suomen varoitukset",
+    "placeholder": "Tämä on placeholder"
   }
 }

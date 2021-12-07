@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
   },
 });
 
