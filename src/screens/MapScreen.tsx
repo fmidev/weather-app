@@ -71,6 +71,17 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
 
+  const initialRegion = {
+    latitude: currentLocation.lat ?? INITIAL_REGION.latitude,
+    longitude: currentLocation.lon ?? INITIAL_REGION.longitude,
+    longitudeDelta: currentLocation
+      ? ANIMATE_ZOOM.longitudeDelta
+      : INITIAL_REGION.longitudeDelta,
+    latitudeDelta: currentLocation
+      ? ANIMATE_ZOOM.latitudeDelta
+      : INITIAL_REGION.latitudeDelta,
+  };
+
   useEffect(() => {
     updateOverlays();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,7 +153,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         style={styles.map}
         userInterfaceStyle={dark ? 'dark' : 'light'}
         customMapStyle={darkGoogleMapsStyle}
-        initialRegion={INITIAL_REGION}
+        initialRegion={initialRegion}
         rotateEnabled={false}
         onRegionChangeComplete={checkDistanceToLocation}>
         {overlay && <WMSOverlay overlay={overlay} />}
