@@ -137,7 +137,6 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               <Text
                 style={[
                   styles.forecastText,
-                  displayFormat === TABLE && styles.medium,
                   displayFormat === TABLE && styles.selectedText,
                   {
                     color:
@@ -168,7 +167,6 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               <Text
                 style={[
                   styles.forecastText,
-                  displayFormat === CHART && styles.medium,
                   displayFormat === CHART && styles.selectedText,
                   {
                     color:
@@ -310,9 +308,6 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontFamily: 'Roboto-Bold',
-  },
-  medium: {
-    fontFamily: 'Roboto-Medium',
   },
   panelContainer: {
     paddingVertical: 12,

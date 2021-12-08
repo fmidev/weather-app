@@ -77,5 +77,7 @@ export type CustomTheme = {
     secondaryBorder: string;
     tabBarInactive: string;
     tabBarActive: string;
+    timeSliderObservationText: string;
+    timeSliderTick: string;
   };
 };
