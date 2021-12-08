@@ -122,6 +122,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             open={false}
             title={title}
             accessibilityLabel=""
+            iconStart="map-marker"
           />
         </View>
         <Latest data={data} />
@@ -150,7 +151,6 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
               <Text
                 style={[
                   styles.observationText,
-                  styles.medium,
                   displayFormat === CHART && styles.selectedText,
                   {
                     color:
@@ -182,7 +182,6 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
               <Text
                 style={[
                   styles.observationText,
-                  styles.medium,
                   displayFormat === LIST && styles.selectedText,
                   {
                     color:
@@ -245,9 +244,6 @@ const styles = StyleSheet.create({
   },
   justifyStart: {
     justifyContent: 'flex-start',
-  },
-  medium: {
-    fontFamily: 'Roboto-Medium',
   },
   observationDropdown: {
     marginBottom: 10,

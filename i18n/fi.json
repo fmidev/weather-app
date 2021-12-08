@@ -238,12 +238,13 @@
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Sulje kartan selitteet",
       "weatherSymbolsTitle": "Säämerkit",
-      "rainRadarTitle": "Sadetutka",
-      "light": "Heikkoa",
-      "moderate": "Kohtalaista",
-      "strong": "Rankkaa",
+      "rainRadarTitle": "Sadetutkan selitykset",
+      "light": "heikkoa",
+      "moderate": "kohtalaista",
+      "strong": "rankkaa",
       "showMore": "Näytä lisää",
-      "showLess": "Näytä vähemmän"
+      "showLess": "Näytä vähemmän",
+      "rainRadarInfo": "Sadetutkan arvot mitataan tutkakaikuna. Heikko sade aiheuttaa erilaisen tukakaiun kuin rankka sade. Tulkitun sateen voimakkuus perustuu tutkakaiun voimakkuuteen tietyn ajanjakson aikana."
     }
   },
   "searchScreen": {

@@ -253,7 +253,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             style={[
               hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
               step !== STEP_60 ? styles.withBorderLeft : undefined,
-              { borderLeftColor: colors.secondaryBorder },
+              { borderLeftColor: colors.timeSliderTick },
             ]}
           />
         </View>
@@ -286,10 +286,10 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             styles.withBorderBottom,
             step !== STEP_60 ? styles.withBorderLeft : undefined,
             {
-              borderLeftColor: colors.secondaryBorder,
+              borderLeftColor: colors.timeSliderTick,
               borderBottomColor:
                 item <= observationEndUnix
-                  ? colors.secondaryBorder
+                  ? colors.timeSliderTick
                   : colors.primary,
             },
           ]}
@@ -368,7 +368,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                   color:
                     sliderTime > observationEndUnix
                       ? colors.primary
-                      : colors.hourListText,
+                      : colors.timeSliderObservationText,
                 },
               ]}>
               {sliderTime > observationEndUnix
@@ -399,7 +399,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                   borderBottomColor:
                     sliderTime > observationEndUnix
                       ? colors.primary
-                      : colors.secondaryBorder,
+                      : colors.timeSliderTick,
                 },
               ]}
             />

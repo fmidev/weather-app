@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
-import { SvgProps } from 'react-native-svg';
-
-import Icon from '@components/common/Icon';
 
 import CloseButton from '@components/common/CloseButton';
 
-import { symbolsLight, symbolsDark } from '@assets/images';
 import {
+  CustomTheme,
   RAIN_1,
   RAIN_2,
   RAIN_3,
@@ -30,29 +21,7 @@ type InfoBottomSheetProps = {
 };
 const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
-  const { colors, dark } = useTheme();
-  const [viewAll, setViewAll] = useState(false);
-
-  const symbols = dark ? symbolsDark : symbolsLight;
-
-  const symbolsArr = Object.entries(symbols).map(([key, value]) => ({
-    key,
-    ...value,
-  }));
-
-  const symbolRowRenderer = ({
-    item,
-  }: {
-    item: { key: string; day: React.FC<SvgProps>; night: React.FC<SvgProps> };
-  }) => (
-    <View style={styles.listRow}>
-      <View style={styles.image}>{item.day({ width: 40, height: 40 })}</View>
-      <Text style={[styles.text, { color: colors.text }]}>
-        {t(`symbols:${item.key}`)}
-      </Text>
-    </View>
-  );
-
+  const { colors } = useTheme() as CustomTheme;
   return (
     <View style={styles.sheetListContainer}>
       <View style={styles.closeButtonContainer}>
@@ -61,63 +30,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
           accessibilityLabel={t('map:infoBottomSheet:closeAccessibilityLabel')}
         />
       </View>
-      <View style={styles.sheetTitle}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          {t('map:infoBottomSheet:weatherSymbolsTitle')}
-        </Text>
-      </View>
-      <View
-        style={[
-          styles.rowWrapper,
-          styles.withBorderBottom,
-          { borderBottomColor: colors.border },
-        ]}>
-        <FlatList
-          style={styles.list}
-          // TODO: sort by real weather observations and then slice
-          data={!viewAll ? symbolsArr.slice(0, 3) : symbolsArr}
-          keyExtractor={({ key }) => key}
-          renderItem={symbolRowRenderer}
-          showsVerticalScrollIndicator={false}
-        />
-        <TouchableOpacity onPress={() => setViewAll(!viewAll)}>
-          {viewAll ? (
-            <View style={[styles.row, styles.showMoreText]}>
-              <Text
-                style={[
-                  styles.title,
-                  styles.showMoreText,
-                  { color: colors.text },
-                ]}>
-                {t('map:infoBottomSheet:showLess')}
-              </Text>
-              <Icon
-                name="arrow-up"
-                style={{ color: colors.text }}
-                width={22}
-                height={22}
-              />
-            </View>
-          ) : (
-            <View style={[styles.row, styles.showMoreText]}>
-              <Text
-                style={[
-                  styles.title,
-                  styles.showMoreText,
-                  { color: colors.text },
-                ]}>
-                {t('map:infoBottomSheet:showMore')}
-              </Text>
-              <Icon
-                name="arrow-down"
-                style={{ color: colors.text }}
-                width={22}
-                height={22}
-              />
-            </View>
-          )}
-        </TouchableOpacity>
-      </View>
+
       <View style={styles.sheetTitle}>
         <Text style={[styles.title, { color: colors.text }]}>
           {t('map:infoBottomSheet:rainRadarTitle')}
@@ -131,25 +44,24 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
           <View style={[styles.rainBlock, { backgroundColor: RAIN_4 }]} />
           <View style={[styles.rainBlock, { backgroundColor: RAIN_5 }]} />
           <View style={[styles.rainBlock, { backgroundColor: RAIN_6 }]} />
-          <View
-            style={[
-              styles.rainBlock,
-              styles.lastBlock,
-              { backgroundColor: RAIN_7 },
-            ]}
-          />
+          <View style={[styles.rainBlock, { backgroundColor: RAIN_7 }]} />
         </View>
         <View style={styles.sheetTitle}>
-          <Text style={[styles.rainTitle, { color: colors.text }]}>
+          <Text style={[styles.text, { color: colors.hourListText }]}>
             {t('map:infoBottomSheet:light')}
           </Text>
-          <Text style={[styles.rainTitle, { color: colors.text }]}>
+          <Text style={[styles.text, { color: colors.hourListText }]}>
             {t('map:infoBottomSheet:moderate')}
           </Text>
-          <Text style={[styles.rainTitle, { color: colors.text }]}>
+          <Text style={[styles.text, { color: colors.hourListText }]}>
             {t('map:infoBottomSheet:strong')}
           </Text>
         </View>
+      </View>
+      <View>
+        <Text style={[styles.text, { color: colors.hourListText }]}>
+          {t('infoBottomSheet.rainRadarInfo')}
+        </Text>
       </View>
     </View>
   );
@@ -160,15 +72,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: -10,
     paddingHorizontal: 20,
-  },
-  list: {
-    paddingHorizontal: 12,
-    maxHeight: 460,
-  },
-  listRow: {
-    flexDirection: 'row',
-    paddingBottom: 10,
-    alignItems: 'center',
   },
   closeButtonContainer: {
     flexDirection: 'row',
@@ -185,27 +88,17 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     marginBottom: 14,
   },
-  withBorderBottom: {
-    borderBottomWidth: 1,
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  showMoreText: {
-    alignSelf: 'center',
-  },
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
-    maxWidth: '88%',
   },
   title: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
-  },
-  image: {
-    margin: 8,
   },
   rainContainer: {
     justifyContent: 'space-around',
@@ -214,15 +107,7 @@ const styles = StyleSheet.create({
   rainBlock: {
     flexGrow: 1,
     height: 8,
-    borderWidth: 1,
-    borderRightWidth: 0,
-  },
-  lastBlock: {
-    borderRightWidth: 1,
-  },
-  rainTitle: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    margin: 1,
   },
 });
 

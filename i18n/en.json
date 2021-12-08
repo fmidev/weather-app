@@ -237,12 +237,13 @@
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Close map legend",
       "weatherSymbolsTitle": "Weather symbols",
-      "rainRadarTitle": "Rain radar",
-      "light": "Light",
-      "moderate": "Moderate",
-      "strong": "Heavy",
+      "rainRadarTitle": "Rain radar info",
+      "light": "light",
+      "moderate": "moderate",
+      "strong": "heavy",
       "showMore": "Show more",
-      "showLess": "Show less"
+      "showLess": "Show less",
+      "rainRadarInfo": "Rain radar values are measured as a radar echo. Light rain causes a different echo than heavy rain. The intensity of the interpreted rain is based on the intensity of the radar echo over a period of time."
     }
   },
   "searchScreen": {

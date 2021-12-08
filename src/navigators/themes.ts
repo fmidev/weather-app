@@ -51,6 +51,8 @@ export const lightTheme = {
     secondaryBorder: GRAY_1,
     tabBarInactive: PRIMARY_BLUE,
     tabBarActive: SECONDARY_BLUE,
+    timeSliderObservationText: GRAY_3,
+    timeSliderTick: GRAY_2,
   },
 };
 
@@ -86,5 +88,7 @@ export const darkTheme = {
     secondaryBorder: GRAY_1,
     tabBarInactive: GRAY_1,
     tabBarActive: WHITE,
+    timeSliderObservationText: GRAY_1,
+    timeSliderTick: GRAY_1,
   },
 };
