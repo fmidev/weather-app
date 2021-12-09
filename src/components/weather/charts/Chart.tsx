@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   View,
@@ -41,7 +41,7 @@ import VisCloudChart from './VisCloudChart';
 import CloudHeightChart from './CloudHeightChart';
 
 type ChartProps = {
-  data: ChartData | false;
+  data: ChartData;
   chartType: ChartType;
   observation?: boolean;
 };
@@ -60,14 +60,25 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
   const { width } = useWindowDimensions();
   moment.locale(i18n.language);
 
-  if (!data || data.length === 0) {
-    return null;
-  }
-
   const tickInterval = 3;
   const stepLength = (15 / tickInterval) * 3;
 
   const chartWidth = observation ? width - 100 : data.length * stepLength;
+
+  useEffect(() => {
+    if (scrollIndex === 0) {
+      setTimeSelectorButtons([true, false]);
+    } else if (scrollIndex + width > chartWidth) {
+      setTimeSelectorButtons([false, true]);
+    } else {
+      setTimeSelectorButtons([false, false]);
+    }
+  }, [scrollIndex, chartWidth, width]);
+
+  if (data.length === 0) {
+    return null;
+  }
+
   const chartSettings: ChartSettings = {
     precipitation: {
       params: ['precipitation1h'],
@@ -127,17 +138,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
   const yLabelText = chartYLabelText(chartType);
 
   const onMomentumScrollEnd = ({ nativeEvent }: any) => {
-    const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
-    if (contentOffset.x === 0) {
-      setTimeSelectorButtons([true, false]);
-    } else if (
-      contentSize.width - (contentOffset.x + layoutMeasurement.width) ===
-      0
-    ) {
-      setTimeSelectorButtons([false, true]);
-    } else {
-      setTimeSelectorButtons([false, false]);
-    }
+    const { contentOffset } = nativeEvent;
     setScrollIndex(contentOffset.x);
   };
 
