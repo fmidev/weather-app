@@ -79,9 +79,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type Props = PropsFromRedux & {
-  initialColorScheme?: string | null;
-};
+type Props = PropsFromRedux & {};
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const MapStack = createStackNavigator();
@@ -92,7 +90,6 @@ const WarningsStack = createStackNavigator();
 const Navigator: React.FC<Props> = ({
   setCurrentLocation,
   setNavigationTab,
-  initialColorScheme,
   theme,
   initialTab,
 }) => {
@@ -101,14 +98,11 @@ const Navigator: React.FC<Props> = ({
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
-  const isDark = (): boolean =>
-    theme === 'dark' ||
-    // (theme === 'automatic' && initialColorScheme === 'dark');
-    (theme === 'automatic' &&
-      (initialColorScheme === 'dark' ||
-        Appearance.getColorScheme() === 'dark'));
+  const isDark = (currentTheme: string): boolean =>
+    currentTheme === 'dark' ||
+    (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
 
-  const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark());
+  const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
 
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
@@ -129,22 +123,9 @@ const Navigator: React.FC<Props> = ({
     });
   }, []);
 
-  useEffect(() => {
-    AppState.addEventListener('change', handleAppStateChange);
-    return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleAppStateChange = (state: AppStateStatus) => {
-    if (state === 'active' && theme === 'automatic') {
-      // getColorScheme() returns 'light' on iOS debug mode
-      if (Appearance.getColorScheme() === 'dark') {
-        setUseDarkTheme(true);
-      } else {
-        setUseDarkTheme(false);
-      }
+    if (state === 'active') {
+      setUseDarkTheme(isDark(theme));
     }
   };
 
@@ -156,10 +137,11 @@ const Navigator: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    const dark = isDark();
-    if (dark !== useDarkTheme) {
-      setUseDarkTheme(dark);
-    }
+    setUseDarkTheme(isDark(theme));
+    AppState.addEventListener('change', handleAppStateChange);
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 

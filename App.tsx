@@ -7,7 +7,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import ReduxThunk from 'redux-thunk';
 
 import '@i18n';
-import { Appearance } from 'react-native';
 import { ConfigProvider } from '@config';
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';
@@ -28,13 +27,11 @@ const App: React.FC = () => {
 
   const persistor = persistStore(store);
 
-  const initialColorScheme = Appearance.getColorScheme();
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ConfigProvider defaultConfig={defaultConfig}>
-          <TabNavigator initialColorScheme={initialColorScheme} />
+          <TabNavigator />
         </ConfigProvider>
       </PersistGate>
     </Provider>
