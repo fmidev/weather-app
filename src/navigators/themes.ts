@@ -38,7 +38,7 @@ export const lightTheme = {
     headerBackground: WHITE,
     timeStepBackground: LIGHT_BLUE,
     shadow: SHADOW_LIGHT,
-    screenBackground: GRAYISH_BLUE,
+    screenBackground: LIGHT_BLUE,
     cardHeader: PRIMARY_BLUE,
     cardShadow: GRAYISH_BLUE,
     warningsIconFill: PRIMARY_BLUE,

@@ -104,7 +104,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         styles.panelWrapper,
         {
           backgroundColor: colors.background,
-          shadowColor: colors.cardShadow,
+          shadowColor: colors.shadow,
         },
       ]}>
       <PanelHeader title={t('panelHeader')} />
@@ -305,6 +305,7 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 16,
     shadowOpacity: 1,
+    elevation: 3,
   },
   bold: {
     fontFamily: 'Roboto-Bold',
