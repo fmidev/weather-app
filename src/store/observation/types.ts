@@ -104,9 +104,9 @@ export type StationId = {
 };
 
 export interface ObservationState {
-  data: ObservationData | {};
+  data: ObservationData | undefined;
   stations: StationInfo[] | [];
-  stationId: StationId | {};
+  stationId: StationId | undefined;
   id: Id;
   loading: boolean;
   error: boolean | Error | string;

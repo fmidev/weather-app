@@ -3,35 +3,31 @@ import moment from 'moment';
 import 'moment/locale/fi';
 
 import { selectGeoid } from '@store/location/selector';
-import { ChartType } from '@components/weather/charts/types';
 import { State } from '../types';
-import { ForecastState, Error, WeatherData, TimestepData } from './types';
+import { ForecastState, TimestepData } from './types';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
 
-export const selectLoading = createSelector<State, ForecastState, boolean>(
+export const selectLoading = createSelector(
   selectForecastDomain,
   (forecast) => forecast.loading
 );
 
-export const selectError = createSelector<
-  State,
-  ForecastState,
-  Error | boolean | string
->(selectForecastDomain, (forecast) => forecast.error);
+export const selectError = createSelector(
+  selectForecastDomain,
+  (forecast) => forecast.error
+);
 
-const selectData = createSelector<State, ForecastState, WeatherData>(
+const selectData = createSelector(
   selectForecastDomain,
   (forecast) => forecast.data
 );
 
-export const selectForecast = createSelector<
-  State,
-  WeatherData,
-  number,
-  TimestepData[]
->([selectData, selectGeoid], (items, geoid) => items[geoid] || []);
+export const selectForecast = createSelector(
+  [selectData, selectGeoid],
+  (items, geoid) => (items ? items[geoid] : [])
+);
 
 export const selectForecastByDay = createSelector(
   selectForecast,
@@ -81,7 +77,11 @@ export const selectHeaderLevelForecast = createSelector(
 export const selectForecastLastUpdatedMoment = createSelector(
   selectForecast,
   (forecast) =>
-    forecast[0] && forecast[0].modtime && moment(forecast[0].modtime)
+    forecast &&
+    forecast.length > 0 &&
+    // forecast[0] &&
+    forecast[0].modtime &&
+    moment(forecast[0].modtime)
 );
 
 export const selectMinimumsAndMaximums = createSelector(
@@ -115,30 +115,22 @@ export const selectMinimumsAndMaximums = createSelector(
     };
   }
 );
-export const selectDisplayParams = createSelector<
-  State,
-  ForecastState,
-  [number, string][]
->(selectForecastDomain, (forecast) =>
-  forecast.displayParams.sort((a, b) => a[0] - b[0])
+export const selectDisplayParams = createSelector(
+  selectForecastDomain,
+  (forecast) => forecast.displayParams.sort((a, b) => a[0] - b[0])
 );
 
-export const selectUniqueSmartSymbols = createSelector<
-  State,
-  TimestepData[],
-  number[]
->(selectForecast, (forecast) => [
-  ...new Set(forecast.map((f) => f.smartSymbol)),
-]);
+export const selectUniqueSmartSymbols = createSelector(
+  selectForecast,
+  (forecast) => [...new Set(forecast.map((f) => f.smartSymbol))]
+);
 
-export const selectDisplayFormat = createSelector<
-  State,
-  ForecastState,
-  'table' | 'chart'
->(selectForecastDomain, (forecast) => forecast.displayFormat);
+export const selectDisplayFormat = createSelector(
+  selectForecastDomain,
+  (forecast) => forecast.displayFormat
+);
 
-export const selectChartDisplayParameter = createSelector<
-  State,
-  ForecastState,
-  ChartType | undefined
->(selectForecastDomain, (forecast) => forecast.chartDisplayParam);
+export const selectChartDisplayParameter = createSelector(
+  selectForecastDomain,
+  (forecast) => forecast.chartDisplayParam
+);

@@ -46,9 +46,12 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
         }
       }
     };
-    AppState.addEventListener('change', handleAppStateChange);
+    const appStateSubscriber = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
 
-    return () => AppState.removeEventListener('change', handleAppStateChange);
+    return () => appStateSubscriber.remove();
   }, [checkUpdates, enabled]);
 
   useEffect(() => {
@@ -64,6 +67,10 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
       )}
     </>
   );
+};
+
+ConfigProvider.defaultProps = {
+  timeout: undefined,
 };
 
 export default ConfigProvider;

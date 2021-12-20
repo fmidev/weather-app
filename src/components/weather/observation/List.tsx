@@ -115,191 +115,198 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
         {getHeaderLabels(parameter)}
       </View>
 
-      {data
-        .filter((ob) => ob.epochtime % 3600 === 0)
-        .map((timeStep, i) => {
-          const time = moment(timeStep.epochtime * 1000).locale(locale);
-          const timeToDisplay =
-            time.hour() === 0
-              ? time.format(`dd DD.MM. [${t('forecast:at')}] HH:mm`)
-              : time.format(`[${t('forecast:at')}] HH:mm`);
+      {data &&
+        data
+          .filter((ob) => ob.epochtime % 3600 === 0)
+          .map((timeStep, i) => {
+            const time = moment(timeStep.epochtime * 1000).locale(locale);
+            const timeToDisplay =
+              time.hour() === 0
+                ? time.format(`dd DD.MM. [${t('forecast:at')}] HH:mm`)
+                : time.format(`[${t('forecast:at')}] HH:mm`);
 
-          return (
-            <View key={timeStep.epochtime} style={[styles.row]}>
-              <View
-                style={[
-                  styles.row,
-                  styles.observationRow,
-                  {
-                    backgroundColor: i % 2 !== 0 ? GRAY_1_OPACITY : undefined,
-                  },
-                ]}>
-                <Text
+            return (
+              <View key={timeStep.epochtime} style={[styles.row]}>
+                <View
                   style={[
-                    styles.rowItem,
-                    styles.listText,
-                    styles.bold,
-                    { color: colors.hourListText },
+                    styles.row,
+                    styles.observationRow,
+                    {
+                      backgroundColor: i % 2 !== 0 ? GRAY_1_OPACITY : undefined,
+                    },
                   ]}>
-                  {capitalize(timeToDisplay)}
-                </Text>
-                {parameter === 'temperature' && (
-                  <View style={styles.row}>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(
-                        timeStep,
-                        'temperature',
-                        '°C',
-                        1
-                      )}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(timeStep, 'dewpoint', '°C', 1)}
-                    </Text>
-                  </View>
-                )}
-                {parameter === 'precipitation' && (
-                  <View style={styles.row}>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(
-                        timeStep,
-                        'precipitation1h',
-                        'mm',
-                        1
-                      )}
-                    </Text>
-                  </View>
-                )}
-                {parameter === 'wind' && (
-                  <View style={styles.row}>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(timeStep, 'windspeedms', 'm/s')}
-                    </Text>
-
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(timeStep, 'windgust', 'm/s')}
-                    </Text>
-                    <View style={styles.rowItem}>
-                      {timeStep.winddirection ? (
-                        <Icon
-                          name="wind-arrow"
-                          style={{
-                            color: colors.hourListText,
-                            transform: [
-                              {
-                                rotate: `${
-                                  timeStep.winddirection + 45 - 180
-                                }deg`,
-                              },
-                            ],
-                          }}
-                        />
-                      ) : (
-                        <Text style={[styles.listText, styles.rowItem]}>-</Text>
-                      )}
+                  <Text
+                    style={[
+                      styles.rowItem,
+                      styles.listText,
+                      styles.bold,
+                      { color: colors.hourListText },
+                    ]}>
+                    {capitalize(timeToDisplay)}
+                  </Text>
+                  {parameter === 'temperature' && (
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(
+                          timeStep,
+                          'temperature',
+                          '°C',
+                          1
+                        )}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(timeStep, 'dewpoint', '°C', 1)}
+                      </Text>
                     </View>
-                  </View>
-                )}
-                {parameter === 'pressure' && (
-                  <View style={styles.row}>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(timeStep, 'pressure', 'hPa')}
-                    </Text>
-                  </View>
-                )}
-                {parameter === 'humidity' && (
-                  <View style={styles.row}>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(timeStep, 'humidity', '%')}
-                    </Text>
-                  </View>
-                )}
-                {parameter === 'visCloud' && (
-                  <View style={styles.row}>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(
-                        timeStep,
-                        'visibility',
-                        'km',
-                        0,
-                        1000
-                      )}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {timeStep.totalcloudcover !== undefined &&
-                      timeStep.totalcloudcover !== null
-                        ? `${timeStep.totalcloudcover}/8`
-                        : '-'}
-                    </Text>
-                  </View>
-                )}
-                {parameter === 'cloud' && (
-                  <View style={styles.row}>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        { color: colors.hourListText },
-                      ]}>
-                      {getObservationCellValue(
-                        timeStep,
-                        'cloudheight',
-                        'km',
-                        1,
-                        1000
-                      )}
-                    </Text>
-                  </View>
-                )}
+                  )}
+                  {parameter === 'precipitation' && (
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(
+                          timeStep,
+                          'precipitation1h',
+                          'mm',
+                          1
+                        )}
+                      </Text>
+                    </View>
+                  )}
+                  {parameter === 'wind' && (
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(
+                          timeStep,
+                          'windspeedms',
+                          'm/s'
+                        )}
+                      </Text>
+
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(timeStep, 'windgust', 'm/s')}
+                      </Text>
+                      <View style={styles.rowItem}>
+                        {timeStep.winddirection ? (
+                          <Icon
+                            name="wind-arrow"
+                            style={{
+                              color: colors.hourListText,
+                              transform: [
+                                {
+                                  rotate: `${
+                                    timeStep.winddirection + 45 - 180
+                                  }deg`,
+                                },
+                              ],
+                            }}
+                          />
+                        ) : (
+                          <Text style={[styles.listText, styles.rowItem]}>
+                            -
+                          </Text>
+                        )}
+                      </View>
+                    </View>
+                  )}
+                  {parameter === 'pressure' && (
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(timeStep, 'pressure', 'hPa')}
+                      </Text>
+                    </View>
+                  )}
+                  {parameter === 'humidity' && (
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(timeStep, 'humidity', '%')}
+                      </Text>
+                    </View>
+                  )}
+                  {parameter === 'visCloud' && (
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(
+                          timeStep,
+                          'visibility',
+                          'km',
+                          0,
+                          1000
+                        )}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {timeStep.totalcloudcover !== undefined &&
+                        timeStep.totalcloudcover !== null
+                          ? `${timeStep.totalcloudcover}/8`
+                          : '-'}
+                      </Text>
+                    </View>
+                  )}
+                  {parameter === 'cloud' && (
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(
+                          timeStep,
+                          'cloudheight',
+                          'km',
+                          1,
+                          1000
+                        )}
+                      </Text>
+                    </View>
+                  )}
+                </View>
               </View>
-            </View>
-          );
-        })}
+            );
+          })}
     </View>
   );
 };

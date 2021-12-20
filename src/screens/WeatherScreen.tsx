@@ -102,16 +102,15 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     updateObservation();
   }, [location, updateForecast, updateObservation]);
 
-  const forecastByDay = forecast.reduce(
-    (acc: { [key: string]: any }, curr: TimestepData) => {
+  const forecastByDay =
+    forecast &&
+    forecast.reduce((acc: { [key: string]: any }, curr: TimestepData) => {
       const day = moment.unix(curr.epochtime).format('D.M.');
       if (acc[day]) {
         return { ...acc, [day]: acc[day].concat(curr) };
       }
       return { ...acc, [day]: [curr] };
-    },
-    {}
-  );
+    }, {});
 
   const headerLevelForecast: TimestepData[] =
     forecastByDay &&
@@ -125,10 +124,12 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         : weatherDataArr[weatherDataArr.length - 1];
     });
 
-  const warningsHeaders5Days = headerLevelForecast.slice(0, 5).map((day) => {
-    const dayMoment = moment.unix(day.epochtime);
-    return dayMoment.format('ddd D.M.');
-  });
+  const warningsHeaders5Days =
+    headerLevelForecast &&
+    headerLevelForecast.slice(0, 5).map((day) => {
+      const dayMoment = moment.unix(day.epochtime);
+      return dayMoment.format('ddd D.M.');
+    });
 
   return (
     <SafeAreaView>
