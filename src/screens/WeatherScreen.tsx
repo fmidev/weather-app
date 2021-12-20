@@ -134,6 +134,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     <SafeAreaView>
       <ScrollView
         style={[styles.container, { backgroundColor: colors.screenBackground }]}
+        contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}>
         <WarningsPanel
           headers={warningsHeaders5Days}
@@ -149,8 +150,11 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     minHeight: '100%',
-    paddingVertical: 12,
     paddingHorizontal: 12,
+  },
+  contentContainer: {
+    paddingTop: 12,
+    paddingBottom: 20,
   },
 });
 

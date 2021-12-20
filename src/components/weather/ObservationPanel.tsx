@@ -108,7 +108,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         styles.panelWrapper,
         {
           backgroundColor: colors.background,
-          shadowColor: colors.cardShadow,
+          shadowColor: colors.shadow,
         },
       ]}>
       <PanelHeader title={t('panelHeader')} />
@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 16,
     shadowOpacity: 1,
+    elevation: 3,
   },
   row: {
     flexDirection: 'row',

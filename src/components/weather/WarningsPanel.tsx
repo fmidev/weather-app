@@ -26,7 +26,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
         styles.cardWrapper,
         {
           backgroundColor: colors.background,
-          shadowColor: colors.cardShadow,
+          shadowColor: colors.shadow,
         },
       ]}>
       <PanelHeader title={t('panelTitle')} />
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 16,
     shadowOpacity: 1,
+    elevation: 3,
   },
   headerTitle: {
     fontSize: 16,
