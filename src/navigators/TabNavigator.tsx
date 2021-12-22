@@ -138,10 +138,12 @@ const Navigator: React.FC<Props> = ({
 
   useEffect(() => {
     setUseDarkTheme(isDark(theme));
-    AppState.addEventListener('change', handleAppStateChange);
-    return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
-    };
+    const appStateSubscriber = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
+    return () => appStateSubscriber.remove();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
