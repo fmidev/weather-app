@@ -32,8 +32,10 @@ const WindChart: React.FC<ChartDataProps> = ({
         }))
       : false;
 
-  const WindLabel = (asd: any) => {
-    const index = Number(asd.index);
+  const WindLabel = (datum: any) => {
+    const { index: dIndex, x: dX } = datum;
+
+    const index = Number(dIndex);
 
     const { x, y } = winddirection[index];
     const time = moment(x);
@@ -43,7 +45,7 @@ const WindChart: React.FC<ChartDataProps> = ({
     }
 
     return (
-      <View style={[styles.arrowStyle, { left: asd.x - 10 }]}>
+      <View style={[styles.arrowStyle, { left: dX - 10 }]}>
         <Icon
           name="wind-arrow"
           width={20}

@@ -69,6 +69,12 @@ const IconButton: React.FC<IconButtonProps> = ({
     </View>
   );
 
+IconButton.defaultProps = {
+  style: {},
+  iconSize: 24,
+  iconColor: undefined,
+};
+
 const styles = StyleSheet.create({
   button: {
     width: 48,

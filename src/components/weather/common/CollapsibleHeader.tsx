@@ -67,6 +67,10 @@ const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   );
 };
 
+CollapsibleHeader.defaultProps = {
+  iconStart: undefined,
+};
+
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',

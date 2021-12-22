@@ -283,6 +283,10 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
   );
 };
 
+Chart.defaultProps = {
+  observation: false,
+};
+
 const styles = StyleSheet.create({
   container: {},
   chartRowContainer: {

@@ -50,6 +50,12 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
     </TouchableOpacity>
   );
 };
+
+HeaderButton.defaultProps = {
+  title: undefined,
+  right: false,
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

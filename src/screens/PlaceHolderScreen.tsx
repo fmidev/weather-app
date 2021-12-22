@@ -43,6 +43,10 @@ const PlaceholderScreen: React.FC<Props> = ({
   );
 };
 
+PlaceholderScreen.defaultProps = {
+  showLocation: false,
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
