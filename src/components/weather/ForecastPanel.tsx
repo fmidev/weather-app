@@ -221,12 +221,12 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                 <CollapsibleListHeader
                   accessibilityLabel={
                     !dayOpenIndexes.includes(index)
-                      ? `${t(
-                          'hourListOpenAccessibilityLabel'
-                        )} ${stepMoment.locale(locale).format('ddd D.M.')}`
-                      : `${t(
-                          'hourListCloseAccessibilityLabel'
-                        )} ${stepMoment.locale(locale).format('ddd D.M.')}`
+                      ? `${t('hourListOpenAccessibilityLabel')} ${stepMoment
+                          .locale(locale)
+                          .format('ddd D.M.')}`
+                      : `${t('hourListCloseAccessibilityLabel')} ${stepMoment
+                          .locale(locale)
+                          .format('ddd D.M.')}`
                   }
                   onPress={() => {
                     if (dayOpenIndexes.includes(index)) {

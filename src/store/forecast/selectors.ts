@@ -34,15 +34,21 @@ export const selectForecastByDay = createSelector(
   (forecast) =>
     forecast &&
     forecast.length > 0 &&
-    forecast.reduce((acc: { [key: string]: any }, curr: TimestepData): {
-      [key: string]: TimestepData[];
-    } => {
-      const day = moment.unix(curr.epochtime).format('D.M.');
-      if (acc[day]) {
-        return { ...acc, [day]: acc[day].concat(curr) };
-      }
-      return { ...acc, [day]: [curr] };
-    }, {})
+    forecast.reduce(
+      (
+        acc: { [key: string]: any },
+        curr: TimestepData
+      ): {
+        [key: string]: TimestepData[];
+      } => {
+        const day = moment.unix(curr.epochtime).format('D.M.');
+        if (acc[day]) {
+          return { ...acc, [day]: acc[day].concat(curr) };
+        }
+        return { ...acc, [day]: [curr] };
+      },
+      {}
+    )
 );
 
 export const selectHeaderLevelForecast = createSelector(

@@ -15,12 +15,8 @@ const WindChart: React.FC<ChartDataProps> = ({
   width,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const {
-    windgust,
-    hourlymaximumgust,
-    windspeedms,
-    winddirection,
-  } = chartValues;
+  const { windgust, hourlymaximumgust, windspeedms, winddirection } =
+    chartValues;
 
   const gustParameter =
     windgust && windgust.length > 0 ? windgust : hourlymaximumgust;
