@@ -283,11 +283,4 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
   }
 };
 
-Icon.defaultProps = {
-  width: 24,
-  height: 24,
-  size: 24,
-  style: {},
-};
-
 export default Icon;

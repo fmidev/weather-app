@@ -45,11 +45,6 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   );
 };
 
-CloseButton.defaultProps = {
-  style: {},
-  backgroundColor: undefined,
-};
-
 const styles = StyleSheet.create({
   button: {
     width: 28,

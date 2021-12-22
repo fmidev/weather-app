@@ -58,10 +58,6 @@ const MapButton: React.FC<MapButtonProps> = ({
   );
 };
 
-MapButton.defaultProps = {
-  iconSize: 24,
-};
-
 const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',

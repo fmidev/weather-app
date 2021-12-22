@@ -111,12 +111,6 @@ const AreaList: React.FC<AreaListProps> = ({
     </View>
   );
 };
-
-AreaList.defaultProps = {
-  iconNameGetter: undefined,
-  iconName: undefined,
-};
-
 const styles = StyleSheet.create({
   listWrapper: {
     flexShrink: 1,

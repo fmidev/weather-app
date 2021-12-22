@@ -69,8 +69,4 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   );
 };
 
-ConfigProvider.defaultProps = {
-  timeout: undefined,
-};
-
 export default ConfigProvider;

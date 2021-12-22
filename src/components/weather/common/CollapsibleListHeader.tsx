@@ -133,13 +133,6 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   );
 };
 
-CollapsibleListHeader.defaultProps = {
-  maxTemp: undefined,
-  minTemp: undefined,
-  totalPrecipitation: undefined,
-  precipitationDay: false,
-};
-
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
