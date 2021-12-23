@@ -46,9 +46,12 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
         }
       }
     };
-    AppState.addEventListener('change', handleAppStateChange);
+    const appStateSubscriber = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
 
-    return () => AppState.removeEventListener('change', handleAppStateChange);
+    return () => appStateSubscriber.remove();
   }, [checkUpdates, enabled]);
 
   useEffect(() => {

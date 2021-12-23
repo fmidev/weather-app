@@ -3,8 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, StyleSheet, Platform } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp, useTheme, useIsFocused } from '@react-navigation/native';
+import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 
 import MapControls from '@components/map/ui/MapControls';
@@ -13,7 +12,6 @@ import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapMarker from '@components/map/layers/MapMarker';
 
-import { MapStackParamList } from '@navigators/types';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { selectDisplayLocation, selectOverlay } from '@store/map/selectors';
@@ -49,11 +47,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type MapScreenProps = PropsFromRedux & {
-  navigation: StackNavigationProp<MapStackParamList, 'Map'>;
-  route: RouteProp<MapStackParamList, 'Map'>;
-  id: number;
-};
+type MapScreenProps = PropsFromRedux & {};
 
 const MapScreen: React.FC<MapScreenProps> = ({
   currentLocation,

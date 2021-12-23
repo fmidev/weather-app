@@ -36,13 +36,9 @@ type ObservationStationListBottomSheetProps = PropsFromRedux & {
   onClose: () => void;
 };
 
-const ObservationStationListBottomSheet: React.FC<ObservationStationListBottomSheetProps> = ({
-  onClose,
-  dataId,
-  stationId,
-  setStationId,
-  stationList,
-}) => {
+const ObservationStationListBottomSheet: React.FC<
+  ObservationStationListBottomSheetProps
+> = ({ onClose, dataId, stationId, setStationId, stationList }) => {
   const { t } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
 

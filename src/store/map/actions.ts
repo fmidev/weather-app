@@ -12,29 +12,25 @@ import {
   UPDATE_ACTIVE_OVERLAY,
 } from './types';
 
-export const updateSliderTime = (time: number) => (
-  dispatch: Dispatch<MapActionTypes>
-) => {
-  dispatch({ type: UPDATE_SLIDER_TIME, time });
-};
+export const updateSliderTime =
+  (time: number) => (dispatch: Dispatch<MapActionTypes>) => {
+    dispatch({ type: UPDATE_SLIDER_TIME, time });
+  };
 
-export const updateSliderStep = (step: number) => (
-  dispatch: Dispatch<MapActionTypes>
-) => {
-  dispatch({ type: UPDATE_SLIDER_STEP, step });
-};
+export const updateSliderStep =
+  (step: number) => (dispatch: Dispatch<MapActionTypes>) => {
+    dispatch({ type: UPDATE_SLIDER_STEP, step });
+  };
 
-export const setAnimateToArea = (animate: boolean) => (
-  dispatch: Dispatch<MapActionTypes>
-) => {
-  dispatch({ type: ANIMATE_TO_AREA, animate });
-};
+export const setAnimateToArea =
+  (animate: boolean) => (dispatch: Dispatch<MapActionTypes>) => {
+    dispatch({ type: ANIMATE_TO_AREA, animate });
+  };
 
-export const updateMapLayers = (layers: MapLayers) => (
-  dispatch: Dispatch<MapActionTypes>
-) => {
-  dispatch({ type: UPDATE_MAP_LAYERS, layers });
-};
+export const updateMapLayers =
+  (layers: MapLayers) => (dispatch: Dispatch<MapActionTypes>) => {
+    dispatch({ type: UPDATE_MAP_LAYERS, layers });
+  };
 
 export const updateOverlays = () => (dispatch: Dispatch<MapActionTypes>) => {
   let overlays;
@@ -48,6 +44,6 @@ export const updateOverlays = () => (dispatch: Dispatch<MapActionTypes>) => {
     .catch((e) => console.error(e));
 };
 
-export const updateActiveOverlay = (id: number) => (
-  dispatch: Dispatch<MapActionTypes>
-) => dispatch({ type: UPDATE_ACTIVE_OVERLAY, activeId: id });
+export const updateActiveOverlay =
+  (id: number) => (dispatch: Dispatch<MapActionTypes>) =>
+    dispatch({ type: UPDATE_ACTIVE_OVERLAY, activeId: id });

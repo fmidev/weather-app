@@ -91,6 +91,7 @@ import WindArrow from '@assets/images/icons/wind-arrow.svg';
 import WindDark from '@assets/images/icons/wind-dark.svg';
 import WindLight from '@assets/images/icons/wind-light.svg';
 import Wind from '@assets/images/icons/wind.svg';
+import { SvgProps } from 'react-native-svg';
 
 type CustomIconProps = IconProps & {
   name: string;
@@ -103,180 +104,180 @@ type CustomIconProps = IconProps & {
 const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
   switch (name) {
     case 'arrow-back':
-      return <ArrowBack {...props} />;
+      return <ArrowBack {...(props as SvgProps)} />;
     case 'arrow-down':
-      return <ArrowDown {...props} />;
+      return <ArrowDown {...(props as SvgProps)} />;
     case 'arrow-forward':
-      return <ArrowForward {...props} />;
+      return <ArrowForward {...(props as SvgProps)} />;
     case 'arrow-left':
-      return <ArrowLeft {...props} />;
+      return <ArrowLeft {...(props as SvgProps)} />;
     case 'arrow-right':
-      return <ArrowRight {...props} />;
+      return <ArrowRight {...(props as SvgProps)} />;
     case 'arrow-up':
-      return <ArrowUp {...props} />;
+      return <ArrowUp {...(props as SvgProps)} />;
     case 'clock':
-      return <Clock {...props} />;
+      return <Clock {...(props as SvgProps)} />;
     case 'close':
-      return <Close {...props} />;
+      return <Close {...(props as SvgProps)} />;
     case 'dew-point':
-      return <DewPoint {...props} />;
+      return <DewPoint {...(props as SvgProps)} />;
     case 'feels-like-colder':
-      return <FeelsLikeColder {...props} />;
+      return <FeelsLikeColder {...(props as SvgProps)} />;
     case 'feels-like-warmer':
-      return <FeelsLikeWarmer {...props} />;
+      return <FeelsLikeWarmer {...(props as SvgProps)} />;
     case 'feels-like':
-      return <FeelsLike {...props} />;
+      return <FeelsLike {...(props as SvgProps)} />;
     case 'gust':
-      return <Gust {...props} />;
+      return <Gust {...(props as SvgProps)} />;
     case 'info-delete-location-dark':
-      return <InfoDeleteLocationDark {...props} />;
+      return <InfoDeleteLocationDark {...(props as SvgProps)} />;
     case 'info-locate-dark':
-      return <InfoLocateDark {...props} />;
+      return <InfoLocateDark {...(props as SvgProps)} />;
     case 'info-save-location-dark':
-      return <InfoSaveLocationDark {...props} />;
+      return <InfoSaveLocationDark {...(props as SvgProps)} />;
     case 'info-delete-location-light':
-      return <InfoDeleteLocationLight {...props} />;
+      return <InfoDeleteLocationLight {...(props as SvgProps)} />;
     case 'info-locate-light':
-      return <InfoLocateLight {...props} />;
+      return <InfoLocateLight {...(props as SvgProps)} />;
     case 'info-save-location-light':
-      return <InfoSaveLocationLight {...props} />;
+      return <InfoSaveLocationLight {...(props as SvgProps)} />;
     case 'info':
-      return <Info {...props} />;
+      return <Info {...(props as SvgProps)} />;
     case 'layers':
-      return <Layers {...props} />;
+      return <Layers {...(props as SvgProps)} />;
     case 'locate':
-      return <Locate {...props} />;
+      return <Locate {...(props as SvgProps)} />;
     case 'map-marker':
-      return <MapMarker {...props} />;
+      return <MapMarker {...(props as SvgProps)} />;
     case 'map':
-      return <Map {...props} />;
+      return <Map {...(props as SvgProps)} />;
     case 'menu':
-      return <Menu {...props} />;
+      return <Menu {...(props as SvgProps)} />;
     case 'mic':
-      return <Mic {...props} />;
+      return <Mic {...(props as SvgProps)} />;
     case 'midnight-sun':
-      return <MidnightSun {...props} />;
+      return <MidnightSun {...(props as SvgProps)} />;
     case 'minus':
-      return <Minus {...props} />;
+      return <Minus {...(props as SvgProps)} />;
     case 'open-in-new':
-      return <OpenInNew {...props} />;
+      return <OpenInNew {...(props as SvgProps)} />;
     case 'pause':
-      return <Pause {...props} />;
+      return <Pause {...(props as SvgProps)} />;
     case 'play':
-      return <Play {...props} />;
+      return <Play {...(props as SvgProps)} />;
     case 'plus':
-      return <Plus {...props} />;
+      return <Plus {...(props as SvgProps)} />;
     case 'polar-night':
-      return <PolarNight {...props} />;
+      return <PolarNight {...(props as SvgProps)} />;
     case 'precipitation':
-      return <Precipitation {...props} />;
+      return <Precipitation {...(props as SvgProps)} />;
     case 'radio-button-off':
-      return <RadioButtonOff {...props} />;
+      return <RadioButtonOff {...(props as SvgProps)} />;
     case 'radio-button-on':
-      return <RadioButtonOn {...props} />;
+      return <RadioButtonOn {...(props as SvgProps)} />;
     case 'rain-dark':
-      return <RainDark {...props} />;
+      return <RainDark {...(props as SvgProps)} />;
     case 'rain-light':
-      return <RainLight {...props} />;
+      return <RainLight {...(props as SvgProps)} />;
     case 'rain-white':
-      return <RainWhite {...props} />;
+      return <RainWhite {...(props as SvgProps)} />;
     case 'search':
-      return <Search {...props} />;
+      return <Search {...(props as SvgProps)} />;
     case 'settings':
-      return <Settings {...props} />;
+      return <Settings {...(props as SvgProps)} />;
     case 'snow':
-      return <Snow {...props} />;
+      return <Snow {...(props as SvgProps)} />;
     case 'star-selected':
-      return <StarSelected {...props} />;
+      return <StarSelected {...(props as SvgProps)} />;
     case 'star-unselected':
-      return <StarUnselected {...props} />;
+      return <StarUnselected {...(props as SvgProps)} />;
     case 'sunrise':
-      return <Sunrise {...props} />;
+      return <Sunrise {...(props as SvgProps)} />;
     case 'sunset':
-      return <Sunset {...props} />;
+      return <Sunset {...(props as SvgProps)} />;
     case 'temperature-dark':
-      return <TemperatureDark {...props} />;
+      return <TemperatureDark {...(props as SvgProps)} />;
     case 'temperature-light':
-      return <TemperatureLight {...props} />;
+      return <TemperatureLight {...(props as SvgProps)} />;
     case 'temperature-highest-dark':
-      return <TemperatureHighestDark {...props} />;
+      return <TemperatureHighestDark {...(props as SvgProps)} />;
     case 'temperature-highest-light':
-      return <TemperatureHighestLight {...props} />;
+      return <TemperatureHighestLight {...(props as SvgProps)} />;
     case 'temperature-lowest-dark':
-      return <TemperatureLowestDark {...props} />;
+      return <TemperatureLowestDark {...(props as SvgProps)} />;
     case 'temperature-lowest-light':
-      return <TemperatureLowestLight {...props} />;
+      return <TemperatureLowestLight {...(props as SvgProps)} />;
     case 'temperature':
-      return <Temperature {...props} />;
+      return <Temperature {...(props as SvgProps)} />;
     case 'thunder':
-      return <Thunder {...props} />;
+      return <Thunder {...(props as SvgProps)} />;
     case 'time':
-      return <Time {...props} />;
+      return <Time {...(props as SvgProps)} />;
     case 'warnings-flood-level-2':
-      return <WarningsFloodLevel2 {...props} />;
+      return <WarningsFloodLevel2 {...(props as SvgProps)} />;
     case 'warnings-flood-level-3':
-      return <WarningsFloodLevel3 {...props} />;
+      return <WarningsFloodLevel3 {...(props as SvgProps)} />;
     case 'warnings-flood-level-4':
-      return <WarningsFloodLevel4 {...props} />;
+      return <WarningsFloodLevel4 {...(props as SvgProps)} />;
     case 'warnings-forest-fire-weather-orange':
-      return <WarningsForestFireWeatherOrange {...props} />;
+      return <WarningsForestFireWeatherOrange {...(props as SvgProps)} />;
     case 'warnings-forest-fire-weather-red':
-      return <WarningsForestFireWeatherRed {...props} />;
+      return <WarningsForestFireWeatherRed {...(props as SvgProps)} />;
     case 'warnings-forest-fire-weather-yellow':
-      return <WarningsForestFireWeatherYellow {...props} />;
+      return <WarningsForestFireWeatherYellow {...(props as SvgProps)} />;
     case 'warnings-grass-fire-weather':
-      return <WarningsGrassFireWeather {...props} />;
+      return <WarningsGrassFireWeather {...(props as SvgProps)} />;
     case 'warnings-hot-weather-orange':
     case 'warnings-cold-weather-orange':
-      return <WarningsHotWeatherOrange {...props} />;
+      return <WarningsHotWeatherOrange {...(props as SvgProps)} />;
     case 'warnings-hot-weather-red':
     case 'warnings-cold-weather-red':
-      return <WarningsHotWeatherRed {...props} />;
+      return <WarningsHotWeatherRed {...(props as SvgProps)} />;
     case 'warnings-hot-weather-yellow':
     case 'warnings-cold-weather-yellow':
-      return <WarningsHotWeatherYellow {...props} />;
+      return <WarningsHotWeatherYellow {...(props as SvgProps)} />;
     case 'warnings-pedestrian-safety':
-      return <WarningsPedestrianSafety {...props} />;
+      return <WarningsPedestrianSafety {...(props as SvgProps)} />;
     case 'warnings-rain-orange':
-      return <WarningsRainOrange {...props} />;
+      return <WarningsRainOrange {...(props as SvgProps)} />;
     case 'warnings-rain-red':
-      return <WarningsRainRed {...props} />;
+      return <WarningsRainRed {...(props as SvgProps)} />;
     case 'warnings-rain-yellow':
-      return <WarningsRainYellow {...props} />;
+      return <WarningsRainYellow {...(props as SvgProps)} />;
     case 'warnings-status-orange':
-      return <WarningsStatusOrange {...props} />;
+      return <WarningsStatusOrange {...(props as SvgProps)} />;
     case 'warnings-thunder-storm-orange':
-      return <WarningsThunderStormOrange {...props} />;
+      return <WarningsThunderStormOrange {...(props as SvgProps)} />;
     case 'warnings-thunder-storm-red':
-      return <WarningsThunderStormRed {...props} />;
+      return <WarningsThunderStormRed {...(props as SvgProps)} />;
     case 'warnings-thunder-storm-yellow':
-      return <WarningsThunderStormYellow {...props} />;
+      return <WarningsThunderStormYellow {...(props as SvgProps)} />;
     case 'warnings-traffic-weather-orange':
-      return <WarningsTrafficWeatherOrange {...props} />;
+      return <WarningsTrafficWeatherOrange {...(props as SvgProps)} />;
     case 'warnings-traffic-weather-yellow':
-      return <WarningsTrafficWeatherYellow {...props} />;
+      return <WarningsTrafficWeatherYellow {...(props as SvgProps)} />;
     case 'warnings-uv-note':
-      return <WarningsUvNote {...props} />;
+      return <WarningsUvNote {...(props as SvgProps)} />;
     case 'warnings-wind-orange':
-      return <WarningsWindOrange {...props} />;
+      return <WarningsWindOrange {...(props as SvgProps)} />;
     case 'warnings-wind-red':
-      return <WarningsWindRed {...props} />;
+      return <WarningsWindRed {...(props as SvgProps)} />;
     case 'warnings-wind-yellow':
-      return <WarningsWindYellow {...props} />;
+      return <WarningsWindYellow {...(props as SvgProps)} />;
     case 'warnings':
-      return <Warnings {...props} />;
+      return <Warnings {...(props as SvgProps)} />;
     case 'weather-symbol':
-      return <WeatherSymbol {...props} />;
+      return <WeatherSymbol {...(props as SvgProps)} />;
     case 'weather':
-      return <Weather {...props} />;
+      return <Weather {...(props as SvgProps)} />;
     case 'wind-arrow':
-      return <WindArrow {...props} />;
+      return <WindArrow {...(props as SvgProps)} />;
     case 'wind-dark':
-      return <WindDark {...props} />;
+      return <WindDark {...(props as SvgProps)} />;
     case 'wind-light':
-      return <WindLight {...props} />;
+      return <WindLight {...(props as SvgProps)} />;
     case 'wind':
-      return <Wind {...props} />;
+      return <Wind {...(props as SvgProps)} />;
     default:
       return <IonIcon name={name} {...props} />;
   }

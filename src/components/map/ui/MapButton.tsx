@@ -57,6 +57,7 @@ const MapButton: React.FC<MapButtonProps> = ({
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',

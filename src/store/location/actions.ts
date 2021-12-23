@@ -16,66 +16,58 @@ import {
   RESET_AUTOCOMPLETE,
 } from './types';
 
-export const setGeolocation = (geolocation: Geolocation) => (
-  dispatch: Dispatch<LocationActionTypes>
-) => {
-  dispatch({ type: SET_GEOLOCATION, geolocation });
-};
+export const setGeolocation =
+  (geolocation: Geolocation) => (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: SET_GEOLOCATION, geolocation });
+  };
 
-export const setCurrentLocation = (
-  location: Location,
-  isGeolocation?: boolean
-) => (dispatch: Dispatch<LocationActionTypes>) => {
-  dispatch({ type: SET_CURRENT_LOCATION, location, isGeolocation });
-};
+export const setCurrentLocation =
+  (location: Location, isGeolocation?: boolean) =>
+  (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: SET_CURRENT_LOCATION, location, isGeolocation });
+  };
 
-export const addFavorite = (location: Location) => (
-  dispatch: Dispatch<LocationActionTypes>
-) => {
-  const max = Config.get('location').maxFavorite;
-  dispatch({ type: ADD_FAVORITE, location, max });
-};
+export const addFavorite =
+  (location: Location) => (dispatch: Dispatch<LocationActionTypes>) => {
+    const max = Config.get('location').maxFavorite;
+    dispatch({ type: ADD_FAVORITE, location, max });
+  };
 
-export const deleteFavorite = (id: number) => (
-  dispatch: Dispatch<LocationActionTypes>
-) => {
-  dispatch({ type: DELETE_FAVORITE, id });
-};
+export const deleteFavorite =
+  (id: number) => (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: DELETE_FAVORITE, id });
+  };
 
-export const deleteAllFavorites = () => (
-  dispatch: Dispatch<LocationActionTypes>
-) => {
-  dispatch({ type: DELETE_ALL_FAVORITES });
-};
+export const deleteAllFavorites =
+  () => (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: DELETE_ALL_FAVORITES });
+  };
 
-export const searchLocation = (pattern: string) => (
-  dispatch: Dispatch<LocationActionTypes>
-) => {
-  getAutocomplete(pattern)
-    .then((data) => {
-      dispatch({
-        type: FETCH_AUTOCOMPLETE,
-        data,
+export const searchLocation =
+  (pattern: string) => (dispatch: Dispatch<LocationActionTypes>) => {
+    getAutocomplete(pattern)
+      .then((data) => {
+        dispatch({
+          type: FETCH_AUTOCOMPLETE,
+          data,
+        });
+      })
+      .catch(() => {
+        dispatch({ type: RESET_AUTOCOMPLETE });
       });
-    })
-    .catch(() => {
-      dispatch({ type: RESET_AUTOCOMPLETE });
-    });
-};
+  };
 
 export const resetSearch = () => (dispatch: Dispatch<LocationActionTypes>) => {
   dispatch({ type: RESET_AUTOCOMPLETE });
 };
 
-export const updateRecentSearches = (location: Location) => (
-  dispatch: Dispatch<LocationActionTypes>
-) => {
-  const max = Config.get('location').maxRecent;
-  dispatch({ type: UPDATE_RECENT_SEARCHES, location, max });
-};
+export const updateRecentSearches =
+  (location: Location) => (dispatch: Dispatch<LocationActionTypes>) => {
+    const max = Config.get('location').maxRecent;
+    dispatch({ type: UPDATE_RECENT_SEARCHES, location, max });
+  };
 
-export const deleteAllRecentSearches = () => (
-  dispatch: Dispatch<LocationActionTypes>
-) => {
-  dispatch({ type: DELETE_ALL_RECENT_SEARCHES });
-};
+export const deleteAllRecentSearches =
+  () => (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: DELETE_ALL_RECENT_SEARCHES });
+  };

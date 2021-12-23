@@ -11,8 +11,6 @@ import { ConfigProvider } from '@config';
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';
 
-// @ts-ignore
-// eslint-disable-next-line import/extensions
 import defaultConfig from './defaultConfig';
 
 const App: React.FC = () => {

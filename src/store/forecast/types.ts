@@ -90,7 +90,7 @@ export interface ForecastLocation {
 }
 
 export interface WeatherData {
-  [geoid: string]: TimestepData[];
+  [geoid: string | number]: TimestepData[];
 }
 
 export interface Error {
@@ -99,7 +99,7 @@ export interface Error {
 }
 
 export interface ForecastState {
-  data: WeatherData | {};
+  data: WeatherData | undefined;
   loading: boolean;
   error: boolean | Error | string;
   displayParams: [number, string][];

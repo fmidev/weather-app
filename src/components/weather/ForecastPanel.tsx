@@ -80,11 +80,11 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const paramSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
-  const dateKeys = Object.keys(forecastByDay);
+  const dateKeys = forecastByDay && Object.keys(forecastByDay);
 
   useEffect(() => {
     if (forecastByDay) {
-      if (dateKeys.length > 0 && !selectedDate) {
+      if (dateKeys && dateKeys.length > 0 && !selectedDate) {
         setSelectedDate(dateKeys[0]);
       }
     }
@@ -221,12 +221,12 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                 <CollapsibleListHeader
                   accessibilityLabel={
                     !dayOpenIndexes.includes(index)
-                      ? `${t(
-                          'hourListOpenAccessibilityLabel'
-                        )} ${stepMoment.locale(locale).format('ddd D.M.')}`
-                      : `${t(
-                          'hourListCloseAccessibilityLabel'
-                        )} ${stepMoment.locale(locale).format('ddd D.M.')}`
+                      ? `${t('hourListOpenAccessibilityLabel')} ${stepMoment
+                          .locale(locale)
+                          .format('ddd D.M.')}`
+                      : `${t('hourListCloseAccessibilityLabel')} ${stepMoment
+                          .locale(locale)
+                          .format('ddd D.M.')}`
                   }
                   onPress={() => {
                     if (dayOpenIndexes.includes(index)) {

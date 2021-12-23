@@ -14,25 +14,24 @@ import {
   UPDATE_FORECAST_CHART_PARAMETER,
 } from './types';
 
-export const fetchForecast = (
-  location: ForecastLocation,
-  filterLocations: number[] = []
-) => (dispatch: Dispatch<ForecastActionTypes>) => {
-  dispatch({ type: FETCH_FORECAST });
+export const fetchForecast =
+  (location: ForecastLocation, filterLocations: number[] = []) =>
+  (dispatch: Dispatch<ForecastActionTypes>) => {
+    dispatch({ type: FETCH_FORECAST });
 
-  getForecast(location)
-    .then((data) => {
-      const geoid = Number(Object.keys(data)[0]);
-      const favorites = [...filterLocations, geoid];
-      dispatch({
-        type: FETCH_FORECAST_SUCCESS,
-        data: {
-          data,
-          favorites,
-        },
-      });
+    getForecast(location)
+      .then((data) => {
+        const geoid = Number(Object.keys(data)[0]);
+        const favorites = [...filterLocations, geoid];
+        dispatch({
+          type: FETCH_FORECAST_SUCCESS,
+          data: {
+            data,
+            favorites,
+          },
+        });
 
-      /**
+        /**
       TODO: Dispatch selected location geoid, name, region to LOCATION
       dispatch({
         type: TODO,
@@ -43,32 +42,28 @@ export const fetchForecast = (
         },
       });
       */
-    })
-    .catch((error: Error) => {
-      dispatch({ type: FETCH_FORECAST_ERROR, error });
-    });
-};
+      })
+      .catch((error: Error) => {
+        dispatch({ type: FETCH_FORECAST_ERROR, error });
+      });
+  };
 
-export const updateDisplayParams = (param: [number, string]) => (
-  dispatch: Dispatch<ForecastActionTypes>
-) => {
-  dispatch({ type: UPDATE_DISPLAY_PARAMS, param });
-};
+export const updateDisplayParams =
+  (param: [number, string]) => (dispatch: Dispatch<ForecastActionTypes>) => {
+    dispatch({ type: UPDATE_DISPLAY_PARAMS, param });
+  };
 
-export const restoreDefaultDisplayParams = () => (
-  dispatch: Dispatch<ForecastActionTypes>
-) => {
-  dispatch({ type: RESTORE_DEFAULT_DISPLAY_PARAMS });
-};
+export const restoreDefaultDisplayParams =
+  () => (dispatch: Dispatch<ForecastActionTypes>) => {
+    dispatch({ type: RESTORE_DEFAULT_DISPLAY_PARAMS });
+  };
 
-export const updateDisplayFormat = (value: 'table' | 'chart') => (
-  dispatch: Dispatch<ForecastActionTypes>
-) => {
-  dispatch({ type: UPDATE_FORECAST_DISPLAY_FORMAT, value });
-};
+export const updateDisplayFormat =
+  (value: 'table' | 'chart') => (dispatch: Dispatch<ForecastActionTypes>) => {
+    dispatch({ type: UPDATE_FORECAST_DISPLAY_FORMAT, value });
+  };
 
-export const updateChartParameter = (value: ChartType) => (
-  dispatch: Dispatch<ForecastActionTypes>
-) => {
-  dispatch({ type: UPDATE_FORECAST_CHART_PARAMETER, value });
-};
+export const updateChartParameter =
+  (value: ChartType) => (dispatch: Dispatch<ForecastActionTypes>) => {
+    dispatch({ type: UPDATE_FORECAST_CHART_PARAMETER, value });
+  };

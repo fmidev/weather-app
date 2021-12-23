@@ -75,7 +75,7 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
     }
   }, [scrollIndex, chartWidth, width]);
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     return null;
   }
 
