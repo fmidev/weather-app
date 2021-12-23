@@ -37,6 +37,7 @@ i18n
   .use(languageDetector)
   .use(initReactI18next)
   .init({
+    compatibilityJSON: 'v3',
     fallbackLng: 'fi',
     resources: languageResources,
     ns: ['navigation'],
