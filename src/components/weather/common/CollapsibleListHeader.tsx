@@ -44,7 +44,10 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
           },
         ]}>
         <View style={[styles.rowColumn, styles.alignStart]}>
-          <Text style={[styles.title, { color: colors.primaryText }]}>
+          <Text
+            style={[styles.title, { color: colors.primaryText }]}
+            numberOfLines={2}
+            ellipsizeMode="clip">
             {title}
           </Text>
         </View>
