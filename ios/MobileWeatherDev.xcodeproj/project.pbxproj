@@ -31,6 +31,15 @@
 		A461C8A9278C104800D34E2B /* MobileWeatherDevWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A461C8A5278C104600D34E2B /* MobileWeatherDevWidget.intentdefinition */; };
 		A461C8AA278C104800D34E2B /* MobileWeatherDevWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A461C8A5278C104600D34E2B /* MobileWeatherDevWidget.intentdefinition */; };
 		A461C8AD278C104800D34E2B /* MobileWeatherDevWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A461C89D278C104600D34E2B /* MobileWeatherDevWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A461C8B3278C220E00D34E2B /* LocationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8B2278C220E00D34E2B /* LocationEntry.swift */; };
+		A461C8B5278C251700D34E2B /* LocationTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8B4278C251700D34E2B /* LocationTimelineProvider.swift */; };
+		A461C8B7278C25D100D34E2B /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8B6278C25D100D34E2B /* LocationManager.swift */; };
+		A461C8BC278C2CFC00D34E2B /* WidgetSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8BB278C2CFC00D34E2B /* WidgetSmall.swift */; };
+		A461C8BE278C2EA900D34E2B /* TitleDateHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8BD278C2EA900D34E2B /* TitleDateHeader.swift */; };
+		A461C8C0278C302400D34E2B /* CoordinateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8BF278C302400D34E2B /* CoordinateView.swift */; };
+		A461C8C2278C354E00D34E2B /* CoordinateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8C1278C354E00D34E2B /* CoordinateRow.swift */; };
+		A461C8C4278C4A1200D34E2B /* WidgetMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8C3278C4A1200D34E2B /* WidgetMedium.swift */; };
+		A461C8C6278C4C1400D34E2B /* LocationWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A461C8C5278C4C1400D34E2B /* LocationWidgetEntryView.swift */; };
 		A4C8322726C6896900FEC2EB /* icons in Resources */ = {isa = PBXBuildFile; fileRef = A4C8322626C6896900FEC2EB /* icons */; };
 		A4C8322926C6897A00FEC2EB /* symbols in Resources */ = {isa = PBXBuildFile; fileRef = A4C8322826C6897A00FEC2EB /* symbols */; };
 /* End PBXBuildFile section */
@@ -111,6 +120,15 @@
 		A461C8A5278C104600D34E2B /* MobileWeatherDevWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = MobileWeatherDevWidget.intentdefinition; sourceTree = "<group>"; };
 		A461C8A6278C104800D34E2B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A461C8A8278C104800D34E2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A461C8B2278C220E00D34E2B /* LocationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEntry.swift; sourceTree = "<group>"; };
+		A461C8B4278C251700D34E2B /* LocationTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTimelineProvider.swift; sourceTree = "<group>"; };
+		A461C8B6278C25D100D34E2B /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		A461C8BB278C2CFC00D34E2B /* WidgetSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSmall.swift; sourceTree = "<group>"; };
+		A461C8BD278C2EA900D34E2B /* TitleDateHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDateHeader.swift; sourceTree = "<group>"; };
+		A461C8BF278C302400D34E2B /* CoordinateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateView.swift; sourceTree = "<group>"; };
+		A461C8C1278C354E00D34E2B /* CoordinateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinateRow.swift; sourceTree = "<group>"; };
+		A461C8C3278C4A1200D34E2B /* WidgetMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetMedium.swift; sourceTree = "<group>"; };
+		A461C8C5278C4C1400D34E2B /* LocationWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationWidgetEntryView.swift; sourceTree = "<group>"; };
 		A4BAA1A826BD1F040096B054 /* symbols */ = {isa = PBXFileReference; lastKnownFileType = folder; name = symbols; path = ../src/assets/images/symbols; sourceTree = "<group>"; };
 		A4C8322426C685A700FEC2EB /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = ../src/assets/images; sourceTree = "<group>"; };
 		A4C8322626C6896900FEC2EB /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = ../src/assets/images/icons; sourceTree = "<group>"; };
@@ -288,12 +306,29 @@
 		A461C8A2278C104600D34E2B /* MobileWeatherDevWidget */ = {
 			isa = PBXGroup;
 			children = (
+				A461C8B8278C2CAD00D34E2B /* Views */,
+				A461C8B2278C220E00D34E2B /* LocationEntry.swift */,
+				A461C8B6278C25D100D34E2B /* LocationManager.swift */,
+				A461C8B4278C251700D34E2B /* LocationTimelineProvider.swift */,
 				A461C8A3278C104600D34E2B /* MobileWeatherDevWidget.swift */,
 				A461C8A5278C104600D34E2B /* MobileWeatherDevWidget.intentdefinition */,
 				A461C8A6278C104800D34E2B /* Assets.xcassets */,
 				A461C8A8278C104800D34E2B /* Info.plist */,
 			);
 			path = MobileWeatherDevWidget;
+			sourceTree = "<group>";
+		};
+		A461C8B8278C2CAD00D34E2B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A461C8BB278C2CFC00D34E2B /* WidgetSmall.swift */,
+				A461C8BD278C2EA900D34E2B /* TitleDateHeader.swift */,
+				A461C8BF278C302400D34E2B /* CoordinateView.swift */,
+				A461C8C1278C354E00D34E2B /* CoordinateRow.swift */,
+				A461C8C3278C4A1200D34E2B /* WidgetMedium.swift */,
+				A461C8C5278C4C1400D34E2B /* LocationWidgetEntryView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -427,6 +462,7 @@
 					};
 					A461C89C278C104600D34E2B = {
 						CreatedOnToolsVersion = 13.2.1;
+						DevelopmentTeam = DJHT89EW79;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -792,8 +828,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A461C8C2278C354E00D34E2B /* CoordinateRow.swift in Sources */,
+				A461C8B5278C251700D34E2B /* LocationTimelineProvider.swift in Sources */,
+				A461C8C6278C4C1400D34E2B /* LocationWidgetEntryView.swift in Sources */,
+				A461C8BC278C2CFC00D34E2B /* WidgetSmall.swift in Sources */,
+				A461C8C0278C302400D34E2B /* CoordinateView.swift in Sources */,
+				A461C8C4278C4A1200D34E2B /* WidgetMedium.swift in Sources */,
 				A461C8A4278C104600D34E2B /* MobileWeatherDevWidget.swift in Sources */,
+				A461C8B7278C25D100D34E2B /* LocationManager.swift in Sources */,
 				A461C8A9278C104800D34E2B /* MobileWeatherDevWidget.intentdefinition in Sources */,
+				A461C8BE278C2EA900D34E2B /* TitleDateHeader.swift in Sources */,
+				A461C8B3278C220E00D34E2B /* LocationEntry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1156,13 +1201,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = DJHT89EW79;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MobileWeatherDevWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MobileWeatherDevWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -1201,7 +1246,7 @@
 				INFOPLIST_FILE = MobileWeatherDevWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MobileWeatherDevWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
