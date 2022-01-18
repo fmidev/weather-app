@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
@@ -30,7 +31,7 @@ import { GRAY_1, CustomTheme } from '@utils/colors';
 import Icon from '@components/common/Icon';
 import { selectTimeZone } from '@store/location/selector';
 import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecast/actions';
-import CollapsibleListHeader from './common/CollapsibleListHeader';
+import { weatherSymbolGetter } from '@assets/images';
 import PanelHeader from './common/PanelHeader';
 import ForecastByHourList from './forecast/ForecastByHourList';
 import ChartList from './forecast/ChartList';
@@ -70,10 +71,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   displayFormat,
   updateDisplayFormat,
 }) => {
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
-  const [dayOpenIndexes, setDayOpenIndexes] = useState<number[]>([0]);
+  const [activeDayIndex, setActiveDayIndex] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
@@ -81,6 +82,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
+
+  const flatListRef = useRef() as React.MutableRefObject<FlatList>;
 
   useEffect(() => {
     if (forecastByDay) {
@@ -94,9 +97,79 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
     moment.tz.setDefault(timezone);
   }, [timezone]);
 
+  useEffect(() => {
+    if (Number.isInteger(activeDayIndex) && data && data.length > 0) {
+      flatListRef.current.scrollToIndex({
+        index: activeDayIndex,
+        animated: true,
+      });
+    }
+  }, [activeDayIndex, data]);
+
+  const sections =
+    forecastByDay &&
+    Object.keys(forecastByDay).map((k) => ({
+      day: k,
+      data: forecastByDay[k],
+    }));
+
   const forecastLastUpdated =
     forecastLastUpdatedMoment &&
     forecastLastUpdatedMoment.format(`D.M. [${t('at')}] HH:mm`);
+
+  const colRenderer = ({
+    item,
+    index,
+  }: {
+    item: {
+      timeStamp: number;
+      maxTemperature: number;
+      minTemperature: number;
+      smartSymbol: number;
+    };
+    index: number;
+  }) => {
+    const { timeStamp, maxTemperature, minTemperature, smartSymbol } = item;
+    const stepMoment = moment.unix(timeStamp);
+    const maxTemperaturePrefix = maxTemperature > 0 ? '+' : '';
+    const minTemperaturePrefix = minTemperature > 0 ? '+' : '';
+    const daySmartSymbol = weatherSymbolGetter(smartSymbol.toString(), dark);
+    const isActive = index === activeDayIndex;
+    return (
+      <View
+        style={[
+          styles.dayBlock,
+          {
+            backgroundColor: isActive ? colors.screenBackground : undefined,
+            borderColor: colors.border,
+          },
+        ]}>
+        <TouchableOpacity onPress={() => setActiveDayIndex(index)}>
+          <Text
+            style={[
+              styles.bold,
+              styles.capitalize,
+              {
+                color: colors.hourListText,
+              },
+            ]}>
+            {stepMoment.locale(locale).format('ddd D.M.')}
+          </Text>
+          <View style={styles.alignCenter}>
+            {daySmartSymbol?.({
+              width: 40,
+              height: 40,
+            })}
+          </View>
+          <Text
+            style={[
+              styles.forecastText,
+              { color: colors.hourListText },
+            ]}>{`${minTemperaturePrefix}${minTemperature}° ... ${maxTemperaturePrefix}${maxTemperature}°`}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <View
@@ -206,62 +279,42 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           </View>
         </View>
       </View>
+      <View style={styles.forecastContainer}>
+        {headerLevelForecast && headerLevelForecast.length > 0 && (
+          <FlatList
+            ref={flatListRef}
+            style={styles.flatList}
+            data={headerLevelForecast}
+            horizontal
+            renderItem={colRenderer}
+            keyExtractor={({ timeStamp }) => timeStamp.toString()}
+            showsHorizontalScrollIndicator={false}
+          />
+        )}
+      </View>
       <View style={[styles.forecastContainer]}>
         {loading && <ActivityIndicator />}
-        {headerLevelForecast &&
+        {sections && sections.length > 0 && displayFormat === TABLE && (
+          <ForecastByHourList
+            data={data}
+            isOpen
+            activeDayIndex={activeDayIndex}
+            setActiveDayIndex={(i) => setActiveDayIndex(i)}
+            currentDayOffset={sections[0].data.length}
+          />
+        )}
+        {sections &&
+          sections.length > 0 &&
+          headerLevelForecast &&
           headerLevelForecast.length > 0 &&
-          displayFormat === TABLE &&
-          headerLevelForecast.map((dayStep, index) => {
-            const stepMoment = moment.unix(dayStep.timeStamp);
-            const maxTemperaturePrefix = dayStep.maxTemperature > 0 ? '+' : '';
-            const minTemperaturePrefix = dayStep.minTemperature > 0 ? '+' : '';
-
-            return (
-              <View key={dayStep.timeStamp}>
-                <CollapsibleListHeader
-                  accessibilityLabel={
-                    !dayOpenIndexes.includes(index)
-                      ? `${t('hourListOpenAccessibilityLabel')} ${stepMoment
-                          .locale(locale)
-                          .format('ddd D.M.')}`
-                      : `${t('hourListCloseAccessibilityLabel')} ${stepMoment
-                          .locale(locale)
-                          .format('ddd D.M.')}`
-                  }
-                  onPress={() => {
-                    if (dayOpenIndexes.includes(index)) {
-                      setDayOpenIndexes(
-                        dayOpenIndexes.filter((i) => i !== index)
-                      );
-                    } else {
-                      setDayOpenIndexes(dayOpenIndexes.concat(index));
-                    }
-                  }}
-                  open={dayOpenIndexes.includes(index)}
-                  title={stepMoment.locale(locale).format('ddd D.M.')}
-                  maxTemp={`${maxTemperaturePrefix}${dayStep.maxTemperature}°`}
-                  minTemp={`${minTemperaturePrefix}${dayStep.minTemperature}°`}
-                  totalPrecipitation={dayStep.totalPrecipitation}
-                  precipitationDay={
-                    forecastByDay &&
-                    forecastByDay[stepMoment.format('D.M.')].map((f) => ({
-                      precipitation: f.precipitation1h,
-                      timestamp: f.epochtime,
-                    }))
-                  }
-                />
-                {forecastByDay && dayOpenIndexes.includes(index) && (
-                  <ForecastByHourList
-                    dayForecast={forecastByDay[stepMoment.format('D.M.')]}
-                    isOpen={dayOpenIndexes.includes(index)}
-                  />
-                )}
-              </View>
-            );
-          })}
-        {headerLevelForecast &&
-          headerLevelForecast.length > 0 &&
-          displayFormat === CHART && <ChartList data={data} />}
+          displayFormat === CHART && (
+            <ChartList
+              data={data}
+              activeDayIndex={activeDayIndex}
+              setActiveDayIndex={(i) => setActiveDayIndex(i)}
+              currentDayOffset={sections[0].data.length}
+            />
+          )}
       </View>
       <RBSheet
         ref={paramSheetRef}
@@ -365,6 +418,22 @@ const styles = StyleSheet.create({
   draggableIcon: {
     backgroundColor: GRAY_1,
     width: 65,
+  },
+  dayBlock: {
+    minWidth: 80,
+    borderWidth: 1,
+    padding: 10,
+    flex: 1,
+    alignItems: 'center',
+  },
+  flatList: {
+    maxHeight: 100,
+  },
+  alignCenter: {
+    alignItems: 'center',
+  },
+  capitalize: {
+    textTransform: 'capitalize',
   },
 });
 

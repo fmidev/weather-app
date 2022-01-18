@@ -27,12 +27,18 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type ChartListProps = PropsFromRedux & {
   data: TimestepData[] | false;
+  activeDayIndex: number;
+  setActiveDayIndex: (i: number) => void;
+  currentDayOffset: number;
 };
 
 const ChartList: React.FC<ChartListProps> = ({
   data,
   chartParameter,
   updateChartParameter,
+  activeDayIndex,
+  setActiveDayIndex,
+  currentDayOffset,
 }) => {
   const charts: ChartType[] = ['temperature', 'precipitation', 'wind'];
   const parameter = chartParameter ?? charts[0];
@@ -44,7 +50,15 @@ const ChartList: React.FC<ChartListProps> = ({
         parameter={parameter}
         setParameter={updateChartParameter}
       />
-      <Chart chartType={parameter} data={data} />
+      {data && (
+        <Chart
+          chartType={parameter}
+          data={data}
+          activeDayIndex={activeDayIndex}
+          setActiveDayIndex={setActiveDayIndex}
+          currentDayOffset={currentDayOffset}
+        />
+      )}
     </View>
   );
 };
