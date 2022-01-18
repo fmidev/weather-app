@@ -302,7 +302,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             }}
             getItemCount={(items) => items && items.length}
             getItem={(items, index) => items[index]}
-            getItemLayout={(items: any, index: number) => ({
+            getItemLayout={(_, index: number) => ({
               length: 80,
               offset: index * 80,
               index,

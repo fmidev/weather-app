@@ -52,7 +52,7 @@ const ForecastByHourSectionList: React.FC<ForecastByHourSectionListProps> = ({
         calculatedIndex > data.length ? data.length : calculatedIndex;
       virtualizedList.current.scrollToIndex({
         index,
-        animated: true,
+        animated: false,
       });
     }
   }, [activeDayIndex, currentIndex, data, currentDayOffset]);
@@ -232,13 +232,15 @@ const ForecastByHourSectionList: React.FC<ForecastByHourSectionListProps> = ({
     );
   };
 
-  const onScrollEnd = ({
+  const handleOnScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset } = nativeEvent;
     const dayIndex = Math.ceil((contentOffset.x / 48 - currentDayOffset) / 24);
-    setCurrentIndex(dayIndex);
-    if (dayIndex !== activeDayIndex) setActiveDayIndex(dayIndex);
+    if (dayIndex !== currentIndex) setCurrentIndex(dayIndex);
+    if (dayIndex !== activeDayIndex) {
+      setActiveDayIndex(dayIndex);
+    }
   };
 
   if (!isOpen) return null;
@@ -260,8 +262,8 @@ const ForecastByHourSectionList: React.FC<ForecastByHourSectionListProps> = ({
             renderItem={({ item }: any) => <ForecastListColumn data={item} />}
             horizontal
             showsHorizontalScrollIndicator={false}
-            onMomentumScrollEnd={onScrollEnd}
-            getItemLayout={(items: any, index: number) => ({
+            onScroll={handleOnScroll}
+            getItemLayout={(_, index: number) => ({
               length: 48,
               offset: index * 48,
               index,
