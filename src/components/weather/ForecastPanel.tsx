@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  FlatList,
+  VirtualizedList,
 } from 'react-native';
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
@@ -83,7 +83,15 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
 
-  const flatListRef = useRef() as React.MutableRefObject<FlatList>;
+  const dayStripRef = useRef() as React.MutableRefObject<
+    VirtualizedList<{
+      maxTemperature: number;
+      minTemperature: number;
+      totalPrecipitation: number;
+      timeStamp: number;
+      smartSymbol: number;
+    }>
+  >;
 
   useEffect(() => {
     if (forecastByDay) {
@@ -99,7 +107,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
 
   useEffect(() => {
     if (Number.isInteger(activeDayIndex) && data && data.length > 0) {
-      flatListRef.current.scrollToIndex({
+      dayStripRef.current.scrollToIndex({
         index: activeDayIndex,
         animated: true,
       });
@@ -281,14 +289,24 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       </View>
       <View style={styles.forecastContainer}>
         {headerLevelForecast && headerLevelForecast.length > 0 && (
-          <FlatList
-            ref={flatListRef}
+          <VirtualizedList
+            ref={dayStripRef}
             style={styles.flatList}
             data={headerLevelForecast}
             horizontal
             renderItem={colRenderer}
             keyExtractor={({ timeStamp }) => timeStamp.toString()}
             showsHorizontalScrollIndicator={false}
+            onScrollToIndexFailed={({ index }) => {
+              console.warn(`scroll to index: ${index} failed`);
+            }}
+            getItemCount={(items) => items && items.length}
+            getItem={(items, index) => items[index]}
+            getItemLayout={(items: any, index: number) => ({
+              length: 80,
+              offset: index * 80,
+              index,
+            })}
           />
         )}
       </View>
