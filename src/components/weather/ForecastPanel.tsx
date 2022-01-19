@@ -290,6 +290,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       <View style={styles.forecastContainer}>
         {headerLevelForecast && headerLevelForecast.length > 0 && (
           <VirtualizedList
+            listKey="dayStrip"
             ref={dayStripRef}
             style={styles.flatList}
             data={headerLevelForecast}

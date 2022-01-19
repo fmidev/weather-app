@@ -251,6 +251,7 @@ const ForecastByHourSectionList: React.FC<ForecastByHourSectionListProps> = ({
         <ForecastListHeaderColumn />
         <View style={styles.listContainer}>
           <VirtualizedList
+            listKey="hoursList"
             ref={virtualizedList}
             data={data}
             keyExtractor={(item) => `${item.epochtime}`}
