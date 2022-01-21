@@ -44,9 +44,19 @@ type ChartProps = {
   data: ChartData;
   chartType: ChartType;
   observation?: boolean;
+  activeDayIndex: number;
+  setActiveDayIndex: (i: number) => void;
+  currentDayOffset: number;
 };
 
-const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
+const Chart: React.FC<ChartProps> = ({
+  data,
+  chartType,
+  observation,
+  activeDayIndex,
+  setActiveDayIndex,
+  currentDayOffset,
+}) => {
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
   const [scrollIndex, setScrollIndex] = useState<number>(
     observation ? 24 * 20 : 0
@@ -64,7 +74,6 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
   const stepLength = (15 / tickInterval) * 3;
 
   const chartWidth = observation ? width - 100 : data.length * stepLength;
-
   useEffect(() => {
     if (scrollIndex === 0) {
       setTimeSelectorButtons([true, false]);
@@ -74,6 +83,21 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
       setTimeSelectorButtons([false, false]);
     }
   }, [scrollIndex, chartWidth, width]);
+
+  useEffect(() => {
+    const dayIndex = Math.ceil(
+      (scrollIndex / stepLength - currentDayOffset) / 24
+    );
+    if (activeDayIndex === 0 && dayIndex !== activeDayIndex) {
+      scrollRef.current.scrollTo({ x: 0, animated: true });
+    }
+    if (activeDayIndex > 0 && dayIndex !== activeDayIndex) {
+      const off = currentDayOffset * stepLength;
+      const offsetX = activeDayIndex * 24 * stepLength - off;
+
+      scrollRef.current.scrollTo({ x: offsetX, animated: true });
+    }
+  }, [activeDayIndex, stepLength, currentDayOffset, scrollIndex]);
 
   if (!data || data.length === 0) {
     return null;
@@ -140,6 +164,10 @@ const Chart: React.FC<ChartProps> = ({ data, chartType, observation }) => {
   const onMomentumScrollEnd = ({ nativeEvent }: any) => {
     const { contentOffset } = nativeEvent;
     setScrollIndex(contentOffset.x);
+    const dayIndex = Math.ceil(
+      (contentOffset.x / stepLength - currentDayOffset) / 24
+    );
+    if (dayIndex !== activeDayIndex) setActiveDayIndex(dayIndex);
   };
 
   return (

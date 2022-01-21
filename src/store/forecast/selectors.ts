@@ -68,7 +68,9 @@ export const selectHeaderLevelForecast = createSelector(
 
       const roundedTotalPrecipitation =
         Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
+      const asd = Math.floor(dayArr.length / 2);
 
+      const { smartSymbol } = dayArr[asd];
       const timeStamp = dayArr[0].epochtime;
 
       return {
@@ -76,6 +78,7 @@ export const selectHeaderLevelForecast = createSelector(
         minTemperature,
         totalPrecipitation: roundedTotalPrecipitation,
         timeStamp,
+        smartSymbol,
       };
     })
 );
