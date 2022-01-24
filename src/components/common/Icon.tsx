@@ -90,7 +90,25 @@ import Weather from '@assets/images/icons/weather.svg';
 import WindArrow from '@assets/images/icons/wind-arrow.svg';
 import WindDark from '@assets/images/icons/wind-dark.svg';
 import WindLight from '@assets/images/icons/wind-light.svg';
+import WindNextHour from '@assets/images/icons/wind-next-hour.svg';
 import Wind from '@assets/images/icons/wind.svg';
+
+// FeelsLike Icons
+import FeelsLikeBasic from '@assets/images/feelslike/basic.svg';
+import FeelsLikeEaster from '@assets/images/feelslike/easter.svg';
+import FeelsLikeHalloween from '@assets/images/feelslike/halloween.svg';
+import FeelsLikeHot from '@assets/images/feelslike/hot.svg';
+import FeelsLikeItsenaisyyspaiva from '@assets/images/feelslike/itsenaisyyspaiva.svg';
+import FeelsLikeJuhannus from '@assets/images/feelslike/juhannus.svg';
+import FeelsLikeNaistenpaiva from '@assets/images/feelslike/naistenpaiva.svg';
+import FeelsLikeNewYear from '@assets/images/feelslike/newyear.svg';
+import FeelsLikeRaining from '@assets/images/feelslike/raining.svg';
+import FeelsLikeValentine from '@assets/images/feelslike/valentine.svg';
+import FeelsLikeVappu from '@assets/images/feelslike/vappu.svg';
+import FeelsLikeWindy from '@assets/images/feelslike/windy.svg';
+import FeelsLikeWinter from '@assets/images/feelslike/winter.svg';
+import FeelsLikeXmas from '@assets/images/feelslike/xmas.svg';
+
 import { SvgProps } from 'react-native-svg';
 
 type CustomIconProps = IconProps & {
@@ -276,8 +294,38 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WindDark {...(props as SvgProps)} />;
     case 'wind-light':
       return <WindLight {...(props as SvgProps)} />;
+    case 'wind-next-hour':
+      return <WindNextHour {...(props as SvgProps)} />;
     case 'wind':
       return <Wind {...(props as SvgProps)} />;
+    case 'feels-like-basic':
+      return <FeelsLikeBasic {...(props as SvgProps)} />;
+    case 'feels-like-easter':
+      return <FeelsLikeEaster {...(props as SvgProps)} />;
+    case 'feels-like-halloween':
+      return <FeelsLikeHalloween {...(props as SvgProps)} />;
+    case 'feels-like-hot':
+      return <FeelsLikeHot {...(props as SvgProps)} />;
+    case 'feels-like-itsenaisyyspaiva':
+      return <FeelsLikeItsenaisyyspaiva {...(props as SvgProps)} />;
+    case 'feels-like-juhannus':
+      return <FeelsLikeJuhannus {...(props as SvgProps)} />;
+    case 'feels-like-naistenpaiva':
+      return <FeelsLikeNaistenpaiva {...(props as SvgProps)} />;
+    case 'feels-like-newyear':
+      return <FeelsLikeNewYear {...(props as SvgProps)} />;
+    case 'feels-like-raining':
+      return <FeelsLikeRaining {...(props as SvgProps)} />;
+    case 'feels-like-valentine':
+      return <FeelsLikeValentine {...(props as SvgProps)} />;
+    case 'feels-like-vappu':
+      return <FeelsLikeVappu {...(props as SvgProps)} />;
+    case 'feels-like-windy':
+      return <FeelsLikeWindy {...(props as SvgProps)} />;
+    case 'feels-like-winter':
+      return <FeelsLikeWinter {...(props as SvgProps)} />;
+    case 'feels-like-xmas':
+      return <FeelsLikeXmas {...(props as SvgProps)} />;
     default:
       return <IonIcon name={name} {...props} />;
   }

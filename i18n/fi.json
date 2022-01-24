@@ -38,12 +38,13 @@
     "parameter": "Suure"
   },
   "forecast": {
+    "nextHourForecast": "Seuraavan tunnin ennuste,",
     "panelHeader": "Sääennuste",
     "lastUpdated": "Päivitetty viimeksi",
     "sunrise": "Aurinko nousee",
     "sunset": "Laskee",
     "dayLength": "Päivän pituus",
-    "feelsLike": "Tuntuu",
+    "feelsLike": "Tuntuu kuin",
     "hourListOpenAccessibilityLabel": "Avaa tuntiennuste päivälle",
     "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle",
     "at": "klo",

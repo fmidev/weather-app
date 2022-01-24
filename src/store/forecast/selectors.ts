@@ -29,6 +29,11 @@ export const selectForecast = createSelector(
   (items, geoid) => (items ? items[geoid] : [])
 );
 
+export const selectNextHourForecast = createSelector(
+  selectForecast,
+  (forecast) => forecast && forecast[0]
+);
+
 export const selectForecastByDay = createSelector(
   selectForecast,
   (forecast) =>
