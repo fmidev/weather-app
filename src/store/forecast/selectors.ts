@@ -26,7 +26,20 @@ const selectData = createSelector(
 
 export const selectForecast = createSelector(
   [selectData, selectGeoid],
-  (items, geoid) => (items ? items[geoid] : [])
+  (items, geoid) => {
+    if (items) {
+      const now = new Date();
+      const locationItems = items[geoid];
+      // filter out outdated items
+      const filtered = locationItems?.filter((i) => {
+        const timestamp = new Date(i.epochtime * 1000);
+        return timestamp > now;
+      });
+
+      return filtered || [];
+    }
+    return [];
+  }
 );
 
 export const selectNextHourForecast = createSelector(
