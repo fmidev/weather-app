@@ -7,6 +7,7 @@ import { TimestepData } from '@store/forecast/types';
 import { TimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import { MomentObjectOutput } from 'moment';
+import { Config } from '@config';
 import {
   RAIN_1,
   RAIN_2,
@@ -146,23 +147,31 @@ export const getFeelsLikeIconName = (
   item: TimestepData,
   momentObj: MomentObjectOutput
 ): string => {
-  const { years, months, date } = momentObj; // months are zero index: Jan = 0, Feb = 1 etc.
-  const [easterM, easterD] = getEaster(years);
-  const midsummerDay = getMidSummerDay(years);
+  const shouldUseFinnishHolidays =
+    Config.get('location')?.default?.country === 'FI';
 
-  // holidays
-  if (months + 1 === 6 && (date === midsummerDay || date - 1 === midsummerDay))
-    return 'feels-like-juhannus';
-  if (months + 1 === easterM && date === easterD) return 'feels-like-easter';
-  if (months + 1 === 12 && date === 6) return 'feels-like-itsenaisyyspaiva';
-  if (months + 1 === 3 && date === 8) {
-    return 'feels-like-naistenpaiva';
+  if (shouldUseFinnishHolidays) {
+    const { years, months, date } = momentObj; // months are zero index: Jan = 0, Feb = 1 etc.
+    const [easterM, easterD] = getEaster(years);
+    const midsummerDay = getMidSummerDay(years);
+    // holidays
+    if (
+      months + 1 === 6 &&
+      (date === midsummerDay || date - 1 === midsummerDay)
+    )
+      return 'feels-like-juhannus';
+    if (months + 1 === easterM && date === easterD) return 'feels-like-easter';
+    if (months + 1 === 12 && date === 6) return 'feels-like-itsenaisyyspaiva';
+    if (months + 1 === 3 && date === 8) {
+      return 'feels-like-naistenpaiva';
+    }
+    if (months + 1 === 12 && date === 31) return 'feels-like-newyear';
+    if (months + 1 === 12 && (date === 24 || date === 25))
+      return 'feels-like-xmas';
+    if (months + 1 === 5 && date === 1) return 'feels-like-vappu';
+    if (months + 1 === 2 && date === 14) return 'feels-like-valentine';
   }
-  if (months + 1 === 12 && date === 31) return 'feels-like-newyear';
-  if (months + 1 === 12 && (date === 24 || date === 25))
-    return 'feels-like-xmas';
-  if (months + 1 === 5 && date === 1) return 'feels-like-vappu';
-  if (months + 1 === 2 && date === 14) return 'feels-like-valentine';
+
   // weather
   if (item.windspeedms >= 10) return 'feels-like-windy';
   if (item.temperature >= 30) return 'feels-like-hot';
