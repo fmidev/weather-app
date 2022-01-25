@@ -1,20 +1,19 @@
 import React from 'react';
-import { View, StyleSheet, Text, ViewStyle } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 import moment from 'moment';
 
-import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { GRAY_1 } from '@utils/colors';
 import { getPrecipitationColorOrTransparent } from '@utils/helpers';
 
 type PrecipitationStripProps = {
   precipitationData: { precipitation: number; timestamp: number }[] | false;
+  style?: ViewStyle;
 };
 
 const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
   precipitationData,
+  style,
 }) => {
-  const { colors } = useTheme() as CustomTheme;
-
   const precipitationHourArr =
     precipitationData &&
     precipitationData.map((item) => ({
@@ -59,100 +58,30 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <View style={styles.timeTextContainer}>
-          <Text
+    <View style={[styles.row, style]}>
+      {normalizedPrecipitationData &&
+        normalizedPrecipitationData.map((obj, i) => (
+          <View
+            key={`${obj.hour}-${i + 1}`}
             style={[
-              styles.precipitationLineText,
-              { color: colors.primaryText },
-            ]}>
-            03
-          </Text>
-        </View>
-        <View style={styles.timeTextContainer}>
-          <Text
-            style={[
-              styles.precipitationLineText,
-              { color: colors.primaryText },
-            ]}>
-            09
-          </Text>
-        </View>
-        <View style={styles.timeTextContainer}>
-          <Text
-            style={[
-              styles.precipitationLineText,
-              { color: colors.primaryText },
-            ]}>
-            15
-          </Text>
-        </View>
-        <View style={styles.timeTextContainer}>
-          <Text
-            style={[
-              styles.precipitationLineText,
-              { color: colors.primaryText },
-            ]}>
-            21
-          </Text>
-        </View>
-      </View>
-      <View
-        style={[
-          styles.row,
-          styles.withBorderBottom,
-          { borderColor: colors.primaryText },
-        ]}>
-        {normalizedPrecipitationData &&
-          normalizedPrecipitationData.map((obj, i) => (
-            <View
-              key={`${obj.hour}-${i + 1}`}
-              style={[
-                styles.precipitationBlock,
-                (i === 0 || i % 3 === 0) && styles.withBorderLeft,
-                i === 23 && styles.withBorderRight,
-                {
-                  ...backgroundStyleGetter(obj.precipitation),
-                  borderColor: colors.primaryText,
-                },
-              ]}
-            />
-          ))}
-      </View>
+              styles.precipitationBlock,
+              {
+                ...backgroundStyleGetter(obj.precipitation),
+              },
+            ]}
+          />
+        ))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingBottom: 10,
-  },
   row: {
     flexDirection: 'row',
   },
-  timeTextContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  precipitationLineText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-  },
   precipitationBlock: {
     flex: 1,
-    height: 4,
-  },
-  withBorderBottom: {
-    borderBottomWidth: 1,
-  },
-  withBorderLeft: {
-    borderLeftWidth: 1,
-  },
-  withBorderRight: {
-    borderRightWidth: 1,
+    height: 8,
   },
 });
 
