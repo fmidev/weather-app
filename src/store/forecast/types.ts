@@ -20,11 +20,13 @@ interface FetchForecastSuccess {
     data: WeatherData;
     favorites: number[];
   };
+  timestamp: number;
 }
 
 interface FetchForecastError {
   type: typeof FETCH_FORECAST_ERROR;
   error: Error;
+  timestamp: number;
 }
 
 interface UpdateDisplayParams {
@@ -105,4 +107,5 @@ export interface ForecastState {
   displayParams: [number, string][];
   displayFormat: 'table' | 'chart';
   chartDisplayParam: ChartType | undefined;
+  fetchTimestamp: number;
 }

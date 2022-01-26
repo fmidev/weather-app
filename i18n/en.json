@@ -38,6 +38,7 @@
     "parameter": "Parameter"
   },
   "forecast": {
+    "nextHourForecast": "Next hour forecast,",
     "panelHeader": "Weather forecast",
     "lastUpdated": "Last updated",
     "sunrise": "Sunrise",

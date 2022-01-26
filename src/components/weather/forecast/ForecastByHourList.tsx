@@ -19,7 +19,7 @@ import { CustomTheme } from '@utils/colors';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
-type ForecastByHourSectionListProps = {
+type ForecastByHourListProps = {
   data: TimestepData[];
   isOpen: boolean;
   activeDayIndex: number;
@@ -27,7 +27,7 @@ type ForecastByHourSectionListProps = {
   currentDayOffset: number;
 };
 
-const ForecastByHourSectionList: React.FC<ForecastByHourSectionListProps> = ({
+const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   data,
   isOpen,
   activeDayIndex,
@@ -50,10 +50,12 @@ const ForecastByHourSectionList: React.FC<ForecastByHourSectionListProps> = ({
 
       const index =
         calculatedIndex > data.length ? data.length : calculatedIndex;
-      virtualizedList.current.scrollToIndex({
-        index,
-        animated: false,
-      });
+      if (index >= 0) {
+        virtualizedList.current.scrollToIndex({
+          index,
+          animated: false,
+        });
+      }
     }
   }, [activeDayIndex, currentIndex, data, currentDayOffset]);
 
@@ -317,4 +319,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(ForecastByHourSectionList);
+export default memo(ForecastByHourList);

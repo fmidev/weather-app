@@ -3,8 +3,11 @@ import Geolocation from 'react-native-geolocation-service';
 import { TFunction } from 'react-i18next';
 
 import { Location } from '@store/location/types';
+import { TimestepData } from '@store/forecast/types';
 import { TimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
+import { MomentObjectOutput } from 'moment';
+import { Config } from '@config';
 import {
   RAIN_1,
   RAIN_2,
@@ -111,4 +114,69 @@ export const getObservationCellValue = (
       .toString()
       .replace('.', ',')} ${unit}`;
   return '-';
+};
+
+// https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
+const getEaster = (year: number): [number, number] => {
+  const f = Math.floor;
+  // Golden Number - 1
+  const G = year % 19;
+  const C = f(year / 100);
+  // related to Epact
+  const H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30;
+  // number of days from 21 March to the Paschal full moon
+  const I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11));
+  // weekday for the Paschal full moon
+  const J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7;
+  // number of days from 21 March to the Sunday on or before the Paschal full moon
+  const L = I - J;
+  const month = 3 + f((L + 40) / 44);
+  const day = L + 28 - 31 * f(month / 4);
+
+  return [month, day];
+};
+
+// midsummer is next Saturday following 19th of June
+const getMidSummerDay = (year: number): number => {
+  const o = new Date(year, 5, 19);
+  const a = 19 - o.getDay() + 6;
+  return a === 19 ? a + 7 : a;
+};
+
+export const getFeelsLikeIconName = (
+  item: TimestepData,
+  momentObj: MomentObjectOutput
+): string => {
+  const shouldUseFinnishHolidays =
+    Config.get('location')?.default?.country === 'FI';
+
+  if (shouldUseFinnishHolidays) {
+    const { years, months, date } = momentObj; // months are zero index: Jan = 0, Feb = 1 etc.
+    const [easterM, easterD] = getEaster(years);
+    const midsummerDay = getMidSummerDay(years);
+    // holidays
+    if (
+      months + 1 === 6 &&
+      (date === midsummerDay || date - 1 === midsummerDay)
+    )
+      return 'feels-like-juhannus';
+    if (months + 1 === easterM && date === easterD) return 'feels-like-easter';
+    if (months + 1 === 12 && date === 6) return 'feels-like-itsenaisyyspaiva';
+    if (months + 1 === 3 && date === 8) {
+      return 'feels-like-naistenpaiva';
+    }
+    if (months + 1 === 12 && date === 31) return 'feels-like-newyear';
+    if (months + 1 === 12 && (date === 24 || date === 25))
+      return 'feels-like-xmas';
+    if (months + 1 === 5 && date === 1) return 'feels-like-vappu';
+    if (months + 1 === 2 && date === 14) return 'feels-like-valentine';
+  }
+
+  // weather
+  if (item.windspeedms >= 10) return 'feels-like-windy';
+  if (item.temperature >= 30) return 'feels-like-hot';
+  if (item.temperature <= -10) return 'feels-like-winter';
+  if (item.smartSymbol >= 37 && item.smartSymbol <= 39)
+    return 'feels-like-raining';
+  return 'feels-like-basic';
 };

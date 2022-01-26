@@ -106,7 +106,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   }, [timezone]);
 
   useEffect(() => {
-    if (Number.isInteger(activeDayIndex) && data && data.length > 0) {
+    if (activeDayIndex >= 0 && data && data.length > 0) {
       dayStripRef.current.scrollToIndex({
         index: activeDayIndex,
         animated: true,
