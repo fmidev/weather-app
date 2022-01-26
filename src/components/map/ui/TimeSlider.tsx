@@ -133,6 +133,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   }, [sliderMinUnix, sliderMaxUnix, step]);
 
   useEffect(() => {
+    let sliderTimeout: ReturnType<typeof setTimeout>;
     if (sliderRef.current && times && times.length > 0) {
       // try scroll closest to current time
       const now = moment().format('X');
@@ -141,12 +142,15 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
       if (i >= 0) {
         // for some reason this needed timeout to work on initial render
-        setTimeout(
+        sliderTimeout = setTimeout(
           () => sliderRef.current.scrollToIndex({ index: i, animated: false }),
-          20
+          40
         );
       }
     }
+    return () => {
+      clearTimeout(sliderTimeout);
+    };
   }, [times, step, sliderRef]);
 
   useEffect(() => {
@@ -185,7 +189,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const resolveAndSetCurrentIndex = useCallback(
     (x: number) => {
-      const divider = step === STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH;
+      const divider = step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH;
       const index = Math.floor(x / divider);
       if (index >= 0 && index <= times.length) {
         if (index === times.length) {
@@ -241,7 +245,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             <Text
               style={[
                 styles.text,
-                step === STEP_60 ? styles.lastHourText : styles.lastQuarterText,
+                step >= STEP_60 ? styles.lastHourText : styles.lastQuarterText,
                 {
                   color: colors.hourListText,
                 },
@@ -252,7 +256,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           <View
             style={[
               hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
-              step !== STEP_60 ? styles.withBorderLeft : undefined,
+              step < STEP_60 ? styles.withBorderLeft : undefined,
               { borderLeftColor: colors.timeSliderTick },
             ]}
           />
@@ -264,7 +268,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         style={[
           styles.quarterContainer,
           {
-            width: step === STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
+            width: step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
             marginLeft: index === 0 ? sliderWidth / 2 - 80 : undefined,
           },
         ]}>
@@ -272,7 +276,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           <Text
             style={[
               styles.text,
-              step === STEP_60 ? styles.hourText : styles.quarterText,
+              step >= STEP_60 ? styles.hourText : styles.quarterText,
               {
                 color: colors.hourListText,
               },
@@ -284,7 +288,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           style={[
             hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
             styles.withBorderBottom,
-            step !== STEP_60 ? styles.withBorderLeft : undefined,
+            step < STEP_60 ? styles.withBorderLeft : undefined,
             {
               borderLeftColor: colors.timeSliderTick,
               borderBottomColor:
@@ -343,9 +347,9 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                 onMomentumScrollEnd={handleMomentumScroll}
                 onScrollBeginDrag={handleMomentumStart}
                 getItemLayout={(data, index: number) => ({
-                  length: step === STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
+                  length: step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
                   offset:
-                    index * (step === STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH),
+                    index * (step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH),
                   index,
                 })}
               />
