@@ -93,6 +93,10 @@ export const selectHeaderLevelForecast = createSelector(
 
       const { smartSymbol } = dayArr[asd];
       const timeStamp = dayArr[0].epochtime;
+      const precipitationArr = dayArr.map((h) => ({
+        precipitation: h.precipitation1h,
+        timestamp: h.epochtime,
+      }));
 
       return {
         maxTemperature,
@@ -100,6 +104,7 @@ export const selectHeaderLevelForecast = createSelector(
         totalPrecipitation: roundedTotalPrecipitation,
         timeStamp,
         smartSymbol,
+        precipitationData: precipitationArr,
       };
     })
 );

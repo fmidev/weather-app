@@ -44,9 +44,9 @@ type ChartProps = {
   data: ChartData;
   chartType: ChartType;
   observation?: boolean;
-  activeDayIndex: number;
-  setActiveDayIndex: (i: number) => void;
-  currentDayOffset: number;
+  activeDayIndex?: number;
+  setActiveDayIndex?: (i: number) => void;
+  currentDayOffset?: number;
 };
 
 const Chart: React.FC<ChartProps> = ({
@@ -85,17 +85,19 @@ const Chart: React.FC<ChartProps> = ({
   }, [scrollIndex, chartWidth, width]);
 
   useEffect(() => {
-    const dayIndex = Math.ceil(
-      (scrollIndex / stepLength - currentDayOffset) / 24
-    );
-    if (activeDayIndex === 0 && dayIndex !== activeDayIndex) {
-      scrollRef.current.scrollTo({ x: 0, animated: true });
-    }
-    if (activeDayIndex > 0 && dayIndex !== activeDayIndex) {
-      const off = currentDayOffset * stepLength;
-      const offsetX = activeDayIndex * 24 * stepLength - off;
+    if (currentDayOffset && activeDayIndex !== undefined) {
+      const dayIndex = Math.ceil(
+        (scrollIndex / stepLength - currentDayOffset) / 24
+      );
+      if (activeDayIndex === 0 && dayIndex !== activeDayIndex) {
+        scrollRef.current.scrollTo({ x: 0, animated: true });
+      }
+      if (activeDayIndex > 0 && dayIndex !== activeDayIndex) {
+        const off = currentDayOffset * stepLength;
+        const offsetX = activeDayIndex * 24 * stepLength - off;
 
-      scrollRef.current.scrollTo({ x: offsetX, animated: true });
+        scrollRef.current.scrollTo({ x: offsetX, animated: true });
+      }
     }
   }, [activeDayIndex, stepLength, currentDayOffset, scrollIndex]);
 
@@ -164,10 +166,12 @@ const Chart: React.FC<ChartProps> = ({
   const onMomentumScrollEnd = ({ nativeEvent }: any) => {
     const { contentOffset } = nativeEvent;
     setScrollIndex(contentOffset.x);
-    const dayIndex = Math.ceil(
-      (contentOffset.x / stepLength - currentDayOffset) / 24
-    );
-    if (dayIndex !== activeDayIndex) setActiveDayIndex(dayIndex);
+    if (currentDayOffset && setActiveDayIndex) {
+      const dayIndex = Math.ceil(
+        (contentOffset.x / stepLength - currentDayOffset) / 24
+      );
+      if (dayIndex !== activeDayIndex) setActiveDayIndex(dayIndex);
+    }
   };
 
   return (
