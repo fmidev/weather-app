@@ -28,6 +28,7 @@ const INITIAL_STATE: ForecastState = {
   displayParams: INITIAL_PARAMS,
   displayFormat: 'table',
   chartDisplayParam: undefined,
+  fetchTimestamp: Date.now(),
 };
 
 const filterLocations = (data: WeatherData, favorites: number[]): WeatherData =>
@@ -54,6 +55,7 @@ export default (
           { ...state.data, ...action.data.data },
           action.data.favorites
         ),
+        fetchTimestamp: action.timestamp,
         loading: false,
         error: false,
       };
@@ -64,6 +66,7 @@ export default (
         ...state,
         loading: false,
         error: action.error,
+        fetchTimestamp: action.timestamp,
       };
     }
 

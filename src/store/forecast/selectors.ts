@@ -24,17 +24,20 @@ const selectData = createSelector(
   (forecast) => forecast.data
 );
 
+const selectFetchTimestamp = createSelector(
+  selectForecastDomain,
+  (forecast) => forecast.fetchTimestamp
+);
+
 export const selectForecast = createSelector(
-  [selectData, selectGeoid],
-  (items, geoid) => {
+  [selectData, selectGeoid, selectFetchTimestamp],
+  (items, geoid, timestamp) => {
     if (items) {
-      const now = new Date();
       const locationItems = items[geoid];
       // filter out outdated items
-      const filtered = locationItems?.filter((i) => {
-        const timestamp = new Date(i.epochtime * 1000);
-        return timestamp > now;
-      });
+      const filtered = locationItems?.filter(
+        (i) => i.epochtime * 1000 > timestamp
+      );
 
       return filtered || [];
     }

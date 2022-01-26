@@ -29,6 +29,7 @@ export const fetchForecast =
             data,
             favorites,
           },
+          timestamp: Date.now(),
         });
 
         /**
@@ -44,7 +45,7 @@ export const fetchForecast =
       */
       })
       .catch((error: Error) => {
-        dispatch({ type: FETCH_FORECAST_ERROR, error });
+        dispatch({ type: FETCH_FORECAST_ERROR, error, timestamp: Date.now() });
       });
   };
 
