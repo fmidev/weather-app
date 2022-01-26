@@ -98,16 +98,20 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             borderTopColor: isActive ? colors.tabBarActive : colors.border,
           },
         ]}>
-        <TouchableOpacity onPress={() => setActiveDayIndex(index)}>
+        <TouchableOpacity
+          onPress={() => setActiveDayIndex(index)}
+          style={styles.alignCenter}>
           <Text
             style={[
-              styles.bold,
-              styles.capitalize,
+              styles.forecastText,
               {
-                color: colors.hourListText,
+                color: colors.primaryText,
               },
             ]}>
-            {stepMoment.locale(locale).format('ddd D.M.')}
+            {stepMoment.locale(locale).format('ddd')}{' '}
+            <Text style={[styles.bold, { color: colors.primaryText }]}>
+              {stepMoment.locale(locale).format('D.M.')}
+            </Text>
           </Text>
           <View style={styles.alignCenter}>
             {daySmartSymbol?.({
@@ -118,7 +122,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
           <Text
             style={[
               styles.forecastText,
-              { color: colors.hourListText },
+              { color: colors.primaryText },
             ]}>{`${minTemperaturePrefix}${minTemperature}° ... ${maxTemperaturePrefix}${maxTemperature}°`}</Text>
         </TouchableOpacity>
         <PrecipitationStrip
@@ -180,10 +184,6 @@ const styles = StyleSheet.create({
   alignCenter: {
     alignItems: 'center',
   },
-  capitalize: {
-    textTransform: 'capitalize',
-  },
-
   forecastText: {
     fontSize: 14,
     fontFamily: 'Roboto-Regular',
