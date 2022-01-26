@@ -13,7 +13,7 @@ import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapMarker from '@components/map/layers/MapMarker';
 
 import { State } from '@store/types';
-import { selectCurrent } from '@store/location/selector';
+import { selectCurrent, selectTimeZone } from '@store/location/selector';
 import { selectDisplayLocation, selectOverlay } from '@store/map/selectors';
 import { updateOverlays as updateOverlaysAction } from '@store/map/actions';
 
@@ -21,6 +21,7 @@ import darkMapStyle from '@utils/dark_map_style.json';
 import { GRAY_1 } from '@utils/colors';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
+import moment from 'moment';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -38,6 +39,7 @@ const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
   displayLocation: selectDisplayLocation(state),
   overlay: selectOverlay(state),
+  timezone: selectTimeZone(state),
 });
 
 const mapDispatchToProps = {
@@ -54,6 +56,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   displayLocation,
   overlay,
   updateOverlays,
+  timezone,
 }) => {
   const { colors, dark } = useTheme();
   const isFocused = useIsFocused();
@@ -80,6 +83,10 @@ const MapScreen: React.FC<MapScreenProps> = ({
     updateOverlays();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    moment.tz.setDefault(timezone);
+  }, [timezone]);
 
   useEffect(() => {
     const now = Date.now();

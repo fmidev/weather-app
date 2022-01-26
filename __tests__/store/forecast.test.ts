@@ -14,6 +14,8 @@ const defaultState: types.ForecastState = {
   loading: false,
   error: false,
   displayParams: initialParams,
+  displayFormat: 'table',
+  chartDisplayParam: 'temperature',
 };
 
 describe('forecast reducer', () => {

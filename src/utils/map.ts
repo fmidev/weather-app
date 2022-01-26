@@ -36,13 +36,6 @@ type WmsLayer = {
       }[];
 };
 
-// 60 minutes = 3600 seconds
-const STEP_60 = 3600;
-// 30 minutes = 1800 seconds
-const STEP_30 = 1800;
-// 15 minutes = 900 seconds
-const STEP_15 = 900;
-
 const round = (unix: number, step: number): number =>
   Math.floor(unix / step) * step;
 
@@ -51,23 +44,24 @@ export const getSliderMinUnix = (
   overlay: MapOverlay | undefined
 ): number => {
   let reference = moment.utc().unix();
+  const { layers } = Config.get('map');
+  const layer = layers.find((l) => l.id === layerId);
+  if (!layerId || !layer) return reference;
+  const { times } = layer;
+  const stepSeconds = getSliderStepSeconds(times.timeStep);
+
+  reference = Math.ceil(reference / stepSeconds) * stepSeconds;
+
   if (!overlay || !overlay.observation) return reference;
   const { observation } = overlay;
   const observationStart = moment(observation?.start).unix();
   const observationEnd = moment(observation?.end).unix();
 
   if (observationEnd < reference) {
-    reference = observationEnd;
+    reference = Math.ceil(observationEnd / stepSeconds) * stepSeconds;
   }
 
-  const { layers } = Config.get('map');
-  const layer = layers.find((l) => l.id === layerId);
-  if (!layerId || !layer) return reference;
-
-  const { times } = layer;
   if (!times.observation) return reference;
-
-  const stepSeconds = getSliderStepSeconds(times.timeStep);
 
   const steps = times.observation - 1;
   const min = reference - steps * stepSeconds;
@@ -100,11 +94,9 @@ export const getSliderMaxUnix = (
   return max > forecastEnd ? forecastEnd : round(max, stepSeconds);
 };
 
-export const getSliderStepSeconds = (sliderStep: number): number => {
-  if (sliderStep === 60) return STEP_60;
-  if (sliderStep === 30) return STEP_30;
-  return STEP_15;
-};
+export const getSliderStepSeconds = (sliderStep: number): number =>
+  ([15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
+// [15, 30, 60, 180].includes(sliderStep) ? sliderStep * 60 : 15 * 60;
 
 export const getWMSLayerUrlsAndBounds = async (): Promise<
   Map<number, MapOverlay> | undefined

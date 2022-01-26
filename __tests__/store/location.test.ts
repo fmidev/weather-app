@@ -7,6 +7,8 @@ const location: types.Location = {
   id: 7,
   lat: 12,
   lon: 34,
+  country: 'FI',
+  timezone: 'Europe/Helsinki',
 };
 
 const defaultState: types.LocationState = {

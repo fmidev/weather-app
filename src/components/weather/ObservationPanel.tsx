@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import { CustomTheme, GRAY_1 } from '@utils/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { toStringWithDecimal } from '@utils/helpers';
+import { Config } from '@config';
 import Chart from './charts/Chart';
 import { ChartType } from './charts/types';
 import ParameterSelector from './common/ParameterSelector';
@@ -76,6 +77,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('observation');
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const { enabled } = Config.get('weather').observation;
 
   useEffect(() => {
     const sid = stationList[0]?.id;
@@ -83,6 +85,10 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       setStationId(dataId, sid);
     }
   }, [stationList, stationId, dataId, setStationId]);
+
+  if (!enabled) {
+    return null;
+  }
 
   const charts: ChartType[] = [
     'temperature',

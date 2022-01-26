@@ -11,6 +11,7 @@
     "noEmit": true,
     "target": "ES6",
     "noImplicitAny": true,
+    "skipLibCheck": true,
     "strict": true,
     "baseUrl": ".",
     "paths": {
@@ -25,5 +26,8 @@
       "@i18n": ["./i18n"]
     }
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "e2e",
+  ]
 }

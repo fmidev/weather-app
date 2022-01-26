@@ -13,6 +13,8 @@ const defaultConfig: ConfigType = {
       lat: 60.16952,
       lon: 24.93545,
       id: 658225,
+      country: 'FI',
+      timezone: 'Europe/Helsinki',
     },
     apiUrl: 'locationApiUrl',
     keyword: 'keyword_name',
@@ -20,6 +22,7 @@ const defaultConfig: ConfigType = {
     maxFavorite: 10,
   },
   map: {
+    updateInterval: 5,
     latitudeDelta: 0.15,
     sources: {
       server1: 'server1Url',
@@ -28,6 +31,7 @@ const defaultConfig: ConfigType = {
     layers: [
       {
         id: 1,
+        type: 'WMS',
         name: { fi: 'fiName', sv: 'svName', en: 'enName' },
         legend: 'urlString',
         sources: [
@@ -38,12 +42,14 @@ const defaultConfig: ConfigType = {
           },
         ],
         times: {
-          60: { forecast: 8 },
-          30: { forecast: 4 },
+          timeStep: 15,
+          observation: 12,
+          forecast: 8,
         },
       },
       {
         id: 7,
+        type: 'WMS',
         name: { en: 'enName' },
         legend: 'urlString',
         sources: [
@@ -59,7 +65,9 @@ const defaultConfig: ConfigType = {
           },
         ],
         times: {
-          60: { observation: 4, forecast: 4 },
+          timeStep: 15,
+          observation: 12,
+          forecast: 8,
         },
       },
     ],
@@ -67,11 +75,13 @@ const defaultConfig: ConfigType = {
   weather: {
     apiUrl: 'weatherApiUrl',
     forecast: {
+      updateInterval: 5,
       timePeriod: 'data',
       producer: 'default',
       parameters: ['Temperature'],
     },
     observation: {
+      updateInterval: 5,
       enabled: true,
       numberOfStations: 10,
       producer: 'observation_producer',
@@ -81,6 +91,7 @@ const defaultConfig: ConfigType = {
   },
   warnings: {
     enabled: true,
+    updateInterval: 5,
     apiUrl: 'warningsApiUrl',
   },
   settings: {
