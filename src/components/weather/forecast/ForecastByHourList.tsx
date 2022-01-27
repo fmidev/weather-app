@@ -49,7 +49,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
         : currentDayOffset + (activeDayIndex - 1) * 24 + 12;
 
       const index =
-        calculatedIndex > data.length ? data.length : calculatedIndex;
+        calculatedIndex > data.length ? data.length - 1 : calculatedIndex;
       if (index >= 0) {
         virtualizedList.current.scrollToIndex({
           index,
@@ -62,7 +62,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   if (!isOpen && !data) return null;
 
   const DayDurationRow = () => {
-    const step = data[0];
+    const calculatedStepIndex = !currentIndex
+      ? 0
+      : currentDayOffset + (currentIndex - 1) * 24 + 12;
+    const adjustedStepIndex =
+      calculatedStepIndex > data.length ? data.length - 1 : calculatedStepIndex;
+
+    const step = data[adjustedStepIndex];
     const sunrise = moment(step.sunrise);
     const sunset = moment(step.sunset);
     const dayHours = Math.floor(step.daylength / 60);
