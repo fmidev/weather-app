@@ -16,6 +16,7 @@ const defaultState: types.ForecastState = {
   displayParams: initialParams,
   displayFormat: 'table',
   chartDisplayParam: 'temperature',
+  fetchTimestamp: Date.now(),
 };
 
 describe('forecast reducer', () => {
