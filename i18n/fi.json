@@ -39,8 +39,8 @@
   },
   "forecast": {
     "nextHourForecast": "Seuraavan tunnin ennuste,",
-    "panelHeader": "Sääennuste",
-    "lastUpdated": "Päivitetty viimeksi",
+    "panelHeader": "10 vrk ennuste",
+    "updated": "Päivitetty",
     "sunrise": "Aurinko nousee",
     "sunset": "Laskee",
     "dayLength": "Päivän pituus",
