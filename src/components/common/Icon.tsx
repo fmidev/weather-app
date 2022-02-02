@@ -49,6 +49,9 @@ import Settings from '@assets/images/icons/settings.svg';
 import Snow from '@assets/images/icons/snow.svg';
 import StarSelected from '@assets/images/icons/star-selected.svg';
 import StarUnselected from '@assets/images/icons/star-unselected.svg';
+import SunArrowDown from '@assets/images/icons/sun-arrow-down.svg';
+import SunArrowUp from '@assets/images/icons/sun-arrow-up.svg';
+import Sun from '@assets/images/icons/sun.svg';
 import Sunrise from '@assets/images/icons/sunrise.svg';
 import Sunset from '@assets/images/icons/sunset.svg';
 import TemperatureDark from '@assets/images/icons/temperature-dark.svg';
@@ -209,6 +212,12 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <StarSelected {...(props as SvgProps)} />;
     case 'star-unselected':
       return <StarUnselected {...(props as SvgProps)} />;
+    case 'sun-arrow-down':
+      return <SunArrowDown {...(props as SvgProps)} />;
+    case 'sun-arrow-up':
+      return <SunArrowUp {...(props as SvgProps)} />;
+    case 'sun':
+      return <Sun {...(props as SvgProps)} />;
     case 'sunrise':
       return <Sunrise {...(props as SvgProps)} />;
     case 'sunset':

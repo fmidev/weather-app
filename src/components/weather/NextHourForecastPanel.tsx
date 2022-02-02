@@ -146,7 +146,12 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           </Text>
         </View>
         <View style={styles.row}>
-          <Icon name="precipitation" color={colors.hourListText} />
+          <Icon
+            name="precipitation"
+            color={colors.hourListText}
+            width={28}
+            height={28}
+          />
           <Text style={[styles.text, { color: colors.hourListText }]}>
             <Text style={styles.bold}>{`${nextHourForecast.precipitation1h
               .toFixed(1)
@@ -155,11 +160,15 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           </Text>
         </View>
         <View style={styles.row}>
-          <Icon name="weather-symbol" color={colors.hourListText} />
+          <Icon
+            name="sun"
+            color={colors.hourListText}
+            style={styles.withSmallMarginRight}
+          />
           <View>
             <View style={styles.row}>
               <Icon
-                name="arrow-up-outline"
+                name="sun-arrow-up"
                 size={14}
                 color={colors.hourListText}
                 style={styles.withSmallMarginRight}
@@ -175,7 +184,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             </View>
             <View style={styles.row}>
               <Icon
-                name="arrow-down-outline"
+                name="sun-arrow-down"
                 size={14}
                 color={colors.hourListText}
                 style={styles.withSmallMarginRight}
