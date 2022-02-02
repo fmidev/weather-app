@@ -256,6 +256,16 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           </View>
         </>
       )}
+      {chartType === 'snowDepth' && (
+        <>
+          <View style={styles.legendRow}>
+            <Bar color={colors.primaryText} />
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
+              {t('weather:charts:snowDepth')} (m)
+            </Text>
+          </View>
+        </>
+      )}
     </View>
   );
 };

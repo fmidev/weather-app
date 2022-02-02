@@ -58,7 +58,7 @@ export interface TimeStepData {
   precipitation1h: number | null;
   pressure: number | null;
   ri_10min: number | null;
-  snowdepth: number | null;
+  snowDepth: number | null;
   temperature: number | null;
   totalcloudcover: number | null;
   visibility: number | null;

@@ -23,7 +23,8 @@ export type ChartType =
   | 'cloud'
   | 'precipitation'
   | 'temperature'
-  | 'wind';
+  | 'wind'
+  | 'snowDepth';
 
 export type ChartSettings = {
   [key in ChartType]: {

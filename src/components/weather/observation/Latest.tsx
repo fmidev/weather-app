@@ -131,6 +131,13 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
                 ]}>
                 {t('measurements.totalCloudCover')}
               </Text>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
+                {t('measurements.snowDepth')}
+              </Text>
             </View>
             <View style={styles.observationRow}>
               <View>
@@ -216,6 +223,14 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
                         `cloudcover.${latestObservation.totalcloudcover}`
                       )} (${latestObservation.totalcloudcover}/8)`
                     : '-'}
+                </Text>
+                <Text
+                  style={[styles.panelValue, { color: colors.hourListText }]}>
+                  {getObservationCellValue(
+                    latestObservation,
+                    'snowDepth',
+                    'cm'
+                  )}
                 </Text>
               </View>
             </View>

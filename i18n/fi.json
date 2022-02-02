@@ -33,7 +33,8 @@
       "previous24h": "Edelliset 24 h",
       "previous24hAccessibilityLabel": "Näytä edelliset 24 tuntia",
       "next24h": "Seuraavat 24 h",
-      "next24hAccessibilityLabel": "Näytä seuraavat 24 tuntia"
+      "next24hAccessibilityLabel": "Näytä seuraavat 24 tuntia",
+      "snowDepth": "Lumensyvyys"
     },
     "parameter": "Suure"
   },
@@ -142,7 +143,8 @@
       "humidity": "Kosteus",
       "visibility": "Näkyvyys",
       "totalCloudCover": "Pilvisyys",
-      "cloudBase": "Pilven alarajan korkeus"
+      "cloudBase": "Pilven alarajan korkeus",
+      "snowDepth": "Lumensyvyys"
     },
     "cloudcover": {
       "0": "Selkeää",

@@ -39,6 +39,7 @@ import HumidityChart from './HumidityChart';
 import PressureChart from './PressureChart';
 import VisCloudChart from './VisCloudChart';
 import CloudHeightChart from './CloudHeightChart';
+import SnowDepthChart from './SnowDepth';
 
 type ChartProps = {
   data: ChartData;
@@ -138,8 +139,16 @@ const Chart: React.FC<ChartProps> = ({
       ],
       component: WindChart,
     },
+    snowDepth: {
+      params: ['snowDepth'],
+      component: SnowDepthChart,
+    },
   };
-  const ChartComponent = chartSettings[chartType].component;
+
+  const ChartComponent = chartSettings[chartType]?.component;
+  if (!ChartComponent) {
+    return null;
+  }
 
   const minMax: ChartMinMax = [];
 
@@ -158,7 +167,7 @@ const Chart: React.FC<ChartProps> = ({
       .filter(({ y }) => y !== undefined);
   });
 
-  const tickValues = chartTickValues(data, observation, tickInterval);
+  const tickValues = chartTickValues(data, tickInterval);
   const xDomain = chartXDomain(tickValues);
   const yDomain = chartYDomain(minMax, chartType);
   const yLabelText = chartYLabelText(chartType);

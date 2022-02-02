@@ -98,6 +98,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'humidity',
     'visCloud',
     'cloud',
+    'snowDepth',
   ];
 
   const parameter = chartParameter ?? charts[0];
