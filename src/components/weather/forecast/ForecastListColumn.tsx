@@ -1,29 +1,21 @@
 import React, { memo } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 
 import Icon from '@components/common/Icon';
 
-import { State } from '@store/types';
 import { TimestepData } from '@store/forecast/types';
-import { selectDisplayParams } from '@store/forecast/selectors';
 
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
 import * as constants from '@store/forecast/constants';
 
-const mapStateToProps = (state: State) => ({
-  displayParams: selectDisplayParams(state),
-});
+import { isOdd } from '@utils/helpers';
 
-const connector = connect(mapStateToProps, {});
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type ForecastListColumnProps = PropsFromRedux & {
+type ForecastListColumnProps = {
   data: TimestepData;
+  displayParams: [number, string][];
 };
 
 const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
@@ -35,24 +27,30 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   const time = moment.unix(data.epochtime).format('HH:mm');
   const tempPrefix = data.temperature > 0 ? '+' : '';
   const feelsLikePrefix = data.feelsLike > 0 ? '+' : '';
+  const dewPointPrefix = data.dewpoint > 0 ? '+' : '';
   const smartSymbol = weatherSymbolGetter(data.smartSymbol.toString(), dark);
 
   return (
     <View style={[styles.hourColumn, { borderColor: colors.border }]}>
-      <View style={styles.hourBlock}>
+      <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
         <Text
           style={[
-            styles.panelText,
+            styles.hourText,
             styles.medium,
             { color: colors.hourListText },
           ]}>
           {time}
         </Text>
       </View>
-      {displayParams.map(([i, param]) => {
+      {displayParams.map(([i, param], index) => {
         if (param === constants.SMART_SYMBOL) {
           return (
-            <View key={i}>
+            <View
+              key={i}
+              style={[
+                styles.hourBlock,
+                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+              ]}>
               {smartSymbol?.({
                 width: 40,
                 height: 40,
@@ -62,7 +60,12 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         }
         if (param === constants.WIND_SPEED_AND_DIRECTION) {
           return (
-            <View key={i} style={styles.windBlock}>
+            <View
+              key={i}
+              style={[
+                styles.hourBlock,
+                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+              ]}>
               <Icon
                 name={dark ? 'wind-dark' : 'wind-light'}
                 width={20}
@@ -88,7 +91,12 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         }
         if (param === constants.TEMPERATURE) {
           return (
-            <View key={i} style={styles.hourBlock}>
+            <View
+              key={i}
+              style={[
+                styles.hourBlock,
+                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+              ]}>
               <Text
                 style={[
                   styles.hourText,
@@ -99,7 +107,12 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         }
         if (param === constants.FEELS_LIKE) {
           return (
-            <View key={i} style={styles.hourBlock}>
+            <View
+              key={i}
+              style={[
+                styles.hourBlock,
+                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+              ]}>
               <Text
                 style={[
                   styles.hourText,
@@ -109,17 +122,32 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           );
         }
 
+        if (param === constants.DEW_POINT) {
+          return (
+            <View
+              key={i}
+              style={[
+                styles.hourBlock,
+                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+              ]}>
+              <Text
+                style={[
+                  styles.hourText,
+                  { color: colors.hourListText },
+                ]}>{`${dewPointPrefix}${data.dewpoint}°`}</Text>
+            </View>
+          );
+        }
+
         const toDisplay =
           data[param] !== null && data[param] !== undefined ? data[param] : '-';
         return (
           <View
             key={i}
-            style={
-              param === constants.PRECIPITATION_1H ||
-              param === constants.WIND_GUST
-                ? styles.windBlock
-                : styles.hourBlock
-            }>
+            style={[
+              styles.hourBlock,
+              { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+            ]}>
             <Text style={[styles.hourText, { color: colors.hourListText }]}>
               {param === constants.PRECIPITATION_1H &&
               toDisplay >= 0 &&
@@ -138,10 +166,6 @@ const styles = StyleSheet.create({
   medium: {
     fontFamily: 'Roboto-Medium',
   },
-  panelText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-  },
   withMarginTop: {
     marginTop: 2,
   },
@@ -150,21 +174,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
   },
   hourColumn: {
-    width: 48,
+    width: 52,
     borderRightWidth: 1,
     borderTopWidth: 1,
-    borderBottomWidth: 1,
-    paddingHorizontal: 4,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingBottom: 4,
   },
-  hourBlock: { height: 40, justifyContent: 'center', alignItems: 'center' },
-  windBlock: {
-    height: 60,
+  hourBlock: {
+    height: 52,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
 });
 
-export default memo(connector(ForecastListColumn));
+export default memo(ForecastListColumn);

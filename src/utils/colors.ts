@@ -5,6 +5,7 @@ export const LIGHT_BLUE = '#EEF4FB';
 
 export const WHITE = '#FFFFFF';
 export const WHITE_TRANSPARENT = 'rgba(255,255,255,0.0)';
+export const WHITE_OPACITY = 'rgba(255,255,255,0.07)';
 export const TRANSPARENT = 'transparent';
 
 export const BLACK = '#000000';
@@ -21,6 +22,9 @@ export const GRAY_1_OPACITY = 'rgba(142,142,147,0.08)';
 
 export const GRAY_6_TRANSPARENT = 'rgba(28,28,30,0.0)';
 export const GRAY_6_95 = 'rgba(28,28,30,0.95)';
+
+export const BLACK_OPACITY = 'rgba(0,0,0,0.07)';
+export const BLACK_TRANSPARENT = 'rgba(0,0,0,0.0)';
 
 export const SHADOW_DARK = 'rgba(0,0,0,0.3)';
 export const SHADOW_LIGHT = 'rgba(48,49,147,0.1)';
@@ -79,5 +83,6 @@ export type CustomTheme = {
     tabBarActive: string;
     timeSliderObservationText: string;
     timeSliderTick: string;
+    listTint: string;
   };
 };

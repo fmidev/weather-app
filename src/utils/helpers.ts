@@ -180,3 +180,5 @@ export const getFeelsLikeIconName = (
     return 'feels-like-raining';
   return 'feels-like-basic';
 };
+
+export const isOdd = (num: number) => !!(num % 2);

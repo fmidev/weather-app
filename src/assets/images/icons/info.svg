@@ -1,11 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-    <g fill="none" fill-rule="evenodd">
-        <g fill="currentColor" fill-rule="nonzero">
-            <g transform="translate(1.000000, 1.000000)">
-                <path d="M11 0c6.075 0 11 4.925 11 11s-4.925 11-11 11S0 17.075 0 11 4.925 0 11 0zm0 2c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"/>
-                <rect width="2" height="6" x="10" y="10" rx="1"/>
-                <circle cx="11" cy="7.5" r="1.5"/>
-            </g>
-        </g>
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(1 1)" fill="currentColor" fill-rule="nonzero">
+        <path d="M11 0c6.075 0 11 4.925 11 11s-4.925 11-11 11S0 17.075 0 11 4.925 0 11 0zm0 2a9 9 0 1 0 .001 18.001A9 9 0 0 0 11 2z"/>
+        <rect x="10" y="10" width="2" height="6" rx="1"/>
+        <circle cx="11" cy="7.5" r="1.5"/>
     </g>
 </svg>

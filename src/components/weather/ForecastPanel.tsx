@@ -112,13 +112,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           shadowColor: colors.shadow,
         },
       ]}>
-      <PanelHeader title={t('panelHeader')} />
-      <View style={styles.panelContainer}>
-        <Text style={[styles.panelText, { color: colors.hourListText }]}>
-          {t('lastUpdated')}{' '}
-          <Text style={styles.bold}>{forecastLastUpdated}</Text>
-        </Text>
-      </View>
+      <PanelHeader title={t('panelHeader')} lastUpdated={forecastLastUpdated} />
       <View style={styles.panelContainer}>
         <View style={[styles.row]}>
           <View style={[styles.row, styles.justifyStart]}>
@@ -288,16 +282,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     elevation: 3,
   },
-  bold: {
-    fontFamily: 'Roboto-Bold',
-  },
   panelContainer: {
     paddingVertical: 12,
     paddingHorizontal: 12,
-  },
-  panelText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
   },
   row: {
     flexDirection: 'row',
@@ -306,7 +293,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forecastContainer: {
-    marginHorizontal: 8,
+    marginLeft: 8,
     marginBottom: 8,
     flex: 1,
   },

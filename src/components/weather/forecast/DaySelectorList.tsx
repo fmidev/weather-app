@@ -138,6 +138,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       listKey="dayStrip"
       ref={dayStripRef}
       style={styles.list}
+      contentContainerStyle={styles.listContentContainer}
       data={dayData}
       horizontal
       renderItem={colRenderer}
@@ -160,6 +161,9 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
 const styles = StyleSheet.create({
   list: {
     maxHeight: 100,
+  },
+  listContentContainer: {
+    paddingRight: 8,
   },
   dayBlock: {
     minWidth: 80,

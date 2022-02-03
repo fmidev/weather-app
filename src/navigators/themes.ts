@@ -17,6 +17,7 @@ import {
   SHADOW_DARK,
   SHADOW_LIGHT,
   CHART_BLUE,
+  GRAY_1_OPACITY,
 } from '@utils/colors';
 
 export const lightTheme = {
@@ -53,6 +54,7 @@ export const lightTheme = {
     tabBarActive: SECONDARY_BLUE,
     timeSliderObservationText: GRAY_3,
     timeSliderTick: GRAY_2,
+    listTint: GRAY_1_OPACITY,
   },
 };
 
@@ -90,5 +92,6 @@ export const darkTheme = {
     tabBarActive: WHITE,
     timeSliderObservationText: GRAY_1,
     timeSliderTick: GRAY_1,
+    listTint: GRAY_1_OPACITY,
   },
 };

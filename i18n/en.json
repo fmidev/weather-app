@@ -39,8 +39,8 @@
   },
   "forecast": {
     "nextHourForecast": "Next hour forecast,",
-    "panelHeader": "Weather forecast",
-    "lastUpdated": "Last updated",
+    "panelHeader": "10 day forecast",
+    "updated": "Updated",
     "sunrise": "Sunrise",
     "sunset": "Sunset",
     "dayLength": "Length of day",
