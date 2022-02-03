@@ -146,12 +146,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           </Text>
         </View>
         <View style={styles.row}>
-          <Icon
-            name="precipitation"
-            color={colors.hourListText}
-            width={28}
-            height={28}
-          />
+          <Icon name="precipitation" color={colors.hourListText} />
           <Text style={[styles.text, { color: colors.hourListText }]}>
             <Text style={styles.bold}>{`${nextHourForecast.precipitation1h
               .toFixed(1)

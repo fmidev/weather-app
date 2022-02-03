@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forecastContainer: {
-    marginHorizontal: 8,
+    marginLeft: 8,
     marginBottom: 8,
     flex: 1,
   },

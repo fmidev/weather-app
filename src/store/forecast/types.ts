@@ -84,6 +84,7 @@ export interface TimestepData {
   precipitation1h: number;
   feelsLike: number;
   dark: number;
+  dewpoint: number;
   [key: string]: string | number;
 }
 export interface ForecastLocation {

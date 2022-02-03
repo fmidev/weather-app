@@ -1,4 +1,5 @@
 import React, { memo, useState, useRef, useEffect } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   Text,
@@ -10,16 +11,33 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
+import LinearGradient from 'react-native-linear-gradient';
 
 import Icon from '@components/common/Icon';
-
+import { State } from '@store/types';
 import { TimestepData } from '@store/forecast/types';
-import { CustomTheme } from '@utils/colors';
+import { selectDisplayParams } from '@store/forecast/selectors';
+import {
+  BLACK_OPACITY,
+  WHITE_TRANSPARENT,
+  BLACK_TRANSPARENT,
+  WHITE_OPACITY,
+  CustomTheme,
+} from '@utils/colors';
 
+import { isOdd } from '@utils/helpers';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
-type ForecastByHourListProps = {
+const mapStateToProps = (state: State) => ({
+  displayParams: selectDisplayParams(state),
+});
+
+const connector = connect(mapStateToProps, {});
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type ForecastByHourListProps = PropsFromRedux & {
   data: TimestepData[];
   isOpen: boolean;
   activeDayIndex: number;
@@ -33,9 +51,10 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   activeDayIndex,
   setActiveDayIndex,
   currentDayOffset,
+  displayParams,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
 
   const virtualizedList = useRef() as React.MutableRefObject<
@@ -81,161 +100,187 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     return (
       <View
         style={[
-          styles.row,
           styles.dayLengthContainer,
           styles.forecastHeader,
-          styles.justifySpaceAround,
-          { borderBottomColor: colors.border },
+          {
+            borderColor: colors.border,
+            backgroundColor: isOdd(displayParams.length)
+              ? colors.listTint
+              : undefined,
+          },
         ]}>
-        {isPolarNight && !isMidnightSun && (
-          <>
-            <View style={[styles.row, styles.alignCenter]}>
-              <Icon
-                width={24}
-                height={24}
-                name="polar-night"
-                style={[
-                  styles.withMarginRight,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}
-              />
-              <Text
-                style={[
-                  styles.panelText,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {t('weatherInfoBottomSheet.polarNight')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.alignCenter]}>
-              <Icon
-                width={24}
-                height={24}
-                name="sunrise"
-                style={[
-                  styles.withMarginRight,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}
-              />
-              <Text
-                style={[
-                  styles.panelText,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {sunrise.format(`DD.MM.YYYY [${t('at')}] HH:mm`)}
-              </Text>
-            </View>
-          </>
-        )}
-        {isMidnightSun && !isPolarNight && (
-          <>
-            <View style={[styles.row, styles.alignCenter]}>
-              <Icon
-                width={24}
-                height={24}
-                name="midnight-sun"
-                style={[
-                  styles.withMarginRight,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}
-              />
-              <Text
-                style={[
-                  styles.panelText,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {t('weatherInfoBottomSheet.nightlessNight')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.alignCenter]}>
-              <Icon
-                width={24}
-                height={24}
-                name="sunset"
-                style={[
-                  styles.withMarginRight,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}
-              />
-              <Text
-                style={[
-                  styles.panelText,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {sunset.format(`DD.MM.YYYY [${t('at')}] HH:mm`)}
-              </Text>
-            </View>
-          </>
-        )}
-        {!isPolarNight && !isMidnightSun && (
-          <>
-            <View style={[styles.row, styles.alignCenter]}>
-              <Icon
-                width={24}
-                height={24}
-                name="sunrise"
-                style={[
-                  styles.withMarginRight,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}
-              />
-              <Text
-                style={[
-                  styles.panelText,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {sunrise.format('HH:mm')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.alignCenter]}>
-              <Icon
-                width={24}
-                height={24}
-                name="sunset"
-                style={[styles.withMarginRight, { color: colors.hourListText }]}
-              />
-              <Text
-                style={[
-                  styles.panelText,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {sunset.format('HH:mm')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.alignCenter]}>
-              <Icon
-                width={24}
-                height={24}
-                name="time"
-                style={[styles.withMarginRight, { color: colors.hourListText }]}
-              />
-              <Text
-                style={[
-                  styles.panelText,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {`${dayHours} h ${dayMinutes} min`}
-              </Text>
-            </View>
-          </>
-        )}
+        <View
+          style={[
+            styles.symbolBlock,
+            {
+              borderColor: colors.border,
+            },
+          ]}>
+          <Icon name="sun" color={colors.hourListText} />
+        </View>
+        <View
+          style={[styles.row, styles.listContainer, styles.paddingHorizontal]}>
+          {isPolarNight && !isMidnightSun && (
+            <>
+              <View
+                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+                <Icon
+                  width={24}
+                  height={24}
+                  name="polar-night"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {t('weatherInfoBottomSheet.polarNight')}
+                </Text>
+              </View>
+              <View style={[styles.row, styles.alignCenter]}>
+                <Icon
+                  width={14}
+                  height={14}
+                  name="sun-arrow-up"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {sunrise.format(`DD.MM.YYYY [${t('at')}] HH:mm`)}
+                </Text>
+              </View>
+            </>
+          )}
+          {isMidnightSun && !isPolarNight && (
+            <>
+              <View
+                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+                <Icon
+                  width={24}
+                  height={24}
+                  name="midnight-sun"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {t('weatherInfoBottomSheet.nightlessNight')}
+                </Text>
+              </View>
+              <View style={[styles.row, styles.alignCenter]}>
+                <Icon
+                  width={14}
+                  height={14}
+                  name="sun-arrow-down"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {sunset.format(`DD.MM.YYYY [${t('at')}] HH:mm`)}
+                </Text>
+              </View>
+            </>
+          )}
+          {!isPolarNight && !isMidnightSun && (
+            <>
+              <View
+                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+                <Icon
+                  width={14}
+                  height={14}
+                  name="sun-arrow-up"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {sunrise.format('HH:mm')}
+                </Text>
+              </View>
+              <View
+                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+                <Icon
+                  width={14}
+                  height={14}
+                  name="sun-arrow-down"
+                  style={[
+                    styles.withMarginRight,
+                    { color: colors.hourListText },
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {sunset.format('HH:mm')}
+                </Text>
+              </View>
+              <View
+                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+                <Icon
+                  width={24}
+                  height={24}
+                  name="time"
+                  style={[
+                    styles.withMarginRight,
+                    { color: colors.hourListText },
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {`${dayHours} h ${dayMinutes} min`}
+                </Text>
+              </View>
+            </>
+          )}
+        </View>
       </View>
     );
   };
@@ -244,7 +289,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset } = nativeEvent;
-    const dayIndex = Math.ceil((contentOffset.x / 48 - currentDayOffset) / 24);
+    const dayIndex = Math.ceil((contentOffset.x / 52 - currentDayOffset) / 24);
     if (dayIndex !== currentIndex) setCurrentIndex(dayIndex);
     if (dayIndex !== activeDayIndex) {
       setActiveDayIndex(dayIndex);
@@ -256,7 +301,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   return (
     <View style={[!isOpen && styles.displayNone]}>
       <View style={styles.row}>
-        <ForecastListHeaderColumn />
+        <ForecastListHeaderColumn displayParams={displayParams} />
         <View style={styles.listContainer}>
           <VirtualizedList
             listKey="hoursList"
@@ -268,20 +313,41 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             onScrollToIndexFailed={({ index }) => {
               console.warn(`scroll to index: ${index} failed`);
             }}
-            renderItem={({ item }: any) => <ForecastListColumn data={item} />}
+            renderItem={({ item }: any) => (
+              <ForecastListColumn data={item} displayParams={displayParams} />
+            )}
             horizontal
             showsHorizontalScrollIndicator={false}
             onScroll={handleOnScroll}
             getItemLayout={(_, index: number) => ({
-              length: 48,
-              offset: index * 48,
+              length: 52,
+              offset: index * 52,
               index,
             })}
           />
         </View>
       </View>
-
       <DayDurationRow />
+      <LinearGradient
+        style={[styles.gradient, styles.gradientLeft]}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}
+        colors={
+          dark
+            ? [WHITE_OPACITY, BLACK_TRANSPARENT]
+            : [BLACK_OPACITY, WHITE_TRANSPARENT]
+        }
+      />
+      <LinearGradient
+        style={[styles.gradient, styles.gradientRight]}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}
+        colors={
+          dark
+            ? [BLACK_TRANSPARENT, WHITE_OPACITY]
+            : [WHITE_TRANSPARENT, BLACK_OPACITY]
+        }
+      />
     </View>
   );
 };
@@ -293,8 +359,6 @@ const styles = StyleSheet.create({
   dayLengthContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    flex: 1,
   },
   listContainer: {
     flex: 1,
@@ -307,12 +371,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
   },
   withMarginRight: {
-    marginRight: 9,
+    marginRight: 2,
   },
   forecastHeader: {
-    height: 56,
+    height: 52,
+    borderLeftWidth: 1,
     borderBottomWidth: 1,
-    paddingHorizontal: 16,
   },
   displayNone: {
     display: 'none',
@@ -320,9 +384,28 @@ const styles = StyleSheet.create({
   alignCenter: {
     alignItems: 'center',
   },
-  justifySpaceAround: {
-    justifyContent: 'space-around',
+  symbolBlock: {
+    height: '100%',
+    width: 51,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRightWidth: 1,
+  },
+  paddingHorizontal: {
+    paddingHorizontal: 16,
+  },
+  gradient: {
+    position: 'absolute',
+    width: 32,
+    height: '100%',
+    zIndex: 3,
+  },
+  gradientLeft: {
+    left: 52,
+  },
+  gradientRight: {
+    right: 0,
   },
 });
 
-export default memo(ForecastByHourList);
+export default memo(connector(ForecastByHourList));
