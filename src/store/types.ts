@@ -4,6 +4,7 @@ import { SettingsState } from './settings/types';
 import { MapState } from './map/types';
 import { LocationState } from './location/types';
 import { NavigationState } from './navigation/types';
+import { WarningsState } from './warnings/types';
 
 export interface State {
   settings: SettingsState;
@@ -12,6 +13,7 @@ export interface State {
   map: MapState;
   location: LocationState;
   navigation: NavigationState;
+  warnings: WarningsState;
 }
 
 export interface PersistConfig {
