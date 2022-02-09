@@ -147,7 +147,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   // return null until something to return
   if (!image || !bounds) return null;
 
-  return <WMSTile urlTemplate={image} />;
+  return <WMSTile key={image} urlTemplate={image} />;
 };
 
 export default connector(WMSOverlay);
