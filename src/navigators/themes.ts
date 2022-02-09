@@ -43,7 +43,7 @@ export const lightTheme = {
     cardHeader: PRIMARY_BLUE,
     cardShadow: GRAYISH_BLUE,
     warningsIconFill: PRIMARY_BLUE,
-    selectedDayBackground: PRIMARY_BLUE,
+    selectedDayBackground: LIGHT_BLUE,
     chartPrimaryLine: PRIMARY_BLUE,
     chartSecondaryLine: SECONDARY_BLUE,
     chartGrid: GRAY_8,

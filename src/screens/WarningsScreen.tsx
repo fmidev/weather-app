@@ -1,85 +1,94 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { WebView } from 'react-native-webview';
-import { useTheme, useIsFocused } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { useIsFocused, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
+
+import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
+import WarningsWebViewPanel from '@components/warnings/WarningsWebViewPanel';
+import WarningsPanel from '@components/warnings/WarningsPanel';
+import { State } from '@store/types';
+import { connect, ConnectedProps } from 'react-redux';
+import { selectCurrent } from '@store/location/selector';
 
-const WarningsScreen: React.FC = () => {
+const mapStateToProps = (state: State) => ({
+  location: selectCurrent(state),
+});
+
+const mapDispatchToProps = {
+  fetchWarnings: fetchWarningsAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type WarningsScreenProps = PropsFromRedux;
+const WarningsScreen: React.FC<WarningsScreenProps> = ({
+  fetchWarnings,
+  location,
+}) => {
   const { colors } = useTheme() as CustomTheme;
-  const { shouldReload } = useReloader();
-  const [updated, setUpdated] = useState<number>(Date.now());
-  const webViewRef = useRef(null);
   const isFocused = useIsFocused();
-  const { i18n } = useTranslation('forecast');
-  const locale = ['en', 'fi', 'sv'].includes(i18n.language)
-    ? i18n.language
-    : 'en';
+  const { shouldReload } = useReloader();
+  const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
 
-  const { webViewUrl, updateInterval } = Config.get('warnings');
+  const warningsConfig = Config.get('warnings');
+
+  const updateWarnings = useCallback(() => {
+    if (warningsConfig.enabled && warningsConfig.apiUrl[location.country]) {
+      fetchWarnings(location);
+      setWarningsUpdated(Date.now());
+    }
+  }, [fetchWarnings, location, warningsConfig]);
 
   useEffect(() => {
     const now = Date.now();
-    const timeToUpdate = updated + (updateInterval ?? 5) * 60 * 1000;
-    if (isFocused && (now > timeToUpdate || shouldReload > timeToUpdate)) {
-      const script = `
-      document.getElementById('fmi-warnings').__vue__.update();
-      true;
-      `;
-      // @ts-ignore
-      webViewRef?.current?.injectJavaScript(script);
-      setUpdated(now);
+    const warningsUpdateTime =
+      warningsUpdated + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
+
+    if (isFocused) {
+      if (now > warningsUpdateTime || shouldReload > warningsUpdateTime) {
+        updateWarnings();
+      }
     }
-  }, [isFocused, updated, shouldReload, updateInterval]);
+  }, [
+    isFocused,
+    warningsUpdated,
+    shouldReload,
+    warningsConfig,
+    updateWarnings,
+  ]);
 
-  if (!webViewUrl) {
-    return null;
-  }
-
-  const injectedJavaScript = `(function() {
-    const meta = document.createElement('meta');
-    meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1');
-    meta.setAttribute('name', 'viewport');
-    document.getElementsByTagName('head')[0].appendChild(meta);
-
-    const style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = '\
-      body { background-color: ${colors.screenBackground} !important; margin: 0px !important; margin-top: 12px !important; } \
-      #fmi-warnings { padding: 0px !important; margin:  0px !important; } \
-      @media (max-width: 575px) {.date-selector-cell-header { background-color: ${colors.screenBackground} !important; } } \
-      .nav-tabs > .nav-item:first-of-type .date-selector-text { border-top-left-radius: 10px !important; } \
-      .nav-tabs > .nav-item:last-of-type .date-selector-text { border-top-right-radius: 10px !important; } \
-      .header-region, .symbol-list { padding-left: 5px !important} \
-      .data-providers > span { font-size: 12px !important } \
-      .day-region-views > h3 { display: none } \
-      .symbol-list-header-row { margin-right: 10px !important; } \
-    ';
-    document.getElementsByTagName('head')[0].appendChild(style);
-    })();`;
-
-  const uri = `${webViewUrl}/index.${locale}.html`;
+  useEffect(() => {
+    updateWarnings();
+  }, [location, updateWarnings]);
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: colors.screenBackground }]}>
-      <WebView
-        ref={webViewRef}
-        source={{ uri }}
-        showsVerticalScrollIndicator={false}
-        injectedJavaScript={injectedJavaScript}
-        onMessage={() => {}}
-      />
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
+        style={[styles.container, { backgroundColor: colors.screenBackground }]}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}>
+        <WarningsPanel />
+        <WarningsWebViewPanel />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
+  },
+  container: {
+    minHeight: '100%',
     paddingHorizontal: 12,
+  },
+  contentContainer: {
+    paddingTop: 12,
+    paddingBottom: 20,
   },
 });
 
-export default WarningsScreen;
+export default connector(WarningsScreen);

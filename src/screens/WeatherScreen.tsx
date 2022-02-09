@@ -8,6 +8,7 @@ import { selectCurrent } from '@store/location/selector';
 
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
+import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
 
 import NextHourForecastPanel from '@components/weather/NextHourForecastPanel';
 import ForecastPanel from '@components/weather/ForecastPanel';
@@ -17,6 +18,7 @@ import { CustomTheme } from '@utils/colors';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
+import WarningsPanelSlim from '@components/warnings/WarningsPanelSlim';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
@@ -25,6 +27,7 @@ const mapStateToProps = (state: State) => ({
 const mapDispatchToProps = {
   fetchForecast: fetchForecastAction,
   fetchObservation: fetchObservationAction,
+  fetchWarnings: fetchWarningsAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -36,6 +39,7 @@ type WeatherScreenProps = PropsFromRedux;
 const WeatherScreen: React.FC<WeatherScreenProps> = ({
   fetchForecast,
   fetchObservation,
+  fetchWarnings,
   location,
 }) => {
   const { colors } = useTheme() as CustomTheme;
@@ -44,9 +48,10 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const [observationUpdated, setObservationUpdated] = useState<number>(
     Date.now()
   );
+  const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
   const { shouldReload } = useReloader();
 
-  const weatherConfig = Config.get('weather');
+  const { weather: weatherConfig, warnings: warningsConfig } = Config.getAll();
 
   const updateForecast = useCallback(() => {
     const geoid = location.id;
@@ -61,6 +66,13 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     }
   }, [fetchObservation, location, weatherConfig.observation.enabled]);
 
+  const updateWarnings = useCallback(() => {
+    if (warningsConfig.enabled && warningsConfig.apiUrl[location.country]) {
+      fetchWarnings(location);
+      setWarningsUpdated(Date.now());
+    }
+  }, [fetchWarnings, location, warningsConfig]);
+
   useEffect(() => {
     const now = Date.now();
     const observationUpdateTime =
@@ -69,6 +81,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     const forecastUpdateTime =
       forecastUpdated +
       (weatherConfig.forecast.updateInterval ?? 5) * 60 * 1000;
+    const warningsUpdateTime =
+      warningsUpdated + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
 
     if (isFocused) {
       if (now > forecastUpdateTime || shouldReload > forecastUpdateTime) {
@@ -77,21 +91,29 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       if (now > observationUpdateTime || shouldReload > observationUpdateTime) {
         updateObservation();
       }
+      if (now > warningsUpdateTime || shouldReload > warningsUpdateTime) {
+        updateWarnings();
+      }
     }
   }, [
     isFocused,
     forecastUpdated,
     observationUpdated,
+    warningsUpdated,
     shouldReload,
     weatherConfig,
+    warningsConfig,
     updateForecast,
     updateObservation,
+    updateWarnings,
   ]);
 
   useEffect(() => {
     updateForecast();
     updateObservation();
-  }, [location, updateForecast, updateObservation]);
+    updateWarnings();
+  }, [location, updateForecast, updateObservation, updateWarnings]);
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -99,6 +121,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}>
         <NextHourForecastPanel />
+        <WarningsPanelSlim />
         <ForecastPanel />
         <ObservationPanel />
       </ScrollView>
