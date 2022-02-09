@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Image, ImageURISource } from 'react-native';
-import { Overlay } from 'react-native-maps';
+import { Image } from 'react-native';
+import { WMSTile } from 'react-native-maps';
 import moment from 'moment';
 
 import {
@@ -142,12 +142,12 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     ? forecast?.url
     : observation?.url;
 
-  const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
+  const image = baseUrl && (`${baseUrl}&time=${current}` as string);
 
   // return null until something to return
   if (!image || !bounds) return null;
 
-  return <Overlay bounds={bounds} image={image} />;
+  return <WMSTile urlTemplate={image} />;
 };
 
 export default connector(WMSOverlay);

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import proj4 from 'proj4';
+// import proj4 from 'proj4';
 import { parse } from 'fast-xml-parser';
 
 import { MapOverlay } from '@store/map/types';
@@ -168,16 +168,16 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
         Number(maxx),
         Number(maxy),
       ];
-      const [minX, minY] = proj4('WGS84', 'EPSG:3857', [
-        numMinX,
-        numMinY < -85 ? 85 : numMinY,
-      ]);
-      const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [
-        numMaxX,
-        numMaxY > 85 ? 85 : numMaxY,
-      ]);
+      // const [minX, minY] = proj4('WGS84', 'EPSG:3857', [
+      //   numMinX,
+      //   numMinY < -85 ? 85 : numMinY,
+      // ]);
+      // const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [
+      //   numMaxX,
+      //   numMaxY > 85 ? 85 : numMaxY,
+      // ]);
 
-      const bbox = `${minX},${minY},${maxX},${maxY}`;
+      // const bbox = `${minX},${minY},${maxX},${maxY}`;
 
       const overlayBounds = {
         bottomLeft: [numMinY, numMinX],
@@ -194,9 +194,9 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
         request: 'GetMap',
         transparent: 'true',
         layers: layerSrc.layer,
-        bbox,
-        width: '1454',
-        height: '2304',
+        bbox: '{minX},{minY},{maxX},{maxY}',
+        width: '{width}',
+        height: '{height}',
         format: 'image/png',
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
