@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
   },
   withMarginRight: {
-    marginRight: 2,
+    marginRight: 6,
   },
   forecastHeader: {
     height: 52,

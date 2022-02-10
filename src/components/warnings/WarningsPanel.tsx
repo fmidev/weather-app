@@ -183,7 +183,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           <DayDetails warnings={dailyWarnings[selectedDay].warnings} />
         </View>
         <View style={[styles.row, styles.alignCenter]}>
-          <Text style={[styles.updatedText, { color: colors.secondaryText }]}>
+          <Text style={[styles.updatedText, { color: colors.hourListText }]}>
             {t('lastUpdated')}{' '}
             <Text style={styles.bold}>
               {moment(updated).format(`DD.MM. [${t('forecast:at')}] HH:mm`)}
