@@ -82,7 +82,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
               </View>
               <View style={styles.flex}>
                 <Text
-                  style={[styles.headerText, { color: colors.secondaryText }]}>
+                  style={[styles.headerText, { color: colors.hourListText }]}>
                   <Text style={styles.bold}>{`${t(`types.${type}`)}`}</Text>
                   {` – ${t('valid')} ${moment(duration.startTime).format(
                     'DD.MM. HH:mm'
@@ -102,7 +102,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
           {openWarnings[index] && (
             <View style={styles.body}>
               <Text
-                style={[styles.description, { color: colors.secondaryText }]}>
+                style={[styles.description, { color: colors.hourListText }]}>
                 {description}
               </Text>
             </View>
