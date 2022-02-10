@@ -67,7 +67,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
   return (
     <View style={styles.container}>
       {warnings.map(({ description, type, severity, duration }, index) => (
-        <View key={`${type}-${severity}`}>
+        <View key={`${type}-${duration.startTime}`}>
           <View style={styles.flex}>
             <TouchableOpacity
               style={styles.row}
