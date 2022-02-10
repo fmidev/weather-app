@@ -40,7 +40,7 @@ const WarningsPanelSlim: React.FC<WarningsPanelSlimProps> = ({
   moment.locale(i18n.language);
 
   const lastUpdated = moment(updated).format(
-    `DD.MM.YYYY [${t('forecast:at')}] HH:mm`
+    `DD.MM. [${t('forecast:at')}] HH:mm`
   );
 
   const onPress = (index: number) => {

@@ -186,7 +186,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           <Text style={[styles.updatedText, { color: colors.secondaryText }]}>
             {t('lastUpdated')}{' '}
             <Text style={styles.bold}>
-              {moment(updated).format(`DD.MM.YYYY [${t('forecast:at')}] HH:mm`)}
+              {moment(updated).format(`DD.MM. [${t('forecast:at')}] HH:mm`)}
             </Text>
           </Text>
         </View>
