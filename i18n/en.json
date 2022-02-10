@@ -33,7 +33,8 @@
       "previous24h": "Previous 24 h",
       "previous24hAccessibilityLabel": "Show previous 24 hours",
       "next24h": "Next 24 h",
-      "next24hAccessibilityLabel": "Show next 24 hours"
+      "next24hAccessibilityLabel": "Show next 24 hours",
+      "snowDepth": "Snow depth"
     },
     "parameter": "Parameter"
   },
@@ -142,7 +143,8 @@
       "humidity": "Humidity",
       "visibility": "Visibility",
       "totalCloudCover": "Cloud cover",
-      "cloudBase": "Cloud base"
+      "cloudBase": "Cloud base",
+      "snowDepth": "Snow depth"
     },
     "cloudcover": {
       "0": "Clear",

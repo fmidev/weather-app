@@ -100,7 +100,7 @@ export const getObservation = async (
       'precipitation1h',
       'pressure',
       'ri_10min', // iso2 = 'fi'
-      'snowdepth',
+      'snowDepth',
       'stationname',
       'temperature',
       'totalcloudcover',

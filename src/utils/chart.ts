@@ -47,11 +47,7 @@ export const chartYDomain = (
   };
 };
 
-export const chartTickValues = (
-  data: ChartData,
-  observation: boolean | undefined,
-  tickInterval: number
-) => {
+export const chartTickValues = (data: ChartData, tickInterval: number) => {
   const unfiltered = data.map(({ epochtime }, index) => {
     const time = moment.unix(epochtime);
     return index === 0 ||

@@ -54,6 +54,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
       case 'cloud':
         labels = [t('measurements.cloudBase')];
         break;
+      case 'snowDepth':
+        labels = [t('measurements.snowDepth')];
+        break;
       default:
         labels = [];
     }
@@ -300,6 +303,18 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                           1,
                           1000
                         )}
+                      </Text>
+                    </View>
+                  )}
+                  {parameter === 'snowDepth' && (
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.listText,
+                          styles.rowItem,
+                          { color: colors.hourListText },
+                        ]}>
+                        {getObservationCellValue(timeStep, 'snowDepth', 'cm')}
                       </Text>
                     </View>
                   )}
