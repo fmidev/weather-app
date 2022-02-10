@@ -34,10 +34,12 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   updated,
   location,
 }) => {
-  const { t } = useTranslation('warnings');
+  const { t, i18n } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
+
+  moment.locale(i18n.language);
 
   useEffect(() => {
     setSelectedDay(route.params?.day || 0);

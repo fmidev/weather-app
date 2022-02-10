@@ -30,12 +30,14 @@ const WarningsPanelSlim: React.FC<WarningsPanelSlimProps> = ({
   dailyWarnings,
   updated,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
   const navigation = useNavigation();
   if (!updated) {
     return null;
   }
+
+  moment.locale(i18n.language);
 
   const lastUpdated = moment(updated).format(
     `DD.MM.YYYY [${t('forecast:at')}] HH:mm`
