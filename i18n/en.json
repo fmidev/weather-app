@@ -366,8 +366,22 @@
   },
   "warnings": {
     "panelTitle": "Warnings on land",
+    "panelTitleSlim": "Warnings",
     "lastUpdated": "Last updated",
-    "viewAllWarnings": "See all warnings for Finland",
-    "placeholder": "This is a placeholder"
+    "allWarnings": "All warnings for Finland",
+    "valid": "valid between",
+    "types": {
+      "thunderStorm": "Severe thunderstorm warning",
+      "wind": "Wind warning for land areas",
+      "rain": "Heavy rain warning",
+      "trafficWeather": "Traffic weather warning",
+      "pedestrianSafety": "Pedestrian weather warning",
+      "forestFireWeather": "Forest fire warning",
+      "grassFireWeather": "Grass fire warning",
+      "hotWeather": "Heat wave warning",
+      "coldWeather": "Cold warning",
+      "uvNote": "UV advisory",
+      "floodLevel": "Flood warning"
+    }
   }
 }

@@ -367,8 +367,22 @@
   },
   "warnings": {
     "panelTitle": "Varoitukset maa-alueilla",
+    "panelTitleSlim": "Varoitukset",
     "lastUpdated": "Päivitetty viimeksi",
-    "viewAllWarnings": "Katso koko Suomen varoitukset",
-    "placeholder": "Tämä on placeholder"
+    "allWarnings": "Koko Suomen varoitukset",
+    "valid": "voimassa",
+    "types": {
+      "thunderStorm": "Raju ukonilma",
+      "wind": "Tuulivaroitus maa‑alueille",
+      "rain": "Sadevaroitus",
+      "trafficWeather": "Liikennesää",
+      "pedestrianSafety": "Jalankulkusää",
+      "forestFireWeather": "Metsäpalovaroitus",
+      "grassFireWeather": "Ruohikkopalovaara",
+      "hotWeather": "Hellevaroitus",
+      "coldWeather": "Pakkasvaroitus",
+      "uvNote": "UV-tiedote",
+      "floodLevel": "Tulvavaroitus"
+    }
   }
 }

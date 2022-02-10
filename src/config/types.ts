@@ -57,7 +57,9 @@ interface ObservationDisabled extends Partial<Observation> {
 }
 
 interface Warnings {
-  apiUrl: string;
+  apiUrl: {
+    [country: string]: string;
+  };
   updateInterval: number;
   webViewUrl?: string;
 }

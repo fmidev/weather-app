@@ -247,10 +247,13 @@ const Navigator: React.FC<Props> = ({
       <WarningsStack.Screen
         name="StackWarnings"
         component={WarningsScreen}
-        options={{
-          headerTitle: `${t('navigation:warnings')}`,
-          headerShown: true,
-        }}
+        options={LocationHeaderOptions}
+        initialParams={{ day: 0 }}
+      />
+      <WeatherStack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={SearchScreenOptions}
       />
     </WarningsStack.Navigator>
   );

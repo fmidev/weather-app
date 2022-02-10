@@ -92,7 +92,7 @@ const defaultConfig: ConfigType = {
   warnings: {
     enabled: true,
     updateInterval: 5,
-    apiUrl: 'warningsApiUrl',
+    apiUrl: { FI: 'warningsApiUrl' },
   },
   settings: {
     languages: ['fi', 'sv', 'en'],
