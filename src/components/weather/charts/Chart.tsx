@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   View,
@@ -9,37 +15,20 @@ import {
 import { VictoryChart, VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-
-import { CustomTheme } from '@utils/colors';
-
-import chartTheme from '@utils/chartTheme';
 import moment from 'moment';
 
+import { CustomTheme } from '@utils/colors';
 import {
   chartTickValues,
   chartXDomain,
   chartYDomain,
   chartYLabelText,
-  tickFormat,
 } from '@utils/chart';
 
-import {
-  ChartData,
-  ChartType,
-  ChartValues,
-  ChartMinMax,
-  ChartSettings,
-} from './types';
+import { ChartData, ChartType, ChartValues, ChartMinMax } from './types';
 import ChartLegend from './Legend';
-import TimeSelector from './TimeSelector';
-import TemperatureChart from './TemperatureChart';
-import PrecipitationChart from './PrecipitationChart';
-import WindChart from './WindChart';
-import HumidityChart from './HumidityChart';
-import PressureChart from './PressureChart';
-import VisCloudChart from './VisCloudChart';
-import CloudHeightChart from './CloudHeightChart';
-import SnowDepthChart from './SnowDepth';
+import chartSettings from './settings';
+import ChartDataRenderer from './ChartDataRenderer';
 
 type ChartProps = {
   data: ChartData;
@@ -62,10 +51,6 @@ const Chart: React.FC<ChartProps> = ({
   const [scrollIndex, setScrollIndex] = useState<number>(
     observation ? 24 * 20 : 0
   );
-  const [initialized, setInitialized] = useState<boolean>(false);
-  const [timeSelectorButtons, setTimeSelectorButtons] = useState<
-    [boolean, boolean]
-  >([true, false]);
   const { colors } = useTheme() as CustomTheme;
   const { i18n } = useTranslation();
   const { width } = useWindowDimensions();
@@ -75,111 +60,82 @@ const Chart: React.FC<ChartProps> = ({
   const stepLength = (15 / tickInterval) * 3;
 
   const chartWidth = observation ? width - 100 : data.length * stepLength;
-  useEffect(() => {
-    if (scrollIndex === 0) {
-      setTimeSelectorButtons([true, false]);
-    } else if (scrollIndex + width > chartWidth) {
-      setTimeSelectorButtons([false, true]);
-    } else {
-      setTimeSelectorButtons([false, false]);
-    }
-  }, [scrollIndex, chartWidth, width]);
+
+  const calculateDayIndex = useCallback(
+    (index: number) =>
+      Math.ceil((index / stepLength - (currentDayOffset || 0) + 1) / 24),
+    [currentDayOffset, stepLength]
+  );
 
   useEffect(() => {
     if (currentDayOffset && activeDayIndex !== undefined) {
-      const dayIndex = Math.ceil(
-        (scrollIndex / stepLength - currentDayOffset) / 24
-      );
+      const dayIndex = calculateDayIndex(scrollIndex);
       if (activeDayIndex === 0 && dayIndex !== activeDayIndex) {
         scrollRef.current.scrollTo({ x: 0, animated: true });
       }
       if (activeDayIndex > 0 && dayIndex !== activeDayIndex) {
         const off = currentDayOffset * stepLength;
-        const offsetX = activeDayIndex * 24 * stepLength - off;
-
+        const offsetX = off + (activeDayIndex - 1) * 24 * stepLength;
         scrollRef.current.scrollTo({ x: offsetX, animated: true });
       }
     }
-  }, [activeDayIndex, stepLength, currentDayOffset, scrollIndex]);
+  }, [
+    activeDayIndex,
+    stepLength,
+    currentDayOffset,
+    scrollIndex,
+    calculateDayIndex,
+  ]);
 
-  if (!data || data.length === 0) {
-    return null;
-  }
+  const { Component, params } = useMemo(
+    () => chartSettings(chartType, observation),
+    [chartType, observation]
+  );
 
-  const chartSettings: ChartSettings = {
-    precipitation: {
-      params: ['precipitation1h'],
-      component: PrecipitationChart,
-    },
-    pressure: {
-      params: ['pressure'],
-      component: PressureChart,
-    },
-    humidity: {
-      params: ['humidity'],
-      component: HumidityChart,
-    },
-    visCloud: {
-      params: ['visibility', 'totalcloudcover'],
-      component: VisCloudChart,
-    },
-    cloud: {
-      params: ['cloudheight'],
-      component: CloudHeightChart,
-    },
-    temperature: {
-      params: ['temperature', observation ? 'dewpoint' : 'feelsLike'],
-      component: TemperatureChart,
-    },
-    wind: {
-      params: [
-        'windspeedms',
-        observation ? 'windgust' : 'hourlymaximumgust',
-        'winddirection',
-      ],
-      component: WindChart,
-    },
-    snowDepth: {
-      params: ['snowDepth'],
-      component: SnowDepthChart,
-    },
-  };
+  const { chartValues, chartMinMax } = useMemo(() => {
+    const minMax: ChartMinMax = [];
+    const values: ChartValues = {};
 
-  const ChartComponent = chartSettings[chartType]?.component;
-  if (!ChartComponent) {
-    return null;
-  }
+    params.forEach((param) => {
+      values[param] = (
+        data?.map((step) => {
+          const x = step.epochtime * 1000;
+          // @ts-ignore
+          const y = step[param];
+          if (param !== 'winddirection') {
+            minMax.push(y);
+          }
+          return { x, y };
+        }) || []
+      ).filter(({ y }) => y !== undefined);
+    });
 
-  const minMax: ChartMinMax = [];
+    return { chartValues: values, chartMinMax: minMax };
+  }, [data, params]);
 
-  const chartValues: ChartValues = {};
-  chartSettings[chartType].params.forEach((param) => {
-    chartValues[param] = data
-      .map((step) => {
-        const x = step.epochtime * 1000;
-        // @ts-ignore
-        const y = step[param];
-        if (param !== 'winddirection') {
-          minMax.push(y);
-        }
-        return { x, y };
-      })
-      .filter(({ y }) => y !== undefined);
-  });
+  const tickValues = useMemo(
+    () => chartTickValues(data, tickInterval),
+    [data, tickInterval]
+  );
 
-  const tickValues = chartTickValues(data, tickInterval);
-  const xDomain = chartXDomain(tickValues);
-  const yDomain = chartYDomain(minMax, chartType);
+  const chartDomain = useMemo(
+    () => ({
+      y: chartYDomain(chartMinMax, chartType),
+      x: chartXDomain(tickValues),
+    }),
+    [chartType, chartMinMax, tickValues]
+  );
+
   const yLabelText = chartYLabelText(chartType);
 
   const onMomentumScrollEnd = ({ nativeEvent }: any) => {
     const { contentOffset } = nativeEvent;
     setScrollIndex(contentOffset.x);
     if (currentDayOffset && setActiveDayIndex) {
-      const dayIndex = Math.ceil(
-        (contentOffset.x / stepLength - currentDayOffset) / 24
-      );
-      if (dayIndex !== activeDayIndex) setActiveDayIndex(dayIndex);
+      const dayIndex = calculateDayIndex(contentOffset.x);
+      if (dayIndex !== activeDayIndex) {
+        setActiveDayIndex(dayIndex);
+      }
     }
   };
 
@@ -192,7 +148,7 @@ const Chart: React.FC<ChartProps> = ({
               dependentAxis
               crossAxis={false}
               tickFormat={(t) => (t >= 10000 ? t / 1000 : t)}
-              domain={yDomain}
+              domain={chartDomain.y}
               style={{
                 tickLabels: {
                   fill: colors.hourListText,
@@ -210,84 +166,18 @@ const Chart: React.FC<ChartProps> = ({
         </View>
         <ScrollView
           ref={scrollRef}
-          onLayout={() => {
-            if (!initialized) {
-              if (observation) {
-                scrollRef.current.scrollToEnd();
-              }
-              setInitialized(true);
-            }
-          }}
           onMomentumScrollEnd={onMomentumScrollEnd}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.chartContainer}>
-          <VictoryChart
-            height={300}
-            width={chartWidth}
-            theme={chartTheme}
-            scale={{ x: 'linear' }}>
-            <VictoryAxis
-              scale={{ x: 'linear' }}
-              tickFormat={tickFormat}
-              tickValues={tickValues}
-              orientation="bottom"
-              style={{
-                grid: {
-                  stroke: ({ tick }) =>
-                    moment(tick).hour() === 0
-                      ? colors.chartGridDay
-                      : colors.chartGrid,
-                  strokeDasharray: ({ tick }) =>
-                    moment(tick).hour() === 0 ? 3 : 0,
-                },
-                tickLabels: {
-                  fill: colors.hourListText,
-                  fontWeight: ({ tick }) =>
-                    moment(tick).hour() === 0 ? 'bold' : 'normal',
-                },
-              }}
-              offsetY={50}
-            />
-            <VictoryAxis
-              dependentAxis
-              crossAxis={false}
-              tickFormat={() => ''}
-              domain={yDomain}
-              style={{
-                axis: {
-                  stroke: colors.chartGrid,
-                },
-                grid: {
-                  stroke: colors.chartGrid,
-                },
-              }}
-            />
-            {chartType === 'visCloud' && (
-              <VictoryAxis
-                dependentAxis
-                crossAxis={false}
-                orientation="right"
-                tickCount={4}
-                tickFormat={() => ''}
-                tickValues={[15000, 30000, 45000, 60000]}
-                style={{
-                  axis: {
-                    stroke: colors.chartGrid,
-                  },
-                  grid: {
-                    stroke: colors.chartGrid,
-                  },
-                }}
-              />
-            )}
-
-            <ChartComponent
-              chartValues={chartValues}
-              width={chartWidth}
-              domain={xDomain}
-            />
-          </VictoryChart>
+          <ChartDataRenderer
+            chartWidth={chartWidth}
+            tickValues={tickValues}
+            chartDomain={chartDomain}
+            chartType={chartType}
+            Component={Component}
+            chartValues={chartValues}
+          />
         </ScrollView>
         {chartType === 'visCloud' && (
           <View style={styles.yAxisContainer}>
@@ -299,7 +189,7 @@ const Chart: React.FC<ChartProps> = ({
                 tickCount={4}
                 tickFormat={(t) => `${(t / 60000) * 8}/8`}
                 tickValues={[15000, 30000, 45000, 60000]}
-                domain={yDomain}
+                domain={chartDomain.y}
                 style={{
                   tickLabels: {
                     fill: colors.hourListText,
@@ -311,15 +201,6 @@ const Chart: React.FC<ChartProps> = ({
         )}
       </View>
       <ChartLegend chartType={chartType} observation={observation} />
-      {!observation && (
-        <TimeSelector
-          scrollRef={scrollRef}
-          scrollIndex={scrollIndex}
-          setScrollIndex={setScrollIndex}
-          buttonStatus={timeSelectorButtons}
-          stepLength={stepLength}
-        />
-      )}
     </View>
   );
 };

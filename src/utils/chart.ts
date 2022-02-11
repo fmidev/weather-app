@@ -48,14 +48,15 @@ export const chartYDomain = (
 };
 
 export const chartTickValues = (data: ChartData, tickInterval: number) => {
-  const unfiltered = data.map(({ epochtime }, index) => {
-    const time = moment.unix(epochtime);
-    return index === 0 ||
-      index === data.length - 1 ||
-      (time.hour() % tickInterval === 0 && time.minutes() === 0)
-      ? epochtime * 1000
-      : false;
-  });
+  const unfiltered =
+    data?.map(({ epochtime }, index) => {
+      const time = moment.unix(epochtime);
+      return index === 0 ||
+        index === data.length - 1 ||
+        (time.hour() % tickInterval === 0 && time.minutes() === 0)
+        ? epochtime * 1000
+        : false;
+    }) || [];
   const tickValues: number[] = unfiltered.filter(
     <(t: number | false) => t is number>((t) => typeof t === 'number')
   );

@@ -14,19 +14,20 @@ const VisCloudChart: React.FC<ChartDataProps> = ({
   const { totalcloudcover, visibility } = chartValues;
   const max = 60000;
 
-  const normalizedCloudCover = totalcloudcover.map(({ x, y }) => {
-    let value = null;
-    if (y && y <= 8) {
-      value = (y / 8) * max;
-    } else if (y) {
-      value = max;
-    }
+  const normalizedCloudCover =
+    totalcloudcover?.map(({ x, y }) => {
+      let value = null;
+      if (y && y <= 8) {
+        value = (y / 8) * max;
+      } else if (y) {
+        value = max;
+      }
 
-    return {
-      x,
-      y: value,
-    };
-  });
+      return {
+        x,
+        y: value,
+      };
+    }) || [];
   return (
     <VictoryGroup theme={chartTheme} width={width}>
       {normalizedCloudCover && normalizedCloudCover.length > 0 && (
