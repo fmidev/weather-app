@@ -209,6 +209,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           chartTypes={charts}
           parameter={parameter}
           setParameter={updateChartParameter}
+          showHeader
         />
         {displayFormat === LIST && <List data={data} parameter={parameter} />}
         {displayFormat === CHART && (
