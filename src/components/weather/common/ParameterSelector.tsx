@@ -27,12 +27,14 @@ type ParameterSelectorProps = {
   chartTypes: ChartType[];
   parameter: ChartType;
   setParameter: (chartType: ChartType) => void;
+  showHeader: boolean;
 };
 
 const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   chartTypes,
   parameter,
   setParameter,
+  showHeader,
 }) => {
   const [firstVisible, setFirstVisible] = useState<boolean>(true);
   const [lastVisible, setLastVisible] = useState<boolean>(true);
@@ -130,13 +132,15 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
 
   return (
     <View>
-      <Text
-        style={[
-          styles.parameterSelectorHeader,
-          { color: colors.hourListText },
-        ]}>
-        {t('weather:parameter')}
-      </Text>
+      {showHeader && (
+        <Text
+          style={[
+            styles.parameterSelectorHeader,
+            { color: colors.hourListText },
+          ]}>
+          {t('weather:parameter')}
+        </Text>
+      )}
       <View style={styles.wrapper}>
         <FlatList
           ref={buttonList}

@@ -27,10 +27,8 @@ export type ChartType =
   | 'snowDepth';
 
 export type ChartSettings = {
-  [key in ChartType]: {
-    params: Parameter[];
-    component: React.FC<ChartDataProps>;
-  };
+  params: Parameter[];
+  Component: React.FC<ChartDataProps>;
 };
 
 export type ChartDomain =
