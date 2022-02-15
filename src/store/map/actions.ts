@@ -1,5 +1,6 @@
 import { Dispatch } from 'redux';
-import { getWMSLayerUrlsAndBounds } from '@utils/map';
+import { getOverlayData } from '@utils/map';
+import { Region } from 'react-native-maps';
 import {
   MapLayers,
   MapOverlay,
@@ -10,6 +11,7 @@ import {
   UPDATE_MAP_LAYERS,
   UPDATE_OVERLAYS,
   UPDATE_ACTIVE_OVERLAY,
+  UPDATE_REGION,
 } from './types';
 
 export const updateSliderTime =
@@ -32,18 +34,23 @@ export const updateMapLayers =
     dispatch({ type: UPDATE_MAP_LAYERS, layers });
   };
 
-export const updateOverlays = () => (dispatch: Dispatch<MapActionTypes>) => {
-  let overlays;
-  getWMSLayerUrlsAndBounds()
-    .then((overlayMap: Map<number, MapOverlay> | undefined) => {
-      if (overlayMap) {
-        overlays = overlayMap;
-        dispatch({ type: UPDATE_OVERLAYS, overlays });
-      }
-    })
-    .catch((e) => console.error(e));
-};
+export const updateOverlays =
+  (activeOverlay: number) => (dispatch: Dispatch<MapActionTypes>) => {
+    let overlays;
+    getOverlayData(activeOverlay)
+      .then((overlayMap: Map<number, MapOverlay> | undefined) => {
+        if (overlayMap) {
+          overlays = overlayMap;
+          dispatch({ type: UPDATE_OVERLAYS, overlays });
+        }
+      })
+      .catch((e) => console.error(e));
+  };
 
 export const updateActiveOverlay =
   (id: number) => (dispatch: Dispatch<MapActionTypes>) =>
     dispatch({ type: UPDATE_ACTIVE_OVERLAY, activeId: id });
+
+export const updateRegion =
+  (region: Region) => (dispatch: Dispatch<MapActionTypes>) =>
+    dispatch({ type: UPDATE_REGION, region });

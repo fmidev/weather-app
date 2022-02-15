@@ -11,7 +11,7 @@ import {
 } from '@utils/map';
 
 import { State } from '@store/types';
-import { MapOverlay } from '@store/map/types';
+import { Layer, MapOverlay } from '@store/map/types';
 import {
   selectActiveOverlay,
   selectSliderTime,
@@ -38,7 +38,8 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   sliderStep,
   overlay,
 }) => {
-  const { observation, forecast } = overlay;
+  const observation = overlay.observation as Layer;
+  const forecast = overlay.forecast as Layer;
 
   const [borderTime, setBorderTime] = useState<{
     time: string;

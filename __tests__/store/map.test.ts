@@ -15,6 +15,7 @@ describe('map reducer', () => {
     animateToArea: false,
     overlays: undefined,
     activeOverlay: undefined,
+    region: { latitude: 0, longitude: 0, longitudeDelta: 0, latitudeDelta: 0 },
   };
 
   it('should handle ANIMATE_TO_AREA', () => {
@@ -77,7 +78,7 @@ describe('map reducer', () => {
           topLeft: [14, 13],
           topRight: [14, 16],
         },
-      },
+      } as types.Layer,
       forecast: {
         url: 'example.test.forecast',
         bounds: {
@@ -87,7 +88,7 @@ describe('map reducer', () => {
           topRight: [14, 16],
         },
         start: '2021-01-01T01:00:00Z',
-      },
+      } as types.Layer,
     } as types.MapOverlay;
 
     const overlayMap = new Map([[1, dummyOverlay]]);

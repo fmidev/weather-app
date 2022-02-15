@@ -9,6 +9,7 @@ import {
   MapActionTypes,
   MapState,
   UPDATE_ACTIVE_OVERLAY,
+  UPDATE_REGION,
 } from './types';
 
 const INITIAL_STATE: MapState = {
@@ -22,6 +23,7 @@ const INITIAL_STATE: MapState = {
   animateToArea: false,
   overlays: undefined,
   activeOverlay: undefined,
+  region: { latitude: 0, longitude: 0, longitudeDelta: 0, latitudeDelta: 0 },
 };
 
 export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
@@ -65,6 +67,13 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       return {
         ...state,
         activeOverlay: action.activeId,
+      };
+    }
+
+    case UPDATE_REGION: {
+      return {
+        ...state,
+        region: action.region,
       };
     }
 

@@ -23,6 +23,7 @@
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/stack": "^6.0.11",
+    "@types/supercluster": "^5.0.3",
     "axios": "^0.24.0",
     "fast-xml-parser": "^3.21.1",
     "geolib": "^3.3.3",
@@ -53,6 +54,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.0",
     "reselect": "^4.1.4",
+    "supercluster": "^7.1.4",
     "victory-native": "^36.2.0"
   },
   "devDependencies": {

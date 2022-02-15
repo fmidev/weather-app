@@ -1,9 +1,12 @@
+import { Region } from 'react-native-maps';
+
 export const UPDATE_SLIDER_TIME = 'UPDATE_SLIDER_TIME';
 export const UPDATE_SLIDER_STEP = 'UPDATE_SLIDER_STEP';
 export const ANIMATE_TO_AREA = 'ANIMATE_TO_AREA';
 export const UPDATE_MAP_LAYERS = 'UPDATE_MAP_LAYERS';
 export const UPDATE_OVERLAYS = 'UPDATE_OVERLAYS';
 export const UPDATE_ACTIVE_OVERLAY = 'UPDATE_ACTIVE_OVERLAY';
+export const UPDATE_REGION = 'UPDATE_REGION';
 
 interface UpdateSliderTime {
   type: typeof UPDATE_SLIDER_TIME;
@@ -34,13 +37,20 @@ interface UpdateActiveOverlay {
   type: typeof UPDATE_ACTIVE_OVERLAY;
   activeId: number;
 }
+
+interface UpdateRegion {
+  type: typeof UPDATE_REGION;
+  region: Region;
+}
+
 export type MapActionTypes =
   | UpdateSliderTime
   | UpdateSliderStep
   | AnimateToArea
   | UpdateMapLayers
   | InitializeOverlays
-  | UpdateActiveOverlay;
+  | UpdateActiveOverlay
+  | UpdateRegion;
 
 export interface MapLayers {
   location: boolean;
@@ -56,9 +66,29 @@ export interface Layer {
   customParameters?: { [key: string]: number | string };
 }
 
+export interface TimeseriesLayer {
+  start?: string;
+  end?: string;
+}
+
+export type WeatherData = {
+  epochtime: number;
+  [param: string]: number;
+};
+
+export type TimeseriesData = {
+  [latlon: string]: {
+    [population: string]: {
+      [name: string]: WeatherData[];
+    };
+  };
+};
+
 export interface MapOverlay {
-  observation?: Layer;
-  forecast?: Layer;
+  type: 'WMS' | 'Timeseries';
+  observation?: Layer | TimeseriesLayer;
+  forecast?: Layer | TimeseriesLayer;
+  data?: TimeseriesData[];
 }
 export interface MapState {
   mapLayers: MapLayers;
@@ -67,4 +97,5 @@ export interface MapState {
   animateToArea: boolean;
   overlays: Map<number, MapOverlay> | undefined;
   activeOverlay: number | undefined;
+  region: Region;
 }
