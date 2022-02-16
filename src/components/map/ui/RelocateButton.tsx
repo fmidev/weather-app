@@ -45,8 +45,8 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
 
 const styles = StyleSheet.create({
   button: {
-    width: 158,
-    height: 50,
+    width: 132,
+    height: 44,
     borderRadius: 25,
   },
   shadow: {

@@ -48,7 +48,6 @@ import {
 } from '@utils/colors';
 
 const QUARTER_WIDTH = 12;
-const HOUR_WIDTH = QUARTER_WIDTH * 4;
 
 const STEP_60 = 3600;
 let interval: NodeJS.Timeout;
@@ -85,6 +84,10 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const [times, setTimes] = useState<number[]>([]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const { width } = useWindowDimensions();
+
+  const multiplier = Math.ceil(width / 400);
+  const quarterWidth = multiplier * QUARTER_WIDTH;
+  const hourWidth = 4 * quarterWidth;
 
   const sliderRef = useRef() as React.MutableRefObject<FlatList>;
 
@@ -189,7 +192,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const resolveAndSetCurrentIndex = useCallback(
     (x: number) => {
-      const divider = step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH;
+      const divider = step >= STEP_60 ? hourWidth : quarterWidth;
       const index = Math.floor(x / divider);
       if (index >= 0 && index <= times.length) {
         if (index === times.length) {
@@ -202,7 +205,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         }
       }
     },
-    [times, isAnimating, step]
+    [times, isAnimating, step, hourWidth, quarterWidth]
   );
 
   useEffect(() => {
@@ -268,7 +271,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         style={[
           styles.quarterContainer,
           {
-            width: step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
+            width: step >= STEP_60 ? hourWidth : quarterWidth,
             marginLeft: index === 0 ? sliderWidth / 2 - 80 : undefined,
           },
         ]}>
@@ -347,9 +350,8 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                 onMomentumScrollEnd={handleMomentumScroll}
                 onScrollBeginDrag={handleMomentumStart}
                 getItemLayout={(data, index: number) => ({
-                  length: step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
-                  offset:
-                    index * (step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH),
+                  length: step >= STEP_60 ? hourWidth : quarterWidth,
+                  offset: index * (step >= STEP_60 ? hourWidth : quarterWidth),
                   index,
                 })}
               />

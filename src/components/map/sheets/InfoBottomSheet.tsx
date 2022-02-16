@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -23,51 +23,58 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
   const { colors } = useTheme() as CustomTheme;
   return (
-    <View style={styles.sheetListContainer}>
-      <View style={styles.closeButtonContainer}>
-        <CloseButton
-          onPress={onClose}
-          accessibilityLabel={t('map:infoBottomSheet:closeAccessibilityLabel')}
-        />
-      </View>
+    <SafeAreaView style={styles.wrapper}>
+      <View style={styles.sheetListContainer}>
+        <View style={styles.closeButtonContainer}>
+          <CloseButton
+            onPress={onClose}
+            accessibilityLabel={t(
+              'map:infoBottomSheet:closeAccessibilityLabel'
+            )}
+          />
+        </View>
 
-      <View style={styles.sheetTitle}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          {t('map:infoBottomSheet:rainRadarTitle')}
-        </Text>
-      </View>
-      <View style={styles.rowWrapper}>
-        <View style={[styles.row, styles.rainContainer]}>
-          <View style={[styles.rainBlock, { backgroundColor: RAIN_1 }]} />
-          <View style={[styles.rainBlock, { backgroundColor: RAIN_2 }]} />
-          <View style={[styles.rainBlock, { backgroundColor: RAIN_3 }]} />
-          <View style={[styles.rainBlock, { backgroundColor: RAIN_4 }]} />
-          <View style={[styles.rainBlock, { backgroundColor: RAIN_5 }]} />
-          <View style={[styles.rainBlock, { backgroundColor: RAIN_6 }]} />
-          <View style={[styles.rainBlock, { backgroundColor: RAIN_7 }]} />
-        </View>
         <View style={styles.sheetTitle}>
-          <Text style={[styles.text, { color: colors.hourListText }]}>
-            {t('map:infoBottomSheet:light')}
+          <Text style={[styles.title, { color: colors.text }]}>
+            {t('map:infoBottomSheet:rainRadarTitle')}
           </Text>
+        </View>
+        <View style={styles.rowWrapper}>
+          <View style={[styles.row, styles.rainContainer]}>
+            <View style={[styles.rainBlock, { backgroundColor: RAIN_1 }]} />
+            <View style={[styles.rainBlock, { backgroundColor: RAIN_2 }]} />
+            <View style={[styles.rainBlock, { backgroundColor: RAIN_3 }]} />
+            <View style={[styles.rainBlock, { backgroundColor: RAIN_4 }]} />
+            <View style={[styles.rainBlock, { backgroundColor: RAIN_5 }]} />
+            <View style={[styles.rainBlock, { backgroundColor: RAIN_6 }]} />
+            <View style={[styles.rainBlock, { backgroundColor: RAIN_7 }]} />
+          </View>
+          <View style={styles.sheetTitle}>
+            <Text style={[styles.text, { color: colors.hourListText }]}>
+              {t('map:infoBottomSheet:light')}
+            </Text>
+            <Text style={[styles.text, { color: colors.hourListText }]}>
+              {t('map:infoBottomSheet:moderate')}
+            </Text>
+            <Text style={[styles.text, { color: colors.hourListText }]}>
+              {t('map:infoBottomSheet:strong')}
+            </Text>
+          </View>
+        </View>
+        <View>
           <Text style={[styles.text, { color: colors.hourListText }]}>
-            {t('map:infoBottomSheet:moderate')}
-          </Text>
-          <Text style={[styles.text, { color: colors.hourListText }]}>
-            {t('map:infoBottomSheet:strong')}
+            {t('infoBottomSheet.rainRadarInfo')}
           </Text>
         </View>
       </View>
-      <View>
-        <Text style={[styles.text, { color: colors.hourListText }]}>
-          {t('infoBottomSheet.rainRadarInfo')}
-        </Text>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   sheetListContainer: {
     flex: 1,
     marginTop: -10,
