@@ -84,8 +84,10 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const [times, setTimes] = useState<number[]>([]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const { width } = useWindowDimensions();
+  const [sliderWidth, setSliderWidth] = useState<number>(width - 24);
 
   const multiplier = Math.ceil(width / 400);
+
   const quarterWidth = multiplier * QUARTER_WIDTH;
   const hourWidth = 4 * quarterWidth;
 
@@ -101,7 +103,6 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     .unix(sliderTime)
     .locale(locale)
     .format('ddd HH:mm');
-  const sliderWidth = width - 24;
 
   const sliderMinUnix = useMemo(
     () => getSliderMinUnix(activeOverlayId, overlay),
@@ -240,8 +241,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           style={[
             styles.lastQuarterContainer,
             {
-              marginRight:
-                index === times.length - 1 ? sliderWidth / 2 - 1 : undefined,
+              marginRight: sliderWidth / 2 - 1,
             },
           ]}>
           {hour && (
@@ -306,113 +306,114 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   };
 
   return (
-    <>
-      <View
-        style={[
-          styles.wrapper,
-          styles.shadow,
-          {
-            backgroundColor: colors.mapButtonBackground,
-            borderColor: colors.mapButtonBorder,
-            shadowColor: colors.shadow,
-          },
-        ]}>
-        <View style={styles.container}>
+    <View
+      style={[
+        styles.wrapper,
+        styles.shadow,
+        {
+          backgroundColor: colors.mapButtonBackground,
+          borderColor: colors.mapButtonBorder,
+          shadowColor: colors.shadow,
+        },
+      ]}
+      onLayout={({ nativeEvent }) => {
+        const {
+          layout: { width: layoutWidth },
+        } = nativeEvent;
+        if (layoutWidth !== sliderWidth) setSliderWidth(layoutWidth);
+      }}>
+      <View style={styles.container}>
+        <View
+          style={[styles.buttonContainer, { borderRightColor: colors.border }]}>
+          <TouchableOpacity
+            onPress={() => (isAnimating ? clear() : animate())}
+            accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
+            <Icon
+              name={isAnimating ? 'pause' : 'play'}
+              style={{ color: colors.text }}
+              width={50}
+              height={50}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.sliderWrapper}>
+          {times.length > 0 && (
+            <FlatList
+              decelerationRate="fast"
+              ref={sliderRef}
+              data={times}
+              keyExtractor={(item) => `${item}`}
+              renderItem={renderStep}
+              horizontal
+              style={styles.sliderContainer}
+              showsHorizontalScrollIndicator={false}
+              onScroll={handleScroll}
+              onMomentumScrollEnd={handleMomentumScroll}
+              onScrollBeginDrag={handleMomentumStart}
+              getItemLayout={(data, index: number) => ({
+                length: step >= STEP_60 ? hourWidth : quarterWidth,
+                offset: index * (step >= STEP_60 ? hourWidth : quarterWidth),
+                index,
+              })}
+            />
+          )}
+          <Text
+            style={[
+              styles.currentTimeText,
+              styles.textCapitalize,
+              {
+                color: colors.hourListText,
+              },
+            ]}>
+            {currentSliderTime}
+          </Text>
+          <Text
+            style={[
+              styles.currentTimeText,
+              styles.textRight,
+              {
+                color:
+                  sliderTime > observationEndUnix
+                    ? colors.primary
+                    : colors.timeSliderObservationText,
+              },
+            ]}>
+            {sliderTime > observationEndUnix
+              ? t('map:timeSlider:forecast')
+              : t('map:timeSlider:observation')}
+          </Text>
+          <LinearGradient
+            style={[styles.gradient, styles.gradientLeft]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            colors={
+              dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
+            }
+          />
+          <LinearGradient
+            style={[styles.gradient, styles.gradientRight]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            colors={
+              dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
+            }
+          />
           <View
             style={[
-              styles.buttonContainer,
-              { borderRightColor: colors.border },
-            ]}>
-            <TouchableOpacity
-              onPress={() => (isAnimating ? clear() : animate())}
-              accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
-              <Icon
-                name={isAnimating ? 'pause' : 'play'}
-                style={{ color: colors.text }}
-                width={50}
-                height={50}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.sliderWrapper}>
-            {times.length > 0 && (
-              <FlatList
-                decelerationRate="fast"
-                ref={sliderRef}
-                data={times}
-                keyExtractor={(item) => `${item}`}
-                renderItem={renderStep}
-                horizontal
-                style={styles.sliderContainer}
-                showsHorizontalScrollIndicator={false}
-                onScroll={handleScroll}
-                onMomentumScrollEnd={handleMomentumScroll}
-                onScrollBeginDrag={handleMomentumStart}
-                getItemLayout={(data, index: number) => ({
-                  length: step >= STEP_60 ? hourWidth : quarterWidth,
-                  offset: index * (step >= STEP_60 ? hourWidth : quarterWidth),
-                  index,
-                })}
-              />
-            )}
-            <Text
-              style={[
-                styles.currentTimeText,
-                styles.textCapitalize,
-                {
-                  color: colors.hourListText,
-                },
-              ]}>
-              {currentSliderTime}
-            </Text>
-            <Text
-              style={[
-                styles.currentTimeText,
-                styles.textRight,
-                {
-                  color:
-                    sliderTime > observationEndUnix
-                      ? colors.primary
-                      : colors.timeSliderObservationText,
-                },
-              ]}>
-              {sliderTime > observationEndUnix
-                ? t('map:timeSlider:forecast')
-                : t('map:timeSlider:observation')}
-            </Text>
-            <LinearGradient
-              style={[styles.gradient, styles.gradientLeft]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              colors={
-                dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
-              }
-            />
-            <LinearGradient
-              style={[styles.gradient, styles.gradientRight]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              colors={
-                dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
-              }
-            />
-            <View
-              style={[
-                styles.tick,
-                {
-                  left: sliderWidth / 2 - 86,
-                  borderBottomColor:
-                    sliderTime > observationEndUnix
-                      ? colors.primary
-                      : colors.timeSliderTick,
-                },
-              ]}
-            />
-          </View>
+              styles.tick,
+              {
+                left: sliderWidth / 2 - 86,
+                borderBottomColor:
+                  sliderTime > observationEndUnix
+                    ? colors.primary
+                    : colors.timeSliderTick,
+              },
+            ]}
+          />
         </View>
       </View>
-    </>
+    </View>
   );
 };
 
