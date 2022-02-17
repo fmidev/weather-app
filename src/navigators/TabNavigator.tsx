@@ -46,6 +46,7 @@ import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { getGeolocation } from '@utils/helpers';
+
 import {
   PRIMARY_BLUE,
   WHITE,
@@ -317,12 +318,6 @@ const Navigator: React.FC<Props> = ({
         <Tab.Navigator
           initialRouteName={initialTab}
           screenOptions={{
-            tabBarStyle: {
-              // ...styles.tabBar,
-            },
-            // tabBarItemStyle: {
-            //   paddingVertical: 10,
-            // },
             tabBarActiveTintColor: useDarkTheme
               ? darkTheme.colors.tabBarActive
               : lightTheme.colors.tabBarActive,
@@ -462,6 +457,7 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     borderTopWidth: 3,
+    marginBottom: -10,
   },
   header: {
     shadowOffset: {

@@ -29,6 +29,7 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
           styles.container,
           right && styles.right,
           !title && styles.right,
+          !isLandscape && styles.marginBottom,
           isLandscape ? styles.row : undefined,
           isLandscape && right ? styles.rowReverse : undefined,
         ]}>
@@ -74,6 +75,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontFamily: 'Roboto-Medium',
+  },
+  marginBottom: {
+    marginBottom: 10,
   },
   marginRight: {
     marginRight: 6,
