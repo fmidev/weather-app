@@ -10,7 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import { WHITE, CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 
 type RelocateButtonProps = {
   onPress: () => void;
@@ -28,7 +28,8 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
         styles.shadow,
         {
           shadowColor: colors.shadow,
-          backgroundColor: colors.relocateButtonBackground,
+          backgroundColor: colors.background,
+          borderColor: colors.primaryText,
         },
       ]}>
       <TouchableOpacity
@@ -36,7 +37,9 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
         accessibilityRole="button"
         accessibilityLabel={t('map:relocateButtonAccessibilityLabel')}>
         <View style={styles.textContainer}>
-          <Text style={styles.text}>{t('map:relocateButtonText')}</Text>
+          <Text style={[styles.text, { color: colors.primaryText }]}>
+            {t('map:relocateButtonText')}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -45,9 +48,10 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
 
 const styles = StyleSheet.create({
   button: {
-    width: 132,
+    width: 142,
     height: 44,
     borderRadius: 25,
+    borderWidth: 2,
   },
   shadow: {
     shadowOffset: {
@@ -66,7 +70,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontFamily: 'Roboto-Medium',
-    color: WHITE,
     textAlign: 'center',
   },
 });
