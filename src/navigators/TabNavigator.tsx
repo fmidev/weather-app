@@ -463,19 +463,6 @@ const styles = StyleSheet.create({
   tabItem: {
     borderTopWidth: 3,
   },
-  // tabBar: {
-  //   ...Platform.select({
-  //     ios: {
-  //       minHeight: 90,
-  //     },
-  //     android: {
-  //       minHeight: 72,
-  //     },
-  //     default: {
-  //       minHeight: 72,
-  //     },
-  //   }),
-  // },
   header: {
     shadowOffset: {
       width: 0,
@@ -483,17 +470,6 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 4,
     shadowOpacity: 1,
-    //   ...Platform.select({
-    //     ios: {
-    //       height: 102,
-    //     },
-    //     android: {
-    //       height: 60,
-    //     },
-    //     default: {
-    //       height: 60,
-    //     },
-    //   }),
   },
 });
 
