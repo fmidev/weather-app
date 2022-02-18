@@ -382,7 +382,7 @@
       "hotWeather": "Hellevaroitus",
       "coldWeather": "Pakkasvaroitus",
       "uvNote": "UV-tiedote",
-      "floodLevel": "Tulvavaroitus"
+      "flooding": "Tulvavaroitus"
     }
   }
 }

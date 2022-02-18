@@ -48,13 +48,16 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
       hotWeather: 'hot-weather',
       coldWeather: 'hot-weather',
       uvNote: 'uv-note',
-      // floodLevel: 'flood-level',
+      flooding: 'flooding',
     };
 
-    let name = `warnings${typeMap[type] ? `-${typeMap[type]}` : ''}`;
-
-    if (!['uvNote', 'grassFireWeather', 'pedestrianSafety'].includes(type)) {
-      name += `-${colorMap[severity]}`;
+    let name = 'warnings';
+    const typeName = typeMap[type];
+    if (typeName) {
+      name += `-${typeMap[type]}`;
+      if (!['uvNote', 'grassFireWeather', 'pedestrianSafety'].includes(type)) {
+        name += `-${colorMap[severity]}`;
+      }
     }
 
     return <Icon name={name} width={24} height={24} />;
