@@ -22,7 +22,7 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
   const locale = i18n.language;
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
-  const latestObservation = data && data.length > 0 && data[data.length - 1];
+  const [latestObservation] = data || [];
   const latestObservationTime =
     latestObservation &&
     moment(latestObservation.epochtime * 1000)
