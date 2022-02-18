@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-import { useTheme, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
@@ -10,15 +10,14 @@ import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
 import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
 
+import GradientWrapper from '@components/weather/GradientWrapper';
 import NextHourForecastPanel from '@components/weather/NextHourForecastPanel';
 import ForecastPanel from '@components/weather/ForecastPanel';
 import ObservationPanel from '@components/weather/ObservationPanel';
-
-import { CustomTheme } from '@utils/colors';
+import WarningsPanelSlim from '@components/warnings/WarningsPanelSlim';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
-import WarningsPanelSlim from '@components/warnings/WarningsPanelSlim';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
@@ -42,7 +41,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   fetchWarnings,
   location,
 }) => {
-  const { colors } = useTheme() as CustomTheme;
   const isFocused = useIsFocused();
   const [forecastUpdated, setForecastUpdated] = useState<number>(Date.now());
   const [observationUpdated, setObservationUpdated] = useState<number>(
@@ -116,15 +114,17 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   return (
     <SafeAreaView>
-      <ScrollView
-        style={[styles.container, { backgroundColor: colors.screenBackground }]}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}>
-        <NextHourForecastPanel />
-        <WarningsPanelSlim />
-        <ForecastPanel />
-        <ObservationPanel />
-      </ScrollView>
+      <GradientWrapper>
+        <ScrollView
+          style={[styles.container]}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}>
+          <NextHourForecastPanel />
+          <WarningsPanelSlim />
+          <ForecastPanel />
+          <ObservationPanel />
+        </ScrollView>
+      </GradientWrapper>
     </SafeAreaView>
   );
 };
