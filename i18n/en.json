@@ -381,7 +381,7 @@
       "hotWeather": "Heat wave warning",
       "coldWeather": "Cold warning",
       "uvNote": "UV advisory",
-      "floodLevel": "Flood warning"
+      "flooding": "Flood warning"
     }
   }
 }

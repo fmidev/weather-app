@@ -39,6 +39,11 @@ const WarningsWebViewPanel: React.FC = () => {
   }
 
   const injectedJavaScript = `(function() {
+    const meta = document.createElement('meta');
+    meta.setAttribute('content', 'width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1');
+    meta.setAttribute('name', 'viewport');
+    document.getElementsByTagName('head')[0].appendChild(meta);
+
     const style = document.createElement('style');
     style.type = 'text/css';
     style.innerHTML = '\

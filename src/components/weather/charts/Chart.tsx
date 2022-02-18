@@ -6,12 +6,7 @@ import React, {
   useState,
 } from 'react';
 
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { VictoryChart, VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +20,7 @@ import {
   chartYLabelText,
 } from '@utils/chart';
 
+import { Config } from '@config';
 import { ChartData, ChartType, ChartValues, ChartMinMax } from './types';
 import ChartLegend from './Legend';
 import chartSettings from './settings';
@@ -53,13 +49,17 @@ const Chart: React.FC<ChartProps> = ({
   );
   const { colors } = useTheme() as CustomTheme;
   const { i18n } = useTranslation();
-  const { width } = useWindowDimensions();
   moment.locale(i18n.language);
 
-  const tickInterval = 3;
-  const stepLength = (15 / tickInterval) * 3;
+  const { timePeriod } = Config.get('weather').observation;
 
-  const chartWidth = observation ? width - 100 : data.length * stepLength;
+  const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
+  const stepLength = tickInterval === 1 ? 26 : 13;
+
+  const chartWidth =
+    observation && timePeriod
+      ? timePeriod * stepLength
+      : data.length * stepLength;
 
   const calculateDayIndex = useCallback(
     (index: number) =>
@@ -139,6 +139,12 @@ const Chart: React.FC<ChartProps> = ({
     }
   };
 
+  const onLayout = () => {
+    if (observation) {
+      scrollRef.current.scrollToEnd();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.chartRowContainer}>
@@ -166,6 +172,7 @@ const Chart: React.FC<ChartProps> = ({
         </View>
         <ScrollView
           ref={scrollRef}
+          onLayout={onLayout}
           onMomentumScrollEnd={onMomentumScrollEnd}
           horizontal
           showsHorizontalScrollIndicator={false}

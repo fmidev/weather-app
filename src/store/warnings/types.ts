@@ -32,8 +32,8 @@ export type WarningType =
   | 'grassFireWeather'
   | 'hotWeather'
   | 'coldWeather'
-  | 'uvNote';
-// | 'floodLevel';
+  | 'uvNote'
+  | 'flooding';
 
 export type Severity = 'Moderate' | 'Severe' | 'Extreme';
 
