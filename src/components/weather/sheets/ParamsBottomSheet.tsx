@@ -28,6 +28,7 @@ import constants, {
   PARAMS_TO_ICONS,
 } from '@store/forecast/constants';
 
+import { useOrientation } from '@utils/hooks';
 import {
   WHITE,
   SECONDARY_BLUE,
@@ -60,6 +61,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
 }) => {
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
+  const isLandscape = useOrientation();
 
   const rowRenderer = (param: string, index: number) => (
     <View
@@ -124,7 +126,9 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
             {t('paramsBottomSheet.title')}
           </Text>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={isLandscape && styles.landscape}>
           <TouchableOpacity activeOpacity={1}>
             <View style={styles.descriptionContainer}>
               <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -211,6 +215,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     minHeight: 60,
     marginTop: 24,
+  },
+  landscape: {
+    paddingBottom: 200,
   },
 });
 

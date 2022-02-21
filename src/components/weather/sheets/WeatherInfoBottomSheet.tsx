@@ -23,6 +23,8 @@ import {
   symbolsDark,
   weatherSymbolKeyParser,
 } from '@assets/images';
+
+import { useOrientation } from '@utils/hooks';
 import {
   GRAY_1,
   RAIN_1,
@@ -54,6 +56,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   const [symbolsOpen, setSymbolsOpen] = useState<boolean>(false);
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
+  const isLandscape = useOrientation();
   const uniqueSymbolKeys = [
     ...new Set(
       uniqueSmartSymbols.map((s) => weatherSymbolKeyParser(s.toString()))
@@ -79,7 +82,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
           />
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={isLandscape && styles.landscape}>
           <TouchableOpacity activeOpacity={1}>
             <View style={styles.sheetTitle}>
               <Text style={[styles.title, { color: colors.primaryText }]}>
@@ -886,6 +891,9 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
+  },
+  landscape: {
+    paddingBottom: 200,
   },
 });
 
