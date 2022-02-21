@@ -248,7 +248,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             <Text
               style={[
                 styles.text,
-                step >= STEP_60 ? styles.lastHourText : styles.lastQuarterText,
+                styles.lastBlockText,
                 {
                   color: colors.hourListText,
                 },
@@ -279,7 +279,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           <Text
             style={[
               styles.text,
-              step >= STEP_60 ? styles.hourText : styles.quarterText,
+              styles.textBlock,
               {
                 color: colors.hourListText,
               },
@@ -469,25 +469,19 @@ const styles = StyleSheet.create({
     height: 32,
     justifyContent: 'flex-end',
   },
-  quarterText: {
-    marginRight: '20%',
-    marginLeft: '-65%',
-  },
-  hourText: {
-    marginRight: '20%',
-    marginLeft: '-15%',
+  textBlock: {
+    marginRight: '25%',
+    marginLeft: '-75%',
+    textAlign: 'center',
   },
   lastQuarterContainer: {
     height: 32,
     justifyContent: 'flex-end',
   },
-  lastQuarterText: {
-    marginRight: '50%',
-    marginLeft: '-35%',
-  },
-  lastHourText: {
+  lastBlockText: {
     marginRight: '35%',
-    marginLeft: '-20%',
+    marginLeft: '-35%',
+    textAlign: 'center',
   },
   quarterBottom: {
     minHeight: 10,
