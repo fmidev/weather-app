@@ -29,7 +29,7 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
       return;
     }
     const now = Date.now();
-    if (interval && updated < now - interval * 1000) {
+    if (interval && updated < now - interval * 60 * 1000) {
       await Config.update();
       setUpdated(now);
     }
