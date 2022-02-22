@@ -3,8 +3,8 @@ import proj4 from 'proj4';
 import { parse } from 'fast-xml-parser';
 
 import { MapOverlay } from '@store/map/types';
+import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
 
-import { Config } from '@config';
 import axiosClient from './axiosClient';
 
 type BoundingBox = {
@@ -96,9 +96,63 @@ export const getSliderMaxUnix = (
 
 export const getSliderStepSeconds = (sliderStep: number): number =>
   ([15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
-// [15, 30, 60, 180].includes(sliderStep) ? sliderStep * 60 : 15 * 60;
 
-export const getWMSLayerUrlsAndBounds = async (): Promise<
+export const getOverlayData = async (activeOverlay: number) => {
+  const { sources, layers } = Config.get('map');
+  const [overlay] = layers.filter(
+    ({ id }) => !activeOverlay || activeOverlay === id
+  );
+
+  if (overlay.type === 'Timeseries') {
+    return getTimeseriesData(sources, overlay);
+  }
+  return getWMSLayerUrlsAndBounds();
+};
+
+const getTimeseriesData = async (
+  sources: { [name: string]: string },
+  overlay: MapLayer
+): Promise<Map<number, MapOverlay> | undefined> => {
+  const overlayMap = new Map();
+  const toReturn = { type: 'Timeseries' } as MapOverlay;
+  const [layer] = overlay.sources as TimeseriesSource[];
+
+  const params = {
+    timeStep: overlay.times.timeStep,
+    timeSteps: overlay.times.forecast,
+    param: [
+      'lonlat',
+      'population',
+      'name',
+      'epochtime',
+      ...layer.parameters,
+    ].join(','),
+    keyword:
+      typeof layer.keyword === 'string'
+        ? layer.keyword
+        : layer.keyword.join(','),
+    format: 'json',
+    producer: layer.producer || 'default',
+    attributes: 'lonlat,population,name',
+  };
+
+  const url = `${sources[layer.source]}/timeseries`;
+  const { data } = await axiosClient({ url, params });
+
+  Object.assign(toReturn, {
+    data,
+    [layer.type]: {
+      start: layer.type === 'observation' ? Infinity : undefined,
+      end: layer.type === 'observation' ? undefined : Infinity,
+    },
+  });
+
+  overlayMap.set(overlay.id, toReturn);
+
+  return overlayMap;
+};
+
+const getWMSLayerUrlsAndBounds = async (): Promise<
   Map<number, MapOverlay> | undefined
 > => {
   const capabilitiesData = new Map();
@@ -106,7 +160,10 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
 
   const { sources, layers } = Config.get('map');
 
-  const wmsLayers = layers.filter((layer) => layer.type === 'WMS');
+  const wmsLayers = layers
+    .filter((layer) => layer.type === 'WMS')
+    .map((tmp) => ({ ...tmp, sources: tmp.sources as WMSSource[] }));
+
   const allLayerNames = wmsLayers
     .map((layer) => layer.sources.map((lSrc) => lSrc.layer))
     .flat();
@@ -141,8 +198,8 @@ export const getWMSLayerUrlsAndBounds = async (): Promise<
     })
   );
 
-  layers.forEach((layer) => {
-    const toReturn = {} as MapOverlay;
+  wmsLayers.forEach((layer) => {
+    const toReturn = { type: 'WMS' } as MapOverlay;
 
     layer.sources.forEach((layerSrc) => {
       const wmsLayer = capabilitiesData

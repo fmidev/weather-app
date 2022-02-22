@@ -57,3 +57,8 @@ export const selectOverlay = createSelector(
     return undefined;
   }
 );
+
+export const selectRegion = createSelector(
+  selectMapDomain,
+  (map) => map.region
+);

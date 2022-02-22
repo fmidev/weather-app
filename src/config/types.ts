@@ -21,22 +21,32 @@ type BoundingBox = {
   maxy: number;
 };
 
+export type WMSSource = {
+  source: string;
+  layer: string;
+  type: 'observation' | 'forecast';
+  boundingBox?: BoundingBox;
+  customParameters?: {
+    [name: string]: string | number;
+  };
+};
+
+export type TimeseriesSource = {
+  source: string;
+  type: 'observation' | 'forecast';
+  parameters: string[];
+  producer?: string;
+  keyword: string | string[];
+};
+
 type Times = RequireAtLeastOne<BaseTimes, 'forecast' | 'observation'>;
-export interface Layer {
+
+export interface MapLayer {
   id: string | number;
-  type: 'WMS' | 'GeoJSON';
+  type: 'WMS' | 'GeoJSON' | 'Timeseries';
   name: { [lang: string]: string };
   legend: string;
-  sources: {
-    source: string;
-    layer: string;
-    type: 'observation' | 'forecast';
-    boundingBox?: BoundingBox;
-    customParameters?: {
-      [name: string]: string | number;
-    };
-  }[];
-
+  sources: WMSSource[] | TimeseriesSource[];
   times: Times;
 }
 
@@ -98,7 +108,7 @@ export interface ConfigType {
     latitudeDelta: number;
     updateInterval: number;
     sources: { [name: string]: string };
-    layers: Layer[];
+    layers: MapLayer[];
   };
   weather: {
     apiUrl: string;

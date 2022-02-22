@@ -9,14 +9,22 @@ import moment from 'moment';
 
 import MapControls from '@components/map/ui/MapControls';
 import WMSOverlay from '@components/map/layers/WMSOverlay';
+import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapMarker from '@components/map/layers/MapMarker';
 
 import { State } from '@store/types';
 import { selectCurrent, selectTimeZone } from '@store/location/selector';
-import { selectDisplayLocation, selectOverlay } from '@store/map/selectors';
-import { updateOverlays as updateOverlaysAction } from '@store/map/actions';
+import {
+  selectActiveOverlay,
+  selectDisplayLocation,
+  selectOverlay,
+} from '@store/map/selectors';
+import {
+  updateOverlays as updateOverlaysAction,
+  updateRegion as updateRegionAction,
+} from '@store/map/actions';
 
 import darkMapStyle from '@utils/dark_map_style.json';
 import { GRAY_1 } from '@utils/colors';
@@ -39,11 +47,13 @@ const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
   displayLocation: selectDisplayLocation(state),
   overlay: selectOverlay(state),
+  activeOverlay: selectActiveOverlay(state),
   timezone: selectTimeZone(state),
 });
 
 const mapDispatchToProps = {
   updateOverlays: updateOverlaysAction,
+  updateRegion: updateRegionAction,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -55,8 +65,10 @@ const MapScreen: React.FC<MapScreenProps> = ({
   currentLocation,
   displayLocation,
   overlay,
+  activeOverlay,
   updateOverlays,
   timezone,
+  updateRegion,
 }) => {
   const { colors, dark } = useTheme();
   const isFocused = useIsFocused();
@@ -80,9 +92,10 @@ const MapScreen: React.FC<MapScreenProps> = ({
   };
 
   useEffect(() => {
-    updateOverlays();
+    updateOverlays(activeOverlay);
+    setMapUpdated(Date.now());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeOverlay]);
 
   useEffect(() => {
     moment.tz.setDefault(timezone);
@@ -92,10 +105,17 @@ const MapScreen: React.FC<MapScreenProps> = ({
     const now = Date.now();
     const mapUpdateTime = mapUpdated + (updateInterval ?? 5) * 60 * 1000;
     if (isFocused && (now > mapUpdateTime || shouldReload > mapUpdateTime)) {
-      updateOverlays();
+      updateOverlays(activeOverlay);
       setMapUpdated(now);
     }
-  }, [isFocused, mapUpdated, shouldReload, updateInterval, updateOverlays]);
+  }, [
+    isFocused,
+    mapUpdated,
+    shouldReload,
+    updateInterval,
+    updateOverlays,
+    activeOverlay,
+  ]);
 
   useEffect(() => {
     if (currentLocation) {
@@ -124,7 +144,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
     });
   };
 
-  const checkDistanceToLocation = (region: Region) => {
+  const onRegionChangeComplete = (region: Region) => {
+    updateRegion(region);
     if (currentLocation) {
       const { lat: latitude, lon: longitude } = currentLocation;
       const distance = getDistance(region, { latitude, longitude });
@@ -156,8 +177,11 @@ const MapScreen: React.FC<MapScreenProps> = ({
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={initialRegion}
         rotateEnabled={false}
-        onRegionChangeComplete={checkDistanceToLocation}>
-        {overlay && <WMSOverlay overlay={overlay} />}
+        onRegionChangeComplete={onRegionChangeComplete}>
+        {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} />}
+        {overlay && overlay.type === 'Timeseries' && (
+          <TimeseriesOverlay overlay={overlay} />
+        )}
         {displayLocation && currentLocation && (
           <MapMarker
             coordinates={{
