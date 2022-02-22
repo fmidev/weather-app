@@ -12,9 +12,9 @@ import {
   Text,
   TouchableOpacity,
   useWindowDimensions,
-  FlatList,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
@@ -46,6 +46,7 @@ import {
   GRAY_6_TRANSPARENT,
   TRANSPARENT,
 } from '@utils/colors';
+import SliderStep from './SliderStep';
 
 const QUARTER_WIDTH = 12;
 
@@ -91,7 +92,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const quarterWidth = multiplier * QUARTER_WIDTH;
   const hourWidth = 4 * quarterWidth;
 
-  const sliderRef = useRef() as React.MutableRefObject<FlatList>;
+  const sliderRef = useRef() as React.MutableRefObject<ScrollView>;
 
   const observationEndUnix =
     (overlay?.observation &&
@@ -143,11 +144,12 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       const now = moment().format('X');
       const roundedNow = Math.floor(Number(now) / step) * step;
       const i = times.indexOf(roundedNow);
-
+      const stepWidth = step >= STEP_60 ? hourWidth : quarterWidth;
+      const offset = Math.floor(i * stepWidth);
       if (i >= 0) {
         // for some reason this needed timeout to work on initial render
         sliderTimeout = setTimeout(
-          () => sliderRef.current.scrollToIndex({ index: i, animated: false }),
+          () => sliderRef.current.scrollTo({ x: offset, animated: false }),
           40
         );
       }
@@ -155,7 +157,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     return () => {
       clearTimeout(sliderTimeout);
     };
-  }, [times, step, sliderRef]);
+  }, [times, step, sliderRef, hourWidth, quarterWidth]);
 
   useEffect(() => {
     const time = times[currentIndex];
@@ -211,8 +213,8 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   useEffect(() => {
     if (isAnimating) {
-      sliderRef.current.scrollToOffset({
-        offset: scrollIndex,
+      sliderRef.current.scrollTo({
+        x: scrollIndex,
         animated: false,
       });
       resolveAndSetCurrentIndex(scrollIndex);
@@ -231,78 +233,6 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const clear = () => {
     setIsAnimating(false);
     clearInterval(interval);
-  };
-
-  const renderStep = ({ item, index }: { item: number; index: number }) => {
-    const hour = item % STEP_60 === 0 && moment.unix(item).format('HH');
-    if (index === times.length - 1)
-      return (
-        <View
-          style={[
-            styles.lastQuarterContainer,
-            {
-              marginRight: sliderWidth / 2 - 1,
-            },
-          ]}>
-          {hour && (
-            <Text
-              style={[
-                styles.text,
-                styles.lastBlockText,
-                {
-                  color: colors.hourListText,
-                },
-              ]}>
-              {hour}
-            </Text>
-          )}
-          <View
-            style={[
-              hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
-              step < STEP_60 ? styles.withBorderLeft : undefined,
-              { borderLeftColor: colors.timeSliderTick },
-            ]}
-          />
-        </View>
-      );
-    return (
-      <View
-        key={`${item}`}
-        style={[
-          styles.quarterContainer,
-          {
-            width: step >= STEP_60 ? hourWidth : quarterWidth,
-            marginLeft: index === 0 ? sliderWidth / 2 - 80 : undefined,
-          },
-        ]}>
-        {hour && (
-          <Text
-            style={[
-              styles.text,
-              styles.textBlock,
-              {
-                color: colors.hourListText,
-              },
-            ]}>
-            {hour}
-          </Text>
-        )}
-        <View
-          style={[
-            hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
-            styles.withBorderBottom,
-            step < STEP_60 ? styles.withBorderLeft : undefined,
-            {
-              borderLeftColor: colors.timeSliderTick,
-              borderBottomColor:
-                item <= observationEndUnix
-                  ? colors.timeSliderTick
-                  : colors.primary,
-            },
-          ]}
-        />
-      </View>
-    );
   };
 
   return (
@@ -339,24 +269,30 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
         <View style={styles.sliderWrapper}>
           {times.length > 0 && (
-            <FlatList
-              decelerationRate="fast"
+            <ScrollView
               ref={sliderRef}
-              data={times}
-              keyExtractor={(item) => `${item}`}
-              renderItem={renderStep}
               horizontal
-              style={styles.sliderContainer}
               showsHorizontalScrollIndicator={false}
+              decelerationRate="fast"
+              style={styles.sliderContainer}
               onScroll={handleScroll}
               onMomentumScrollEnd={handleMomentumScroll}
               onScrollBeginDrag={handleMomentumStart}
-              getItemLayout={(data, index: number) => ({
-                length: step >= STEP_60 ? hourWidth : quarterWidth,
-                offset: index * (step >= STEP_60 ? hourWidth : quarterWidth),
-                index,
-              })}
-            />
+              scrollEventThrottle={20}>
+              {times.map((item, index) => (
+                <SliderStep
+                  key={item}
+                  item={item}
+                  index={index}
+                  sliderWidth={sliderWidth}
+                  step={step}
+                  hourWidth={hourWidth}
+                  quarterWidth={quarterWidth}
+                  isLast={index === times.length - 1}
+                  isObservation={item <= observationEndUnix}
+                />
+              ))}
+            </ScrollView>
           )}
           <Text
             style={[
@@ -437,10 +373,6 @@ const styles = StyleSheet.create({
 
     elevation: 5,
   },
-  text: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-  },
   currentTimeText: {
     fontSize: 14,
     fontFamily: 'Roboto-Bold',
@@ -464,38 +396,6 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     borderRightWidth: 1,
-  },
-  quarterContainer: {
-    height: 32,
-    justifyContent: 'flex-end',
-  },
-  textBlock: {
-    marginRight: '25%',
-    marginLeft: '-75%',
-    textAlign: 'center',
-  },
-  lastQuarterContainer: {
-    height: 32,
-    justifyContent: 'flex-end',
-  },
-  lastBlockText: {
-    marginRight: '35%',
-    marginLeft: '-35%',
-    textAlign: 'center',
-  },
-  quarterBottom: {
-    minHeight: 10,
-    paddingTop: 6,
-  },
-  withBorderLeft: {
-    borderLeftWidth: 1,
-  },
-  fullHourQuarterBottom: {
-    borderLeftWidth: 1,
-    minHeight: 16,
-  },
-  withBorderBottom: {
-    borderBottomWidth: 4,
   },
   sliderWrapper: {
     flex: 1,
