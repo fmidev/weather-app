@@ -457,7 +457,17 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     borderTopWidth: 3,
-    marginBottom: -10,
+    ...Platform.select({
+      android: {
+        marginBottom: 0,
+      },
+      ios: {
+        marginBottom: -10,
+      },
+      default: {
+        marginBottom: 0,
+      },
+    }),
   },
   header: {
     shadowOffset: {
