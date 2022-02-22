@@ -1,6 +1,13 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text, Switch, TouchableOpacity } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  Text,
+  Switch,
+  TouchableOpacity,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -57,83 +64,88 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
 
   const { colors } = useTheme() as CustomTheme;
   return (
-    <View style={styles.sheetListContainer}>
-      <View style={styles.closeButtonContainer}>
-        <CloseButton
-          onPress={onClose}
-          accessibilityLabel={t(
-            'map:layersBottomSheet:closeAccessibilityLabel'
-          )}
-        />
-      </View>
-
-      <View style={styles.sheetTitle}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          {t('map:layersBottomSheet:locationTitle')}
-        </Text>
-      </View>
-      <View
-        style={[
-          styles.rowWrapper,
-          styles.withBorderBottom,
-          { borderBottomColor: colors.border },
-        ]}>
-        <View style={styles.row}>
-          <Text style={[styles.text, { color: colors.text }]}>
-            {t('map:layersBottomSheet:locationHint')}
-          </Text>
-          <Switch
-            trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-            thumbColor={WHITE}
-            ios_backgroundColor={GRAYISH_BLUE}
-            value={mapLayers.location}
-            onValueChange={() =>
-              updateMapLayers({
-                ...mapLayers,
-                location: !mapLayers.location,
-              })
-            }
+    <SafeAreaView style={styles.wrapper}>
+      <View style={styles.sheetListContainer}>
+        <View style={styles.closeButtonContainer}>
+          <CloseButton
+            onPress={onClose}
+            accessibilityLabel={t(
+              'map:layersBottomSheet:closeAccessibilityLabel'
+            )}
           />
         </View>
-      </View>
 
-      <View style={styles.sheetTitle}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          {t('map:layersBottomSheet:mapLayersTitle')}
-        </Text>
+        <View style={styles.sheetTitle}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {t('map:layersBottomSheet:locationTitle')}
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            { borderBottomColor: colors.border },
+          ]}>
+          <View style={styles.row}>
+            <Text style={[styles.text, { color: colors.text }]}>
+              {t('map:layersBottomSheet:locationHint')}
+            </Text>
+            <Switch
+              trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
+              thumbColor={WHITE}
+              ios_backgroundColor={GRAYISH_BLUE}
+              value={mapLayers.location}
+              onValueChange={() =>
+                updateMapLayers({
+                  ...mapLayers,
+                  location: !mapLayers.location,
+                })
+              }
+            />
+          </View>
+        </View>
+
+        <View style={styles.sheetTitle}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {t('map:layersBottomSheet:mapLayersTitle')}
+          </Text>
+        </View>
+        {layers.length > 0 &&
+          layers.map((layer) => (
+            <TouchableOpacity
+              key={layer.id}
+              disabled={layer.id === activeOverlay}
+              onPress={() => {
+                updateActiveOverlay(Number(layer.id));
+                const step = layer.times.timeStep;
+                updateSliderStep(step);
+              }}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {(layer?.name && layer?.name[locale]) || ''}
+                </Text>
+                <Icon
+                  name={
+                    activeOverlay === layer.id
+                      ? 'radio-button-on'
+                      : 'radio-button-off'
+                  }
+                  style={{
+                    color: activeOverlay === layer.id ? colors.primary : GRAY_1,
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          ))}
       </View>
-      {layers.length > 0 &&
-        layers.map((layer) => (
-          <TouchableOpacity
-            key={layer.id}
-            disabled={layer.id === activeOverlay}
-            onPress={() => {
-              updateActiveOverlay(Number(layer.id));
-              const step = layer.times.timeStep;
-              updateSliderStep(step);
-            }}>
-            <View style={styles.row}>
-              <Text style={[styles.text, { color: colors.text }]}>
-                {(layer?.name && layer?.name[locale]) || ''}
-              </Text>
-              <Icon
-                name={
-                  activeOverlay === layer.id
-                    ? 'radio-button-on'
-                    : 'radio-button-off'
-                }
-                style={{
-                  color: activeOverlay === layer.id ? colors.primary : GRAY_1,
-                }}
-              />
-            </View>
-          </TouchableOpacity>
-        ))}
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   sheetListContainer: {
     flex: 1,
     marginTop: -10,

@@ -46,6 +46,7 @@ import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { getGeolocation } from '@utils/helpers';
+
 import {
   PRIMARY_BLUE,
   WHITE,
@@ -97,7 +98,6 @@ const Navigator: React.FC<Props> = ({
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-
   const isDark = (currentTheme: string): boolean =>
     currentTheme === 'dark' ||
     (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
@@ -318,11 +318,6 @@ const Navigator: React.FC<Props> = ({
         <Tab.Navigator
           initialRouteName={initialTab}
           screenOptions={{
-            tabBarStyle: styles.tabBar,
-            tabBarItemStyle: {
-              paddingVertical: 12,
-              minHeight: 72,
-            },
             tabBarActiveTintColor: useDarkTheme
               ? darkTheme.colors.tabBarActive
               : lightTheme.colors.tabBarActive,
@@ -462,17 +457,15 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     borderTopWidth: 3,
-  },
-  tabBar: {
     ...Platform.select({
-      ios: {
-        minHeight: 90,
-      },
       android: {
-        minHeight: 72,
+        marginBottom: 0,
+      },
+      ios: {
+        marginBottom: -10,
       },
       default: {
-        minHeight: 72,
+        marginBottom: 0,
       },
     }),
   },
@@ -483,17 +476,6 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 4,
     shadowOpacity: 1,
-    ...Platform.select({
-      ios: {
-        height: 102,
-      },
-      android: {
-        height: 60,
-      },
-      default: {
-        height: 60,
-      },
-    }),
   },
 });
 
