@@ -3,8 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Dimensions } from 'react-native';
 import Supercluster, { AnyProps, PointFeature } from 'supercluster';
 import { Marker, Region } from 'react-native-maps';
-// import { useTheme } from '@react-navigation/native';
-// import { CustomTheme } from '@utils/colors';
+import { useTranslation } from 'react-i18next';
 import { weatherSymbolGetter } from '@assets/images';
 
 import { State } from '@store/types';
@@ -29,7 +28,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   sliderTime,
   overlay,
 }) => {
-  // const { dark } = useTheme() as CustomTheme;
+  const { t } = useTranslation();
   const { data } = overlay;
 
   const getZoomLevel = (longitudeDelta: number) => {
@@ -126,7 +125,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
     []
   );
 
-  const { /* cluster, */ markers } = useMemo(
+  const { markers } = useMemo(
     () => getCluster(data, region),
     [data, region, getCluster]
   );
@@ -149,7 +148,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
           key={`${name}`}
           coordinate={{ latitude, longitude }}
           title={`${name}`}
-          // description={`${smartSymbol}`}
+          description={`${t(`symbols:${smartSymbol}`)}`}
           tracksViewChanges={false}>
           {weatherSymbolGetter(
             smartSymbol.toString(),
