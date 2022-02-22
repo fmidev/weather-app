@@ -12,9 +12,9 @@ import {
   Text,
   TouchableOpacity,
   useWindowDimensions,
-  FlatList,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
@@ -46,9 +46,9 @@ import {
   GRAY_6_TRANSPARENT,
   TRANSPARENT,
 } from '@utils/colors';
+import SliderStep from './SliderStep';
 
 const QUARTER_WIDTH = 12;
-const HOUR_WIDTH = QUARTER_WIDTH * 4;
 
 const STEP_60 = 3600;
 let interval: NodeJS.Timeout;
@@ -85,8 +85,11 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const [times, setTimes] = useState<number[]>([]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const { width } = useWindowDimensions();
+  const [sliderWidth, setSliderWidth] = useState<number>(width - 24);
 
-  const sliderRef = useRef() as React.MutableRefObject<FlatList>;
+  const multiplier = Math.round(width / 400);
+
+  const sliderRef = useRef() as React.MutableRefObject<ScrollView>;
 
   const observationEndUnix =
     (overlay?.observation &&
@@ -98,7 +101,6 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     .unix(sliderTime)
     .locale(locale)
     .format('ddd HH:mm');
-  const sliderWidth = width - 24;
 
   const sliderMinUnix = useMemo(
     () => getSliderMinUnix(activeOverlayId, overlay),
@@ -110,6 +112,8 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   );
 
   const step = getSliderStepSeconds(sliderStep);
+
+  const stepWidth = (step >= STEP_60 ? 4 : 1) * multiplier * QUARTER_WIDTH;
 
   const isFocused = useIsFocused();
 
@@ -139,11 +143,11 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       const now = moment().format('X');
       const roundedNow = Math.floor(Number(now) / step) * step;
       const i = times.indexOf(roundedNow);
-
+      const offset = Math.floor(i * stepWidth);
       if (i >= 0) {
         // for some reason this needed timeout to work on initial render
         sliderTimeout = setTimeout(
-          () => sliderRef.current.scrollToIndex({ index: i, animated: false }),
+          () => sliderRef.current.scrollTo({ x: offset, animated: false }),
           40
         );
       }
@@ -151,7 +155,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     return () => {
       clearTimeout(sliderTimeout);
     };
-  }, [times, step, sliderRef]);
+  }, [times, step, sliderRef, stepWidth]);
 
   useEffect(() => {
     const time = times[currentIndex];
@@ -189,8 +193,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const resolveAndSetCurrentIndex = useCallback(
     (x: number) => {
-      const divider = step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH;
-      const index = Math.floor(x / divider);
+      const index = Math.floor(x / stepWidth);
       if (index >= 0 && index <= times.length) {
         if (index === times.length) {
           setCurrentIndex(index - 1);
@@ -202,26 +205,27 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         }
       }
     },
-    [times, isAnimating, step]
+    [times, isAnimating, stepWidth]
   );
 
   useEffect(() => {
     if (isAnimating) {
-      sliderRef.current.scrollToOffset({
-        offset: scrollIndex,
+      sliderRef.current.scrollTo({
+        x: scrollIndex,
         animated: false,
       });
       resolveAndSetCurrentIndex(scrollIndex);
     }
   }, [scrollIndex, isAnimating, resolveAndSetCurrentIndex]);
 
-  const handleSetScrollIndex = () => setScrollIndex((prev) => prev + 1);
+  const handleSetScrollIndex = () =>
+    setScrollIndex((prev) => prev + stepWidth / 12.5);
 
   const animate = () => {
     setIsAnimating(true);
     interval = setInterval(() => {
       handleSetScrollIndex();
-    }, (80 / sliderStep) * 15);
+    }, 80);
   };
 
   const clear = () => {
@@ -229,188 +233,120 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     clearInterval(interval);
   };
 
-  const renderStep = ({ item, index }: { item: number; index: number }) => {
-    const hour = item % STEP_60 === 0 && moment.unix(item).format('HH');
-    if (index === times.length - 1)
-      return (
+  return (
+    <View
+      style={[
+        styles.wrapper,
+        styles.shadow,
+        {
+          backgroundColor: colors.mapButtonBackground,
+          borderColor: colors.mapButtonBorder,
+          shadowColor: colors.shadow,
+        },
+      ]}
+      onLayout={({ nativeEvent }) => {
+        const {
+          layout: { width: layoutWidth },
+        } = nativeEvent;
+        if (layoutWidth !== sliderWidth) setSliderWidth(layoutWidth);
+      }}>
+      <View style={styles.container}>
         <View
-          style={[
-            styles.lastQuarterContainer,
-            {
-              marginRight:
-                index === times.length - 1 ? sliderWidth / 2 - 1 : undefined,
-            },
-          ]}>
-          {hour && (
-            <Text
-              style={[
-                styles.text,
-                step >= STEP_60 ? styles.lastHourText : styles.lastQuarterText,
-                {
-                  color: colors.hourListText,
-                },
-              ]}>
-              {hour}
-            </Text>
-          )}
-          <View
-            style={[
-              hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
-              step < STEP_60 ? styles.withBorderLeft : undefined,
-              { borderLeftColor: colors.timeSliderTick },
-            ]}
-          />
+          style={[styles.buttonContainer, { borderRightColor: colors.border }]}>
+          <TouchableOpacity
+            onPress={() => (isAnimating ? clear() : animate())}
+            accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
+            <Icon
+              name={isAnimating ? 'pause' : 'play'}
+              style={{ color: colors.text }}
+              width={50}
+              height={50}
+            />
+          </TouchableOpacity>
         </View>
-      );
-    return (
-      <View
-        key={`${item}`}
-        style={[
-          styles.quarterContainer,
-          {
-            width: step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
-            marginLeft: index === 0 ? sliderWidth / 2 - 80 : undefined,
-          },
-        ]}>
-        {hour && (
+
+        <View style={styles.sliderWrapper}>
+          {times.length > 0 && (
+            <ScrollView
+              ref={sliderRef}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              decelerationRate="fast"
+              style={styles.sliderContainer}
+              onScroll={handleScroll}
+              onMomentumScrollEnd={handleMomentumScroll}
+              onScrollBeginDrag={handleMomentumStart}
+              scrollEventThrottle={20}>
+              {times.map((item, index) => (
+                <SliderStep
+                  key={item}
+                  item={item}
+                  index={index}
+                  sliderWidth={sliderWidth}
+                  step={step}
+                  stepWidth={stepWidth}
+                  isLast={index === times.length - 1}
+                  isObservation={item <= observationEndUnix}
+                />
+              ))}
+            </ScrollView>
+          )}
           <Text
             style={[
-              styles.text,
-              step >= STEP_60 ? styles.hourText : styles.quarterText,
+              styles.currentTimeText,
+              styles.textCapitalize,
               {
                 color: colors.hourListText,
               },
             ]}>
-            {hour}
+            {currentSliderTime}
           </Text>
-        )}
-        <View
-          style={[
-            hour ? styles.fullHourQuarterBottom : styles.quarterBottom,
-            styles.withBorderBottom,
-            step < STEP_60 ? styles.withBorderLeft : undefined,
-            {
-              borderLeftColor: colors.timeSliderTick,
-              borderBottomColor:
-                item <= observationEndUnix
-                  ? colors.timeSliderTick
-                  : colors.primary,
-            },
-          ]}
-        />
-      </View>
-    );
-  };
-
-  return (
-    <>
-      <View
-        style={[
-          styles.wrapper,
-          styles.shadow,
-          {
-            backgroundColor: colors.mapButtonBackground,
-            borderColor: colors.mapButtonBorder,
-            shadowColor: colors.shadow,
-          },
-        ]}>
-        <View style={styles.container}>
+          <Text
+            style={[
+              styles.currentTimeText,
+              styles.textRight,
+              {
+                color:
+                  sliderTime > observationEndUnix
+                    ? colors.primary
+                    : colors.timeSliderObservationText,
+              },
+            ]}>
+            {sliderTime > observationEndUnix
+              ? t('map:timeSlider:forecast')
+              : t('map:timeSlider:observation')}
+          </Text>
+          <LinearGradient
+            style={[styles.gradient, styles.gradientLeft]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            colors={
+              dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
+            }
+          />
+          <LinearGradient
+            style={[styles.gradient, styles.gradientRight]}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+            colors={
+              dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
+            }
+          />
           <View
             style={[
-              styles.buttonContainer,
-              { borderRightColor: colors.border },
-            ]}>
-            <TouchableOpacity
-              onPress={() => (isAnimating ? clear() : animate())}
-              accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
-              <Icon
-                name={isAnimating ? 'pause' : 'play'}
-                style={{ color: colors.text }}
-                width={50}
-                height={50}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.sliderWrapper}>
-            {times.length > 0 && (
-              <FlatList
-                decelerationRate="fast"
-                ref={sliderRef}
-                data={times}
-                keyExtractor={(item) => `${item}`}
-                renderItem={renderStep}
-                horizontal
-                style={styles.sliderContainer}
-                showsHorizontalScrollIndicator={false}
-                onScroll={handleScroll}
-                onMomentumScrollEnd={handleMomentumScroll}
-                onScrollBeginDrag={handleMomentumStart}
-                getItemLayout={(data, index: number) => ({
-                  length: step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH,
-                  offset:
-                    index * (step >= STEP_60 ? HOUR_WIDTH : QUARTER_WIDTH),
-                  index,
-                })}
-              />
-            )}
-            <Text
-              style={[
-                styles.currentTimeText,
-                styles.textCapitalize,
-                {
-                  color: colors.hourListText,
-                },
-              ]}>
-              {currentSliderTime}
-            </Text>
-            <Text
-              style={[
-                styles.currentTimeText,
-                styles.textRight,
-                {
-                  color:
-                    sliderTime > observationEndUnix
-                      ? colors.primary
-                      : colors.timeSliderObservationText,
-                },
-              ]}>
-              {sliderTime > observationEndUnix
-                ? t('map:timeSlider:forecast')
-                : t('map:timeSlider:observation')}
-            </Text>
-            <LinearGradient
-              style={[styles.gradient, styles.gradientLeft]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              colors={
-                dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
-              }
-            />
-            <LinearGradient
-              style={[styles.gradient, styles.gradientRight]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              colors={
-                dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
-              }
-            />
-            <View
-              style={[
-                styles.tick,
-                {
-                  left: sliderWidth / 2 - 86,
-                  borderBottomColor:
-                    sliderTime > observationEndUnix
-                      ? colors.primary
-                      : colors.timeSliderTick,
-                },
-              ]}
-            />
-          </View>
+              styles.tick,
+              {
+                left: sliderWidth / 2 - 86,
+                borderBottomColor:
+                  sliderTime > observationEndUnix
+                    ? colors.primary
+                    : colors.timeSliderTick,
+              },
+            ]}
+          />
         </View>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -433,10 +369,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-  },
-  text: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
   },
   currentTimeText: {
     fontSize: 14,
@@ -461,44 +393,6 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     borderRightWidth: 1,
-  },
-  quarterContainer: {
-    height: 32,
-    justifyContent: 'flex-end',
-  },
-  quarterText: {
-    marginRight: '20%',
-    marginLeft: '-65%',
-  },
-  hourText: {
-    marginRight: '20%',
-    marginLeft: '-15%',
-  },
-  lastQuarterContainer: {
-    height: 32,
-    justifyContent: 'flex-end',
-  },
-  lastQuarterText: {
-    marginRight: '50%',
-    marginLeft: '-35%',
-  },
-  lastHourText: {
-    marginRight: '35%',
-    marginLeft: '-20%',
-  },
-  quarterBottom: {
-    minHeight: 10,
-    paddingTop: 6,
-  },
-  withBorderLeft: {
-    borderLeftWidth: 1,
-  },
-  fullHourQuarterBottom: {
-    borderLeftWidth: 1,
-    minHeight: 16,
-  },
-  withBorderBottom: {
-    borderBottomWidth: 4,
   },
   sliderWrapper: {
     flex: 1,

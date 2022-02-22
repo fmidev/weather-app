@@ -5,9 +5,11 @@ import MapView, { Camera, Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
+import moment from 'moment';
 
 import MapControls from '@components/map/ui/MapControls';
 import WMSOverlay from '@components/map/layers/WMSOverlay';
+import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapMarker from '@components/map/layers/MapMarker';
@@ -28,8 +30,6 @@ import darkMapStyle from '@utils/dark_map_style.json';
 import { GRAY_1 } from '@utils/colors';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
-import moment from 'moment';
-import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
+  SafeAreaView,
   View,
   StyleSheet,
   Text,
@@ -27,6 +28,7 @@ import constants, {
   PARAMS_TO_ICONS,
 } from '@store/forecast/constants';
 
+import { useOrientation } from '@utils/hooks';
 import {
   WHITE,
   SECONDARY_BLUE,
@@ -59,6 +61,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
 }) => {
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
+  const isLandscape = useOrientation();
 
   const rowRenderer = (param: string, index: number) => (
     <View
@@ -109,48 +112,55 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   );
 
   return (
-    <View style={styles.sheetListContainer}>
-      <View style={styles.closeButtonContainer}>
-        <CloseButton
-          onPress={onClose}
-          accessibilityLabel={t('paramsBottomSheet.closeAccessibilityLabel')}
-        />
-      </View>
+    <SafeAreaView style={styles.wrapper}>
+      <View style={styles.sheetListContainer}>
+        <View style={styles.closeButtonContainer}>
+          <CloseButton
+            onPress={onClose}
+            accessibilityLabel={t('paramsBottomSheet.closeAccessibilityLabel')}
+          />
+        </View>
 
-      <View style={styles.sheetTitle}>
-        <Text style={[styles.title, { color: colors.primaryText }]}>
-          {t('paramsBottomSheet.title')}
-        </Text>
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <TouchableOpacity activeOpacity={1}>
-          <View style={styles.descriptionContainer}>
-            <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t('paramsBottomSheet.subTitle')}
-            </Text>
-          </View>
-
-          {constants.map(rowRenderer)}
-          <View style={styles.lastRow}>
-            <TouchableOpacity onPress={() => restoreDefaultDisplayParams()}>
-              <Text
-                style={[
-                  styles.restoreText,
-                  {
-                    color: colors.primaryText,
-                  },
-                ]}>
-                {t('paramsBottomSheet.restoreButtonText')}
+        <View style={styles.sheetTitle}>
+          <Text style={[styles.title, { color: colors.primaryText }]}>
+            {t('paramsBottomSheet.title')}
+          </Text>
+        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={isLandscape && styles.landscape}>
+          <TouchableOpacity activeOpacity={1}>
+            <View style={styles.descriptionContainer}>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t('paramsBottomSheet.subTitle')}
               </Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
+            </View>
+
+            {constants.map(rowRenderer)}
+            <View style={styles.lastRow}>
+              <TouchableOpacity onPress={() => restoreDefaultDisplayParams()}>
+                <Text
+                  style={[
+                    styles.restoreText,
+                    {
+                      color: colors.primaryText,
+                    },
+                  ]}>
+                  {t('paramsBottomSheet.restoreButtonText')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   sheetListContainer: {
     flex: 1,
     marginTop: -10,
@@ -205,6 +215,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     minHeight: 60,
     marginTop: 24,
+  },
+  landscape: {
+    paddingBottom: 200,
   },
 });
 

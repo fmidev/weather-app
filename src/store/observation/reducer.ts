@@ -34,7 +34,7 @@ const formatData = (
     Object.entries(nameHolder).forEach(([name, distanceHolder]) => {
       Object.entries(distanceHolder).forEach(([distance, dataHolder]) => {
         stations.push({ id: Number(id), name, distance: Number(distance) });
-        data[Number(id)] = dataHolder;
+        data[Number(id)] = dataHolder.reverse();
       });
     });
   });

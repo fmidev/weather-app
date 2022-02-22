@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useOrientation } from '@utils/hooks';
+
 import MapButton from './MapButton';
 import RelocateButton from './RelocateButton';
 import TimeSlider from './TimeSlider';
@@ -23,53 +25,77 @@ const MapControls: React.FC<MapControlsProps> = ({
   relocate,
 }) => {
   const { t } = useTranslation();
+  const isLandscape = useOrientation();
   return (
-    <>
+    <View style={styles.wrapper} pointerEvents="box-none">
       {showRelocateButton && (
         <RelocateButton
           onPress={relocate}
-          style={[styles.mapButton, styles.center, styles.plusButton]}
+          style={[styles.mapButton, styles.center, styles.topFirst]}
         />
       )}
       <MapButton
-        style={[styles.mapButton, styles.right, styles.plusButton]}
+        style={[
+          styles.mapButton,
+          styles.right,
+          styles.topFirst,
+          isLandscape && styles.left,
+        ]}
         accessibilityLabel={t('map:plusButtonAccessibilityLabel')}
         onPress={onZoomIn}
         icon="plus"
         iconSize={26}
       />
       <MapButton
-        style={[styles.mapButton, styles.right, styles.minusButton]}
+        style={[
+          styles.mapButton,
+          styles.right,
+          styles.topSecond,
+          isLandscape && styles.left,
+        ]}
         accessibilityLabel={t('map:minusButtonAccessibilityLabel')}
         onPress={onZoomOut}
         icon="minus"
         iconSize={26}
       />
       <MapButton
-        style={[styles.mapButton, styles.right, styles.infoButton]}
+        style={[
+          styles.mapButton,
+          styles.right,
+          isLandscape ? styles.topFirst : styles.bottomSecond,
+        ]}
         accessibilityLabel={t('map:infoButtonAccessibilityLabel')}
         onPress={onInfoPressed}
         icon="info"
         iconSize={26}
       />
       <MapButton
-        style={[styles.mapButton, styles.right, styles.layersButton]}
+        style={[
+          styles.mapButton,
+          styles.right,
+          isLandscape ? styles.topSecond : styles.bottomFirst,
+        ]}
         accessibilityLabel={t('map:layersButtonAccessibilityLabel')}
         onPress={onLayersPressed}
         icon="layers"
         iconSize={26}
       />
       <TimeSlider />
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    width: '100%',
+    zIndex: 0,
+  },
   mapButton: {
     position: 'absolute',
     borderRadius: 8,
-    height: 50,
-    width: 50,
+    height: 44,
+    width: 44,
   },
   center: {
     alignSelf: 'center',
@@ -77,18 +103,20 @@ const styles = StyleSheet.create({
   right: {
     right: 12,
   },
-  plusButton: {
+  left: {
+    left: 12,
+  },
+  topFirst: {
     top: 42,
   },
-  minusButton: {
+  topSecond: {
     top: 104,
   },
-
-  infoButton: {
+  bottomSecond: {
     right: 12,
     bottom: 30 + 150,
   },
-  layersButton: {
+  bottomFirst: {
     right: 12,
     bottom: 30 + 90,
   },

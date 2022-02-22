@@ -1,6 +1,12 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -43,53 +49,58 @@ const ObservationStationListBottomSheet: React.FC<
   const { colors } = useTheme() as CustomTheme;
 
   return (
-    <View style={styles.sheetListContainer}>
-      <View style={styles.closeButtonContainer}>
-        <CloseButton
-          onPress={onClose}
-          accessibilityLabel={t(
-            'forecast:paramsBottomSheet:closeAccessibilityLabel'
-          )}
-        />
-      </View>
+    <SafeAreaView style={styles.wrapper}>
+      <View style={styles.sheetListContainer}>
+        <View style={styles.closeButtonContainer}>
+          <CloseButton
+            onPress={onClose}
+            accessibilityLabel={t(
+              'forecast:paramsBottomSheet:closeAccessibilityLabel'
+            )}
+          />
+        </View>
 
-      <View style={styles.sheetTitle}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          {t('observation:observationStation')}
-        </Text>
+        <View style={styles.sheetTitle}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {t('observation:observationStation')}
+          </Text>
+        </View>
+        {stationList.length > 0 &&
+          stationList.map((station) => (
+            <TouchableOpacity
+              key={station.id}
+              disabled={station.id === stationId}
+              onPress={() => {
+                setStationId(dataId, station.id);
+                onClose();
+              }}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {`${station.name} – ${t(
+                    'observation:distance'
+                  )} ${toStringWithDecimal(station.distance, ',')} km`}
+                </Text>
+                <Icon
+                  name={
+                    station.id === stationId
+                      ? 'radio-button-on'
+                      : 'radio-button-off'
+                  }
+                  style={{
+                    color: station.id === stationId ? colors.primary : GRAY_1,
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          ))}
       </View>
-      {stationList.length > 0 &&
-        stationList.map((station) => (
-          <TouchableOpacity
-            key={station.id}
-            disabled={station.id === stationId}
-            onPress={() => {
-              setStationId(dataId, station.id);
-              onClose();
-            }}>
-            <View style={styles.row}>
-              <Text style={[styles.text, { color: colors.text }]}>
-                {`${station.name} – ${t(
-                  'observation:distance'
-                )} ${toStringWithDecimal(station.distance, ',')} km`}
-              </Text>
-              <Icon
-                name={
-                  station.id === stationId
-                    ? 'radio-button-on'
-                    : 'radio-button-off'
-                }
-                style={{
-                  color: station.id === stationId ? colors.primary : GRAY_1,
-                }}
-              />
-            </View>
-          </TouchableOpacity>
-        ))}
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   sheetListContainer: {
     flex: 1,
     marginTop: -10,

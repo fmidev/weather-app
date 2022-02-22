@@ -63,9 +63,9 @@ import TemperatureLowestLight from '@assets/images/icons/temperature-lowest-ligh
 import Temperature from '@assets/images/icons/temperature.svg';
 import Thunder from '@assets/images/icons/thunder.svg';
 import Time from '@assets/images/icons/time.svg';
-import WarningsFloodLevel2 from '@assets/images/icons/warnings-flood-level-2.svg';
-import WarningsFloodLevel3 from '@assets/images/icons/warnings-flood-level-3.svg';
-import WarningsFloodLevel4 from '@assets/images/icons/warnings-flood-level-4.svg';
+import WarningsFloodingYellow from '@assets/images/icons/warnings-flooding-yellow.svg';
+import WarningsFloodingOrange from '@assets/images/icons/warnings-flooding-orange.svg';
+import WarningsFloodingRed from '@assets/images/icons/warnings-flooding-red.svg';
 import WarningsForestFireWeatherOrange from '@assets/images/icons/warnings-forest-fire-weather-orange.svg';
 import WarningsForestFireWeatherRed from '@assets/images/icons/warnings-forest-fire-weather-red.svg';
 import WarningsForestFireWeatherYellow from '@assets/images/icons/warnings-forest-fire-weather-yellow.svg';
@@ -240,12 +240,12 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Thunder {...(props as SvgProps)} />;
     case 'time':
       return <Time {...(props as SvgProps)} />;
-    case 'warnings-flood-level-2':
-      return <WarningsFloodLevel2 {...(props as SvgProps)} />;
-    case 'warnings-flood-level-3':
-      return <WarningsFloodLevel3 {...(props as SvgProps)} />;
-    case 'warnings-flood-level-4':
-      return <WarningsFloodLevel4 {...(props as SvgProps)} />;
+    case 'warnings-flooding-yellow':
+      return <WarningsFloodingYellow {...(props as SvgProps)} />;
+    case 'warnings-flooding-orange':
+      return <WarningsFloodingOrange {...(props as SvgProps)} />;
+    case 'warnings-flooding-red':
+      return <WarningsFloodingRed {...(props as SvgProps)} />;
     case 'warnings-forest-fire-weather-orange':
       return <WarningsForestFireWeatherOrange {...(props as SvgProps)} />;
     case 'warnings-forest-fire-weather-red':

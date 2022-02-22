@@ -8,6 +8,13 @@ export const WHITE_TRANSPARENT = 'rgba(255,255,255,0.0)';
 export const WHITE_OPACITY = 'rgba(255,255,255,0.07)';
 export const TRANSPARENT = 'transparent';
 
+export const FREEZING = 'rgb(206,218,255)';
+export const REALLY_COLD = 'rgb(214,233,254)';
+export const COLD = 'rgb(232,243,255)';
+export const WARM = 'rgb(255,248,231)';
+export const REALLY_WARM = 'rgb(255,240,204)';
+export const HOT = 'rgb(253,227,193)';
+
 export const BLACK = '#000000';
 export const GRAY_8 = '#E6E6E6';
 export const GRAY_7 = '#121212';
