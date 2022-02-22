@@ -12,8 +12,7 @@ type SliderStepProps = {
   item: number;
   sliderWidth: number;
   step: number;
-  hourWidth: number;
-  quarterWidth: number;
+  stepWidth: number;
 };
 
 const STEP_60 = 3600;
@@ -25,8 +24,7 @@ const SliderStep: React.FC<SliderStepProps> = ({
   item,
   sliderWidth,
   step,
-  hourWidth,
-  quarterWidth,
+  stepWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const hour = item % STEP_60 === 0 && moment.unix(item).format('HH');
@@ -66,7 +64,7 @@ const SliderStep: React.FC<SliderStepProps> = ({
       style={[
         styles.quarterContainer,
         {
-          width: step >= STEP_60 ? hourWidth : quarterWidth,
+          width: stepWidth,
           marginLeft: index === 0 ? sliderWidth / 2 - 80 : undefined,
         },
       ]}>

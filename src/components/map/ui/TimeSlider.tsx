@@ -87,10 +87,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const { width } = useWindowDimensions();
   const [sliderWidth, setSliderWidth] = useState<number>(width - 24);
 
-  const multiplier = Math.ceil(width / 400);
-
-  const quarterWidth = multiplier * QUARTER_WIDTH;
-  const hourWidth = 4 * quarterWidth;
+  const multiplier = Math.round(width / 400);
 
   const sliderRef = useRef() as React.MutableRefObject<ScrollView>;
 
@@ -115,6 +112,8 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   );
 
   const step = getSliderStepSeconds(sliderStep);
+
+  const stepWidth = (step >= STEP_60 ? 4 : 1) * multiplier * QUARTER_WIDTH;
 
   const isFocused = useIsFocused();
 
@@ -144,7 +143,6 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       const now = moment().format('X');
       const roundedNow = Math.floor(Number(now) / step) * step;
       const i = times.indexOf(roundedNow);
-      const stepWidth = step >= STEP_60 ? hourWidth : quarterWidth;
       const offset = Math.floor(i * stepWidth);
       if (i >= 0) {
         // for some reason this needed timeout to work on initial render
@@ -157,7 +155,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     return () => {
       clearTimeout(sliderTimeout);
     };
-  }, [times, step, sliderRef, hourWidth, quarterWidth]);
+  }, [times, step, sliderRef, stepWidth]);
 
   useEffect(() => {
     const time = times[currentIndex];
@@ -195,8 +193,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const resolveAndSetCurrentIndex = useCallback(
     (x: number) => {
-      const divider = step >= STEP_60 ? hourWidth : quarterWidth;
-      const index = Math.floor(x / divider);
+      const index = Math.floor(x / stepWidth);
       if (index >= 0 && index <= times.length) {
         if (index === times.length) {
           setCurrentIndex(index - 1);
@@ -208,7 +205,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         }
       }
     },
-    [times, isAnimating, step, hourWidth, quarterWidth]
+    [times, isAnimating, stepWidth]
   );
 
   useEffect(() => {
@@ -221,13 +218,14 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     }
   }, [scrollIndex, isAnimating, resolveAndSetCurrentIndex]);
 
-  const handleSetScrollIndex = () => setScrollIndex((prev) => prev + 1);
+  const handleSetScrollIndex = () =>
+    setScrollIndex((prev) => prev + stepWidth / 12.5);
 
   const animate = () => {
     setIsAnimating(true);
     interval = setInterval(() => {
       handleSetScrollIndex();
-    }, (80 / sliderStep) * 15);
+    }, 80);
   };
 
   const clear = () => {
@@ -286,8 +284,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                   index={index}
                   sliderWidth={sliderWidth}
                   step={step}
-                  hourWidth={hourWidth}
-                  quarterWidth={quarterWidth}
+                  stepWidth={stepWidth}
                   isLast={index === times.length - 1}
                   isObservation={item <= observationEndUnix}
                 />
