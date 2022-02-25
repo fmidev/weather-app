@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { getForecast } from '@network/WeatherApi';
 import { ChartType } from '@components/weather/charts/types';
+import { Config } from '@config';
 import {
   Error,
   FETCH_FORECAST,
@@ -25,24 +26,10 @@ export const fetchForecast =
         const favorites = [...filterLocations, geoid];
         dispatch({
           type: FETCH_FORECAST_SUCCESS,
-          data: {
-            data,
-            favorites,
-          },
+          data,
+          favorites,
           timestamp: Date.now(),
         });
-
-        /**
-      TODO: Dispatch selected location geoid, name, region to LOCATION
-      dispatch({
-        type: TODO,
-        data: {
-          geoid,
-          name: Object.values(shit)[0][0]?.name,
-          region: Object.values(shit)[0][0]?.region,
-        },
-      });
-      */
       })
       .catch((error: Error) => {
         dispatch({ type: FETCH_FORECAST_ERROR, error, timestamp: Date.now() });
@@ -51,7 +38,13 @@ export const fetchForecast =
 
 export const updateDisplayParams =
   (param: [number, string]) => (dispatch: Dispatch<ForecastActionTypes>) => {
-    dispatch({ type: UPDATE_DISPLAY_PARAMS, param });
+    const defaultParameters = Config.get(
+      'weather'
+    ).forecast.defaultParameters.map((parameter, index) => [
+      index,
+      parameter,
+    ]) as [number, string][];
+    dispatch({ type: UPDATE_DISPLAY_PARAMS, param, defaultParameters });
   };
 
 export const restoreDefaultDisplayParams =

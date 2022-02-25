@@ -25,6 +25,7 @@ describe('forecast reducer', () => {
       reducer(undefined, {
         type: types.UPDATE_DISPLAY_PARAMS,
         param: [6, constants.DEW_POINT],
+        defaultParameters: [[0, constants.SMART_SYMBOL]],
       })
     ).toMatchObject({
       displayParams: [...initialParams, [6, constants.DEW_POINT]],
@@ -36,6 +37,7 @@ describe('forecast reducer', () => {
       reducer(undefined, {
         type: types.UPDATE_DISPLAY_PARAMS,
         param: [3, constants.WIND_SPEED_AND_DIRECTION],
+        defaultParameters: [[0, constants.SMART_SYMBOL]],
       })
     ).toMatchObject({
       displayParams: [

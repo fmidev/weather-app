@@ -51,7 +51,8 @@ const Chart: React.FC<ChartProps> = ({
   const { i18n } = useTranslation();
   moment.locale(i18n.language);
 
-  const { timePeriod } = Config.get('weather').observation;
+  const { timePeriod, parameters: obsParameters } =
+    Config.get('weather').observation;
 
   const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
   const stepLength = tickInterval === 1 ? 26 : 13;
@@ -102,7 +103,7 @@ const Chart: React.FC<ChartProps> = ({
           const x = step.epochtime * 1000;
           // @ts-ignore
           const y = step[param];
-          if (param !== 'winddirection') {
+          if (param !== 'windDirection') {
             minMax.push(y);
           }
           return { x, y };
@@ -186,26 +187,27 @@ const Chart: React.FC<ChartProps> = ({
             chartValues={chartValues}
           />
         </ScrollView>
-        {chartType === 'visCloud' && (
-          <View style={styles.yAxisContainer}>
-            <VictoryChart height={300} width={45}>
-              <VictoryAxis
-                dependentAxis
-                crossAxis={false}
-                orientation="right"
-                tickCount={4}
-                tickFormat={(t) => `${(t / 60000) * 8}/8`}
-                tickValues={[15000, 30000, 45000, 60000]}
-                domain={chartDomain.y}
-                style={{
-                  tickLabels: {
-                    fill: colors.hourListText,
-                  },
-                }}
-              />
-            </VictoryChart>
-          </View>
-        )}
+        {chartType === 'visCloud' &&
+          obsParameters?.includes('totalCloudCover') && (
+            <View style={styles.yAxisContainer}>
+              <VictoryChart height={300} width={45}>
+                <VictoryAxis
+                  dependentAxis
+                  crossAxis={false}
+                  orientation="right"
+                  tickCount={4}
+                  tickFormat={(t) => `${(t / 60000) * 8}/8`}
+                  tickValues={[15000, 30000, 45000, 60000]}
+                  domain={chartDomain.y}
+                  style={{
+                    tickLabels: {
+                      fill: colors.hourListText,
+                    },
+                  }}
+                />
+              </VictoryChart>
+            </View>
+          )}
       </View>
       <ChartLegend chartType={chartType} observation={observation} />
     </View>

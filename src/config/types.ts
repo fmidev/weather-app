@@ -1,4 +1,6 @@
 import { Location } from '@store/location/types';
+import { ForecastParameters } from '@store/forecast/types';
+import { ObservationParameters } from '@store/observation/types';
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
   T,
@@ -55,7 +57,7 @@ interface Observation {
   numberOfStations: number;
   producer: string | { default: string; [name: string]: string };
   timePeriod: number;
-  parameters: string[];
+  parameters: (keyof ObservationParameters)[];
 }
 
 interface ObservationEnabled extends Observation {
@@ -115,8 +117,11 @@ export interface ConfigType {
     forecast: {
       updateInterval: number;
       timePeriod: number | 'data';
-      producer: string;
-      parameters: string[];
+      data: {
+        producer?: string;
+        parameters: (keyof ForecastParameters)[];
+      }[];
+      defaultParameters: (keyof ForecastParameters)[];
     };
     observation: ObservationEnabled | ObservationDisabled;
   };

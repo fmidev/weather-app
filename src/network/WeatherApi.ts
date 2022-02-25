@@ -9,59 +9,52 @@ import axiosClient from '@utils/axiosClient';
 
 export const getForecast = async (
   location: ForecastLocation
-): Promise<WeatherData> => {
+): Promise<WeatherData[]> => {
   const { language } = i18n;
   const {
     apiUrl,
-    forecast: { timePeriod, producer },
+    forecast: { timePeriod, data: dataSettings },
   } = Config.get('weather');
 
   const params = {
     ...location,
     starttime: 0,
     endtime: timePeriod,
-    param: [
-      'geoid',
-      'epochtime',
-      'name',
-      'latitude',
-      'longitude',
-      'region',
-      'country',
-      'iso2',
-      'localtz',
-      'sunrise',
-      'sunset',
-      'sunrisetoday',
-      'sunsettoday',
-      'daylength',
-      'utctime',
-      'localtime',
-      'origintime',
-      'modtime',
-      'temperature',
-      'smartSymbol',
-      'pop',
-      'windspeedms',
-      'winddirection',
-      'hourlymaximumgust',
-      'windcompass8',
-      'precipitation1h',
-      'feelsLike',
-      'dark',
-      'dewpoint',
-      'relativeHumidity',
-      'pressure',
-    ].join(','),
     format: 'json',
-    producer,
     attributes: 'geoid',
     lang: language,
   };
 
-  const { data } = await axiosClient({ url: apiUrl, params });
+  const metaParams = [
+    [
+      'geoid',
+      'epochtime',
+      'name',
+      'sunrise',
+      'sunset',
+      'sunriseToday',
+      'sunsetToday',
+      'dayLength',
+      'utctime',
+      'modtime',
+      'dark',
+    ],
+    ['geoid', 'epochtime'],
+  ];
 
-  return data;
+  const queries = dataSettings.map(({ parameters, producer }, index) =>
+    axiosClient({
+      url: apiUrl,
+      params: {
+        ...params,
+        producer: producer || 'default',
+        param: [...metaParams[index === 0 ? 0 : 1], ...parameters].join(','),
+      },
+    })
+  );
+
+  const promises = await Promise.all(queries);
+  return promises.map(({ data }) => data);
 };
 
 export const getObservation = async (
@@ -70,7 +63,13 @@ export const getObservation = async (
 ): Promise<ObservationDataRaw> => {
   const {
     apiUrl,
-    observation: { enabled, numberOfStations, producer, timePeriod },
+    observation: {
+      enabled,
+      numberOfStations,
+      producer,
+      timePeriod,
+      parameters,
+    },
   } = Config.get('weather');
   const { language } = i18n;
 
@@ -91,25 +90,11 @@ export const getObservation = async (
     starttime: `-${timePeriod}h`,
     endtime: '0',
     param: [
-      'cloudheight',
-      'dewpoint',
       'distance',
       'epochtime',
       'fmisid', // geoid??
-      'humidity',
-      'precipitation1h',
-      'pressure',
-      'ri_10min', // iso2 = 'fi'
-      'snowDepth',
       'stationname',
-      'temperature',
-      'totalcloudcover',
-      'visibility',
-      'windcompass8',
-      'winddirection',
-      'windgust',
-      'windspeedms',
-      'ww_aws', // iso2 = 'fi'
+      ...(parameters || []),
     ].join(','),
     format: 'json',
     producer: observationProducer,

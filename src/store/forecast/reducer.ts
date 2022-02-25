@@ -12,23 +12,30 @@ import {
   UPDATE_FORECAST_CHART_PARAMETER,
 } from './types';
 
-import * as constants from './constants';
-
-const INITIAL_PARAMS = [
-  [0, constants.SMART_SYMBOL],
-  [1, constants.TEMPERATURE],
-  [3, constants.WIND_SPEED_AND_DIRECTION],
-  [5, constants.PRECIPITATION_1H],
-] as [number, string][];
-
 const INITIAL_STATE: ForecastState = {
   data: {},
   loading: false,
   error: false,
-  displayParams: INITIAL_PARAMS,
+  displayParams: [],
   displayFormat: 'table',
   chartDisplayParam: undefined,
   fetchTimestamp: Date.now(),
+};
+
+const formatData = (data: WeatherData[]): WeatherData => {
+  const weatherData: WeatherData = {};
+  data.forEach((foo) => {
+    Object.entries(foo).forEach(([id, steps]) => {
+      Object.assign(weatherData, { [id]: weatherData[id] || [] });
+      weatherData[id] = steps.map((step) => ({
+        ...(weatherData[id].find(
+          ({ epochtime }) => epochtime === step.epochtime
+        ) || {}),
+        ...step,
+      }));
+    });
+  });
+  return weatherData;
 };
 
 const filterLocations = (data: WeatherData, favorites: number[]): WeatherData =>
@@ -52,9 +59,10 @@ export default (
       return {
         ...state,
         data: filterLocations(
-          { ...state.data, ...action.data.data },
-          action.data.favorites
+          { ...state.data, ...formatData(action.data) },
+          action.favorites
         ),
+        // data: formatData([state.data || {}, ...action.data], action.favorites),
         fetchTimestamp: action.timestamp,
         loading: false,
         error: false,
@@ -72,18 +80,22 @@ export default (
 
     case UPDATE_DISPLAY_PARAMS: {
       const [, param] = action.param;
+      const defaultParameters =
+        state.displayParams.length > 0
+          ? state.displayParams
+          : action.defaultParameters;
       return {
         ...state,
-        displayParams: state.displayParams.some((arr) => arr.includes(param))
-          ? state.displayParams.filter((arr) => !arr.includes(param))
-          : state.displayParams.concat([action.param]),
+        displayParams: defaultParameters.some((arr) => arr.includes(param))
+          ? defaultParameters.filter((arr) => !arr.includes(param))
+          : defaultParameters.concat([action.param]),
       };
     }
 
     case RESTORE_DEFAULT_DISPLAY_PARAMS: {
       return {
         ...state,
-        displayParams: INITIAL_PARAMS,
+        displayParams: [],
       };
     }
 

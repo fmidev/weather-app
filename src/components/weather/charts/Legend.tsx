@@ -16,6 +16,7 @@ import {
 } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
+import { Config } from '@config';
 import { ChartType } from './types';
 
 type ChartLegendProps = {
@@ -29,6 +30,11 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
+
+  const obsParameters = Config.get('weather').observation.parameters;
+  const forParameters = Config.get('weather').forecast.data.flatMap(
+    ({ parameters }) => parameters
+  );
 
   type LineProps = { color?: string };
   const Line = ({ color = colors.primaryText }: LineProps) => (
@@ -96,19 +102,27 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     <View style={styles.legendContainer}>
       {chartType === 'temperature' && (
         <>
-          <View style={styles.legendRow}>
-            <Line color={colors.chartPrimaryLine} />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:temperature')} (°C)
-            </Text>
-          </View>
-          <View style={styles.legendRow}>
-            <DashLine />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t(`weather:charts:${observation ? 'dewpoint' : 'feelsLike'}`)}{' '}
-              (°C)
-            </Text>
-          </View>
+          {(observation
+            ? obsParameters?.includes('temperature')
+            : forParameters.includes('temperature')) && (
+            <View style={styles.legendRow}>
+              <Line color={colors.chartPrimaryLine} />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:temperature')} (°C)
+              </Text>
+            </View>
+          )}
+          {(observation
+            ? obsParameters?.includes('dewPoint')
+            : forParameters.includes('feelsLike')) && (
+            <View style={styles.legendRow}>
+              <DashLine />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t(`weather:charts:${observation ? 'dewPoint' : 'feelsLike'}`)}{' '}
+                (°C)
+              </Text>
+            </View>
+          )}
         </>
       )}
       {chartType === 'precipitation' && (
@@ -141,24 +155,36 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
       )}
       {chartType === 'wind' && (
         <>
-          <View style={styles.legendRow}>
-            <Line />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:windSpeed')} (m/s)
-            </Text>
-          </View>
-          <View style={styles.legendRow}>
-            <DashLine />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:windGust')} (m/s)
-            </Text>
-          </View>
-          <View style={styles.legendRow}>
-            <Arrow />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:windDirection')}
-            </Text>
-          </View>
+          {(observation
+            ? obsParameters?.includes('windSpeedMS')
+            : forParameters.includes('windSpeedMS')) && (
+            <View style={styles.legendRow}>
+              <Line />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:windSpeed')} (m/s)
+              </Text>
+            </View>
+          )}
+          {(observation
+            ? obsParameters?.includes('windGust')
+            : forParameters.includes('hourlymaximumgust')) && (
+            <View style={styles.legendRow}>
+              <DashLine />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:windGust')} (m/s)
+              </Text>
+            </View>
+          )}
+          {(observation
+            ? obsParameters?.includes('windDirection')
+            : forParameters.includes('windDirection')) && (
+            <View style={styles.legendRow}>
+              <Arrow />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:windDirection')}
+              </Text>
+            </View>
+          )}
         </>
       )}
       {chartType === 'cloud' && (
@@ -193,67 +219,94 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
       )}
       {chartType === 'visCloud' && (
         <>
-          <View style={styles.legendRow}>
-            <View style={styles.rowFirstHalf}>
-              <DashLine />
+          {obsParameters?.includes('visibility') && (
+            <View style={styles.legendRow}>
+              <View style={styles.rowFirstHalf}>
+                <DashLine />
+              </View>
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:visibility')} (m)
+              </Text>
             </View>
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:visibility')} (m)
-            </Text>
-          </View>
-          <View style={styles.legendRow}>
-            <View style={styles.rowFirstHalf}>
-              <Bar color={colors.primaryText} />
-            </View>
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:totalcloudcover')}
-            </Text>
-          </View>
-          <View style={styles.legendRowNoMargin}>
-            <Text
-              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
-              0/8 - 1/8
-            </Text>
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:cloudCover01')}
-            </Text>
-          </View>
-          <View style={styles.legendRowNoMargin}>
-            <Text
-              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
-              2/8 - 4/8
-            </Text>
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:cloudCover24')}
-            </Text>
-          </View>
-          <View style={styles.legendRowNoMargin}>
-            <Text
-              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
-              3/8 - 6/8
-            </Text>
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:cloudCover36')}
-            </Text>
-          </View>
-          <View style={styles.legendRowNoMargin}>
-            <Text
-              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
-              5/8 - 7/8
-            </Text>
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:cloudCover57')}
-            </Text>
-          </View>
-          <View style={styles.legendRowNoMargin}>
-            <Text
-              style={[styles.rowFirstHalfText, { color: colors.hourListText }]}>
-              7/8 - 8/8
-            </Text>
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:cloudCover78')}
-            </Text>
-          </View>
+          )}
+          {obsParameters?.includes('totalCloudCover') && (
+            <>
+              <View style={styles.legendRow}>
+                <View style={styles.rowFirstHalf}>
+                  <Bar color={colors.primaryText} />
+                </View>
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t('weather:charts:totalCloudCover')}
+                </Text>
+              </View>
+              <View style={styles.legendRowNoMargin}>
+                <Text
+                  style={[
+                    styles.rowFirstHalfText,
+                    { color: colors.hourListText },
+                  ]}>
+                  0/8 - 1/8
+                </Text>
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t('weather:charts:cloudCover01')}
+                </Text>
+              </View>
+              <View style={styles.legendRowNoMargin}>
+                <Text
+                  style={[
+                    styles.rowFirstHalfText,
+                    { color: colors.hourListText },
+                  ]}>
+                  2/8 - 4/8
+                </Text>
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t('weather:charts:cloudCover24')}
+                </Text>
+              </View>
+              <View style={styles.legendRowNoMargin}>
+                <Text
+                  style={[
+                    styles.rowFirstHalfText,
+                    { color: colors.hourListText },
+                  ]}>
+                  3/8 - 6/8
+                </Text>
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t('weather:charts:cloudCover36')}
+                </Text>
+              </View>
+              <View style={styles.legendRowNoMargin}>
+                <Text
+                  style={[
+                    styles.rowFirstHalfText,
+                    { color: colors.hourListText },
+                  ]}>
+                  5/8 - 7/8
+                </Text>
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t('weather:charts:cloudCover57')}
+                </Text>
+              </View>
+              <View style={styles.legendRowNoMargin}>
+                <Text
+                  style={[
+                    styles.rowFirstHalfText,
+                    { color: colors.hourListText },
+                  ]}>
+                  7/8 - 8/8
+                </Text>
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t('weather:charts:cloudCover78')}
+                </Text>
+              </View>
+            </>
+          )}
         </>
       )}
       {chartType === 'snowDepth' && (

@@ -11,8 +11,8 @@ const TemperatureChart: React.FC<ChartDataProps> = ({
   width,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { temperature, feelsLike, dewpoint } = chartValues;
-  const secondParameter = feelsLike || dewpoint;
+  const { temperature, feelsLike, dewPoint } = chartValues;
+  const secondParameter = feelsLike || dewPoint;
 
   return (
     <VictoryGroup theme={chartTheme} width={width}>

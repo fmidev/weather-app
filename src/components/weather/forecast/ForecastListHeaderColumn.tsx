@@ -32,7 +32,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         if (param === constants.WIND_SPEED_AND_DIRECTION) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -47,7 +47,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         if (param === constants.WIND_GUST) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -62,7 +62,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         if (param === constants.PRECIPITATION_1H) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -78,7 +78,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         if (param === constants.PRECIPITATION_PROBABILITY) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 styles.row,
@@ -95,7 +95,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         if (param === constants.RELATIVE_HUMIDITY) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -110,7 +110,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         if (param === constants.PRESSURE) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -123,7 +123,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         }
         return (
           <View
-            key={i}
+            key={`${param}-${i}`}
             style={[
               styles.hourBlock,
               { backgroundColor: isOdd(index) ? colors.listTint : undefined },

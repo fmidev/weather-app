@@ -5,15 +5,17 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { State } from '@store/types';
-import { TimestepData } from '@store/forecast/types';
+import { ForecastParameters, TimeStepData } from '@store/forecast/types';
 
 import { selectChartDisplayParameter } from '@store/forecast/selectors';
 import { updateChartParameter as updateChartParameterAction } from '@store/forecast/actions';
 
 import { CustomTheme } from '@utils/colors';
+import { Config } from '@config';
 import Chart from '../charts/Chart';
 import { ChartType } from '../charts/types';
 import ParameterSelector from '../common/ParameterSelector';
+import { forecastTypeParameters } from '../charts/settings';
 
 const mapStateToProps = (state: State) => ({
   chartParameter: selectChartDisplayParameter(state),
@@ -28,7 +30,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type ChartListProps = PropsFromRedux & {
-  data: TimestepData[] | false;
+  data: TimeStepData[] | false;
   activeDayIndex: number;
   setActiveDayIndex: (i: number) => void;
   currentDayOffset: number;
@@ -42,7 +44,20 @@ const ChartList: React.FC<ChartListProps> = ({
   setActiveDayIndex,
   currentDayOffset,
 }) => {
-  const charts: ChartType[] = ['temperature', 'precipitation', 'wind'];
+  const activeParameters = Config.get('weather').forecast.data.flatMap(
+    ({ parameters }) => parameters
+  );
+
+  let charts: ChartType[] = ['temperature', 'precipitation', 'wind'];
+  charts = charts.filter((type) => {
+    const typeParameters = forecastTypeParameters[type];
+    return (
+      typeParameters.filter((typeParameter) =>
+        activeParameters?.includes(typeParameter as keyof ForecastParameters)
+      ).length > 0
+    );
+  });
+
   const parameter = chartParameter ?? charts[0];
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();

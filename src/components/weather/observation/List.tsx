@@ -6,10 +6,11 @@ import { useTranslation } from 'react-i18next';
 
 import Icon from '@components/common/Icon';
 
-import { TimeStepData } from '@store/observation/types';
+import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import { GRAY_1_OPACITY, CustomTheme } from '@utils/colors';
 import { capitalize } from '@utils/chart';
 import { getObservationCellValue } from '@utils/helpers';
+import { Config } from '@config';
 import { ChartType } from '../charts/types';
 
 type ListProps = {
@@ -20,64 +21,61 @@ type ListProps = {
 const List: React.FC<ListProps> = ({ data, parameter }) => {
   const { t, i18n } = useTranslation('observation');
   const { colors } = useTheme() as CustomTheme;
+  const { parameters } = Config.get('weather').observation;
 
   const locale = i18n.language;
 
-  const getHeaderLabels = (param: string) => {
-    let labels = [] as string[];
-    switch (param) {
-      case 'temperature':
-        labels = [t('measurements.temperature'), t('measurements.dewPoint')];
-        break;
-      case 'precipitation':
-        labels = [t('measurements.precipitation')];
-        break;
-      case 'wind':
-        labels = [
-          t('measurements.windSpeed'),
-          t('measurements.windGust'),
-          t('measurements.windDirection'),
-        ];
-        break;
-      case 'pressure':
-        labels = [t('measurements.pressure')];
-        break;
-      case 'humidity':
-        labels = [t('measurements.humidity')];
-        break;
-      case 'visCloud':
-        labels = [
-          t('measurements.visibility'),
-          t('measurements.totalCloudCover'),
-        ];
-        break;
-      case 'cloud':
-        labels = [t('measurements.cloudBase')];
-        break;
-      case 'snowDepth':
-        labels = [t('measurements.snowDepth')];
-        break;
-      default:
-        labels = [];
-    }
-
-    return (
-      <View style={styles.row}>
-        {labels.map((label) => (
-          <Text
-            key={label}
-            style={[
-              styles.rowItem,
-              styles.listText,
-              styles.bold,
-              { color: colors.hourListText },
-            ]}>
-            {label}
-          </Text>
-        ))}
-      </View>
-    );
+  const listParameters: {
+    [key in ChartType]: {
+      parameters: (keyof Partial<ObservationParameters>)[];
+    };
+  } = {
+    temperature: {
+      parameters: ['temperature', 'dewPoint'],
+    },
+    precipitation: {
+      parameters: ['precipitation1h'],
+    },
+    wind: {
+      parameters: ['windSpeedMS', 'windGust', 'windDirection'],
+    },
+    pressure: {
+      parameters: ['pressure'],
+    },
+    humidity: {
+      parameters: ['humidity'],
+    },
+    visCloud: {
+      parameters: ['visibility', 'totalCloudCover'],
+    },
+    cloud: {
+      parameters: ['cloudHeight'],
+    },
+    snowDepth: {
+      parameters: ['snowDepth'],
+    },
   };
+
+  const activeParameters = listParameters[parameter].parameters.filter(
+    (param) => parameters?.includes(param)
+  );
+
+  const getHeaderLabels = () => (
+    <View style={styles.row}>
+      {activeParameters.map((param) => (
+        <Text
+          key={param}
+          style={[
+            styles.rowItem,
+            styles.listText,
+            styles.bold,
+            { color: colors.hourListText },
+          ]}>
+          {t(`measurements.${param}`)}
+        </Text>
+      ))}
+    </View>
+  );
 
   return (
     <View style={styles.observationListContainer}>
@@ -115,7 +113,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
           ]}>
           {t('time')}
         </Text>
-        {getHeaderLabels(parameter)}
+        {getHeaderLabels()}
       </View>
 
       {data &&
@@ -162,14 +160,21 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                           1
                         )}
                       </Text>
-                      <Text
-                        style={[
-                          styles.listText,
-                          styles.rowItem,
-                          { color: colors.hourListText },
-                        ]}>
-                        {getObservationCellValue(timeStep, 'dewpoint', '°C', 1)}
-                      </Text>
+                      {activeParameters.includes('dewPoint') && (
+                        <Text
+                          style={[
+                            styles.listText,
+                            styles.rowItem,
+                            { color: colors.hourListText },
+                          ]}>
+                          {getObservationCellValue(
+                            timeStep,
+                            'dewPoint',
+                            '°C',
+                            1
+                          )}
+                        </Text>
+                      )}
                     </View>
                   )}
                   {parameter === 'precipitation' && (
@@ -191,48 +196,53 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                   )}
                   {parameter === 'wind' && (
                     <View style={styles.row}>
-                      <Text
-                        style={[
-                          styles.listText,
-                          styles.rowItem,
-                          { color: colors.hourListText },
-                        ]}>
-                        {getObservationCellValue(
-                          timeStep,
-                          'windspeedms',
-                          'm/s'
-                        )}
-                      </Text>
-
-                      <Text
-                        style={[
-                          styles.listText,
-                          styles.rowItem,
-                          { color: colors.hourListText },
-                        ]}>
-                        {getObservationCellValue(timeStep, 'windgust', 'm/s')}
-                      </Text>
-                      <View style={styles.rowItem}>
-                        {timeStep.winddirection ? (
-                          <Icon
-                            name="wind-arrow"
-                            style={{
-                              color: colors.hourListText,
-                              transform: [
-                                {
-                                  rotate: `${
-                                    timeStep.winddirection + 45 - 180
-                                  }deg`,
-                                },
-                              ],
-                            }}
-                          />
-                        ) : (
-                          <Text style={[styles.listText, styles.rowItem]}>
-                            -
-                          </Text>
-                        )}
-                      </View>
+                      {activeParameters.includes('windSpeedMS') && (
+                        <Text
+                          style={[
+                            styles.listText,
+                            styles.rowItem,
+                            { color: colors.hourListText },
+                          ]}>
+                          {getObservationCellValue(
+                            timeStep,
+                            'windSpeedMS',
+                            'm/s'
+                          )}
+                        </Text>
+                      )}
+                      {activeParameters.includes('windGust') && (
+                        <Text
+                          style={[
+                            styles.listText,
+                            styles.rowItem,
+                            { color: colors.hourListText },
+                          ]}>
+                          {getObservationCellValue(timeStep, 'windGust', 'm/s')}
+                        </Text>
+                      )}
+                      {activeParameters.includes('windDirection') && (
+                        <View style={styles.rowItem}>
+                          {timeStep.windDirection ? (
+                            <Icon
+                              name="wind-arrow"
+                              style={{
+                                color: colors.hourListText,
+                                transform: [
+                                  {
+                                    rotate: `${
+                                      timeStep.windDirection + 45 - 180
+                                    }deg`,
+                                  },
+                                ],
+                              }}
+                            />
+                          ) : (
+                            <Text style={[styles.listText, styles.rowItem]}>
+                              -
+                            </Text>
+                          )}
+                        </View>
+                      )}
                     </View>
                   )}
                   {parameter === 'pressure' && (
@@ -261,31 +271,35 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                   )}
                   {parameter === 'visCloud' && (
                     <View style={styles.row}>
-                      <Text
-                        style={[
-                          styles.listText,
-                          styles.rowItem,
-                          { color: colors.hourListText },
-                        ]}>
-                        {getObservationCellValue(
-                          timeStep,
-                          'visibility',
-                          'km',
-                          0,
-                          1000
-                        )}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.listText,
-                          styles.rowItem,
-                          { color: colors.hourListText },
-                        ]}>
-                        {timeStep.totalcloudcover !== undefined &&
-                        timeStep.totalcloudcover !== null
-                          ? `${timeStep.totalcloudcover}/8`
-                          : '-'}
-                      </Text>
+                      {activeParameters.includes('visibility') && (
+                        <Text
+                          style={[
+                            styles.listText,
+                            styles.rowItem,
+                            { color: colors.hourListText },
+                          ]}>
+                          {getObservationCellValue(
+                            timeStep,
+                            'visibility',
+                            'km',
+                            0,
+                            1000
+                          )}
+                        </Text>
+                      )}
+                      {activeParameters.includes('totalCloudCover') && (
+                        <Text
+                          style={[
+                            styles.listText,
+                            styles.rowItem,
+                            { color: colors.hourListText },
+                          ]}>
+                          {timeStep.totalCloudCover !== undefined &&
+                          timeStep.totalCloudCover !== null
+                            ? `${timeStep.totalCloudCover}/8`
+                            : '-'}
+                        </Text>
+                      )}
                     </View>
                   )}
                   {parameter === 'cloud' && (
@@ -298,7 +312,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         ]}>
                         {getObservationCellValue(
                           timeStep,
-                          'cloudheight',
+                          'cloudHeight',
                           'km',
                           1,
                           1000

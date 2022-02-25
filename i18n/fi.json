@@ -3,13 +3,13 @@
     "charts": {
       "cloud": "Pilven korkeus",
       "cloudAccessibilityLabel": "Avaa pilvenkorkeusgraafi",
-      "dewpoint": "Kastepiste",
+      "dewPoint": "Kastepiste",
       "humidity": "Kosteus",
       "humidityAccessibilityLabel": "Avaa kosteusgraafi",
       "visCloud": "Näkyvyys ja pilvisyys",
       "visCloudAccessibilityLabel": "Avaa näkyvyys- ja pilvisyysgraafi",
       "visibility": "Näkyvyys",
-      "totalcloudcover": "Pilvisyys",
+      "totalCloudCover": "Pilvisyys",
       "cloudCover01": "Selkeää",
       "cloudCover24": "Melko selkeää",
       "cloudCover36": "Puolipilvistä",
@@ -60,13 +60,14 @@
       "smartSymbol": "Sääsymboli",
       "temperature": "Lämpötila (°C)",
       "feelsLike": "Tuntuu kuin (°C)",
-      "windSpeedAndDir": "Tuulen nopeus (m/s) ja suunta",
+      "windSpeedMSwindDirection": "Tuulen nopeus (m/s) ja suunta",
       "hourlymaximumgust": "Puuskanopeus (m/s)",
       "precipitation1h": "Sademäärä (mm)",
       "pop": "Sateen todennäköisyys (%)",
-      "dewpoint": "Kastepiste (°C)",
+      "dewPoint": "Kastepiste (°C)",
       "relativeHumidity": "Suhteellinen kosteus (%)",
-      "pressure": "Ilmanpaine (hPa)"
+      "pressure": "Ilmanpaine (hPa)",
+      "uvCumulated": "UV indeksi"
     },
     "weatherInfoBottomSheet": {
       "closeAccessibilityLabel": "Sulje sääennusteen selitteet",
@@ -143,7 +144,7 @@
       "humidity": "Kosteus",
       "visibility": "Näkyvyys",
       "totalCloudCover": "Pilvisyys",
-      "cloudBase": "Pilven alarajan korkeus",
+      "cloudHeight": "Pilven alarajan korkeus",
       "snowDepth": "Lumensyvyys"
     },
     "cloudcover": {
@@ -158,7 +159,7 @@
       "8": "Pilvistä",
       "9": "Pilvisyyttä ei voida määrittää"
     },
-    "winddirection": {
+    "windDirection": {
       "N": "Pohjoistuulta",
       "NE": "Koillistuulta",
       "E": "Itätuulta",

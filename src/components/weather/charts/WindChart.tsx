@@ -15,18 +15,18 @@ const WindChart: React.FC<ChartDataProps> = ({
   width,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { windgust, hourlymaximumgust, windspeedms, winddirection } =
+  const { windGust, hourlymaximumgust, windSpeedMS, windDirection } =
     chartValues;
 
   const gustParameter =
-    windgust && windgust.length > 0 ? windgust : hourlymaximumgust;
+    windGust && windGust.length > 0 ? windGust : hourlymaximumgust;
 
   const combinedData =
-    windspeedms &&
-    windspeedms.length > 0 &&
+    windSpeedMS &&
+    windSpeedMS.length > 0 &&
     gustParameter &&
     gustParameter.length > 0
-      ? windspeedms.map((item, index) => ({
+      ? windSpeedMS.map((item, index) => ({
           ...item,
           y0: gustParameter[index].y,
         }))
@@ -34,10 +34,13 @@ const WindChart: React.FC<ChartDataProps> = ({
 
   const WindLabel = (datum: any) => {
     const { index: dIndex, x: dX } = datum;
+    if (!windDirection || windDirection.length === 0) {
+      return null;
+    }
 
     const index = Number(dIndex);
 
-    const { x, y } = winddirection[index];
+    const { x, y } = windDirection[index];
     const time = moment(x);
 
     if (y === null || time.minutes() !== 0) {
@@ -73,9 +76,9 @@ const WindChart: React.FC<ChartDataProps> = ({
         />
       )}
 
-      {windspeedms && windspeedms.length > 0 && (
+      {windSpeedMS && windSpeedMS.length > 0 && (
         <VictoryLine
-          data={windspeedms}
+          data={windSpeedMS}
           domain={domain}
           labels={({ datum }) => `${datum}`}
           labelComponent={<WindLabel />}

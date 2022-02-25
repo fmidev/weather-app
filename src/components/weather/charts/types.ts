@@ -1,5 +1,5 @@
 import React from 'react';
-import { TimestepData as ForDataStep } from '@store/forecast/types';
+import { TimeStepData as ForDataStep } from '@store/forecast/types';
 import { TimeStepData as ObsDataStep } from '@store/observation/types';
 
 export interface ChartValue {

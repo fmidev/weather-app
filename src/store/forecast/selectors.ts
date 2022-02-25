@@ -3,8 +3,9 @@ import moment from 'moment';
 import 'moment/locale/fi';
 
 import { selectGeoid } from '@store/location/selector';
+import { Config } from '@config';
 import { State } from '../types';
-import { ForecastState, TimestepData } from './types';
+import { ForecastState, TimeStepData } from './types';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
@@ -58,9 +59,9 @@ export const selectForecastByDay = createSelector(
     forecast.reduce(
       (
         acc: { [key: string]: any },
-        curr: TimestepData
+        curr: TimeStepData
       ): {
-        [key: string]: TimestepData[];
+        [key: string]: TimeStepData[];
       } => {
         const day = moment.unix(curr.epochtime).format('D.M.');
         if (acc[day]) {
@@ -78,13 +79,13 @@ export const selectHeaderLevelForecast = createSelector(
     forecastByDay &&
     Object.keys(forecastByDay).map((key: string) => {
       const dayArr = forecastByDay[key];
-      const tempArray = dayArr.map((h) => h.temperature);
+      const tempArray = dayArr.map((h) => h.temperature || 0);
       // get forecasted min and max temps for current day
       const maxTemperature = Math.max(...tempArray);
       const minTemperature = Math.min(...tempArray);
       // calculate total precipitation
       const sumPrecipitation = dayArr
-        .map((h) => h.precipitation1h)
+        .map((h) => h.precipitation1h || 0)
         .reduce((acc, curr) => acc + curr, 0);
 
       const roundedTotalPrecipitation =
@@ -128,9 +129,12 @@ export const selectMinimumsAndMaximums = createSelector(
     let precipitationArray = [] as number[];
 
     forecast.forEach((f) => {
-      totalTempArray = totalTempArray.concat([f.temperature, f.feelsLike]);
-      tempArray = tempArray.concat(f.temperature);
-      precipitationArray = precipitationArray.concat(f.precipitation1h);
+      totalTempArray = totalTempArray.concat([
+        f.temperature || 0,
+        f.feelsLike || 0,
+      ]);
+      tempArray = tempArray.concat(f.temperature || 0);
+      precipitationArray = precipitationArray.concat(f.precipitation1h || 0);
     });
 
     const totalTempMax = Math.max(...totalTempArray);
@@ -152,7 +156,23 @@ export const selectMinimumsAndMaximums = createSelector(
 );
 export const selectDisplayParams = createSelector(
   selectForecastDomain,
-  (forecast) => forecast.displayParams.sort((a, b) => a[0] - b[0])
+  (forecast) => {
+    const { data, defaultParameters } = Config.get('weather').forecast;
+    const regex = new RegExp(
+      data.flatMap(({ parameters }) => parameters).join('|')
+    );
+
+    return (
+      forecast.displayParams.length > 0
+        ? forecast.displayParams
+        : (
+            defaultParameters.map((parameter, index) => [index, parameter]) as [
+              number,
+              string
+            ][]
+          ).sort((a, b) => a[0] - b[0])
+    ).filter(([, param]) => regex.test(param));
+  }
 );
 
 export const selectUniqueSmartSymbols = createSelector(

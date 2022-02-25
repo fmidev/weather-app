@@ -11,13 +11,13 @@ const CloudHeightChart: React.FC<ChartDataProps> = ({
   width,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { cloudheight } = chartValues;
+  const { cloudHeight } = chartValues;
 
   return (
     <VictoryGroup theme={chartTheme} width={width}>
-      {cloudheight && cloudheight.length > 0 && (
+      {cloudHeight && cloudHeight.length > 0 && (
         <VictoryLine
-          data={cloudheight}
+          data={cloudHeight}
           domain={domain}
           style={{ data: { stroke: colors.primaryText } }}
           interpolation="natural"

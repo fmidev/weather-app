@@ -59,7 +59,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   const isLandscape = useOrientation();
   const uniqueSymbolKeys = [
     ...new Set(
-      uniqueSmartSymbols.map((s) => weatherSymbolKeyParser(s.toString()))
+      uniqueSmartSymbols.map((s) => weatherSymbolKeyParser((s || 0).toString()))
     ),
   ];
   const symbols = dark ? symbolsDark : symbolsLight;

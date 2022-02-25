@@ -20,6 +20,7 @@ import { getFeelsLikeIconName } from '@utils/helpers';
 import { CustomTheme } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
+import { Config } from '@config';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -51,14 +52,18 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
       </View>
     );
   }
+  const activeParameters = Config.get('weather').forecast.data.flatMap(
+    ({ parameters }) => parameters
+  );
 
   const currentTime = moment.unix(nextHourForecast.epochtime);
   const smartSymbol = weatherSymbolGetter(
-    nextHourForecast.smartSymbol.toString(),
+    nextHourForecast?.smartSymbol?.toString() || '0',
     dark
   );
-  const temperaturePrefix = nextHourForecast.temperature > 0 ? '+' : '';
-  const feelsLikePrefix = nextHourForecast.feelsLike > 0 ? '+' : '';
+
+  const temperaturePrefix = (nextHourForecast?.temperature || 0) > 0 ? '+' : '';
+  const feelsLikePrefix = (nextHourForecast?.feelsLike || 0) > 0 ? '+' : '';
 
   const sunrise = moment(nextHourForecast.sunrise);
   const sunset = moment(nextHourForecast.sunset);
@@ -83,36 +88,51 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             height: 100,
           })}
         </View>
-        <Text
-          style={[
-            styles.temperatureText,
-            { color: colors.primaryText },
-          ]}>{`${temperaturePrefix}${nextHourForecast.temperature}°`}</Text>
-      </View>
-      <View style={[styles.row, styles.justifyEnd, styles.withMarginBottom]}>
-        <View style={styles.feelsLikeRow}>
+        {activeParameters.includes('temperature') && (
           <Text
             style={[
-              styles.text,
-              styles.withMarginRight,
-              { color: colors.hourListText },
-            ]}>
-            {t('feelsLike')}{' '}
-            <Text
-              style={[
-                styles.bold,
-                styles.feelsLikeText,
-              ]}>{`${feelsLikePrefix}${nextHourForecast.feelsLike}°`}</Text>
-          </Text>
-          <Icon
-            name={getFeelsLikeIconName(
-              nextHourForecast,
-              currentTime.toObject()
-            )}
-            height={40}
-            width={40}
-            color={colors.primaryText}
-          />
+              styles.temperatureText,
+              { color: colors.primaryText },
+            ]}>{`${temperaturePrefix}${nextHourForecast.temperature}°`}</Text>
+        )}
+      </View>
+      <View style={[styles.feelsLikeRow, styles.withMarginBottom]}>
+        <View style={styles.row}>
+          {activeParameters.includes('uvCumulated') && (
+            <Text style={[styles.text, { color: colors.hourListText }]}>
+              {'UV '}
+              <Text
+                style={styles.bold}>{`${nextHourForecast.uvCumulated}`}</Text>
+            </Text>
+          )}
+        </View>
+        <View style={[styles.row, styles.alignEnd]}>
+          {activeParameters.includes('feelsLike') && (
+            <>
+              <Text
+                style={[
+                  styles.text,
+                  styles.withMarginRight,
+                  { color: colors.hourListText },
+                ]}>
+                {t('feelsLike')}{' '}
+                <Text
+                  style={[
+                    styles.bold,
+                    styles.feelsLikeText,
+                  ]}>{`${feelsLikePrefix}${nextHourForecast.feelsLike}°`}</Text>
+              </Text>
+              <Icon
+                name={getFeelsLikeIconName(
+                  nextHourForecast,
+                  currentTime.toObject()
+                )}
+                height={40}
+                width={40}
+                color={colors.primaryText}
+              />
+            </>
+          )}
         </View>
       </View>
       <View
@@ -124,35 +144,46 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
       />
       <View style={styles.row}>
         <View style={styles.row}>
-          <Icon
-            name="wind-next-hour"
-            width={28}
-            height={28}
-            style={[
-              styles.withMarginRight,
-              {
-                transform: [
-                  {
-                    rotate: `${nextHourForecast.winddirection + 45 - 180}deg`,
-                  },
-                ],
-              },
-            ]}
-          />
-          <Text style={[styles.text, { color: colors.hourListText }]}>
-            <Text
-              style={styles.bold}>{`${nextHourForecast.windspeedms} `}</Text>
-            m/s
-          </Text>
+          {activeParameters.includes('windDirection') && (
+            <Icon
+              name="wind-next-hour"
+              width={28}
+              height={28}
+              style={[
+                styles.withMarginRight,
+                {
+                  transform: [
+                    {
+                      rotate: `${
+                        (nextHourForecast.windDirection || 0) + 45 - 180
+                      }deg`,
+                    },
+                  ],
+                },
+              ]}
+            />
+          )}
+          {activeParameters.includes('windSpeedMS') && (
+            <Text style={[styles.text, { color: colors.hourListText }]}>
+              <Text
+                style={styles.bold}>{`${nextHourForecast.windSpeedMS} `}</Text>
+              m/s
+            </Text>
+          )}
         </View>
         <View style={styles.row}>
-          <Icon name="precipitation" color={colors.hourListText} />
-          <Text style={[styles.text, { color: colors.hourListText }]}>
-            <Text style={styles.bold}>{`${nextHourForecast.precipitation1h
-              .toFixed(1)
-              .replace('.', ',')}`}</Text>{' '}
-            mm
-          </Text>
+          {activeParameters.includes('precipitation1h') && (
+            <>
+              <Icon name="precipitation" color={colors.hourListText} />
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                <Text style={styles.bold}>{`${
+                  nextHourForecast.precipitation1h ||
+                  (0).toFixed(1).replace('.', ',')
+                }`}</Text>
+                {' mm'}
+              </Text>
+            </>
+          )}
         </View>
         <View style={styles.row}>
           <Icon
@@ -212,7 +243,7 @@ const styles = StyleSheet.create({
   },
   feelsLikeRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
   withMarginBottom: {
@@ -224,8 +255,8 @@ const styles = StyleSheet.create({
   withSmallMarginRight: {
     marginRight: 4,
   },
-  justifyEnd: {
-    justifyContent: 'flex-end',
+  alignEnd: {
+    alignItems: 'flex-end',
   },
   alignCenter: {
     alignItems: 'center',

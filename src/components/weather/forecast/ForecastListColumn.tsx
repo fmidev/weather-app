@@ -5,16 +5,17 @@ import moment from 'moment';
 
 import Icon from '@components/common/Icon';
 
-import { TimestepData } from '@store/forecast/types';
+import { TimeStepData } from '@store/forecast/types';
 
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
 import * as constants from '@store/forecast/constants';
 
 import { isOdd } from '@utils/helpers';
+import { Config } from '@config';
 
 type ForecastListColumnProps = {
-  data: TimestepData;
+  data: TimeStepData;
   displayParams: [number, string][];
 };
 
@@ -23,15 +24,23 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   displayParams,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
+  const activeParameters = Config.get('weather').forecast.data.flatMap(
+    ({ parameters }) => parameters
+  );
 
   const time = moment.unix(data.epochtime).format('HH:mm');
-  const tempPrefix = data.temperature > 0 ? '+' : '';
-  const feelsLikePrefix = data.feelsLike > 0 ? '+' : '';
-  const dewPointPrefix = data.dewpoint > 0 ? '+' : '';
-  const smartSymbol = weatherSymbolGetter(data.smartSymbol.toString(), dark);
+  const tempPrefix = (data.temperature || 0) > 0 ? '+' : '';
+  const feelsLikePrefix = (data.feelsLike || 0) > 0 ? '+' : '';
+  const dewPointPrefix = (data.dewPoint || 0) > 0 ? '+' : '';
+  const smartSymbol = weatherSymbolGetter(
+    (data.smartSymbol || 0).toString(),
+    dark
+  );
 
   return (
-    <View style={[styles.hourColumn, { borderColor: colors.border }]}>
+    <View
+      key={data.epochtime}
+      style={[styles.hourColumn, { borderColor: colors.border }]}>
       <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
         <Text
           style={[
@@ -46,7 +55,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         if (param === constants.SMART_SYMBOL) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -61,38 +70,42 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         if (param === constants.WIND_SPEED_AND_DIRECTION) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
               ]}>
-              <Icon
-                name={dark ? 'wind-dark' : 'wind-light'}
-                width={20}
-                height={20}
-                style={{
-                  transform: [
-                    {
-                      rotate: `${data.winddirection + 45 - 180}deg`,
-                    },
-                  ],
-                }}
-              />
-              <Text
-                style={[
-                  styles.hourText,
-                  styles.withMarginTop,
-                  { color: colors.hourListText },
-                ]}>
-                {data.windspeedms}
-              </Text>
+              {activeParameters.includes('windDirection') && (
+                <Icon
+                  name={dark ? 'wind-dark' : 'wind-light'}
+                  width={20}
+                  height={20}
+                  style={{
+                    transform: [
+                      {
+                        rotate: `${(data.windDirection || 0) + 45 - 180}deg`,
+                      },
+                    ],
+                  }}
+                />
+              )}
+              {activeParameters.includes('windSpeedMS') && (
+                <Text
+                  style={[
+                    styles.hourText,
+                    styles.withMarginTop,
+                    { color: colors.hourListText },
+                  ]}>
+                  {data.windSpeedMS}
+                </Text>
+              )}
             </View>
           );
         }
         if (param === constants.TEMPERATURE) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -108,7 +121,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         if (param === constants.FEELS_LIKE) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -125,7 +138,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         if (param === constants.DEW_POINT) {
           return (
             <View
-              key={i}
+              key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -134,7 +147,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 style={[
                   styles.hourText,
                   { color: colors.hourListText },
-                ]}>{`${dewPointPrefix}${data.dewpoint}°`}</Text>
+                ]}>{`${dewPointPrefix}${data.dewPoint}°`}</Text>
             </View>
           );
         }
@@ -143,15 +156,15 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           data[param] !== null && data[param] !== undefined ? data[param] : '-';
         return (
           <View
-            key={i}
+            key={`${param}-${i}`}
             style={[
               styles.hourBlock,
               { backgroundColor: isOdd(index) ? colors.listTint : undefined },
             ]}>
             <Text style={[styles.hourText, { color: colors.hourListText }]}>
               {param === constants.PRECIPITATION_1H &&
-              toDisplay >= 0 &&
-              typeof toDisplay === 'number'
+              typeof toDisplay === 'number' &&
+              toDisplay >= 0
                 ? `${toDisplay.toFixed(1)}`.replace('.', ',')
                 : toDisplay}
             </Text>

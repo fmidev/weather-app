@@ -77,8 +77,13 @@ const defaultConfig: ConfigType = {
     forecast: {
       updateInterval: 5,
       timePeriod: 'data',
-      producer: 'default',
-      parameters: ['Temperature'],
+      data: [
+        {
+          producer: 'default',
+          parameters: ['temperature'],
+        },
+      ],
+      defaultParameters: ['temperature'],
     },
     observation: {
       updateInterval: 5,
@@ -86,7 +91,7 @@ const defaultConfig: ConfigType = {
       numberOfStations: 10,
       producer: 'observation_producer',
       timePeriod: 24,
-      parameters: ['Temperature'],
+      parameters: ['temperature'],
     },
   },
   warnings: {
