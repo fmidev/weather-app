@@ -2,7 +2,7 @@ import reducer from '@store/forecast/reducer';
 import * as types from '@store/forecast/types';
 import * as constants from '@store/forecast/constants';
 
-const initialParams = [
+const defaultParameters = [
   [0, constants.SMART_SYMBOL],
   [1, constants.TEMPERATURE],
   [3, constants.WIND_SPEED_AND_DIRECTION],
@@ -13,7 +13,7 @@ const defaultState: types.ForecastState = {
   data: {},
   loading: false,
   error: false,
-  displayParams: initialParams,
+  displayParams: [],
   displayFormat: 'table',
   chartDisplayParam: 'temperature',
   fetchTimestamp: Date.now(),
@@ -25,10 +25,10 @@ describe('forecast reducer', () => {
       reducer(undefined, {
         type: types.UPDATE_DISPLAY_PARAMS,
         param: [6, constants.DEW_POINT],
-        defaultParameters: [[0, constants.SMART_SYMBOL]],
+        defaultParameters,
       })
     ).toMatchObject({
-      displayParams: [...initialParams, [6, constants.DEW_POINT]],
+      displayParams: [...defaultParameters, [6, constants.DEW_POINT]],
     });
   });
 
@@ -37,7 +37,7 @@ describe('forecast reducer', () => {
       reducer(undefined, {
         type: types.UPDATE_DISPLAY_PARAMS,
         param: [3, constants.WIND_SPEED_AND_DIRECTION],
-        defaultParameters: [[0, constants.SMART_SYMBOL]],
+        defaultParameters,
       })
     ).toMatchObject({
       displayParams: [
@@ -55,7 +55,7 @@ describe('forecast reducer', () => {
         { type: types.RESTORE_DEFAULT_DISPLAY_PARAMS }
       )
     ).toMatchObject({
-      displayParams: initialParams,
+      displayParams: [],
     });
   });
 });
