@@ -3,8 +3,8 @@ import Geolocation from 'react-native-geolocation-service';
 import { TFunction } from 'react-i18next';
 
 import { Location } from '@store/location/types';
-import { TimestepData } from '@store/forecast/types';
-import { TimeStepData } from '@store/observation/types';
+import { TimeStepData as ForTimeStepData } from '@store/forecast/types';
+import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
@@ -99,8 +99,8 @@ export const toStringWithDecimal = (
 };
 
 export const getObservationCellValue = (
-  item: TimeStepData,
-  param: keyof TimeStepData,
+  item: ObsTimeStepData,
+  param: keyof ObsTimeStepData,
   unit: string,
   decimal?: number,
   divider?: number
@@ -112,8 +112,36 @@ export const getObservationCellValue = (
     return `${(Number(item[param]) / divideWith)
       .toFixed(decimal || 0)
       .toString()
-      .replace('.', ',')} ${unit}`;
+      .replace('.', ',')} ${unit}`.trim();
   return '-';
+};
+
+export const getParameterUnit = (
+  param: keyof (ObsTimeStepData | ForTimeStepData)
+): string => {
+  switch (param) {
+    case 'precipitation1h':
+    case 'ri_10min':
+      return 'mm';
+    case 'humidity':
+      return '%';
+    case 'temperature':
+    case 'dewPoint':
+      return '°C';
+    case 'windSpeedMS':
+    case 'windGust':
+      return 'm/s';
+    case 'pressure':
+      return 'hpa';
+    case 'visibility':
+      return 'km';
+    case 'snowDepth':
+      return 'cm';
+    case 'windDirection':
+      return '°';
+    default:
+      return '';
+  }
 };
 
 // https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
@@ -144,7 +172,7 @@ const getMidSummerDay = (year: number): number => {
 };
 
 export const getFeelsLikeIconName = (
-  item: TimestepData,
+  item: ForTimeStepData,
   momentObj: MomentObjectOutput
 ): string => {
   const shouldUseFinnishHolidays =
@@ -173,10 +201,10 @@ export const getFeelsLikeIconName = (
   }
 
   // weather
-  if (item.windspeedms >= 10) return 'feels-like-windy';
-  if (item.temperature >= 30) return 'feels-like-hot';
-  if (item.temperature <= -10) return 'feels-like-winter';
-  if (item.smartSymbol >= 37 && item.smartSymbol <= 39)
+  if (Number(item.windSpeedMS) >= 10) return 'feels-like-windy';
+  if (Number(item.temperature) >= 30) return 'feels-like-hot';
+  if (Number(item.temperature) <= -10) return 'feels-like-winter';
+  if (Number(item.smartSymbol) >= 37 && Number(item.smartSymbol) <= 39)
     return 'feels-like-raining';
   return 'feels-like-basic';
 };

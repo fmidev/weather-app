@@ -22,7 +22,6 @@ import {
   restoreDefaultDisplayParams as restoreDefaultDisplayParamsAction,
 } from '@store/forecast/actions';
 import constants, {
-  SMART_SYMBOL,
   RELATIVE_HUMIDITY,
   PRESSURE,
   PARAMS_TO_ICONS,
@@ -35,6 +34,7 @@ import {
   GRAYISH_BLUE,
   CustomTheme,
 } from '@utils/colors';
+import { Config } from '@config';
 
 const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
@@ -62,6 +62,14 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
+  const {
+    data,
+    defaultParameters: [defaultParameter],
+  } = Config.get('weather').forecast;
+  const activeParameters = data.flatMap(({ parameters }) => parameters);
+
+  const regex = new RegExp(activeParameters.join('|'));
+  const activeConstants = constants.filter((constant) => regex.test(constant));
 
   const rowRenderer = (param: string, index: number) => (
     <View
@@ -106,7 +114,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         ios_backgroundColor={GRAYISH_BLUE}
         value={displayParams.some((arr) => arr.includes(param))}
         onValueChange={() => updateDisplayParams([index, param])}
-        disabled={param === SMART_SYMBOL}
+        disabled={param === defaultParameter}
       />
     </View>
   );
@@ -136,7 +144,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               </Text>
             </View>
 
-            {constants.map(rowRenderer)}
+            {activeConstants.map(rowRenderer)}
             <View style={styles.lastRow}>
               <TouchableOpacity onPress={() => restoreDefaultDisplayParams()}>
                 <Text

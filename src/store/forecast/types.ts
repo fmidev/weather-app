@@ -16,10 +16,8 @@ interface FetchForecast {
 
 interface FetchForecastSuccess {
   type: typeof FETCH_FORECAST_SUCCESS;
-  data: {
-    data: WeatherData;
-    favorites: number[];
-  };
+  data: WeatherData[];
+  favorites: number[];
   timestamp: number;
 }
 
@@ -32,6 +30,7 @@ interface FetchForecastError {
 interface UpdateDisplayParams {
   type: typeof UPDATE_DISPLAY_PARAMS;
   param: [number, string];
+  defaultParameters: [number, string][];
 }
 
 interface RestoreDefaultDisplayParams {
@@ -57,35 +56,34 @@ export type ForecastActionTypes =
   | UpdateDisplayFormat
   | UpdateForecastChartParameter;
 
-// copied almost as is from https://github.com/fmidev/mobileweather/blob/2b15990947985506a7b0711eef6df5c5826078b5/www/js/main.js#L554
-export interface TimestepData {
-  epochtime: number;
-  name: string;
-  latitude: number;
-  longitude: number;
-  region: string;
-  country: string;
-  iso2: string;
-  localtz: string;
-  sunrise: string;
-  sunset: string;
-  sunrisetoday: number;
-  sunsettoday: number;
-  daylength: number;
-  origintime: string;
-  modtime: string;
+export interface ForecastParameters {
   temperature: number;
   smartSymbol: number;
   pop: number;
-  windspeedms: number;
-  winddirection: number;
-  windcompass8: string;
+  windSpeedMS: number;
+  windDirection: number;
+  windCompass8: string;
   hourlymaximumgust: number;
+  relativeHumidity: number;
   precipitation1h: number;
   feelsLike: number;
+  dewPoint: number;
+  uvCumulated: number;
+  pressure: number;
+}
+
+// copied almost as is from https://github.com/fmidev/mobileweather/blob/2b15990947985506a7b0711eef6df5c5826078b5/www/js/main.js#L554
+export interface TimeStepData extends Partial<ForecastParameters> {
+  epochtime: number;
+  name: string;
+  sunrise: string;
+  sunset: string;
+  sunriseToday: number;
+  sunsetToday: number;
+  dayLength: number;
+  modtime: string;
   dark: number;
-  dewpoint: number;
-  [key: string]: string | number;
+  [key: string]: string | number | undefined;
 }
 export interface ForecastLocation {
   geoid?: number;
@@ -93,7 +91,7 @@ export interface ForecastLocation {
 }
 
 export interface WeatherData {
-  [geoid: string | number]: TimestepData[];
+  [geoid: string | number]: TimeStepData[];
 }
 
 export interface Error {

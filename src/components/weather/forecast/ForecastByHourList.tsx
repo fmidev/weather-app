@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import Icon from '@components/common/Icon';
 import { State } from '@store/types';
-import { TimestepData } from '@store/forecast/types';
+import { TimeStepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
 import {
   BLACK_OPACITY,
@@ -38,7 +38,7 @@ const connector = connect(mapStateToProps, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type ForecastByHourListProps = PropsFromRedux & {
-  data: TimestepData[];
+  data: TimeStepData[];
   isOpen: boolean;
   activeDayIndex: number;
   setActiveDayIndex: (i: number) => void;
@@ -58,7 +58,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const { t } = useTranslation('forecast');
 
   const virtualizedList = useRef() as React.MutableRefObject<
-    VirtualizedList<TimestepData>
+    VirtualizedList<TimeStepData>
   >;
 
   useEffect(() => {
@@ -90,12 +90,12 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const step = data[adjustedStepIndex];
     const sunrise = moment(step.sunrise);
     const sunset = moment(step.sunset);
-    const dayHours = Math.floor(step.daylength / 60);
-    const dayMinutes = step.daylength % 60;
+    const dayHours = Math.floor(step.dayLength / 60);
+    const dayMinutes = step.dayLength % 60;
 
-    const isPolarNight = !step.sunrisetoday && sunset.isBefore(sunrise);
+    const isPolarNight = !step.sunriseToday && sunset.isBefore(sunrise);
 
-    const isMidnightSun = !step.sunsettoday && sunrise.isBefore(sunset);
+    const isMidnightSun = !step.sunsetToday && sunrise.isBefore(sunset);
 
     return (
       <View

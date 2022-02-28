@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CustomTheme } from '@utils/colors';
 import { weatherSymbolGetter } from '@assets/images';
+import { Config } from '@config';
 import PrecipitationStrip from './PrecipitationStrip';
 
 type DaySelectorListProps = {
@@ -22,9 +23,9 @@ type DaySelectorListProps = {
     minTemperature: number;
     totalPrecipitation: number;
     timeStamp: number;
-    smartSymbol: number;
+    smartSymbol: number | undefined;
     precipitationData: {
-      precipitation: number;
+      precipitation: number | undefined;
       timestamp: number;
     }[];
   }[];
@@ -51,6 +52,10 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       }[];
     }>
   >;
+
+  const activeParameters = Config.get('weather').forecast.data.flatMap(
+    ({ parameters }) => parameters
+  );
 
   useEffect(() => {
     if (activeDayIndex >= 0 && dayData && dayData.length) {
@@ -81,7 +86,10 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     const stepMoment = moment.unix(timeStamp);
     const maxTemperaturePrefix = maxTemperature > 0 ? '+' : '';
     const minTemperaturePrefix = minTemperature > 0 ? '+' : '';
-    const daySmartSymbol = weatherSymbolGetter(smartSymbol.toString(), dark);
+    const daySmartSymbol = weatherSymbolGetter(
+      (smartSymbol || 0).toString(),
+      dark
+    );
     const isActive = index === activeDayIndex;
 
     return (
@@ -119,16 +127,20 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
               height: 40,
             })}
           </View>
-          <Text
-            style={[
-              styles.forecastText,
-              { color: colors.primaryText },
-            ]}>{`${minTemperaturePrefix}${minTemperature}° ... ${maxTemperaturePrefix}${maxTemperature}°`}</Text>
+          {activeParameters.includes('temperature') && (
+            <Text
+              style={[
+                styles.forecastText,
+                { color: colors.primaryText },
+              ]}>{`${minTemperaturePrefix}${minTemperature}° ... ${maxTemperaturePrefix}${maxTemperature}°`}</Text>
+          )}
         </TouchableOpacity>
-        <PrecipitationStrip
-          precipitationData={item.precipitationData}
-          style={styles.precipitationStrip}
-        />
+        {activeParameters.includes('precipitation1h') && (
+          <PrecipitationStrip
+            precipitationData={item.precipitationData}
+            style={styles.precipitationStrip}
+          />
+        )}
       </View>
     );
   };

@@ -50,23 +50,25 @@ export type ObservationActionTypes =
   | UpdateDisplayFormat
   | UpdateObservationChartParameter;
 
-export interface TimeStepData {
-  epochtime: number;
-  cloudheight: number | null;
-  dewpoint: number | null;
+export interface ObservationParameters {
+  cloudHeight: number | null;
+  dewPoint: number | null;
   humidity: number | null;
   precipitation1h: number | null;
   pressure: number | null;
   ri_10min: number | null;
   snowDepth: number | null;
   temperature: number | null;
-  totalcloudcover: number | null;
+  totalCloudCover: number | null;
   visibility: number | null;
-  windcompass8: string | null;
-  winddirection: number | null;
-  windgust: number | null;
-  windspeedms: number | null;
-  ww_aws: number | null;
+  windCompass8: string | null;
+  windDirection: number | null;
+  windGust: number | null;
+  windSpeedMS: number | null;
+}
+
+export interface TimeStepData extends Partial<ObservationParameters> {
+  epochtime: number;
 }
 
 export interface ObservationLocation {

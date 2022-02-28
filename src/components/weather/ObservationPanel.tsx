@@ -26,6 +26,7 @@ import { CustomTheme, GRAY_1 } from '@utils/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
+import { ObservationParameters } from '@store/observation/types';
 import Chart from './charts/Chart';
 import { ChartType } from './charts/types';
 import ParameterSelector from './common/ParameterSelector';
@@ -35,6 +36,7 @@ import PanelHeader from './common/PanelHeader';
 import List from './observation/List';
 import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
+import { observationTypeParameters } from './charts/settings';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -77,7 +79,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('observation');
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const { enabled } = Config.get('weather').observation;
+  const { enabled, parameters } = Config.get('weather').observation;
 
   useEffect(() => {
     const sid = stationList[0]?.id;
@@ -90,7 +92,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     return null;
   }
 
-  const charts: ChartType[] = [
+  let charts: ChartType[] = [
     'temperature',
     'precipitation',
     'wind',
@@ -100,6 +102,14 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'cloud',
     'snowDepth',
   ];
+  charts = charts.filter((type) => {
+    const typeParameters = observationTypeParameters[type];
+    return (
+      typeParameters.filter((typeParameter) =>
+        parameters?.includes(typeParameter as keyof ObservationParameters)
+      ).length > 0
+    );
+  });
 
   const parameter = chartParameter ?? charts[0];
   const currentStation = stationList.find(

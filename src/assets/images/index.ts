@@ -539,7 +539,7 @@ export const weatherSymbolGetter = (key: string, dark: boolean) => {
 
   // TODO: fix
   const toReturn =
-    key !== parsedKey ? symbolSet[parsedKey].night : symbolSet[parsedKey].day;
+    key !== parsedKey ? symbolSet[parsedKey]?.night : symbolSet[parsedKey]?.day;
   if (toReturn) {
     return toReturn;
   }

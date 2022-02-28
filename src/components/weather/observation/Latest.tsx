@@ -6,21 +6,24 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import { CustomTheme } from '@utils/colors';
-import { TimeStepData } from '@store/observation/types';
-import { getObservationCellValue } from '@utils/helpers';
+import { ObservationParameters, TimeStepData } from '@store/observation/types';
+import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 
 import Icon from '@components/common/Icon';
 import { capitalize } from '@utils/chart';
+import { Config } from '@config';
 import WeatherInfoBottomSheet from '../sheets/WeatherInfoBottomSheet';
 
 type LatestProps = {
   data: TimeStepData[];
 };
+
 const Latest: React.FC<LatestProps> = ({ data }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const { parameters } = Config.get('weather').observation;
 
   const [latestObservation] = data || [];
   const latestObservationTime =
@@ -28,6 +31,108 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
     moment(latestObservation.epochtime * 1000)
       .locale(locale)
       .format(`dd D.M. [${t('at')}] HH:mm`);
+
+  const latestParameters: {
+    [key in keyof Partial<ObservationParameters>]: {
+      decimals: number;
+      divider?: number;
+      altParameter?: keyof ObservationParameters;
+    };
+  } = {
+    temperature: {
+      decimals: 1,
+    },
+    dewPoint: {
+      decimals: 1,
+    },
+    precipitation1h: {
+      decimals: 1,
+      altParameter: 'ri_10min',
+    },
+    windSpeedMS: {
+      decimals: 0,
+    },
+    windGust: {
+      decimals: 0,
+    },
+    windDirection: {
+      decimals: 0,
+    },
+    pressure: {
+      decimals: 0,
+    },
+    humidity: {
+      decimals: 0,
+    },
+    visibility: {
+      decimals: 0,
+      divider: 1000,
+    },
+    totalCloudCover: {
+      decimals: 0,
+    },
+    snowDepth: {
+      decimals: 0,
+    },
+  };
+
+  const renderRow = () =>
+    Object.entries(latestParameters).map(
+      ([key, { decimals, divider, altParameter }]) => {
+        const parameter = key as keyof ObservationParameters;
+        if (
+          !parameters?.includes(parameter) ||
+          (altParameter &&
+            !parameters?.includes(altParameter) &&
+            !parameters?.includes(parameter))
+        ) {
+          return null;
+        }
+
+        const unit = getParameterUnit(parameter);
+        let value = getObservationCellValue(
+          latestObservation,
+          altParameter && parameters?.includes(altParameter)
+            ? altParameter
+            : parameter,
+          unit,
+          decimals,
+          divider || 1
+        );
+
+        if (parameter === 'totalCloudCover' && value !== '-') {
+          value = `${t(
+            `cloudcover.${value.toString()}`
+          )} (${value.toString()}/8)`;
+        } else if (parameter === 'windDirection' && value !== '-') {
+          value = `${
+            latestObservation.windCompass8
+              ? t(`windDirection.${latestObservation.windCompass8}`)
+              : '-'
+          } (${value})`;
+        }
+
+        return (
+          <View key={parameter} style={styles.observationRow}>
+            <View style={styles.flex}>
+              <Text
+                style={[
+                  styles.panelMeasurement,
+                  { color: colors.hourListText },
+                ]}>
+                {t(`measurements.${parameter}`)}
+              </Text>
+            </View>
+            <View style={styles.flex}>
+              <Text style={[styles.panelValue, { color: colors.hourListText }]}>
+                {value}
+              </Text>
+            </View>
+          </View>
+        );
+      }
+    );
+
   return (
     <>
       {!!latestObservation && (
@@ -59,182 +164,7 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={styles.observationRow}>
-            <View>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.temperature')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.dewPoint')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.precipitation1h')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.windSpeedMS')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.windDirection')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.windGust')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.pressure')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.humidity')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.visibility')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.totalCloudCover')}
-              </Text>
-              <Text
-                style={[
-                  styles.panelMeasurement,
-                  { color: colors.hourListText },
-                ]}>
-                {t('measurements.snowDepth')}
-              </Text>
-            </View>
-            <View style={styles.observationRow}>
-              <View>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(
-                    latestObservation,
-                    'temperature',
-                    '°C',
-                    1
-                  )}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(
-                    latestObservation,
-                    'dewpoint',
-                    '°C',
-                    1
-                  )}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(
-                    latestObservation,
-                    'ri_10min',
-                    'mm',
-                    1
-                  )}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(
-                    latestObservation,
-                    'windspeedms',
-                    'm/s'
-                  )}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {latestObservation.windcompass8
-                    ? t(`winddirection.${data[data.length - 1].windcompass8}`)
-                    : '-'}
-                  {latestObservation.winddirection
-                    ? ` (${data[data.length - 1].winddirection}°)`
-                    : ''}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(
-                    latestObservation,
-                    'windgust',
-                    'm/s'
-                  )}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(
-                    latestObservation,
-                    'pressure',
-                    'hPa'
-                  )}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(latestObservation, 'humidity', '%')}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(
-                    latestObservation,
-                    'visibility',
-                    'km',
-                    0,
-                    1000
-                  )}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {latestObservation.totalcloudcover !== null &&
-                  latestObservation.totalcloudcover !== undefined
-                    ? `${t(
-                        `cloudcover.${latestObservation.totalcloudcover}`
-                      )} (${latestObservation.totalcloudcover}/8)`
-                    : '-'}
-                </Text>
-                <Text
-                  style={[styles.panelValue, { color: colors.hourListText }]}>
-                  {getObservationCellValue(
-                    latestObservation,
-                    'snowDepth',
-                    'cm'
-                  )}
-                </Text>
-              </View>
-            </View>
-          </View>
+          <View>{renderRow()}</View>
         </View>
       )}
       <RBSheet
@@ -273,8 +203,9 @@ const styles = StyleSheet.create({
   },
   observationRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+  },
+  flex: {
     flex: 1,
   },
   panelMeasurement: {

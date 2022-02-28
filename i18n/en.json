@@ -3,13 +3,13 @@
     "charts": {
       "cloud": "Cloud height",
       "cloudAccessibilityLabel": "Open cloud height chart",
-      "dewpoint": "Dew point",
+      "dewPoint": "Dew point",
       "humidity": "Humidity",
       "humidityAccessibilityLabel": "Open humidity chart",
       "visCloud": "Visibility and cloud cover",
       "visCloudAccessibilityLabel": "Open visibility and cloud cover chart",
       "visibility": "Visibility",
-      "totalcloudcover": "Cloud cover",
+      "totalCloudCover": "Cloud cover",
       "cloudCover01": "Clear",
       "cloudCover24": "Mostly clear",
       "cloudCover36": "Partly cloudy",
@@ -60,13 +60,14 @@
       "smartSymbol": "Weather symbol",
       "temperature": "Temperature (°C)",
       "feelsLike": "Feels like (°C)",
-      "windSpeedAndDir": "Wind speed (m/s) and direction",
+      "windSpeedMSwindDirection": "Wind speed (m/s) and direction",
       "hourlymaximumgust": "Gust speed (m/s)",
       "precipitation1h": "Precipitation (mm)",
       "pop": "Precipitation probability (%)",
-      "dewpoint": "Dew point (°C)",
+      "dewPoint": "Dew point (°C)",
       "relativeHumidity": "Relative humidity (%)",
-      "pressure": "Pressure (hPa)"
+      "pressure": "Pressure (hPa)",
+      "uvCumulated": "UV index"
     },
     "weatherInfoBottomSheet": {
       "closeAccessibilityLabel": "Close weather info",
@@ -143,7 +144,7 @@
       "humidity": "Humidity",
       "visibility": "Visibility",
       "totalCloudCover": "Cloud cover",
-      "cloudBase": "Cloud base",
+      "cloudHeight": "Cloud base",
       "snowDepth": "Snow depth"
     },
     "cloudcover": {
@@ -158,7 +159,7 @@
       "8": "Cloudy",
       "9": "Cloudcover could not be determined"
     },
-    "winddirection": {
+    "windDirection": {
       "N": "North wind",
       "NE": "North-east wind",
       "E": "East wind",

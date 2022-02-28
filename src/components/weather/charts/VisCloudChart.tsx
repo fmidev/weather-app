@@ -11,11 +11,11 @@ const VisCloudChart: React.FC<ChartDataProps> = ({
   width,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { totalcloudcover, visibility } = chartValues;
+  const { totalCloudCover, visibility } = chartValues;
   const max = 60000;
 
   const normalizedCloudCover =
-    totalcloudcover?.map(({ x, y }) => {
+    totalCloudCover?.map(({ x, y }) => {
       let value = null;
       if (y && y <= 8) {
         value = (y / 8) * max;

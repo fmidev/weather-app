@@ -43,7 +43,10 @@ const GradientWrapper: React.FC<GradientWrapperProps> = ({
   const colorsDark = [colors.screenBackground, colors.screenBackground];
 
   const tempColor = () => {
-    if (!nextHourForecast) return colors.screenBackground;
+    if (typeof nextHourForecast?.temperature === 'undefined') {
+      return colors.screenBackground;
+    }
+
     const { temperature } = nextHourForecast;
     if (temperature >= 25) {
       return HOT;
