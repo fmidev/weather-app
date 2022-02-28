@@ -82,7 +82,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           ]}>{`${t('at')} ${currentTime.format('HH:mm')}`}</Text>
       </View>
       <View style={styles.row}>
-        <View>
+        <View
+          accessible
+          accessibilityLabel={`${t(
+            `symbols:${nextHourForecast.smartSymbol}`
+          )}`}>
           {smartSymbol?.({
             width: 100,
             height: 100,
