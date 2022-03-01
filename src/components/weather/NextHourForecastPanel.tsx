@@ -70,7 +70,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.alignCenter}>
+      <View style={styles.alignCenter} accessible accessibilityRole="header">
         <Text style={[styles.text, { color: colors.primaryText }]}>
           {t('nextHourForecast')}
         </Text>

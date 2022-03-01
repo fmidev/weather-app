@@ -54,54 +54,60 @@ const AreaList: React.FC<AreaListProps> = ({
       </View>
 
       <View>
-        {elements.map((element: Location) => (
-          <View
-            key={`${title}-${element.id}`}
-            style={[
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <View style={styles.listItem}>
-              <TouchableOpacity
-                onPress={() => onSelect(element)}
-                style={styles.locationContainer}>
-                <View style={styles.listItem}>
-                  <Text style={[styles.resultText, { color: colors.text }]}>
-                    {element.area && element.area !== element.name
-                      ? `${element.name}, ${element.area}`
-                      : element.name}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => onIconPress(element)}>
-                <View
-                  style={[
-                    styles.actionButtonContainer,
-                    { borderLeftColor: colors.border },
-                  ]}>
-                  <Icon
-                    name={iconRight(element)}
-                    size={20}
+        {elements.map((element: Location) => {
+          const name =
+            element.area && element.area !== element.name
+              ? `${element.name}, ${element.area}`
+              : element.name;
+          return (
+            <View
+              key={`${title}-${element.id}`}
+              style={[
+                styles.withBorderBottom,
+                { borderBottomColor: colors.border },
+              ]}>
+              <View style={styles.listItem}>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel={`Valitse ${name}`}
+                  onPress={() => onSelect(element)}
+                  style={styles.locationContainer}>
+                  <View style={styles.listItem}>
+                    <Text style={[styles.resultText, { color: colors.text }]}>
+                      {name}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => onIconPress(element)}>
+                  <View
                     style={[
-                      styles.iconStyle,
-                      {
-                        color:
-                          iconRight(element) === 'star-unselected'
-                            ? GRAY_1
-                            : colors.primary,
-                      },
-                    ]}
-                  />
-                </View>
-              </TouchableOpacity>
+                      styles.actionButtonContainer,
+                      { borderLeftColor: colors.border },
+                    ]}>
+                    <Icon
+                      name={iconRight(element)}
+                      size={20}
+                      style={[
+                        styles.iconStyle,
+                        {
+                          color:
+                            iconRight(element) === 'star-unselected'
+                              ? GRAY_1
+                              : colors.primary,
+                        },
+                      ]}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </View>
 
       {clearTitle && onClear && (
         <View style={[styles.resultsHeader, styles.clearRow]}>
-          <TouchableOpacity onPress={onClear}>
+          <TouchableOpacity onPress={onClear} accessibilityRole="button">
             <Text style={[styles.title, { color: colors.text }]}>
               {clearTitle}
             </Text>

@@ -117,6 +117,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         <View style={[styles.row]}>
           <View style={[styles.row, styles.justifyStart]}>
             <TouchableOpacity
+              accessibilityRole="button"
               activeOpacity={1}
               onPress={() => updateDisplayFormat(TABLE)}
               style={[
@@ -148,6 +149,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              accessibilityRole="button"
               activeOpacity={1}
               onPress={() => updateDisplayFormat(CHART)}
               style={[
@@ -183,6 +185,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               style={[styles.separator, { backgroundColor: colors.border }]}
             />
             <TouchableOpacity
+              accessibilityRole="button"
               style={styles.bottomSheetButton}
               onPress={() => paramSheetRef.current.open()}>
               <Icon
@@ -193,6 +196,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               />
             </TouchableOpacity>
             <TouchableOpacity
+              accessibilityRole="button"
               style={styles.bottomSheetButton}
               onPress={() => weatherInfoSheetRef.current.open()}>
               <Icon

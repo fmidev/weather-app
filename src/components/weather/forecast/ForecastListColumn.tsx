@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import Icon from '@components/common/Icon';
@@ -23,6 +24,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   data,
   displayParams,
 }) => {
+  const { t } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
@@ -39,6 +41,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
 
   return (
     <View
+      accessible
       key={data.epochtime}
       style={[styles.hourColumn, { borderColor: colors.border }]}>
       <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
@@ -56,6 +59,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           return (
             <View
               key={`${param}-${i}`}
+              accessibilityLabel={`${t(`symbols:${data.smartSymbol}`)}`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },

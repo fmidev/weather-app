@@ -33,6 +33,7 @@ const IconButton: React.FC<IconButtonProps> = ({
 }) =>
   onPress ? (
     <View
+      accessibilityRole="button"
       style={[
         styles.button,
         style,
