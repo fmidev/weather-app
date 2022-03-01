@@ -6,7 +6,6 @@ import {
   MapOverlay,
   MapActionTypes,
   UPDATE_SLIDER_TIME,
-  UPDATE_SLIDER_STEP,
   ANIMATE_TO_AREA,
   UPDATE_MAP_LAYERS,
   UPDATE_OVERLAYS,
@@ -17,11 +16,6 @@ import {
 export const updateSliderTime =
   (time: number) => (dispatch: Dispatch<MapActionTypes>) => {
     dispatch({ type: UPDATE_SLIDER_TIME, time });
-  };
-
-export const updateSliderStep =
-  (step: number) => (dispatch: Dispatch<MapActionTypes>) => {
-    dispatch({ type: UPDATE_SLIDER_STEP, step });
   };
 
 export const setAnimateToArea =

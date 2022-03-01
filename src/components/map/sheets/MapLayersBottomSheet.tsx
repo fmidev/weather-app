@@ -19,7 +19,6 @@ import { selectMapLayers, selectActiveOverlay } from '@store/map/selectors';
 import {
   updateMapLayers as updateMapLayersAction,
   updateActiveOverlay as updateActiveOverlayAction,
-  updateSliderStep as updateSliderStepAction,
 } from '@store/map/actions';
 
 import {
@@ -39,7 +38,6 @@ const mapStateToProps = (state: State) => ({
 const mapDispatchToProps = {
   updateMapLayers: updateMapLayersAction,
   updateActiveOverlay: updateActiveOverlayAction,
-  updateSliderStep: updateSliderStepAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -56,7 +54,6 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
   mapLayers,
   updateMapLayers,
   updateActiveOverlay,
-  updateSliderStep,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
@@ -116,9 +113,8 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
               key={layer.id}
               disabled={layer.id === activeOverlay}
               onPress={() => {
+                onClose();
                 updateActiveOverlay(Number(layer.id));
-                const step = layer.times.timeStep;
-                updateSliderStep(step);
               }}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>

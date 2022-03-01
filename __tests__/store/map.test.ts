@@ -9,7 +9,6 @@ describe('map reducer', () => {
       radar: false,
     },
     sliderTime: 0,
-    sliderStep: undefined,
     animateToArea: false,
     overlays: undefined,
     activeOverlay: undefined,
@@ -35,15 +34,6 @@ describe('map reducer', () => {
         time: 1618208990,
       })
     ).toEqual({ ...initial, sliderTime: 1618208990 });
-  });
-
-  it('should handle UPDATE_SLIDER_STEP', () => {
-    expect(
-      reducer(initial, {
-        type: types.UPDATE_SLIDER_STEP,
-        step: 15,
-      })
-    ).toEqual({ ...initial, sliderStep: 15 });
   });
 
   it('should handle UPDATE_MAP_LAYERS', () => {

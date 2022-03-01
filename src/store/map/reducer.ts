@@ -2,7 +2,6 @@ import { PersistConfig } from '@store/types';
 import {
   UPDATE_MAP_LAYERS,
   UPDATE_SLIDER_TIME,
-  UPDATE_SLIDER_STEP,
   ANIMATE_TO_AREA,
   UPDATE_OVERLAYS,
   MapActionTypes,
@@ -18,7 +17,6 @@ const INITIAL_STATE: MapState = {
     radar: false,
   },
   sliderTime: 0,
-  sliderStep: undefined,
   animateToArea: false,
   overlays: undefined,
   activeOverlay: undefined,
@@ -31,13 +29,6 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       return {
         ...state,
         sliderTime: action.time,
-      };
-    }
-
-    case UPDATE_SLIDER_STEP: {
-      return {
-        ...state,
-        sliderStep: action.step,
       };
     }
 
@@ -59,6 +50,7 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       return {
         ...state,
         overlays: action.overlays,
+        sliderTime: 0,
       };
     }
 
@@ -66,6 +58,7 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       return {
         ...state,
         activeOverlay: action.activeId,
+        sliderTime: 0,
       };
     }
 
@@ -83,5 +76,5 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
 };
 export const mapPersist: PersistConfig = {
   key: 'map',
-  whitelist: ['activeOverlay', 'sliderStep', 'mapLayers'],
+  whitelist: ['activeOverlay', 'mapLayers'],
 };
