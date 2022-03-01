@@ -329,6 +329,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
       </View>
       <DayDurationRow />
       <LinearGradient
+        pointerEvents="none"
         style={[styles.gradient, styles.gradientLeft]}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 0.5 }}
@@ -339,6 +340,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
         }
       />
       <LinearGradient
+        pointerEvents="none"
         style={[styles.gradient, styles.gradientRight]}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 0.5 }}
