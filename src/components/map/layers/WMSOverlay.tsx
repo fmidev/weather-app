@@ -146,7 +146,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
 
   // return null until something to return
-  if (!image || !bounds) return null;
+  if (!image || !bounds || sliderTime === 0) return null;
 
   return <Overlay bounds={bounds} image={image} />;
 };

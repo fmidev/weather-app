@@ -11,9 +11,6 @@ export const selectSliderTime = createSelector(
 );
 
 export const selectSliderStep = createSelector(selectMapDomain, (map) => {
-  if (map.sliderStep) {
-    return map.sliderStep;
-  }
   if (map.overlays) {
     const firstId = map.overlays.keys().next().value;
     const activeLayer = Config.get('map').layers.find((l) => l.id === firstId);

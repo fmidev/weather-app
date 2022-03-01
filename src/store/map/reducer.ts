@@ -1,5 +1,4 @@
 import { PersistConfig } from '@store/types';
-import moment from 'moment';
 import {
   UPDATE_MAP_LAYERS,
   UPDATE_SLIDER_TIME,
@@ -18,7 +17,7 @@ const INITIAL_STATE: MapState = {
     weather: true,
     radar: false,
   },
-  sliderTime: moment.utc().startOf('hour').unix(),
+  sliderTime: 0,
   sliderStep: undefined,
   animateToArea: false,
   overlays: undefined,

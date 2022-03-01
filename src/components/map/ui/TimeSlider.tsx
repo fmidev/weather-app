@@ -15,6 +15,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
@@ -137,34 +138,24 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   }, [sliderMinUnix, sliderMaxUnix, step]);
 
   useEffect(() => {
-    let sliderTimeout: ReturnType<typeof setTimeout>;
-    if (sliderRef.current && times && times.length > 0) {
-      // try scroll closest to current time
-      const now = moment().format('X');
-      const roundedNow = Math.floor(Number(now) / step) * step;
-      const i = times.indexOf(roundedNow);
-      const offset = Math.floor(i * stepWidth);
-      if (i >= 0) {
-        // for some reason this needed timeout to work on initial render
-        sliderTimeout = setTimeout(
-          () => sliderRef.current.scrollTo({ x: offset, animated: false }),
-          40
-        );
-      }
-    }
-    return () => {
-      clearTimeout(sliderTimeout);
-    };
-  }, [times, step, sliderRef, stepWidth]);
+    updateSliderTime(times[currentIndex] || 0);
+  }, [currentIndex, times, updateSliderTime]);
 
-  useEffect(() => {
-    const time = times[currentIndex];
-    if (time % step === 0) {
-      if (sliderTime !== time) {
-        updateSliderTime(time);
-      }
+  const onLayout = () => {
+    const now = moment().format('X');
+    const roundedNow = Math.floor(Number(now) / step) * step;
+    const i = times.indexOf(roundedNow);
+
+    if (i > 0) {
+      sliderRef.current.scrollTo({
+        x: Math.floor(i * stepWidth),
+        animated: false,
+      });
+    } else {
+      setCurrentIndex(0);
     }
-  }, [currentIndex, sliderTime, updateSliderTime, step, times]);
+  };
+
   const handleMomentumScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {
       contentOffset: { x },
@@ -268,11 +259,13 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         <View style={styles.sliderWrapper}>
           {times.length > 0 && (
             <ScrollView
+              key={activeOverlayId}
               ref={sliderRef}
               horizontal
               showsHorizontalScrollIndicator={false}
               decelerationRate="fast"
               style={styles.sliderContainer}
+              onLayout={onLayout}
               onScroll={handleScroll}
               onMomentumScrollEnd={handleMomentumScroll}
               onScrollBeginDrag={handleMomentumStart}
@@ -291,59 +284,70 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
               ))}
             </ScrollView>
           )}
-          <Text
-            style={[
-              styles.currentTimeText,
-              styles.textCapitalize,
-              {
-                color: colors.hourListText,
-              },
-            ]}>
-            {currentSliderTime}
-          </Text>
-          <Text
-            style={[
-              styles.currentTimeText,
-              styles.textRight,
-              {
-                color:
-                  sliderTime > observationEndUnix
-                    ? colors.primary
-                    : colors.timeSliderObservationText,
-              },
-            ]}>
-            {sliderTime > observationEndUnix
-              ? t('map:timeSlider:forecast')
-              : t('map:timeSlider:observation')}
-          </Text>
-          <LinearGradient
-            style={[styles.gradient, styles.gradientLeft]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            colors={
-              dark ? [GRAY_6, GRAY_6_TRANSPARENT] : [WHITE, WHITE_TRANSPARENT]
-            }
-          />
-          <LinearGradient
-            style={[styles.gradient, styles.gradientRight]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            colors={
-              dark ? [GRAY_6_TRANSPARENT, GRAY_6] : [WHITE_TRANSPARENT, WHITE]
-            }
-          />
-          <View
-            style={[
-              styles.tick,
-              {
-                left: sliderWidth / 2 - 86,
-                borderBottomColor:
-                  sliderTime > observationEndUnix
-                    ? colors.primary
-                    : colors.timeSliderTick,
-              },
-            ]}
-          />
+          {sliderTime === 0 && (
+            <ActivityIndicator size="small" style={styles.sliderWrapper} />
+          )}
+          {sliderTime > 0 && (
+            <>
+              <Text
+                style={[
+                  styles.currentTimeText,
+                  styles.textCapitalize,
+                  {
+                    color: colors.hourListText,
+                  },
+                ]}>
+                {currentSliderTime}
+              </Text>
+              <Text
+                style={[
+                  styles.currentTimeText,
+                  styles.textRight,
+                  {
+                    color:
+                      sliderTime > observationEndUnix
+                        ? colors.primary
+                        : colors.timeSliderObservationText,
+                  },
+                ]}>
+                {sliderTime > observationEndUnix
+                  ? t('map:timeSlider:forecast')
+                  : t('map:timeSlider:observation')}
+              </Text>
+              <LinearGradient
+                style={[styles.gradient, styles.gradientLeft]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                colors={
+                  dark
+                    ? [GRAY_6, GRAY_6_TRANSPARENT]
+                    : [WHITE, WHITE_TRANSPARENT]
+                }
+              />
+              <LinearGradient
+                style={[styles.gradient, styles.gradientRight]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                colors={
+                  dark
+                    ? [GRAY_6_TRANSPARENT, GRAY_6]
+                    : [WHITE_TRANSPARENT, WHITE]
+                }
+              />
+              <View
+                style={[
+                  styles.tick,
+                  {
+                    left: sliderWidth / 2 - 86,
+                    borderBottomColor:
+                      sliderTime > observationEndUnix
+                        ? colors.primary
+                        : colors.timeSliderTick,
+                  },
+                ]}
+              />
+            </>
+          )}
         </View>
       </View>
     </View>
