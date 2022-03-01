@@ -4,6 +4,7 @@ import 'moment/locale/fi';
 
 import { selectGeoid } from '@store/location/selector';
 import { Config } from '@config';
+import { getIndexForDaySmartSymbol } from '@utils/helpers';
 import { State } from '../types';
 import { ForecastState, TimeStepData } from './types';
 
@@ -77,7 +78,7 @@ export const selectHeaderLevelForecast = createSelector(
   selectForecastByDay,
   (forecastByDay) =>
     forecastByDay &&
-    Object.keys(forecastByDay).map((key: string) => {
+    Object.keys(forecastByDay).map((key: string, dayIndex: number) => {
       const dayArr = forecastByDay[key];
       const tempArray = dayArr.map((h) => h.temperature || 0);
       // get forecasted min and max temps for current day
@@ -90,9 +91,9 @@ export const selectHeaderLevelForecast = createSelector(
 
       const roundedTotalPrecipitation =
         Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
-      const asd = Math.floor(dayArr.length / 2);
+      const index = getIndexForDaySmartSymbol(dayArr, dayIndex);
 
-      const { smartSymbol } = dayArr[asd];
+      const { smartSymbol } = dayArr[index];
       const timeStamp = dayArr[0].epochtime;
       const precipitationArr = dayArr.map((h) => ({
         precipitation: h.precipitation1h,
