@@ -112,7 +112,6 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         curr += step;
       }
     }
-    setCurrentIndex(-1);
 
     return { sliderStep: step, sliderTimes: times.length > 1 ? times : [] };
   }, [activeOverlayId, overlay]);
