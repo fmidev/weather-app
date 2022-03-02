@@ -1,7 +1,6 @@
 import { Region } from 'react-native-maps';
 
 export const UPDATE_SLIDER_TIME = 'UPDATE_SLIDER_TIME';
-export const UPDATE_SLIDER_STEP = 'UPDATE_SLIDER_STEP';
 export const ANIMATE_TO_AREA = 'ANIMATE_TO_AREA';
 export const UPDATE_MAP_LAYERS = 'UPDATE_MAP_LAYERS';
 export const UPDATE_OVERLAYS = 'UPDATE_OVERLAYS';
@@ -11,11 +10,6 @@ export const UPDATE_REGION = 'UPDATE_REGION';
 interface UpdateSliderTime {
   type: typeof UPDATE_SLIDER_TIME;
   time: number;
-}
-
-interface UpdateSliderStep {
-  type: typeof UPDATE_SLIDER_STEP;
-  step: number;
 }
 
 interface AnimateToArea {
@@ -45,7 +39,6 @@ interface UpdateRegion {
 
 export type MapActionTypes =
   | UpdateSliderTime
-  | UpdateSliderStep
   | AnimateToArea
   | UpdateMapLayers
   | InitializeOverlays
@@ -89,11 +82,12 @@ export interface MapOverlay {
   observation?: Layer | TimeseriesLayer;
   forecast?: Layer | TimeseriesLayer;
   data?: TimeseriesData[];
+  step: number;
 }
+
 export interface MapState {
   mapLayers: MapLayers;
   sliderTime: number;
-  sliderStep: number | undefined;
   animateToArea: boolean;
   overlays: Map<number, MapOverlay> | undefined;
   activeOverlay: number | undefined;

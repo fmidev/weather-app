@@ -1,17 +1,14 @@
-import moment from 'moment';
 import reducer from '../../src/store/map/reducer';
 import * as types from '../../src/store/map/types';
 
 describe('map reducer', () => {
-  const sliderTime = moment.utc().startOf('hour').unix();
   const initial: types.MapState = {
     mapLayers: {
       location: true,
       weather: true,
       radar: false,
     },
-    sliderTime,
-    sliderStep: undefined,
+    sliderTime: 0,
     animateToArea: false,
     overlays: undefined,
     activeOverlay: undefined,
@@ -37,15 +34,6 @@ describe('map reducer', () => {
         time: 1618208990,
       })
     ).toEqual({ ...initial, sliderTime: 1618208990 });
-  });
-
-  it('should handle UPDATE_SLIDER_STEP', () => {
-    expect(
-      reducer(initial, {
-        type: types.UPDATE_SLIDER_STEP,
-        step: 15,
-      })
-    ).toEqual({ ...initial, sliderStep: 15 });
   });
 
   it('should handle UPDATE_MAP_LAYERS', () => {

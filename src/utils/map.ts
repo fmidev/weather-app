@@ -46,7 +46,7 @@ export const getSliderMinUnix = (
   let reference = moment.utc().unix();
   const { layers } = Config.get('map');
   const layer = layers.find((l) => l.id === layerId);
-  if (!layerId || !layer) return reference;
+  if (!layerId || !layer) return 0;
   const { times } = layer;
   const stepSeconds = getSliderStepSeconds(times.timeStep);
 
@@ -74,7 +74,7 @@ export const getSliderMaxUnix = (
   overlay: MapOverlay | undefined
 ): number => {
   let reference = moment.utc().unix();
-  if (!overlay) return reference;
+  if (!overlay) return 0;
   const { observation, forecast } = overlay;
   const observationEnd = moment(observation?.end).unix();
   const forecastEnd = moment(forecast?.end).unix();
@@ -106,7 +106,7 @@ export const getOverlayData = async (activeOverlay: number) => {
   if (overlay.type === 'Timeseries') {
     return getTimeseriesData(sources, overlay);
   }
-  return getWMSLayerUrlsAndBounds();
+  return getWMSLayerUrlsAndBounds(sources, overlay);
 };
 
 const getTimeseriesData = async (
@@ -119,6 +119,7 @@ const getTimeseriesData = async (
 
   const params = {
     timeStep: overlay.times.timeStep,
+    starttime: moment().unix(),
     timeSteps: overlay.times.forecast,
     param: [
       'lonlat',
@@ -141,10 +142,21 @@ const getTimeseriesData = async (
 
   Object.assign(toReturn, {
     data,
+    order: [
+      ...new Set(
+        Object.keys(data)
+          .sort(
+            (a, b) =>
+              Number(Object.keys(data[a])[0]) - Number(Object.keys(data[b])[0])
+          )
+          .reverse()
+      ),
+    ],
     [layer.type]: {
       start: layer.type === 'observation' ? Infinity : undefined,
       end: layer.type === 'observation' ? undefined : Infinity,
     },
+    step: overlay.times.timeStep,
   });
 
   overlayMap.set(overlay.id, toReturn);
@@ -152,13 +164,14 @@ const getTimeseriesData = async (
   return overlayMap;
 };
 
-const getWMSLayerUrlsAndBounds = async (): Promise<
-  Map<number, MapOverlay> | undefined
-> => {
+const getWMSLayerUrlsAndBounds = async (
+  sources: { [name: string]: string },
+  overlay: MapLayer
+): Promise<Map<number, MapOverlay> | undefined> => {
   const capabilitiesData = new Map();
   const overlayMap = new Map();
 
-  const { sources, layers } = Config.get('map');
+  const layers = [overlay];
 
   const wmsLayers = layers
     .filter((layer) => layer.type === 'WMS')
@@ -168,10 +181,14 @@ const getWMSLayerUrlsAndBounds = async (): Promise<
     .map((layer) => layer.sources.map((lSrc) => lSrc.layer))
     .flat();
 
+  const activeSources = [
+    ...new Set(overlay.sources.map(({ source }) => source)),
+  ];
+
   await Promise.all(
-    Object.entries(sources).map(async ([src, url]) => {
+    activeSources.map(async (src) => {
       const { data } = await axiosClient({
-        url: `${url}/wms`,
+        url: `${sources[src]}/wms`,
         params: { service: 'WMS', request: 'GetCapabilities' },
       });
 
@@ -263,26 +280,15 @@ const getWMSLayerUrlsAndBounds = async (): Promise<
 
       const overlayUrl = `${url}/wms?${query.toString()}`;
 
-      if (layerSrc.type === 'observation') {
-        Object.assign(toReturn, {
-          observation: {
-            bounds: overlayBounds,
-            url: overlayUrl,
-            start: layerStart,
-            end: layerEnd,
-          },
-        });
-      }
-      if (layerSrc.type === 'forecast') {
-        Object.assign(toReturn, {
-          forecast: {
-            bounds: overlayBounds,
-            url: overlayUrl,
-            start: layerStart,
-            end: layerEnd,
-          },
-        });
-      }
+      Object.assign(toReturn, {
+        [layerSrc.type]: {
+          bounds: overlayBounds,
+          url: overlayUrl,
+          start: layerStart,
+          end: layerEnd,
+        },
+        step: layer.times.timeStep,
+      });
     });
 
     overlayMap.set(layer.id, toReturn);

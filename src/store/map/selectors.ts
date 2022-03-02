@@ -1,5 +1,4 @@
 import { Selector, createSelector } from 'reselect';
-import { Config } from '@config';
 import { State } from '../types';
 import { MapState } from './types';
 
@@ -9,19 +8,6 @@ export const selectSliderTime = createSelector(
   selectMapDomain,
   (map) => map.sliderTime
 );
-
-export const selectSliderStep = createSelector(selectMapDomain, (map) => {
-  if (map.sliderStep) {
-    return map.sliderStep;
-  }
-  if (map.overlays) {
-    const firstId = map.overlays.keys().next().value;
-    const activeLayer = Config.get('map').layers.find((l) => l.id === firstId);
-    const timeStep = activeLayer?.times.timeStep;
-    return timeStep || 0;
-  }
-  return 0;
-});
 
 export const selectAnimateToArea = createSelector(
   selectMapDomain,

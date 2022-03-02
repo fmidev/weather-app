@@ -12,16 +12,11 @@ import {
 
 import { State } from '@store/types';
 import { Layer, MapOverlay } from '@store/map/types';
-import {
-  selectActiveOverlay,
-  selectSliderTime,
-  selectSliderStep,
-} from '@store/map/selectors';
+import { selectActiveOverlay, selectSliderTime } from '@store/map/selectors';
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
   sliderTime: selectSliderTime(state),
-  sliderStep: selectSliderStep(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -35,7 +30,6 @@ type WMSOverlayProps = PropsFromRedux & {
 const WMSOverlay: React.FC<WMSOverlayProps> = ({
   activeOverlayId,
   sliderTime,
-  sliderStep,
   overlay,
 }) => {
   const observation = overlay.observation as Layer;
@@ -47,7 +41,8 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   }>({ time: moment.utc().toISOString(), type: 'observation' });
 
   const current = moment.unix(sliderTime).toISOString();
-  const currentStep = getSliderStepSeconds(sliderStep);
+
+  const currentStep = getSliderStepSeconds(overlay.step);
 
   const memoizedMinUnix = useMemo(
     () => getSliderMinUnix(activeOverlayId, overlay),
@@ -146,7 +141,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
 
   // return null until something to return
-  if (!image || !bounds) return null;
+  if (!image || !bounds || sliderTime === 0) return null;
 
   return <Overlay bounds={bounds} image={image} />;
 };
