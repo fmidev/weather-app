@@ -23,7 +23,10 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
   const isLandscape = useOrientation();
   const { colors } = useTheme();
   return (
-    <TouchableOpacity onPress={onPress} accessibilityLabel={accessibilityLabel}>
+    <TouchableOpacity
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}>
       <View
         style={[
           styles.container,

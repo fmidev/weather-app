@@ -175,6 +175,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
             </TouchableOpacity>
 
             <LinearGradient
+              pointerEvents="none"
               style={[styles.gradient, styles.gradientLeft]}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
@@ -204,6 +205,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
               ]}
             />
             <LinearGradient
+              pointerEvents="none"
               style={[styles.gradient, styles.gradientRight]}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}

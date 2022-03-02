@@ -85,7 +85,11 @@ const WarningsPanelSlim: React.FC<WarningsPanelSlimProps> = ({
               <TouchableOpacity
                 key={date}
                 style={styles.touchArea}
-                onPress={() => onPress(index)}>
+                onPress={() => onPress(index)}
+                accessibilityRole="button"
+                accessibilityLabel={`${moment(date).format('dd')} ${
+                  severity > 0 ? t('warnings:hasWarnings') : ''
+                }`}>
                 <View
                   style={[
                     styles.warningsSingleDayContainer,

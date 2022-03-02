@@ -37,7 +37,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   dayData,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const dayStripRef = useRef() as React.MutableRefObject<
     VirtualizedList<{
@@ -94,6 +94,8 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
 
     return (
       <View
+        accessible
+        accessibilityRole="button"
         style={[
           styles.dayBlock,
           isActive ? styles.activeBlock : undefined,
@@ -121,7 +123,9 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
               {stepMoment.locale(locale).format('D.M.')}
             </Text>
           </Text>
-          <View style={styles.alignCenter}>
+          <View
+            style={styles.alignCenter}
+            accessibilityLabel={`${t(`symbols:${smartSymbol}`)}`}>
             {daySmartSymbol?.({
               width: 40,
               height: 40,
@@ -178,7 +182,7 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   dayBlock: {
-    minWidth: 80,
+    minWidth: 90,
     borderWidth: 1,
     padding: 10,
     flex: 1,
@@ -201,8 +205,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   forecastText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Roboto-Regular',
+    textTransform: 'capitalize',
   },
   bold: {
     fontFamily: 'Roboto-Bold',

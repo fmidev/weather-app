@@ -3,7 +3,10 @@ import Geolocation from 'react-native-geolocation-service';
 import { TFunction } from 'react-i18next';
 
 import { Location } from '@store/location/types';
-import { TimeStepData as ForTimeStepData } from '@store/forecast/types';
+import {
+  TimeStepData as ForTimeStepData,
+  TimeStepData,
+} from '@store/forecast/types';
 import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import { MomentObjectOutput } from 'moment';
@@ -210,3 +213,26 @@ export const getFeelsLikeIconName = (
 };
 
 export const isOdd = (num: number) => !!(num % 2);
+
+/** Returns the index of 15:00 or nearest */
+export const getIndexForDaySmartSymbol = (
+  dayArray: TimeStepData[],
+  dayIndex: number
+): number => {
+  if (dayArray.length === 24) {
+    return 16;
+  }
+  const index = dayArray.findIndex((d) => {
+    const dateObj = new Date(d.epochtime * 1000);
+    const hours = dateObj.getHours();
+    return hours === 15;
+  });
+
+  if (dayIndex === 0 && index < 0) {
+    return 0;
+  }
+  if (index < 0) {
+    return dayArray.length - 1;
+  }
+  return index;
+};

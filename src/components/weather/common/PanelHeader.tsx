@@ -15,6 +15,8 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({ title, lastUpdated }) => {
   const { t } = useTranslation('forecast');
   return (
     <View
+      accessible
+      accessibilityRole="header"
       style={[
         styles.cardHeader,
         {

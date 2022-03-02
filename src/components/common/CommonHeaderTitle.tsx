@@ -43,7 +43,11 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
         {isGeolocation && (
           <Icon name="map-marker" style={{ color: colors.text }} height={12} />
         )}
-        <Text style={[styles.title, { color: colors.text }]}>{title()}</Text>
+        <Text
+          accessibilityRole="header"
+          style={[styles.title, { color: colors.text }]}>
+          {title()}
+        </Text>
       </View>
     </TouchableOpacity>
   );

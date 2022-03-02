@@ -1,6 +1,8 @@
 {
   "weather": {
     "charts": {
+      "accessibilityLabel": "Data displayed in a chart",
+      "accessibilityHint": "The same data is displayed in Table view in an accessible format",
       "cloud": "Cloud height",
       "cloudAccessibilityLabel": "Open cloud height chart",
       "dewPoint": "Dew point",
@@ -40,17 +42,26 @@
   },
   "forecast": {
     "nextHourForecast": "Next hour forecast,",
+    "nextHourForecastPrecipitation": "precipitation",
+    "nextHourForecastMetersPerSecond": "meters per second",
+    "nextHourForecastMillimeters": "millimeters",
     "panelHeader": "10 day forecast",
     "updated": "Updated",
     "sunrise": "Sunrise",
     "sunset": "Sunset",
     "dayLength": "Length of day",
+    "hours": "hours",
+    "minutes": "minutes",
     "feelsLike": "Feels like",
     "hourListOpenAccessibilityLabel": "Open forecast by hour list for day",
     "hourListCloseAccessibilityLabel": "Close forecast by hour list for day",
     "at": "at",
     "table": "Table",
+    "tableAccessibilityHint": "Open forecast table view",
     "chart": "Chart",
+    "chartAccessibilityHint": "Open forecast chart view",
+    "paramsAccessibilityLabel": "Parameters",
+    "paramsAccessibilityHint": "Open parameter selection",
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Close hourly parameter selection",
       "title": "Hourly view",
@@ -69,6 +80,8 @@
       "pressure": "Pressure (hPa)",
       "uvCumulated": "UV index"
     },
+    "infoAccessibilityLabel": "Info",
+    "infoAccessibilityHint": "Open weather info",
     "weatherInfoBottomSheet": {
       "closeAccessibilityLabel": "Close weather info",
       "dayForecastInfoTitle": "Day forecast info",
@@ -115,10 +128,6 @@
       "description": "description",
       "showRest": "Show rest of the weather symbols",
       "showLess": "Show less"
-    },
-    "hourList": {
-      "moveBackAccessibilityLabel": "move back",
-      "moveForwardAccessibilityLabel": "move forward"
     }
   },
   "observation": {
@@ -256,10 +265,14 @@
     "favorites": "My locations",
     "searchResults": "Search results",
     "locate": "Use your location",
+    "clear": "Clear search field",
     "clearFavorites": "Clear all my locations",
     "clearRecentSearches": "Clear all previous searches",
     "noResults": "Search returned no results",
     "remember": "Remember",
+    "choose": "Choose",
+    "addToFavorites": "Add to my locations",
+    "removeFromFavorites": "Remove from my locations",
     "infoSheet": {
       "closeButtonAccessibilityLabel": "Close search screen info",
       "saveAndDeleteTitle": "Saving and deleting my locations",
@@ -371,6 +384,8 @@
     "lastUpdated": "Last updated",
     "allWarnings": "All warnings for Finland",
     "valid": "valid between",
+    "hasWarnings": "active warnings",
+    "navigateToWarningsPage": "Navigate to Warnings page",
     "types": {
       "thunderStorm": "Severe thunderstorm warning",
       "wind": "Wind warning for land areas",

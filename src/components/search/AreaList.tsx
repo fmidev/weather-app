@@ -47,61 +47,78 @@ const AreaList: React.FC<AreaListProps> = ({
           styles.listItem,
           { borderBottomColor: colors.border },
         ]}>
-        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+        <Text
+          accessibilityRole="header"
+          style={[styles.title, { color: colors.text }]}>
+          {title}
+        </Text>
         <Text style={[styles.regular, { color: colors.hourListText }]}>
           {t('remember')}
         </Text>
       </View>
 
       <View>
-        {elements.map((element: Location) => (
-          <View
-            key={`${title}-${element.id}`}
-            style={[
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <View style={styles.listItem}>
-              <TouchableOpacity
-                onPress={() => onSelect(element)}
-                style={styles.locationContainer}>
-                <View style={styles.listItem}>
-                  <Text style={[styles.resultText, { color: colors.text }]}>
-                    {element.area && element.area !== element.name
-                      ? `${element.name}, ${element.area}`
-                      : element.name}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => onIconPress(element)}>
-                <View
-                  style={[
-                    styles.actionButtonContainer,
-                    { borderLeftColor: colors.border },
-                  ]}>
-                  <Icon
-                    name={iconRight(element)}
-                    size={20}
+        {elements.map((element: Location) => {
+          const name =
+            element.area && element.area !== element.name
+              ? `${element.name}, ${element.area}`
+              : element.name;
+          return (
+            <View
+              key={`${title}-${element.id}`}
+              style={[
+                styles.withBorderBottom,
+                { borderBottomColor: colors.border },
+              ]}>
+              <View style={styles.listItem}>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel={`${t('choose')} ${name}`}
+                  onPress={() => onSelect(element)}
+                  style={styles.locationContainer}>
+                  <View style={styles.listItem}>
+                    <Text style={[styles.resultText, { color: colors.text }]}>
+                      {name}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    iconRight(element) === 'star-unselected'
+                      ? t('addToFavorites')
+                      : t('removeFromFavorites')
+                  }
+                  onPress={() => onIconPress(element)}>
+                  <View
                     style={[
-                      styles.iconStyle,
-                      {
-                        color:
-                          iconRight(element) === 'star-unselected'
-                            ? GRAY_1
-                            : colors.primary,
-                      },
-                    ]}
-                  />
-                </View>
-              </TouchableOpacity>
+                      styles.actionButtonContainer,
+                      { borderLeftColor: colors.border },
+                    ]}>
+                    <Icon
+                      name={iconRight(element)}
+                      size={20}
+                      style={[
+                        styles.iconStyle,
+                        {
+                          color:
+                            iconRight(element) === 'star-unselected'
+                              ? GRAY_1
+                              : colors.primary,
+                        },
+                      ]}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </View>
 
       {clearTitle && onClear && (
         <View style={[styles.resultsHeader, styles.clearRow]}>
-          <TouchableOpacity onPress={onClear}>
+          <TouchableOpacity onPress={onClear} accessibilityRole="button">
             <Text style={[styles.title, { color: colors.text }]}>
               {clearTitle}
             </Text>
@@ -148,6 +165,8 @@ const styles = StyleSheet.create({
   },
   actionButtonContainer: {
     width: 50,
+    minWidth: 44,
+    minHeight: 44,
     borderLeftWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',

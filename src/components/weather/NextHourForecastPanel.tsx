@@ -70,7 +70,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.alignCenter}>
+      <View style={styles.alignCenter} accessible accessibilityRole="header">
         <Text style={[styles.text, { color: colors.primaryText }]}>
           {t('nextHourForecast')}
         </Text>
@@ -82,7 +82,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           ]}>{`${t('at')} ${currentTime.format('HH:mm')}`}</Text>
       </View>
       <View style={styles.row}>
-        <View>
+        <View
+          accessible
+          accessibilityLabel={`${t(
+            `symbols:${nextHourForecast.smartSymbol}`
+          )}`}>
           {smartSymbol?.({
             width: 100,
             height: 100,
@@ -142,8 +146,18 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           { backgroundColor: colors.border },
         ]}
       />
-      <View style={styles.row}>
-        <View style={styles.row}>
+      <View style={styles.row} accessible>
+        <View
+          style={styles.row}
+          accessibilityLabel={
+            nextHourForecast.windCompass8
+              ? `${t(
+                  `observation:windDirection:${nextHourForecast.windCompass8}`
+                )} ${nextHourForecast.windSpeedMS} ${t(
+                  'forecast:nextHourForecastMetersPerSecond'
+                )}`
+              : undefined
+          }>
           {activeParameters.includes('windDirection') && (
             <Icon
               name="wind-next-hour"
@@ -175,17 +189,32 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           {activeParameters.includes('precipitation1h') && (
             <>
               <Icon name="precipitation" color={colors.hourListText} />
-              <Text style={[styles.text, { color: colors.hourListText }]}>
+              <Text
+                style={[styles.text, { color: colors.hourListText }]}
+                accessibilityLabel={`${t(
+                  'forecast:nextHourForecastPrecipitation'
+                )} ${
+                  nextHourForecast.precipitation1h
+                    ?.toString()
+                    .replace('.', ',') || (0).toFixed(1).replace('.', ',')
+                } ${t('forecast:nextHourForecastMillimeters')}`}>
                 <Text style={styles.bold}>{`${
-                  nextHourForecast.precipitation1h ||
-                  (0).toFixed(1).replace('.', ',')
+                  nextHourForecast.precipitation1h
+                    ?.toString()
+                    .replace('.', ',') || (0).toFixed(1).replace('.', ',')
                 }`}</Text>
                 {' mm'}
               </Text>
             </>
           )}
         </View>
-        <View style={styles.row}>
+        <View
+          style={styles.row}
+          accessibilityLabel={`${t('forecast:sunrise')} ${t(
+            'forecast:at'
+          )} ${sunrise.format('HH:mm')} ${t('forecast:sunset')} ${t(
+            'at'
+          )} ${sunset.format('HH:mm')}`}>
           <Icon
             name="sun"
             color={colors.hourListText}

@@ -64,7 +64,10 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
             <View style={[styles.iconPadding]}>
               <View style={styles.filler} />
             </View>
-            <View style={[styles.flex, styles.alignItems]}>
+            <View
+              style={[styles.flex, styles.alignItems]}
+              accessible
+              accessibilityRole="header">
               <Text
                 style={[
                   styles.headerText,
@@ -128,7 +131,12 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                 )}
                 <TouchableOpacity
                   style={styles.touchArea}
-                  onPress={() => setSelectedDay(index)}>
+                  onPress={() => setSelectedDay(index)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${moment(date).format('dd DD.MM.')} ${t(
+                    'hasWarnings'
+                  )} ${count}`}
+                  accessibilityHint={t('warnings:navigateToWarningsPage')}>
                   <View
                     style={[
                       styles.warningsSingleDayContainer,

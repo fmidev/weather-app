@@ -1,6 +1,8 @@
 {
   "weather": {
     "charts": {
+      "accessibilityLabel": "Datan esitys graafina",
+      "accessibilityHint": "Sama data on esitetty saavutettavassa muodossa Taulukko-näkymässä",
       "cloud": "Pilven korkeus",
       "cloudAccessibilityLabel": "Avaa pilvenkorkeusgraafi",
       "dewPoint": "Kastepiste",
@@ -40,17 +42,26 @@
   },
   "forecast": {
     "nextHourForecast": "Seuraavan tunnin ennuste,",
+    "nextHourForecastPrecipitation": "sadetta",
+    "nextHourForecastMetersPerSecond": "metriä sekunnissa",
+    "nextHourForecastMillimeters": "millimetriä",
     "panelHeader": "10 vrk ennuste",
     "updated": "Päivitetty",
     "sunrise": "Aurinko nousee",
-    "sunset": "Laskee",
+    "sunset": "Aurinko laskee",
     "dayLength": "Päivän pituus",
+    "hours": "tuntia",
+    "minutes": "minuuttia",
     "feelsLike": "Tuntuu kuin",
     "hourListOpenAccessibilityLabel": "Avaa tuntiennuste päivälle",
     "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle",
     "at": "klo",
     "table": "Taulukko",
+    "tableAccessibilityHint": "Avaa ennusteen taulukkonäkymä",
     "chart": "Graafi",
+    "chartAccessibilityHint": "Avaa ennusteen graafinäkymä",
+    "paramsAccessibilityLabel": "Parametrit",
+    "paramsAccessibilityHint": "Avaa parametrien valinta",
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Sulje tuntinäkymän suureiden valinta",
       "title": "Tuntikohtainen näkymä",
@@ -69,6 +80,8 @@
       "pressure": "Ilmanpaine (hPa)",
       "uvCumulated": "UV indeksi"
     },
+    "infoAccessibilityLabel": "Selitteet",
+    "infoAccessibilityHint": "Avaa selitteet",
     "weatherInfoBottomSheet": {
       "closeAccessibilityLabel": "Sulje sääennusteen selitteet",
       "dayForecastInfoTitle": "Vuorokauden ennusteen selitykset",
@@ -115,10 +128,6 @@
       "description": "kuvaus",
       "showRest": "Näytä loput säämerkit",
       "showLess": "Näytä vähemmän"
-    },
-    "hourList": {
-      "moveBackAccessibilityLabel": "siirry taaksepäin",
-      "moveForwardAccessibilityLabel": "siirry eteenpäin"
     }
   },
   "observation": {
@@ -257,10 +266,14 @@
     "favorites": "Omat paikat",
     "searchResults": "Hakutulokset",
     "locate": "Paikanna oma sijainti",
+    "clear": "Tyhjennä hakukenttä",
     "clearFavorites": "Poista kaikki omat paikat",
     "clearRecentSearches": "Poista kaikki edelliset haut",
     "noResults": "Haku ei tuottanut tuloksia",
     "remember": "Muista",
+    "choose": "Valitse",
+    "addToFavorites": "Lisää omiin paikkoihin",
+    "removeFromFavorites": "Poista omista paikoista",
     "infoSheet": {
       "closeButtonAccessibilityLabel": "Sulje hakusivun selitteet",
       "saveAndDeleteTitle": "Oman paikan tallennus ja poistaminen",
@@ -321,7 +334,6 @@
     "74": "Paikoin ukkoskuuroja",
     "77": "Ukkoskuuroja",
     "101": "$t(symbols:1)",
-
     "102": "$t(symbols:2)",
     "104": "$t(symbols:4)",
     "106": "$t(symbols:6)",
@@ -373,6 +385,8 @@
     "lastUpdated": "Päivitetty viimeksi",
     "allWarnings": "Koko Suomen varoitukset",
     "valid": "voimassa",
+    "hasWarnings": "varoituksia voimassa",
+    "navigateToWarningsPage": "navigoi Varoitus-sivulle",
     "types": {
       "thunderStorm": "Raju ukonilma",
       "wind": "Tuulivaroitus maa‑alueille",
