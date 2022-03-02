@@ -55,10 +55,10 @@ R5CR207HAFP	device
 
 1. `cd ios && pod install && cd ..`
 
-2. `yarn ios`
+2. `npx react-native run-ios`
 
 ## **Config**
 
 1. `cp defaultConfig.ts.example defaultConfig.ts`
 
-2. `update defaultConfig.ts`
+2. `edit defaultConfig.ts`
