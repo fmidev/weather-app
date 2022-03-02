@@ -1,6 +1,8 @@
 {
   "weather": {
     "charts": {
+      "accessibilityLabel": "Datan esitys graafina",
+      "accessibilityHint": "Sama data on esitetty saavutettavassa muodossa Taulukko-näkymässä",
       "cloud": "Pilven korkeus",
       "cloudAccessibilityLabel": "Avaa pilvenkorkeusgraafi",
       "dewPoint": "Kastepiste",

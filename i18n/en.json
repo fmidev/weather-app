@@ -1,6 +1,8 @@
 {
   "weather": {
     "charts": {
+      "accessibilityLabel": "Data displayed in a chart",
+      "accessibilityHint": "The same data is displayed in Table view in an accessible format",
       "cloud": "Cloud height",
       "cloudAccessibilityLabel": "Open cloud height chart",
       "dewPoint": "Dew point",

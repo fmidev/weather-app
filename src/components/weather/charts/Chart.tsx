@@ -48,7 +48,7 @@ const Chart: React.FC<ChartProps> = ({
     observation ? 24 * 20 : 0
   );
   const { colors } = useTheme() as CustomTheme;
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('weather');
   moment.locale(i18n.language);
 
   const { timePeriod, parameters: obsParameters } =
@@ -147,14 +147,18 @@ const Chart: React.FC<ChartProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      accessible
+      accessibilityLabel={t('charts.accessibilityLabel')}
+      accessibilityHint={t('charts.accessibilityHint')}>
       <View style={styles.chartRowContainer}>
         <View style={styles.yAxisContainer}>
           <VictoryChart height={300} width={45}>
             <VictoryAxis
               dependentAxis
               crossAxis={false}
-              tickFormat={(t) => (t >= 10000 ? t / 1000 : t)}
+              tickFormat={(tick) => (tick >= 10000 ? tick / 1000 : tick)}
               domain={chartDomain.y}
               style={{
                 tickLabels: {
@@ -196,7 +200,7 @@ const Chart: React.FC<ChartProps> = ({
                   crossAxis={false}
                   orientation="right"
                   tickCount={4}
-                  tickFormat={(t) => `${(t / 60000) * 8}/8`}
+                  tickFormat={(tick) => `${(tick / 60000) * 8}/8`}
                   tickValues={[15000, 30000, 45000, 60000]}
                   domain={chartDomain.y}
                   style={{
