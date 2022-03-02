@@ -307,6 +307,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                   : t('map:timeSlider:observation')}
               </Text>
               <LinearGradient
+                pointerEvents="none"
                 style={[styles.gradient, styles.gradientLeft]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0.5 }}
@@ -317,6 +318,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                 }
               />
               <LinearGradient
+                pointerEvents="none"
                 style={[styles.gradient, styles.gradientRight]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0.5 }}
