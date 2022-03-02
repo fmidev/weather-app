@@ -42,6 +42,9 @@
   },
   "forecast": {
     "nextHourForecast": "Next hour forecast,",
+    "nextHourForecastPrecipitation": "precipitation",
+    "nextHourForecastMetersPerSecond": "meters per second",
+    "nextHourForecastMillimeters": "millimeters",
     "panelHeader": "10 day forecast",
     "updated": "Updated",
     "sunrise": "Sunrise",
@@ -381,6 +384,8 @@
     "lastUpdated": "Last updated",
     "allWarnings": "All warnings for Finland",
     "valid": "valid between",
+    "hasWarnings": "active warnings",
+    "navigateToWarningsPage": "Navigate to Warnings page",
     "types": {
       "thunderStorm": "Severe thunderstorm warning",
       "wind": "Wind warning for land areas",

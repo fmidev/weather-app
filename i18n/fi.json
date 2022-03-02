@@ -42,6 +42,9 @@
   },
   "forecast": {
     "nextHourForecast": "Seuraavan tunnin ennuste,",
+    "nextHourForecastPrecipitation": "sadetta",
+    "nextHourForecastMetersPerSecond": "metriä sekunnissa",
+    "nextHourForecastMillimeters": "millimetriä",
     "panelHeader": "10 vrk ennuste",
     "updated": "Päivitetty",
     "sunrise": "Aurinko nousee",
@@ -382,6 +385,8 @@
     "lastUpdated": "Päivitetty viimeksi",
     "allWarnings": "Koko Suomen varoitukset",
     "valid": "voimassa",
+    "hasWarnings": "varoituksia voimassa",
+    "navigateToWarningsPage": "navigoi Varoitus-sivulle",
     "types": {
       "thunderStorm": "Raju ukonilma",
       "wind": "Tuulivaroitus maa‑alueille",
