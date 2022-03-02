@@ -74,6 +74,13 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         if (param === constants.WIND_SPEED_AND_DIRECTION) {
           return (
             <View
+              accessibilityLabel={
+                data.windCompass8
+                  ? `${t(`observation:windDirection:${data.windCompass8}`)} ${
+                      data.windSpeedMS
+                    }`
+                  : undefined
+              }
               key={`${param}-${i}`}
               style={[
                 styles.hourBlock,

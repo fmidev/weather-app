@@ -33,15 +33,15 @@ const IconButton: React.FC<IconButtonProps> = ({
 }) =>
   onPress ? (
     <View
+      accessible
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       style={[
         styles.button,
         style,
         { backgroundColor: backgroundColor || undefined },
       ]}>
-      <TouchableOpacity
-        onPress={onPress}
-        accessibilityLabel={accessibilityLabel}>
+      <TouchableOpacity onPress={onPress}>
         <View>
           <Icon
             name={icon}

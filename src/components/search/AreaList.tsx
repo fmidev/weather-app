@@ -47,7 +47,11 @@ const AreaList: React.FC<AreaListProps> = ({
           styles.listItem,
           { borderBottomColor: colors.border },
         ]}>
-        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+        <Text
+          accessibilityRole="header"
+          style={[styles.title, { color: colors.text }]}>
+          {title}
+        </Text>
         <Text style={[styles.regular, { color: colors.hourListText }]}>
           {t('remember')}
         </Text>
@@ -69,7 +73,7 @@ const AreaList: React.FC<AreaListProps> = ({
               <View style={styles.listItem}>
                 <TouchableOpacity
                   accessibilityRole="button"
-                  accessibilityLabel={`Valitse ${name}`}
+                  accessibilityLabel={`${t('choose')} ${name}`}
                   onPress={() => onSelect(element)}
                   style={styles.locationContainer}>
                   <View style={styles.listItem}>
@@ -78,7 +82,14 @@ const AreaList: React.FC<AreaListProps> = ({
                     </Text>
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => onIconPress(element)}>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    iconRight(element) === 'star-unselected'
+                      ? t('addToFavorites')
+                      : t('removeFromFavorites')
+                  }
+                  onPress={() => onIconPress(element)}>
                   <View
                     style={[
                       styles.actionButtonContainer,
@@ -154,6 +165,8 @@ const styles = StyleSheet.create({
   },
   actionButtonContainer: {
     width: 50,
+    minWidth: 44,
+    minHeight: 44,
     borderLeftWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',

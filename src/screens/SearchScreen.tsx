@@ -145,7 +145,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           <CloseButton
             style={styles.closeButton}
             backgroundColor={colors.inputButtonBackground}
-            accessibilityLabel="clear search"
+            accessibilityLabel={t('clear')}
             onPress={() => setValue('')}
           />
         )}
