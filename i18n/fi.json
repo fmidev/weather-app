@@ -400,5 +400,20 @@
       "uvNote": "UV-tiedote",
       "flooding": "Tulvavaroitus"
     }
+  },
+  "setUp": {
+    "termsAndConditions": "Käyttöehdot",
+    "termsAndConditionsDescription": "Käyttääksesi palvelua, sinun tulee hyväksyä käyttöehdot. Tutustu käyttö-\nehtoihin painamalla Käyttöehdot-linkkiä.",
+    "accept": "Hyväksy",
+    "location": "Sijainti",
+    "locationDescription": "Sovellus käyttää laitteen sijaintia paikantamaan käyttäjän. Sijaintia käytetään vain esitystarkoitukseen.",
+    "acceptLocation": "Salli sijainti",
+    "declineLocation": "Älä salli"
+  },
+  "termsAndConditions": {
+    "generalTitle": "Sää-sovelluksen käyttöehdot",
+    "contentsTitle": "Käyttöoikeuden sisältö",
+    "someOtherTitle": "Kolmas otsikko",
+    "loremIpsum": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus."
   }
 }
