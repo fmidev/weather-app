@@ -21,3 +21,8 @@ export const selectInitialTab = createInitialSelector(
   selectNavigationDomain,
   (navigation) => navigation.tab
 );
+
+export const selectDidLaunchApp = createSelector(
+  selectNavigationDomain,
+  (navigation) => navigation.didLaunchApp
+);

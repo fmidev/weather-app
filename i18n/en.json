@@ -399,5 +399,20 @@
       "uvNote": "UV advisory",
       "flooding": "Flood warning"
     }
+  },
+  "setUp": {
+    "termsAndConditions": "Terms and Conditions",
+    "termsAndConditionsDescription": "To use the service you must accept the Terms and Conditions. To view Terms and Conditions, press the link below.",
+    "accept": "Accept",
+    "location": "Location",
+    "locationDescription": "The app uses device location to locate the user. Location is used only for presentation purposes. ",
+    "acceptLocation": "Allow location",
+    "declineLocation": "Do not allow"
+  },
+  "termsAndConditions": {
+    "generalTitle": "Weather app Terms and Conditions",
+    "contentsTitle": "Contents",
+    "someOtherTitle": "Third title",
+    "loremIpsum": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus."
   }
 }

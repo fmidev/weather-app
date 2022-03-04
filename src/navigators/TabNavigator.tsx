@@ -23,7 +23,6 @@ import {
 import type { NavigationState } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -35,6 +34,7 @@ import SettingsScreen from '@screens/SettingsScreen';
 import SearchScreen from '@screens/SearchScreen';
 import AboutScreen from '@screens/AboutScreen';
 import WarningsScreen from '@screens/WarningsScreen';
+import SetupScreen from '@screens/SetupScreen';
 
 import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
@@ -46,7 +46,6 @@ import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { getGeolocation } from '@utils/helpers';
-
 import {
   PRIMARY_BLUE,
   WHITE,
@@ -55,9 +54,16 @@ import {
   SHADOW_DARK,
   SHADOW_LIGHT,
 } from '@utils/colors';
-import { selectInitialTab } from '@store/navigation/selectors';
-import { setNavigationTab as setNavigationTabAction } from '@store/navigation/actions';
+import {
+  selectInitialTab,
+  selectDidLaunchApp,
+} from '@store/navigation/selectors';
+import {
+  setNavigationTab as setNavigationTabAction,
+  setDidLaunchApp as setDidLaunchAppAction,
+} from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
+import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import { lightTheme, darkTheme } from './themes';
 import {
   TabParamList,
@@ -69,11 +75,13 @@ import {
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
   theme: selectTheme(state),
+  didLaunchApp: selectDidLaunchApp(state),
 });
 
 const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
   setNavigationTab: setNavigationTabAction,
+  setDidLaunchApp: setDidLaunchAppAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -87,14 +95,17 @@ const MapStack = createStackNavigator();
 const WeatherStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
+const SetupStack = createStackNavigator();
 
 const Navigator: React.FC<Props> = ({
   setCurrentLocation,
   setNavigationTab,
   theme,
   initialTab,
+  didLaunchApp,
+  setDidLaunchApp,
 }) => {
-  const { t, ready } = useTranslation(['navigation', 'placeholder'], {
+  const { t, ready } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
@@ -110,18 +121,6 @@ const Navigator: React.FC<Props> = ({
       SplashScreen.hide();
     }
   }, [theme, ready]);
-
-  useEffect(() => {
-    const permission =
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.LOCATION_ALWAYS
-        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
-    Permissions.request(permission).then((result) => {
-      if (result === Permissions.RESULTS.GRANTED) {
-        console.log('location granted');
-      }
-    });
-  }, []);
 
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {
@@ -295,10 +294,45 @@ const Navigator: React.FC<Props> = ({
     </OthersStack.Navigator>
   );
 
-  // TODO: this is never shown as SplashScreen is visible with the condition
+  const SetupStackScreen = () => (
+    <SetupStack.Navigator initialRouteName="SetupScreen">
+      <SetupStack.Screen
+        name="SetupScreen"
+        options={{
+          headerShown: false,
+        }}>
+        {(props) => (
+          <SetupScreen
+            {...props}
+            setUpDone={() => {
+              setDidLaunchApp();
+            }}
+          />
+        )}
+      </SetupStack.Screen>
+      <SetupStack.Screen
+        name="TermsAndConditions"
+        component={TermsAndConditionsScreen}
+        options={{
+          ...CommonHeaderOptions,
+          headerTitle: t('setUp:termsAndConditions'),
+        }}
+      />
+    </SetupStack.Navigator>
+  );
+
+  // this is never shown as SplashScreen is visible with the condition
   // however, this prevents unnecessary child component rendering
   if (!ready || !theme) {
     return null;
+  }
+
+  if (!didLaunchApp) {
+    return (
+      <NavigationContainer theme={lightTheme}>
+        <SetupStackScreen />
+      </NavigationContainer>
+    );
   }
 
   return (

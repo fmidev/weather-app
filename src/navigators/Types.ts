@@ -23,3 +23,8 @@ export type WeatherStackParamList = {
   Weather: Location;
   Search: undefined;
 };
+
+export type SetupStackParamList = {
+  SetupScreen: undefined;
+  TermsAndConditions: undefined;
+};
