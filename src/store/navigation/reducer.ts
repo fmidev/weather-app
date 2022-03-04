@@ -3,10 +3,12 @@ import {
   NavigationState,
   NavigationActionTypes,
   SET_NAVIGATION_TAB,
+  SET_DID_LAUNCH_APP,
 } from './types';
 
 const INITIAL_STATE: NavigationState = {
   tab: 'Map',
+  didLaunchApp: false,
 };
 
 export default (
@@ -21,6 +23,13 @@ export default (
       };
     }
 
+    case SET_DID_LAUNCH_APP: {
+      return {
+        ...state,
+        didLaunchApp: true,
+      };
+    }
+
     default: {
       return state;
     }
@@ -29,5 +38,5 @@ export default (
 
 export const navigationPersist: PersistConfig = {
   key: 'navigation',
-  whitelist: ['tab'],
+  whitelist: ['tab', 'didLaunchApp'],
 };

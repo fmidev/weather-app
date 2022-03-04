@@ -61,26 +61,3 @@ export const clear = async (): Promise<void> => {
     throw Error(`Error clearing async storage`);
   }
 };
-
-const HAS_LAUNCHED = '@weather-app-has-launched';
-
-export const checkIfFirstLaunch = async (): Promise<boolean> => {
-  try {
-    const hasLaunched = await AsyncStorage.getItem(HAS_LAUNCHED);
-    if (hasLaunched === null) {
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-};
-
-export const setUpDone = async (): Promise<void> => {
-  try {
-    await AsyncStorage.setItem(HAS_LAUNCHED, 'true');
-  } catch (error) {
-    throw Error(`Error setting HAS_LAUNCHED`);
-  }
-};

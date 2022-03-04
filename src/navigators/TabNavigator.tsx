@@ -46,7 +46,6 @@ import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { getGeolocation } from '@utils/helpers';
-import { checkIfFirstLaunch, setUpDone } from '@utils/async_storage';
 import {
   PRIMARY_BLUE,
   WHITE,
@@ -55,8 +54,14 @@ import {
   SHADOW_DARK,
   SHADOW_LIGHT,
 } from '@utils/colors';
-import { selectInitialTab } from '@store/navigation/selectors';
-import { setNavigationTab as setNavigationTabAction } from '@store/navigation/actions';
+import {
+  selectInitialTab,
+  selectDidLaunchApp,
+} from '@store/navigation/selectors';
+import {
+  setNavigationTab as setNavigationTabAction,
+  setDidLaunchApp as setDidLaunchAppAction,
+} from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
 import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import { lightTheme, darkTheme } from './themes';
@@ -70,11 +75,13 @@ import {
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
   theme: selectTheme(state),
+  didLaunchApp: selectDidLaunchApp(state),
 });
 
 const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
   setNavigationTab: setNavigationTabAction,
+  setDidLaunchApp: setDidLaunchAppAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -95,6 +102,8 @@ const Navigator: React.FC<Props> = ({
   setNavigationTab,
   theme,
   initialTab,
+  didLaunchApp,
+  setDidLaunchApp,
 }) => {
   const { t, ready } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
@@ -105,7 +114,6 @@ const Navigator: React.FC<Props> = ({
     (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
 
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
-  const [isFirstLaunch, setIsFirstLaunch] = useState<boolean>(false);
 
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
@@ -114,13 +122,6 @@ const Navigator: React.FC<Props> = ({
     }
   }, [theme, ready]);
 
-  useEffect(() => {
-    async function checkASyncStorage() {
-      const isFirst = await checkIfFirstLaunch();
-      setIsFirstLaunch(isFirst);
-    }
-    checkASyncStorage();
-  }, []);
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {
       setUseDarkTheme(isDark(theme));
@@ -304,8 +305,7 @@ const Navigator: React.FC<Props> = ({
           <SetupScreen
             {...props}
             setUpDone={() => {
-              setIsFirstLaunch(false);
-              setUpDone();
+              setDidLaunchApp();
             }}
           />
         )}
@@ -327,7 +327,7 @@ const Navigator: React.FC<Props> = ({
     return null;
   }
 
-  if (isFirstLaunch) {
+  if (!didLaunchApp) {
     return (
       <NavigationContainer theme={lightTheme}>
         <SetupStackScreen />
