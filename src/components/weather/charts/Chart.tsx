@@ -133,7 +133,9 @@ const Chart: React.FC<ChartProps> = ({
     const { contentOffset } = nativeEvent;
     setScrollIndex(contentOffset.x);
     if (currentDayOffset && setActiveDayIndex) {
-      const dayIndex = calculateDayIndex(contentOffset.x);
+      let dayIndex = calculateDayIndex(contentOffset.x);
+      dayIndex = dayIndex >= 0 ? dayIndex : 0;
+
       if (dayIndex !== activeDayIndex) {
         setActiveDayIndex(dayIndex);
       }
