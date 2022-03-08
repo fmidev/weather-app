@@ -315,6 +315,11 @@ const Navigator: React.FC<Props> = ({
         component={TermsAndConditionsScreen}
         options={{
           ...CommonHeaderOptions,
+          headerTintColor: PRIMARY_BLUE,
+          headerStyle: {
+            ...styles.header,
+            shadowColor: SHADOW_LIGHT,
+          },
           headerTitle: t('setUp:termsAndConditions'),
         }}
       />
