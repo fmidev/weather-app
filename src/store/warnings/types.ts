@@ -10,11 +10,13 @@ interface FetchWarningsSuccess {
   type: typeof FETCH_WARNINGS_SUCCESS;
   data: WarningsData;
   id: number;
+  timestamp: number;
 }
 
 interface FetchWarningsError {
   type: typeof FETCH_WARNINGS_ERROR;
   error: Error;
+  timestamp: number;
 }
 
 export type WarningsActionTypes =
@@ -67,4 +69,5 @@ export interface WarningsState {
   data: LocationWarnings;
   loading: boolean;
   error: boolean | Error | string;
+  fetchTimestamp: number;
 }
