@@ -211,12 +211,10 @@ const Navigator: React.FC<Props> = ({
     ),
   };
 
-  /** Navigates back to initial route on blur, if possible */
+  /** Navigates back to initial route on blur */
   const stackScreenListener = ({ navigation }: { navigation: any }) => ({
     blur: () => {
-      if (navigation.canGoBack()) {
-        navigation.goBack();
-      }
+      navigation.popToTop();
     },
   });
 
