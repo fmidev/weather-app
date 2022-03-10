@@ -211,6 +211,15 @@ const Navigator: React.FC<Props> = ({
     ),
   };
 
+  /** Navigates back to initial route on blur, if possible */
+  const stackScreenListener = ({ navigation }: { navigation: any }) => ({
+    blur: () => {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      }
+    },
+  });
+
   const MapStackScreen = () => (
     <MapStack.Navigator>
       <MapStack.Screen
@@ -222,6 +231,7 @@ const Navigator: React.FC<Props> = ({
         name="Search"
         component={SearchScreen}
         options={SearchScreenOptions}
+        listeners={stackScreenListener}
       />
     </MapStack.Navigator>
   );
@@ -237,6 +247,7 @@ const Navigator: React.FC<Props> = ({
         name="Search"
         component={SearchScreen}
         options={SearchScreenOptions}
+        listeners={stackScreenListener}
       />
     </WeatherStack.Navigator>
   );
@@ -253,6 +264,7 @@ const Navigator: React.FC<Props> = ({
         name="Search"
         component={SearchScreen}
         options={SearchScreenOptions}
+        listeners={stackScreenListener}
       />
     </WarningsStack.Navigator>
   );
@@ -274,6 +286,7 @@ const Navigator: React.FC<Props> = ({
           ...CommonHeaderOptions,
           headerTitle: `${t('navigation:about')}`,
         }}
+        listeners={stackScreenListener}
       />
       <OthersStack.Screen
         name="Settings"
@@ -282,6 +295,7 @@ const Navigator: React.FC<Props> = ({
           ...CommonHeaderOptions,
           headerTitle: `${t('navigation:settings')}`,
         }}
+        listeners={stackScreenListener}
       />
       <OthersStack.Screen
         name="Symbols"
@@ -290,6 +304,7 @@ const Navigator: React.FC<Props> = ({
           ...CommonHeaderOptions,
           headerTitle: `${t('navigation:symbols')}`,
         }}
+        listeners={stackScreenListener}
       />
     </OthersStack.Navigator>
   );

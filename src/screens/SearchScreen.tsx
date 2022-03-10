@@ -11,17 +11,12 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
 import CloseButton from '@components/common/CloseButton';
 
-import {
-  MapStackParamList,
-  WeatherStackParamList,
-  TabParamList,
-} from '@navigators/Types';
+import { MapStackParamList, WeatherStackParamList } from '@navigators/Types';
 
 import { State } from '@store/types';
 
@@ -97,16 +92,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
-
-  useEffect(() => {
-    const bottomTabNavigator =
-      navigation.getParent() as BottomTabNavigationProp<TabParamList>;
-    bottomTabNavigator?.addListener('tabPress', () => {
-      if (navigation.canGoBack()) {
-        navigation.goBack();
-      }
-    });
-  }, [navigation]);
 
   useEffect(() => {
     if (value) {
