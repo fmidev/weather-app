@@ -55,7 +55,7 @@ const Chart: React.FC<ChartProps> = ({
     Config.get('weather').observation;
 
   const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
-  const stepLength = tickInterval === 1 ? 26 : 13;
+  const stepLength = tickInterval === 1 ? 20 : 8;
 
   const chartWidth =
     observation && timePeriod
