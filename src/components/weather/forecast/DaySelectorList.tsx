@@ -84,8 +84,6 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   }) => {
     const { timeStamp, maxTemperature, minTemperature, smartSymbol } = item;
     const stepMoment = moment.unix(timeStamp);
-    const maxTemperaturePrefix = maxTemperature > 0 ? '+' : '';
-    const minTemperaturePrefix = minTemperature > 0 ? '+' : '';
     const daySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
       dark
@@ -136,7 +134,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
               style={[
                 styles.forecastText,
                 { color: colors.primaryText },
-              ]}>{`${minTemperaturePrefix}${minTemperature}° ... ${maxTemperaturePrefix}${maxTemperature}°`}</Text>
+              ]}>{`${minTemperature}° ... ${maxTemperature}°`}</Text>
           )}
         </TouchableOpacity>
         {activeParameters.includes('precipitation1h') && (

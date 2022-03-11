@@ -62,9 +62,6 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     dark
   );
 
-  const temperaturePrefix = (nextHourForecast?.temperature || 0) > 0 ? '+' : '';
-  const feelsLikePrefix = (nextHourForecast?.feelsLike || 0) > 0 ? '+' : '';
-
   const sunrise = moment(nextHourForecast.sunrise);
   const sunset = moment(nextHourForecast.sunset);
 
@@ -97,7 +94,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             style={[
               styles.temperatureText,
               { color: colors.primaryText },
-            ]}>{`${temperaturePrefix}${nextHourForecast.temperature}°`}</Text>
+            ]}>{`${nextHourForecast.temperature}°`}</Text>
         )}
       </View>
       <View style={[styles.feelsLikeRow, styles.withMarginBottom]}>
@@ -124,7 +121,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                   style={[
                     styles.bold,
                     styles.feelsLikeText,
-                  ]}>{`${feelsLikePrefix}${nextHourForecast.feelsLike}°`}</Text>
+                  ]}>{`${nextHourForecast.feelsLike}°`}</Text>
               </Text>
               <Icon
                 name={getFeelsLikeIconName(
