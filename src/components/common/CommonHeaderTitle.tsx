@@ -59,12 +59,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    width: '100%',
+    width: '97%',
   },
   title: {
     fontSize: 16,
-    alignSelf: 'center',
     fontFamily: 'Roboto-Medium',
+    textAlign: 'center',
   },
 });
 
