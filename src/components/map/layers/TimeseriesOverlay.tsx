@@ -2,13 +2,13 @@ import React, { useCallback, useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Dimensions } from 'react-native';
 import Supercluster, { AnyProps, PointFeature } from 'supercluster';
-import { Marker, Region } from 'react-native-maps';
-import { useTranslation } from 'react-i18next';
-import { weatherSymbolGetter } from '@assets/images';
+import { Region } from 'react-native-maps';
 
 import { State } from '@store/types';
 import { MapOverlay, TimeseriesData } from '@store/map/types';
 import { selectSliderTime, selectRegion } from '@store/map/selectors';
+
+import TimeseriesMarker from './TimeseriesMarker';
 
 const mapStateToProps = (state: State) => ({
   region: selectRegion(state),
@@ -28,16 +28,14 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   sliderTime,
   overlay,
 }) => {
-  const { t } = useTranslation();
   const { data } = overlay;
-
   const getZoomLevel = (longitudeDelta: number) => {
     const angle = longitudeDelta;
     return Math.round(Math.log(360 / angle) / Math.LN2);
   };
 
   const getBBox = (r: Region): [number, number, number, number] => {
-    const padding = 0;
+    const padding = 0.2;
     return [
       r.longitude - r.longitudeDelta * (0.5 + padding),
       r.latitude - r.latitudeDelta * (0.5 + padding),
@@ -134,7 +132,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
     markers.map(({ geometry, properties }) => {
       const [longitude, latitude] = geometry.coordinates;
       const { weatherData, name } = properties;
-      const { smartSymbol } =
+      const { smartSymbol, temperature, windDirection, windSpeedMS } =
         weatherData.find(
           ({ epochtime }: { epochtime: number }) => sliderTime === epochtime
         ) || {};
@@ -144,20 +142,15 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
       }
 
       return (
-        <Marker
-          key={`${name}`}
+        <TimeseriesMarker
+          key={`${name}-${sliderTime}`}
+          name={name}
           coordinate={{ latitude, longitude }}
-          title={`${name}`}
-          description={`${t(`symbols:${smartSymbol}`)}`}
-          tracksViewChanges={false}>
-          {weatherSymbolGetter(
-            smartSymbol.toString(),
-            false
-          )?.({
-            width: 40,
-            height: 40,
-          })}
-        </Marker>
+          smartSymbol={smartSymbol}
+          temperature={temperature}
+          windDirection={windDirection}
+          windSpeedMS={windSpeedMS}
+        />
       );
     });
 
