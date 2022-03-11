@@ -177,6 +177,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={initialRegion}
         rotateEnabled={false}
+        toolbarEnabled={false}
         onRegionChangeComplete={onRegionChangeComplete}>
         {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} />}
         {overlay && overlay.type === 'Timeseries' && (

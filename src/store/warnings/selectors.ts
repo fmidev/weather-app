@@ -32,15 +32,20 @@ export const selectUpdated = createSelector(
   (items, geoid) => items?.[geoid]?.updated || null
 );
 
+const selectFetchTimestamp = createSelector(
+  selectWarningsDomain,
+  (warnings) => warnings.fetchTimestamp
+);
+
 export const selectDailyWarningData = createSelector(
-  [selectWarnings],
-  (warnings) => {
+  [selectWarnings, selectFetchTimestamp],
+  (warnings, fetchTime) => {
     const dayCount = 5;
     const severityList = ['', 'Moderate', 'Severe', 'Extreme'];
 
     const days = Array.from({ length: dayCount }, (_, i) => {
-      const dayStart = moment().startOf('day').add(i, 'days');
-      const dayEnd = moment().endOf('day').add(i, 'days');
+      const dayStart = moment(fetchTime).startOf('day').add(i, 'days');
+      const dayEnd = moment(fetchTime).endOf('day').add(i, 'days');
 
       const dailyWarnings = warnings.filter(
         ({ duration: { startTime, endTime } }) =>

@@ -37,12 +37,12 @@ export const selectDataId = createSelector(
 
 export const selectStationId = createSelector(
   [selectDataId, selectStationIdList],
-  (id, stations) => (stations ? stations[id] : 0)
+  (id, stations) => (stations?.[id] ? stations[id] : 0)
 );
 
 export const selectData = createSelector(
   [selectDataSets, selectStationId],
-  (data, id) => (data ? data[id] : [])
+  (data, id) => (data?.[id] ? data[id] : [])
 );
 
 export const selectDisplayFormat = createSelector(

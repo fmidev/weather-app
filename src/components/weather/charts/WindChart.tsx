@@ -32,27 +32,40 @@ const WindChart: React.FC<ChartDataProps> = ({
         }))
       : false;
 
+  const labelData = (windDirection || []).sort((a, b) => a.x - b.x);
+  const labelSize = 20;
+  const labelInterval =
+    width /
+      ((labelData[labelData.length - 1]?.x - labelData[0]?.x) /
+        (60 * 60 * 1000)) >
+    labelSize
+      ? 1
+      : 3;
+
   const WindLabel = (datum: any) => {
     const { index: dIndex, x: dX } = datum;
-    if (!windDirection || windDirection.length === 0) {
+    if (labelData.length === 0) {
       return null;
     }
 
     const index = Number(dIndex);
-
-    const { x, y } = windDirection[index];
+    const { x, y } = labelData[index];
     const time = moment(x);
 
-    if (y === null || time.minutes() !== 0) {
+    if (
+      y === null ||
+      time.minutes() !== 0 ||
+      time.hours() % labelInterval !== 0
+    ) {
       return null;
     }
 
     return (
-      <View style={[styles.arrowStyle, { left: dX - 10 }]}>
+      <View style={[styles.arrowStyle, { left: dX - labelSize / 2 }]}>
         <Icon
           name="wind-arrow"
-          width={20}
-          height={20}
+          width={labelSize}
+          height={labelSize}
           style={{
             color: colors.primaryText,
             transform: [
@@ -73,6 +86,7 @@ const WindChart: React.FC<ChartDataProps> = ({
           data={combinedData}
           domain={domain}
           style={{ data: { fill: '#d8d8d8' } }}
+          interpolation="natural"
         />
       )}
 

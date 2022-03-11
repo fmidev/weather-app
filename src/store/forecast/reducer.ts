@@ -22,17 +22,27 @@ const INITIAL_STATE: ForecastState = {
   fetchTimestamp: Date.now(),
 };
 
-const formatData = (data: WeatherData[]): WeatherData => {
+const formatData = (dataSets: WeatherData[]): WeatherData => {
   const weatherData: WeatherData = {};
-  data.forEach((foo) => {
-    Object.entries(foo).forEach(([id, steps]) => {
-      Object.assign(weatherData, { [id]: weatherData[id] || [] });
-      weatherData[id] = steps.map((step) => ({
-        ...(weatherData[id].find(
-          ({ epochtime }) => epochtime === step.epochtime
-        ) || {}),
-        ...step,
-      }));
+  dataSets.forEach((dataSet) => {
+    Object.entries(dataSet).forEach(([id, steps]) => {
+      if (!weatherData[id]) {
+        Object.assign(weatherData, { [id]: steps });
+      } else {
+        steps.forEach((step) => {
+          const timeIndex = weatherData[id].findIndex(
+            ({ epochtime }) => epochtime === step.epochtime
+          );
+          if (timeIndex >= 0) {
+            Object.assign(weatherData[id][timeIndex], {
+              ...weatherData[id][timeIndex],
+              ...step,
+            });
+          } else {
+            weatherData[id].push(step);
+          }
+        });
+      }
     });
   });
   return weatherData;
@@ -62,7 +72,6 @@ export default (
           { ...state.data, ...formatData(action.data) },
           action.favorites
         ),
-        // data: formatData([state.data || {}, ...action.data], action.favorites),
         fetchTimestamp: action.timestamp,
         loading: false,
         error: false,
