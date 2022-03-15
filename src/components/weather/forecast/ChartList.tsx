@@ -86,7 +86,6 @@ const ChartList: React.FC<ChartListProps> = ({
           chartTypes={charts}
           parameter={parameter}
           setParameter={updateChartParameter}
-          showHeader={false}
         />
       </View>
     </View>

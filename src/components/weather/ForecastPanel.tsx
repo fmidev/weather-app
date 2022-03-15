@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 16,
+    borderRadius: 20,
   },
   separator: {
     minHeight: '70%',

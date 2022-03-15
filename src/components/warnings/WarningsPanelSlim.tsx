@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   cardText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Roboto-Medium',
   },
   weekWarningsContainer: {

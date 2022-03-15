@@ -219,7 +219,6 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           chartTypes={charts}
           parameter={parameter}
           setParameter={updateChartParameter}
-          showHeader
         />
         {displayFormat === LIST && <List data={data} parameter={parameter} />}
         {displayFormat === CHART && (
@@ -258,7 +257,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 16,
+    borderRadius: 20,
   },
   justifyStart: {
     justifyContent: 'flex-start',
