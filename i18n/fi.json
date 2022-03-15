@@ -191,7 +191,8 @@
     "locate": "Paikanna",
     "search": "Haku",
     "locateAccessibilityLabel": "Käytä nykyistä sijaintiasi",
-    "searchAccessibilityLabel": "Avaa hakusivu"
+    "searchAccessibilityLabel": "Avaa hakusivu",
+    "timezone": "Aikavyöhyke"
   },
   "placeholder": {
     "weather": "Täällä olisi havaintoa ja ennustetta",

@@ -2,10 +2,12 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import { State } from '@store/types';
 import { selectCurrent, selectIsGeolocation } from '@store/location/selector';
 
+import { useOrientation } from '@utils/hooks';
 import Icon from './Icon';
 
 const mapStateToProps = (state: State) => ({
@@ -26,7 +28,10 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
   isGeolocation,
   onPress,
 }) => {
+  const { t } = useTranslation('navigation');
   const { colors } = useTheme();
+  const isLandscape = useOrientation();
+
   const title = (): string => {
     if (currentLocation) {
       return currentLocation.area &&
@@ -39,15 +44,29 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={styles.container}>
-        {isGeolocation && (
-          <Icon name="map-marker" style={{ color: colors.text }} height={12} />
+      <View style={[styles.container, !isLandscape && styles.portraitWidth]}>
+        <View style={styles.row}>
+          {isGeolocation && (
+            <Icon
+              name="map-marker"
+              style={{ color: colors.text }}
+              height={12}
+            />
+          )}
+          <Text
+            accessibilityRole="header"
+            style={[styles.title, { color: colors.text }]}>
+            {title()}
+          </Text>
+        </View>
+        {currentLocation.country !== 'FI' && (
+          <Text
+            style={[
+              styles.timezone,
+              !isLandscape && styles.timeZoneMarginBottom,
+              { color: colors.text },
+            ]}>{`${t('timezone')}: ${currentLocation.timezone}`}</Text>
         )}
-        <Text
-          accessibilityRole="header"
-          style={[styles.title, { color: colors.text }]}>
-          {title()}
-        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -55,17 +74,30 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    width: '97%',
+    minWidth: '90%',
     alignSelf: 'center',
   },
   title: {
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
     textAlign: 'center',
+  },
+  timezone: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 12,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  timeZoneMarginBottom: {
+    marginBottom: 10,
+  },
+  portraitWidth: {
+    maxWidth: '97%',
   },
 });
 
