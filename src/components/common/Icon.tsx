@@ -93,6 +93,7 @@ import Weather from '@assets/images/icons/weather.svg';
 import WindArrow from '@assets/images/icons/wind-arrow.svg';
 import WindDark from '@assets/images/icons/wind-dark.svg';
 import WindLight from '@assets/images/icons/wind-light.svg';
+import WindLightMap from '@assets/images/icons/wind-light-map.svg';
 import WindNextHour from '@assets/images/icons/wind-next-hour.svg';
 import Wind from '@assets/images/icons/wind.svg';
 
@@ -303,6 +304,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WindDark {...(props as SvgProps)} />;
     case 'wind-light':
       return <WindLight {...(props as SvgProps)} />;
+    case 'wind-light-map':
+      return <WindLightMap {...(props as SvgProps)} />;
     case 'wind-next-hour':
       return <WindNextHour {...(props as SvgProps)} />;
     case 'wind':

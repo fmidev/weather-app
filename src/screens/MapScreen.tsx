@@ -178,7 +178,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
         initialRegion={initialRegion}
         rotateEnabled={false}
         toolbarEnabled={false}
-        onRegionChangeComplete={onRegionChangeComplete}>
+        onRegionChangeComplete={onRegionChangeComplete}
+        moveOnMarkerPress={false}>
         {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} />}
         {overlay && overlay.type === 'Timeseries' && (
           <TimeseriesOverlay overlay={overlay} />
