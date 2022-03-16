@@ -84,8 +84,6 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   }) => {
     const { timeStamp, maxTemperature, minTemperature, smartSymbol } = item;
     const stepMoment = moment.unix(timeStamp);
-    const maxTemperaturePrefix = maxTemperature > 0 ? '+' : '';
-    const minTemperaturePrefix = minTemperature > 0 ? '+' : '';
     const daySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
       dark
@@ -113,7 +111,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
           style={styles.alignCenter}>
           <Text
             style={[
-              styles.forecastText,
+              styles.dateText,
               {
                 color: colors.primaryText,
               },
@@ -136,7 +134,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
               style={[
                 styles.forecastText,
                 { color: colors.primaryText },
-              ]}>{`${minTemperaturePrefix}${minTemperature}° ... ${maxTemperaturePrefix}${maxTemperature}°`}</Text>
+              ]}>{`${minTemperature}° ... ${maxTemperature}°`}</Text>
           )}
         </TouchableOpacity>
         {activeParameters.includes('precipitation1h') && (
@@ -153,7 +151,6 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     <VirtualizedList
       listKey="dayStrip"
       ref={dayStripRef}
-      style={styles.list}
       contentContainerStyle={styles.listContentContainer}
       data={dayData}
       horizontal
@@ -175,16 +172,13 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
 };
 
 const styles = StyleSheet.create({
-  list: {
-    maxHeight: 100,
-  },
   listContentContainer: {
     paddingRight: 8,
   },
   dayBlock: {
     minWidth: 90,
     borderWidth: 1,
-    padding: 10,
+    padding: 6,
     flex: 1,
     alignItems: 'center',
   },
@@ -193,7 +187,7 @@ const styles = StyleSheet.create({
   },
   activeBlock: {
     borderTopWidth: 3,
-    paddingTop: 8,
+    paddingTop: 4,
   },
   leftBlock: {
     borderTopLeftRadius: 4,
@@ -204,17 +198,21 @@ const styles = StyleSheet.create({
   alignCenter: {
     alignItems: 'center',
   },
-  forecastText: {
+  dateText: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
     textTransform: 'capitalize',
+  },
+  forecastText: {
+    fontSize: 14,
+    fontFamily: 'Roboto-Regular',
   },
   bold: {
     fontFamily: 'Roboto-Bold',
   },
   precipitationStrip: {
-    marginBottom: -10,
-    marginHorizontal: -10,
+    marginBottom: -6,
+    marginHorizontal: -6,
     marginTop: 4,
   },
 });

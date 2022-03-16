@@ -31,9 +31,6 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   );
 
   const time = moment.unix(data.epochtime).format('HH:mm');
-  const tempPrefix = (data.temperature || 0) > 0 ? '+' : '';
-  const feelsLikePrefix = (data.feelsLike || 0) > 0 ? '+' : '';
-  const dewPointPrefix = (data.dewPoint || 0) > 0 ? '+' : '';
   const smartSymbol = weatherSymbolGetter(
     (data.smartSymbol || 0).toString(),
     dark
@@ -125,7 +122,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 style={[
                   styles.hourText,
                   { color: colors.hourListText },
-                ]}>{`${tempPrefix}${data.temperature}°`}</Text>
+                ]}>{`${data.temperature}°`}</Text>
             </View>
           );
         }
@@ -141,7 +138,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 style={[
                   styles.hourText,
                   { color: colors.hourListText },
-                ]}>{`${feelsLikePrefix}${data.feelsLike}°`}</Text>
+                ]}>{`${data.feelsLike}°`}</Text>
             </View>
           );
         }
@@ -158,7 +155,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 style={[
                   styles.hourText,
                   { color: colors.hourListText },
-                ]}>{`${dewPointPrefix}${data.dewPoint}°`}</Text>
+                ]}>{`${data.dewPoint}°`}</Text>
             </View>
           );
         }

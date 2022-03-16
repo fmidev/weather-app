@@ -50,7 +50,8 @@ const WarningsWebViewPanel: React.FC = () => {
       body { margin: 0 !important } \
       .container-fluid { margin-top: 0 !important } \
       .day-region-views > h3 { display: none } \
-      .header-region, .symbol-list { padding-left: 5px !important} \
+      .header-region, .symbol-list { padding-left: 5px !important } \
+      .date-selector-cell-header { text-transform: capitalize !important } \
       ';
     document.getElementsByTagName('head')[0].appendChild(style);
     const resizeObserver = new ResizeObserver(entries => window.ReactNativeWebView.postMessage(entries[0].target.clientHeight));

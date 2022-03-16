@@ -191,7 +191,8 @@
     "locate": "Locate",
     "search": "Search",
     "locateAccessibilityLabel": "Use current location",
-    "searchAccessibilityLabel": "Open search screen"
+    "searchAccessibilityLabel": "Open search screen",
+    "timezone": "Time zone"
   },
   "placeholder": {
     "weather": "Some forecast here",

@@ -182,37 +182,39 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={[styles.row, styles.justifyEnd]}>
-            <View
-              style={[styles.separator, { backgroundColor: colors.border }]}
-            />
-            <TouchableOpacity
-              accessibilityRole="button"
-              accessibilityLabel={t('paramsAccessibilityLabel')}
-              accessibilityHint={t('paramsAccessibilityHint')}
-              style={styles.bottomSheetButton}
-              onPress={() => paramSheetRef.current.open()}>
-              <Icon
-                name="settings"
-                color={colors.primaryText}
-                width={24}
-                height={24}
+          {displayFormat === TABLE && (
+            <View style={[styles.row, styles.justifyEnd]}>
+              <View
+                style={[styles.separator, { backgroundColor: colors.border }]}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              accessibilityRole="button"
-              accessibilityLabel={t('infoAccessibilityLabel')}
-              accessibilityHint={t('infoAccessibilityHint')}
-              style={styles.bottomSheetButton}
-              onPress={() => weatherInfoSheetRef.current.open()}>
-              <Icon
-                name="info"
-                color={colors.primaryText}
-                height={24}
-                width={24}
-              />
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel={t('paramsAccessibilityLabel')}
+                accessibilityHint={t('paramsAccessibilityHint')}
+                style={styles.bottomSheetButton}
+                onPress={() => paramSheetRef.current.open()}>
+                <Icon
+                  name="settings"
+                  color={colors.primaryText}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel={t('infoAccessibilityLabel')}
+                accessibilityHint={t('infoAccessibilityHint')}
+                style={styles.bottomSheetButton}
+                onPress={() => weatherInfoSheetRef.current.open()}>
+                <Icon
+                  name="info"
+                  color={colors.primaryText}
+                  height={24}
+                  width={24}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
       <View style={styles.forecastContainer}>
@@ -327,14 +329,14 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 16,
+    borderRadius: 20,
   },
   separator: {
     minHeight: '70%',
     width: 1,
   },
   bottomSheetButton: {
-    padding: 10,
+    paddingHorizontal: 10,
   },
   sheetContainer: {
     borderTopLeftRadius: 10,
