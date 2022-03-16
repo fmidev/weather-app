@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Dimensions } from 'react-native';
+// import { Dimensions } from 'react-native';
 import Supercluster, { AnyProps, PointFeature } from 'supercluster';
 import { Region } from 'react-native-maps';
 
@@ -43,7 +43,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
       r.latitude + r.latitudeDelta * (0.5 + padding),
     ];
   };
-  const getRadius = () => Dimensions.get('window').width * 0.135;
+  // const getRadius = () => Dimensions.get('window').width * 0.135;
 
   const clusterSelectedPoint = (
     leaves: Supercluster.PointFeature<Supercluster.AnyProps>[]
@@ -63,7 +63,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
     (clusterData: TimeseriesData[] | undefined, clusterRegion: Region) => {
       const zoom = getZoomLevel(clusterRegion.longitudeDelta);
       const bbox = getBBox(clusterRegion);
-      const radius = getRadius();
+      const radius = 100; // getRadius();
 
       const markers: PointFeature<AnyProps>[] = [];
 
@@ -143,7 +143,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
       return (
         <TimeseriesMarker
-          key={`${name}-${sliderTime}`}
+          key={name}
           name={name}
           coordinate={{ latitude, longitude }}
           smartSymbol={smartSymbol}

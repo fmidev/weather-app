@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Marker, LatLng } from 'react-native-maps';
 import { useTheme } from '@react-navigation/native';
@@ -28,17 +28,13 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
-  const markerRef = useRef() as MutableRefObject<Marker>;
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   return (
     <Marker
-      ref={markerRef}
       coordinate={coordinate}
       tracksViewChanges={false}
-      pointerEvents="auto"
-      onSelect={() => setIsSelected(true)}
-      onDeselect={() => setIsSelected(false)}>
+      onPress={() => setIsSelected((prev) => !prev)}>
       <View
         style={[
           styles.markerContainer,
