@@ -413,6 +413,7 @@
     "declineLocation": "Älä salli"
   },
   "termsAndConditions": {
+    "close": "Sulje",
     "generalTitle": "Sää-sovelluksen käyttöehdot",
     "contentsTitle": "Käyttöoikeuden sisältö",
     "someOtherTitle": "Kolmas otsikko",

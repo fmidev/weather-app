@@ -412,6 +412,7 @@
     "declineLocation": "Do not allow"
   },
   "termsAndConditions": {
+    "close": "Close",
     "generalTitle": "Weather app Terms and Conditions",
     "contentsTitle": "Contents",
     "someOtherTitle": "Third title",
