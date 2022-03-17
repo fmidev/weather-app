@@ -16,27 +16,10 @@ const defaultState: types.LocationState = {
   recent: Array.from({ length: 3 }).map((_, i) => ({ ...location, id: i })),
   search: [location],
   current: location,
-  geolocation: undefined,
   isGeolocation: undefined,
 };
 
 describe('location reducer', () => {
-  it('should handle SET_GEOLOCATION', () => {
-    const helsinkiCoordinates = {
-      latitude: 60.1733244,
-      longitude: 24.9410248,
-    };
-
-    expect(
-      reducer(defaultState, {
-        type: types.SET_GEOLOCATION,
-        geolocation: helsinkiCoordinates,
-      })
-    ).toMatchObject({
-      geolocation: helsinkiCoordinates,
-    });
-  });
-
   it('should handle ADD_FAVORITE', () => {
     expect(
       reducer(defaultState, {

@@ -2,9 +2,7 @@ import getAutocomplete from '@network/AutocompleteApi';
 import { Dispatch } from 'react';
 import { Config } from '@config';
 import {
-  SET_GEOLOCATION,
   SET_CURRENT_LOCATION,
-  Geolocation,
   Location,
   LocationActionTypes,
   ADD_FAVORITE,
@@ -15,11 +13,6 @@ import {
   FETCH_AUTOCOMPLETE,
   RESET_AUTOCOMPLETE,
 } from './types';
-
-export const setGeolocation =
-  (geolocation: Geolocation) => (dispatch: Dispatch<LocationActionTypes>) => {
-    dispatch({ type: SET_GEOLOCATION, geolocation });
-  };
 
 export const setCurrentLocation =
   (location: Location, isGeolocation?: boolean) =>

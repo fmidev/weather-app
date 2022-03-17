@@ -44,6 +44,7 @@ const AreaList: React.FC<AreaListProps> = ({
         style={[
           styles.resultsHeader,
           styles.withBorderBottom,
+          styles.listHeader,
           styles.listItem,
           { borderBottomColor: colors.border },
         ]}>
@@ -77,6 +78,16 @@ const AreaList: React.FC<AreaListProps> = ({
                   onPress={() => onSelect(element)}
                   style={styles.locationContainer}>
                   <View style={styles.listItem}>
+                    {element.isGeolocation && (
+                      <Icon
+                        name="map-marker"
+                        style={[
+                          styles.listLocationIcon,
+                          { color: colors.text },
+                        ]}
+                        height={12}
+                      />
+                    )}
                     <Text style={[styles.resultText, { color: colors.text }]}>
                       {name}
                     </Text>
@@ -146,11 +157,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
   },
+  listHeader: {
+    justifyContent: 'space-between',
+  },
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     height: 44,
+  },
+  listLocationIcon: {
+    marginLeft: -5,
+    marginRight: -20,
   },
   locationContainer: {
     flex: 1,
