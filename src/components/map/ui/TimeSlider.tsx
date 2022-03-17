@@ -21,6 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 import Icon from '@components/common/Icon';
 
@@ -130,9 +131,12 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   useEffect(() => {
     if (currentIndex >= 0) {
+      if (!isAnimating) {
+        ReactNativeHapticFeedback.trigger('soft');
+      }
       updateSliderTime(sliderTimes[currentIndex] || 0);
     }
-  }, [currentIndex, sliderTimes, updateSliderTime]);
+  }, [currentIndex, sliderTimes, updateSliderTime, isAnimating]);
 
   const onLayout = () => {
     const now = moment().format('X');
