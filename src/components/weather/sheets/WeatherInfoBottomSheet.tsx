@@ -358,9 +358,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 />
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.westWind')}
+                {t('weatherInfoBottomSheet.windDirectionArrow')}
               </Text>
             </View>
+
             <View style={[styles.row, styles.withMarginLeft]}>
               <Text
                 style={[
@@ -368,49 +369,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   styles.unitText,
                   { color: colors.hourListText },
                 ]}>
-                21–32 m/s
+                0 m/s
               </Text>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.storm')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                14–20 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.heavyWind')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                8–13 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.gale')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                4–7 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.moderate')}
+                {t('weatherInfoBottomSheet.calm')}
               </Text>
             </View>
             <View style={[styles.row, styles.withMarginLeft]}>
@@ -433,10 +395,62 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   styles.unitText,
                   { color: colors.hourListText },
                 ]}>
-                0 m/s
+                4–7 m/s
               </Text>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.calm')}
+                {t('weatherInfoBottomSheet.moderate')}
+              </Text>
+            </View>
+            <View style={[styles.row, styles.withMarginLeft]}>
+              <Text
+                style={[
+                  styles.withMarginRight,
+                  styles.unitText,
+                  { color: colors.hourListText },
+                ]}>
+                8–13 m/s
+              </Text>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t('weatherInfoBottomSheet.strongBreeze')}
+              </Text>
+            </View>
+            <View style={[styles.row, styles.withMarginLeft]}>
+              <Text
+                style={[
+                  styles.withMarginRight,
+                  styles.unitText,
+                  { color: colors.hourListText },
+                ]}>
+                14–20 m/s
+              </Text>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t('weatherInfoBottomSheet.gale')}
+              </Text>
+            </View>
+            <View style={[styles.row, styles.withMarginLeft]}>
+              <Text
+                style={[
+                  styles.withMarginRight,
+                  styles.unitText,
+                  { color: colors.hourListText },
+                ]}>
+                21–32 m/s
+              </Text>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t('weatherInfoBottomSheet.storm')}
+              </Text>
+            </View>
+            <View style={[styles.row, styles.withMarginLeft]}>
+              <Text
+                style={[
+                  styles.withMarginRight,
+                  styles.unitText,
+                  { color: colors.hourListText },
+                ]}>
+                {'> 32 m/s'}
+              </Text>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t('weatherInfoBottomSheet.hurricane')}
               </Text>
             </View>
 
