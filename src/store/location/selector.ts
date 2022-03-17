@@ -6,11 +6,6 @@ import { LocationState } from './types';
 const selectLocationDomain: Selector<State, LocationState> = (state) =>
   state.location;
 
-export const selectGeolocation = createSelector(
-  selectLocationDomain,
-  (location) => location.geolocation
-);
-
 export const selectIsGeolocation = createSelector(
   selectLocationDomain,
   (location) => location.isGeolocation
@@ -32,8 +27,13 @@ export const selectTimeZone = createSelector(
 );
 
 export const selectRecent = createSelector(
-  selectLocationDomain,
-  (location) => location.recent
+  [selectLocationDomain, selectIsGeolocation, selectCurrent],
+  (location, isGeolocation, current) =>
+    isGeolocation
+      ? location.recent
+          .filter(({ id }) => id !== current.id)
+          .concat({ ...current, isGeolocation: true })
+      : location.recent
 );
 
 export const selectFavorites = createSelector(

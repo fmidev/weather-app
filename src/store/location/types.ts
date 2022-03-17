@@ -1,4 +1,3 @@
-export const SET_GEOLOCATION = 'SET_GEOLOCATION';
 export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
 
 export const GET_FAVORITES = 'GET_FAVORITES';
@@ -21,17 +20,13 @@ export type Location = {
   id: number;
   timezone: string;
   country: string;
+  isGeolocation?: boolean;
 };
 
 export type Geolocation = {
   latitude: number;
   longitude: number;
 };
-
-interface SetGeolocation {
-  type: typeof SET_GEOLOCATION;
-  geolocation: Geolocation;
-}
 
 interface SetCurrentLocation {
   type: typeof SET_CURRENT_LOCATION;
@@ -101,7 +96,6 @@ export type LocationActionTypes =
   | GetRecentSearches
   | ResetAutocomplete
   | SetCurrentLocation
-  | SetGeolocation
   | UpdateRecentSearches;
 
 export interface LocationState {
@@ -109,6 +103,5 @@ export interface LocationState {
   recent: Location[] | [];
   search: Location[] | [];
   current: Location | undefined;
-  geolocation?: Geolocation;
   isGeolocation?: boolean;
 }

@@ -10,7 +10,6 @@ import {
   LocationActionTypes,
   SET_CURRENT_LOCATION,
   RESET_AUTOCOMPLETE,
-  SET_GEOLOCATION,
 } from './types';
 
 const INITIAL_STATE: LocationState = {
@@ -20,15 +19,18 @@ const INITIAL_STATE: LocationState = {
   current: undefined,
   isGeolocation: undefined,
 };
+
 export default (
   state = INITIAL_STATE,
   action: LocationActionTypes
 ): LocationState => {
   switch (action.type) {
     case ADD_FAVORITE: {
+      const { location } = action;
+      delete location.isGeolocation;
       return {
         ...state,
-        favorites: [...state.favorites, action.location].slice(-action.max),
+        favorites: [...state.favorites, location].slice(-action.max),
       };
     }
 
@@ -64,9 +66,11 @@ export default (
     }
 
     case SET_CURRENT_LOCATION: {
+      const { location } = action;
+      delete location.isGeolocation;
       return {
         ...state,
-        current: action.location,
+        current: location,
         isGeolocation: action.isGeolocation || false,
       };
     }
@@ -82,13 +86,6 @@ export default (
       return {
         ...state,
         search: [],
-      };
-    }
-
-    case SET_GEOLOCATION: {
-      return {
-        ...state,
-        geolocation: action.geolocation,
       };
     }
 
