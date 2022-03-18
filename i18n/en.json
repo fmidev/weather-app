@@ -112,6 +112,7 @@
       "probabilityOfPrecipitation": "probability of precipitation (%)",
       "probabilityOfThunder": "probability of thunder (%)",
       "dewPoint": "dew point temperature (°C)",
+      "relativeHumidity": "relative humidity (%)",
       "pressure": "air pressure (hPa)",
       "uvIndex": "ultraviolet radiation index",
       "uvModerate": "moderate – need for protection begins",

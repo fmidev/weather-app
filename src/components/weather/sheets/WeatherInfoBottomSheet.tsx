@@ -534,6 +534,23 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       color: colors.hourListText,
                     },
                   ]}>
+                  RH%
+                </Text>
+              </View>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t('weatherInfoBottomSheet.relativeHumidity')}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <View style={styles.iconWrapper}>
+                <Text
+                  style={[
+                    styles.iconText,
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}>
                   hPa
                 </Text>
               </View>

@@ -20,7 +20,6 @@ export const PARAMS_TO_ICONS = {
   precipitation1h: 'precipitation',
   pop: 'precipitation',
   dewPoint: 'dew-point',
-  uvCumulated: 'weather-symbol',
 } as { [key: string]: string };
 
 export default [

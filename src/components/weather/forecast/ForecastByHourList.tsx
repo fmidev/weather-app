@@ -21,7 +21,6 @@ import {
   BLACK_OPACITY,
   WHITE_TRANSPARENT,
   BLACK_TRANSPARENT,
-  WHITE_OPACITY,
   CustomTheme,
 } from '@utils/colors';
 
@@ -355,7 +354,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
         end={{ x: 1, y: 0.5 }}
         colors={
           dark
-            ? [WHITE_OPACITY, BLACK_TRANSPARENT]
+            ? [BLACK_OPACITY, BLACK_TRANSPARENT]
             : [BLACK_OPACITY, WHITE_TRANSPARENT]
         }
       />
@@ -366,7 +365,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
         end={{ x: 1, y: 0.5 }}
         colors={
           dark
-            ? [BLACK_TRANSPARENT, WHITE_OPACITY]
+            ? [BLACK_TRANSPARENT, BLACK_OPACITY]
             : [WHITE_TRANSPARENT, BLACK_OPACITY]
         }
       />
@@ -419,8 +418,9 @@ const styles = StyleSheet.create({
   gradient: {
     position: 'absolute',
     width: 32,
-    height: '100%',
     zIndex: 3,
+    top: 1,
+    bottom: 1,
   },
   gradientLeft: {
     left: 52,
