@@ -2,15 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useTheme } from '@react-navigation/native';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import PanelHeader from '@components/weather/common/PanelHeader';
+import { CustomTheme } from '@utils/colors';
 
 const WarningsWebViewPanel: React.FC = () => {
   const { shouldReload } = useReloader();
   const [updated, setUpdated] = useState<number>(Date.now());
   const [viewHeight, setViewHeight] = useState<number>(2000);
+  const { colors, dark } = useTheme() as CustomTheme;
   const webViewRef = useRef(null);
   const isFocused = useIsFocused();
   const { i18n, t } = useTranslation('warnings');
@@ -38,37 +40,53 @@ const WarningsWebViewPanel: React.FC = () => {
     return null;
   }
 
-  const injectedJavaScript = `(function() {
-    const meta = document.createElement('meta');
-    meta.setAttribute('content', 'width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1');
-    meta.setAttribute('name', 'viewport');
-    document.getElementsByTagName('head')[0].appendChild(meta);
+  const html = `<!DOCTYPE html>
+  <html lang="fi">
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <script src="${webViewUrl}/vue.js"></script>
+  <script src="${webViewUrl}/SmartMetAlertClient.umd.js"></script>
 
-    const style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = '\
-      body { margin: 0 !important } \
-      .container-fluid { margin-top: 0 !important } \
-      .day-region-views > h3 { display: none } \
-      .header-region, .symbol-list { padding-left: 5px !important } \
-      .date-selector-cell-header { text-transform: capitalize !important } \
-      ';
-    document.getElementsByTagName('head')[0].appendChild(style);
-    const resizeObserver = new ResizeObserver(entries => window.ReactNativeWebView.postMessage(entries[0].target.clientHeight));
-    resizeObserver.observe(document.body);
-  })();`;
+  <link rel="stylesheet" href="${webViewUrl}/SmartMetAlertClient.css">
+  <style>
+    body { background-color: ${colors.background}; margin: 0 !important }
+    .container-fluid { margin-top: 0 !important }
+    .day-region-views > h3 { display: none }
+    .header-region, .symbol-list { padding-left: 5px !important }
+    .date-selector-cell-header { text-transform: capitalize !important }
+  </style>
+  </head>
+  <body>
+  <div id="app"></div>
 
-  const uri = `${webViewUrl}/index.${locale}.html`;
+  <script>
+  new Vue({
+    el: '#app',
+    render: function(h) {
+      return h(SmartMetAlertClient, {
+        props: {
+          language: '${locale}',
+          theme: '${dark ? 'dark' : 'light'}',
+        }
+      });
+    }
+  });
+  const resizeObserver = new ResizeObserver(entries => window.ReactNativeWebView.postMessage(entries[0].target.clientHeight));
+  resizeObserver.observe(document.body);
+  </script>
+  </body>
+  </html>`;
 
   return (
-    <View style={{ height: viewHeight }}>
+    <View>
       <PanelHeader title={`${t('allWarnings')}`} />
       <WebView
         ref={webViewRef}
-        source={{ uri }}
+        style={{ height: viewHeight }}
+        source={{ html }}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}
-        injectedJavaScript={injectedJavaScript}
         onMessage={(event) => {
           setViewHeight(Number(event.nativeEvent.data) || 2000);
         }}
