@@ -121,6 +121,22 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
             </View>
           );
         }
+
+        if (param === constants.UV_CUMULATED) {
+          return (
+            <View
+              key={`${param}-${i}`}
+              style={[
+                styles.hourBlock,
+                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+              ]}>
+              <Text style={[styles.panelText, { color: colors.hourListText }]}>
+                UV
+              </Text>
+            </View>
+          );
+        }
+
         return (
           <View
             key={`${param}-${i}`}

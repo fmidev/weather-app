@@ -24,6 +24,7 @@ import {
 import constants, {
   RELATIVE_HUMIDITY,
   PRESSURE,
+  UV_CUMULATED,
   PARAMS_TO_ICONS,
 } from '@store/forecast/constants';
 
@@ -76,13 +77,15 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
       key={param}
       style={[styles.row, { borderBottomColor: colors.border }]}>
       <View style={styles.innerRow}>
-        {param !== RELATIVE_HUMIDITY && param !== PRESSURE && (
-          <Icon
-            name={PARAMS_TO_ICONS[param]}
-            style={styles.withMarginRight}
-            color={colors.hourListText}
-          />
-        )}
+        {param !== RELATIVE_HUMIDITY &&
+          param !== PRESSURE &&
+          param !== UV_CUMULATED && (
+            <Icon
+              name={PARAMS_TO_ICONS[param]}
+              style={styles.withMarginRight}
+              color={colors.hourListText}
+            />
+          )}
         {param === RELATIVE_HUMIDITY && (
           <Text
             style={[
@@ -101,6 +104,16 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               { color: colors.hourListText },
             ]}>
             hPa
+          </Text>
+        )}
+        {param === UV_CUMULATED && (
+          <Text
+            style={[
+              styles.iconText,
+              styles.withMarginRight,
+              { color: colors.hourListText },
+            ]}>
+            UV
           </Text>
         )}
         <Text style={[styles.text, { color: colors.hourListText }]}>

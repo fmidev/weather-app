@@ -325,7 +325,6 @@ const Navigator: React.FC<Props> = ({
       </SetupStack.Screen>
       <SetupStack.Screen
         name="TermsAndConditions"
-        component={TermsAndConditionsScreen}
         options={{
           ...CommonHeaderOptions,
           headerTintColor: PRIMARY_BLUE,
@@ -334,8 +333,14 @@ const Navigator: React.FC<Props> = ({
             shadowColor: SHADOW_LIGHT,
           },
           headerTitle: t('setUp:termsAndConditions'),
-        }}
-      />
+        }}>
+        {({ navigation }) => (
+          <TermsAndConditionsScreen
+            showCloseButton
+            onClose={() => navigation.goBack()}
+          />
+        )}
+      </SetupStack.Screen>
     </SetupStack.Navigator>
   );
 
@@ -517,6 +522,7 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 4,
     shadowOpacity: 1,
+    elevation: 8,
   },
 });
 

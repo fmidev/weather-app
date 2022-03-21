@@ -117,7 +117,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   );
   const title = `${currentStation?.name || ''} – ${t(
     'distance'
-  )} ${toStringWithDecimal(currentStation?.distance, ',')}`;
+  )} ${toStringWithDecimal(currentStation?.distance, ',')} km`;
 
   return (
     <View

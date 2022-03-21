@@ -43,8 +43,10 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
   };
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={[styles.container, !isLandscape && styles.portraitWidth]}>
+    <View
+      style={[styles.container, !isLandscape && styles.portraitWidth]}
+      pointerEvents="box-none">
+      <TouchableOpacity onPress={onPress}>
         <View style={styles.row}>
           {isGeolocation && (
             <Icon
@@ -59,16 +61,16 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
             {title()}
           </Text>
         </View>
-        {currentLocation.country !== 'FI' && (
-          <Text
-            style={[
-              styles.timezone,
-              !isLandscape && styles.timeZoneMarginBottom,
-              { color: colors.text },
-            ]}>{`${t('timezone')}: ${currentLocation.timezone}`}</Text>
-        )}
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+      {currentLocation.country !== 'FI' && (
+        <Text
+          style={[
+            styles.timezone,
+            !isLandscape && styles.timeZoneMarginBottom,
+            { color: colors.text },
+          ]}>{`${t('timezone')}: ${currentLocation.timezone}`}</Text>
+      )}
+    </View>
   );
 };
 
