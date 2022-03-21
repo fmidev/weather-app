@@ -118,9 +118,10 @@ const Navigator: React.FC<Props> = ({
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
     if (theme && !!ready) {
+      getGeolocation(setCurrentLocation, t);
       SplashScreen.hide();
     }
-  }, [theme, ready]);
+  }, [theme, ready, setCurrentLocation, t]);
 
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {
