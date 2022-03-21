@@ -24,7 +24,8 @@ import {
 
 export const getGeolocation = (
   callback: (arg0: Location, arg1: boolean) => void,
-  t: TFunction<string[] | string>
+  t: TFunction<string[] | string>,
+  failSilently?: boolean
 ) =>
   Geolocation.getCurrentPosition(
     (position) => {
@@ -59,7 +60,7 @@ export const getGeolocation = (
     },
     (error) => {
       console.log('GEOLOCATION NOT AVAILABLE', error);
-      if (error.code === 1) {
+      if (error.code === 1 && !failSilently) {
         Alert.alert(
           t('map:noLocationPermission'),
           t('map:noLocationPermissionHint'),
