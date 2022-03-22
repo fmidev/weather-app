@@ -1,5 +1,6 @@
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import { PERMISSIONS, check } from 'react-native-permissions';
 import { TFunction } from 'react-i18next';
 
 import { Location } from '@store/location/types';
@@ -26,60 +27,69 @@ export const getGeolocation = (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>,
   failSilently?: boolean
-) =>
-  Geolocation.getCurrentPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords;
-      getCurrentPosition(latitude, longitude)
-        .then((json) => {
-          const geoid = Number(Object.keys(json)[0]);
-          const vals: {
-            name: string;
-            latitude: number;
-            longitude: number;
-            region: string;
-            iso2: string;
-            localtz: string;
-          }[][] = Object.values(json);
+) => {
+  check(
+    Platform.OS === 'ios'
+      ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+      : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+  ).then((result) => {
+    if (result === 'granted') {
+      return Geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          getCurrentPosition(latitude, longitude)
+            .then((json) => {
+              const geoid = Number(Object.keys(json)[0]);
+              const vals: {
+                name: string;
+                latitude: number;
+                longitude: number;
+                region: string;
+                iso2: string;
+                localtz: string;
+              }[][] = Object.values(json);
 
-          const { name, region, localtz, iso2 } = vals[0][0];
-          callback(
-            {
-              lat: latitude,
-              lon: longitude,
-              name,
-              area: region,
-              id: geoid,
-              timezone: localtz,
-              country: iso2,
-            },
-            true
-          );
-        })
-        .catch((e) => console.error(e));
-    },
-    (error) => {
-      console.log('GEOLOCATION NOT AVAILABLE', error);
-      if (error.code === 1 && !failSilently) {
-        Alert.alert(
-          t('map:noLocationPermission'),
-          t('map:noLocationPermissionHint'),
-          [
-            {
-              text: 'OK',
-              onPress: () => {},
-            },
-          ]
-        );
-      }
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 10000,
+              const { name, region, localtz, iso2 } = vals[0][0];
+              callback(
+                {
+                  lat: latitude,
+                  lon: longitude,
+                  name,
+                  area: region,
+                  id: geoid,
+                  timezone: localtz,
+                  country: iso2,
+                },
+                true
+              );
+            })
+            .catch((e) => console.error(e));
+        },
+        (error) => {
+          console.log('GEOLOCATION NOT AVAILABLE', error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 10000,
+        }
+      );
     }
-  );
-
+    if (!failSilently) {
+      Alert.alert(
+        t('map:noLocationPermission'),
+        t('map:noLocationPermissionHint'),
+        [
+          {
+            text: 'OK',
+            onPress: () => {},
+          },
+        ]
+      );
+    }
+    return {};
+  });
+};
 export const getPrecipitationColorOrTransparent = (amount: number): string => {
   if (amount >= 0.1 && amount < 0.2) return RAIN_1;
   if (amount >= 0.2 && amount < 0.5) return RAIN_2;
