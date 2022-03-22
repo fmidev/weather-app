@@ -122,6 +122,10 @@ const Navigator: React.FC<Props> = ({
     }
   }, [theme, ready]);
 
+  useEffect(() => {
+    if (didLaunchApp) getGeolocation(setCurrentLocation, t, true);
+  }, [didLaunchApp, setCurrentLocation, t]);
+
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {
       setUseDarkTheme(isDark(theme));
