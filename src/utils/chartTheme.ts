@@ -23,7 +23,6 @@ const border = '#E6E6E6';
 // *
 // * Typography
 // *
-const sansSerif = "'Helvetica Neue', 'Helvetica', sans-serif";
 const letterSpacing = 'normal';
 const fontSize = 14;
 // *
@@ -31,15 +30,13 @@ const fontSize = 14;
 // *
 const padding = 8;
 const baseProps = {
-  width: 300,
-  height: 350,
   padding: { top: 50, bottom: 50, left: 5, right: 10 },
 };
 // *
 // * Labels
 // *
 const baseLabelStyles = {
-  fontFamily: sansSerif,
+  fontFamily: 'Roboto',
   fontSize,
   letterSpacing,
   padding,

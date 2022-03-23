@@ -1,35 +1,28 @@
 import React from 'react';
-import { VictoryBar, VictoryGroup } from 'victory-native';
+import { VictoryLine, VictoryGroup } from 'victory-native';
 import { CustomTheme } from '@utils/colors';
 import { useTheme } from '@react-navigation/native';
 import chartTheme from '@utils/chartTheme';
 import { ChartDataProps } from './types';
 
-const SnowDepthChart: React.FC<ChartDataProps> = ({
+const UvChart: React.FC<ChartDataProps> = ({
   chartValues,
   chartDomain,
   chartWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { snowDepth } = chartValues;
-
+  const { uvCumulated } = chartValues;
   return (
     <VictoryGroup theme={chartTheme} width={chartWidth}>
-      {snowDepth && snowDepth.length > 0 && (
-        <VictoryBar
-          data={snowDepth}
+      {uvCumulated && uvCumulated.length > 0 && (
+        <VictoryLine
+          data={uvCumulated}
           domain={chartDomain}
-          key="secondary"
-          alignment="middle"
-          barWidth={2}
-          style={{
-            data: {
-              fill: colors.primaryText,
-            },
-          }}
+          style={{ data: { stroke: colors.primaryText } }}
+          interpolation="basis"
         />
       )}
     </VictoryGroup>
   );
 };
-export default SnowDepthChart;
+export default UvChart;

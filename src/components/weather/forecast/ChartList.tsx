@@ -45,7 +45,14 @@ const ChartList: React.FC<ChartListProps> = ({
     ({ parameters }) => parameters
   );
 
-  let charts: ChartType[] = ['temperature', 'precipitation', 'wind'];
+  let charts: ChartType[] = [
+    'temperature',
+    'wind',
+    'precipitation',
+    'humidity',
+    'pressure',
+    'uv',
+  ];
   charts = charts.filter((type) => {
     const typeParameters = forecastTypeParameters[type];
     return (

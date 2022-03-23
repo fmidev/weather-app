@@ -7,31 +7,40 @@ import { ChartDataProps } from './types';
 
 const TemperatureChart: React.FC<ChartDataProps> = ({
   chartValues,
-  domain,
-  width,
+  chartDomain,
+  chartWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { temperature, feelsLike, dewPoint } = chartValues;
-  const secondParameter = feelsLike || dewPoint;
 
   return (
-    <VictoryGroup theme={chartTheme} width={width}>
+    <VictoryGroup theme={chartTheme} width={chartWidth}>
       {temperature && temperature.length > 0 && (
         <VictoryLine
           data={temperature}
-          domain={domain}
+          domain={chartDomain}
           style={{ data: { stroke: colors.chartPrimaryLine } }}
-          interpolation="natural"
+          interpolation="basis"
         />
       )}
-      {secondParameter && secondParameter.length > 0 && (
+      {feelsLike && feelsLike.length > 0 && (
         <VictoryLine
-          data={secondParameter}
-          domain={domain}
+          data={feelsLike}
+          domain={chartDomain}
           style={{
             data: { stroke: colors.chartSecondaryLine, strokeDasharray: '4' },
           }}
-          interpolation="natural"
+          interpolation="basis"
+        />
+      )}
+      {dewPoint && dewPoint.length > 0 && (
+        <VictoryLine
+          data={dewPoint}
+          domain={chartDomain}
+          style={{
+            data: { stroke: colors.chartPrimaryLine, strokeDasharray: '2' },
+          }}
+          interpolation="basis"
         />
       )}
     </VictoryGroup>

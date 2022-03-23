@@ -7,19 +7,21 @@ import { ChartDataProps } from './types';
 
 const HumidityChart: React.FC<ChartDataProps> = ({
   chartValues,
-  domain,
-  width,
+  chartDomain,
+  chartWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { humidity } = chartValues;
+  const { humidity, relativeHumidity } = chartValues;
+  const humidityData = humidity?.length > 0 ? humidity : relativeHumidity;
+
   return (
-    <VictoryGroup theme={chartTheme} width={width}>
-      {humidity && humidity.length > 0 && (
+    <VictoryGroup theme={chartTheme} width={chartWidth}>
+      {humidityData && humidityData.length > 0 && (
         <VictoryLine
-          data={humidity}
-          domain={domain}
+          data={humidityData}
+          domain={chartDomain}
           style={{ data: { stroke: colors.primaryText } }}
-          interpolation="natural"
+          interpolation="basis"
         />
       )}
     </VictoryGroup>

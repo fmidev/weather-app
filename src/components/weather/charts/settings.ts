@@ -7,32 +7,34 @@ import VisCloudChart from './VisCloudChart';
 import CloudHeightChart from './CloudHeightChart';
 import { ChartSettings, ChartType, Parameter } from './types';
 import SnowDepthChart from './SnowDepth';
+import UvChart from './UvChart';
 
 type TypeParameters = {
   [key in ChartType]: Parameter[];
 };
 
-const typeParameters: TypeParameters = {
-  precipitation: ['precipitation1h'],
+export const observationTypeParameters: TypeParameters = {
   pressure: ['pressure'],
+  precipitation: ['precipitation1h'],
+  temperature: ['temperature', 'dewPoint'],
+  humidity: ['humidity'],
+  wind: ['windSpeedMS', 'windGust', 'windDirection'],
+  snowDepth: ['snowDepth'],
   visCloud: ['visibility', 'totalCloudCover'],
   cloud: ['cloudHeight'],
-  humidity: ['humidity'],
-  snowDepth: ['snowDepth'],
-  temperature: [],
-  wind: [],
-};
-
-export const observationTypeParameters: TypeParameters = {
-  ...typeParameters,
-  temperature: ['temperature', 'dewPoint'],
-  wind: ['windSpeedMS', 'windGust', 'windDirection'],
+  uv: [],
 };
 
 export const forecastTypeParameters: TypeParameters = {
-  ...typeParameters,
-  temperature: ['temperature', 'feelsLike'],
+  pressure: ['pressure'],
+  precipitation: ['precipitation1h', 'pop'],
+  temperature: ['temperature', 'feelsLike', 'dewPoint'],
+  humidity: ['relativeHumidity'],
   wind: ['windSpeedMS', 'hourlymaximumgust', 'windDirection'],
+  snowDepth: [],
+  visCloud: [],
+  cloud: [],
+  uv: ['uvCumulated'],
 };
 
 const chartSettings = (
@@ -83,6 +85,11 @@ const chartSettings = (
       return {
         params,
         Component: SnowDepthChart,
+      };
+    case 'uv':
+      return {
+        params,
+        Component: UvChart,
       };
     default: {
       return { params: [], Component: TemperatureChart };

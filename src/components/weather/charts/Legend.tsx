@@ -36,42 +36,55 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     ({ parameters }) => parameters
   );
 
-  type LineProps = { color?: string };
-  const Line = ({ color = colors.primaryText }: LineProps) => (
+  type LineProps = { color?: string; height?: number };
+
+  const Line = ({ color = colors.primaryText, height = 2 }: LineProps) => (
     <View
       style={[
         styles.legendLine,
         {
           backgroundColor: color,
+          height,
         },
       ]}
     />
   );
 
-  const DashLine = () => (
-    <View style={styles.legendRowNoMargin}>
-      <View
-        style={[
-          styles.legendLineBlock,
-          styles.withMarginRight,
-          { backgroundColor: colors.chartSecondaryLine },
-        ]}
-      />
-      <View
-        style={[
-          styles.legendLineBlock,
-          styles.withMarginRight,
-          { backgroundColor: colors.chartSecondaryLine },
-        ]}
-      />
-      <View
-        style={[
-          styles.legendLineBlock,
-          { backgroundColor: colors.chartSecondaryLine },
-        ]}
-      />
-    </View>
-  );
+  const DashLine = () => {
+    const length = 3;
+    return (
+      <View style={styles.legendRowNoMargin}>
+        {[...Array(length)].map((_, index) => (
+          <View
+            key={`dash-${index.toString()}`}
+            style={[
+              styles.legendLineBlock,
+              styles.withMarginRight,
+              { backgroundColor: colors.chartSecondaryLine },
+            ]}
+          />
+        ))}
+      </View>
+    );
+  };
+
+  const DotLine = () => {
+    const length = 6;
+    return (
+      <View style={styles.legendRowNoMargin}>
+        {[...Array(length)].map((_, index) => (
+          <View
+            key={`dot-${index.toString()}`}
+            style={[
+              styles.legendDot,
+              index !== length - 1 ? styles.dotMarginRight : {},
+              { backgroundColor: colors.chartPrimaryLine },
+            ]}
+          />
+        ))}
+      </View>
+    );
+  };
 
   const Bar = ({ color }: { color: string }) => (
     <View
@@ -101,29 +114,49 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   return (
     <View style={styles.legendContainer}>
       {chartType === 'temperature' && (
-        <>
-          {(observation
-            ? obsParameters?.includes('temperature')
-            : forParameters.includes('temperature')) && (
+        <View style={styles.row}>
+          <View>
+            {(observation
+              ? obsParameters?.includes('temperature')
+              : forParameters.includes('temperature')) && (
+              <View style={styles.legendRow}>
+                <Line color={colors.chartPrimaryLine} />
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t('weather:charts:temperature').toLocaleLowerCase()} (°C)
+                </Text>
+              </View>
+            )}
+            {!observation && forParameters.includes('feelsLike') && (
+              <View style={styles.legendRow}>
+                <DashLine />
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t(`weather:charts:feelsLike`).toLocaleLowerCase()} (°C)
+                </Text>
+              </View>
+            )}
+            {(observation
+              ? obsParameters?.includes('dewPoint')
+              : forParameters.includes('dewPoint')) && (
+              <View style={styles.legendRow}>
+                <DotLine />
+                <Text
+                  style={[styles.legendText, { color: colors.hourListText }]}>
+                  {t(`weather:charts:dewPoint`).toLocaleLowerCase()} (°C)
+                </Text>
+              </View>
+            )}
+          </View>
+          <View style={styles.marginLeft}>
             <View style={styles.legendRow}>
-              <Line color={colors.chartPrimaryLine} />
+              <Line color={colors.secondaryBorder} height={1} />
               <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t('weather:charts:temperature')} (°C)
+                {t(`weather:charts:zeroLine`).toLocaleLowerCase()}
               </Text>
             </View>
-          )}
-          {(observation
-            ? obsParameters?.includes('dewPoint')
-            : forParameters.includes('feelsLike')) && (
-            <View style={styles.legendRow}>
-              <DashLine />
-              <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t(`weather:charts:${observation ? 'dewPoint' : 'feelsLike'}`)}{' '}
-                (°C)
-              </Text>
-            </View>
-          )}
-        </>
+          </View>
+        </View>
       )}
       {chartType === 'precipitation' && (
         <>
@@ -132,7 +165,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={RAIN_2} />
             <Bar color={TRANSPARENT} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:precipitationLight')}
+              {t('weather:charts:precipitationLight').toLocaleLowerCase()}
             </Text>
           </View>
           <View style={styles.legendRow}>
@@ -140,7 +173,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={RAIN_4} />
             <Bar color={RAIN_5} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:precipitationModerate')}
+              {t('weather:charts:precipitationModerate').toLocaleLowerCase()}
             </Text>
           </View>
           <View style={styles.legendRow}>
@@ -148,9 +181,22 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={RAIN_7} />
             <Bar color={TRANSPARENT} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:precipitationHeavy')}
+              {t('weather:charts:precipitationHeavy').toLocaleLowerCase()}
             </Text>
           </View>
+          {!observation && forParameters.includes('pop') && (
+            <View style={styles.legendRow}>
+              <DotLine />
+              <Text
+                style={[
+                  styles.legendText,
+                  styles.paddingLeft,
+                  { color: colors.hourListText },
+                ]}>
+                {t(`weather:charts:pop`).toLocaleLowerCase()} (°C)
+              </Text>
+            </View>
+          )}
         </>
       )}
       {chartType === 'wind' && (
@@ -161,7 +207,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <View style={styles.legendRow}>
               <Line />
               <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t('weather:charts:windSpeed')} (m/s)
+                {t('weather:charts:windSpeed').toLocaleLowerCase()} (m/s)
               </Text>
             </View>
           )}
@@ -171,7 +217,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <View style={styles.legendRow}>
               <DashLine />
               <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t('weather:charts:windGust')} (m/s)
+                {t('weather:charts:windGust').toLocaleLowerCase()} (m/s)
               </Text>
             </View>
           )}
@@ -181,7 +227,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <View style={styles.legendRow}>
               <Arrow />
               <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t('weather:charts:windDirection')}
+                {t('weather:charts:windDirection').toLocaleLowerCase()}
               </Text>
             </View>
           )}
@@ -192,7 +238,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           <View style={styles.legendRow}>
             <Line />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:cloud')} (m)
+              {t('weather:charts:cloud').toLocaleLowerCase()} (m)
             </Text>
           </View>
         </>
@@ -202,7 +248,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           <View style={styles.legendRow}>
             <Line />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:pressure')} (hpa)
+              {t('weather:charts:pressure').toLocaleLowerCase()} (hpa)
             </Text>
           </View>
         </>
@@ -212,7 +258,10 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           <View style={styles.legendRow}>
             <Line />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:humidity')} (%)
+              {observation
+                ? t('weather:charts:humidity').toLocaleLowerCase()
+                : t('weather:charts:relativeHumidity').toLocaleLowerCase()}{' '}
+              (%)
             </Text>
           </View>
         </>
@@ -225,7 +274,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 <DashLine />
               </View>
               <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t('weather:charts:visibility')} (m)
+                {t('weather:charts:visibility').toLocaleLowerCase()} (m)
               </Text>
             </View>
           )}
@@ -237,7 +286,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 </View>
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
-                  {t('weather:charts:totalCloudCover')}
+                  {t('weather:charts:totalCloudCover').toLocaleLowerCase()}
                 </Text>
               </View>
               <View style={styles.legendRowNoMargin}>
@@ -250,7 +299,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 </Text>
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
-                  {t('weather:charts:cloudCover01')}
+                  {t('weather:charts:cloudCover01').toLocaleLowerCase()}
                 </Text>
               </View>
               <View style={styles.legendRowNoMargin}>
@@ -263,7 +312,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 </Text>
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
-                  {t('weather:charts:cloudCover24')}
+                  {t('weather:charts:cloudCover24').toLocaleLowerCase()}
                 </Text>
               </View>
               <View style={styles.legendRowNoMargin}>
@@ -276,7 +325,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 </Text>
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
-                  {t('weather:charts:cloudCover36')}
+                  {t('weather:charts:cloudCover36').toLocaleLowerCase()}
                 </Text>
               </View>
               <View style={styles.legendRowNoMargin}>
@@ -289,7 +338,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 </Text>
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
-                  {t('weather:charts:cloudCover57')}
+                  {t('weather:charts:cloudCover57').toLocaleLowerCase()}
                 </Text>
               </View>
               <View style={styles.legendRowNoMargin}>
@@ -302,7 +351,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 </Text>
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
-                  {t('weather:charts:cloudCover78')}
+                  {t('weather:charts:cloudCover78').toLocaleLowerCase()}
                 </Text>
               </View>
             </>
@@ -314,7 +363,17 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           <View style={styles.legendRow}>
             <Bar color={colors.primaryText} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:snowDepth')} (m)
+              {t('weather:charts:snowDepth').toLocaleLowerCase()} (m)
+            </Text>
+          </View>
+        </>
+      )}
+      {chartType === 'uv' && (
+        <>
+          <View style={styles.legendRow}>
+            <Line />
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
+              {t('weather:charts:uvIndex').toLocaleLowerCase()}
             </Text>
           </View>
         </>
@@ -345,8 +404,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   legendLine: {
-    width: 16,
-    height: 3,
+    width: 17,
+    height: 2,
   },
   legendText: {
     fontSize: 14,
@@ -355,10 +414,17 @@ const styles = StyleSheet.create({
   },
   legendLineBlock: {
     width: 4,
-    height: 3,
+    height: 2,
+  },
+  legendDot: {
+    width: 2,
+    height: 2,
   },
   withMarginRight: {
     marginRight: 2,
+  },
+  dotMarginRight: {
+    marginRight: 1,
   },
   legendBlock: {
     width: 8,
@@ -367,6 +433,15 @@ const styles = StyleSheet.create({
   },
   iconMargin: {
     marginLeft: -4,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  marginLeft: {
+    marginLeft: 20,
+  },
+  paddingLeft: {
+    paddingLeft: 13,
   },
 });
 

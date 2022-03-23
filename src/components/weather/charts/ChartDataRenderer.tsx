@@ -8,18 +8,15 @@ import { tickFormat } from '@utils/chart';
 import { ChartDataProps, ChartDomain, ChartType, ChartValues } from './types';
 
 type ChartDataRendererProps = {
-  chartWidth: number;
+  chartDimensions: { x: number; y: number };
   tickValues: number[];
-  chartDomain: {
-    y: ChartDomain;
-    x: ChartDomain;
-  };
+  chartDomain: ChartDomain;
   chartType: ChartType;
   chartValues: ChartValues;
   Component: React.FC<ChartDataProps>;
 };
 const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
-  chartWidth,
+  chartDimensions,
   tickValues,
   chartDomain,
   chartType,
@@ -28,10 +25,18 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
+  let yTickValues;
+  if (chartType === 'precipitation') {
+    yTickValues = [0, 0.2, 0.4, 0.6, 0.8, 1];
+  }
+  if (chartType === 'visCloud') {
+    yTickValues = [0, 0.25, 0.5, 0.75, 1];
+  }
+
   return (
     <VictoryChart
-      height={300}
-      width={chartWidth}
+      height={chartDimensions.y}
+      width={chartDimensions.x}
       theme={chartTheme}
       scale={{ x: 'linear' }}>
       <VictoryAxis
@@ -45,7 +50,6 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
               moment(tick).hour() === 0
                 ? colors.chartGridDay
                 : colors.chartGrid,
-            strokeDasharray: ({ tick }) => (moment(tick).hour() === 0 ? 3 : 0),
           },
           tickLabels: {
             fill: colors.hourListText,
@@ -59,40 +63,25 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
         dependentAxis
         crossAxis={false}
         tickFormat={() => ''}
-        domain={chartDomain.y}
+        domain={chartDomain}
+        tickValues={yTickValues}
         style={{
           axis: {
             stroke: colors.chartGrid,
           },
           grid: {
-            stroke: colors.chartGrid,
+            stroke: ({ tick }) =>
+              chartType === 'temperature' && tick === 0
+                ? colors.secondaryBorder
+                : colors.chartGrid,
           },
         }}
       />
-      {chartType === 'visCloud' && (
-        <VictoryAxis
-          dependentAxis
-          crossAxis={false}
-          orientation="right"
-          tickCount={4}
-          tickFormat={() => ''}
-          tickValues={[15000, 30000, 45000, 60000]}
-          style={{
-            axis: {
-              stroke: colors.chartGrid,
-            },
-            grid: {
-              stroke: colors.chartGrid,
-            },
-          }}
-        />
-      )}
-
       {Component !== null && (
         <Component
           chartValues={chartValues}
-          width={chartWidth}
-          domain={chartDomain.x}
+          chartWidth={chartDimensions.x}
+          chartDomain={chartDomain}
         />
       )}
     </VictoryChart>

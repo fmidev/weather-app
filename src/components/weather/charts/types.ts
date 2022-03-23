@@ -24,7 +24,8 @@ export type ChartType =
   | 'precipitation'
   | 'temperature'
   | 'wind'
-  | 'snowDepth';
+  | 'snowDepth'
+  | 'uv';
 
 export type ChartSettings = {
   params: Parameter[];
@@ -47,6 +48,6 @@ export type ChartData = ForDataStep[] | ObsDataStep[];
 
 export type ChartDataProps = {
   chartValues: ChartValues;
-  domain: ChartDomain;
-  width: number;
+  chartDomain: ChartDomain;
+  chartWidth: number;
 };
