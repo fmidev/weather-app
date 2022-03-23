@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  VirtualizedList,
+  ScrollView,
 } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
@@ -39,19 +39,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
-  const dayStripRef = useRef() as React.MutableRefObject<
-    VirtualizedList<{
-      maxTemperature: number;
-      minTemperature: number;
-      totalPrecipitation: number;
-      timeStamp: number;
-      smartSymbol: number;
-      precipitationData: {
-        precipitation: number;
-        timestamp: number;
-      }[];
-    }>
-  >;
+  const dayStripRef = useRef() as React.MutableRefObject<ScrollView>;
 
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
@@ -59,8 +47,8 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
 
   useEffect(() => {
     if (activeDayIndex >= 0 && dayData && dayData.length) {
-      dayStripRef.current.scrollToIndex({
-        index: activeDayIndex,
+      dayStripRef.current.scrollTo({
+        x: activeDayIndex * 90,
         animated: true,
       });
     }
@@ -74,7 +62,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       timeStamp: number;
       maxTemperature: number;
       minTemperature: number;
-      smartSymbol: number;
+      smartSymbol: number | undefined;
       precipitationData: {
         precipitation: number;
         timestamp: number;
@@ -92,6 +80,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
 
     return (
       <View
+        key={timeStamp}
         accessible
         accessibilityRole="button"
         style={[
@@ -148,26 +137,13 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   };
 
   return (
-    <VirtualizedList
-      listKey="dayStrip"
+    <ScrollView
       ref={dayStripRef}
       contentContainerStyle={styles.listContentContainer}
-      data={dayData}
       horizontal
-      renderItem={colRenderer}
-      keyExtractor={({ timeStamp }) => timeStamp.toString()}
-      showsHorizontalScrollIndicator={false}
-      onScrollToIndexFailed={({ index }) => {
-        console.warn(`scroll to index: ${index} failed`);
-      }}
-      getItemCount={(items) => items && items.length}
-      getItem={(items, index) => items[index]}
-      getItemLayout={(_, index: number) => ({
-        length: 80,
-        offset: index * 80,
-        index,
-      })}
-    />
+      showsHorizontalScrollIndicator={false}>
+      {dayData.map((item, index) => colRenderer({ item, index }))}
+    </ScrollView>
   );
 };
 
