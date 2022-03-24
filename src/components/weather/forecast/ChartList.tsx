@@ -66,7 +66,7 @@ const ChartList: React.FC<ChartListProps> = ({
 
   return (
     <View style={styles.verticalPadding}>
-      <View>
+      <View style={styles.overflowPadding}>
         <ParameterSelector
           chartTypes={charts}
           parameter={parameter}
@@ -89,6 +89,9 @@ const ChartList: React.FC<ChartListProps> = ({
 const styles = StyleSheet.create({
   verticalPadding: {
     paddingVertical: 16,
+  },
+  overflowPadding: {
+    paddingRight: 8,
   },
 });
 
