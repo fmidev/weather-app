@@ -6,7 +6,9 @@ import { GRAY_1 } from '@utils/colors';
 import { getPrecipitationColorOrTransparent } from '@utils/helpers';
 
 type PrecipitationStripProps = {
-  precipitationData: { precipitation: number; timestamp: number }[] | false;
+  precipitationData:
+    | { precipitation: number | undefined; timestamp: number }[]
+    | false;
   style?: ViewStyle;
 };
 
