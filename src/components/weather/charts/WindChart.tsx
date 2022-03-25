@@ -11,8 +11,8 @@ import { ChartDataProps } from './types';
 
 const WindChart: React.FC<ChartDataProps> = ({
   chartValues,
-  domain,
-  width,
+  chartDomain,
+  chartWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { windGust, hourlymaximumgust, windSpeedMS, windDirection } =
@@ -35,7 +35,7 @@ const WindChart: React.FC<ChartDataProps> = ({
   const labelData = (windDirection || []).sort((a, b) => a.x - b.x);
   const labelSize = 20;
   const labelInterval =
-    width /
+    chartWidth /
       ((labelData[labelData.length - 1]?.x - labelData[0]?.x) /
         (60 * 60 * 1000)) >
     labelSize
@@ -80,38 +80,38 @@ const WindChart: React.FC<ChartDataProps> = ({
   };
 
   return (
-    <VictoryGroup theme={chartTheme} width={width}>
+    <VictoryGroup theme={chartTheme} width={chartWidth}>
       {combinedData && (
         <VictoryArea
           data={combinedData}
-          domain={domain}
+          domain={chartDomain}
           style={{ data: { fill: '#d8d8d8' } }}
-          interpolation="natural"
+          interpolation="basis"
         />
       )}
 
       {windSpeedMS && windSpeedMS.length > 0 && (
         <VictoryLine
           data={windSpeedMS}
-          domain={domain}
+          domain={chartDomain}
           labels={({ datum }) => `${datum}`}
           labelComponent={<WindLabel />}
           style={{ data: { stroke: colors.primaryText } }}
-          interpolation="natural"
+          interpolation="basis"
         />
       )}
 
       {gustParameter && gustParameter.length > 0 && (
         <VictoryLine
           data={gustParameter}
-          domain={domain}
+          domain={chartDomain}
           style={{
             data: {
               stroke: colors.chartSecondaryLine,
               strokeDasharray: '4',
             },
           }}
-          interpolation="natural"
+          interpolation="basis"
         />
       )}
     </VictoryGroup>

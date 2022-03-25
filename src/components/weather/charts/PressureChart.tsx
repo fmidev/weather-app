@@ -7,19 +7,19 @@ import { ChartDataProps } from './types';
 
 const PressureChart: React.FC<ChartDataProps> = ({
   chartValues,
-  domain,
-  width,
+  chartDomain,
+  chartWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { pressure } = chartValues;
   return (
-    <VictoryGroup theme={chartTheme} width={width}>
+    <VictoryGroup theme={chartTheme} width={chartWidth}>
       {pressure && pressure.length > 0 && (
         <VictoryLine
           data={pressure}
-          domain={domain}
+          domain={chartDomain}
           style={{ data: { stroke: colors.primaryText } }}
-          interpolation="natural"
+          interpolation="basis"
         />
       )}
     </VictoryGroup>

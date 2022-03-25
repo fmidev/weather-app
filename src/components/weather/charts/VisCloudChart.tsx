@@ -7,33 +7,18 @@ import { ChartDataProps } from './types';
 
 const VisCloudChart: React.FC<ChartDataProps> = ({
   chartValues,
-  domain,
-  width,
+  chartDomain,
+  chartWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { totalCloudCover, visibility } = chartValues;
-  const max = 60000;
 
-  const normalizedCloudCover =
-    totalCloudCover?.map(({ x, y }) => {
-      let value = null;
-      if (y && y <= 8) {
-        value = (y / 8) * max;
-      } else if (y) {
-        value = max;
-      }
-
-      return {
-        x,
-        y: value,
-      };
-    }) || [];
   return (
-    <VictoryGroup theme={chartTheme} width={width}>
-      {normalizedCloudCover && normalizedCloudCover.length > 0 && (
+    <VictoryGroup theme={chartTheme} width={chartWidth}>
+      {totalCloudCover && totalCloudCover.length > 0 && (
         <VictoryBar
-          data={normalizedCloudCover}
-          domain={domain}
+          data={totalCloudCover}
+          domain={chartDomain}
           key="secondary"
           alignment="middle"
           barWidth={4}
@@ -42,16 +27,18 @@ const VisCloudChart: React.FC<ChartDataProps> = ({
               fill: colors.primaryText,
             },
           }}
+          y={(datum) => (datum.y > 8 ? 1 : datum.y / 8)}
         />
       )}
       {visibility && visibility.length > 0 && (
         <VictoryLine
           data={visibility}
-          domain={domain}
+          domain={chartDomain}
           style={{
             data: { stroke: colors.chartSecondaryLine, strokeDasharray: '4' },
           }}
-          interpolation="natural"
+          interpolation="basis"
+          y={(datum) => (datum.y !== null ? datum.y / 60000 : null)}
         />
       )}
     </VictoryGroup>

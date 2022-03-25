@@ -14,9 +14,10 @@ export const chartYDomain = (
   minMax: ChartMinMax,
   chartType: ChartType
 ): ChartDomain => {
-  if (chartType === 'visCloud') {
-    return { y: [0, 60000] };
+  if (chartType === 'visCloud' || chartType === 'precipitation') {
+    return { y: [0, 1] };
   }
+
   if (chartType === 'humidity') {
     return { y: [0, 100] };
   }
@@ -39,15 +40,26 @@ export const chartYDomain = (
     return { y: [0, Math.ceil((max + 1) / 500) * 500] };
   }
 
+  if (chartType === 'snowDepth') {
+    return { y: [0, Math.ceil((max + 10) / 10) * 10] };
+  }
+
   return {
     y: [
-      chartType !== 'precipitation' ? Math.floor((min - 1) / 5) * 5 : 0,
+      ['precipitation', 'uv'].includes(chartType)
+        ? 0
+        : Math.floor((min - 1) / 5) * 5,
       Math.ceil((max + 1) / 5) * 5,
     ],
   };
 };
 
-export const chartTickValues = (data: ChartData, tickInterval: number) => {
+export const chartTickValues = (
+  data: ChartData,
+  tickInterval: number,
+  observation: boolean,
+  timePeriod: number
+) => {
   const unfiltered =
     data?.map(({ epochtime }, index) => {
       const time = moment.unix(epochtime);
@@ -60,7 +72,17 @@ export const chartTickValues = (data: ChartData, tickInterval: number) => {
   const tickValues: number[] = unfiltered.filter(
     <(t: number | false) => t is number>((t) => typeof t === 'number')
   );
-
+  if (observation && tickValues.length < timePeriod / tickInterval - 2) {
+    const time = moment().startOf('hour');
+    let i = 0;
+    while (i < timePeriod) {
+      time.subtract(tickInterval, 'hour');
+      if (time.hour() % tickInterval === 0) {
+        tickValues.push(time.valueOf());
+      }
+      i += tickInterval;
+    }
+  }
   return tickValues;
 };
 
@@ -83,26 +105,26 @@ ${time.format('DD.MM.')}`;
 };
 
 export const chartYLabelText = (chartType: ChartType) => {
-  if (['temperatureFeels', 'temperature'].includes(chartType)) {
-    return '°C';
+  switch (chartType) {
+    case 'humidity':
+      return ['%'];
+    case 'temperature':
+      return ['°C'];
+    case 'pressure':
+      return ['hPa'];
+    case 'visCloud':
+      return ['km', 'weather:charts:totalCloudCover'];
+    case 'precipitation':
+      return ['mm', '%'];
+    case 'wind':
+      return ['m/s'];
+    case 'uv':
+      return ['UV'];
+    case 'snowDepth':
+      return ['cm'];
+    case 'cloud':
+      return ['m'];
+    default:
+      return [''];
   }
-  if (['cloud'].includes(chartType)) {
-    return 'm';
-  }
-  if (['humidity'].includes(chartType)) {
-    return '%';
-  }
-  if (['precipitation'].includes(chartType)) {
-    return 'mm';
-  }
-  if (['pressure'].includes(chartType)) {
-    return 'hPa';
-  }
-  if (['visCloud'].includes(chartType)) {
-    return 'km';
-  }
-  if (['wind'].includes(chartType)) {
-    return 'm/s';
-  }
-  return '';
 };

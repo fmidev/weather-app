@@ -7,20 +7,20 @@ import { ChartDataProps } from './types';
 
 const CloudHeightChart: React.FC<ChartDataProps> = ({
   chartValues,
-  domain,
-  width,
+  chartDomain,
+  chartWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { cloudHeight } = chartValues;
 
   return (
-    <VictoryGroup theme={chartTheme} width={width}>
+    <VictoryGroup theme={chartTheme} width={chartWidth}>
       {cloudHeight && cloudHeight.length > 0 && (
         <VictoryLine
           data={cloudHeight}
-          domain={domain}
+          domain={chartDomain}
           style={{ data: { stroke: colors.primaryText } }}
-          interpolation="natural"
+          interpolation="basis"
         />
       )}
     </VictoryGroup>

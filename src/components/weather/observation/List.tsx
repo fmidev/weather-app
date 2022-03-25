@@ -54,6 +54,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
     snowDepth: {
       parameters: ['snowDepth'],
     },
+    uv: {
+      parameters: [],
+    },
   };
 
   const activeParameters = listParameters[parameter].parameters.filter(

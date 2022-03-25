@@ -8,6 +8,7 @@
       "dewPoint": "Dew point",
       "humidity": "Humidity",
       "humidityAccessibilityLabel": "Open humidity chart",
+      "relativeHumidity": "Relative humidity",
       "visCloud": "Visibility and cloud cover",
       "visCloudAccessibilityLabel": "Open visibility and cloud cover chart",
       "visibility": "Visibility",
@@ -26,6 +27,7 @@
       "precipitationLight": "Precipitation (mm), light rain",
       "precipitationModerate": "Precipitation (mm), moderate rain",
       "precipitationHeavy": "Precipitation (mm), heavy rain",
+      "pop":"Precipitation probability (%)",
       "wind": "Wind",
       "windAccessibilityLabel": "Open wind chart",
       "feelsLike": "Feels like",
@@ -36,7 +38,11 @@
       "previous24hAccessibilityLabel": "Show previous 24 hours",
       "next24h": "Next 24 h",
       "next24hAccessibilityLabel": "Show next 24 hours",
-      "snowDepth": "Snow depth"
+      "snowDepth": "Snow depth",
+      "uvIndex": "Ultraviolet index",
+      "uv": "UV-index",
+      "uvAccessibilityLabel": "Open uv chart",
+      "zeroLine": "Zero line"
     },
     "parameter": "Parameter"
   },

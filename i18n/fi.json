@@ -8,6 +8,7 @@
       "dewPoint": "Kastepiste",
       "humidity": "Kosteus",
       "humidityAccessibilityLabel": "Avaa kosteuskuvaaja",
+      "relativeHumidity": "Suhteellinen kosteus",
       "visCloud": "Näkyvyys ja pilvisyys",
       "visCloudAccessibilityLabel": "Avaa näkyvyys- ja pilvisyyskuvaaja",
       "visibility": "Näkyvyys",
@@ -26,6 +27,7 @@
       "precipitationLight": "Sademäärä (mm), heikkoa sadetta",
       "precipitationModerate": "Sademäärä (mm), kohtalaista sadetta",
       "precipitationHeavy": "Sademäärä (mm), rankkaa sadetta",
+      "pop":"Sateen todennäköisyys (%)",
       "wind": "Tuuli",
       "windAccessibilityLabel": "Avaa tuulikuvaaja",
       "feelsLike": "Tuntuu kuin",
@@ -36,7 +38,11 @@
       "previous24hAccessibilityLabel": "Näytä edelliset 24 tuntia",
       "next24h": "Seuraavat 24 h",
       "next24hAccessibilityLabel": "Näytä seuraavat 24 tuntia",
-      "snowDepth": "Lumensyvyys"
+      "snowDepth": "Lumensyvyys",
+      "uvIndex": "Ultraviolettisäteilyn indeksi",
+      "uv": "UV-indeksi",
+      "uvAccessibilityLabel": "Avaa uvgraafi",
+      "zeroLine": "Nollapiste"
     },
     "parameter": "Suure"
   },
