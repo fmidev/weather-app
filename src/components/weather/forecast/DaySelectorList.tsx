@@ -64,7 +64,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       minTemperature: number;
       smartSymbol: number | undefined;
       precipitationData: {
-        precipitation: number;
+        precipitation: number | undefined;
         timestamp: number;
       }[];
     };
