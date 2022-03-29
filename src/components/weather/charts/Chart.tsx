@@ -156,8 +156,20 @@ const Chart: React.FC<ChartProps> = ({
   return (
     <View
       accessible
-      accessibilityLabel={t('charts.accessibilityLabel')}
-      accessibilityHint={t('charts.accessibilityHint')}>
+      accessibilityLabel={
+        observation
+          ? t('charts.observationAccessibilityLabel', {
+              parameter: t(`charts.${chartType}`),
+            })
+          : t('charts.forecastAccessibilityLabel', {
+              parameter: t(`charts.${chartType}`),
+            })
+      }
+      accessibilityHint={
+        observation
+          ? t('charts.observationAccessibilityHint')
+          : t('charts.forecastAccessibilityHint')
+      }>
       <View style={styles.chartRowContainer}>
         <ChartYAxis
           chartDimensions={chartDimensions}

@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  ActivityIndicator,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/en-gb';
@@ -28,6 +22,7 @@ import {
 import { GRAY_1, CustomTheme } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectTimeZone } from '@store/location/selector';
 import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecast/actions';
 import PanelHeader from './common/PanelHeader';
@@ -116,81 +111,89 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       <View style={styles.panelContainer}>
         <View style={[styles.row]}>
           <View style={[styles.row, styles.justifyStart]}>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
               accessibilityRole="button"
-              accessibilityHint={t('tableAccessibilityHint')}
+              accessibilityHint={`${t('tableAccessibilityHint')}. ${
+                displayFormat === TABLE ? t('active') : t('notActive')
+              }`}
               activeOpacity={1}
               onPress={() => updateDisplayFormat(TABLE)}
-              style={[
-                styles.contentSelectionContainer,
-                styles.withMarginRight,
-                {
-                  backgroundColor:
-                    displayFormat === TABLE
-                      ? colors.timeStepBackground
-                      : colors.inputButtonBackground,
-                  borderColor:
-                    displayFormat === TABLE
-                      ? colors.chartSecondaryLine
-                      : colors.secondaryBorder,
-                },
-              ]}>
-              <Text
+              style={styles.withMarginRight}>
+              <View
                 style={[
-                  styles.forecastText,
-                  displayFormat === TABLE && styles.selectedText,
+                  styles.contentSelectionContainer,
                   {
-                    color:
+                    backgroundColor:
                       displayFormat === TABLE
-                        ? colors.primaryText
-                        : colors.hourListText,
+                        ? colors.timeStepBackground
+                        : colors.inputButtonBackground,
+                    borderColor:
+                      displayFormat === TABLE
+                        ? colors.chartSecondaryLine
+                        : colors.secondaryBorder,
                   },
                 ]}>
-                {t('table')}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+                <Text
+                  style={[
+                    styles.forecastText,
+                    displayFormat === TABLE && styles.selectedText,
+                    {
+                      color:
+                        displayFormat === TABLE
+                          ? colors.primaryText
+                          : colors.hourListText,
+                    },
+                  ]}>
+                  {t('table')}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
+            <AccessibleTouchableOpacity
               accessibilityRole="button"
-              accessibilityHint={t('chartAccessibilityHint')}
+              accessibilityHint={`${t('chartAccessibilityHint')}. ${
+                displayFormat === CHART ? t('active') : t('notActive')
+              }`}
               activeOpacity={1}
-              onPress={() => updateDisplayFormat(CHART)}
-              style={[
-                styles.contentSelectionContainer,
-                {
-                  backgroundColor:
-                    displayFormat === CHART
-                      ? colors.timeStepBackground
-                      : colors.inputButtonBackground,
-                  borderColor:
-                    displayFormat === CHART
-                      ? colors.chartSecondaryLine
-                      : colors.secondaryBorder,
-                },
-              ]}>
-              <Text
+              onPress={() => updateDisplayFormat(CHART)}>
+              <View
                 style={[
-                  styles.forecastText,
-                  displayFormat === CHART && styles.selectedText,
+                  styles.contentSelectionContainer,
                   {
-                    color:
+                    backgroundColor:
                       displayFormat === CHART
-                        ? colors.primaryText
-                        : colors.hourListText,
+                        ? colors.timeStepBackground
+                        : colors.inputButtonBackground,
+                    borderColor:
+                      displayFormat === CHART
+                        ? colors.chartSecondaryLine
+                        : colors.secondaryBorder,
                   },
                 ]}>
-                {t('chart')}
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.forecastText,
+                    displayFormat === CHART && styles.selectedText,
+                    {
+                      color:
+                        displayFormat === CHART
+                          ? colors.primaryText
+                          : colors.hourListText,
+                    },
+                  ]}>
+                  {t('chart')}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
           </View>
           {displayFormat === TABLE && (
             <View style={[styles.row, styles.justifyEnd]}>
               <View
                 style={[styles.separator, { backgroundColor: colors.border }]}
               />
-              <TouchableOpacity
+              <AccessibleTouchableOpacity
                 accessibilityRole="button"
                 accessibilityLabel={t('paramsAccessibilityLabel')}
-                accessibilityHint={t('paramsAccessibilityHint')}
+                accessibilityHint={t('paramsBottomSheet.subTitle')}
                 style={styles.bottomSheetButton}
                 onPress={() => paramSheetRef.current.open()}>
                 <Icon
@@ -199,8 +202,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                   width={24}
                   height={24}
                 />
-              </TouchableOpacity>
-              <TouchableOpacity
+              </AccessibleTouchableOpacity>
+              <AccessibleTouchableOpacity
                 accessibilityRole="button"
                 accessibilityLabel={t('infoAccessibilityLabel')}
                 accessibilityHint={t('infoAccessibilityHint')}
@@ -212,7 +215,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                   height={24}
                   width={24}
                 />
-              </TouchableOpacity>
+              </AccessibleTouchableOpacity>
             </View>
           )}
         </View>

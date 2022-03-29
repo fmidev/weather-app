@@ -10,7 +10,6 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity,
   useWindowDimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -24,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { State } from '@store/types';
 import {
@@ -238,21 +238,32 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
         if (layoutWidth !== sliderWidth) setSliderWidth(layoutWidth);
       }}>
       <View style={styles.container}>
-        <View
-          style={[styles.buttonContainer, { borderRightColor: colors.border }]}>
-          <TouchableOpacity
-            onPress={() => (isAnimating ? clear() : animate())}
-            accessibilityLabel={t('map:playButtonAccessibilityLabel')}>
+        <AccessibleTouchableOpacity
+          accessibilityRole="button"
+          onPress={() => (isAnimating ? clear() : animate())}
+          accessibilityLabel={
+            !isAnimating ? t('map:playButton') : t('map:pauseButton')
+          }
+          accessibilityHint={
+            !isAnimating
+              ? t('map:playButtonAccessibilityHint')
+              : t('map:pauseButtonAccessibilityHint')
+          }>
+          <View
+            style={[
+              styles.buttonContainer,
+              { borderRightColor: colors.border },
+            ]}>
             <Icon
               name={isAnimating ? 'pause' : 'play'}
               style={{ color: colors.text }}
               width={50}
               height={50}
             />
-          </TouchableOpacity>
-        </View>
+          </View>
+        </AccessibleTouchableOpacity>
 
-        <View style={styles.sliderWrapper}>
+        <View style={styles.sliderWrapper} accessibilityElementsHidden>
           {sliderTimes.length > 0 && (
             <ScrollView
               key={activeOverlayId}

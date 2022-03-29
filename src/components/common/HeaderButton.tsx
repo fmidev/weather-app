@@ -1,20 +1,23 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import { useOrientation } from '@utils/hooks';
 import Icon from './Icon';
+import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 type HeaderButtonProps = {
   title?: string;
   onPress: () => void;
   accessibilityLabel: string;
+  accessibilityHint: string;
   icon: string;
   right?: boolean;
 };
 
 const HeaderButton: React.FC<HeaderButtonProps> = ({
   accessibilityLabel,
+  accessibilityHint,
   icon,
   title,
   onPress,
@@ -23,10 +26,13 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
   const isLandscape = useOrientation();
   const { colors } = useTheme();
   return (
-    <TouchableOpacity
+    <AccessibleTouchableOpacity
       onPress={onPress}
+      accessible
+      accessibilityElementsHidden
       accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}>
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}>
       <View
         style={[
           styles.container,
@@ -54,7 +60,7 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
           </Text>
         )}
       </View>
-    </TouchableOpacity>
+    </AccessibleTouchableOpacity>
   );
 };
 const styles = StyleSheet.create({

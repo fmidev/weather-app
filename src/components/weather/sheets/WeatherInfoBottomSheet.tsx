@@ -16,6 +16,7 @@ import { State } from '@store/types';
 import { selectUniqueSmartSymbols } from '@store/forecast/selectors';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
 import {
@@ -85,7 +86,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={isLandscape && styles.landscape}>
-          <TouchableOpacity activeOpacity={1}>
+          <TouchableOpacity activeOpacity={1} accessible={false}>
             <View style={styles.sheetTitle}>
               <Text style={[styles.title, { color: colors.primaryText }]}>
                 {t('weatherInfoBottomSheet.dayForecastInfoTitle')}
@@ -784,7 +785,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   )
                 )}
             </View>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
               style={[
                 styles.row,
                 styles.buttonContainer,
@@ -809,7 +810,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   { color: colors.primaryText },
                 ]}
               />
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           </TouchableOpacity>
         </ScrollView>
       </View>

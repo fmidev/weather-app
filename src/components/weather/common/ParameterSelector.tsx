@@ -4,13 +4,14 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  TouchableOpacity,
   NativeSyntheticEvent,
   NativeScrollEvent,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from '@react-navigation/native';
+
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import {
   WHITE,
@@ -81,38 +82,46 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   };
 
   const rowRenderer = ({ item, index }: { item: ChartType; index: number }) => (
-    <TouchableOpacity
+    <AccessibleTouchableOpacity
       activeOpacity={1}
+      accessible
+      accessibilityRole="button"
+      accessibilityState={{ selected: parameter === item }}
+      accessibilityLabel={`${t('weather:parameter')}: ${t(
+        `weather:charts:${item}`
+      )}`}
       onPress={() => {
         setParameter(item);
       }}
-      style={[
-        styles.contentSelectionContainer,
-        index < chartTypes.length && styles.withMarginRight,
-        {
-          backgroundColor:
-            parameter === item
-              ? colors.timeStepBackground
-              : colors.inputButtonBackground,
-          borderColor:
-            parameter === item
-              ? colors.chartSecondaryLine
-              : colors.secondaryBorder,
-        },
-      ]}>
-      <Text
+      style={index < chartTypes.length && styles.withMarginRight}>
+      <View
         style={[
-          styles.text,
-          parameter === item && styles.medium,
-          parameter === item && styles.selectedText,
+          styles.contentSelectionContainer,
           {
-            color:
-              parameter === item ? colors.primaryText : colors.hourListText,
+            backgroundColor:
+              parameter === item
+                ? colors.timeStepBackground
+                : colors.inputButtonBackground,
+            borderColor:
+              parameter === item
+                ? colors.chartSecondaryLine
+                : colors.secondaryBorder,
           },
         ]}>
-        {t(`weather:charts:${item}`)}
-      </Text>
-    </TouchableOpacity>
+        <Text
+          style={[
+            styles.text,
+            parameter === item && styles.medium,
+            parameter === item && styles.selectedText,
+            {
+              color:
+                parameter === item ? colors.primaryText : colors.hourListText,
+            },
+          ]}>
+          {t(`weather:charts:${item}`)}
+        </Text>
+      </View>
+    </AccessibleTouchableOpacity>
   );
 
   return (

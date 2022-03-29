@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  View,
-  SafeAreaView,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, SafeAreaView, Text, StyleSheet, ScrollView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { OthersStackParamList } from '@navigators/types';
 
 interface Props {
@@ -32,7 +26,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             styles.withBorderBottom,
             { borderBottomColor: colors.border },
           ]}>
-          <TouchableOpacity
+          <AccessibleTouchableOpacity
             delayPressIn={100}
             onPress={() => navigation.navigate('Symbols')}
             testID="navigation_symbols">
@@ -47,7 +41,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                 style={{ color: colors.text }}
               />
             </View>
-          </TouchableOpacity>
+          </AccessibleTouchableOpacity>
         </View>
         <View
           style={[
@@ -55,7 +49,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             styles.withBorderBottom,
             { borderBottomColor: colors.border },
           ]}>
-          <TouchableOpacity
+          <AccessibleTouchableOpacity
             delayPressIn={100}
             onPress={() => navigation.navigate('Settings')}
             testID="navigation_settings">
@@ -70,11 +64,11 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                 style={{ color: colors.text }}
               />
             </View>
-          </TouchableOpacity>
+          </AccessibleTouchableOpacity>
         </View>
 
         <View style={styles.rowWrapper}>
-          <TouchableOpacity
+          <AccessibleTouchableOpacity
             delayPressIn={100}
             onPress={() => navigation.navigate('About')}
             testID="navigation_about">
@@ -89,7 +83,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                 style={{ color: colors.text }}
               />
             </View>
-          </TouchableOpacity>
+          </AccessibleTouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -105,6 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 40,
+    width: '100%',
   },
   rowWrapper: {
     marginHorizontal: 20,

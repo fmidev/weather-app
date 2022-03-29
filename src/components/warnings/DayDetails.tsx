@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import moment from 'moment';
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@utils/colors';
 import { Severity, Warning, WarningType } from '@store/warnings/types';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
 type DayDetailsProps = {
@@ -72,7 +72,9 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
       {warnings.map(({ description, type, severity, duration }, index) => (
         <View key={`${type}-${duration.startTime}`}>
           <View style={styles.flex}>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
+              accessibilityRole="button"
+              accessibilityHint={t('warningAccessibilityHint')}
               style={styles.row}
               onPress={() =>
                 setOpenWarnings({
@@ -85,7 +87,12 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
               </View>
               <View style={styles.flex}>
                 <Text
-                  style={[styles.headerText, { color: colors.hourListText }]}>
+                  style={[styles.headerText, { color: colors.hourListText }]}
+                  accessibilityLabel={`${t(`types.${type}`)} - ${t(
+                    'valid'
+                  )} ${moment(duration.startTime).format(
+                    'DD MMMM HH:mm'
+                  )} - ${moment(duration.endTime).format('DD MMMM HH:mm')}`}>
                   <Text style={styles.bold}>{`${t(`types.${type}`)}`}</Text>
                   {` – ${t('valid')} ${moment(duration.startTime).format(
                     'DD.MM. HH:mm'
@@ -100,7 +107,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
                   style={{ color: colors.text }}
                 />
               </View>
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           </View>
           {openWarnings[index] && (
             <View style={styles.body}>
@@ -152,6 +159,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    alignItems: 'flex-start',
   },
 });
 export default DayDetails;

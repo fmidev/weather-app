@@ -6,13 +6,14 @@ import {
   StyleSheet,
   Text,
   Switch,
-  TouchableOpacity,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
@@ -74,6 +75,16 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
 
   const rowRenderer = (param: string, index: number) => (
     <View
+      accessible
+      accessibilityState={{
+        selected: displayParams.some((arr) => arr.includes(param)),
+      }}
+      accessibilityHint={
+        displayParams.some((arr) => arr.includes(param))
+          ? t('paramsBottomSheet.unSelectAccessibilityHint')
+          : t('paramsBottomSheet.selectAccessibilityHint')
+      }
+      onAccessibilityTap={() => updateDisplayParams([index, param])}
       key={param}
       style={[styles.row, { borderBottomColor: colors.border }]}>
       <View style={styles.innerRow}>
@@ -88,6 +99,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
           )}
         {param === RELATIVE_HUMIDITY && (
           <Text
+            accessible={false}
             style={[
               styles.iconText,
               styles.withMarginRight,
@@ -98,6 +110,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         )}
         {param === PRESSURE && (
           <Text
+            accessible={false}
             style={[
               styles.iconText,
               styles.withMarginRight,
@@ -108,6 +121,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         )}
         {param === UV_CUMULATED && (
           <Text
+            accessible={false}
             style={[
               styles.iconText,
               styles.withMarginRight,
@@ -143,15 +157,17 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         </View>
 
         <View style={styles.sheetTitle}>
-          <Text style={[styles.title, { color: colors.primaryText }]}>
+          <Text
+            accessibilityRole="header"
+            style={[styles.title, { color: colors.primaryText }]}>
             {t('paramsBottomSheet.title')}
           </Text>
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={isLandscape && styles.landscape}>
-          <TouchableOpacity activeOpacity={1}>
-            <View style={styles.descriptionContainer}>
+          <TouchableOpacity activeOpacity={1} accessible={false}>
+            <View style={styles.descriptionContainer} accessible>
               <Text style={[styles.text, { color: colors.hourListText }]}>
                 {t('paramsBottomSheet.subTitle')}
               </Text>
@@ -159,7 +175,11 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
 
             {activeConstants.map(rowRenderer)}
             <View style={styles.lastRow}>
-              <TouchableOpacity onPress={() => restoreDefaultDisplayParams()}>
+              <AccessibleTouchableOpacity
+                accessible
+                accessibilityRole="button"
+                accessibilityHint={t('paramsBottomSheet.restoreDefaultHint')}
+                onPress={() => restoreDefaultDisplayParams()}>
                 <Text
                   style={[
                     styles.restoreText,
@@ -169,7 +189,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                   ]}>
                   {t('paramsBottomSheet.restoreButtonText')}
                 </Text>
-              </TouchableOpacity>
+              </AccessibleTouchableOpacity>
             </View>
           </TouchableOpacity>
         </ScrollView>
@@ -235,7 +255,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
     minHeight: 60,
-    marginTop: 24,
+    marginTop: 14,
   },
   landscape: {
     paddingBottom: 200,

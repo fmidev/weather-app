@@ -1,4 +1,4 @@
-import { Alert, Platform } from 'react-native';
+import { Alert, AccessibilityInfo, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { PERMISSIONS, check } from 'react-native-permissions';
 import { TFunction } from 'react-i18next';
@@ -42,6 +42,11 @@ export const getGeolocation = (
               const geoid = Number(Object.keys(json)[0]);
               const item = Object.values(json)[0][0];
               const { name, localtz, iso2, country, region } = item;
+
+              AccessibilityInfo.announceForAccessibility(
+                `${t('navigation:locatedTo')} ${name}, ${region}`
+              );
+
               callback(
                 {
                   lat: latitude,

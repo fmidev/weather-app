@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+
 import { CustomTheme } from '@utils/colors';
 
 type CollapsiblePanelHeaderProps = {
@@ -23,7 +25,7 @@ const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   const { colors } = useTheme() as CustomTheme;
 
   return (
-    <TouchableOpacity
+    <AccessibleTouchableOpacity
       activeOpacity={1}
       accessibilityLabel={accessibilityLabel}
       onPress={onPress}>
@@ -63,7 +65,7 @@ const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
           />
         </View>
       </View>
-    </TouchableOpacity>
+    </AccessibleTouchableOpacity>
   );
 };
 

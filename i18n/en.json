@@ -1,8 +1,10 @@
 {
   "weather": {
     "charts": {
-      "accessibilityLabel": "Data displayed in a chart",
-      "accessibilityHint": "The same data is displayed in Table view in an accessible format",
+      "forecastAccessibilityLabel": "10 day {{ parameter }} in a chart",
+      "observationAccessibilityLabel": "{{ parameter }} observation in a chart",
+      "forecastAccessibilityHint": "The same data is displayed in Table view in an accessible format",
+      "observationAccessibilityHint": "The same data is displayed in List view in an accessible format",
       "cloud": "Cloud height",
       "cloudAccessibilityLabel": "Open cloud height chart",
       "dewPoint": "Dew point",
@@ -48,9 +50,9 @@
   },
   "forecast": {
     "nextHourForecast": "Next hour forecast,",
-    "nextHourForecastPrecipitation": "precipitation",
-    "nextHourForecastMetersPerSecond": "meters per second",
-    "nextHourForecastMillimeters": "millimeters",
+    "precipitation": "precipitation",
+    "metersPerSecond": "meters per second",
+    "millimeters": "millimeters",
     "panelHeader": "10 day forecast",
     "updated": "Updated",
     "sunrise": "Sunrise",
@@ -59,6 +61,8 @@
     "hours": "hours",
     "minutes": "minutes",
     "feelsLike": "Feels like",
+    "temperature": "Temperature",
+    "fromTo": "From {{ min }}° to {{ max }}°",
     "hourListOpenAccessibilityLabel": "Open forecast by hour list for day",
     "hourListCloseAccessibilityLabel": "Close forecast by hour list for day",
     "at": "at",
@@ -68,6 +72,19 @@
     "chartAccessibilityHint": "Open forecast chart view",
     "paramsAccessibilityLabel": "Parameters",
     "paramsAccessibilityHint": "Open parameter selection",
+    "active": "active",
+    "notActive": "not active",
+    "params": {
+      "temperature": "temperature: {{ value }}°.",
+      "feelsLike": "feels like: {{ value }}°.",
+      "dewpoint": "dewpoint: {{ value }}°.",
+      "pop": "precipitation probability: {{ value }}%.",
+      "hourlymaximumgust": "gust speed: {{ value }}m/s.",
+      "relativeHumidity": "relative humidity: {{ value }}%.",
+      "precipitation1h": "precipitation: {{ value }}mm.",
+      "uvCumulated": "UV index: {{ value }}.",
+      "pressure": "pressure: {{ value }}hPa."
+    },
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Close hourly parameter selection",
       "title": "Hourly view",
@@ -84,7 +101,10 @@
       "dewPoint": "Dew point (°C)",
       "relativeHumidity": "Relative humidity (%)",
       "pressure": "Pressure (hPa)",
-      "uvCumulated": "UV index"
+      "uvCumulated": "UV index",
+      "selectAccessibilityHint": "Double tap to select parameter",
+      "unSelectAccessibilityHint": "Double tap to unselect parameter",
+      "restoreDefaultHint": "Restore default selection"
     },
     "infoAccessibilityLabel": "Info",
     "infoAccessibilityHint": "Open weather info",
@@ -140,6 +160,8 @@
   },
   "observation": {
     "observationStation": "Station",
+    "stationAccessibilityHint": "double tap to change observation station",
+    "selectStationAccessibilityHint": "double tap to select observation station",
     "latestObservation": "Latest observation",
     "distance": "distance",
     "distanceFromStation": "km from forecast location",
@@ -198,9 +220,14 @@
     "symbols": "Weather symbols",
     "locate": "Locate",
     "search": "Search",
+    "currentLocation": "Current user location",
+    "backAccessibilityLabel": "Navigate back",
     "locateAccessibilityLabel": "Use current location",
     "searchAccessibilityLabel": "Open search screen",
-    "timezone": "Time zone"
+    "searchInfoAccessibilityHint": "Open search screen info",
+    "timezone": "Time zone",
+    "slash": "of",
+    "locatedTo": "Located to:"
   },
   "placeholder": {
     "weather": "Some forecast here",
@@ -231,7 +258,10 @@
     "layersButtonAccessibilityLabel": "Show map layer selection",
     "minusButtonAccessibilityLabel": "Zoom out map",
     "plusButtonAccessibilityLabel": "Zoom in map",
-    "playButtonAccessibilityLabel": "Animate time range on map",
+    "playButtonAccessibilityHint": "Animate selected layer",
+    "pauseButtonAccessibilityHint": "Stop animating selected layer",
+    "playButton": "Play",
+    "pauseButton": "Pause",
     "relocateButtonAccessibilityLabel": "Animate back to selected location",
     "relocateButtonText": "Re-center",
     "selectionButtonAccessibilityLabel": "Show slider time step selection",
@@ -249,12 +279,16 @@
       "closeAccessibilityLabel": "Close map layers selection",
       "locationTitle": "Your location",
       "locationHint": "Show location on map",
+      "showLocationAccessibilityHint": "double tap to show current location on map",
+      "hideLocationAccessibilityHint": "double tap to hide current location on map",
       "localWeatherTitle": "Local weather",
       "showOnMap": "Show on map",
       "temperatureAndWeather": "Temperature and weather",
       "precipitationAndPropability": "Precipitation and propability",
       "mapLayersTitle": "Map layers",
-      "rainRadar": "Rain radar"
+      "rainRadar": "Rain radar",
+      "notSelected": "not selected",
+      "selectLayerAccessibilityHint": "double tap to select map layer"
     },
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Close map legend",
@@ -279,9 +313,12 @@
     "clearRecentSearches": "Clear all previous searches",
     "noResults": "Search returned no results",
     "remember": "Remember",
-    "choose": "Choose",
-    "addToFavorites": "Add to my locations",
-    "removeFromFavorites": "Remove from my locations",
+    "choose": "Show weather info for location",
+    "selected": "Selected",
+    "unSelected": "Not selected",
+    "addToFavorites": "Add {{ location }} to my locations",
+    "removeFromFavorites": "Remove {{ location }} from my locations",
+    "selectedLocation": "Selected location: {{ location }}",
     "infoSheet": {
       "closeButtonAccessibilityLabel": "Close search screen info",
       "saveAndDeleteTitle": "Saving and deleting my locations",
@@ -394,7 +431,10 @@
     "allWarnings": "All warnings for Finland",
     "valid": "valid between",
     "hasWarnings": "active warnings",
+    "noWarnings": "no active warnings",
     "navigateToWarningsPage": "Navigate to Warnings page",
+    "dateAccessibilityHint": "show all active warnings to selected date",
+    "warningAccessibilityHint": "show detailed warning description",
     "types": {
       "thunderStorm": "Severe thunderstorm warning",
       "wind": "Wind warning for land areas",
@@ -420,6 +460,7 @@
   },
   "termsAndConditions": {
     "close": "Close",
+    "closeButtonAccessibilityHint": "Close Terms and Conditions and navigate back to previous screen",
     "generalTitle": "Weather app Terms and Conditions",
     "contentsTitle": "Contents",
     "someOtherTitle": "Third title",

@@ -1,17 +1,11 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Text,
-  Switch,
-  TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
@@ -83,7 +77,21 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
             styles.withBorderBottom,
             { borderBottomColor: colors.border },
           ]}>
-          <View style={styles.row}>
+          <View
+            style={styles.row}
+            accessible
+            accessibilityState={{ selected: mapLayers.location }}
+            accessibilityHint={
+              mapLayers.location
+                ? t('map:layersBottomSheet:hideLocationAccessibilityHint')
+                : t('map:layersBottomSheet:showLocationAccessibilityHint')
+            }
+            onAccessibilityTap={() =>
+              updateMapLayers({
+                ...mapLayers,
+                location: !mapLayers.location,
+              })
+            }>
             <Text style={[styles.text, { color: colors.text }]}>
               {t('map:layersBottomSheet:locationHint')}
             </Text>
@@ -109,10 +117,24 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
         </View>
         {layers.length > 0 &&
           layers.map((layer) => (
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
               key={layer.id}
-              disabled={layer.id === activeOverlay}
+              accessibilityRole="button"
+              accessibilityLabel={
+                layer.id === activeOverlay
+                  ? `${layer?.name && layer?.name[locale]}`
+                  : `${layer?.name && layer?.name[locale]}, ${t(
+                      'map:layersBottomSheet:notSelected'
+                    )}`
+              }
+              accessibilityState={{ selected: layer.id === activeOverlay }}
+              accessibilityHint={
+                layer.id === activeOverlay
+                  ? ''
+                  : t('map:layersBottomSheet:selectLayerAccessibilityHint')
+              }
               onPress={() => {
+                if (layer.id === activeOverlay) return;
                 onClose();
                 updateActiveOverlay(Number(layer.id));
               }}>
@@ -131,7 +153,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                   }}
                 />
               </View>
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           ))}
       </View>
     </SafeAreaView>
@@ -169,8 +191,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 10,
-    minHeight: 44,
+    padding: 10,
+    width: '100%',
   },
   title: {
     fontSize: 16,

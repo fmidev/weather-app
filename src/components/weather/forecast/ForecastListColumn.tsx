@@ -43,6 +43,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
       style={[styles.hourColumn, { borderColor: colors.border }]}>
       <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
         <Text
+          accessibilityLabel={`${t('forecast:at')} ${time}.`}
           style={[
             styles.hourText,
             styles.medium,
@@ -56,7 +57,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           return (
             <View
               key={`${param}-${i}`}
-              accessibilityLabel={`${t(`symbols:${data.smartSymbol}`)}`}
+              accessibilityLabel={`${t(`symbols:${data.smartSymbol}`)}.`}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -75,7 +76,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 data.windCompass8
                   ? `${t(`observation:windDirection:${data.windCompass8}`)} ${
                       data.windSpeedMS
-                    }`
+                    } ${t('forecast:metersPerSecond')}.`
                   : undefined
               }
               key={`${param}-${i}`}
@@ -114,6 +115,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           return (
             <View
               key={`${param}-${i}`}
+              accessibilityLabel={t('forecast:params:temperature', {
+                value: data.temperature,
+              })}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -130,6 +134,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           return (
             <View
               key={`${param}-${i}`}
+              accessibilityLabel={t('forecast:params:feelsLike', {
+                value: data.feelsLike,
+              })}
               style={[
                 styles.hourBlock,
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
@@ -152,6 +159,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
               ]}>
               <Text
+                accessibilityLabel={t('forecast:params:dewpoint', {
+                  value: data.dewPoint,
+                })}
                 style={[
                   styles.hourText,
                   { color: colors.hourListText },
@@ -169,7 +179,11 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               styles.hourBlock,
               { backgroundColor: isOdd(index) ? colors.listTint : undefined },
             ]}>
-            <Text style={[styles.hourText, { color: colors.hourListText }]}>
+            <Text
+              accessibilityLabel={t(`forecast:params:${param}`, {
+                value: toDisplay,
+              })}
+              style={[styles.hourText, { color: colors.hourListText }]}>
               {param === constants.PRECIPITATION_1H &&
               typeof toDisplay === 'number' &&
               toDisplay >= 0

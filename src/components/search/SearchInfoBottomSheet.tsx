@@ -31,9 +31,14 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <TouchableOpacity activeOpacity={1} style={styles.innerContainer}>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.innerContainer}
+          accessible={false}>
           <View style={styles.sheetTitle}>
-            <Text style={[styles.title, { color: colors.text }]}>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
               {t('infoSheet.saveAndDeleteTitle')}
             </Text>
           </View>
@@ -103,7 +108,9 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
             style={[styles.separator, { backgroundColor: colors.border }]}
           />
           <View style={styles.sheetTitle}>
-            <Text style={[styles.title, { color: colors.text }]}>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
               {t('infoSheet.locateTitle')}
             </Text>
           </View>
