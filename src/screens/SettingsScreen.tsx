@@ -23,17 +23,21 @@ import {
   updateUnits as updateUnitsAction,
   updateTheme as updateThemeAction,
 } from '@store/settings/actions';
+import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
 import { UnitType } from '@store/settings/types';
+import { selectStoredGeoids } from '@store/location/selector';
 // import { GRAY_1 } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
   theme: selectTheme(state),
+  geoids: selectStoredGeoids(state),
 });
 
 const mapDispatchToProps = {
   updateUnits: updateUnitsAction,
   updateTheme: updateThemeAction,
+  updateLocationsLocales: updateLocationsLocalesAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -44,9 +48,11 @@ type Props = PropsFromRedux;
 
 const SettingsScreen: React.FC<Props> = ({
   theme,
+  geoids,
   // units,
   // updateUnits,
   updateTheme,
+  updateLocationsLocales,
 }) => {
   const { t, i18n } = useTranslation('settings');
   const { colors } = useTheme();
@@ -59,6 +65,7 @@ const SettingsScreen: React.FC<Props> = ({
 
   const onChangeLanguage = async (lang: string): Promise<void> => {
     i18n.changeLanguage(lang);
+    updateLocationsLocales(geoids);
     try {
       await setItem(LOCALE, lang);
     } catch (error) {

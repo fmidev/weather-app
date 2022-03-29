@@ -40,22 +40,14 @@ export const getGeolocation = (
           getCurrentPosition(latitude, longitude)
             .then((json) => {
               const geoid = Number(Object.keys(json)[0]);
-              const vals: {
-                name: string;
-                latitude: number;
-                longitude: number;
-                region: string;
-                iso2: string;
-                localtz: string;
-              }[][] = Object.values(json);
-
-              const { name, region, localtz, iso2 } = vals[0][0];
+              const item = Object.values(json)[0][0];
+              const { name, localtz, iso2, country, region } = item;
               callback(
                 {
                   lat: latitude,
                   lon: longitude,
                   name,
-                  area: region,
+                  area: iso2 === 'FI' && country === region ? '' : region,
                   id: geoid,
                   timezone: localtz,
                   country: iso2,
@@ -90,6 +82,7 @@ export const getGeolocation = (
     return {};
   });
 };
+
 export const getPrecipitationColorOrTransparent = (amount: number): string => {
   if (amount >= 0.1 && amount < 0.2) return RAIN_1;
   if (amount >= 0.2 && amount < 0.5) return RAIN_2;

@@ -10,6 +10,8 @@ import {
   LocationActionTypes,
   SET_CURRENT_LOCATION,
   RESET_AUTOCOMPLETE,
+  UPDATE_LOCATIONS_LOCALES,
+  TimeseriesLocation,
 } from './types';
 
 const INITIAL_STATE: LocationState = {
@@ -19,6 +21,11 @@ const INITIAL_STATE: LocationState = {
   current: undefined,
   isGeolocation: undefined,
 };
+
+const cleanAreaFromTimeseries = (location: TimeseriesLocation) =>
+  location?.iso2 === 'FI' && location?.country === location?.region
+    ? ''
+    : location?.region;
 
 export default (
   state = INITIAL_STATE,
@@ -86,6 +93,22 @@ export default (
       return {
         ...state,
         search: [],
+      };
+    }
+
+    case UPDATE_LOCATIONS_LOCALES: {
+      return {
+        ...state,
+        favorites: state.favorites.map((item) => ({
+          ...item,
+          name: action.data[item.id]?.[0]?.name || item.name,
+          area: cleanAreaFromTimeseries(action.data[item.id]?.[0]) || item.area,
+        })),
+        recent: state.recent.map((item) => ({
+          ...item,
+          name: action.data[item.id]?.[0]?.name || item.name,
+          area: cleanAreaFromTimeseries(action.data[item.id]?.[0]) || item.area,
+        })),
       };
     }
 
