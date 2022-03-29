@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+
 import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
@@ -20,13 +23,11 @@ import {
 } from '@store/observation/actions';
 
 import { State } from '@store/types';
-import { useTheme } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
 import { CustomTheme, GRAY_1 } from '@utils/colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
 import { ObservationParameters } from '@store/observation/types';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Chart from './charts/Chart';
 import { ChartType } from './charts/types';
 import ParameterSelector from './common/ParameterSelector';
@@ -130,86 +131,100 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       ]}>
       <PanelHeader title={t('panelHeader')} />
       <View style={styles.panelContainer}>
-        <Text style={[styles.panelText, { color: colors.primaryText }]}>
-          {t('observationStation')}{' '}
-        </Text>
-        <View style={[styles.observationDropdown]}>
-          <CollapsibleHeader
-            onPress={() => stationSheetRef.current.open()}
-            open={false}
-            title={title}
-            accessibilityLabel=""
-            iconStart="map-marker"
-          />
+        <View
+          accessible
+          accessibilityRole="menu"
+          accessibilityLabel={`${t('observationStation')}: ${title}`}
+          accessibilityHint={t('stationAccessibilityHint')}>
+          <Text style={[styles.panelText, { color: colors.primaryText }]}>
+            {t('observationStation')}{' '}
+          </Text>
+          <View style={[styles.observationDropdown]}>
+            <CollapsibleHeader
+              onPress={() => stationSheetRef.current.open()}
+              open={false}
+              title={title}
+              accessibilityLabel=""
+              iconStart="map-marker"
+            />
+          </View>
         </View>
+
         <Latest data={data} />
       </View>
 
       <View style={styles.panelContainer}>
         <View style={[styles.row]}>
           <View style={[styles.row, styles.justifyStart]}>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
+              accessibilityRole="button"
+              accessibilityState={{ selected: displayFormat === CHART }}
               activeOpacity={1}
               onPress={() => updateDisplayFormat(CHART)}
-              style={[
-                styles.contentSelectionContainer,
-                styles.withMarginRight,
-                {
-                  backgroundColor:
-                    displayFormat === CHART
-                      ? colors.timeStepBackground
-                      : colors.inputButtonBackground,
-                  borderColor:
-                    displayFormat === CHART
-                      ? colors.chartSecondaryLine
-                      : colors.secondaryBorder,
-                },
-              ]}>
-              <Text
+              style={styles.withMarginRight}>
+              <View
                 style={[
-                  styles.observationText,
-                  displayFormat === CHART && styles.selectedText,
+                  styles.contentSelectionContainer,
                   {
-                    color:
+                    backgroundColor:
                       displayFormat === CHART
-                        ? colors.primaryText
-                        : colors.hourListText,
+                        ? colors.timeStepBackground
+                        : colors.inputButtonBackground,
+                    borderColor:
+                      displayFormat === CHART
+                        ? colors.chartSecondaryLine
+                        : colors.secondaryBorder,
                   },
                 ]}>
-                {t('chart')}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+                <Text
+                  style={[
+                    styles.observationText,
+                    displayFormat === CHART && styles.selectedText,
+                    {
+                      color:
+                        displayFormat === CHART
+                          ? colors.primaryText
+                          : colors.hourListText,
+                    },
+                  ]}>
+                  {t('chart')}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
+            <AccessibleTouchableOpacity
+              accessibilityRole="button"
+              accessibilityState={{ selected: displayFormat === LIST }}
               activeOpacity={1}
-              onPress={() => updateDisplayFormat(LIST)}
-              style={[
-                styles.contentSelectionContainer,
-                styles.withMarginRight,
-                {
-                  backgroundColor:
-                    displayFormat === LIST
-                      ? colors.timeStepBackground
-                      : colors.inputButtonBackground,
-                  borderColor:
-                    displayFormat === LIST
-                      ? colors.chartSecondaryLine
-                      : colors.secondaryBorder,
-                },
-              ]}>
-              <Text
+              onPress={() => updateDisplayFormat(LIST)}>
+              <View
                 style={[
-                  styles.observationText,
-                  displayFormat === LIST && styles.selectedText,
+                  styles.contentSelectionContainer,
                   {
-                    color:
+                    backgroundColor:
                       displayFormat === LIST
-                        ? colors.primaryText
-                        : colors.hourListText,
+                        ? colors.timeStepBackground
+                        : colors.inputButtonBackground,
+                    borderColor:
+                      displayFormat === LIST
+                        ? colors.chartSecondaryLine
+                        : colors.secondaryBorder,
                   },
                 ]}>
-                {t('list')}
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.observationText,
+                    displayFormat === LIST && styles.selectedText,
+                    {
+                      color:
+                        displayFormat === LIST
+                          ? colors.primaryText
+                          : colors.hourListText,
+                    },
+                  ]}>
+                  {t('list')}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
           </View>
         </View>
       </View>

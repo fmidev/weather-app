@@ -1,6 +1,5 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
@@ -9,10 +8,8 @@ import { CustomTheme } from '@utils/colors';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 
-import Icon from '@components/common/Icon';
 import { capitalize } from '@utils/chart';
 import { Config } from '@config';
-import WeatherInfoBottomSheet from '../sheets/WeatherInfoBottomSheet';
 
 type LatestProps = {
   data: TimeStepData[];
@@ -22,7 +19,6 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
-  const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const { parameters } = Config.get('weather').observation;
 
   const [latestObservation] = data || [];
@@ -113,7 +109,7 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
         }
 
         return (
-          <View key={parameter} style={styles.observationRow}>
+          <View key={parameter} style={styles.observationRow} accessible>
             <View style={styles.flex}>
               <Text
                 style={[
@@ -138,7 +134,7 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
       {!!latestObservation && (
         <View>
           <View style={[styles.row]}>
-            <View style={[styles.latestObservation]}>
+            <View style={[styles.latestObservation]} accessible>
               <Text style={[styles.panelText, { color: colors.hourListText }]}>
                 {t('latestObservation')}
               </Text>
@@ -153,34 +149,10 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
                   : '-'}
               </Text>
             </View>
-            <TouchableOpacity
-              style={styles.bottomSheetButton}
-              onPress={() => weatherInfoSheetRef.current.open()}>
-              <Icon
-                name="info"
-                color={colors.primaryText}
-                height={24}
-                width={24}
-              />
-            </TouchableOpacity>
           </View>
           <View>{renderRow()}</View>
         </View>
       )}
-      <RBSheet
-        ref={weatherInfoSheetRef}
-        height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-        }}>
-        <WeatherInfoBottomSheet
-          onClose={() => weatherInfoSheetRef.current.close()}
-        />
-      </RBSheet>
     </>
   );
 };
@@ -189,9 +161,6 @@ const styles = StyleSheet.create({
   bold: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
-  },
-  bottomSheetButton: {
-    padding: 10,
   },
   justifyStart: {
     justifyContent: 'flex-start',
@@ -227,10 +196,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flex: 1,
-  },
-  sheetContainer: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
   },
 });
 export default Latest;

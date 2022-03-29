@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+
 import { CustomTheme, GRAY_1 } from '@utils/colors';
 import { Location } from '@store/location/types';
 
@@ -72,9 +74,9 @@ const AreaList: React.FC<AreaListProps> = ({
                 { borderBottomColor: colors.border },
               ]}>
               <View style={styles.listItem}>
-                <TouchableOpacity
+                <AccessibleTouchableOpacity
                   accessibilityRole="button"
-                  accessibilityLabel={`${t('choose')} ${name}`}
+                  accessibilityHint={t('choose')}
                   onPress={() => onSelect(element)}
                   style={styles.locationContainer}>
                   <View style={styles.listItem}>
@@ -92,13 +94,13 @@ const AreaList: React.FC<AreaListProps> = ({
                       {name}
                     </Text>
                   </View>
-                </TouchableOpacity>
-                <TouchableOpacity
+                </AccessibleTouchableOpacity>
+                <AccessibleTouchableOpacity
                   accessibilityRole="button"
                   accessibilityLabel={
                     iconRight(element) === 'star-unselected'
-                      ? t('addToFavorites')
-                      : t('removeFromFavorites')
+                      ? t('addToFavorites', { location: name })
+                      : t('removeFromFavorites', { location: name })
                   }
                   onPress={() => onIconPress(element)}>
                   <View
@@ -120,7 +122,7 @@ const AreaList: React.FC<AreaListProps> = ({
                       ]}
                     />
                   </View>
-                </TouchableOpacity>
+                </AccessibleTouchableOpacity>
               </View>
             </View>
           );
@@ -129,11 +131,13 @@ const AreaList: React.FC<AreaListProps> = ({
 
       {clearTitle && onClear && (
         <View style={[styles.resultsHeader, styles.clearRow]}>
-          <TouchableOpacity onPress={onClear} accessibilityRole="button">
+          <AccessibleTouchableOpacity
+            onPress={onClear}
+            accessibilityRole="button">
             <Text style={[styles.title, { color: colors.text }]}>
               {clearTitle}
             </Text>
-          </TouchableOpacity>
+          </AccessibleTouchableOpacity>
         </View>
       )}
     </View>
@@ -161,6 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   listItem: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     height: 44,
@@ -182,8 +187,7 @@ const styles = StyleSheet.create({
   },
   actionButtonContainer: {
     width: 50,
-    minWidth: 44,
-    minHeight: 44,
+    minHeight: 36,
     borderLeftWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',

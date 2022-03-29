@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import { CustomTheme } from '@utils/colors';
+import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 import Icon from './Icon';
 
@@ -28,20 +23,23 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   const { colors } = useTheme() as CustomTheme;
 
   return (
-    <View
-      style={[
-        style,
-        styles.button,
-        { backgroundColor: backgroundColor || colors.inputBackground },
-      ]}>
-      <TouchableOpacity
-        onPress={onPress}
-        accessibilityLabel={accessibilityLabel}>
+    // TODO: tsekkaa laitteella
+    <AccessibleTouchableOpacity
+      onPress={onPress}
+      accessible
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}>
+      <View
+        style={[
+          style,
+          styles.button,
+          { backgroundColor: backgroundColor || colors.inputBackground },
+        ]}>
         <View>
           <Icon name="close-outline" style={{ color: colors.text }} size={24} />
         </View>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </AccessibleTouchableOpacity>
   );
 };
 

@@ -43,6 +43,7 @@ const WindChart: React.FC<ChartDataProps> = ({
       : 3;
 
   const WindLabel = (datum: any) => {
+    if (!datum || datum === null) return <></>;
     const { index: dIndex, x: dX } = datum;
     if (labelData.length === 0) {
       return null;

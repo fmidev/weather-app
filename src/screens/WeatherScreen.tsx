@@ -113,8 +113,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   }, [location, updateForecast, updateObservation, updateWarnings]);
 
   return (
-    <SafeAreaView>
-      <GradientWrapper>
+    <GradientWrapper>
+      <SafeAreaView>
         <ScrollView
           style={[styles.container]}
           contentContainerStyle={styles.contentContainer}
@@ -124,8 +124,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           <ForecastPanel />
           <ObservationPanel />
         </ScrollView>
-      </GradientWrapper>
-    </SafeAreaView>
+      </SafeAreaView>
+    </GradientWrapper>
   );
 };
 

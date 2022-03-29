@@ -12,7 +12,7 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
 import Icon from '@components/common/Icon';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
@@ -86,16 +86,16 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                 {location.name}
               </Text>
             </View>
-            <View style={[styles.iconPadding]}>
-              <TouchableOpacity onPress={() => {}}>
+            <AccessibleTouchableOpacity onPress={() => {}}>
+              <View style={[styles.iconPadding]}>
                 <Icon
                   name="info"
                   color={colors.primaryText}
                   height={24}
                   width={24}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </AccessibleTouchableOpacity>
           </View>
         </View>
         <View
@@ -116,6 +116,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               <View key={date}>
                 {count > 0 && (
                   <View
+                    accessibilityElementsHidden
                     style={[
                       styles.countBadge,
                       {
@@ -129,14 +130,14 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                     </Text>
                   </View>
                 )}
-                <TouchableOpacity
-                  style={styles.touchArea}
+                <AccessibleTouchableOpacity
                   onPress={() => setSelectedDay(index)}
                   accessibilityRole="button"
-                  accessibilityLabel={`${moment(date).format('dd DD.MM.')} ${t(
-                    'hasWarnings'
-                  )} ${count}`}
-                  accessibilityHint={t('warnings:navigateToWarningsPage')}>
+                  accessibilityState={{ selected: index === selectedDay }}
+                  accessibilityLabel={`${moment(date).format(
+                    'dddd DD MMMM'
+                  )}, ${t('hasWarnings')}: ${count}`}
+                  accessibilityHint={t('dateAccessibilityHint')}>
                   <View
                     style={[
                       styles.warningsSingleDayContainer,
@@ -184,7 +185,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                     </Text>
                     <SeverityBar severity={severity} />
                   </View>
-                </TouchableOpacity>
+                </AccessibleTouchableOpacity>
               </View>
             ))}
           </View>
@@ -286,19 +287,17 @@ const styles = StyleSheet.create({
   },
   warningDaysContainer: {
     borderBottomWidth: 1,
-    height: 65,
     flex: 1,
     flexDirection: 'row',
   },
   warningsSingleDayContainer: {
     flex: 1,
+    minWidth: '20%',
     paddingHorizontal: 10,
     paddingVertical: 8,
     justifyContent: 'space-between',
-  },
-  touchArea: {
-    minWidth: '20%',
-    height: '100%',
+    alignItems: 'center',
+    height: 65,
   },
   updatedText: {
     fontSize: 14,

@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  TouchableOpacity,
-  StyleProp,
-  View,
-  ViewStyle,
-  StyleSheet,
-} from 'react-native';
+import { StyleProp, View, ViewStyle, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@utils/colors';
 
@@ -41,7 +36,7 @@ const MapButton: React.FC<MapButtonProps> = ({
           shadowColor: colors.shadow,
         },
       ]}>
-      <TouchableOpacity
+      <AccessibleTouchableOpacity
         onPress={onPress}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button">
@@ -53,7 +48,7 @@ const MapButton: React.FC<MapButtonProps> = ({
             style={{ color: colors.text }}
           />
         </View>
-      </TouchableOpacity>
+      </AccessibleTouchableOpacity>
     </View>
   );
 };

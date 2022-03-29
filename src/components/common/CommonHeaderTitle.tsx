@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -9,6 +9,7 @@ import { selectCurrent, selectIsGeolocation } from '@store/location/selector';
 
 import { useOrientation } from '@utils/hooks';
 import Icon from './Icon';
+import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
@@ -46,7 +47,7 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
     <View
       style={[styles.container, !isLandscape && styles.portraitWidth]}
       pointerEvents="box-none">
-      <TouchableOpacity onPress={onPress}>
+      <AccessibleTouchableOpacity onPress={onPress}>
         <View style={styles.row}>
           {isGeolocation && (
             <Icon
@@ -57,11 +58,14 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
           )}
           <Text
             accessibilityRole="header"
+            accessibilityLabel={
+              isGeolocation ? `${title()}, ${t('currentLocation')}` : title()
+            }
             style={[styles.title, { color: colors.text }]}>
             {title()}
           </Text>
         </View>
-      </TouchableOpacity>
+      </AccessibleTouchableOpacity>
       {currentLocation.country !== 'FI' && (
         <Text
           style={[

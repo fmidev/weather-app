@@ -6,7 +6,6 @@ import {
   Text,
   View,
   Platform,
-  TouchableOpacity,
 } from 'react-native';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +13,8 @@ import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';
+
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import {
   PRIMARY_BLUE,
@@ -68,47 +69,57 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
     primaryButtonDisabled,
   }) => (
     <View style={styles.permissionContainer}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title} accessibilityRole="header">
+        {title}
+      </Text>
       <Text style={[styles.textNormal, { color: colors.hourListText }]}>
         {description}
       </Text>
       {!primaryButtonFirst ? (
         <>
-          <TouchableOpacity onPress={onSecondaryButtonPress}>
-            <View style={[styles.secondaryButton, styles.marginBottom20]}>
+          <AccessibleTouchableOpacity
+            accessibilityRole="button"
+            onPress={onSecondaryButtonPress}
+            style={styles.marginBottom20}>
+            <View style={styles.secondaryButton}>
               <Text style={styles.textHighlight}>{secondaryButtonText}</Text>
             </View>
-          </TouchableOpacity>
-          <View style={[styles.button, styles.marginBottom40]}>
-            <TouchableOpacity
-              onPress={onPrimaryButtonPress}
-              accessibilityRole="button"
-              disabled={primaryButtonDisabled}
-              style={primaryButtonDisabled && styles.disabled}>
+          </AccessibleTouchableOpacity>
+          <AccessibleTouchableOpacity
+            onPress={onPrimaryButtonPress}
+            accessibilityRole="button"
+            disabled={primaryButtonDisabled}
+            style={styles.marginBottom40}>
+            <View
+              style={[styles.button, primaryButtonDisabled && styles.disabled]}>
               <View style={styles.textContainer}>
                 <Text style={styles.text}>{primaryButtonText}</Text>
               </View>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </AccessibleTouchableOpacity>
         </>
       ) : (
         <>
-          <View style={[styles.button, styles.marginBottom20]}>
-            <TouchableOpacity
-              onPress={onPrimaryButtonPress}
-              accessibilityRole="button"
-              disabled={primaryButtonDisabled}
-              style={primaryButtonDisabled && styles.disabled}>
+          <AccessibleTouchableOpacity
+            onPress={onPrimaryButtonPress}
+            accessibilityRole="button"
+            disabled={primaryButtonDisabled}
+            style={styles.marginBottom20}>
+            <View
+              style={[styles.button, primaryButtonDisabled && styles.disabled]}>
               <View style={styles.textContainer}>
                 <Text style={styles.text}>{primaryButtonText}</Text>
               </View>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={onSecondaryButtonPress}>
-            <View style={[styles.secondaryButton, styles.marginBottom40]}>
+            </View>
+          </AccessibleTouchableOpacity>
+          <AccessibleTouchableOpacity
+            accessibilityRole="button"
+            onPress={onSecondaryButtonPress}
+            style={styles.marginBottom40}>
+            <View style={styles.secondaryButton}>
               <Text style={styles.textHighlight}>{secondaryButtonText}</Text>
             </View>
-          </TouchableOpacity>
+          </AccessibleTouchableOpacity>
         </>
       )}
     </View>

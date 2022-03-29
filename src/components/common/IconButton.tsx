@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  TouchableOpacity,
   StyleProp,
   View,
   ViewStyle,
@@ -11,6 +10,7 @@ import {
 import { LIGHT_BLUE, PRIMARY_BLUE } from '@utils/colors';
 
 import Icon from './Icon';
+import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 type ButtonProps = { onPress: () => void; accessibilityLabel: string };
 
@@ -41,7 +41,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         style,
         { backgroundColor: backgroundColor || undefined },
       ]}>
-      <TouchableOpacity onPress={onPress}>
+      <AccessibleTouchableOpacity onPress={onPress}>
         <View>
           <Icon
             name={icon}
@@ -50,7 +50,7 @@ const IconButton: React.FC<IconButtonProps> = ({
             style={{ color: iconColor || PRIMARY_BLUE }}
           />
         </View>
-      </TouchableOpacity>
+      </AccessibleTouchableOpacity>
     </View>
   ) : (
     <View

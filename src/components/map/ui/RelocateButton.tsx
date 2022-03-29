@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-  Text,
-} from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
+
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@utils/colors';
 
@@ -32,7 +27,7 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
           borderColor: colors.primaryText,
         },
       ]}>
-      <TouchableOpacity
+      <AccessibleTouchableOpacity
         onPress={onPress}
         accessibilityRole="button"
         accessibilityLabel={t('map:relocateButtonAccessibilityLabel')}>
@@ -41,7 +36,7 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
             {t('map:relocateButtonText')}
           </Text>
         </View>
-      </TouchableOpacity>
+      </AccessibleTouchableOpacity>
     </View>
   );
 };

@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-} from 'react-native';
+import { SafeAreaView, ScrollView, Text, View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
+
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme, WHITE } from '@utils/colors';
 
@@ -29,19 +24,25 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
-        <Text style={[styles.title, { color: colors.primaryText }]}>
+        <Text
+          style={[styles.title, { color: colors.primaryText }]}
+          accessibilityRole="header">
           {t('generalTitle')}
         </Text>
         <Text style={[styles.body, { color: colors.hourListText }]}>
           {t('loremIpsum')}
         </Text>
-        <Text style={[styles.title, { color: colors.primaryText }]}>
+        <Text
+          style={[styles.title, { color: colors.primaryText }]}
+          accessibilityRole="header">
           {t('contentsTitle')}
         </Text>
         <Text style={[styles.body, { color: colors.hourListText }]}>
           {t('loremIpsum')}
         </Text>
-        <Text style={[styles.title, { color: colors.primaryText }]}>
+        <Text
+          style={[styles.title, { color: colors.primaryText }]}
+          accessibilityRole="header">
           {t('someOtherTitle')}
         </Text>
         <Text style={[styles.body, { color: colors.hourListText }]}>
@@ -51,13 +52,16 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
       {showCloseButton && (
         <View
           style={[styles.closeButtonContainer, { shadowColor: colors.shadow }]}>
-          <TouchableOpacity onPress={onClose}>
+          <AccessibleTouchableOpacity
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityHint={t('closeButtonAccessibilityHint')}>
             <View style={[styles.closeButton, { borderColor: colors.text }]}>
               <Text style={[styles.closeText, { color: colors.text }]}>
                 {t('close')}
               </Text>
             </View>
-          </TouchableOpacity>
+          </AccessibleTouchableOpacity>
         </View>
       )}
     </SafeAreaView>

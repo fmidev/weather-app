@@ -151,7 +151,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
               ? `${t(
                   `observation:windDirection:${nextHourForecast.windCompass8}`
                 )} ${nextHourForecast.windSpeedMS} ${t(
-                  'forecast:nextHourForecastMetersPerSecond'
+                  'forecast:metersPerSecond'
                 )}`
               : undefined
           }>
@@ -188,13 +188,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
               <Icon name="precipitation" color={colors.hourListText} />
               <Text
                 style={[styles.text, { color: colors.hourListText }]}
-                accessibilityLabel={`${t(
-                  'forecast:nextHourForecastPrecipitation'
-                )} ${
+                accessibilityLabel={`${t('forecast:precipitation')} ${
                   nextHourForecast.precipitation1h
                     ?.toString()
                     .replace('.', ',') || (0).toFixed(1).replace('.', ',')
-                } ${t('forecast:nextHourForecastMillimeters')}`}>
+                } ${t('forecast:millimeters')}`}>
                 <Text style={styles.bold}>{`${
                   nextHourForecast.precipitation1h
                     ?.toString()

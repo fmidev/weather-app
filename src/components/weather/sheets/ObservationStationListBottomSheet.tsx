@@ -1,16 +1,11 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-} from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
@@ -67,10 +62,20 @@ const ObservationStationListBottomSheet: React.FC<
         </View>
         {stationList.length > 0 &&
           stationList.map((station) => (
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
+              accessible
+              accessibilityState={{ selected: station.id === stationId }}
+              accessibilityLabel={`${station.name} – ${t(
+                'observation:distance'
+              )} ${station.distance} km`}
+              accessibilityHint={
+                station.id === stationId
+                  ? ''
+                  : t('observation:selectStationAccessibilityHint')
+              }
               key={station.id}
-              disabled={station.id === stationId}
               onPress={() => {
+                if (station.id === stationId) return;
                 setStationId(dataId, station.id);
                 onClose();
               }}>
@@ -91,7 +96,7 @@ const ObservationStationListBottomSheet: React.FC<
                   }}
                 />
               </View>
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           ))}
       </View>
     </SafeAreaView>
@@ -117,6 +122,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   row: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -1,14 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@utils/colors';
 import { weatherSymbolGetter } from '@assets/images';
@@ -95,16 +91,17 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             borderTopColor: isActive ? colors.tabBarActive : colors.border,
           },
         ]}>
-        <TouchableOpacity
-          onPress={() => setActiveDayIndex(index)}
-          style={styles.alignCenter}>
+        <AccessibleTouchableOpacity onPress={() => setActiveDayIndex(index)}>
           <Text
             style={[
               styles.dateText,
               {
                 color: colors.primaryText,
               },
-            ]}>
+            ]}
+            accessibilityLabel={stepMoment
+              .locale(locale)
+              .format('dddd, Do MMMM')}>
             {stepMoment.locale(locale).format('ddd')}{' '}
             <Text style={[styles.bold, { color: colors.primaryText }]}>
               {stepMoment.locale(locale).format('D.M.')}
@@ -120,12 +117,13 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
           </View>
           {activeParameters.includes('temperature') && (
             <Text
-              style={[
-                styles.forecastText,
-                { color: colors.primaryText },
-              ]}>{`${minTemperature}° ... ${maxTemperature}°`}</Text>
+              style={[styles.forecastText, { color: colors.primaryText }]}
+              accessibilityLabel={t('forecast:fromTo', {
+                min: minTemperature,
+                max: maxTemperature,
+              })}>{`${minTemperature}° ... ${maxTemperature}°`}</Text>
           )}
-        </TouchableOpacity>
+        </AccessibleTouchableOpacity>
         {activeParameters.includes('precipitation1h') && (
           <PrecipitationStrip
             precipitationData={item.precipitationData}

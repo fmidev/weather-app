@@ -17,13 +17,13 @@ export const HOT = 'rgb(253,227,193)';
 
 export const BLACK = '#000000';
 export const GRAY_8 = '#E6E6E6';
-export const GRAY_7 = '#121212';
-export const GRAY_6 = '#1C1C1E';
-export const GRAY_5 = '#2C2C2E';
-export const GRAY_4 = '#3A3A3C';
-export const GRAY_3 = '#48484A';
-export const GRAY_2 = '#636366';
-export const GRAY_1 = '#8E8E93';
+export const GRAY_7 = '#101113';
+export const GRAY_6 = '#191B22';
+export const GRAY_5 = '#282B34';
+export const GRAY_4 = '#353944';
+export const GRAY_3 = '#434752';
+export const GRAY_2 = '#5E626E';
+export const GRAY_1 = '#898D9B';
 
 export const GRAY_1_OPACITY = 'rgba(142,142,147,0.08)';
 

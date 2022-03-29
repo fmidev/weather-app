@@ -1,19 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  View,
-  SafeAreaView,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, SafeAreaView, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { setItem, LOCALE } from '@utils/async_storage';
 import { UNITS } from '@utils/units';
@@ -95,7 +89,7 @@ const SettingsScreen: React.FC<Props> = ({
               styles.withBorderBottom,
               { borderBottomColor: colors.border },
             ]}>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
               onPress={() => onChangeLanguage('fi')}
               delayPressIn={100}
               disabled={i18n.language === 'fi'}
@@ -112,10 +106,10 @@ const SettingsScreen: React.FC<Props> = ({
                   />
                 )}
               </View>
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           </View>
           <View style={styles.rowWrapper}>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
               onPress={() => onChangeLanguage('en')}
               delayPressIn={100}
               disabled={i18n.language === 'en'}
@@ -132,7 +126,7 @@ const SettingsScreen: React.FC<Props> = ({
                   />
                 )}
               </View>
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           </View>
         </View>
         <View style={styles.titleContainer}>
@@ -149,7 +143,7 @@ const SettingsScreen: React.FC<Props> = ({
               styles.withBorderBottom,
               { borderBottomColor: colors.border },
             ]}>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
               onPress={() => updateTheme('light')}
               delayPressIn={100}
               disabled={theme === 'light'}
@@ -168,7 +162,7 @@ const SettingsScreen: React.FC<Props> = ({
                   </View>
                 )}
               </View>
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           </View>
           <View
             style={[
@@ -176,7 +170,7 @@ const SettingsScreen: React.FC<Props> = ({
               styles.withBorderBottom,
               { borderBottomColor: colors.border },
             ]}>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
               onPress={() => updateTheme('dark')}
               delayPressIn={100}
               disabled={theme === 'dark'}
@@ -195,10 +189,10 @@ const SettingsScreen: React.FC<Props> = ({
                   </View>
                 )}
               </View>
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           </View>
           <View style={styles.rowWrapper}>
-            <TouchableOpacity
+            <AccessibleTouchableOpacity
               onPress={() => updateTheme('automatic')}
               delayPressIn={100}
               disabled={theme === 'automatic'}
@@ -217,7 +211,7 @@ const SettingsScreen: React.FC<Props> = ({
                   </View>
                 )}
               </View>
-            </TouchableOpacity>
+            </AccessibleTouchableOpacity>
           </View>
         </View>
         {/* {units && (
@@ -240,7 +234,7 @@ const SettingsScreen: React.FC<Props> = ({
                         }
                       : null,
                   ]}>
-                  <TouchableOpacity
+                  <AccessibleTouchableOpacity
                     onPress={() => sheetRefs[key].current.open()}
                     testID={`settings_set_${key}`}>
                     <View style={styles.row}>
@@ -285,7 +279,7 @@ const SettingsScreen: React.FC<Props> = ({
                                 styles.withBorderBottom,
                                 { borderBottomColor: colors.border },
                               ]}>
-                              <TouchableOpacity
+                              <AccessibleTouchableOpacity
                                 onPress={() => updateUnits(key, type)}
                                 testID={`settings_units_${key}_${type.unit}`}>
                                 <View style={styles.row}>
@@ -305,13 +299,13 @@ const SettingsScreen: React.FC<Props> = ({
                                     />
                                   )}
                                 </View>
-                              </TouchableOpacity>
+                              </AccessibleTouchableOpacity>
                             </View>
                           ))}
                         </View>
                       </RBSheet>
                     )}
-                  </TouchableOpacity>
+                  </AccessibleTouchableOpacity>
                 </View>
               ))}
             </View>
@@ -347,6 +341,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 13,
+    width: '100%',
   },
   text: {
     fontSize: 16,

@@ -2,7 +2,8 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTheme, useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@utils/colors';
 import PanelHeader from '@components/weather/common/PanelHeader';
@@ -82,14 +83,16 @@ const WarningsPanelSlim: React.FC<WarningsPanelSlimProps> = ({
               },
             ]}>
             {dailyWarnings.map(({ severity, date }, index) => (
-              <TouchableOpacity
+              <AccessibleTouchableOpacity
                 key={date}
-                style={styles.touchArea}
                 onPress={() => onPress(index)}
                 accessibilityRole="button"
-                accessibilityLabel={`${moment(date).format('dd')} ${
-                  severity > 0 ? t('warnings:hasWarnings') : ''
-                }`}>
+                accessibilityLabel={`${moment(date).format('dddd')}, ${
+                  severity > 0
+                    ? t('warnings:hasWarnings')
+                    : t('warnings:noWarnings')
+                }`}
+                accessibilityHint={t('warnings:navigateToWarningsPage')}>
                 <View
                   style={[
                     styles.warningsSingleDayContainer,
@@ -112,7 +115,7 @@ const WarningsPanelSlim: React.FC<WarningsPanelSlimProps> = ({
                   </Text>
                   <SeverityBar severity={severity} />
                 </View>
-              </TouchableOpacity>
+              </AccessibleTouchableOpacity>
             ))}
           </View>
         </View>
@@ -152,14 +155,12 @@ const styles = StyleSheet.create({
   },
   warningsSingleDayContainer: {
     height: '100%',
+    minWidth: '20%',
     flex: 1,
     paddingHorizontal: 10,
     paddingVertical: 8,
     justifyContent: 'space-between',
-  },
-  touchArea: {
-    minWidth: '20%',
-    height: '100%',
+    alignItems: 'center',
   },
   startBorderRadius: {
     borderTopLeftRadius: 4,

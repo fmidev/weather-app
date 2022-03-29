@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
+  AccessibilityInfo,
   View,
   SafeAreaView,
   Text,
@@ -102,6 +103,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   }, [value, searchLocation, resetSearch]);
 
   const handleSelectLocation = (location: Location, update: boolean) => {
+    AccessibilityInfo.announceForAccessibility(
+      t('selectedLocation', { location: location.name })
+    );
     Keyboard.dismiss();
     setAnimateToArea(true);
     setValue('');

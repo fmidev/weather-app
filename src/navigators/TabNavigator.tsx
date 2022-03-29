@@ -7,7 +7,6 @@ import {
   AppStateStatus,
   StyleSheet,
   StatusBar,
-  TouchableOpacity,
   StyleProp,
   ViewStyle,
   View,
@@ -39,6 +38,7 @@ import SetupScreen from '@screens/SetupScreen';
 import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
 import Icon from '@components/common/Icon';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 
@@ -172,6 +172,7 @@ const Navigator: React.FC<Props> = ({
       <HeaderBackImage tintColor={tintColor} />
     ),
     headerBackTitleVisible: false,
+    headerBackAccessibilityLabel: t('navigation:backAccessibilityLabel'),
   };
 
   const LocationHeaderOptions = ({
@@ -183,7 +184,8 @@ const Navigator: React.FC<Props> = ({
     headerLeft: () => (
       <HeaderButton
         title={t('navigation:locate')}
-        accessibilityLabel={t('navigation:locateAccessibilityLabel')}
+        accessibilityLabel={t('navigation:locate')}
+        accessibilityHint={t('navigation:locateAccessibilityLabel')}
         icon="locate"
         onPress={() => getGeolocation(setCurrentLocation, t)}
       />
@@ -194,7 +196,8 @@ const Navigator: React.FC<Props> = ({
     headerRight: () => (
       <HeaderButton
         title={t('navigation:search')}
-        accessibilityLabel={t('navigation:searchAccessibilityLabel')}
+        accessibilityLabel={t('navigation:search')}
+        accessibilityHint={t('navigation:searchAccessibilityLabel')}
         icon="search"
         onPress={() => navigation.navigate('Search')}
         right
@@ -208,7 +211,8 @@ const Navigator: React.FC<Props> = ({
     headerTitle: t('navigation:search'),
     headerRight: () => (
       <HeaderButton
-        accessibilityLabel="Press to show info"
+        accessibilityLabel="info"
+        accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
         icon="info"
         onPress={() => searchInfoSheetRef.current.open()}
       />
@@ -372,7 +376,7 @@ const Navigator: React.FC<Props> = ({
         }
         barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
       />
-
+      {/* TODO: lokalisoi navigoinnin automaattisesti tulevat tekstisisällöt, page 1 of 4, tab 3 of 4 jne. */}
       <NavigationContainer
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}>
@@ -392,8 +396,10 @@ const Navigator: React.FC<Props> = ({
                 : lightTheme.colors.tabBarActive;
 
               return (
-                <TouchableOpacity
+                <AccessibleTouchableOpacity
                   {...rest}
+                  accessibilityRole="tab"
+                  accessibilityState={accessibilityState}
                   style={[
                     ...(style as StyleProp<ViewStyle>[]),
                     styles.tabItem,
@@ -411,6 +417,9 @@ const Navigator: React.FC<Props> = ({
             name="Weather"
             component={WeatherStackScreen}
             options={{
+              tabBarAccessibilityLabel: `${t('navigation:weather')}, 1 ${t(
+                'navigation:slash'
+              )} 4 `,
               headerShown: false,
               tabBarTestID: 'navigation_weather',
               tabBarLabel: `${t('navigation:weather')}`,
@@ -428,6 +437,9 @@ const Navigator: React.FC<Props> = ({
             name="Map"
             component={MapStackScreen}
             options={{
+              tabBarAccessibilityLabel: `${t('navigation:map')}, 2 ${t(
+                'navigation:slash'
+              )} 4`,
               headerShown: false,
               tabBarTestID: 'navigation_map',
               tabBarLabel: `${t('navigation:map')}`,
@@ -441,6 +453,9 @@ const Navigator: React.FC<Props> = ({
             name="Warnings"
             component={WarningsStackScreen}
             options={{
+              tabBarAccessibilityLabel: `${t('navigation:warnings')}, 3 ${t(
+                'navigation:slash'
+              )} 4`,
               headerShown: false,
               tabBarTestID: 'navigation_warnings',
               tabBarLabel: `${t('navigation:warnings')}`,
@@ -458,6 +473,9 @@ const Navigator: React.FC<Props> = ({
             name="Others"
             component={OthersStackScreen}
             options={{
+              tabBarAccessibilityLabel: `${t('navigation:others')}, 4 ${t(
+                'navigation:slash'
+              )} 4`,
               headerShown: false,
               tabBarTestID: 'navigation_others',
               tabBarLabel: `${t('navigation:others')}`,
