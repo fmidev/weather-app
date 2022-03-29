@@ -130,7 +130,6 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                 : time.format(`[${t('forecast:at')}] HH:mm`);
 
             return (
-              // TODO: lue valitut parametrit mukaan, vrt. sääennuste taulukko
               <View key={timeStep.epochtime} style={[styles.row]} accessible>
                 <View
                   style={[

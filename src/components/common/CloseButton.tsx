@@ -23,7 +23,6 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   const { colors } = useTheme() as CustomTheme;
 
   return (
-    // TODO: tsekkaa laitteella
     <AccessibleTouchableOpacity
       onPress={onPress}
       accessible

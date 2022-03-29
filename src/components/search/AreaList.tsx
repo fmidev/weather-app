@@ -12,7 +12,7 @@ import { Location } from '@store/location/types';
 type ClearProps =
   | { clearTitle?: undefined; onClear?: never }
   | { clearTitle?: string; onClear: () => void };
-// TODO: add accessibility labels
+
 type AreaListProps = ClearProps & {
   elements: Location[];
   title: string;

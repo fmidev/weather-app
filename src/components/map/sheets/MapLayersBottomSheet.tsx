@@ -119,7 +119,6 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
           layers.map((layer) => (
             <AccessibleTouchableOpacity
               key={layer.id}
-              // TODO: sama logiikka voisi olla parametrivalinnassa
               accessibilityRole="button"
               accessibilityLabel={
                 layer.id === activeOverlay

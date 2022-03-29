@@ -376,7 +376,6 @@ const Navigator: React.FC<Props> = ({
         }
         barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
       />
-      {/* TODO: lokalisoi navigoinnin automaattisesti tulevat tekstisisällöt, page 1 of 4, tab 3 of 4 jne. */}
       <NavigationContainer
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}>
