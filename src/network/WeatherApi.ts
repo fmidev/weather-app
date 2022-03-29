@@ -6,6 +6,7 @@ import {
 import { Config } from '@config';
 import i18n from '@i18n';
 import axiosClient from '@utils/axiosClient';
+import { TimeseriesLocation } from '@store/location/types';
 
 export const getForecast = async (
   location: ForecastLocation
@@ -108,28 +109,50 @@ export const getObservation = async (
   return data;
 };
 
+const locationQueryParams = {
+  param: [
+    'geoid',
+    'name',
+    'latitude',
+    'longitude',
+    'region',
+    'country',
+    'iso2',
+    'localtz',
+  ].join(','),
+  timesteps: 1,
+  attributes: 'geoid',
+  format: 'json',
+};
+
 export const getCurrentPosition = async (
   latitude: number,
   longitude: number
-): Promise<Object> => {
+): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
   const { apiUrl } = Config.get('weather');
   const { language } = i18n;
 
   const params = {
+    ...locationQueryParams,
     latlon: `${latitude},${longitude}`,
-    param: [
-      'geoid',
-      'name',
-      'latitude',
-      'longitude',
-      'region',
-      'iso2',
-      'localtz',
-    ].join(','),
-    timesteps: 2,
-    format: 'json',
     lang: language,
-    attributes: 'geoid',
+  };
+
+  const { data } = await axiosClient({ url: apiUrl, params });
+
+  return data;
+};
+
+export const getLocationsLocales = async (
+  geoids: number[]
+): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
+  const { apiUrl } = Config.get('weather');
+  const { language } = i18n;
+
+  const params = {
+    ...locationQueryParams,
+    geoid: geoids.join(','),
+    lang: language,
   };
 
   const { data } = await axiosClient({ url: apiUrl, params });

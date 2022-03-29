@@ -1,6 +1,7 @@
 import getAutocomplete from '@network/AutocompleteApi';
 import { Dispatch } from 'react';
 import { Config } from '@config';
+import { getLocationsLocales } from '@network/WeatherApi';
 import {
   SET_CURRENT_LOCATION,
   Location,
@@ -12,6 +13,7 @@ import {
   DELETE_ALL_RECENT_SEARCHES,
   FETCH_AUTOCOMPLETE,
   RESET_AUTOCOMPLETE,
+  UPDATE_LOCATIONS_LOCALES,
 } from './types';
 
 export const setCurrentLocation =
@@ -63,4 +65,11 @@ export const updateRecentSearches =
 export const deleteAllRecentSearches =
   () => (dispatch: Dispatch<LocationActionTypes>) => {
     dispatch({ type: DELETE_ALL_RECENT_SEARCHES });
+  };
+
+export const updateLocationsLocales =
+  (geoids: number[]) => (dispatch: Dispatch<LocationActionTypes>) => {
+    getLocationsLocales(geoids).then((data) => {
+      dispatch({ type: UPDATE_LOCATIONS_LOCALES, data });
+    });
   };

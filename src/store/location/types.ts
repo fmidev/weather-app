@@ -12,6 +12,8 @@ export const DELETE_ALL_RECENT_SEARCHES = 'DELETE_ALL_RECENT_SEARCHES';
 export const FETCH_AUTOCOMPLETE = 'FETCH_AUTOCOMPLETE';
 export const RESET_AUTOCOMPLETE = 'RESET_AUTOCOMPLETE';
 
+export const UPDATE_LOCATIONS_LOCALES = 'UPDATE_LOCATIONS_LOCALES';
+
 export type Location = {
   name: string;
   area: string;
@@ -21,6 +23,16 @@ export type Location = {
   timezone: string;
   country: string;
   isGeolocation?: boolean;
+};
+
+export type TimeseriesLocation = {
+  name: string;
+  region: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  iso2: string;
+  localtz: string;
 };
 
 export type Geolocation = {
@@ -86,6 +98,11 @@ interface ResetAutocomplete {
   type: typeof RESET_AUTOCOMPLETE;
 }
 
+interface LocationsToLocale {
+  type: typeof UPDATE_LOCATIONS_LOCALES;
+  data: { [geoid: string]: TimeseriesLocation[] };
+}
+
 export type LocationActionTypes =
   | AddFavorite
   | DeleteAllFavorites
@@ -96,7 +113,8 @@ export type LocationActionTypes =
   | GetRecentSearches
   | ResetAutocomplete
   | SetCurrentLocation
-  | UpdateRecentSearches;
+  | UpdateRecentSearches
+  | LocationsToLocale;
 
 export interface LocationState {
   favorites: Location[] | [];

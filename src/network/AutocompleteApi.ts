@@ -9,7 +9,7 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
 
   const params = {
     keyword,
-    language,
+    lang: language,
     pattern,
   };
 

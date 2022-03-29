@@ -12,7 +12,11 @@ const location: types.Location = {
 };
 
 const defaultState: types.LocationState = {
-  favorites: Array.from({ length: 5 }).map((_, i) => ({ ...location, id: i })),
+  favorites: Array.from({ length: 5 }).map((_, i) => ({
+    ...location,
+    id: i,
+    area: i === 3 ? '' : location.area,
+  })),
   recent: Array.from({ length: 3 }).map((_, i) => ({ ...location, id: i })),
   search: [location],
   current: location,
@@ -115,6 +119,42 @@ describe('location reducer', () => {
       })
     ).toMatchObject({
       search: [],
+    });
+  });
+
+  it('should handle UPDATE_LOCATIONS_LOCALES', () => {
+    expect(
+      reducer(defaultState, {
+        type: types.UPDATE_LOCATIONS_LOCALES,
+        data: {
+          '3': [
+            {
+              iso2: 'FI',
+              name: 'Test',
+              region: 'Suomi',
+              country: 'Suomi',
+              latitude: 1,
+              longitude: 2,
+              localtz: 'Europe/Helsinki',
+            },
+          ],
+          '4': [
+            {
+              iso2: 'FI',
+              name: 'Testi',
+              region: 'Suomi',
+              country: 'Suomi',
+              latitude: 1,
+              longitude: 2,
+              localtz: 'Europe/Helsinki',
+            },
+          ],
+        },
+      })
+    ).toMatchObject({
+      favorites: defaultState.favorites.map((item) =>
+        item.id === 4 ? { ...item, name: 'Testi' } : item
+      ),
     });
   });
 });

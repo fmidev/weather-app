@@ -45,3 +45,8 @@ export const selectSearch = createSelector(
   selectLocationDomain,
   (location) => location.search
 );
+
+export const selectStoredGeoids = createSelector(
+  [selectFavorites, selectRecent],
+  (favorites, recent) => [...favorites, ...recent].map(({ id }) => id)
+);
