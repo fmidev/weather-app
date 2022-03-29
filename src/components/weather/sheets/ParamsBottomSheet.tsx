@@ -178,7 +178,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               <AccessibleTouchableOpacity
                 accessible
                 accessibilityRole="button"
-                accessibilityHint={t('restoreDefaultHint')}
+                accessibilityHint={t('paramsBottomSheet.restoreDefaultHint')}
                 onPress={() => restoreDefaultDisplayParams()}>
                 <Text
                   style={[

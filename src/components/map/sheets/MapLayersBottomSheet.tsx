@@ -131,7 +131,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
               accessibilityHint={
                 layer.id === activeOverlay
                   ? ''
-                  : t('map:layerBottomSheet:selectLayerAccessibilityHint')
+                  : t('map:layersBottomSheet:selectLayerAccessibilityHint')
               }
               onPress={() => {
                 if (layer.id === activeOverlay) return;
