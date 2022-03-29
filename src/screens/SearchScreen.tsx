@@ -103,8 +103,13 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   }, [value, searchLocation, resetSearch]);
 
   const handleSelectLocation = (location: Location, update: boolean) => {
+    const name =
+      location.area && location.area !== location.name
+        ? `${location.name}, ${location.area}`
+        : location.name;
+
     AccessibilityInfo.announceForAccessibility(
-      t('selectedLocation', { location: location.name })
+      t('selectedLocation', { location: name })
     );
     Keyboard.dismiss();
     setAnimateToArea(true);
