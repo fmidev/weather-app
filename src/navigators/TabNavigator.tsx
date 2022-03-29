@@ -408,19 +408,6 @@ const Navigator: React.FC<Props> = ({
             },
           }}>
           <Tab.Screen
-            name="Map"
-            component={MapStackScreen}
-            options={{
-              headerShown: false,
-              tabBarTestID: 'navigation_map',
-              tabBarLabel: `${t('navigation:map')}`,
-              tabBarLabelStyle: styles.tabText,
-              tabBarIcon: ({ color, size }) => (
-                <Icon name="map" style={{ color }} width={size} height={size} />
-              ),
-            }}
-          />
-          <Tab.Screen
             name="Weather"
             component={WeatherStackScreen}
             options={{
@@ -434,6 +421,19 @@ const Navigator: React.FC<Props> = ({
                   width={size}
                   height={size}
                 />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Map"
+            component={MapStackScreen}
+            options={{
+              headerShown: false,
+              tabBarTestID: 'navigation_map',
+              tabBarLabel: `${t('navigation:map')}`,
+              tabBarLabelStyle: styles.tabText,
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="map" style={{ color }} width={size} height={size} />
               ),
             }}
           />

@@ -7,7 +7,7 @@ import {
 } from './types';
 
 const INITIAL_STATE: NavigationState = {
-  tab: 'Map',
+  tab: 'Weather',
   didLaunchApp: false,
 };
 
