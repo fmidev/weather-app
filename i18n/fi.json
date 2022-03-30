@@ -261,7 +261,10 @@
     "allowLocation": "Salli paikannus",
     "locationNever": "Ei koskaan",
     "locationWhenInUse": "Vain sovellusta käytettäessä",
-    "locationAlways": "Aina"
+    "locationAlways": "Aina",
+    "fi": "suomi",
+    "sv": "på svenska",
+    "en": "in English"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",

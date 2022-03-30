@@ -260,7 +260,10 @@
     "allowLocation": "Allow location use",
     "locationNever": "Never",
     "locationWhenInUse": "When using the application",
-    "locationAlways": "Always"
+    "locationAlways": "Always",
+    "fi": "suomi",
+    "sv": "på svenska",
+    "en": "in English"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search location",

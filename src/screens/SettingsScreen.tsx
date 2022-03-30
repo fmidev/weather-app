@@ -30,6 +30,8 @@ import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/l
 import { selectStoredGeoids } from '@store/location/selector';
 // import { GRAY_1 } from '@utils/colors';
 
+import { Config } from '@config';
+
 const LOCATION_ALWAYS = 'location_always';
 const LOCATION_WHEN_IN_USE = 'location_when_in_use';
 const LOCATION_NEVER = 'location_never';
@@ -72,6 +74,7 @@ const SettingsScreen: React.FC<Props> = ({
   //   wind: useRef(),
   //   pressure: useRef(),
   // } as { [key: string]: React.MutableRefObject<RBSheet> };
+  const { languages } = Config.get('settings');
 
   useEffect(() => {
     const subscriber = AppState.addEventListener(
@@ -245,7 +248,37 @@ const SettingsScreen: React.FC<Props> = ({
           </View>
         </View>
         <View>
-          <View
+          {languages &&
+            languages
+              .filter((lang) => lang !== 'sv') // TODO: remove when sv.json is added
+              .map((language) => (
+                <View
+                  key={language}
+                  style={[
+                    styles.rowWrapper,
+                    styles.withBorderBottom,
+                    { borderBottomColor: colors.border },
+                  ]}>
+                  <AccessibleTouchableOpacity
+                    onPress={() => onChangeLanguage(language)}
+                    delayPressIn={100}
+                    disabled={i18n.language === language}>
+                    <View style={styles.row}>
+                      <Text style={[styles.text, { color: colors.text }]}>
+                        {t(`settings:${language}`)}
+                      </Text>
+                      {i18n.language === language && (
+                        <Icon
+                          name="checkmark"
+                          size={22}
+                          style={{ color: colors.text }}
+                        />
+                      )}
+                    </View>
+                  </AccessibleTouchableOpacity>
+                </View>
+              ))}
+          {/* <View
             style={[
               styles.rowWrapper,
               styles.withBorderBottom,
@@ -292,7 +325,7 @@ const SettingsScreen: React.FC<Props> = ({
                 )}
               </View>
             </AccessibleTouchableOpacity>
-          </View>
+          </View> */}
         </View>
         <View
           style={[
