@@ -69,7 +69,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                   'navigation:settings'
                 )}`}</Text>
                 <Icon
-                  name="arrow-right"
+                  name="arrow-forward"
                   width={22}
                   height={22}
                   style={{ color: colors.text }}
@@ -91,7 +91,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                   'navigation:termsAndConditions'
                 )}`}</Text>
                 <Icon
-                  name="arrow-right"
+                  name="arrow-forward"
                   width={22}
                   height={22}
                   style={{ color: colors.text }}
@@ -105,16 +105,74 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               styles.withBorderBottom,
               { borderBottomColor: colors.border },
             ]}>
+            <View style={styles.row}>
+              <Text style={[styles.text, { color: colors.text }]}>{`${t(
+                'navigation:about'
+              )}`}</Text>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.withBorderBottom,
+              styles.withMarginLeft,
+              { borderBottomColor: colors.border },
+            ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('About')}
-              testID="navigation_about">
+              onPress={() => navigation.navigate('About')}>
               <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>{`${t(
-                  'navigation:about'
+                <Text
+                  style={[styles.textRegular, { color: colors.text }]}>{`${t(
+                  'navigation:general'
                 )}`}</Text>
                 <Icon
-                  name="arrow-right"
+                  name="arrow-forward"
+                  width={22}
+                  height={22}
+                  style={{ color: colors.text }}
+                />
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+          <View
+            style={[
+              styles.withBorderBottom,
+              styles.withMarginLeft,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              delayPressIn={100}
+              onPress={() => navigation.navigate('About')}>
+              <View style={styles.row}>
+                <Text
+                  style={[styles.textRegular, { color: colors.text }]}>{`${t(
+                  'navigation:dataPrivacy'
+                )}`}</Text>
+                <Icon
+                  name="arrow-forward"
+                  width={22}
+                  height={22}
+                  style={{ color: colors.text }}
+                />
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+          <View
+            style={[
+              styles.withBorderBottom,
+              styles.withMarginLeft,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              delayPressIn={100}
+              onPress={() => navigation.navigate('About')}>
+              <View style={styles.row}>
+                <Text
+                  style={[styles.textRegular, { color: colors.text }]}>{`${t(
+                  'navigation:accessibility'
+                )}`}</Text>
+                <Icon
+                  name="arrow-forward"
                   width={22}
                   height={22}
                   style={{ color: colors.text }}
@@ -136,7 +194,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                   'navigation:feedback'
                 )}`}</Text>
                 <Icon
-                  name="arrow-right"
+                  name="arrow-forward"
                   width={22}
                   height={22}
                   style={{ color: colors.text }}
@@ -206,11 +264,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
   },
+  textRegular: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+  },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 12,
+    minHeight: 44,
     width: '100%',
   },
   withBorderBottom: {
@@ -231,6 +294,9 @@ const styles = StyleSheet.create({
   },
   withPaddingHorizontal: {
     paddingHorizontal: 12,
+  },
+  withMarginLeft: {
+    marginLeft: 20,
   },
 });
 
