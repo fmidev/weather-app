@@ -28,7 +28,7 @@ import SplashScreen from 'react-native-splash-screen';
 import OthersScreen from '@screens/OthersScreen';
 import MapScreen from '@screens/MapScreen';
 import WeatherScreen from '@screens/WeatherScreen';
-import SymbolsScreen from '@screens/SymbolsScreen';
+import FeedbackScreen from '@screens/FeedbackScreen';
 import SettingsScreen from '@screens/SettingsScreen';
 import SearchScreen from '@screens/SearchScreen';
 import AboutScreen from '@screens/AboutScreen';
@@ -281,8 +281,7 @@ const Navigator: React.FC<Props> = ({
         name="StackOthers"
         component={OthersScreen}
         options={{
-          ...CommonHeaderOptions,
-          headerTitle: `${t('navigation:others')}`,
+          headerShown: false,
         }}
       />
       <OthersStack.Screen
@@ -304,13 +303,20 @@ const Navigator: React.FC<Props> = ({
         listeners={stackScreenListener}
       />
       <OthersStack.Screen
-        name="Symbols"
-        component={SymbolsScreen}
+        name="TermsAndConditions"
+        component={TermsAndConditionsScreen}
         options={{
           ...CommonHeaderOptions,
-          headerTitle: `${t('navigation:symbols')}`,
+          headerTitle: `${t('navigation:termsAndConditions')}`,
         }}
-        listeners={stackScreenListener}
+      />
+      <OthersStack.Screen
+        name="GiveFeedback"
+        component={FeedbackScreen}
+        options={{
+          ...CommonHeaderOptions,
+          headerTitle: `${t('navigation:feedback')}`,
+        }}
       />
     </OthersStack.Navigator>
   );
@@ -382,6 +388,7 @@ const Navigator: React.FC<Props> = ({
         <Tab.Navigator
           initialRouteName={initialTab}
           screenOptions={{
+            tabBarHideOnKeyboard: true,
             tabBarActiveTintColor: useDarkTheme
               ? darkTheme.colors.tabBarActive
               : lightTheme.colors.tabBarActive,

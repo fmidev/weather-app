@@ -23,6 +23,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
       style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.scrollContainer}
+        contentContainerStyle={styles.withPaddingBottom}
         showsVerticalScrollIndicator={false}>
         <Text
           style={[styles.title, { color: colors.primaryText }]}
@@ -110,6 +111,9 @@ const styles = StyleSheet.create({
   closeText: {
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
+  },
+  withPaddingBottom: {
+    paddingBottom: 24,
   },
 });
 

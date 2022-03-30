@@ -1,16 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, SafeAreaView, Text, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  AppState,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+// import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
+import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { setItem, LOCALE } from '@utils/async_storage';
-import { UNITS } from '@utils/units';
+// import { UNITS } from '@utils/units';
 import { State } from '@store/types';
 import { selectUnits, selectTheme } from '@store/settings/selectors';
 import {
@@ -18,9 +26,13 @@ import {
   updateTheme as updateThemeAction,
 } from '@store/settings/actions';
 import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
-import { UnitType } from '@store/settings/types';
+// import { UnitType } from '@store/settings/types';
 import { selectStoredGeoids } from '@store/location/selector';
 // import { GRAY_1 } from '@utils/colors';
+
+const LOCATION_ALWAYS = 'location_always';
+const LOCATION_WHEN_IN_USE = 'location_when_in_use';
+const LOCATION_NEVER = 'location_never';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -48,14 +60,55 @@ const SettingsScreen: React.FC<Props> = ({
   updateTheme,
   updateLocationsLocales,
 }) => {
+  const [locationPermission, setLocationPermission] = useState<
+    string | undefined
+  >(undefined);
   const { t, i18n } = useTranslation('settings');
   const { colors } = useTheme();
-  const sheetRefs = {
-    temperature: useRef(),
-    precipitation: useRef(),
-    wind: useRef(),
-    pressure: useRef(),
-  } as { [key: string]: React.MutableRefObject<RBSheet> };
+  const isAndroid = Platform.OS === 'android';
+  // const sheetRefs = {
+  //   temperature: useRef(),
+  //   precipitation: useRef(),
+  //   wind: useRef(),
+  //   pressure: useRef(),
+  // } as { [key: string]: React.MutableRefObject<RBSheet> };
+
+  useEffect(() => {
+    const subscriber = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
+    checkLocationPermissions();
+    return () => subscriber.remove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const checkLocationPermissions = () => {
+    const permissions = isAndroid
+      ? [PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]
+      : [PERMISSIONS.IOS.LOCATION_ALWAYS, PERMISSIONS.IOS.LOCATION_WHEN_IN_USE];
+    Permissions.checkMultiple(permissions).then((statuses) => {
+      if (statuses[PERMISSIONS.IOS.LOCATION_ALWAYS] === RESULTS.GRANTED) {
+        setLocationPermission(LOCATION_ALWAYS);
+      } else if (
+        statuses[PERMISSIONS.IOS.LOCATION_WHEN_IN_USE] === RESULTS.GRANTED
+      ) {
+        setLocationPermission(LOCATION_WHEN_IN_USE);
+      } else if (
+        statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED
+      ) {
+        setLocationPermission(LOCATION_WHEN_IN_USE);
+      } else {
+        setLocationPermission(LOCATION_NEVER);
+      }
+    });
+  };
+
+  const handleAppStateChange = (state: string) => {
+    if (state === 'active') {
+      checkLocationPermissions();
+    }
+  };
 
   const onChangeLanguage = async (lang: string): Promise<void> => {
     i18n.changeLanguage(lang);
@@ -67,20 +120,129 @@ const SettingsScreen: React.FC<Props> = ({
     }
   };
 
-  const unitTypesByKey = (key: string): UnitType[] | undefined =>
-    UNITS.find((unit) => unit.parameterName === key)?.unitTypes;
+  const goToSettings = () => {
+    Permissions.openSettings().catch((e) =>
+      console.warn('cannot open settings', e)
+    );
+  };
+
+  // const unitTypesByKey = (key: string): UnitType[] | undefined =>
+  //   UNITS.find((unit) => unit.parameterName === key)?.unitTypes;
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
-        <View style={styles.titleContainer}>
-          <Text
-            style={[styles.title, { color: colors.text }]}
-            testID="settings_language_header">
-            {t('settings:language')}
-          </Text>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            styles.withMarginTop,
+            { borderBottomColor: colors.border },
+          ]}>
+          <View style={styles.row}>
+            <Text style={[styles.title, { color: colors.text }]}>
+              {t('settings:allowLocation')}
+            </Text>
+          </View>
+        </View>
+        <View>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              onPress={goToSettings}
+              delayPressIn={100}
+              disabled={locationPermission === LOCATION_NEVER}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {t('settings:locationNever')}
+                </Text>
+                {locationPermission === LOCATION_NEVER && (
+                  <View>
+                    <Icon
+                      name="checkmark"
+                      size={22}
+                      style={{ color: colors.text }}
+                    />
+                  </View>
+                )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              onPress={goToSettings}
+              delayPressIn={100}
+              disabled={locationPermission === LOCATION_WHEN_IN_USE}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {t('settings:locationWhenInUse')}
+                </Text>
+                {locationPermission === LOCATION_WHEN_IN_USE && (
+                  <View>
+                    <Icon
+                      name="checkmark"
+                      size={22}
+                      style={{ color: colors.text }}
+                    />
+                  </View>
+                )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+          {!isAndroid && (
+            <View
+              style={[
+                styles.rowWrapper,
+                styles.withBorderBottom,
+                { borderBottomColor: colors.border },
+              ]}>
+              <AccessibleTouchableOpacity
+                onPress={goToSettings}
+                delayPressIn={100}
+                disabled={locationPermission === LOCATION_ALWAYS}>
+                <View style={styles.row}>
+                  <Text style={[styles.text, { color: colors.text }]}>
+                    {t('settings:locationAlways')}
+                  </Text>
+                  {locationPermission === LOCATION_ALWAYS && (
+                    <View>
+                      <Icon
+                        name="checkmark"
+                        size={22}
+                        style={{ color: colors.text }}
+                      />
+                    </View>
+                  )}
+                </View>
+              </AccessibleTouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            styles.withMarginTop,
+            { borderBottomColor: colors.border },
+          ]}>
+          <View style={styles.row}>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              testID="settings_language_header">
+              {t('settings:language')}
+            </Text>
+          </View>
         </View>
         <View>
           <View
@@ -95,9 +257,7 @@ const SettingsScreen: React.FC<Props> = ({
               disabled={i18n.language === 'fi'}
               testID="settings_set_language_fi">
               <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
-                  {t('settings:fi')}
-                </Text>
+                <Text style={[styles.text, { color: colors.text }]}>suomi</Text>
                 {i18n.language === 'fi' && (
                   <Icon
                     name="checkmark"
@@ -108,7 +268,12 @@ const SettingsScreen: React.FC<Props> = ({
               </View>
             </AccessibleTouchableOpacity>
           </View>
-          <View style={styles.rowWrapper}>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
             <AccessibleTouchableOpacity
               onPress={() => onChangeLanguage('en')}
               delayPressIn={100}
@@ -116,7 +281,7 @@ const SettingsScreen: React.FC<Props> = ({
               testID="settings_set_language_en">
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
-                  {t('settings:en')}
+                  in English
                 </Text>
                 {i18n.language === 'en' && (
                   <Icon
@@ -129,12 +294,20 @@ const SettingsScreen: React.FC<Props> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        <View style={styles.titleContainer}>
-          <Text
-            style={[styles.title, { color: colors.text }]}
-            testID="settings_theme_header">
-            {t('settings:appearance')}
-          </Text>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            styles.withMarginTop,
+            { borderBottomColor: colors.border },
+          ]}>
+          <View style={styles.row}>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              testID="settings_theme_header">
+              {t('settings:appearance')}
+            </Text>
+          </View>
         </View>
         <View>
           <View
@@ -191,7 +364,12 @@ const SettingsScreen: React.FC<Props> = ({
               </View>
             </AccessibleTouchableOpacity>
           </View>
-          <View style={styles.rowWrapper}>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
             <AccessibleTouchableOpacity
               onPress={() => updateTheme('automatic')}
               delayPressIn={100}
@@ -323,9 +501,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     minHeight: '100%',
   },
-  titleContainer: {
-    padding: 20,
-  },
   title: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
@@ -340,12 +515,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 13,
+    paddingVertical: 12,
     width: '100%',
+    height: 48,
   },
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
+  },
+  withMarginTop: {
+    marginTop: 16,
   },
   // sheetContainer: {
   //   borderTopLeftRadius: 10,

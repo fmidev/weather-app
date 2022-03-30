@@ -11,7 +11,8 @@ export type OthersStackParamList = {
   StackOthers: undefined;
   About: undefined;
   Settings: undefined;
-  Symbols: undefined;
+  TermsAndConditions: undefined;
+  GiveFeedback: undefined;
 };
 
 export type MapStackParamList = {

@@ -29,7 +29,7 @@
       "precipitationLight": "Precipitation (mm), light rain",
       "precipitationModerate": "Precipitation (mm), moderate rain",
       "precipitationHeavy": "Precipitation (mm), heavy rain",
-      "pop":"Precipitation probability (%)",
+      "pop": "Precipitation probability (%)",
       "wind": "Wind",
       "windAccessibilityLabel": "Open wind chart",
       "feelsLike": "Feels like",
@@ -214,9 +214,11 @@
     "weather": "Weather",
     "others": "Others",
     "about": "About",
-    "notifications": "Notifications",
+    "termsAndConditions": "Terms and Conditions",
+    "feedback": "Give feedback",
     "warnings": "Warnings",
     "settings": "Settings",
+    "fmiServices": "FMI's services",
     "symbols": "Weather symbols",
     "locate": "Locate",
     "search": "Search",
@@ -236,12 +238,13 @@
     "notifications": "Something about notification settings"
   },
   "about": {
-    "versionInfo": "Application version"
+    "versionInfo": "Application version",
+    "followUs": "Follow us",
+    "title": "Lorem ipsum",
+    "body": "Tämä on Ilmatieteen laitoksen mobiilisääsovellus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem."
   },
   "settings": {
     "language": "Language",
-    "en": "English",
-    "fi": "Finnish",
     "units": "Units",
     "temperature": "Temperature",
     "precipitation": "Precipitation",
@@ -250,7 +253,11 @@
     "appearance": "Appearance",
     "appearanceLight": "Light",
     "appearanceDark": "Dark",
-    "appearanceAutomatic": "Automatic"
+    "appearanceAutomatic": "Automatic",
+    "allowLocation": "Allow location use",
+    "locationNever": "Never",
+    "locationWhenInUse": "When using the application",
+    "locationAlways": "Always"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search location",
@@ -465,5 +472,11 @@
     "contentsTitle": "Contents",
     "someOtherTitle": "Third title",
     "loremIpsum": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus."
+  },
+  "feedback": {
+    "title": "Thank you for helping us developing our services!",
+    "body1": "Give us your feedback of the application with Send feedback button. You will be transferred to your mail application.",
+    "body2": "We go through all feedback but may not get back to you personally.",
+    "sendFeedback": "Send feedback"
   }
 }

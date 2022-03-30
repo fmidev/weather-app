@@ -27,6 +27,9 @@ import InfoSaveLocationLight from '@assets/images/icons/info-save-location-light
 import Info from '@assets/images/icons/info.svg';
 import Layers from '@assets/images/icons/layers.svg';
 import Locate from '@assets/images/icons/locate.svg';
+import LogoFmiEn from '@assets/images/icons/logo-fmi-en.svg';
+import LogoFmiFi from '@assets/images/icons/logo-fmi-fi.svg';
+import LogoFmiSv from '@assets/images/icons/logo-fmi-sv.svg';
 import MapMarker from '@assets/images/icons/map-marker.svg';
 import Map from '@assets/images/icons/map.svg';
 import Menu from '@assets/images/icons/menu.svg';
@@ -47,6 +50,12 @@ import RainWhite from '@assets/images/icons/rain-white.svg';
 import Search from '@assets/images/icons/search.svg';
 import Settings from '@assets/images/icons/settings.svg';
 import Snow from '@assets/images/icons/snow.svg';
+import SocialInstagramDark from '@assets/images/icons/social-instagram-dark.svg';
+import SocialTwitterDark from '@assets/images/icons/social-twitter-dark.svg';
+import SocialYoutubeDark from '@assets/images/icons/social-youtube-dark.svg';
+import SocialInstagramLight from '@assets/images/icons/social-instagram-light.svg';
+import SocialTwitterLight from '@assets/images/icons/social-twitter-light.svg';
+import SocialYoutubeLight from '@assets/images/icons/social-youtube-light.svg';
 import StarSelected from '@assets/images/icons/star-selected.svg';
 import StarUnselected from '@assets/images/icons/star-unselected.svg';
 import SunArrowDown from '@assets/images/icons/sun-arrow-down.svg';
@@ -169,6 +178,12 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Layers {...(props as SvgProps)} />;
     case 'locate':
       return <Locate {...(props as SvgProps)} />;
+    case 'logo-fmi-en':
+      return <LogoFmiEn {...(props as SvgProps)} />;
+    case 'logo-fmi-fi':
+      return <LogoFmiFi {...(props as SvgProps)} />;
+    case 'logo-fmi-sv':
+      return <LogoFmiSv {...(props as SvgProps)} />;
     case 'map-marker':
       return <MapMarker {...(props as SvgProps)} />;
     case 'map':
@@ -209,6 +224,18 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Settings {...(props as SvgProps)} />;
     case 'snow':
       return <Snow {...(props as SvgProps)} />;
+    case 'social-instagram-dark':
+      return <SocialInstagramDark {...(props as SvgProps)} />;
+    case 'social-twitter-dark':
+      return <SocialTwitterDark {...(props as SvgProps)} />;
+    case 'social-youtube-dark':
+      return <SocialYoutubeDark {...(props as SvgProps)} />;
+    case 'social-instagram-light':
+      return <SocialInstagramLight {...(props as SvgProps)} />;
+    case 'social-twitter-light':
+      return <SocialTwitterLight {...(props as SvgProps)} />;
+    case 'social-youtube-light':
+      return <SocialYoutubeLight {...(props as SvgProps)} />;
     case 'star-selected':
       return <StarSelected {...(props as SvgProps)} />;
     case 'star-unselected':

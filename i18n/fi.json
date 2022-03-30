@@ -214,9 +214,11 @@
     "weather": "Sää",
     "others": "Muut",
     "about": "Tietoja sovelluksesta",
-    "notifications": "Ilmoitusasetukset",
+    "termsAndConditions": "Käyttöehdot",
+    "feedback": "Anna palautetta",
     "warnings": "Varoitukset",
     "settings": "Asetukset",
+    "fmiServices": "Ilmatieteen laitoksen palvelut",
     "symbols": "Sääsymbolit",
     "locate": "Paikanna",
     "search": "Haku",
@@ -237,12 +239,13 @@
     "notifications": "Täälä olisi jotain notifikaatioista"
   },
   "about": {
-    "versionInfo": "Sovelluksen versio"
+    "versionInfo": "Sovelluksen versio",
+    "followUs": "Seuraa meitä",
+    "title": "Lorem ipsum",
+    "body": "Tämä on Ilmatieteen laitoksen mobiilisääsovellus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem."
   },
   "settings": {
     "language": "Kieli",
-    "en": "Englanti",
-    "fi": "Suomi",
     "units": "Yksiköt",
     "temperature": "Lämpötila",
     "precipitation": "Sademäärä",
@@ -251,7 +254,11 @@
     "appearance": "Ulkoasu",
     "appearanceLight": "Vaalea",
     "appearanceDark": "Tumma",
-    "appearanceAutomatic": "Automaattinen"
+    "appearanceAutomatic": "Automaattinen",
+    "allowLocation": "Salli paikannus",
+    "locationNever": "Ei koskaan",
+    "locationWhenInUse": "Vain sovellusta käytettäessä",
+    "locationAlways": "Aina"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",
@@ -466,5 +473,11 @@
     "contentsTitle": "Käyttöoikeuden sisältö",
     "someOtherTitle": "Kolmas otsikko",
     "loremIpsum": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus."
+  },
+  "feedback": {
+    "title": "Kiitos, että autat meitä kehittämään palvelujamme!",
+    "body1": "Kerro meille palautteesi sovelluksesta Lähetä palautetta -painikkeen kautta. Painikkeesta siirryt puhelimen sähköpostiohjelmaan.",
+    "body2": "Käsittelemme kaikki palautteet, mutta emme voi taata henkilökohtaista vastausta.",
+    "sendFeedback": "Lähetä palautetta"
   }
 }

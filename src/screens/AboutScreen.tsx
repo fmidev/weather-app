@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -9,12 +9,23 @@ const AboutScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   return (
-    <SafeAreaView style={styles.container}>
-      <Text
-        style={[styles.text, { color: colors.text }]}
-        testID="about_version_info">
-        {`${t('about:versionInfo')}: ${packageJSON.version}`}
-      </Text>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}>
+        <Text style={[styles.title, { color: colors.text }]}>
+          {t('about:title')}
+        </Text>
+        <Text style={[styles.text, { color: colors.text }]}>
+          {t('about:body')}
+        </Text>
+        <Text
+          style={[styles.text, { color: colors.text }]}
+          testID="about_version_info">
+          {`${t('about:versionInfo')}: ${packageJSON.version}`}
+        </Text>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -22,13 +33,21 @@ const AboutScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+  },
+  scrollContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
+    marginTop: 32,
+    marginBottom: 16,
   },
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
+    marginBottom: 16,
   },
 });
 
