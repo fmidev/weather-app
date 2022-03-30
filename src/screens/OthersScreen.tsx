@@ -19,42 +19,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
   } = useTranslation('navigation');
   const { colors, dark } = useTheme();
 
-  const fmiServicesURL = {
-    fi: 'https://www.ilmatieteenlaitos.fi/palvelut-ja-tuotteet',
-    en: 'https://en.ilmatieteenlaitos.fi/services-and-products',
-    sv: ' https://sv.ilmatieteenlaitos.fi/service-och-produkter',
-  };
-
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <View>
-          <View
-            style={[
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              delayPressIn={100}
-              onPress={() =>
-                Linking.openURL(
-                  fmiServicesURL[language as keyof typeof fmiServicesURL]
-                )
-              }
-              testID="navigation_symbols">
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>{`${t(
-                  'navigation:fmiServices'
-                )}`}</Text>
-                <Icon
-                  name="open-in-new"
-                  width={22}
-                  height={22}
-                  style={{ color: colors.text }}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
           <View
             style={[
               styles.withBorderBottom,
@@ -67,28 +35,6 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>{`${t(
                   'navigation:settings'
-                )}`}</Text>
-                <Icon
-                  name="arrow-forward"
-                  width={22}
-                  height={22}
-                  style={{ color: colors.text }}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-
-          <View
-            style={[
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              delayPressIn={100}
-              onPress={() => navigation.navigate('TermsAndConditions')}>
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>{`${t(
-                  'navigation:termsAndConditions'
                 )}`}</Text>
                 <Icon
                   name="arrow-forward"
@@ -134,6 +80,30 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               </View>
             </AccessibleTouchableOpacity>
           </View>
+          <View
+            style={[
+              styles.withBorderBottom,
+              styles.withMarginLeft,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              delayPressIn={100}
+              onPress={() => navigation.navigate('TermsAndConditions')}>
+              <View style={styles.row}>
+                <Text
+                  style={[styles.textRegular, { color: colors.text }]}>{`${t(
+                  'navigation:termsAndConditions'
+                )}`}</Text>
+                <Icon
+                  name="arrow-forward"
+                  width={22}
+                  height={22}
+                  style={{ color: colors.text }}
+                />
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+
           <View
             style={[
               styles.withBorderBottom,
