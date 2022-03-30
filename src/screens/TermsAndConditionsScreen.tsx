@@ -31,7 +31,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('generalTitle')}
         </Text>
         <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('loremIpsum')}
+          {t('generalDescription')}
         </Text>
         <Text
           style={[styles.title, { color: colors.primaryText }]}
@@ -39,15 +39,55 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('contentsTitle')}
         </Text>
         <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('loremIpsum')}
+          {t('contentsDescription')}
         </Text>
         <Text
           style={[styles.title, { color: colors.primaryText }]}
           accessibilityRole="header">
-          {t('someOtherTitle')}
+          {t('personalInfoTitle')}
         </Text>
         <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('loremIpsum')}
+          {t('personalInfoDescription')}
+        </Text>
+        <Text
+          style={[styles.title, { color: colors.primaryText }]}
+          accessibilityRole="header">
+          {t('immaterialRightsTitle')}
+        </Text>
+        <Text style={[styles.body, { color: colors.hourListText }]}>
+          {t('immaterialRightsDescription')}
+        </Text>
+        <Text
+          style={[styles.title, { color: colors.primaryText }]}
+          accessibilityRole="header">
+          {t('liabilityTitle')}
+        </Text>
+        <Text style={[styles.body, { color: colors.hourListText }]}>
+          {t('liabilityDescription')}
+        </Text>
+        <Text
+          style={[styles.title, { color: colors.primaryText }]}
+          accessibilityRole="header">
+          {t('rightToChangesTitle')}
+        </Text>
+        <Text style={[styles.body, { color: colors.hourListText }]}>
+          {t('rightToChangesDescription')}
+        </Text>
+        <Text
+          style={[styles.title, { color: colors.primaryText }]}
+          accessibilityRole="header">
+          {t('applicableLawTitle')}
+        </Text>
+        <Text style={[styles.body, { color: colors.hourListText }]}>
+          {t('applicableLawDescription')}
+        </Text>
+        <Text
+          style={[styles.title, { color: colors.primaryText }]}
+          accessibilityRole="header">
+          {t('contactDetailsTitle')}
+        </Text>
+        <Text style={[styles.body, { color: colors.hourListText }]}>
+          {t('contactDetailsDescription')}
         </Text>
       </ScrollView>
       {showCloseButton && (
