@@ -15,6 +15,7 @@ import {
   NativeScrollEvent,
   ScrollView,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
@@ -132,7 +133,9 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   useEffect(() => {
     if (currentIndex >= 0) {
       if (!isAnimating) {
-        ReactNativeHapticFeedback.trigger('soft');
+        ReactNativeHapticFeedback.trigger(
+          Platform.OS === 'ios' ? 'selection' : 'impactMedium'
+        );
       }
       updateSliderTime(sliderTimes[currentIndex] || 0);
     }
