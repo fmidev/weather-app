@@ -143,7 +143,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           { backgroundColor: colors.border },
         ]}
       />
-      <View style={styles.row} accessible>
+      <View style={[styles.row, styles.justifySpaceBetween]} accessible>
         <View
           style={styles.row}
           accessibilityLabel={
@@ -264,6 +264,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+  },
+  justifySpaceBetween: {
+    justifyContent: 'space-between',
   },
   feelsLikeRow: {
     flexDirection: 'row',
