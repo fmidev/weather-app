@@ -63,12 +63,15 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
     return <Icon name={name} width={24} height={24} />;
   };
 
-  if (warnings.length === 0) {
-    return null;
-  }
-
   return (
     <View style={styles.container}>
+      {warnings.length === 0 && (
+        <View>
+          <Text style={[styles.description, { color: colors.hourListText }]}>
+            {t('warnings:noWarningsText')}
+          </Text>
+        </View>
+      )}
       {warnings.map(({ description, type, severity, duration }, index) => (
         <View key={`${type}-${duration.startTime}`}>
           <View style={styles.flex}>

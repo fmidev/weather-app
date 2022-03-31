@@ -432,6 +432,7 @@
     "valid": "valid between",
     "hasWarnings": "active warnings",
     "noWarnings": "no active warnings",
+    "noWarningsText": "No active warnings",
     "navigateToWarningsPage": "Navigate to Warnings page",
     "dateAccessibilityHint": "show all active warnings to selected date",
     "warningAccessibilityHint": "show detailed warning description",

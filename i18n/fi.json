@@ -433,6 +433,7 @@
     "valid": "voimassa",
     "hasWarnings": "varoituksia voimassa",
     "noWarnings": "ei varoituksia voimassa",
+    "noWarningsText": "Ei voimassa olevia varoituksia",
     "navigateToWarningsPage": "navigoi Varoitus-sivulle",
     "dateAccessibilityHint": "näytä kaikki päivän aktiiviset varoitukset",
     "warningAccessibilityHint": "näytä varoituksen tarkemmat tiedot",
