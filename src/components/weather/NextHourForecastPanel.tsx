@@ -90,11 +90,15 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           })}
         </View>
         {activeParameters.includes('temperature') && (
-          <Text
-            style={[
-              styles.temperatureText,
-              { color: colors.primaryText },
-            ]}>{`${nextHourForecast.temperature}°`}</Text>
+          <View style={[styles.row, styles.alignStart]}>
+            <Text
+              style={[styles.temperatureText, { color: colors.primaryText }]}>
+              {`${nextHourForecast.temperature}`}
+            </Text>
+            <Text style={[styles.unitText, { color: colors.primaryText }]}>
+              °C
+            </Text>
+          </View>
         )}
       </View>
       <View style={[styles.feelsLikeRow, styles.withMarginBottom]}>
@@ -117,11 +121,10 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                   { color: colors.hourListText },
                 ]}>
                 {t('feelsLike')}{' '}
-                <Text
-                  style={[
-                    styles.bold,
-                    styles.feelsLikeText,
-                  ]}>{`${nextHourForecast.feelsLike}°`}</Text>
+                <Text style={[styles.bold, styles.feelsLikeText]}>
+                  {`${nextHourForecast.feelsLike}`}
+                </Text>
+                <Text style={styles.feelsLikeText}>°C</Text>
               </Text>
               <Icon
                 name={getFeelsLikeIconName(
@@ -270,6 +273,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
   },
+  alignStart: {
+    alignItems: 'flex-start',
+  },
   withMarginBottom: {
     marginBottom: 15,
   },
@@ -292,6 +298,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
+  },
+  unitText: {
+    fontSize: 20,
+    fontFamily: 'Roboto-Regular',
+    paddingTop: 12,
   },
   bold: {
     fontFamily: 'Roboto-Bold',

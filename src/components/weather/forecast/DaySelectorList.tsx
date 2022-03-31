@@ -121,7 +121,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
               accessibilityLabel={t('forecast:fromTo', {
                 min: minTemperature,
                 max: maxTemperature,
-              })}>{`${minTemperature}° ... ${maxTemperature}°`}</Text>
+              })}>{`${minTemperature} ... ${maxTemperature}°C`}</Text>
           )}
         </AccessibleTouchableOpacity>
         {activeParameters.includes('precipitation1h') && (
