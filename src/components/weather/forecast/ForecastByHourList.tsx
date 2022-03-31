@@ -222,10 +222,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             </>
           )}
           {!isPolarNight && !isMidnightSun && (
-            <>
-              <View
-                accessible
-                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+            <View
+              style={[
+                styles.row,
+                styles.listContainer,
+                styles.justifySpaceBetween,
+              ]}>
+              <View accessible style={[styles.row, styles.alignCenter]}>
                 <Icon
                   width={14}
                   height={14}
@@ -249,8 +252,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {sunrise.format('HH:mm')}
                 </Text>
               </View>
-              <View
-                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+              <View style={[styles.row, styles.alignCenter]}>
                 <Icon
                   width={14}
                   height={14}
@@ -272,8 +274,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {sunset.format('HH:mm')}
                 </Text>
               </View>
-              <View
-                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+              <View style={[styles.row, styles.alignCenter]}>
                 <Icon
                   width={24}
                   height={24}
@@ -295,7 +296,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {`${dayHours} h ${dayMinutes} min`}
                 </Text>
               </View>
-            </>
+            </View>
           )}
         </View>
       </View>
@@ -383,6 +384,9 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
+  },
+  justifySpaceBetween: {
+    justifyContent: 'space-between',
   },
   bold: {
     fontFamily: 'Roboto-Bold',
