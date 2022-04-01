@@ -83,6 +83,7 @@ import WarningsThunderStormRed from '@assets/images/icons/warnings-thunder-storm
 import WarningsThunderStormYellow from '@assets/images/icons/warnings-thunder-storm-yellow.svg';
 import WarningsTrafficWeatherOrange from '@assets/images/icons/warnings-traffic-weather-orange.svg';
 import WarningsTrafficWeatherYellow from '@assets/images/icons/warnings-traffic-weather-yellow.svg';
+import WarningsTrafficWeatherRed from '@assets/images/icons/warnings-traffic-weather-red.svg';
 import WarningsUvNote from '@assets/images/icons/warnings-uv-note.svg';
 import WarningsWindOrange from '@assets/images/icons/warnings-wind-orange.svg';
 import WarningsWindRed from '@assets/images/icons/warnings-wind-red.svg';
@@ -284,6 +285,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WarningsTrafficWeatherOrange {...(props as SvgProps)} />;
     case 'warnings-traffic-weather-yellow':
       return <WarningsTrafficWeatherYellow {...(props as SvgProps)} />;
+    case 'warnings-traffic-weather-red':
+      return <WarningsTrafficWeatherRed {...(props as SvgProps)} />;
     case 'warnings-uv-note':
       return <WarningsUvNote {...(props as SvgProps)} />;
     case 'warnings-wind-orange':
