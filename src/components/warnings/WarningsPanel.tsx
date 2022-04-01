@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTheme, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@utils/colors';
 import { State } from '@store/types';
 import {
   selectUpdated,
@@ -14,8 +14,10 @@ import moment from 'moment';
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
+import RBSheet from 'react-native-raw-bottom-sheet';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
+import InfoSheet from './InfoSheet';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
@@ -38,6 +40,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
+  const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
   moment.locale(i18n.language);
 
@@ -86,7 +89,8 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                 {location.name}
               </Text>
             </View>
-            <AccessibleTouchableOpacity onPress={() => {}}>
+            <AccessibleTouchableOpacity
+              onPress={() => infoSheetRef.current.open()}>
               <View style={[styles.iconPadding]}>
                 <Icon
                   name="info"
@@ -200,6 +204,19 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           </Text>
         </View>
       </View>
+      <RBSheet
+        ref={infoSheetRef}
+        height={600}
+        closeOnDragDown
+        customStyles={{
+          container: {
+            ...styles.sheetContainer,
+            backgroundColor: colors.background,
+          },
+          draggableIcon: styles.draggableIcon,
+        }}>
+        <InfoSheet onClose={() => infoSheetRef.current.close()} />
+      </RBSheet>
     </View>
   );
 };
@@ -315,6 +332,14 @@ const styles = StyleSheet.create({
   dayWarningHeaderText: {
     textTransform: 'capitalize',
     textAlign: 'center',
+  },
+  sheetContainer: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  draggableIcon: {
+    backgroundColor: GRAY_1,
+    width: 65,
   },
 });
 
