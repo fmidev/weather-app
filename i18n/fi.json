@@ -214,9 +214,14 @@
     "weather": "Sää",
     "others": "Muut",
     "about": "Tietoja sovelluksesta",
-    "notifications": "Ilmoitusasetukset",
+    "general": "Yleistä",
+    "dataPrivacy": "Tietosuoja",
+    "accessibility": "Saavutettavuus",
+    "termsAndConditions": "Käyttöehdot",
+    "feedback": "Anna palautetta",
     "warnings": "Varoitukset",
     "settings": "Asetukset",
+    "fmiServices": "Ilmatieteen laitoksen palvelut",
     "symbols": "Sääsymbolit",
     "locate": "Paikanna",
     "search": "Haku",
@@ -237,12 +242,13 @@
     "notifications": "Täälä olisi jotain notifikaatioista"
   },
   "about": {
-    "versionInfo": "Sovelluksen versio"
+    "versionInfo": "Sovelluksen versio",
+    "followUs": "Seuraa meitä",
+    "title": "Ilmatieteen laitoksen Sää -sovellus",
+    "body": "Sää-sovelluksestamme saat säätietoja lähes kaikille Suomen paikkakunnille ja sallimalla puhelimesi paikannuksen, palvelu näyttää automaattisesti sijaintisi sääennusteen 10 vrk asti. Kiinnostaako sinua vain lämpötila vai haluatko myös tietoja esimerkiksi ilmanpaineesta, tuulen puuskista tai vaikkapa UV-indeksistä? Sekä sääennusteissa että säähavainnoissa voit vapaasti valita mitä säätietoja haluat seurata. Voit myös tallentaa sovellukseen suosikkipaikkakuntasi niin Suomesta kuin ulkomailta ja selata niitä helposti. Haluamasi tiedot ovat tarjolla sekä taulukkoina että graafisena esityksenä. Kartta-osion animaatioista voit seurata mm. sadealueiden liikettä ja tutkakuviin perustuva sade-ennuste kertoo mihin päin sateet liikkuvat tulevien tuntien aikana. Palvelussa näkyvät voimassa olevat säävaroitukset valitsemassasi sijainnissa ja pystyt myös helposti tarkistamaan viralliset säävaroitukset koko Suomen alueelta."
   },
   "settings": {
     "language": "Kieli",
-    "en": "Englanti",
-    "fi": "Suomi",
     "units": "Yksiköt",
     "temperature": "Lämpötila",
     "precipitation": "Sademäärä",
@@ -251,7 +257,14 @@
     "appearance": "Ulkoasu",
     "appearanceLight": "Vaalea",
     "appearanceDark": "Tumma",
-    "appearanceAutomatic": "Automaattinen"
+    "appearanceAutomatic": "Automaattinen",
+    "allowLocation": "Salli paikannus",
+    "locationNever": "Ei koskaan",
+    "locationWhenInUse": "Vain sovellusta käytettäessä",
+    "locationAlways": "Aina",
+    "fi": "suomi",
+    "sv": "på svenska",
+    "en": "in English"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",
@@ -476,9 +489,27 @@
   "termsAndConditions": {
     "close": "Sulje",
     "closeButtonAccessibilityHint": "Sulje Käyttöehdot ja navigoi takaisin edelliseen näkymään",
-    "generalTitle": "Sää-sovelluksen käyttöehdot",
-    "contentsTitle": "Käyttöoikeuden sisältö",
-    "someOtherTitle": "Kolmas otsikko",
-    "loremIpsum": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus."
+    "generalTitle": "Ilmatieteen laitoksen Sää -mobiilisovelluksen käyttöehdot",
+    "contentsTitle": "1. Käyttöoikeuden sisältö",
+    "contentsDescription": "Sovelluksen käyttäjällä on oikeus käyttää sovellusta näiden käyttöehtojen mukaisesti. Käyttöoikeus ei ole yksinomainen, eikä se ole siirrettävissä kolmannelle osapuolelle. Käyttöoikeus päättyy käyttäjän poistaessa sovelluksen. Sovelluksen käyttäjä vastaa sovelluksen käyttämiseksi tarvittavien laitteiden, ohjelmistojen ja tietoliikenneyhteyksien hankkimisesta sekä niistä aiheutuvista kustannuksista ja laitteiden, ohjelmistojen ja yhteyksien toiminnasta. Käyttäjä huolehtii sovelluksen käytöstä tietoturvallisessa käyttöympäristössä.",
+    "generalDescription": "Käyttöehtoja sovelletaan Ilmatieteen laitoksen ylläpitämän Sää-sovelluksen (”sovellus”) käyttöön. Sovelluksen tarkoituksena on tarjota käyttäjälle säähavaintoja, -ennusteita ja -varoituksia. Nämä käyttöehdot muodostavat sovelluksen käyttöä koskevan sopimuksen Ilmatieteen laitoksen ja sovelluksen käyttäjän välille. Sovelluksen käyttäjän on hyväksyttävä nämä käyttöehdot sovelluksen käyttöönoton yhteydessä, jolloin ne sitovat käyttäjää. Sovelluksen käyttö on vapaaehtoista. Sovellus tarjotaan käyttöön App Storen, Google Play Storen tai Huawei AppGalleryn kautta, jolloin näiden käyttöehtojen lisäksi käyttäjän tulee noudattaa kyseisen palvelutarjoajan omia käyttöehtoja.",
+    "personalInfoTitle": "2. Henkilötiedot",
+    "personalInfoDescription": "Sovellus ei kerää henkilötietoja eikä sijaintiin tai liikkumiseen liittyviä tietoja. Käyttäjä voi milloin tahansa muuttaa tai peruuttaa sovelluksen käyttöönoton mukaiset suostumukset sovelluksen asetuksista. Ilmatieteen laitos voi käyttää alihankkijoita sovelluksen kautta tarjottavan palvelun mahdollistamiseksi.",
+    "immaterialRightsTitle": "3. Immateriaalioikeudet",
+    "immaterialRightsDescription": "Kaikki sovellukseen liittyvät immateriaalioikeudet ja omistusoikeudet kuuluvat Ilmatieteen laitokselle. Sovellus voi sisältää avoimen lähdekoodin ohjelmistoja.",
+    "liabilityTitle": "4. Vastuurajoitukset",
+    "liabilityDescription": "Ilmatieteen laitos valvoo järjestelmää ja pyrkii parhaan kykynsä mukaan estämään häiriöt ja katkokset palvelussa. Ilmatieteen laitos ei vastaa palvelun tai sen puutteen perusteella tehdyistä päätöksistä eikä aineiston käytöstä aiheutuvista välittömistä tai välillisistä vahingoista. Ilmatieteen laitos ei ole vastuussa näiden käyttöehtojen mukaisista velvoitteistaan siltä osin, kun kyse on Ilmatieteen laitoksesta riippumattomasta ylivoimaisesta esteestä.",
+    "rightToChangesTitle": "5. Käyttöehtojen muuttaminen ja voimassaolo",
+    "rightToChangesDescription": "Käyttöehtojen muuttaminen ja voimassaolo Ilmatieteen laitoksen on oikeus muuttaa sovelluksen sisältöjä ja näitä käyttöehtoja. Käyttöehtojen muutoksesta ja sovelluksen sisältömuutoksista ilmoitetaan käyttäjälle. Jotta käyttäjä voi jatkaa sovelluksen käyttöä käyttöehtojen muutoksen jälkeen, on käyttäjän hyväksyttävä muutetut käyttöehdot sovelluksessa.",
+    "applicableLawTitle": "6. Sovellettava laki ja riitatilanteet",
+    "applicableLawDescription": "Käyttöehtoihin sovelletaan Suomen lakia. Mahdolliset riitatilanteet ratkaistaan Helsingin käräjäoikeudessa.",
+    "contactDetailsTitle": "7. Yhteystiedot",
+    "contactDetailsDescription": "Ilmatieteen laitos\nPL 503\n00101 Helsinki"
+  },
+  "feedback": {
+    "title": "Kiitos, että autat meitä kehittämään palvelujamme!",
+    "body1": "Kerro meille palautteesi sovelluksesta Lähetä palautetta -painikkeen kautta. Painikkeesta siirryt puhelimen sähköpostiohjelmaan.",
+    "body2": "Käsittelemme kaikki palautteet, mutta emme voi taata henkilökohtaista vastausta.",
+    "sendFeedback": "Lähetä palautetta"
   }
 }

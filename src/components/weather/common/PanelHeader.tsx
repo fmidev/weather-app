@@ -8,9 +8,14 @@ import { CustomTheme } from '@utils/colors';
 type PanelHeaderProps = {
   title: string;
   lastUpdated?: string | false;
+  justifyCenter?: boolean;
 };
 
-const PanelHeader: React.FC<PanelHeaderProps> = ({ title, lastUpdated }) => {
+const PanelHeader: React.FC<PanelHeaderProps> = ({
+  title,
+  lastUpdated,
+  justifyCenter,
+}) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
   return (
@@ -23,6 +28,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({ title, lastUpdated }) => {
       }
       style={[
         styles.cardHeader,
+        justifyCenter && styles.justifyCenter,
         {
           backgroundColor: colors.background,
           borderBottomColor: colors.border,
@@ -50,6 +56,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  justifyCenter: {
+    justifyContent: 'center',
   },
   headerTitle: {
     fontSize: 18,

@@ -80,7 +80,7 @@ const WarningsWebViewPanel: React.FC = () => {
 
   return (
     <View>
-      <PanelHeader title={`${t('allWarnings')}`} />
+      <PanelHeader title={`${t('allWarnings')}`} justifyCenter />
       <WebView
         ref={webViewRef}
         style={{ height: viewHeight, backgroundColor: `transparent` }}
