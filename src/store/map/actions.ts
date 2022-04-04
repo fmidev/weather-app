@@ -11,6 +11,7 @@ import {
   UPDATE_OVERLAYS,
   UPDATE_ACTIVE_OVERLAY,
   UPDATE_REGION,
+  UPDATE_SELECTED_CALLOUT,
 } from './types';
 
 export const updateSliderTime =
@@ -48,3 +49,8 @@ export const updateActiveOverlay =
 export const updateRegion =
   (region: Region) => (dispatch: Dispatch<MapActionTypes>) =>
     dispatch({ type: UPDATE_REGION, region });
+
+export const updateSelectedCallout =
+  (selectedCallout: string | undefined) =>
+  (dispatch: Dispatch<MapActionTypes>) =>
+    dispatch({ type: UPDATE_SELECTED_CALLOUT, selectedCallout });

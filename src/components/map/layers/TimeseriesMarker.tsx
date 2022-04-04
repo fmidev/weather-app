@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { connect, ConnectedProps } from 'react-redux';
+
 import { Marker, LatLng } from 'react-native-maps';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -7,9 +9,23 @@ import { useTranslation } from 'react-i18next';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
 
-import Icon from '@components/common/Icon';
+import { State } from '@store/types';
 
-type TimeseriesMarkerProps = {
+import Icon from '@components/common/Icon';
+import { selectSelectedCallout } from '@store/map/selectors';
+import { updateSelectedCallout as updateSelectedCalloutAction } from '@store/map/actions';
+
+const mapStateToProps = (state: State) => ({
+  selectedCallout: selectSelectedCallout(state),
+});
+
+const mapDispatchToProps = {
+  updateSelectedCallout: updateSelectedCalloutAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type TimeseriesMarkerProps = PropsFromRedux & {
   name: string;
   coordinate: LatLng;
   smartSymbol: number;
@@ -25,16 +41,19 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   temperature,
   windDirection,
   windSpeedMS,
+  selectedCallout,
+  updateSelectedCallout,
 }) => {
   const { t } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
-  const [isSelected, setIsSelected] = useState<boolean>(false);
 
   return (
     <Marker
       coordinate={coordinate}
       tracksViewChanges={false}
-      onPress={() => setIsSelected((prev) => !prev)}>
+      onPress={() => {
+        updateSelectedCallout(name === selectedCallout ? undefined : name);
+      }}>
       <View
         style={[
           styles.markerContainer,
@@ -57,7 +76,7 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
               { color: colors.text },
             ]}>{`${temperature}°C`}</Text>
         </View>
-        {isSelected && (
+        {selectedCallout && selectedCallout === name && (
           <View style={styles.calloutContainer}>
             <Text style={[styles.calloutTitle, { color: colors.text }]}>
               {name}
@@ -122,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TimeseriesMarker;
+export default connector(TimeseriesMarker);

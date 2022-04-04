@@ -6,6 +6,7 @@ export const UPDATE_MAP_LAYERS = 'UPDATE_MAP_LAYERS';
 export const UPDATE_OVERLAYS = 'UPDATE_OVERLAYS';
 export const UPDATE_ACTIVE_OVERLAY = 'UPDATE_ACTIVE_OVERLAY';
 export const UPDATE_REGION = 'UPDATE_REGION';
+export const UPDATE_SELECTED_CALLOUT = 'UPDATE_SELECTED_CALLOUT';
 
 interface UpdateSliderTime {
   type: typeof UPDATE_SLIDER_TIME;
@@ -37,13 +38,19 @@ interface UpdateRegion {
   region: Region;
 }
 
+interface UpdateSelectedCallout {
+  type: typeof UPDATE_SELECTED_CALLOUT;
+  selectedCallout: string | undefined;
+}
+
 export type MapActionTypes =
   | UpdateSliderTime
   | AnimateToArea
   | UpdateMapLayers
   | InitializeOverlays
   | UpdateActiveOverlay
-  | UpdateRegion;
+  | UpdateRegion
+  | UpdateSelectedCallout;
 
 export interface MapLayers {
   location: boolean;
@@ -92,4 +99,5 @@ export interface MapState {
   overlays: Map<number, MapOverlay> | undefined;
   activeOverlay: number | undefined;
   region: Region;
+  selectedCallout: string | undefined;
 }
