@@ -6,8 +6,9 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@utils/colors';
-import { Severity, Warning, WarningType } from '@store/warnings/types';
+import { Warning } from '@store/warnings/types';
 import { useTranslation } from 'react-i18next';
+import WarningSymbol from './WarningsSymbol';
 
 type DayDetailsProps = {
   warnings: Warning[];
@@ -24,51 +25,15 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
     setOpenWarnings([]);
   }, [warnings, setOpenWarnings]);
 
-  const WarningSymbol = ({
-    type,
-    severity,
-  }: {
-    type: WarningType;
-    severity: Severity;
-  }) => {
-    const colorMap: { [key in Severity]: string } = {
-      Moderate: 'yellow',
-      Severe: 'orange',
-      Extreme: 'red',
-    };
-
-    const typeMap: { [key in WarningType]: string } = {
-      thunderStorm: 'thunder-storm',
-      wind: 'wind',
-      rain: 'rain',
-      trafficWeather: 'traffic-weather',
-      pedestrianSafety: 'pedestrian-safety',
-      forestFireWeather: 'forest-fire',
-      grassFireWeather: 'grass-fire-weather',
-      hotWeather: 'hot-weather',
-      coldWeather: 'hot-weather',
-      uvNote: 'uv-note',
-      flooding: 'flooding',
-    };
-
-    let name = 'warnings';
-    const typeName = typeMap[type];
-    if (typeName) {
-      name += `-${typeMap[type]}`;
-      if (!['uvNote', 'grassFireWeather', 'pedestrianSafety'].includes(type)) {
-        name += `-${colorMap[severity]}`;
-      }
-    }
-
-    return <Icon name={name} width={24} height={24} />;
-  };
-
-  if (warnings.length === 0) {
-    return null;
-  }
-
   return (
     <View style={styles.container}>
+      {warnings.length === 0 && (
+        <View>
+          <Text style={[styles.description, { color: colors.hourListText }]}>
+            {t('warnings:noWarningsText')}
+          </Text>
+        </View>
+      )}
       {warnings.map(({ description, type, severity, duration }, index) => (
         <View key={`${type}-${duration.startTime}`}>
           <View style={styles.flex}>

@@ -83,7 +83,7 @@ const WarningsWebViewPanel: React.FC = () => {
       <PanelHeader title={`${t('allWarnings')}`} />
       <WebView
         ref={webViewRef}
-        style={{ height: viewHeight }}
+        style={{ height: viewHeight, backgroundColor: `transparent` }}
         source={{ html }}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}

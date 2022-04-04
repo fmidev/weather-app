@@ -432,6 +432,7 @@
     "valid": "valid between",
     "hasWarnings": "active warnings",
     "noWarnings": "no active warnings",
+    "noWarningsText": "No active warnings",
     "navigateToWarningsPage": "Navigate to Warnings page",
     "dateAccessibilityHint": "show all active warnings to selected date",
     "warningAccessibilityHint": "show detailed warning description",
@@ -447,6 +448,19 @@
       "coldWeather": "Cold warning",
       "uvNote": "UV advisory",
       "flooding": "Flood warning"
+    },
+    "severities": {
+      "0": "No particular awareness is needed",
+      "1": "Potentially dangerous",
+      "2": "Dangerous",
+      "3": "Very dangerous"
+    },
+    "info": {
+      "dailyTitle": "Daily legends",
+      "dailyBadge": "2 warnings are valid during the day",
+      "mapTitle": "Map legends",
+      "timezone": "Time zone",
+      "timezoneText": "All times are displayed according to selected places timezone"
     }
   },
   "setUp": {

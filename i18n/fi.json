@@ -433,6 +433,7 @@
     "valid": "voimassa",
     "hasWarnings": "varoituksia voimassa",
     "noWarnings": "ei varoituksia voimassa",
+    "noWarningsText": "Ei voimassa olevia varoituksia",
     "navigateToWarningsPage": "navigoi Varoitus-sivulle",
     "dateAccessibilityHint": "näytä kaikki päivän aktiiviset varoitukset",
     "warningAccessibilityHint": "näytä varoituksen tarkemmat tiedot",
@@ -448,6 +449,19 @@
       "coldWeather": "Pakkasvaroitus",
       "uvNote": "UV-tiedote",
       "flooding": "Tulvavaroitus"
+    },
+    "severities": {
+      "0": "Ei vaaraa",
+      "1": "Mahdollisesti vaarallinen",
+      "2": "Vaarallinen",
+      "3": "Hyvin vaarallinen"
+    },
+    "info": {
+      "dailyTitle": "Vuorokausikohtaiset selitykset",
+      "dailyBadge": "vuorokauden aikana on voimassa 2 varoitusta",
+      "mapTitle": "Varoitusten selitykset",
+      "timezone": "Aikavyöhyke",
+      "timezoneText": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan."
     }
   },
   "setUp": {
