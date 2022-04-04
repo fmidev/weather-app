@@ -22,7 +22,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
   const handleSocialPress = async (appUrl: string, fallback: string) => {
     const supported = await Linking.canOpenURL(appUrl);
     if (supported) {
-      Linking.openURL(appUrl);
+      Linking.openURL(appUrl).catch(() => {});
     } else {
       Linking.openURL(fallback);
     }
