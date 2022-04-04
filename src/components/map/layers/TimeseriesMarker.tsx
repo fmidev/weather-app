@@ -55,7 +55,7 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
             style={[
               styles.tempText,
               { color: colors.text },
-            ]}>{`${temperature}°`}</Text>
+            ]}>{`${temperature}°C`}</Text>
         </View>
         {isSelected && (
           <View style={styles.calloutContainer}>
