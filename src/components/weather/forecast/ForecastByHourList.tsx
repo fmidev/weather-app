@@ -64,7 +64,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     if (activeDayIndex !== currentIndex && data.length > 0) {
       const calculatedIndex = !activeDayIndex
         ? 0
-        : currentDayOffset + (activeDayIndex - 1) * 24 + 12;
+        : currentDayOffset + (activeDayIndex - 1) * 24 + 0;
 
       const index =
         calculatedIndex > data.length ? data.length - 1 : calculatedIndex;
@@ -307,7 +307,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset } = nativeEvent;
-    let dayIndex = Math.ceil((contentOffset.x / 52 - currentDayOffset) / 24);
+    let dayIndex = Math.ceil(
+      ((contentOffset.x + 1) / 52 - currentDayOffset) / 24
+    );
     dayIndex = dayIndex >= 0 ? dayIndex : 0;
 
     if (dayIndex !== currentIndex) setCurrentIndex(dayIndex);
