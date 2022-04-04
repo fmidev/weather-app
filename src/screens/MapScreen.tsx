@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { SafeAreaView, StyleSheet, Platform } from 'react-native';
-import MapView, { Camera, Region } from 'react-native-maps';
+import MapView, { Camera, MapEvent, Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
@@ -24,6 +24,7 @@ import {
 import {
   updateOverlays as updateOverlaysAction,
   updateRegion as updateRegionAction,
+  updateSelectedCallout as updateSelectedCalloutAction,
 } from '@store/map/actions';
 
 import darkMapStyle from '@utils/dark_map_style.json';
@@ -54,6 +55,7 @@ const mapStateToProps = (state: State) => ({
 const mapDispatchToProps = {
   updateOverlays: updateOverlaysAction,
   updateRegion: updateRegionAction,
+  updateSelectedCallout: updateSelectedCalloutAction,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -69,6 +71,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   updateOverlays,
   timezone,
   updateRegion,
+  updateSelectedCallout,
 }) => {
   const { colors, dark } = useTheme();
   const isFocused = useIsFocused();
@@ -157,6 +160,12 @@ const MapScreen: React.FC<MapScreenProps> = ({
     }
   };
 
+  const onPress = (e: MapEvent<{}>) => {
+    if (e.nativeEvent.action !== 'marker-press') {
+      updateSelectedCallout(undefined);
+    }
+  };
+
   const animateToCurrentLocation = () => {
     if (currentLocation) {
       const { lat: latitude, lon: longitude } = currentLocation;
@@ -179,6 +188,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
         rotateEnabled={false}
         toolbarEnabled={false}
         onRegionChangeComplete={onRegionChangeComplete}
+        onPress={onPress}
         moveOnMarkerPress={false}>
         {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} />}
         {overlay && overlay.type === 'Timeseries' && (

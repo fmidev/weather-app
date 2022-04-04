@@ -48,3 +48,8 @@ export const selectRegion = createSelector(
   selectMapDomain,
   (map) => map.region
 );
+
+export const selectSelectedCallout = createSelector(
+  selectMapDomain,
+  (map) => map.selectedCallout
+);

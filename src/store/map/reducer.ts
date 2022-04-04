@@ -8,6 +8,7 @@ import {
   MapState,
   UPDATE_ACTIVE_OVERLAY,
   UPDATE_REGION,
+  UPDATE_SELECTED_CALLOUT,
 } from './types';
 
 const INITIAL_STATE: MapState = {
@@ -21,6 +22,7 @@ const INITIAL_STATE: MapState = {
   overlays: undefined,
   activeOverlay: undefined,
   region: { latitude: 0, longitude: 0, longitudeDelta: 0, latitudeDelta: 0 },
+  selectedCallout: undefined,
 };
 
 export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
@@ -66,6 +68,13 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       return {
         ...state,
         region: action.region,
+      };
+    }
+
+    case UPDATE_SELECTED_CALLOUT: {
+      return {
+        ...state,
+        selectedCallout: action.selectedCallout,
       };
     }
 

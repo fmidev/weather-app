@@ -13,6 +13,7 @@ describe('map reducer', () => {
     overlays: undefined,
     activeOverlay: undefined,
     region: { latitude: 0, longitude: 0, longitudeDelta: 0, latitudeDelta: 0 },
+    selectedCallout: undefined,
   };
 
   it('should handle ANIMATE_TO_AREA', () => {
@@ -89,6 +90,18 @@ describe('map reducer', () => {
     ).toEqual({
       ...initial,
       overlays: overlayMap,
+    });
+  });
+
+  it('should handle UPDATE_SELECTED_CALLOUT', () => {
+    expect(
+      reducer(initial, {
+        type: types.UPDATE_SELECTED_CALLOUT,
+        selectedCallout: 'Test',
+      })
+    ).toEqual({
+      ...initial,
+      selectedCallout: 'Test',
     });
   });
 });
