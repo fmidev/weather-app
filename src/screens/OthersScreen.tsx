@@ -19,6 +19,15 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
   } = useTranslation('navigation');
   const { colors, dark } = useTheme();
 
+  const handleSocialPress = async (appUrl: string, fallback: string) => {
+    const supported = await Linking.canOpenURL(appUrl);
+    if (supported) {
+      Linking.openURL(appUrl);
+    } else {
+      Linking.openURL(fallback);
+    }
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -187,7 +196,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
           <View style={styles.socialRow}>
             <AccessibleTouchableOpacity
               onPress={() =>
-                Linking.openURL('https://twitter.com/meteorologit')
+                handleSocialPress(
+                  'twitter://user?screen_name=meteorologit',
+                  'https://twitter.com/meteorologit'
+                )
               }
               style={styles.withMarginRight}>
               <Icon
@@ -197,7 +209,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             </AccessibleTouchableOpacity>
             <AccessibleTouchableOpacity
               onPress={() =>
-                Linking.openURL('https://www.instagram.com/ilmatieteenlaitos/')
+                handleSocialPress(
+                  'instagram://user?username=ilmatieteenlaitos',
+                  'https://www.instagram.com/ilmatieteenlaitos/'
+                )
               }
               style={styles.withMarginRight}>
               <Icon
@@ -207,7 +222,8 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             </AccessibleTouchableOpacity>
             <AccessibleTouchableOpacity
               onPress={() =>
-                Linking.openURL(
+                handleSocialPress(
+                  'youtube://ilmatieteenlaitos',
                   'https://www.youtube.com/user/ilmatieteenlaitos'
                 )
               }
