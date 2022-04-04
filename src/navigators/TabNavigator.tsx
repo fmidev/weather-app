@@ -34,6 +34,7 @@ import SearchScreen from '@screens/SearchScreen';
 import AboutScreen from '@screens/AboutScreen';
 import WarningsScreen from '@screens/WarningsScreen';
 import SetupScreen from '@screens/SetupScreen';
+import OnboardingScreen from '@screens/OnboardingScreen';
 
 import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
@@ -322,7 +323,12 @@ const Navigator: React.FC<Props> = ({
   );
 
   const SetupStackScreen = () => (
-    <SetupStack.Navigator initialRouteName="SetupScreen">
+    <SetupStack.Navigator initialRouteName="Onboarding">
+      <SetupStack.Screen
+        name="Onboarding"
+        options={{ headerShown: false }}
+        component={OnboardingScreen}
+      />
       <SetupStack.Screen
         name="SetupScreen"
         options={{

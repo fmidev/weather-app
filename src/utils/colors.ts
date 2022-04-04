@@ -34,7 +34,8 @@ export const BLACK_OPACITY = 'rgba(0,0,0,0.07)';
 export const BLACK_TRANSPARENT = 'rgba(0,0,0,0.0)';
 
 export const SHADOW_DARK = 'rgba(0,0,0,0.3)';
-export const SHADOW_LIGHT = 'rgba(142,142,147,0.1)';
+export const SHADOW_LIGHT = 'rgba(142,142,147,0.15)';
+export const SHADOW_LIGHT_DARKER = 'rgba(142,142,147,0.3)';
 
 export const LIGHT_RED = '#F8D7DA';
 export const DARK_RED = '#940214';

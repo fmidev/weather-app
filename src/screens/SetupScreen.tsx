@@ -187,7 +187,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: PRIMARY_BLUE,
+    backgroundColor: WHITE,
   },
   imageBackground: {
     height: '80%',
@@ -206,14 +206,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
-    shadowOffset: {
-      width: -2,
-      height: 2,
-    },
-    shadowRadius: 16,
-    shadowOpacity: 1,
-    elevation: 3,
-    shadowColor: SHADOW_LIGHT,
   },
   permissionContainer: {
     width: '100%',
@@ -222,6 +214,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center',
     paddingHorizontal: 20,
+    shadowOffset: {
+      width: -2,
+      height: 2,
+    },
+    shadowRadius: 16,
+    shadowOpacity: 1,
+    elevation: 3,
+    shadowColor: SHADOW_LIGHT,
   },
   title: {
     color: PRIMARY_BLUE,
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   active: {
-    backgroundColor: WHITE,
+    backgroundColor: SECONDARY_BLUE,
   },
   inActive: {
     backgroundColor: GRAY_1,
