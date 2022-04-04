@@ -40,7 +40,18 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
     <View
       accessible
       key={data.epochtime}
-      style={[styles.hourColumn, { borderColor: colors.border }]}>
+      style={[
+        styles.hourColumn,
+        ...(time === '00:00'
+          ? [
+              styles.dayChangeBorder,
+              {
+                borderLeftColor: colors.chartGridDay,
+                borderColor: colors.border,
+              },
+            ]
+          : [{ borderColor: colors.border }]),
+      ]}>
       <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
         <Text
           accessibilityLabel={`${t('forecast:at')} ${time}.`}
@@ -213,6 +224,9 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderTopWidth: 1,
     alignItems: 'center',
+  },
+  dayChangeBorder: {
+    borderLeftWidth: 1,
   },
   hourBlock: {
     height: 52,
