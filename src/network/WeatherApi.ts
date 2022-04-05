@@ -24,6 +24,7 @@ export const getForecast = async (
     format: 'json',
     attributes: 'geoid',
     lang: language,
+    tz: 'utc',
   };
 
   const metaParams = [
@@ -36,7 +37,6 @@ export const getForecast = async (
       'sunriseToday',
       'sunsetToday',
       'dayLength',
-      'utctime',
       'modtime',
       'dark',
     ],

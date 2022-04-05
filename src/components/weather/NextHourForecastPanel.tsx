@@ -178,11 +178,23 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             />
           )}
           {activeParameters.includes('windSpeedMS') && (
-            <Text style={[styles.text, { color: colors.hourListText }]}>
-              <Text
-                style={styles.bold}>{`${nextHourForecast.windSpeedMS} `}</Text>
-              m/s
-            </Text>
+            <View style={styles.alignStart}>
+              <View style={styles.row}>
+                <Text
+                  style={[
+                    styles.text,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {`${nextHourForecast.windSpeedMS} `}
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  m/s
+                </Text>
+              </View>
+            </View>
           )}
         </View>
         <View style={styles.row}>
