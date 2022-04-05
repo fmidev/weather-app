@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { ImageBackground, Image, StyleSheet, Text, View } from 'react-native';
+import {
+  ImageBackground,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -84,14 +91,14 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ImageBackground
         style={styles.imageBackground}
-        resizeMode="cover"
-        source={require('../assets/images/weather-background.png')}>
+        resizeMode="center"
+        source={require('../assets/images/weather-background-light.png')}>
         <Image
           source={require('../assets/images/fmi-logo-fi.png')}
-          resizeMode="center"
+          resizeMode="contain"
           style={styles.logo}
         />
       </ImageBackground>
@@ -137,7 +144,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         onPress={() => navigation.navigate('SetupScreen')}>
         <Text style={styles.text}>{t('skip')}</Text>
       </AccessibleTouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -147,13 +154,16 @@ const styles = StyleSheet.create({
     backgroundColor: WHITE,
   },
   imageBackground: {
-    height: '80%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
     position: 'absolute',
-    top: 100,
+    top: 40,
+    left: 40,
+    height: 40,
+    width: 190,
   },
   innerContainer: {
     position: 'absolute',

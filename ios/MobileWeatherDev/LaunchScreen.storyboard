@@ -17,14 +17,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FmiLogoFi" translatesAutoresizingMaskIntoConstraints="NO" id="jEE-qh-axV">
+                                <rect key="frame" x="40" y="84" width="191" height="40"/>
+                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashBackground" translatesAutoresizingMaskIntoConstraints="NO" id="MRm-dX-AhG">
                                 <rect key="frame" x="0.0" y="241" width="414" height="414"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="MRm-dX-AhG" secondAttribute="height" multiplier="1:1" id="stm-kR-EpQ"/>
                                 </constraints>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FmiLogoFi" translatesAutoresizingMaskIntoConstraints="NO" id="jEE-qh-axV">
-                                <rect key="frame" x="40" y="84" width="191" height="40"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
