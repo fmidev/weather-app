@@ -64,7 +64,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     if (activeDayIndex !== currentIndex && data.length > 0) {
       const calculatedIndex = !activeDayIndex
         ? 0
-        : currentDayOffset + (activeDayIndex - 1) * 24 + 0;
+        : currentDayOffset + (activeDayIndex - 1) * 24;
 
       const index =
         calculatedIndex > data.length ? data.length - 1 : calculatedIndex;
