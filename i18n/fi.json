@@ -486,6 +486,18 @@
     "acceptLocation": "Salli sijainti",
     "declineLocation": "Älä salli"
   },
+  "onboarding": {
+    "next": "Seuraava",
+    "skip": "Ohita",
+    "weatherTitle": "Sääennuste ja -havainnot",
+    "weatherDescription": "Voit katsella monipuolista sääennuste- ja havaintotietoa sinulle sopivassa muodossa.",
+    "mapTitle": "Kartta",
+    "mapDescription": "Voit tarkistella kartalla esimerkiksi sateiden liikkeitä lähituntien aikana.",
+    "warningsTitle": "Varoitukset",
+    "warningsDescription": "Ole tietoinen alueellasi voimassa olevista varoituksista.",
+    "customizeTitle": "Muokkaa omanlaiseksi",
+    "customizeDescription": "Voit valita asetuksista, millaista säätietoa haluat katsella ja käyttää sovellusta tummalla teemalla."
+  },
   "termsAndConditions": {
     "close": "Sulje",
     "closeButtonAccessibilityHint": "Sulje Käyttöehdot ja navigoi takaisin edelliseen näkymään",

@@ -485,6 +485,18 @@
     "acceptLocation": "Allow location",
     "declineLocation": "Do not allow"
   },
+  "onboarding": {
+    "next": "Next",
+    "skip": "Skip",
+    "weatherTitle": "Weather forecast and observations",
+    "weatherDescription": "You can view rich weather forecast and observation data in a form suitable to your needs.",
+    "mapTitle": "Map",
+    "mapDescription": "You can view e.g. animated rain forecast for the upcoming hours.",
+    "warningsTitle": "Warnings",
+    "warningsDescription": "Be aware of active weather warnings in your area.",
+    "customizeTitle": "Customize",
+    "customizeDescription": "You can adjust the weather parameters to your liking and use dark theme if you wish."
+  },
   "termsAndConditions": {
     "close": "Close",
     "closeButtonAccessibilityHint": "Close Terms and Conditions and navigate back to previous screen",
