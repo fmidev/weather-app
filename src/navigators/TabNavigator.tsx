@@ -323,7 +323,9 @@ const Navigator: React.FC<Props> = ({
   );
 
   const SetupStackScreen = () => (
-    <SetupStack.Navigator initialRouteName="Onboarding">
+    <SetupStack.Navigator
+      initialRouteName="Onboarding"
+      screenOptions={{ gestureEnabled: false }}>
       <SetupStack.Screen
         name="Onboarding"
         options={{ headerShown: false }}
