@@ -8,7 +8,7 @@
     <!-- Adds the splash screen definition -->
     <style name="SplashTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/splashscreen_bg</item>
-        <item name="android:background">@drawable/background_splash</item>
+        <item name="android:background">@mipmap/weather_background_light</item>
     </style>
 
 </resources>
