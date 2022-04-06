@@ -94,7 +94,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ImageBackground
         style={styles.imageBackground}
-        resizeMode="center"
+        resizeMode="contain"
         source={require('../assets/images/weather-background-light.png')}>
         <Image
           source={require('../assets/images/fmi-logo-fi.png')}
