@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_5" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="ipad12_9" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,43 +13,37 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1366" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="WeatherBackground" translatesAutoresizingMaskIntoConstraints="NO" id="ceN-xS-f36" userLabel="SplashBackground">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="657"/>
-                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="SplashBackground" translatesAutoresizingMaskIntoConstraints="NO" id="jId-4J-nZW">
+                                <rect key="frame" x="0.0" y="-171" width="1366" height="1366"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="jId-4J-nZW" secondAttribute="height" multiplier="1:1" id="njq-XH-8Vx"/>
+                                </constraints>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FmiLogoFi" translatesAutoresizingMaskIntoConstraints="NO" id="Hlo-p1-APK">
-                                <rect key="frame" x="111.66666666666669" y="140" width="191" height="40"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FmiLogoFi" translatesAutoresizingMaskIntoConstraints="NO" id="jEE-qh-axV">
+                                <rect key="frame" x="40" y="60" width="191" height="40"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Paikallissää" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fcG-S0-ewm">
-                                <rect key="frame" x="150.66666666666666" y="249" width="112.99999999999997" height="24"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
-                                <color key="textColor" red="0.18823529410000001" green="0.19215686269999999" blue="0.57647058819999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="0.18823529410000001" green="0.19215686269999999" blue="0.57647058819999997" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Hlo-p1-APK" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="E5b-vH-Ua9"/>
-                            <constraint firstItem="fcG-S0-ewm" firstAttribute="top" secondItem="Hlo-p1-APK" secondAttribute="bottom" constant="69" id="K2D-7o-6Ep"/>
-                            <constraint firstItem="ceN-xS-f36" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="ZVh-pB-KWn"/>
-                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="ceN-xS-f36" secondAttribute="trailing" id="amF-Se-Mh4"/>
-                            <constraint firstItem="fcG-S0-ewm" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="fGF-4V-tHq"/>
-                            <constraint firstItem="Hlo-p1-APK" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="96" id="kka-Cc-WT2"/>
-                            <constraint firstItem="ceN-xS-f36" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="yQ3-5j-WYe"/>
+                            <constraint firstItem="jEE-qh-axV" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="40" id="0M7-lw-kNn"/>
+                            <constraint firstItem="jId-4J-nZW" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="7gp-bS-yoe"/>
+                            <constraint firstAttribute="trailing" secondItem="jId-4J-nZW" secondAttribute="trailing" id="I1U-Go-Cta"/>
+                            <constraint firstItem="jEE-qh-axV" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="40" id="nla-Uq-xe0"/>
+                            <constraint firstItem="jId-4J-nZW" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="yDn-56-PUZ"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="170" y="369"/>
+            <point key="canvasLocation" x="169.56521739130437" y="368.97321428571428"/>
         </scene>
     </scenes>
     <resources>
         <image name="FmiLogoFi" width="191" height="40"/>
-        <image name="WeatherBackground" width="375" height="657.33331298828125"/>
+        <image name="SplashBackground" width="520" height="520"/>
     </resources>
 </document>

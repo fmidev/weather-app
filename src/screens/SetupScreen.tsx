@@ -6,6 +6,7 @@ import {
   Text,
   View,
   Platform,
+  SafeAreaView,
 } from 'react-native';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
@@ -126,14 +127,14 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ImageBackground
         style={styles.imageBackground}
-        resizeMode="cover"
-        source={require('../assets/images/weather-background.png')}>
+        resizeMode="contain"
+        source={require('../assets/images/weather-background-light.png')}>
         <Image
           source={require('../assets/images/fmi-logo-fi.png')}
-          resizeMode="center"
+          resizeMode="contain"
           style={styles.logo}
         />
       </ImageBackground>
@@ -180,7 +181,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
           ]}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -190,13 +191,16 @@ const styles = StyleSheet.create({
     backgroundColor: WHITE,
   },
   imageBackground: {
-    height: '80%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
     position: 'absolute',
-    top: 100,
+    top: 40,
+    left: 40,
+    height: 40,
+    width: 190,
   },
   innerContainer: {
     position: 'absolute',
