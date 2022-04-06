@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
@@ -13,17 +13,16 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FmiLogoFi" translatesAutoresizingMaskIntoConstraints="NO" id="jEE-qh-axV">
                                 <rect key="frame" x="40" y="84" width="191" height="40"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashBackground" translatesAutoresizingMaskIntoConstraints="NO" id="MRm-dX-AhG">
-                                <rect key="frame" x="0.0" y="241" width="414" height="414"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashBackground" translatesAutoresizingMaskIntoConstraints="NO" id="jId-4J-nZW">
+                                <rect key="frame" x="0.0" y="227" width="390" height="390"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="MRm-dX-AhG" secondAttribute="height" multiplier="1:1" id="stm-kR-EpQ"/>
+                                    <constraint firstAttribute="width" secondItem="jId-4J-nZW" secondAttribute="height" multiplier="1:1" id="njq-XH-8Vx"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -31,9 +30,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="jEE-qh-axV" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="40" id="0M7-lw-kNn"/>
-                            <constraint firstItem="MRm-dX-AhG" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="3ix-ta-37r"/>
-                            <constraint firstItem="MRm-dX-AhG" firstAttribute="trailing" secondItem="Bcu-3y-fUS" secondAttribute="trailing" id="AT6-S5-EbY"/>
-                            <constraint firstItem="MRm-dX-AhG" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="kZl-Ab-yxd"/>
+                            <constraint firstItem="jId-4J-nZW" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="7gp-bS-yoe"/>
+                            <constraint firstItem="jId-4J-nZW" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="APQ-Bf-drI"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="jId-4J-nZW" secondAttribute="trailing" id="FGR-jh-ugI"/>
                             <constraint firstItem="jEE-qh-axV" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="40" id="nla-Uq-xe0"/>
                         </constraints>
                     </view>
