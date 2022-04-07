@@ -7,6 +7,7 @@ import { Config } from '@config';
 import { getIndexForDaySmartSymbol } from '@utils/helpers';
 import { State } from '../types';
 import { ForecastState, TimeStepData } from './types';
+import constants from './constants';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
@@ -171,13 +172,13 @@ export const selectDisplayParams = createSelector(
     return (
       forecast.displayParams.length > 0
         ? forecast.displayParams
-        : (
-            defaultParameters.map((parameter, index) => [index, parameter]) as [
-              number,
-              string
-            ][]
-          ).sort((a, b) => a[0] - b[0])
-    ).filter(([, param]) => regex.test(param));
+        : (defaultParameters.map((parameter) => [
+            constants.indexOf(parameter),
+            parameter,
+          ]) as [number, string][])
+    )
+      .sort((a, b) => a[0] - b[0])
+      .filter(([, param]) => regex.test(param));
   }
 );
 

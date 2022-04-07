@@ -12,6 +12,8 @@ import {
   UPDATE_FORECAST_CHART_PARAMETER,
 } from './types';
 
+import constants from './constants';
+
 const INITIAL_STATE: ForecastState = {
   data: {},
   loading: false,
@@ -94,12 +96,15 @@ export default (
       const defaultParameters =
         state.displayParams.length > 0
           ? state.displayParams
-          : action.defaultParameters;
+          : (action.defaultParameters.map((item) => [
+              constants.indexOf(item),
+              item,
+            ]) as [number, string][]);
       return {
         ...state,
         displayParams: defaultParameters.some((arr) => arr.includes(param))
           ? defaultParameters.filter((arr) => !arr.includes(param))
-          : defaultParameters.concat([action.param]),
+          : defaultParameters.concat([[constants.indexOf(param), param]]),
       };
     }
 

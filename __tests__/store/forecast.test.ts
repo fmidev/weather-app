@@ -25,11 +25,11 @@ describe('forecast reducer', () => {
     expect(
       reducer(undefined, {
         type: types.UPDATE_DISPLAY_PARAMS,
-        param: [6, constants.DEW_POINT],
-        defaultParameters,
+        param: [7, constants.DEW_POINT],
+        defaultParameters: defaultParameters.map(([, param]) => param),
       })
     ).toMatchObject({
-      displayParams: [...defaultParameters, [6, constants.DEW_POINT]],
+      displayParams: [...defaultParameters, [7, constants.DEW_POINT]],
     });
   });
 
@@ -38,7 +38,7 @@ describe('forecast reducer', () => {
       reducer(undefined, {
         type: types.UPDATE_DISPLAY_PARAMS,
         param: [3, constants.WIND_SPEED_AND_DIRECTION],
-        defaultParameters,
+        defaultParameters: defaultParameters.map(([, param]) => param),
       })
     ).toMatchObject({
       displayParams: [

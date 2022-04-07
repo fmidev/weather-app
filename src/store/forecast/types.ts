@@ -30,7 +30,7 @@ interface FetchForecastError {
 interface UpdateDisplayParams {
   type: typeof UPDATE_DISPLAY_PARAMS;
   param: [number, string];
-  defaultParameters: [number, string][];
+  defaultParameters: string[];
 }
 
 interface RestoreDefaultDisplayParams {
