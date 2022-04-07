@@ -3,11 +3,12 @@ import { View, StyleSheet, Text } from 'react-native';
 import { useTheme, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { CustomTheme, GRAY_1, RED } from '@utils/colors';
 import { State } from '@store/types';
 import {
   selectUpdated,
   selectDailyWarningData,
+  selectWarningsAge,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
@@ -15,6 +16,7 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { Config } from '@config';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
@@ -23,6 +25,7 @@ const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
   updated: selectUpdated(state),
   location: selectCurrent(state),
+  warningsAge: selectWarningsAge(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -35,12 +38,14 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   dailyWarnings,
   updated,
   location,
+  warningsAge,
 }) => {
   const { t, i18n } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const { ageWarning } = Config.get('warnings');
 
   moment.locale(i18n.language);
 
@@ -196,7 +201,16 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           <DayDetails warnings={dailyWarnings[selectedDay].warnings} />
         </View>
         <View style={[styles.row, styles.alignCenter]}>
-          <Text style={[styles.updatedText, { color: colors.hourListText }]}>
+          <Text
+            style={[
+              styles.updatedText,
+              {
+                color:
+                  warningsAge > (ageWarning ?? 120) * 60 * 1000
+                    ? RED
+                    : colors.hourListText,
+              },
+            ]}>
             {t('lastUpdated')}{' '}
             <Text style={styles.bold}>
               {moment(updated).format(`DD.MM. [${t('forecast:at')}] HH:mm`)}

@@ -31,6 +31,11 @@ const selectFetchTimestamp = createSelector(
   (forecast) => forecast.fetchTimestamp
 );
 
+export const selectForecastAge = createSelector(
+  selectForecastDomain,
+  (forecast) => Date.now() - forecast.fetchSuccessTime
+);
+
 export const selectForecast = createSelector(
   [selectData, selectGeoid, selectFetchTimestamp],
   (items, geoid, timestamp) => {
@@ -118,7 +123,7 @@ export const selectForecastLastUpdatedMoment = createSelector(
     forecast.length > 0 &&
     // forecast[0] &&
     forecast[0].modtime &&
-    moment(forecast[0].modtime)
+    moment(`${forecast[0].modtime}Z`)
 );
 
 export const selectMinimumsAndMaximums = createSelector(

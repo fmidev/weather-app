@@ -70,4 +70,5 @@ export interface WarningsState {
   loading: boolean;
   error: boolean | Error | string;
   fetchTimestamp: number;
+  fetchSuccessTime: number;
 }

@@ -73,6 +73,7 @@ interface Warnings {
     [country: string]: string;
   };
   updateInterval: number;
+  ageWarning?: number;
   webViewUrl?: string;
 }
 
@@ -115,6 +116,7 @@ export interface ConfigType {
   weather: {
     apiUrl: string;
     forecast: {
+      ageWarning?: number;
       updateInterval: number;
       timePeriod: number | 'data';
       data: {

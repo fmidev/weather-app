@@ -37,6 +37,11 @@ const selectFetchTimestamp = createSelector(
   (warnings) => warnings.fetchTimestamp
 );
 
+export const selectWarningsAge = createSelector(
+  selectWarningsDomain,
+  (warnings) => Date.now() - warnings.fetchSuccessTime
+);
+
 export const selectDailyWarningData = createSelector(
   [selectWarnings, selectFetchTimestamp],
   (warnings, fetchTime) => {

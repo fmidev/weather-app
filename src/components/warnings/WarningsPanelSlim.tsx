@@ -11,14 +11,17 @@ import { State } from '@store/types';
 import {
   selectUpdated,
   selectDailyWarningData,
+  selectWarningsAge,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
+import { Config } from '@config';
 import SeverityBar from './SeverityBar';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
   updated: selectUpdated(state),
+  warningsAge: selectWarningsAge(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -30,19 +33,22 @@ type WarningsPanelSlimProps = PropsFromRedux & {};
 const WarningsPanelSlim: React.FC<WarningsPanelSlimProps> = ({
   dailyWarnings,
   updated,
+  warningsAge,
 }) => {
   const { t, i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
   const navigation = useNavigation();
+  const { ageWarning } = Config.get('warnings');
   if (!updated) {
     return null;
   }
 
   moment.locale(i18n.language);
 
-  const lastUpdated = moment(updated).format(
-    `DD.MM. [${t('forecast:at')}] HH:mm`
-  );
+  const lastUpdated = {
+    time: moment(updated).format(`DD.MM. [${t('forecast:at')}] HH:mm`),
+    ageCheck: warningsAge > (ageWarning ?? 120) * 60 * 1000,
+  };
 
   const onPress = (index: number) => {
     navigation.navigate(
