@@ -8,7 +8,7 @@ const getWarnings = async ({
   lat,
   lon,
   country,
-}: Location): Promise<WarningsData> => {
+}: Location): Promise<{ data: WarningsData }> => {
   const { language } = i18n;
   const { apiUrl } = Config.get('warnings');
 

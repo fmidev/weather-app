@@ -14,7 +14,7 @@ const fetchWarnings =
     dispatch({ type: FETCH_WARNINGS });
 
     getWarnings(location)
-      .then((data) => {
+      .then(({ data }) => {
         dispatch({
           type: FETCH_WARNINGS_SUCCESS,
           data,
