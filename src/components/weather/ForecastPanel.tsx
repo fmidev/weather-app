@@ -185,39 +185,47 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               </View>
             </AccessibleTouchableOpacity>
           </View>
-          {displayFormat === TABLE && (
-            <View style={[styles.row, styles.justifyEnd]}>
-              <View
-                style={[styles.separator, { backgroundColor: colors.border }]}
+          <View style={[styles.row, styles.justifyEnd]}>
+            <View
+              style={[styles.separator, { backgroundColor: colors.border }]}
+            />
+            <AccessibleTouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('paramsAccessibilityLabel')}
+              accessibilityHint={t('paramsBottomSheet.subTitle')}
+              style={styles.bottomSheetButton}
+              onPress={() => paramSheetRef.current.open()}
+              disabled={displayFormat === CHART}>
+              <Icon
+                name="settings"
+                color={
+                  displayFormat === CHART
+                    ? colors.secondaryBorder
+                    : colors.primaryText
+                }
+                width={24}
+                height={24}
               />
-              <AccessibleTouchableOpacity
-                accessibilityRole="button"
-                accessibilityLabel={t('paramsAccessibilityLabel')}
-                accessibilityHint={t('paramsBottomSheet.subTitle')}
-                style={styles.bottomSheetButton}
-                onPress={() => paramSheetRef.current.open()}>
-                <Icon
-                  name="settings"
-                  color={colors.primaryText}
-                  width={24}
-                  height={24}
-                />
-              </AccessibleTouchableOpacity>
-              <AccessibleTouchableOpacity
-                accessibilityRole="button"
-                accessibilityLabel={t('infoAccessibilityLabel')}
-                accessibilityHint={t('infoAccessibilityHint')}
-                style={styles.bottomSheetButton}
-                onPress={() => weatherInfoSheetRef.current.open()}>
-                <Icon
-                  name="info"
-                  color={colors.primaryText}
-                  height={24}
-                  width={24}
-                />
-              </AccessibleTouchableOpacity>
-            </View>
-          )}
+            </AccessibleTouchableOpacity>
+            <AccessibleTouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('infoAccessibilityLabel')}
+              accessibilityHint={t('infoAccessibilityHint')}
+              style={styles.bottomSheetButton}
+              onPress={() => weatherInfoSheetRef.current.open()}
+              disabled={displayFormat === CHART}>
+              <Icon
+                name="info"
+                color={
+                  displayFormat === CHART
+                    ? colors.secondaryBorder
+                    : colors.primaryText
+                }
+                height={24}
+                width={24}
+              />
+            </AccessibleTouchableOpacity>
+          </View>
         </View>
       </View>
       <View style={styles.forecastContainer}>

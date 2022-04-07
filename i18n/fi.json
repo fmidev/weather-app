@@ -111,6 +111,7 @@
     "weatherInfoBottomSheet": {
       "closeAccessibilityLabel": "Sulje sääennusteen selitteet",
       "dayForecastInfoTitle": "Vuorokauden ennusteen selitykset",
+      "precipitationStripTitle": "Sadepalkin selitykset",
       "dayHighestTemperature": "vuorokauden ylin lämpötila (°C)",
       "dayLowestTemperature": "vuorokauden alin lämpötila (°C)",
       "daySumOfPrecipitation": "vuorokauden kokonaissademäärän summa (mm)",
@@ -141,10 +142,12 @@
       "relativeHumidity": "suhteellinen kosteus (%)",
       "pressure": "ilmanpaine (hPa)",
       "uvIndex": "ultraviolettisäteilyn indeksi",
+      "uvLight": "heikko",
       "uvModerate": "kohtalainen – suojautumistarve alkaa",
       "strong": "voimakas",
       "veryStrong": "hyvin voimakas",
       "extremelyStrong": "äärimmämisen voimakas",
+      "sunriseAndSunset": "auringon nousu ja lasku",
       "sunrise": "auringonnousun ajankohta (klo)",
       "sunset": "auringonlaskun ajankohta (klo)",
       "dayDuration": "päivän pituus tunteina (h) ja minuutteina (min)",
@@ -155,7 +158,9 @@
       "nightTime": "pimeällä",
       "description": "kuvaus",
       "showRest": "Näytä loput säämerkit",
-      "showLess": "Näytä vähemmän"
+      "showLess": "Näytä vähemmän",
+      "timezone": "Aikavyöhyke",
+      "timezoneDescription": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan."
     }
   },
   "observation": {

@@ -82,7 +82,10 @@ const SettingsScreen: React.FC<Props> = ({
       handleAppStateChange
     );
     checkLocationPermissions();
-    return () => subscriber.remove();
+    return () => {
+      setLocationPermission(undefined);
+      subscriber.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
