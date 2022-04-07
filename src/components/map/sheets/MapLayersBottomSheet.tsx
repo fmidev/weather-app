@@ -92,7 +92,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 location: !mapLayers.location,
               })
             }>
-            <Text style={[styles.text, { color: colors.text }]}>
+            <Text style={[styles.text, { color: colors.hourListText }]}>
               {t('map:layersBottomSheet:locationHint')}
             </Text>
             <Switch
@@ -139,7 +139,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 updateActiveOverlay(Number(layer.id));
               }}>
               <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
                   {(layer?.name && layer?.name[locale]) || ''}
                 </Text>
                 <Icon
