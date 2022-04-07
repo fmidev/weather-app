@@ -31,6 +31,11 @@ const selectFetchTimestamp = createSelector(
   (forecast) => forecast.fetchTimestamp
 );
 
+export const selectForecastAge = createSelector(
+  selectForecastDomain,
+  (forecast) => Date.now() - forecast.fetchSuccessTime
+);
+
 export const selectForecast = createSelector(
   [selectData, selectGeoid, selectFetchTimestamp],
   (items, geoid, timestamp) => {

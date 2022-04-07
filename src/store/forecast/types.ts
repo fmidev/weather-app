@@ -107,4 +107,5 @@ export interface ForecastState {
   displayFormat: 'table' | 'chart';
   chartDisplayParam: ChartType | undefined;
   fetchTimestamp: number;
+  fetchSuccessTime: number;
 }

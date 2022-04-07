@@ -17,6 +17,7 @@ import {
   selectForecastLastUpdatedMoment,
   selectForecast,
   selectDisplayFormat,
+  selectForecastAge,
 } from '@store/forecast/selectors';
 
 import { GRAY_1, CustomTheme } from '@utils/colors';
@@ -25,6 +26,7 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectTimeZone } from '@store/location/selector';
 import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecast/actions';
+import { Config } from '@config';
 import PanelHeader from './common/PanelHeader';
 import DaySelectorList from './forecast/DaySelectorList';
 import ForecastByHourList from './forecast/ForecastByHourList';
@@ -41,6 +43,7 @@ const mapStateToProps = (state: State) => ({
   data: selectForecast(state),
   headerLevelForecast: selectHeaderLevelForecast(state),
   forecastLastUpdatedMoment: selectForecastLastUpdatedMoment(state),
+  forecastAge: selectForecastAge(state),
   timezone: selectTimeZone(state),
   displayFormat: selectDisplayFormat(state),
 });
@@ -60,6 +63,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   forecastByDay,
   data,
   forecastLastUpdatedMoment,
+  forecastAge,
   headerLevelForecast,
   timezone,
   displayFormat,
@@ -73,6 +77,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   );
   const paramSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const { ageWarning } = Config.get('weather').forecast;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
 
@@ -94,9 +99,12 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       data: forecastByDay[k],
     }));
 
-  const forecastLastUpdated =
-    forecastLastUpdatedMoment &&
-    forecastLastUpdatedMoment.format(`D.M. [${t('at')}] HH:mm`);
+  const forecastLastUpdated = {
+    time: forecastLastUpdatedMoment
+      ? forecastLastUpdatedMoment.format(`D.M. [${t('at')}] HH:mm`)
+      : undefined,
+    ageCheck: forecastAge > (ageWarning ?? 720) * 60 * 1000,
+  };
 
   return (
     <View

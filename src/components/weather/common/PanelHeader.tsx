@@ -3,11 +3,11 @@ import { View, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme, RED } from '@utils/colors';
 
 type PanelHeaderProps = {
   title: string;
-  lastUpdated?: string | false;
+  lastUpdated?: { time?: string; ageCheck?: boolean };
   justifyCenter?: boolean;
 };
 
@@ -37,9 +37,13 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
       <Text style={[styles.headerTitle, { color: colors.primaryText }]}>
         {title}
       </Text>
-      {lastUpdated && (
-        <Text style={[styles.updatedText, { color: colors.hourListText }]}>
-          {t('updated')} <Text style={styles.bold}>{lastUpdated}</Text>
+      {lastUpdated?.time && (
+        <Text
+          style={[
+            styles.updatedText,
+            { color: lastUpdated.ageCheck ? RED : colors.hourListText },
+          ]}>
+          {t('updated')} <Text style={styles.bold}>{lastUpdated.time}</Text>
         </Text>
       )}
     </View>

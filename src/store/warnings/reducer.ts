@@ -12,6 +12,7 @@ const INITIAL_STATE: WarningsState = {
   loading: false,
   error: false,
   fetchTimestamp: Date.now(),
+  fetchSuccessTime: 0,
 };
 
 export default (
@@ -35,6 +36,7 @@ export default (
           [action.id]: action.data,
         },
         fetchTimestamp: action.timestamp,
+        fetchSuccessTime: action.timestamp,
       };
     }
 

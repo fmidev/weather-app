@@ -20,6 +20,7 @@ const INITIAL_STATE: ForecastState = {
   displayFormat: 'table',
   chartDisplayParam: undefined,
   fetchTimestamp: Date.now(),
+  fetchSuccessTime: 0,
 };
 
 const formatData = (dataSets: WeatherData[]): WeatherData => {
@@ -73,6 +74,7 @@ export default (
           action.favorites
         ),
         fetchTimestamp: action.timestamp,
+        fetchSuccessTime: action.timestamp,
         loading: false,
         error: false,
       };
