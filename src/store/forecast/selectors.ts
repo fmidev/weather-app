@@ -123,7 +123,7 @@ export const selectForecastLastUpdatedMoment = createSelector(
     forecast.length > 0 &&
     // forecast[0] &&
     forecast[0].modtime &&
-    moment(forecast[0].modtime)
+    moment(`${forecast[0].modtime}Z`)
 );
 
 export const selectMinimumsAndMaximums = createSelector(
