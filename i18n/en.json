@@ -111,6 +111,7 @@
     "weatherInfoBottomSheet": {
       "closeAccessibilityLabel": "Close weather info",
       "dayForecastInfoTitle": "Day forecast info",
+      "precipitationStripTitle": "Precipitation strip info",
       "dayHighestTemperature": "max temperature (°C)",
       "dayLowestTemperature": "min temperature (°C)",
       "daySumOfPrecipitation": "precipitation sum (mm)",
@@ -141,10 +142,12 @@
       "relativeHumidity": "relative humidity (%)",
       "pressure": "air pressure (hPa)",
       "uvIndex": "ultraviolet radiation index",
+      "uvLight": "light",
       "uvModerate": "moderate – need for protection begins",
       "strong": "strong",
       "veryStrong": "very strong",
       "extremelyStrong": "extremely strong",
+      "sunriseAndSunset": "sunrise and sunset",
       "sunrise": "sunrise time (at)",
       "sunset": "sunset time (at)",
       "dayDuration": "day duration in hours (h) and minutes (min)",
@@ -155,7 +158,9 @@
       "nightTime": "night time",
       "description": "description",
       "showRest": "Show rest of the weather symbols",
-      "showLess": "Show less"
+      "showLess": "Show less",
+      "timezone": "Time zone",
+      "timezoneDescription": "All times are displayed according to selected time zone location."
     }
   },
   "observation": {
