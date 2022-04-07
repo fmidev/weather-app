@@ -38,12 +38,7 @@ export const fetchForecast =
 
 export const updateDisplayParams =
   (param: [number, string]) => (dispatch: Dispatch<ForecastActionTypes>) => {
-    const defaultParameters = Config.get(
-      'weather'
-    ).forecast.defaultParameters.map((parameter, index) => [
-      index,
-      parameter,
-    ]) as [number, string][];
+    const { defaultParameters } = Config.get('weather').forecast;
     dispatch({ type: UPDATE_DISPLAY_PARAMS, param, defaultParameters });
   };
 
