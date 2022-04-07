@@ -289,10 +289,6 @@
       "forecast": "forecast",
       "observation": "observation"
     },
-    "timeStepBottomSheet": {
-      "title": "Slider time step",
-      "closeAccessibilityLabel": "Close slider time step selection"
-    },
     "layersBottomSheet": {
       "closeAccessibilityLabel": "Close map layers selection",
       "locationTitle": "Your location",
@@ -311,13 +307,15 @@
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Close map legend",
       "weatherSymbolsTitle": "Weather symbols",
-      "rainRadarTitle": "Rain radar info",
+      "mapLayersInfoTitle": "Map layers info",
       "light": "light",
       "moderate": "moderate",
       "strong": "heavy",
       "showMore": "Show more",
       "showLess": "Show less",
-      "rainRadarInfo": "Rain radar values are measured as a radar echo. Light rain causes a different echo than heavy rain. The intensity of the interpreted rain is based on the intensity of the radar echo over a period of time."
+      "rainRadarInfo": "Observed and forecast precipitation is presented with colors.",
+      "mapLayersInfo": "Observed precipitation is measured with weather radar. Forecasted precipitation is a short-term forecast based on radar images and weather forecast models. In Finland the time step is 15 minutes and in Scandinavian region 1 hour. ",
+      "timeseriesLayerInfo": "Weather forecast on map shows weather symbol and temperature to several places over the world. Pressing the symbol reveals more weather info."
     }
   },
   "searchScreen": {

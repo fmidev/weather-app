@@ -3,6 +3,8 @@ import { SafeAreaView, View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import { Config } from '@config';
+
 import CloseButton from '@components/common/CloseButton';
 
 import {
@@ -22,21 +24,27 @@ type InfoBottomSheetProps = {
 const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
   const { colors } = useTheme() as CustomTheme;
+  const { layers } = Config.get('map');
+
+  const timeseriesEnabled = layers.some((layer) => layer.type === 'Timeseries');
   return (
     <SafeAreaView style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
             onPress={onClose}
-            accessibilityLabel={t(
-              'map:infoBottomSheet:closeAccessibilityLabel'
-            )}
+            accessibilityLabel={t('infoBottomSheet.closeAccessibilityLabel')}
           />
         </View>
 
         <View style={styles.sheetTitle}>
           <Text style={[styles.title, { color: colors.text }]}>
-            {t('map:infoBottomSheet:rainRadarTitle')}
+            {t('infoBottomSheet.mapLayersInfoTitle')}
+          </Text>
+        </View>
+        <View>
+          <Text style={[styles.text, { color: colors.hourListText }]}>
+            {t('infoBottomSheet.rainRadarInfo')}
           </Text>
         </View>
         <View style={styles.rowWrapper}>
@@ -61,11 +69,18 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
             </Text>
           </View>
         </View>
-        <View>
+        <View style={styles.withMarginBottom}>
           <Text style={[styles.text, { color: colors.hourListText }]}>
-            {t('infoBottomSheet.rainRadarInfo')}
+            {t('infoBottomSheet.mapLayersInfo')}
           </Text>
         </View>
+        {timeseriesEnabled && (
+          <View>
+            <Text style={[styles.text, { color: colors.hourListText }]}>
+              {t('infoBottomSheet.timeseriesLayerInfo')}
+            </Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -93,7 +108,6 @@ const styles = StyleSheet.create({
   rowWrapper: {
     paddingBottom: 28,
     paddingTop: 15,
-    marginBottom: 14,
   },
   row: {
     flexDirection: 'row',
@@ -115,6 +129,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     height: 8,
     margin: 1,
+  },
+  withMarginBottom: {
+    marginBottom: 28,
   },
 });
 

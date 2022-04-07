@@ -290,10 +290,6 @@
       "forecast": "ennuste",
       "observation": "havainto"
     },
-    "timeStepBottomSheet": {
-      "title": "Aikajanan aika-akseli",
-      "closeAccessibilityLabel": "Sulje aika-askeleen valinta"
-    },
     "layersBottomSheet": {
       "closeAccessibilityLabel": "Sulje karttatasojen valinnat",
       "locationTitle": "Oma sijainti",
@@ -312,13 +308,15 @@
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Sulje kartan selitteet",
       "weatherSymbolsTitle": "Säämerkit",
-      "rainRadarTitle": "Sadetutkan selitykset",
+      "mapLayersInfoTitle": "Karttatasojen selitteet",
       "light": "heikkoa",
       "moderate": "kohtalaista",
       "strong": "rankkaa",
       "showMore": "Näytä lisää",
       "showLess": "Näytä vähemmän",
-      "rainRadarInfo": "Sadetutkan arvot mitataan tutkakaikuna. Heikko sade aiheuttaa erilaisen tukakaiun kuin rankka sade. Tulkitun sateen voimakkuus perustuu tutkakaiun voimakkuuteen tietyn ajanjakson aikana."
+      "rainRadarInfo": "Haivatun ja ennustetun sateen voimakkuus esitetään väreinä.",
+      "mapLayersInfo": "Kartalla esitettävä sadehavainto on mitattu säätutkalla. Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkakuviin ja sääennustemalleihin. Suomen alueella aika-askel on 15 minuuttia ja Skandinavian alueella yksi tunti.",
+      "timeseriesLayerInfo": "Sääennuste kartalla näyttää sääsymbolin ja lämpötilan lukuisille paikkakunnille ympäri maailman. Symbolia painamalla saa esille lisää säätietoa."
     }
   },
   "searchScreen": {
