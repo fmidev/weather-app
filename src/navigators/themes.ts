@@ -47,7 +47,7 @@ export const lightTheme = {
     chartPrimaryLine: PRIMARY_BLUE,
     chartSecondaryLine: SECONDARY_BLUE,
     chartGrid: GRAY_8,
-    chartGridDay: GRAY_2,
+    chartGridDay: GRAY_4,
     hourListText: GRAY_4,
     secondaryBorder: GRAY_1,
     tabBarInactive: PRIMARY_BLUE,
