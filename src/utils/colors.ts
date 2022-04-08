@@ -10,8 +10,8 @@ export const TRANSPARENT = 'transparent';
 
 export const FREEZING = 'rgb(206,218,255)';
 export const REALLY_COLD = 'rgb(214,233,254)';
-export const COLD = 'rgb(232,243,255)';
-export const WARM = 'rgb(255,248,231)';
+export const COLD = '#E3EEFC';
+export const WARM = '#FEF3D9';
 export const REALLY_WARM = 'rgb(255,240,204)';
 export const HOT = 'rgb(253,227,193)';
 
