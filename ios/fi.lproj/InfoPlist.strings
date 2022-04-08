@@ -1,0 +1,3 @@
+"CFBundleDisplayName" = "Sää";
+"CFBundleName" = "Sää";
+"NSLocationWhenInUseUsageDescription" = "Paikannuspalvelua käytetään säätietojen toimittamiseen nykyiseen sijaintipaikkaasi. Paikkatietoa ei välitetä kolmansille osapuolille.";
