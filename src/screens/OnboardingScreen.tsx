@@ -157,7 +157,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         accessibilityRole="button"
         style={styles.skipButton}
         onPress={() => navigation.navigate('SetupScreen')}>
-        <Text style={styles.text}>{t('skip')}</Text>
+        <Text style={[styles.text, { color: colors.primaryText }]}>
+          {t('skip')}
+        </Text>
       </AccessibleTouchableOpacity>
     </SafeAreaView>
   );
