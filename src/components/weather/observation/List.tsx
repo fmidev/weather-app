@@ -126,7 +126,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
             const time = moment(timeStep.epochtime * 1000).locale(locale);
             const timeToDisplay =
               time.hour() === 0
-                ? time.format(`dd DD.MM. [${t('forecast:at')}] HH:mm`)
+                ? time.format(`dd D.M. [${t('forecast:at')}] HH:mm`)
                 : time.format(`[${t('forecast:at')}] HH:mm`);
 
             return (

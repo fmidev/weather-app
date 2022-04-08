@@ -60,8 +60,8 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
                   )} - ${moment(duration.endTime).format('DD MMMM HH:mm')}`}>
                   <Text style={styles.bold}>{`${t(`types.${type}`)}`}</Text>
                   {` – ${t('valid')} ${moment(duration.startTime).format(
-                    'DD.MM. HH:mm'
-                  )} - ${moment(duration.endTime).format('DD.MM. HH:mm')} `}
+                    'D.M. HH:mm'
+                  )} - ${moment(duration.endTime).format('D.M. HH:mm')} `}
                 </Text>
               </View>
               <View style={styles.iconPadding}>
