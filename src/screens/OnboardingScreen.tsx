@@ -16,15 +16,7 @@ import { SetupStackParamList } from '@navigators/types';
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
-import {
-  PRIMARY_BLUE,
-  WHITE,
-  SHADOW_LIGHT,
-  GRAY_1,
-  CustomTheme,
-  SECONDARY_BLUE,
-  SHADOW_LIGHT_DARKER,
-} from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@utils/colors';
 
 type OnboardingScreenProps = {
   navigation: StackNavigationProp<SetupStackParamList, 'Onboarding'>;
@@ -32,7 +24,7 @@ type OnboardingScreenProps = {
 
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const { t } = useTranslation('onboarding');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
 
   const onboardingInfo = [
@@ -63,11 +55,21 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     title: string;
     description: string;
   }> = ({ icon, title, description }) => (
-    <View style={styles.infoContainer}>
-      <View style={styles.iconContainer}>
-        <Icon name={icon} width={32} height={32} color={PRIMARY_BLUE} />
+    <View
+      style={[
+        styles.infoContainer,
+        { backgroundColor: colors.background, shadowColor: colors.shadow },
+      ]}>
+      <View
+        style={[
+          styles.iconContainer,
+          { backgroundColor: colors.background, shadowColor: colors.shadow },
+        ]}>
+        <Icon name={icon} width={32} height={32} color={colors.primaryText} />
       </View>
-      <Text style={styles.title} accessibilityRole="header">
+      <Text
+        style={[styles.title, { color: colors.primaryText }]}
+        accessibilityRole="header">
         {title}
       </Text>
       <Text style={[styles.textNormal, { color: colors.hourListText }]}>
@@ -81,9 +83,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
             navigation.navigate('SetupScreen');
           } else setPageIndex((index) => index + 1);
         }}>
-        <View style={styles.button}>
+        <View style={[styles.button, { borderColor: colors.primaryText }]}>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>{t('next')}</Text>
+            <Text style={[styles.text, { color: colors.primaryText }]}>
+              {t('next')}
+            </Text>
           </View>
         </View>
       </AccessibleTouchableOpacity>
@@ -95,9 +99,17 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
       <ImageBackground
         style={styles.imageBackground}
         resizeMode="contain"
-        source={require('../assets/images/weather-background-light.png')}>
+        source={
+          dark
+            ? require('../assets/images/weather-background-dark.png')
+            : require('../assets/images/weather-background-light.png')
+        }>
         <Image
-          source={require('../assets/images/fmi-logo-fi.png')}
+          source={
+            dark
+              ? require('../assets/images/fmi-logo-dark.png')
+              : require('../assets/images/fmi-logo-light.png')
+          }
           resizeMode="contain"
           style={styles.logo}
         />
@@ -114,27 +126,30 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           style={[
             styles.pagination,
             styles.marginRight,
-            pageIndex === 0 ? styles.active : styles.inActive,
+
+            { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
           ]}
         />
         <View
           style={[
             styles.pagination,
             styles.marginRight,
-            pageIndex === 1 ? styles.active : styles.inActive,
+
+            { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
           ]}
         />
         <View
           style={[
             styles.pagination,
             styles.marginRight,
-            pageIndex === 2 ? styles.active : styles.inActive,
+
+            { backgroundColor: pageIndex === 2 ? colors.primary : GRAY_1 },
           ]}
         />
         <View
           style={[
             styles.pagination,
-            pageIndex === 3 ? styles.active : styles.inActive,
+            { backgroundColor: pageIndex === 3 ? colors.primary : GRAY_1 },
           ]}
         />
       </View>
@@ -142,7 +157,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         accessibilityRole="button"
         style={styles.skipButton}
         onPress={() => navigation.navigate('SetupScreen')}>
-        <Text style={styles.text}>{t('skip')}</Text>
+        <Text style={[styles.text, { color: colors.primaryText }]}>
+          {t('skip')}
+        </Text>
       </AccessibleTouchableOpacity>
     </SafeAreaView>
   );
@@ -151,7 +168,6 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: WHITE,
   },
   imageBackground: {
     height: '100%',
@@ -180,18 +196,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 274,
     borderRadius: 8,
-    backgroundColor: WHITE,
     marginBottom: 20,
     alignItems: 'center',
     paddingHorizontal: 20,
     shadowOffset: {
-      width: -2,
+      width: 0,
       height: 2,
     },
     shadowRadius: 16,
     shadowOpacity: 1,
-    elevation: 3,
-    shadowColor: SHADOW_LIGHT,
+    elevation: 10,
   },
   iconContainer: {
     position: 'absolute',
@@ -200,18 +214,16 @@ const styles = StyleSheet.create({
     width: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: WHITE,
     borderRadius: 50,
-    shadowColor: SHADOW_LIGHT_DARKER,
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowRadius: 10,
     shadowOpacity: 1,
+    elevation: 10,
   },
   title: {
-    color: PRIMARY_BLUE,
     fontSize: 16,
     marginBottom: 20,
     marginTop: 60,
@@ -230,7 +242,6 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: PRIMARY_BLUE,
   },
   buttonContainer: {
     position: 'absolute',
@@ -243,19 +254,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
-    color: PRIMARY_BLUE,
     textAlign: 'center',
   },
   pagination: {
     height: 10,
     width: 10,
     borderRadius: 50,
-  },
-  active: {
-    backgroundColor: SECONDARY_BLUE,
-  },
-  inActive: {
-    backgroundColor: GRAY_1,
   },
   marginRight: {
     marginRight: 8,

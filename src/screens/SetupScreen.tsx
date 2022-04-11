@@ -17,14 +17,7 @@ import { SetupStackParamList } from '@navigators/types';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
-import {
-  PRIMARY_BLUE,
-  WHITE,
-  SHADOW_LIGHT,
-  GRAY_1,
-  CustomTheme,
-  SECONDARY_BLUE,
-} from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@utils/colors';
 
 type SetupScreenProps = {
   setUpDone: () => void;
@@ -33,7 +26,7 @@ type SetupScreenProps = {
 
 const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
   const { t } = useTranslation('setUp');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const [didViewTerms, setDidViewTerms] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
 
@@ -69,8 +62,14 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
     onSecondaryButtonPress,
     primaryButtonDisabled,
   }) => (
-    <View style={styles.permissionContainer}>
-      <Text style={styles.title} accessibilityRole="header">
+    <View
+      style={[
+        styles.permissionContainer,
+        { backgroundColor: colors.background, shadowColor: colors.shadow },
+      ]}>
+      <Text
+        style={[styles.title, { color: colors.primaryText }]}
+        accessibilityRole="header">
         {title}
       </Text>
       <Text style={[styles.textNormal, { color: colors.hourListText }]}>
@@ -82,8 +81,15 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             accessibilityRole="button"
             onPress={onSecondaryButtonPress}
             style={styles.marginBottom20}>
-            <View style={styles.secondaryButton}>
-              <Text style={styles.textHighlight}>{secondaryButtonText}</Text>
+            <View
+              style={[
+                styles.secondaryButton,
+                { borderBottomColor: colors.primary },
+              ]}>
+              <Text
+                style={[styles.textHighlight, { color: colors.primaryText }]}>
+                {secondaryButtonText}
+              </Text>
             </View>
           </AccessibleTouchableOpacity>
           <AccessibleTouchableOpacity
@@ -92,9 +98,15 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             disabled={primaryButtonDisabled}
             style={styles.marginBottom40}>
             <View
-              style={[styles.button, primaryButtonDisabled && styles.disabled]}>
+              style={[
+                styles.button,
+                { backgroundColor: colors.primaryText },
+                primaryButtonDisabled && styles.disabled,
+              ]}>
               <View style={styles.textContainer}>
-                <Text style={styles.text}>{primaryButtonText}</Text>
+                <Text style={[styles.text, { color: colors.headerBackground }]}>
+                  {primaryButtonText}
+                </Text>
               </View>
             </View>
           </AccessibleTouchableOpacity>
@@ -107,9 +119,15 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             disabled={primaryButtonDisabled}
             style={styles.marginBottom20}>
             <View
-              style={[styles.button, primaryButtonDisabled && styles.disabled]}>
+              style={[
+                styles.button,
+                { backgroundColor: colors.primaryText },
+                primaryButtonDisabled && styles.disabled,
+              ]}>
               <View style={styles.textContainer}>
-                <Text style={styles.text}>{primaryButtonText}</Text>
+                <Text style={[styles.text, { color: colors.headerBackground }]}>
+                  {primaryButtonText}
+                </Text>
               </View>
             </View>
           </AccessibleTouchableOpacity>
@@ -117,8 +135,15 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             accessibilityRole="button"
             onPress={onSecondaryButtonPress}
             style={styles.marginBottom40}>
-            <View style={styles.secondaryButton}>
-              <Text style={styles.textHighlight}>{secondaryButtonText}</Text>
+            <View
+              style={[
+                styles.secondaryButton,
+                { borderBottomColor: colors.primary },
+              ]}>
+              <Text
+                style={[styles.textHighlight, { color: colors.primaryText }]}>
+                {secondaryButtonText}
+              </Text>
             </View>
           </AccessibleTouchableOpacity>
         </>
@@ -131,9 +156,17 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
       <ImageBackground
         style={styles.imageBackground}
         resizeMode="contain"
-        source={require('../assets/images/weather-background-light.png')}>
+        source={
+          dark
+            ? require('../assets/images/weather-background-dark.png')
+            : require('../assets/images/weather-background-light.png')
+        }>
         <Image
-          source={require('../assets/images/fmi-logo-fi.png')}
+          source={
+            dark
+              ? require('../assets/images/fmi-logo-dark.png')
+              : require('../assets/images/fmi-logo-light.png')
+          }
           resizeMode="contain"
           style={styles.logo}
         />
@@ -171,13 +204,13 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
           style={[
             styles.pagination,
             styles.marginRight,
-            pageIndex === 0 ? styles.active : styles.inActive,
+            { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
           ]}
         />
         <View
           style={[
             styles.pagination,
-            pageIndex === 1 ? styles.active : styles.inActive,
+            { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
           ]}
         />
       </View>
@@ -188,7 +221,6 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: WHITE,
   },
   imageBackground: {
     height: '100%',
@@ -214,7 +246,6 @@ const styles = StyleSheet.create({
   permissionContainer: {
     width: '100%',
     borderRadius: 8,
-    backgroundColor: WHITE,
     marginBottom: 20,
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -224,11 +255,9 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 16,
     shadowOpacity: 1,
-    elevation: 3,
-    shadowColor: SHADOW_LIGHT,
+    elevation: 10,
   },
   title: {
-    color: PRIMARY_BLUE,
     fontSize: 16,
     marginBottom: 20,
     marginTop: 30,
@@ -244,19 +273,16 @@ const styles = StyleSheet.create({
   textHighlight: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
-    color: PRIMARY_BLUE,
   },
   secondaryButton: {
     borderBottomWidth: 2,
     padding: 4,
-    borderBottomColor: SECONDARY_BLUE,
   },
   button: {
     minWidth: 120,
     paddingHorizontal: 24,
     height: 44,
     borderRadius: 25,
-    backgroundColor: PRIMARY_BLUE,
   },
   textContainer: {
     height: '100%',
@@ -265,19 +291,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
-    color: WHITE,
     textAlign: 'center',
   },
   pagination: {
     height: 10,
     width: 10,
     borderRadius: 50,
-  },
-  active: {
-    backgroundColor: SECONDARY_BLUE,
-  },
-  inActive: {
-    backgroundColor: GRAY_1,
   },
   marginRight: {
     marginRight: 8,

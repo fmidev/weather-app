@@ -349,11 +349,6 @@ const Navigator: React.FC<Props> = ({
         name="TermsAndConditions"
         options={{
           ...CommonHeaderOptions,
-          headerTintColor: PRIMARY_BLUE,
-          headerStyle: {
-            ...styles.header,
-            shadowColor: SHADOW_LIGHT,
-          },
           headerTitle: t('setUp:termsAndConditions'),
         }}>
         {({ navigation }) => (
@@ -374,7 +369,7 @@ const Navigator: React.FC<Props> = ({
 
   if (!didLaunchApp) {
     return (
-      <NavigationContainer theme={lightTheme}>
+      <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
         <SetupStackScreen />
       </NavigationContainer>
     );

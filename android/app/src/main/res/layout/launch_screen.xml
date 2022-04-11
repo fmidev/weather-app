@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/splashscreen_bg">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@mipmap/weather_background_light" />
+            android:src="@drawable/weather_background" />
     </FrameLayout>
 
     <ImageView
@@ -25,6 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="40dp"
-        android:src="@mipmap/fmi_logo_fi" />
+        android:src="@drawable/fmi_logo" />
 
 </RelativeLayout>

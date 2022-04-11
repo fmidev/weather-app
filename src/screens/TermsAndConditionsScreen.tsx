@@ -5,7 +5,7 @@ import { useTheme } from '@react-navigation/native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
-import { CustomTheme, WHITE } from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 
 type TermsAndConditionsScreenProps = {
   showCloseButton?: boolean;
@@ -92,7 +92,13 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
       </ScrollView>
       {showCloseButton && (
         <View
-          style={[styles.closeButtonContainer, { shadowColor: colors.shadow }]}>
+          style={[
+            styles.closeButtonContainer,
+            {
+              shadowColor: colors.shadow,
+              backgroundColor: colors.background,
+            },
+          ]}>
           <AccessibleTouchableOpacity
             onPress={onClose}
             accessibilityRole="button"
@@ -128,7 +134,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
   },
   closeButtonContainer: {
-    backgroundColor: WHITE,
     width: '100%',
     shadowOffset: {
       width: 0,

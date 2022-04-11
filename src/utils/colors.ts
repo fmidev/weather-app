@@ -33,7 +33,7 @@ export const GRAY_6_95 = 'rgba(28,28,30,0.95)';
 export const BLACK_OPACITY = 'rgba(0,0,0,0.07)';
 export const BLACK_TRANSPARENT = 'rgba(0,0,0,0.0)';
 
-export const SHADOW_DARK = 'rgba(0,0,0,0.3)';
+export const SHADOW_DARK = 'rgba(0,0,0,0.4)';
 export const SHADOW_LIGHT = 'rgba(142,142,147,0.15)';
 export const SHADOW_LIGHT_DARKER = 'rgba(142,142,147,0.3)';
 
