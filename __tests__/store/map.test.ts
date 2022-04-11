@@ -67,6 +67,7 @@ describe('map reducer', () => {
           topLeft: [14, 13],
           topRight: [14, 16],
         },
+        styles: { dark: '', light: 'style' },
       } as types.Layer,
       forecast: {
         url: 'example.test.forecast',
@@ -77,6 +78,7 @@ describe('map reducer', () => {
           topRight: [14, 16],
         },
         start: '2021-01-01T01:00:00Z',
+        styles: '',
       } as types.Layer,
     } as types.MapOverlay;
 

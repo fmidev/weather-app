@@ -29,7 +29,7 @@ export type WMSSource = {
   type: 'observation' | 'forecast';
   boundingBox?: BoundingBox;
   customParameters?: {
-    [name: string]: string | number;
+    [name: string]: string | number | { dark: string; light: string };
   };
 };
 

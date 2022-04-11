@@ -1,12 +1,12 @@
 import React from 'react';
 import { VictoryBar, VictoryGroup, VictoryLine } from 'victory-native';
-import { getPrecipitationColorOrTransparent } from '@utils/helpers';
+import { getPrecipitationLevel } from '@utils/helpers';
 import chartTheme from '@utils/chartTheme';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 import { ChartDataProps } from './types';
 
-const PrecipitationChart: React.SFC<ChartDataProps> = ({
+const PrecipitationChart: React.FC<ChartDataProps> = ({
   chartValues,
   chartDomain,
   chartWidth,
@@ -28,7 +28,7 @@ const PrecipitationChart: React.SFC<ChartDataProps> = ({
           barWidth={6}
           style={{
             data: {
-              fill: ({ datum }) => getPrecipitationColorOrTransparent(datum.y),
+              fill: ({ datum }) => colors.rain[getPrecipitationLevel(datum.y)],
             },
           }}
           y={(datum) => datum.y / maxTick}

@@ -18,6 +18,23 @@ import {
   SHADOW_LIGHT,
   CHART_BLUE,
   GRAY_1_OPACITY,
+  RAIN_1_DARK,
+  RAIN_2_DARK,
+  RAIN_3_DARK,
+  RAIN_4_DARK,
+  RAIN_5_DARK,
+  RAIN_6_DARK,
+  RAIN_7_DARK,
+  RAIN_8_DARK,
+  RAIN_1_LIGHT,
+  RAIN_2_LIGHT,
+  RAIN_3_LIGHT,
+  RAIN_4_LIGHT,
+  RAIN_5_LIGHT,
+  RAIN_6_LIGHT,
+  RAIN_7_LIGHT,
+  RAIN_8_LIGHT,
+  TRANSPARENT,
 } from '@utils/colors';
 
 export const lightTheme = {
@@ -55,6 +72,17 @@ export const lightTheme = {
     timeSliderObservationText: GRAY_3,
     timeSliderTick: GRAY_2,
     listTint: GRAY_1_OPACITY,
+    rain: {
+      0: TRANSPARENT,
+      1: RAIN_1_LIGHT,
+      2: RAIN_2_LIGHT,
+      3: RAIN_3_LIGHT,
+      4: RAIN_4_LIGHT,
+      5: RAIN_5_LIGHT,
+      6: RAIN_6_LIGHT,
+      7: RAIN_7_LIGHT,
+      8: RAIN_8_LIGHT,
+    },
   },
 };
 
@@ -93,5 +121,16 @@ export const darkTheme = {
     timeSliderObservationText: GRAY_1,
     timeSliderTick: GRAY_1,
     listTint: GRAY_1_OPACITY,
+    rain: {
+      0: TRANSPARENT,
+      1: RAIN_1_DARK,
+      2: RAIN_2_DARK,
+      3: RAIN_3_DARK,
+      4: RAIN_4_DARK,
+      5: RAIN_5_DARK,
+      6: RAIN_6_DARK,
+      7: RAIN_7_DARK,
+      8: RAIN_8_DARK,
+    },
   },
 };

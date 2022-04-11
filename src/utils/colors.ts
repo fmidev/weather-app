@@ -47,15 +47,37 @@ export const YELLOW = '#F8F800';
 export const ORANGE = '#FFB700';
 export const RED = '#D0021B';
 
-export const RAIN_1 = '#0C9BFF';
-export const RAIN_2 = '#06CDAB';
-export const RAIN_3 = '#8CE614';
-export const RAIN_4 = '#F0F014';
-export const RAIN_5 = '#FFCD15';
-export const RAIN_6 = '#FF503D';
-export const RAIN_7 = '#D41B0E';
+export const RAIN_1_LIGHT = '#3A698E';
+export const RAIN_2_LIGHT = '#6BB1C9';
+export const RAIN_3_LIGHT = '#C5FBF2';
+export const RAIN_4_LIGHT = '#589D6B';
+export const RAIN_5_LIGHT = '#F9F961';
+export const RAIN_6_LIGHT = '#D29F00';
+export const RAIN_7_LIGHT = '#AE5200';
+export const RAIN_8_LIGHT = '#760000';
+
+export const RAIN_1_DARK = '#C1FAFB';
+export const RAIN_2_DARK = '#6BB1C9';
+export const RAIN_3_DARK = '#3F738B';
+export const RAIN_4_DARK = '#6BC37E';
+export const RAIN_5_DARK = '#F9F961';
+export const RAIN_6_DARK = '#D29F00';
+export const RAIN_7_DARK = '#AE5200';
+export const RAIN_8_DARK = '#760000';
 
 export const CHART_BLUE = '#7594EB';
+
+export type Rain = {
+  0: string;
+  1: string;
+  2: string;
+  3: string;
+  4: string;
+  5: string;
+  6: string;
+  7: string;
+  8: string;
+};
 
 export type CustomTheme = {
   dark: boolean;
@@ -92,5 +114,6 @@ export type CustomTheme = {
     timeSliderObservationText: string;
     timeSliderTick: string;
     listTint: string;
+    rain: Rain;
   };
 };
