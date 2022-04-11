@@ -46,7 +46,7 @@ const WarningsPanelSlim: React.FC<WarningsPanelSlimProps> = ({
   moment.locale(i18n.language);
 
   const lastUpdated = {
-    time: moment(updated).format(`DD.MM. [${t('forecast:at')}] HH:mm`),
+    time: moment(updated).format(`D.M. [${t('forecast:at')}] HH:mm`),
     ageCheck: warningsAge > (ageWarning ?? 120) * 60 * 1000,
   };
 

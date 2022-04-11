@@ -99,7 +99,7 @@ export const tickFormat = (tick: any): string | number => {
   }
   if (hour === 0) {
     return `${capitalize(time.format('dd'))}
-${time.format('DD.MM.')}`;
+${time.format('D.M.')}`;
   }
   return time.format('HH');
 };

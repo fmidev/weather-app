@@ -158,14 +158,14 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 />
                 <Text
                   accessibilityLabel={`${t('sunrise')} ${sunrise.format(
-                    `DD.MM.YYYY [${t('at')}] HH:mm`
+                    `D.M.YYYY [${t('at')}] HH:mm`
                   )}`}
                   style={[
                     styles.panelText,
                     styles.bold,
                     { color: colors.hourListText },
                   ]}>
-                  {sunrise.format(`DD.MM.YYYY [${t('at')}] HH:mm`)}
+                  {sunrise.format(`D.M.YYYY [${t('at')}] HH:mm`)}
                 </Text>
               </View>
             </>
@@ -209,14 +209,14 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 />
                 <Text
                   accessibilityLabel={`${t('sunset')} ${sunset.format(
-                    `DD.MM.YYYY [${t('at')}] HH:mm`
+                    `D.M.YYYY [${t('at')}] HH:mm`
                   )}`}
                   style={[
                     styles.panelText,
                     styles.bold,
                     { color: colors.hourListText },
                   ]}>
-                  {sunset.format(`DD.MM.YYYY [${t('at')}] HH:mm`)}
+                  {sunset.format(`D.M.YYYY [${t('at')}] HH:mm`)}
                 </Text>
               </View>
             </>

@@ -190,7 +190,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                           color: colors.text,
                         },
                       ]}>
-                      {moment(date).format('DD.MM.')}
+                      {moment(date).format('D.M.')}
                     </Text>
                     <SeverityBar severity={severity} />
                   </View>
@@ -213,7 +213,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
             ]}>
             {t('lastUpdated')}{' '}
             <Text style={styles.bold}>
-              {moment(updated).format(`DD.MM. [${t('forecast:at')}] HH:mm`)}
+              {moment(updated).format(`D.M. [${t('forecast:at')}] HH:mm`)}
             </Text>
           </Text>
         </View>
