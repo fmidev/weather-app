@@ -7,16 +7,7 @@ import { Config } from '@config';
 
 import CloseButton from '@components/common/CloseButton';
 
-import {
-  CustomTheme,
-  RAIN_1,
-  RAIN_2,
-  RAIN_3,
-  RAIN_4,
-  RAIN_5,
-  RAIN_6,
-  RAIN_7,
-} from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 
 type InfoBottomSheetProps = {
   onClose: () => void;
@@ -49,13 +40,30 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
         </View>
         <View style={styles.rowWrapper}>
           <View style={[styles.row, styles.rainContainer]}>
-            <View style={[styles.rainBlock, { backgroundColor: RAIN_1 }]} />
-            <View style={[styles.rainBlock, { backgroundColor: RAIN_2 }]} />
-            <View style={[styles.rainBlock, { backgroundColor: RAIN_3 }]} />
-            <View style={[styles.rainBlock, { backgroundColor: RAIN_4 }]} />
-            <View style={[styles.rainBlock, { backgroundColor: RAIN_5 }]} />
-            <View style={[styles.rainBlock, { backgroundColor: RAIN_6 }]} />
-            <View style={[styles.rainBlock, { backgroundColor: RAIN_7 }]} />
+            <View
+              style={[styles.rainBlock, { backgroundColor: colors.rain[1] }]}
+            />
+            <View
+              style={[styles.rainBlock, { backgroundColor: colors.rain[2] }]}
+            />
+            <View
+              style={[styles.rainBlock, { backgroundColor: colors.rain[3] }]}
+            />
+            <View
+              style={[styles.rainBlock, { backgroundColor: colors.rain[4] }]}
+            />
+            <View
+              style={[styles.rainBlock, { backgroundColor: colors.rain[5] }]}
+            />
+            <View
+              style={[styles.rainBlock, { backgroundColor: colors.rain[6] }]}
+            />
+            <View
+              style={[styles.rainBlock, { backgroundColor: colors.rain[7] }]}
+            />
+            <View
+              style={[styles.rainBlock, { backgroundColor: colors.rain[8] }]}
+            />
           </View>
           <View style={styles.sheetTitle}>
             <Text style={[styles.text, { color: colors.hourListText }]}>

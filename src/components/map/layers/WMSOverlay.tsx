@@ -13,6 +13,7 @@ import {
 import { State } from '@store/types';
 import { Layer, MapOverlay } from '@store/map/types';
 import { selectActiveOverlay, selectSliderTime } from '@store/map/selectors';
+import { useTheme } from '@react-navigation/native';
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
@@ -32,6 +33,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   sliderTime,
   overlay,
 }) => {
+  const { dark } = useTheme();
   const observation = overlay.observation as Layer;
   const forecast = overlay.forecast as Layer;
 
@@ -72,6 +74,18 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     }
   };
 
+  const formatUrlWithStyles = (timestamp: string): string | false => {
+    const isForecast = borderTimeComparer(timestamp);
+    const { url, styles } = isForecast ? forecast : observation;
+    if (!url) {
+      return false;
+    }
+    const theme = dark ? 'dark' : 'light';
+    return `${url}&styles=${
+      typeof styles === 'string' ? styles : styles[theme]
+    }&time=${timestamp}`;
+  };
+
   const borderTimeComparer = (time: string): boolean =>
     borderTime.type === 'forecast'
       ? time >= borderTime.time
@@ -102,13 +116,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
         moment.unix(unix).toISOString()
       );
 
-      const urls = timeStamps.map((stamp) => {
-        const baseUrl = borderTimeComparer(stamp)
-          ? forecast?.url
-          : observation?.url;
-        if (!baseUrl) return false;
-        return `${baseUrl}&time=${stamp}`;
-      });
+      const urls = timeStamps.map((stamp) => formatUrlWithStyles(stamp));
 
       const filteredUrls = urls.filter((x) => !!x) as string[];
 
@@ -134,11 +142,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     layerBounds?.topRight,
   ];
 
-  const baseUrl = borderTimeComparer(current)
-    ? forecast?.url
-    : observation?.url;
-
-  const image = baseUrl && (`${baseUrl}&time=${current}` as ImageURISource);
+  const image = formatUrlWithStyles(current) as ImageURISource;
 
   // return null until something to return
   if (!image || !bounds || sliderTime === 0) return null;

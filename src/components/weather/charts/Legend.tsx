@@ -3,17 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import {
-  CustomTheme,
-  RAIN_1,
-  RAIN_2,
-  RAIN_3,
-  RAIN_4,
-  RAIN_5,
-  RAIN_6,
-  RAIN_7,
-  TRANSPARENT,
-} from '@utils/colors';
+import { CustomTheme, TRANSPARENT } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
@@ -161,25 +151,25 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
       {chartType === 'precipitation' && (
         <>
           <View style={styles.legendRow}>
-            <Bar color={RAIN_1} />
-            <Bar color={RAIN_2} />
+            <Bar color={colors.rain[1]} />
+            <Bar color={colors.rain[2]} />
             <Bar color={TRANSPARENT} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationLight').toLocaleLowerCase()}
             </Text>
           </View>
           <View style={styles.legendRow}>
-            <Bar color={RAIN_3} />
-            <Bar color={RAIN_4} />
-            <Bar color={RAIN_5} />
+            <Bar color={colors.rain[3]} />
+            <Bar color={colors.rain[4]} />
+            <Bar color={colors.rain[5]} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationModerate').toLocaleLowerCase()}
             </Text>
           </View>
           <View style={styles.legendRow}>
-            <Bar color={RAIN_6} />
-            <Bar color={RAIN_7} />
-            <Bar color={TRANSPARENT} />
+            <Bar color={colors.rain[6]} />
+            <Bar color={colors.rain[7]} />
+            <Bar color={colors.rain[8]} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationHeavy').toLocaleLowerCase()}
             </Text>

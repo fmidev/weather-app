@@ -2,8 +2,9 @@ import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import moment from 'moment';
 
-import { GRAY_1 } from '@utils/colors';
-import { getPrecipitationColorOrTransparent } from '@utils/helpers';
+import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { getPrecipitationLevel } from '@utils/helpers';
+import { useTheme } from '@react-navigation/native';
 
 type PrecipitationStripProps = {
   precipitationData:
@@ -16,6 +17,7 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
   precipitationData,
   style,
 }) => {
+  const { colors } = useTheme() as CustomTheme;
   const precipitationHourArr =
     precipitationData &&
     precipitationData.map((item) => ({
@@ -56,7 +58,7 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
 
   const backgroundStyleGetter = (val: number | undefined): ViewStyle => {
     if (val === undefined) return { backgroundColor: GRAY_1, opacity: 0.5 };
-    return { backgroundColor: getPrecipitationColorOrTransparent(val) };
+    return { backgroundColor: colors.rain[getPrecipitationLevel(val)] };
   };
 
   return (

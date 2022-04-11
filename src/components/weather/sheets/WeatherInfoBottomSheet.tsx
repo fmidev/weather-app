@@ -26,17 +26,7 @@ import {
 } from '@assets/images';
 
 import { useOrientation } from '@utils/hooks';
-import {
-  GRAY_1,
-  RAIN_1,
-  RAIN_2,
-  RAIN_3,
-  RAIN_4,
-  RAIN_5,
-  RAIN_6,
-  RAIN_7,
-  CustomTheme,
-} from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@utils/colors';
 
 const mapStateToProps = (state: State) => ({
   uniqueSmartSymbols: selectUniqueSmartSymbols(state),
@@ -115,14 +105,14 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.rainIntensityBlock,
                       styles.withSmallMarginRight,
                       {
-                        backgroundColor: RAIN_1,
+                        backgroundColor: colors.rain[1],
                       },
                     ]}
                   />
                   <View
                     style={[
                       styles.rainIntensityBlock,
-                      { backgroundColor: RAIN_2 },
+                      { backgroundColor: colors.rain[2] },
                     ]}
                   />
                 </View>
@@ -139,7 +129,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.rainIntensityBlock,
                       styles.withSmallMarginRight,
                       {
-                        backgroundColor: RAIN_3,
+                        backgroundColor: colors.rain[3],
                       },
                     ]}
                   />
@@ -148,14 +138,14 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.rainIntensityBlock,
                       styles.withSmallMarginRight,
                       {
-                        backgroundColor: RAIN_4,
+                        backgroundColor: colors.rain[4],
                       },
                     ]}
                   />
                   <View
                     style={[
                       styles.rainIntensityBlock,
-                      { backgroundColor: RAIN_5 },
+                      { backgroundColor: colors.rain[5] },
                     ]}
                   />
                 </View>
@@ -172,14 +162,20 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.rainIntensityBlock,
                       styles.withSmallMarginRight,
                       {
-                        backgroundColor: RAIN_6,
+                        backgroundColor: colors.rain[6],
                       },
                     ]}
                   />
                   <View
                     style={[
                       styles.rainIntensityBlock,
-                      { backgroundColor: RAIN_7 },
+                      { backgroundColor: colors.rain[7] },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.rainIntensityBlock,
+                      { backgroundColor: colors.rain[8] },
                     ]}
                   />
                 </View>

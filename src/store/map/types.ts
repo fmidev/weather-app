@@ -63,7 +63,7 @@ export interface Layer {
   bounds: { [key: string]: [number, number] } | undefined;
   start?: string;
   end?: string;
-  customParameters?: { [key: string]: number | string };
+  styles: string | { dark: string; light: string };
 }
 
 export interface TimeseriesLayer {

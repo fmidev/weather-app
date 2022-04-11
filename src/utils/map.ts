@@ -262,6 +262,11 @@ const getWMSLayerUrlsAndBounds = async (
 
       const url = sources[layerSrc.source];
 
+      const { styles, ...customParameters } = {
+        styles: '',
+        ...layerSrc.customParameters,
+      };
+
       const query = new URLSearchParams({
         service: 'WMS',
         version: '1.3.0',
@@ -274,8 +279,7 @@ const getWMSLayerUrlsAndBounds = async (
         format: 'image/png',
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
-        styles: '',
-        ...layerSrc.customParameters,
+        ...customParameters,
       });
 
       const overlayUrl = `${url}/wms?${query.toString()}`;
@@ -286,6 +290,7 @@ const getWMSLayerUrlsAndBounds = async (
           url: overlayUrl,
           start: layerStart,
           end: layerEnd,
+          styles,
         },
         step: layer.times.timeStep,
       });

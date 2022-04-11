@@ -12,16 +12,7 @@ import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
-import {
-  RAIN_1,
-  RAIN_2,
-  RAIN_3,
-  RAIN_4,
-  RAIN_5,
-  RAIN_6,
-  RAIN_7,
-  TRANSPARENT,
-} from './colors';
+import { Rain } from './colors';
 
 export const getGeolocation = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -88,15 +79,16 @@ export const getGeolocation = (
   });
 };
 
-export const getPrecipitationColorOrTransparent = (amount: number): string => {
-  if (amount >= 0.1 && amount < 0.2) return RAIN_1;
-  if (amount >= 0.2 && amount < 0.5) return RAIN_2;
-  if (amount >= 0.5 && amount < 1) return RAIN_3;
-  if (amount >= 1 && amount < 2) return RAIN_4;
-  if (amount >= 2 && amount < 5) return RAIN_5;
-  if (amount >= 5 && amount < 10) return RAIN_6;
-  if (amount >= 10) return RAIN_7;
-  return TRANSPARENT;
+export const getPrecipitationLevel = (amount: number): keyof Rain => {
+  if (amount >= 0.1 && amount < 0.15) return 1;
+  if (amount >= 0.15 && amount < 0.2) return 2;
+  if (amount >= 0.2 && amount < 0.5) return 3;
+  if (amount >= 0.5 && amount < 1.0) return 4;
+  if (amount >= 1.0 && amount < 2.0) return 5;
+  if (amount >= 2.0 && amount < 5.0) return 6;
+  if (amount >= 5.0 && amount < 10.0) return 7;
+  if (amount >= 10.0) return 8;
+  return 0;
 };
 
 type DotOrComma = ',' | '.';
