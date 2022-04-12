@@ -24,12 +24,14 @@ export default (
       return {
         ...state,
         loading: true,
+        error: false,
       };
     }
 
     case FETCH_WARNINGS_SUCCESS: {
       return {
         ...state,
+        error: false,
         loading: false,
         data: {
           ...state.data,

@@ -65,6 +65,7 @@ import {
 } from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
 import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
+import ErrorComponent from '@components/common/ErrorComponent';
 import { lightTheme, darkTheme } from './themes';
 import {
   TabParamList,
@@ -516,6 +517,7 @@ const Navigator: React.FC<Props> = ({
             onClose={() => searchInfoSheetRef.current.close()}
           />
         </RBSheet>
+        <ErrorComponent />
       </NavigationContainer>
     </>
   );

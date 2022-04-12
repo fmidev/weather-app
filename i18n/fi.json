@@ -526,5 +526,13 @@
     "body1": "Kerro meille palautteesi sovelluksesta Lähetä palautetta -painikkeen kautta. Painikkeesta siirryt puhelimen sähköpostiohjelmaan.",
     "body2": "Käsittelemme kaikki palautteet, mutta emme voi taata henkilökohtaista vastausta.",
     "sendFeedback": "Lähetä palautetta"
+  },
+  "error": {
+    "forecastErrorTitle": "Tapahtui virhe ladattaessa säätietoja",
+    "observationErrorTitle": "Tapahtui virhe ladattaessa havaintotietoja",
+    "warningsErrorTitle": "Tapahtui virhe ladattaessa varoituksia",
+    "noInternetTitle": "Ei internet-yhteyttä",
+    "checkConnection": "Tarkista internet-yhteytesi ja yritä uudelleen.",
+    "tryAgain": "Yritä uudelleen"
   }
 }

@@ -66,6 +66,7 @@ export default (
       return {
         ...state,
         loading: true,
+        error: false,
       };
     }
 
