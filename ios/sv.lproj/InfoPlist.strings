@@ -1,3 +1,3 @@
-"CFBundleDisplayName" = "FMI Väder";
-"CFBundleName" = "FMI Väder";
+"CFBundleDisplayName" = "FMI Väder Beta";
+"CFBundleName" = "FMI Väder Beta";
 "NSLocationWhenInUseUsageDescription" = "Lokalisering används för att ge dig väderdata för den plats du befinner dig på. Geografisk information sänds inte vidare till tredje part.";
