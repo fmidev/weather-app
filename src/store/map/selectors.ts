@@ -44,6 +44,11 @@ export const selectOverlay = createSelector(
   }
 );
 
+export const selectOverlaysError = createSelector(
+  selectMapDomain,
+  (map) => map.overlaysError
+);
+
 export const selectRegion = createSelector(
   selectMapDomain,
   (map) => map.region

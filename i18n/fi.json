@@ -531,6 +531,7 @@
     "forecastErrorTitle": "Tapahtui virhe ladattaessa säätietoja",
     "observationErrorTitle": "Tapahtui virhe ladattaessa havaintotietoja",
     "warningsErrorTitle": "Tapahtui virhe ladattaessa varoituksia",
+    "overlaysErrorTitle": "Tapahtui virhe ladattaessa karttatasoja",
     "noInternetTitle": "Ei internet-yhteyttä",
     "checkConnection": "Tarkista internet-yhteytesi ja yritä uudelleen.",
     "tryAgain": "Yritä uudelleen"

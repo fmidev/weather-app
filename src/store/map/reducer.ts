@@ -4,6 +4,8 @@ import {
   UPDATE_SLIDER_TIME,
   ANIMATE_TO_AREA,
   UPDATE_OVERLAYS,
+  UPDATE_OVERLAYS_SUCCESS,
+  UPDATE_OVERLAYS_ERROR,
   MapActionTypes,
   MapState,
   UPDATE_ACTIVE_OVERLAY,
@@ -20,6 +22,7 @@ const INITIAL_STATE: MapState = {
   sliderTime: 0,
   animateToArea: false,
   overlays: undefined,
+  overlaysError: false,
   activeOverlay: undefined,
   region: { latitude: 0, longitude: 0, longitudeDelta: 0, latitudeDelta: 0 },
   selectedCallout: undefined,
@@ -51,7 +54,23 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
     case UPDATE_OVERLAYS: {
       return {
         ...state,
+        overlaysError: false,
+      };
+    }
+
+    case UPDATE_OVERLAYS_SUCCESS: {
+      return {
+        ...state,
         overlays: action.overlays,
+        sliderTime: 0,
+      };
+    }
+
+    case UPDATE_OVERLAYS_ERROR: {
+      return {
+        ...state,
+        overlays: undefined,
+        overlaysError: action.error,
         sliderTime: 0,
       };
     }

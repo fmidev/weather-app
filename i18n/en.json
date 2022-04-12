@@ -530,6 +530,7 @@
     "forecastErrorTitle": "Error loading forecast data",
     "observationErrorTitle": "Error loading observation data",
     "warningsErrorTitle": "Error loading warnings data",
+    "overlaysErrorTitle": "Error loading map layer data",
     "noInternetTitle": "No internet connection",
     "checkConnection": "Please check your connection and try again.",
     "tryAgain": "Try again"

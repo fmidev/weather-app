@@ -10,10 +10,12 @@ import { selectCurrent } from '@store/location/selector';
 import { selectError as selectForecastError } from '@store/forecast/selectors';
 import { selectError as selectObservationError } from '@store/observation/selector';
 import { selectError as selectWarningsError } from '@store/warnings/selectors';
+import { selectActiveOverlay, selectOverlaysError } from '@store/map/selectors';
 
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
 import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
+import { updateOverlays as updateOverlaysAction } from '@store/map/actions';
 
 import { YELLOW, BLACK, CustomTheme } from '@utils/colors';
 
@@ -25,12 +27,15 @@ const mapStateToProps = (state: State) => ({
   forecastError: selectForecastError(state),
   observationError: selectObservationError(state),
   warningsError: selectWarningsError(state),
+  activeOverlay: selectActiveOverlay(state),
+  overlaysError: selectOverlaysError(state),
 });
 
 const mapDispatchToProps = {
   fetchForecast: fetchForecastAction,
   fetchObservation: fetchObservationAction,
   fetchWarnings: fetchWarningsAction,
+  updateOverlays: updateOverlaysAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -46,17 +51,21 @@ type Messages = {
   warnings: Message;
   forecast: Message;
   observation: Message;
+  overlays: Message;
   noInternet: Message;
 };
 
 const ErrorComponent: React.FC<PropsFromRedux> = ({
   location,
+  activeOverlay,
   forecastError,
   observationError,
   warningsError,
+  overlaysError,
   fetchForecast,
   fetchObservation,
   fetchWarnings,
+  updateOverlays,
 }) => {
   const { t } = useTranslation('error');
   const { colors } = useTheme() as CustomTheme;
@@ -80,14 +89,21 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
     setErrorType(undefined);
   }, [fetchWarnings, location]);
 
+  const tryUpdateOverlays = useCallback(() => {
+    updateOverlays(activeOverlay);
+    setErrorType(undefined);
+  }, [updateOverlays, activeOverlay]);
+
   const tryAgainFunctions: {
     forecast: () => void;
     observation: () => void;
     warnings: () => void;
+    overlays: () => void;
   } = {
     forecast: tryUpdateForecast,
     observation: tryUpdateObservation,
     warnings: tryUpdateWarnings,
+    overlays: tryUpdateOverlays,
   };
 
   const messages: Messages = {
@@ -104,6 +120,9 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
       title: t('noInternetTitle'),
       additionalInfo: t('checkConnection'),
     },
+    overlays: {
+      title: t('overlaysErrorTitle'),
+    },
   };
 
   useEffect(() => {
@@ -118,12 +137,15 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
         if (observationError) {
           setErrorType('observation');
         }
-        if (warningsError) {
+        if (!warningsError) {
           setErrorType('warnings');
+        }
+        if (overlaysError) {
+          setErrorType('overlays');
         }
       }
     });
-  }, [forecastError, observationError, warningsError]);
+  }, [forecastError, observationError, warningsError, overlaysError]);
 
   return errorType ? (
     <View style={[styles.container, { borderColor: colors.border }]}>
