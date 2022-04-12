@@ -38,7 +38,6 @@ export const updateOverlays =
     dispatch({ type: UPDATE_OVERLAYS });
     getOverlayData(activeOverlay)
       .then((overlayMap: Map<number, MapOverlay> | undefined) => {
-        console.log('hellooooo', { overlayMap });
         if (overlayMap) {
           overlays = overlayMap;
           dispatch({ type: UPDATE_OVERLAYS_SUCCESS, overlays });
