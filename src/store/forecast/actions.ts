@@ -13,6 +13,7 @@ import {
   ForecastLocation,
   UPDATE_FORECAST_DISPLAY_FORMAT,
   UPDATE_FORECAST_CHART_PARAMETER,
+  DisplayParameters,
 } from './types';
 
 export const fetchForecast =
@@ -37,7 +38,8 @@ export const fetchForecast =
   };
 
 export const updateDisplayParams =
-  (param: [number, string]) => (dispatch: Dispatch<ForecastActionTypes>) => {
+  (param: [number, DisplayParameters]) =>
+  (dispatch: Dispatch<ForecastActionTypes>) => {
     const { defaultParameters } = Config.get('weather').forecast;
     dispatch({ type: UPDATE_DISPLAY_PARAMS, param, defaultParameters });
   };

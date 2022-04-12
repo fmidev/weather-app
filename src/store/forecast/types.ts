@@ -1,4 +1,5 @@
 import { ChartType } from '@components/weather/charts/types';
+import * as displayParameters from './constants';
 
 export const FETCH_FORECAST = 'FETCH_FORECAST';
 export const FETCH_FORECAST_SUCCESS = 'FETCH_FORECAST_SUCCESS';
@@ -9,6 +10,12 @@ export const RESTORE_DEFAULT_DISPLAY_PARAMS =
 export const UPDATE_FORECAST_DISPLAY_FORMAT = 'UPDATE_FORECAST_DISPLAY_FORMAT';
 export const UPDATE_FORECAST_CHART_PARAMETER =
   'UPDATE_FORECAST_CHART_PARAMETER';
+
+type DisplayParametersKeys = keyof typeof displayParameters;
+export type DisplayParameters = typeof displayParameters[Exclude<
+  DisplayParametersKeys,
+  'default'
+>];
 
 interface FetchForecast {
   type: typeof FETCH_FORECAST;
@@ -29,8 +36,8 @@ interface FetchForecastError {
 
 interface UpdateDisplayParams {
   type: typeof UPDATE_DISPLAY_PARAMS;
-  param: [number, string];
-  defaultParameters: string[];
+  param: [number, DisplayParameters];
+  defaultParameters: DisplayParameters[];
 }
 
 interface RestoreDefaultDisplayParams {
@@ -103,7 +110,7 @@ export interface ForecastState {
   data: WeatherData | undefined;
   loading: boolean;
   error: boolean | Error | string;
-  displayParams: [number, string][];
+  displayParams: [number, DisplayParameters][];
   displayFormat: 'table' | 'chart';
   chartDisplayParam: ChartType | undefined;
   fetchTimestamp: number;

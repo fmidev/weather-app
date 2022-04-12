@@ -37,6 +37,7 @@ import {
   CustomTheme,
 } from '@utils/colors';
 import { Config } from '@config';
+import { DisplayParameters } from '@store/forecast/types';
 
 const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
@@ -71,9 +72,11 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   const activeParameters = data.flatMap(({ parameters }) => parameters);
 
   const regex = new RegExp(activeParameters.join('|'));
-  const activeConstants = constants.filter((constant) => regex.test(constant));
+  const activeConstants = constants.filter((constant) =>
+    regex.test(constant)
+  ) as DisplayParameters[];
 
-  const rowRenderer = (param: string, index: number) => (
+  const rowRenderer = (param: DisplayParameters, index: number) => (
     <View
       accessible
       accessibilityState={{
@@ -85,14 +88,14 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
           : t('paramsBottomSheet.selectAccessibilityHint')
       }
       onAccessibilityTap={() => updateDisplayParams([index, param])}
-      key={param}
+      key={String(param)}
       style={[styles.row, { borderBottomColor: colors.border }]}>
       <View style={styles.innerRow}>
         {param !== RELATIVE_HUMIDITY &&
           param !== PRESSURE &&
           param !== UV_CUMULATED && (
             <Icon
-              name={PARAMS_TO_ICONS[param]}
+              name={PARAMS_TO_ICONS[String(param)]}
               style={styles.withMarginRight}
               color={colors.hourListText}
             />

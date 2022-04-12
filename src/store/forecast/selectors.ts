@@ -6,7 +6,7 @@ import { selectGeoid } from '@store/location/selector';
 import { Config } from '@config';
 import { getIndexForDaySmartSymbol } from '@utils/helpers';
 import { State } from '../types';
-import { ForecastState, TimeStepData } from './types';
+import { DisplayParameters, ForecastState, TimeStepData } from './types';
 import constants from './constants';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
@@ -173,12 +173,12 @@ export const selectDisplayParams = createSelector(
       forecast.displayParams.length > 0
         ? forecast.displayParams
         : (defaultParameters.map((parameter) => [
-            constants.indexOf(parameter),
+            constants.indexOf(String(parameter)),
             parameter,
-          ]) as [number, string][])
+          ]) as [number, DisplayParameters][])
     )
       .sort((a, b) => a[0] - b[0])
-      .filter(([, param]) => regex.test(param));
+      .filter(([, param]) => regex.test(String(param)));
   }
 );
 

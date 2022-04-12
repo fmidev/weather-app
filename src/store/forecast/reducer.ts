@@ -10,6 +10,7 @@ import {
   RESTORE_DEFAULT_DISPLAY_PARAMS,
   UPDATE_FORECAST_DISPLAY_FORMAT,
   UPDATE_FORECAST_CHART_PARAMETER,
+  DisplayParameters,
 } from './types';
 
 import constants from './constants';
@@ -97,14 +98,16 @@ export default (
         state.displayParams.length > 0
           ? state.displayParams
           : (action.defaultParameters.map((item) => [
-              constants.indexOf(item),
+              constants.indexOf(String(item)),
               item,
-            ]) as [number, string][]);
+            ]) as [number, DisplayParameters][]);
       return {
         ...state,
         displayParams: defaultParameters.some((arr) => arr.includes(param))
           ? defaultParameters.filter((arr) => !arr.includes(param))
-          : defaultParameters.concat([[constants.indexOf(param), param]]),
+          : defaultParameters.concat([
+              [constants.indexOf(String(param)), param],
+            ]),
       };
     }
 

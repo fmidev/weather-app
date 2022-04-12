@@ -1,5 +1,5 @@
 import { Location } from '@store/location/types';
-import { ForecastParameters } from '@store/forecast/types';
+import { DisplayParameters, ForecastParameters } from '@store/forecast/types';
 import { ObservationParameters } from '@store/observation/types';
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
@@ -47,7 +47,7 @@ export interface MapLayer {
   id: string | number;
   type: 'WMS' | 'GeoJSON' | 'Timeseries';
   name: { [lang: string]: string };
-  legend: string;
+  // legend: string;
   sources: WMSSource[] | TimeseriesSource[];
   times: Times;
 }
@@ -108,7 +108,7 @@ export interface ConfigType {
     maxFavorite: number;
   };
   map: {
-    latitudeDelta: number;
+    // latitudeDelta: number;
     updateInterval: number;
     sources: { [name: string]: string };
     layers: MapLayer[];
@@ -123,15 +123,15 @@ export interface ConfigType {
         producer?: string;
         parameters: (keyof ForecastParameters)[];
       }[];
-      defaultParameters: (keyof ForecastParameters)[];
+      defaultParameters: DisplayParameters[];
     };
     observation: ObservationEnabled | ObservationDisabled;
   };
   warnings: WarningsEnabled | WarningsDisabled;
   settings: {
     languages: string[];
-    units: {
-      [type: string]: string[];
-    };
+    // units: {
+    //   [type: string]: string[];
+    // };
   };
 }

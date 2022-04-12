@@ -23,7 +23,7 @@ const defaultConfig: ConfigType = {
   },
   map: {
     updateInterval: 5,
-    latitudeDelta: 0.15,
+    // latitudeDelta: 0.15,
     sources: {
       server1: 'server1Url',
       server2: 'server2Url',
@@ -33,7 +33,7 @@ const defaultConfig: ConfigType = {
         id: 1,
         type: 'WMS',
         name: { fi: 'fiName', sv: 'svName', en: 'enName' },
-        legend: 'urlString',
+        // legend: 'urlString',
         sources: [
           {
             source: 'server1',
@@ -51,7 +51,7 @@ const defaultConfig: ConfigType = {
         id: 7,
         type: 'WMS',
         name: { en: 'enName' },
-        legend: 'urlString',
+        // legend: 'urlString',
         sources: [
           {
             source: 'server1',
@@ -101,9 +101,9 @@ const defaultConfig: ConfigType = {
   },
   settings: {
     languages: ['fi', 'sv', 'en'],
-    units: {
-      Temperature: ['C', 'F'],
-    },
+    // units: {
+    //   Temperature: ['C', 'F'],
+    // },
   },
 };
 

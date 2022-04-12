@@ -7,9 +7,10 @@ import { CustomTheme } from '@utils/colors';
 import * as constants from '@store/forecast/constants';
 
 import { isOdd } from '@utils/helpers';
+import { DisplayParameters } from '@store/forecast/types';
 
 type ForecastListHeaderColumnProps = {
-  displayParams: [number, string][];
+  displayParams: [number, DisplayParameters][];
 };
 
 const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
@@ -145,7 +146,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
               { backgroundColor: isOdd(index) ? colors.listTint : undefined },
             ]}>
             <Icon
-              name={constants.PARAMS_TO_ICONS[param]}
+              name={constants.PARAMS_TO_ICONS[String(param)]}
               color={colors.hourListText}
             />
           </View>
