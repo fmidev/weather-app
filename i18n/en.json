@@ -525,5 +525,14 @@
     "body1": "Give us your feedback of the application with Send feedback button. You will be transferred to your mail application.",
     "body2": "We go through all feedback but may not get back to you personally.",
     "sendFeedback": "Send feedback"
+  },
+  "error": {
+    "forecastErrorTitle": "Error loading forecast data",
+    "observationErrorTitle": "Error loading observation data",
+    "warningsErrorTitle": "Error loading warnings data",
+    "overlaysErrorTitle": "Error loading map layer data",
+    "noInternetTitle": "No internet connection",
+    "checkConnection": "Please check your connection and try again.",
+    "tryAgain": "Try again"
   }
 }

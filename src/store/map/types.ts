@@ -4,6 +4,8 @@ export const UPDATE_SLIDER_TIME = 'UPDATE_SLIDER_TIME';
 export const ANIMATE_TO_AREA = 'ANIMATE_TO_AREA';
 export const UPDATE_MAP_LAYERS = 'UPDATE_MAP_LAYERS';
 export const UPDATE_OVERLAYS = 'UPDATE_OVERLAYS';
+export const UPDATE_OVERLAYS_SUCCESS = 'UPDATE_OVERLAYS_SUCCESS';
+export const UPDATE_OVERLAYS_ERROR = 'UPDATE_OVERLAYS_ERROR';
 export const UPDATE_ACTIVE_OVERLAY = 'UPDATE_ACTIVE_OVERLAY';
 export const UPDATE_REGION = 'UPDATE_REGION';
 export const UPDATE_SELECTED_CALLOUT = 'UPDATE_SELECTED_CALLOUT';
@@ -23,9 +25,17 @@ interface UpdateMapLayers {
   layers: MapLayers;
 }
 
-interface InitializeOverlays {
+interface UpdateOverlays {
   type: typeof UPDATE_OVERLAYS;
+}
+interface UpdateOverlaysSuccess {
+  type: typeof UPDATE_OVERLAYS_SUCCESS;
   overlays: Map<number, MapOverlay>;
+}
+
+interface UpdateOverlaysError {
+  type: typeof UPDATE_OVERLAYS_ERROR;
+  error: Error;
 }
 
 interface UpdateActiveOverlay {
@@ -47,7 +57,9 @@ export type MapActionTypes =
   | UpdateSliderTime
   | AnimateToArea
   | UpdateMapLayers
-  | InitializeOverlays
+  | UpdateOverlays
+  | UpdateOverlaysSuccess
+  | UpdateOverlaysError
   | UpdateActiveOverlay
   | UpdateRegion
   | UpdateSelectedCallout;
@@ -92,11 +104,17 @@ export interface MapOverlay {
   step: number;
 }
 
+export interface Error {
+  code: number;
+  message: string;
+}
+
 export interface MapState {
   mapLayers: MapLayers;
   sliderTime: number;
   animateToArea: boolean;
   overlays: Map<number, MapOverlay> | undefined;
+  overlaysError: boolean | Error | string;
   activeOverlay: number | undefined;
   region: Region;
   selectedCallout: string | undefined;

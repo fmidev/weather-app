@@ -5,10 +5,13 @@ import {
   MapLayers,
   MapOverlay,
   MapActionTypes,
+  Error,
   UPDATE_SLIDER_TIME,
   ANIMATE_TO_AREA,
   UPDATE_MAP_LAYERS,
   UPDATE_OVERLAYS,
+  UPDATE_OVERLAYS_SUCCESS,
+  UPDATE_OVERLAYS_ERROR,
   UPDATE_ACTIVE_OVERLAY,
   UPDATE_REGION,
   UPDATE_SELECTED_CALLOUT,
@@ -32,14 +35,17 @@ export const updateMapLayers =
 export const updateOverlays =
   (activeOverlay: number) => (dispatch: Dispatch<MapActionTypes>) => {
     let overlays;
+    dispatch({ type: UPDATE_OVERLAYS });
     getOverlayData(activeOverlay)
       .then((overlayMap: Map<number, MapOverlay> | undefined) => {
         if (overlayMap) {
           overlays = overlayMap;
-          dispatch({ type: UPDATE_OVERLAYS, overlays });
+          dispatch({ type: UPDATE_OVERLAYS_SUCCESS, overlays });
         }
       })
-      .catch((e) => console.error(e));
+      .catch((error: Error) => {
+        dispatch({ type: UPDATE_OVERLAYS_ERROR, error });
+      });
   };
 
 export const updateActiveOverlay =

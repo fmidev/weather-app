@@ -11,6 +11,7 @@ describe('map reducer', () => {
     sliderTime: 0,
     animateToArea: false,
     overlays: undefined,
+    overlaysError: false,
     activeOverlay: undefined,
     region: { latitude: 0, longitude: 0, longitudeDelta: 0, latitudeDelta: 0 },
     selectedCallout: undefined,
@@ -86,7 +87,7 @@ describe('map reducer', () => {
 
     expect(
       reducer(initial, {
-        type: types.UPDATE_OVERLAYS,
+        type: types.UPDATE_OVERLAYS_SUCCESS,
         overlays: overlayMap,
       })
     ).toEqual({
