@@ -137,7 +137,7 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
         if (observationError) {
           setErrorType('observation');
         }
-        if (!warningsError) {
+        if (warningsError) {
           setErrorType('warnings');
         }
         if (overlaysError) {
