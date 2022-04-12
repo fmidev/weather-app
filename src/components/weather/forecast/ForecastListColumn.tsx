@@ -6,7 +6,7 @@ import moment from 'moment';
 
 import Icon from '@components/common/Icon';
 
-import { TimeStepData } from '@store/forecast/types';
+import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
@@ -17,7 +17,7 @@ import { Config } from '@config';
 
 type ForecastListColumnProps = {
   data: TimeStepData;
-  displayParams: [number, string][];
+  displayParams: [number, DisplayParameters][];
 };
 
 const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
@@ -182,7 +182,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         }
 
         const toDisplay =
-          data[param] !== null && data[param] !== undefined ? data[param] : '-';
+          data[String(param)] !== null && data[String(param)] !== undefined
+            ? data[String(param)]
+            : '-';
         return (
           <View
             key={`${param}-${i}`}
