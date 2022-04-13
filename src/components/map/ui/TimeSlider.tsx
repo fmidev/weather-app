@@ -123,12 +123,16 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const isFocused = useIsFocused();
 
-  // clear animation if user navigates off screen while animating
+  /**
+   * clear animation if:
+   *  user navigates off screen
+   *  user changes map layer
+   */
   useEffect(() => {
-    if (!isFocused && isAnimating) {
+    if ((!isFocused || sliderTime === 0) && isAnimating) {
       clear();
     }
-  }, [isFocused, isAnimating]);
+  }, [isFocused, isAnimating, sliderTime]);
 
   useEffect(() => {
     if (currentIndex >= 0) {
@@ -145,7 +149,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     const now = moment().format('X');
     const roundedNow = Math.floor(Number(now) / sliderStep) * sliderStep;
     const i = sliderTimes.indexOf(roundedNow);
-    if (i > 0) {
+    if (i > 0 && sliderRef.current) {
       sliderRef.current.scrollTo({
         x: Math.floor(i * stepWidth),
         animated: false,
@@ -199,7 +203,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   );
 
   useEffect(() => {
-    if (isAnimating) {
+    if (isAnimating && sliderRef.current) {
       sliderRef.current.scrollTo({
         x: scrollIndex,
         animated: false,
