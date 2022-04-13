@@ -65,15 +65,15 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
             {title()}
           </Text>
         </View>
+        {currentLocation.country !== 'FI' && (
+          <Text
+            style={[
+              styles.timezone,
+              !isLandscape && styles.timeZoneMarginBottom,
+              { color: colors.text },
+            ]}>{`${t('timezone')}: ${currentLocation.timezone}`}</Text>
+        )}
       </AccessibleTouchableOpacity>
-      {currentLocation.country !== 'FI' && (
-        <Text
-          style={[
-            styles.timezone,
-            !isLandscape && styles.timeZoneMarginBottom,
-            { color: colors.text },
-          ]}>{`${t('timezone')}: ${currentLocation.timezone}`}</Text>
-      )}
     </View>
   );
 };
