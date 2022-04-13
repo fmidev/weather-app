@@ -87,8 +87,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
       calculatedStepIndex > data.length ? data.length - 1 : calculatedStepIndex;
 
     const step = data[adjustedStepIndex];
-    const sunrise = moment(step.sunrise);
-    const sunset = moment(step.sunset);
+    const sunrise = moment(`${step.sunrise}Z`);
+    const sunset = moment(`${step.sunset}Z`);
     const dayHours = Math.floor(step.dayLength / 60);
     const dayMinutes = step.dayLength % 60;
 
