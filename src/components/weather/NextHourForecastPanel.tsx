@@ -62,8 +62,8 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     dark
   );
 
-  const sunrise = moment(nextHourForecast.sunrise);
-  const sunset = moment(nextHourForecast.sunset);
+  const sunrise = moment(`${nextHourForecast.sunrise}Z`);
+  const sunset = moment(`${nextHourForecast.sunset}Z`);
 
   return (
     <View style={styles.container}>
