@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -17,7 +16,7 @@ import { fetchObservation as fetchObservationAction } from '@store/observation/a
 import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
 import { updateOverlays as updateOverlaysAction } from '@store/map/actions';
 
-import { YELLOW, BLACK, CustomTheme } from '@utils/colors';
+import { YELLOW, BLACK } from '@utils/colors';
 
 import Icon from './Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
@@ -68,7 +67,6 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
   updateOverlays,
 }) => {
   const { t } = useTranslation('error');
-  const { colors } = useTheme() as CustomTheme;
   const [errorType, setErrorType] = useState<keyof Messages | undefined>(
     undefined
   );
@@ -148,7 +146,7 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
   }, [forecastError, observationError, warningsError, overlaysError]);
 
   return errorType ? (
-    <View style={[styles.container, { borderColor: colors.border }]}>
+    <View style={styles.container}>
       <View style={styles.row}>
         <Text style={styles.title}>{messages[errorType].title}</Text>
         <AccessibleTouchableOpacity
@@ -184,6 +182,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     flex: 1,
     borderRadius: 8,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 16,
+    shadowOpacity: 1,
+    elevation: 10,
   },
   row: {
     flexDirection: 'row',

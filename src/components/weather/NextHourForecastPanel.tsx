@@ -17,7 +17,7 @@ import { selectTimeZone } from '@store/location/selector';
 import { weatherSymbolGetter } from '@assets/images';
 
 import { getFeelsLikeIconName } from '@utils/helpers';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
@@ -139,13 +139,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           )}
         </View>
       </View>
-      <View
-        style={[
-          styles.separator,
-          styles.withMarginBottom,
-          { backgroundColor: colors.border },
-        ]}
-      />
+      <View style={[styles.separator, styles.withMarginBottom]} />
       <View style={[styles.row, styles.justifySpaceBetween]} accessible>
         <View
           style={styles.row}
@@ -309,6 +303,8 @@ const styles = StyleSheet.create({
   separator: {
     width: '100%',
     height: 1,
+    opacity: 0.2,
+    backgroundColor: GRAY_1,
   },
   text: {
     fontSize: 16,
