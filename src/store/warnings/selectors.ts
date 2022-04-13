@@ -53,11 +53,26 @@ export const selectDailyWarningData = createSelector(
       const dayEnd = moment(fetchTime).endOf('day').add(i, 'days');
 
       const dailyWarnings = warnings.filter(
-        ({ duration: { startTime, endTime } }) =>
-          (dayStart.diff(moment(startTime)) <= 0 &&
-            dayEnd.diff(moment(startTime)) > 0) ||
-          (dayStart.diff(moment(endTime)) < 0 &&
-            dayEnd.diff(moment(endTime)) > 0)
+        ({ duration: { startTime, endTime } }) => {
+          const dsWsDiff = dayStart.diff(moment(startTime));
+          const deWsDiff = dayEnd.diff(moment(startTime));
+          const dsWeDiff = dayStart.diff(moment(endTime));
+          const deWeDiff = dayEnd.diff(moment(endTime));
+
+          // Starts duding day
+          if (dsWsDiff <= 0 && deWsDiff >= 0) {
+            return true;
+          }
+          // Ends during day
+          if (dsWeDiff < 0 && deWeDiff >= 0) {
+            return true;
+          }
+          // Starts before and ends after
+          if (dsWsDiff > 0 && deWeDiff < 0) {
+            return true;
+          }
+          return false;
+        }
       );
 
       const daySeverity = Math.max(
