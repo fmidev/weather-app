@@ -95,8 +95,10 @@ const MapScreen: React.FC<MapScreenProps> = ({
   };
 
   useEffect(() => {
-    updateOverlays(activeOverlay);
-    setMapUpdated(Date.now());
+    if (activeOverlay) {
+      updateOverlays(activeOverlay);
+      setMapUpdated(Date.now());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeOverlay]);
 
@@ -108,6 +110,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
     const now = Date.now();
     const mapUpdateTime = mapUpdated + (updateInterval ?? 5) * 60 * 1000;
     if (isFocused && (now > mapUpdateTime || shouldReload > mapUpdateTime)) {
+      console.warn('douple update');
       updateOverlays(activeOverlay);
       setMapUpdated(now);
     }
