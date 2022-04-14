@@ -91,7 +91,10 @@ const SettingsScreen: React.FC<Props> = ({
 
   const checkLocationPermissions = () => {
     const permissions = isAndroid
-      ? [PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION]
+      ? [
+          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+          PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+        ]
       : [PERMISSIONS.IOS.LOCATION_ALWAYS, PERMISSIONS.IOS.LOCATION_WHEN_IN_USE];
     Permissions.checkMultiple(permissions).then((statuses) => {
       if (statuses[PERMISSIONS.IOS.LOCATION_ALWAYS] === RESULTS.GRANTED) {
@@ -101,7 +104,9 @@ const SettingsScreen: React.FC<Props> = ({
       ) {
         setLocationPermission(LOCATION_WHEN_IN_USE);
       } else if (
-        statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] === RESULTS.GRANTED
+        statuses[PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION] ===
+          RESULTS.GRANTED ||
+        statuses[PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION] === RESULTS.GRANTED
       ) {
         setLocationPermission(LOCATION_WHEN_IN_USE);
       } else {
