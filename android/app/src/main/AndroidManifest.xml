@@ -9,7 +9,13 @@
       <intent>
         <action android:name="android.intent.action.VIEW" />
         <data android:scheme="twitter://" android:host="com.twitter.android" />
+      </intent>
+      <intent>
+        <action android:name="android.intent.action.VIEW"/>
         <data android:scheme="instagram://" android:host="com.instagram.android" />
+      </intent>
+      <intent>
+        <action android:name="android.intent.action.VIEW"/>
         <data android:scheme="youtube" android:host="com.google.android.youtube" />
       </intent>
     </queries>
