@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -19,7 +19,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
 
   const timeseriesEnabled = layers.some((layer) => layer.type === 'Timeseries');
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <View style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -90,7 +90,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
           </View>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

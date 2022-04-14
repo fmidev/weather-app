@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  SafeAreaView,
   View,
   StyleSheet,
   Text,
@@ -67,7 +66,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   ).length;
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <View style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -769,7 +768,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
           </TouchableOpacity>
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
@@ -114,7 +114,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   return (
     <GradientWrapper>
-      <SafeAreaView>
+      <View>
         <ScrollView
           style={[styles.container]}
           contentContainerStyle={styles.contentContainer}
@@ -124,7 +124,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           <ForecastPanel />
           <ObservationPanel />
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </GradientWrapper>
   );
 };

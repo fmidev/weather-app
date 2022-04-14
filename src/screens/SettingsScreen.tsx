@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
-  SafeAreaView,
   Text,
   StyleSheet,
   ScrollView,
@@ -136,7 +135,7 @@ const SettingsScreen: React.FC<Props> = ({
   //   UNITS.find((unit) => unit.parameterName === key)?.unitTypes;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
@@ -526,7 +525,7 @@ const SettingsScreen: React.FC<Props> = ({
            </>
         )} */}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

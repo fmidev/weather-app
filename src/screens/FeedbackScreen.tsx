@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Linking } from 'react-native';
+import { View, Text, StyleSheet, Linking } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,7 @@ const FeedbackScreen: React.FC = () => {
     'mailto:mobiili@fmi.fi?subject=Ilmatieteen laitoksen sää palaute';
 
   return (
-    <SafeAreaView>
+    <View>
       <View style={styles.container}>
         <Text
           style={[
@@ -54,7 +54,7 @@ const FeedbackScreen: React.FC = () => {
           </View>
         </AccessibleTouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

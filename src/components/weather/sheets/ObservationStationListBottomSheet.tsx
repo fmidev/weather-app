@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -44,7 +44,7 @@ const ObservationStationListBottomSheet: React.FC<
   const { colors } = useTheme() as CustomTheme;
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <View style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -99,7 +99,7 @@ const ObservationStationListBottomSheet: React.FC<
             </AccessibleTouchableOpacity>
           ))}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

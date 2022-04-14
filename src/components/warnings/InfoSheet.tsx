@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  SafeAreaView,
   View,
   StyleSheet,
   Text,
@@ -84,7 +83,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   );
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <View style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -170,7 +169,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

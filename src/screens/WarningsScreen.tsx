@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 
@@ -66,7 +66,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   }, [location, updateWarnings]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView
         style={[styles.container, { backgroundColor: colors.screenBackground }]}
         contentContainerStyle={styles.contentContainer}
@@ -74,7 +74,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
         <WarningsPanel />
         <WarningsWebViewPanel />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
