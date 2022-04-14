@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   AccessibilityInfo,
   View,
-  SafeAreaView,
   Text,
   TextInput,
   StyleSheet,
@@ -127,7 +126,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     favorites.length > 0 && favorites.some(({ id }) => id === location.id);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View
         style={[
           styles.searchBoxContainer,
@@ -232,7 +231,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           )}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

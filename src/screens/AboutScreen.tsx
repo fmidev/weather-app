@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -9,8 +9,7 @@ const AboutScreen: React.FC = () => {
   const { t } = useTranslation();
   const { colors } = useTheme();
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
@@ -26,7 +25,7 @@ const AboutScreen: React.FC = () => {
           {`${t('about:versionInfo')}: ${packageJSON.version}`}
         </Text>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

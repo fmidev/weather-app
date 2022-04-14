@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { SafeAreaView, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import MapView, { Camera, MapEvent, Region } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
@@ -177,7 +177,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
     dark && Platform.OS === 'android' ? darkMapStyle : [];
 
   return (
-    <SafeAreaView style={styles.mapContainer}>
+    <View style={styles.mapContainer}>
       <MapView
         ref={mapRef}
         testID="map"
@@ -242,7 +242,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
           onClose={() => mapLayersSheetRef.current.close()}
         />
       </RBSheet>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, Text, View, StyleSheet } from 'react-native';
+import { ScrollView, Text, View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -19,8 +19,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
   const { t } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.withPaddingBottom}
@@ -111,7 +110,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           </AccessibleTouchableOpacity>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

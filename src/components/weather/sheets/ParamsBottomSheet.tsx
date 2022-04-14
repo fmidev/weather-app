@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  SafeAreaView,
   View,
   StyleSheet,
   Text,
@@ -150,7 +149,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   );
 
   return (
-    <SafeAreaView style={styles.wrapper}>
+    <View style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -197,7 +196,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
           </TouchableOpacity>
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -65,6 +65,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   const sunrise = moment(`${nextHourForecast.sunrise}Z`);
   const sunset = moment(`${nextHourForecast.sunset}Z`);
 
+  const numericOrDash = (val: number | undefined | null): string => {
+    if (!Number.isInteger(val)) return '-';
+    return `${val}`;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.alignCenter} accessible accessibilityRole="header">
@@ -93,7 +98,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           <View style={[styles.row, styles.alignStart]}>
             <Text
               style={[styles.temperatureText, { color: colors.primaryText }]}>
-              {`${nextHourForecast.temperature}`}
+              {numericOrDash(nextHourForecast.temperature)}
             </Text>
             <Text style={[styles.unitText, { color: colors.primaryText }]}>
               °C
@@ -106,8 +111,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           {activeParameters.includes('uvCumulated') && (
             <Text style={[styles.text, { color: colors.hourListText }]}>
               {'UV '}
-              <Text
-                style={styles.bold}>{`${nextHourForecast.uvCumulated}`}</Text>
+              <Text style={styles.bold}>
+                {numericOrDash(nextHourForecast.uvCumulated)}
+              </Text>
             </Text>
           )}
         </View>
@@ -122,7 +128,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                 ]}>
                 {t('feelsLike')}{' '}
                 <Text style={[styles.bold, styles.feelsLikeText]}>
-                  {`${nextHourForecast.feelsLike}`}
+                  {numericOrDash(nextHourForecast.feelsLike)}
                 </Text>
                 <Text style={styles.feelsLikeText}>°C</Text>
               </Text>
@@ -180,7 +186,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                     styles.bold,
                     { color: colors.hourListText },
                   ]}>
-                  {`${nextHourForecast.windSpeedMS} `}
+                  {numericOrDash(nextHourForecast.windSpeedMS)}
                 </Text>
               </View>
               <View style={styles.row}>
