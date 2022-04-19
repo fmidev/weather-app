@@ -35,7 +35,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
         </View>
       )}
       {warnings.map(({ description, type, severity, duration }, index) => (
-        <View key={`${type}-${duration.startTime}`}>
+        <View key={`${type}-${duration.startTime}-${severity}`}>
           <View style={styles.flex}>
             <AccessibleTouchableOpacity
               accessibilityRole="button"
