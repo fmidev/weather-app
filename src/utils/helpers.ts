@@ -81,8 +81,8 @@ export const getGeolocation = (
 
 export const getPrecipitationLevel = (amount: number): keyof Rain => {
   if (amount >= 0.1 && amount < 0.15) return 1;
-  if (amount >= 0.15 && amount < 0.2) return 2;
-  if (amount >= 0.2 && amount < 0.5) return 3;
+  if (amount >= 0.15 && amount < 0.3) return 2;
+  if (amount >= 0.3 && amount < 0.5) return 3;
   if (amount >= 0.5 && amount < 1.0) return 4;
   if (amount >= 1.0 && amount < 2.0) return 5;
   if (amount >= 2.0 && amount < 5.0) return 6;

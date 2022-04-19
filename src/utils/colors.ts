@@ -58,7 +58,7 @@ export const RAIN_8_LIGHT = '#760000';
 
 export const RAIN_1_DARK = '#C1FAFB';
 export const RAIN_2_DARK = '#6BB1C9';
-export const RAIN_3_DARK = '#3F738B';
+export const RAIN_3_DARK = '#247DA2';
 export const RAIN_4_DARK = '#6BC37E';
 export const RAIN_5_DARK = '#F9F961';
 export const RAIN_6_DARK = '#D29F00';
