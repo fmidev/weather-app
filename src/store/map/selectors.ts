@@ -1,3 +1,4 @@
+import { Config } from '@config';
 import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
 import { MapState } from './types';
@@ -24,15 +25,9 @@ export const selectDisplayLocation = createSelector(
   (layers) => layers.location
 );
 
-export const selectActiveOverlay = createSelector(selectMapDomain, (map) => {
-  if (map.activeOverlay) {
-    return map.activeOverlay;
-  }
-  if (map.overlays) {
-    return map.overlays.keys().next().value;
-  }
-  return undefined;
-});
+export const selectActiveOverlay = createSelector(selectMapDomain, (map) =>
+  map.activeOverlay ? map.activeOverlay : Config.get('map').layers[0].id
+);
 
 export const selectOverlay = createSelector(
   [selectMapDomain, selectActiveOverlay],

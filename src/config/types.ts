@@ -44,7 +44,7 @@ export type TimeseriesSource = {
 type Times = RequireAtLeastOne<BaseTimes, 'forecast' | 'observation'>;
 
 export interface MapLayer {
-  id: string | number;
+  id: number;
   type: 'WMS' | 'GeoJSON' | 'Timeseries';
   name: { [lang: string]: string };
   // legend: string;

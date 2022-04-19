@@ -95,8 +95,10 @@ const MapScreen: React.FC<MapScreenProps> = ({
   };
 
   useEffect(() => {
-    updateOverlays(activeOverlay);
-    setMapUpdated(Date.now());
+    if (activeOverlay) {
+      updateOverlays(activeOverlay);
+      setMapUpdated(Date.now());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeOverlay]);
 
