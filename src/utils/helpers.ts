@@ -136,13 +136,15 @@ export const getParameterUnit = (
     case 'windGust':
       return 'm/s';
     case 'pressure':
-      return 'hpa';
+      return 'hPa';
     case 'visibility':
       return 'km';
     case 'snowDepth':
       return 'cm';
     case 'windDirection':
       return '°';
+    case 'cloudHeight':
+      return 'km';
     default:
       return '';
   }
