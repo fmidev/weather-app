@@ -238,7 +238,9 @@
     "searchInfoAccessibilityHint": "Open search screen info",
     "timezone": "Time zone",
     "slash": "of",
-    "locatedTo": "Located to:"
+    "locatedTo": "Located to:",
+    "navigateTo": "Navigate to:",
+    "open": "Open"
   },
   "placeholder": {
     "weather": "Some forecast here",
@@ -249,8 +251,8 @@
   "about": {
     "versionInfo": "Application version",
     "followUs": "Follow us",
-    "title": "Lorem ipsum",
-    "body": "Tämä on Ilmatieteen laitoksen mobiilisääsovellus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit. Sed augue orci, lacinia eu tincidunt et eleifend nec lacus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem."
+    "title": "About the application",
+    "body": "Sää-sovelluksestamme saat säätietoja lähes kaikille Suomen paikkakunnille ja sallimalla puhelimesi paikannuksen, palvelu näyttää automaattisesti sijaintisi sääennusteen 10 vrk asti. Kiinnostaako sinua vain lämpötila vai haluatko myös tietoja esimerkiksi ilmanpaineesta, tuulen puuskista tai vaikkapa UV-indeksistä? Sekä sääennusteissa että säähavainnoissa voit vapaasti valita mitä säätietoja haluat seurata. Voit myös tallentaa sovellukseen suosikkipaikkakuntasi niin Suomesta kuin ulkomailta ja selata niitä helposti. Haluamasi tiedot ovat tarjolla sekä taulukkoina että graafisena esityksenä. Kartta-osion animaatioista voit seurata mm. sadealueiden liikettä ja tutkakuviin perustuva sade-ennuste kertoo mihin päin sateet liikkuvat tulevien tuntien aikana. Palvelussa näkyvät voimassa olevat säävaroitukset valitsemassasi sijainnissa ja pystyt myös helposti tarkistamaan viralliset säävaroitukset koko Suomen alueelta."
   },
   "settings": {
     "language": "Language",
@@ -269,7 +271,10 @@
     "locationAlways": "Always",
     "fi": "suomi",
     "sv": "på svenska",
-    "en": "in English"
+    "en": "in English",
+    "languageHint": "Change application language to:",
+    "appearanceHint": "Change application appearance to:",
+    "locationSettingHint": "Navigate to device settings to change app's location permissions"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search location",
@@ -453,6 +458,7 @@
     "navigateToWarningsPage": "Navigate to Warnings page",
     "dateAccessibilityHint": "show all active warnings to selected date",
     "warningAccessibilityHint": "show detailed warning description",
+    "infoAccessibilityLabel": "warnings info",
     "types": {
       "thunderStorm": "Severe thunderstorm warning",
       "wind": "Wind warning for land areas",

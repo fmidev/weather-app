@@ -238,7 +238,9 @@
     "searchInfoAccessibilityHint": "Avaa haku-sivun selitteet",
     "timezone": "Aikavyöhyke",
     "slash": "kautta",
-    "locatedTo": "Paikannettu sijaintiin:"
+    "locatedTo": "Paikannettu sijaintiin:",
+    "navigateTo": "Navigoi sivulle:",
+    "open": "Avaa"
   },
   "placeholder": {
     "weather": "Täällä olisi havaintoa ja ennustetta",
@@ -270,7 +272,10 @@
     "locationAlways": "Aina",
     "fi": "suomi",
     "sv": "på svenska",
-    "en": "in English"
+    "en": "in English",
+    "languageHint": "Vaihda sovelluksen kieleksi:",
+    "appearanceHint": "Vaihda sovelluksen ulkoasuksi:",
+    "locationSettingHint": "Siirry puhelimeen asetuksiin muuttaaksesi sovelluksen lupaa käyttää sijaintia"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",
@@ -454,6 +459,7 @@
     "navigateToWarningsPage": "navigoi Varoitus-sivulle",
     "dateAccessibilityHint": "näytä kaikki päivän aktiiviset varoitukset",
     "warningAccessibilityHint": "näytä varoituksen tarkemmat tiedot",
+    "infoAccessibilityLabel": "varoitusten selitteet",
     "types": {
       "thunderStorm": "Raju ukonilma",
       "wind": "Tuulivaroitus maa-alueille",

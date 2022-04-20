@@ -95,7 +95,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           })}
         </View>
         {activeParameters.includes('temperature') && (
-          <View style={[styles.row, styles.alignStart]}>
+          <View style={[styles.row, styles.alignStart]} accessible>
             <Text
               style={[styles.temperatureText, { color: colors.primaryText }]}>
               {numericOrDash(nextHourForecast.temperature)}
@@ -146,8 +146,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
         </View>
       </View>
       <View style={[styles.separator, styles.withMarginBottom]} />
-      <View style={[styles.row, styles.justifySpaceBetween]} accessible>
+      <View style={[styles.row, styles.justifySpaceBetween]}>
         <View
+          accessible
           style={styles.row}
           accessibilityLabel={
             nextHourForecast.windCompass8
@@ -197,7 +198,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             </View>
           )}
         </View>
-        <View style={styles.row}>
+        <View accessible style={styles.row}>
           {activeParameters.includes('precipitation1h') && (
             <>
               <Icon name="precipitation" color={colors.hourListText} />
@@ -219,6 +220,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           )}
         </View>
         <View
+          accessible
           style={styles.row}
           accessibilityLabel={`${t('forecast:sunrise')} ${t(
             'forecast:at'

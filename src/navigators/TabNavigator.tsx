@@ -165,6 +165,9 @@ const Navigator: React.FC<Props> = ({
 
   const CommonHeaderOptions: StackNavigationOptions = {
     headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+    headerTitleStyle: {
+      fontFamily: 'Roboto-Bold',
+    },
     headerStyle: {
       ...styles.header,
       shadowColor: useDarkTheme ? SHADOW_DARK : SHADOW_LIGHT,

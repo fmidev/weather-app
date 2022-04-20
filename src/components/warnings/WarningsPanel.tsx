@@ -95,6 +95,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               </Text>
             </View>
             <AccessibleTouchableOpacity
+              accessibilityLabel={t('infoAccessibilityLabel')}
               onPress={() => infoSheetRef.current.open()}>
               <View style={[styles.iconPadding]}>
                 <Icon

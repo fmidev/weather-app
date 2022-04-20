@@ -152,7 +152,9 @@ const SettingsScreen: React.FC<Props> = ({
             { borderBottomColor: colors.border },
           ]}>
           <View style={styles.row}>
-            <Text style={[styles.title, { color: colors.text }]}>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
               {t('settings:allowLocation')}
             </Text>
           </View>
@@ -167,7 +169,12 @@ const SettingsScreen: React.FC<Props> = ({
             <AccessibleTouchableOpacity
               onPress={goToSettings}
               delayPressIn={100}
-              disabled={locationPermission === LOCATION_NEVER}>
+              disabled={locationPermission === LOCATION_NEVER}
+              accessibilityState={{
+                selected: locationPermission === LOCATION_NEVER,
+              }}
+              accessibilityRole="link"
+              accessibilityHint={t('settings:locationSettingHint')}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:locationNever')}
@@ -193,7 +200,12 @@ const SettingsScreen: React.FC<Props> = ({
             <AccessibleTouchableOpacity
               onPress={goToSettings}
               delayPressIn={100}
-              disabled={locationPermission === LOCATION_WHEN_IN_USE}>
+              disabled={locationPermission === LOCATION_WHEN_IN_USE}
+              accessibilityState={{
+                selected: locationPermission === LOCATION_WHEN_IN_USE,
+              }}
+              accessibilityRole="link"
+              accessibilityHint={t('settings:locationSettingHint')}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:locationWhenInUse')}
@@ -220,7 +232,12 @@ const SettingsScreen: React.FC<Props> = ({
               <AccessibleTouchableOpacity
                 onPress={goToSettings}
                 delayPressIn={100}
-                disabled={locationPermission === LOCATION_ALWAYS}>
+                disabled={locationPermission === LOCATION_ALWAYS}
+                accessibilityState={{
+                  selected: locationPermission === LOCATION_ALWAYS,
+                }}
+                accessibilityRole="link"
+                accessibilityHint={t('settings:locationSettingHint')}>
                 <View style={styles.row}>
                   <Text style={[styles.text, { color: colors.text }]}>
                     {t('settings:locationAlways')}
@@ -249,7 +266,8 @@ const SettingsScreen: React.FC<Props> = ({
           <View style={styles.row}>
             <Text
               style={[styles.title, { color: colors.text }]}
-              testID="settings_language_header">
+              testID="settings_language_header"
+              accessibilityRole="header">
               {t('settings:language')}
             </Text>
           </View>
@@ -269,7 +287,14 @@ const SettingsScreen: React.FC<Props> = ({
                   <AccessibleTouchableOpacity
                     onPress={() => onChangeLanguage(language)}
                     delayPressIn={100}
-                    disabled={i18n.language === language}>
+                    disabled={i18n.language === language}
+                    accessibilityState={{
+                      selected: i18n.language === language,
+                    }}
+                    accessibilityRole="button"
+                    accessibilityHint={`${t('settings:languageHint')} ${t(
+                      `settings:${language}`
+                    )}`}>
                     <View style={styles.row}>
                       <Text style={[styles.text, { color: colors.text }]}>
                         {t(`settings:${language}`)}
@@ -344,7 +369,8 @@ const SettingsScreen: React.FC<Props> = ({
           <View style={styles.row}>
             <Text
               style={[styles.title, { color: colors.text }]}
-              testID="settings_theme_header">
+              testID="settings_theme_header"
+              accessibilityRole="header">
               {t('settings:appearance')}
             </Text>
           </View>
@@ -360,7 +386,12 @@ const SettingsScreen: React.FC<Props> = ({
               onPress={() => updateTheme('light')}
               delayPressIn={100}
               disabled={theme === 'light'}
-              testID="settings_set_theme_light">
+              testID="settings_set_theme_light"
+              accessibilityState={{ selected: theme === 'light' }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:appearanceHint')} ${t(
+                'settings:appearanceLight'
+              )}`}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceLight')}
@@ -387,7 +418,12 @@ const SettingsScreen: React.FC<Props> = ({
               onPress={() => updateTheme('dark')}
               delayPressIn={100}
               disabled={theme === 'dark'}
-              testID="settings_set_theme_dark">
+              testID="settings_set_theme_dark"
+              accessibilityState={{ selected: theme === 'dark' }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:appearanceHint')} ${t(
+                'settings:appearanceDark'
+              )}`}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceDark')}
@@ -414,7 +450,12 @@ const SettingsScreen: React.FC<Props> = ({
               onPress={() => updateTheme('automatic')}
               delayPressIn={100}
               disabled={theme === 'automatic'}
-              testID="settings_set_theme_automatic">
+              testID="settings_set_theme_automatic"
+              accessibilityState={{ selected: theme === 'automatic' }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:appearanceHint')} ${t(
+                'settings:appearanceAutomatic'
+              )}`}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceAutomatic')}
