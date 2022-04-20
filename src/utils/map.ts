@@ -189,7 +189,19 @@ const getWMSLayerUrlsAndBounds = async (
     activeSources.map(async (src) => {
       const { data } = await axiosClient({
         url: `${sources[src]}/wms`,
-        params: { service: 'WMS', request: 'GetCapabilities' },
+        params: {
+          service: 'WMS',
+          request: 'GetCapabilities',
+          ...(src.includes('smartmet')
+            ? {
+                namespace: `/${allLayerNames
+                  .map((layerName) =>
+                    layerName.substring(0, layerName.lastIndexOf(':'))
+                  )
+                  .join('|')}/`,
+              }
+            : {}),
+        },
       });
 
       const parsedResponse = parse(data, {
