@@ -148,6 +148,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
       <View style={styles.row}>
         {activeParameters.map((param) => (
           <Text
+            key={`${param}-${timeStep.epochtime}`}
             style={[
               styles.listText,
               styles.rowItem,
@@ -224,7 +225,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
             const timeToDisplay = time.format('HH:mm');
 
             return (
-              <View>
+              <View key={timeStep.epochtime}>
                 {time.hour() === 23 && i > 0 && (
                   <View
                     style={[
@@ -244,7 +245,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                     </Text>
                   </View>
                 )}
-                <View key={timeStep.epochtime} style={[styles.row]} accessible>
+                <View style={[styles.row]} accessible>
                   <View
                     style={[
                       styles.row,
