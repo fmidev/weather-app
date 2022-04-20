@@ -218,7 +218,7 @@ const getWMSLayerUrlsAndBounds = async (
           },
         },
       } = parsedResponse;
-      // console.log(Layer);
+
       const filteredLayers = Layer.filter((L: WmsLayer) =>
         allLayerNames.includes(L.Name)
       );
