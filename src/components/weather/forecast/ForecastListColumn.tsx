@@ -88,7 +88,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   ? `${t(`observation:windDirection:${data.windCompass8}`)} ${
                       data.windSpeedMS
                     } ${t('forecast:metersPerSecond')}.`
-                  : undefined
+                  : `${data.windSpeedMS} ${t('forecast:metersPerSecond')}`
               }
               key={`${param}-${i}`}
               style={[
