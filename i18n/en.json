@@ -193,6 +193,16 @@
       "cloudHeight": "Cloud base",
       "snowDepth": "Snow depth"
     },
+    "paramUnits": {
+      "mm": "millimeters",
+      "%": "percent",
+      "°C": "degrees celcius",
+      "m/s": "meters per second",
+      "hPa": "hectopascal",
+      "km": "kilometers",
+      "cm": "centimeters",
+      "°": "degrees"
+    },
     "cloudcover": {
       "0": "Clear",
       "1": "Clear",
@@ -270,6 +280,7 @@
     "locationNever": "Never",
     "locationWhenInUse": "When using the application",
     "locationAlways": "Always",
+    "edit": "Edit",
     "fi": "suomi",
     "sv": "på svenska",
     "en": "in English",
@@ -457,8 +468,9 @@
     "noWarnings": "no active warnings",
     "noWarningsText": "No active warnings",
     "navigateToWarningsPage": "Navigate to Warnings page",
-    "dateAccessibilityHint": "show all active warnings to selected date",
-    "warningAccessibilityHint": "show detailed warning description",
+    "dateOpenHint": "show active warnings for selected date",
+    "moreAccessibilityHint": "show detailed warning description",
+    "lessAccessibilityHint": "hide detailed warning description",
     "infoAccessibilityLabel": "warnings info",
     "types": {
       "thunderStorm": "Severe thunderstorm warning",

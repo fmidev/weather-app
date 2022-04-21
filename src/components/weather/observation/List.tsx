@@ -96,7 +96,12 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                   styles.listText,
                   styles.windText,
                   { color: colors.hourListText },
-                ]}>
+                ]}
+                accessibilityLabel={`${t(
+                  'measurements.windSpeedMS'
+                )} ${getObservationCellValue(timeStep, 'windSpeedMS', '')} ${t(
+                  'forecast:metersPerSecond'
+                )}.`}>
                 {getObservationCellValue(timeStep, 'windSpeedMS', '')}
               </Text>
             )}
@@ -115,6 +120,13 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
             {activeParameters.includes('windDirection') &&
               timeStep.windDirection && (
                 <Icon
+                  accessibilityLabel={
+                    timeStep.windCompass8
+                      ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
+                      : `${t('measurements.windDirection')} ${
+                          timeStep.windDirection
+                        } ${t('paramUnits.°')}.`
+                  }
                   name="wind-arrow"
                   style={[
                     styles.wdPadding,
@@ -136,7 +148,12 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                 styles.listText,
                 styles.rowItem,
                 { color: colors.hourListText },
-              ]}>
+              ]}
+              accessibilityLabel={`${t(
+                'measurements.windGust'
+              )} ${getObservationCellValue(timeStep, 'windGust', '')} ${t(
+                'forecast:metersPerSecond'
+              )}`}>
               {getObservationCellValue(timeStep, 'windGust', '')}
             </Text>
           )}
@@ -146,34 +163,55 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
 
     return (
       <View style={styles.row}>
-        {activeParameters.map((param) => (
-          <Text
-            key={`${param}-${timeStep.epochtime}`}
-            style={[
-              styles.listText,
-              styles.rowItem,
-              { color: colors.hourListText },
-            ]}>
-            {param === 'totalCloudCover' && (
-              <>
-                {timeStep.totalCloudCover !== undefined &&
-                timeStep.totalCloudCover !== null
-                  ? `${timeStep.totalCloudCover}/8`
-                  : '-'}{' '}
-              </>
-            )}
-            {param !== 'totalCloudCover' &&
-              getObservationCellValue(
-                timeStep,
-                param,
-                '',
-                ['pressure', 'humidity', 'visibility', 'snow'].includes(param)
-                  ? 0
-                  : 1,
-                ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0
+        {activeParameters.map((param) => {
+          const accessibilityLabel =
+            param === 'totalCloudCover' &&
+            timeStep.totalCloudCover !== undefined &&
+            timeStep.totalCloudCover !== null
+              ? `${t(`measurements.${param}`)}: ${t(
+                  `cloudcover.${timeStep.totalCloudCover}`
+                )}`
+              : `${t(`measurements.${param}`)}: ${getObservationCellValue(
+                  timeStep,
+                  param,
+                  '',
+                  ['pressure', 'humidity', 'visibility', 'snow'].includes(param)
+                    ? 0
+                    : 1,
+                  ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0
+                ).replace(',', '.')} ${t(
+                  `paramUnits.${getParameterUnit(param)}`
+                )}`;
+          return (
+            <Text
+              key={`${param}-${timeStep.epochtime}`}
+              style={[
+                styles.listText,
+                styles.rowItem,
+                { color: colors.hourListText },
+              ]}
+              accessibilityLabel={accessibilityLabel}>
+              {param === 'totalCloudCover' && (
+                <>
+                  {timeStep.totalCloudCover !== undefined &&
+                  timeStep.totalCloudCover !== null
+                    ? `${timeStep.totalCloudCover}/8`
+                    : '-'}{' '}
+                </>
               )}
-          </Text>
-        ))}
+              {param !== 'totalCloudCover' &&
+                getObservationCellValue(
+                  timeStep,
+                  param,
+                  '',
+                  ['pressure', 'humidity', 'visibility', 'snow'].includes(param)
+                    ? 0
+                    : 1,
+                  ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0
+                )}
+            </Text>
+          );
+        })}
       </View>
     );
   };
@@ -261,7 +299,10 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.listText,
                         styles.bold,
                         { color: colors.hourListText },
-                      ]}>
+                      ]}
+                      accessibilityLabel={`${t(
+                        'forecast:at'
+                      )} ${timeToDisplay}`}>
                       {capitalize(timeToDisplay)}
                     </Text>
                     {getRowValues(timeStep)}

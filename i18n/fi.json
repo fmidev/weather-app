@@ -193,6 +193,16 @@
       "cloudHeight": "Pilven alarajan korkeus",
       "snowDepth": "Lumensyvyys"
     },
+    "paramUnits": {
+      "mm": "millimetriä",
+      "%": "prosenttia",
+      "°C": "celcius astetta",
+      "m/s": "metriä sekunnissa",
+      "hPa": "hehtopascalia",
+      "km": "kilometriä",
+      "cm": "senttimetriä",
+      "°": "astetta"
+    },
     "cloudcover": {
       "0": "Selkeää",
       "1": "Selkeää",
@@ -271,6 +281,7 @@
     "locationNever": "Ei koskaan",
     "locationWhenInUse": "Vain sovellusta käytettäessä",
     "locationAlways": "Aina",
+    "edit": "Muokkaa",
     "fi": "suomi",
     "sv": "på svenska",
     "en": "in English",
@@ -458,8 +469,9 @@
     "noWarnings": "ei varoituksia voimassa",
     "noWarningsText": "Ei voimassa olevia varoituksia",
     "navigateToWarningsPage": "navigoi Varoitus-sivulle",
-    "dateAccessibilityHint": "näytä kaikki päivän aktiiviset varoitukset",
-    "warningAccessibilityHint": "näytä varoituksen tarkemmat tiedot",
+    "dateOpenHint": "näytä kaikki päivän aktiiviset varoitukset",
+    "moreAccessibilityHint": "näytä varoituksen tarkemmat tiedot",
+    "lessAccessibilityHint": "piilota varoituksen tarkemmat tiedot",
     "infoAccessibilityLabel": "varoitusten selitteet",
     "types": {
       "thunderStorm": "Raju ukonilma",
