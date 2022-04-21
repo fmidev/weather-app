@@ -171,6 +171,7 @@
     "distance": "distance",
     "distanceFromStation": "km from forecast location",
     "panelHeader": "Past weather",
+    "noObservations": "No observations available",
     "list": "List",
     "chart": "Chart",
     "time": "Time",
