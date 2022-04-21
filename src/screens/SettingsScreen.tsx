@@ -136,6 +136,12 @@ const SettingsScreen: React.FC<Props> = ({
     );
   };
 
+  const locationPermissionsDisplayString = {
+    [LOCATION_ALWAYS]: t('settings:locationAlways'),
+    [LOCATION_WHEN_IN_USE]: t('settings:locationWhenInUse'),
+    [LOCATION_NEVER]: t('settings:locationNever'),
+  } as { [key: string]: string };
+
   // const unitTypesByKey = (key: string): UnitType[] | undefined =>
   //   UNITS.find((unit) => unit.parameterName === key)?.unitTypes;
 
@@ -177,84 +183,26 @@ const SettingsScreen: React.FC<Props> = ({
               accessibilityHint={t('settings:locationSettingHint')}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
-                  {t('settings:locationNever')}
+                  {locationPermission
+                    ? locationPermissionsDisplayString[locationPermission]
+                    : '-'}
                 </Text>
-                {locationPermission === LOCATION_NEVER && (
-                  <View>
-                    <Icon
-                      name="checkmark"
-                      size={22}
-                      style={{ color: colors.text }}
-                    />
-                  </View>
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              onPress={goToSettings}
-              delayPressIn={100}
-              disabled={locationPermission === LOCATION_WHEN_IN_USE}
-              accessibilityState={{
-                selected: locationPermission === LOCATION_WHEN_IN_USE,
-              }}
-              accessibilityRole="link"
-              accessibilityHint={t('settings:locationSettingHint')}>
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
-                  {t('settings:locationWhenInUse')}
-                </Text>
-                {locationPermission === LOCATION_WHEN_IN_USE && (
-                  <View>
-                    <Icon
-                      name="checkmark"
-                      size={22}
-                      style={{ color: colors.text }}
-                    />
-                  </View>
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-          {!isAndroid && (
-            <View
-              style={[
-                styles.rowWrapper,
-                styles.withBorderBottom,
-                { borderBottomColor: colors.border },
-              ]}>
-              <AccessibleTouchableOpacity
-                onPress={goToSettings}
-                delayPressIn={100}
-                disabled={locationPermission === LOCATION_ALWAYS}
-                accessibilityState={{
-                  selected: locationPermission === LOCATION_ALWAYS,
-                }}
-                accessibilityRole="link"
-                accessibilityHint={t('settings:locationSettingHint')}>
-                <View style={styles.row}>
-                  <Text style={[styles.text, { color: colors.text }]}>
-                    {t('settings:locationAlways')}
+                <View style={styles.editRow}>
+                  <Text
+                    accessibilityLabel=""
+                    style={[styles.editText, { color: colors.text }]}>
+                    {t('settings:edit')}
                   </Text>
-                  {locationPermission === LOCATION_ALWAYS && (
-                    <View>
-                      <Icon
-                        name="checkmark"
-                        size={22}
-                        style={{ color: colors.text }}
-                      />
-                    </View>
-                  )}
+                  <Icon
+                    name="open-in-new"
+                    width={22}
+                    height={22}
+                    style={{ color: colors.text }}
+                  />
                 </View>
-              </AccessibleTouchableOpacity>
-            </View>
-          )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
         </View>
         <View
           style={[
@@ -612,6 +560,15 @@ const styles = StyleSheet.create({
   },
   withMarginTop: {
     marginTop: 16,
+  },
+  editText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Medium',
+    marginRight: 8,
+  },
+  editRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   // sheetContainer: {
   //   borderTopLeftRadius: 10,
