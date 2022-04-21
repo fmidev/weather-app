@@ -35,7 +35,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
   const requestLocationPermissions = () => {
     const permission =
       Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.LOCATION_ALWAYS
+        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
     Permissions.request(permission)
       .then((result) => {
