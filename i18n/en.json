@@ -46,7 +46,8 @@
       "uvAccessibilityLabel": "Open uv chart",
       "zeroLine": "Zero line"
     },
-    "parameter": "Parameter"
+    "parameter": "Parameter",
+    "loading": "Loading content"
   },
   "forecast": {
     "nextHourForecast": "Next hour forecast,",
@@ -62,28 +63,28 @@
     "minutes": "minutes",
     "feelsLike": "Feels like",
     "temperature": "Temperature",
-    "fromTo": "From {{ min }}° to {{ max }}°",
+    "fromTo": "From {{ min }} degrees to {{ max }} degrees",
     "hourListOpenAccessibilityLabel": "Open forecast by hour list for day",
     "hourListCloseAccessibilityLabel": "Close forecast by hour list for day",
     "at": "at",
     "table": "Table",
-    "tableAccessibilityHint": "Open forecast table view",
+    "tableAccessibilityHint": "Switch to forecast table view",
     "chart": "Chart",
-    "chartAccessibilityHint": "Open forecast chart view",
+    "chartAccessibilityHint": "Switch to forecast chart view",
     "paramsAccessibilityLabel": "Parameters",
     "paramsAccessibilityHint": "Open parameter selection",
     "active": "active",
     "notActive": "not active",
     "params": {
-      "temperature": "temperature: {{ value }}°.",
-      "feelsLike": "feels like: {{ value }}°.",
-      "dewpoint": "dewpoint: {{ value }}°.",
+      "temperature": "temperature: {{ value }} degrees.",
+      "feelsLike": "feels like: {{ value }} degrees.",
+      "dewpoint": "dewpoint: {{ value }} degrees.",
       "pop": "precipitation probability: {{ value }}%.",
-      "hourlymaximumgust": "gust speed: {{ value }}m/s.",
+      "hourlymaximumgust": "gust speed: {{ value }} meters per second.",
       "relativeHumidity": "relative humidity: {{ value }}%.",
       "precipitation1h": "precipitation: {{ value }}mm.",
       "uvCumulated": "UV index: {{ value }}.",
-      "pressure": "pressure: {{ value }}hPa."
+      "pressure": "pressure: {{ value }} hectopascal."
     },
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Close hourly parameter selection",
@@ -319,7 +320,7 @@
       "strong": "heavy",
       "showMore": "Show more",
       "showLess": "Show less",
-      "rainRadarInfo": "Observed and forecast precipitation is presented with colors.",
+      "rainRadarInfo": "Observed and forecasted precipitation is presented with colors.",
       "mapLayersInfo": "Observed precipitation is measured with weather radar. Forecasted precipitation is a short-term forecast based on radar images and weather forecast models. In Finland the time step is 15 minutes and in Scandinavian region 1 hour. ",
       "timeseriesLayerInfo": "Weather forecast on map shows weather symbol and temperature to several places over the world. Pressing the symbol reveals more weather info."
     }
@@ -505,7 +506,8 @@
     "warningsTitle": "Warnings",
     "warningsDescription": "Be aware of active weather warnings in your area.",
     "customizeTitle": "Customize",
-    "customizeDescription": "You can adjust the weather parameters to your liking and use dark theme if you wish."
+    "customizeDescription": "You can adjust the weather parameters to your liking and use dark theme if you wish.",
+    "step": "Step {{ current }} of {{ total }}"
   },
   "termsAndConditions": {
     "close": "Close",
@@ -531,7 +533,8 @@
     "title": "Thank you for helping us developing our services!",
     "body1": "Give us your feedback of the application with Send feedback button. You will be transferred to your mail application.",
     "body2": "We go through all feedback but may not get back to you personally.",
-    "sendFeedback": "Send feedback"
+    "sendFeedback": "Send feedback",
+    "moveToHint": "Move to your mail application"
   },
   "error": {
     "forecastErrorTitle": "Error loading forecast data",

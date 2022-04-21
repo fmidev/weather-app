@@ -181,6 +181,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   return (
     <View style={styles.mapContainer}>
       <MapView
+        accessibilityElementsHidden
         ref={mapRef}
         testID="map"
         style={styles.map}

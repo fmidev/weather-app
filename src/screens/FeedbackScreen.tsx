@@ -48,7 +48,8 @@ const FeedbackScreen: React.FC = () => {
 
         <AccessibleTouchableOpacity
           accessibilityRole="button"
-          onPress={() => Linking.openURL(mailToUrl)}>
+          onPress={() => Linking.openURL(mailToUrl)}
+          accessibilityHint={t('moveToHint')}>
           <View
             style={[styles.sendFeedbackButton, { borderColor: colors.text }]}>
             <Text style={[styles.title, { color: colors.text }]}>

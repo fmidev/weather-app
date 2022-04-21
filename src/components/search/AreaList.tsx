@@ -43,6 +43,8 @@ const AreaList: React.FC<AreaListProps> = ({
   return (
     <View style={styles.listWrapper}>
       <View
+        accessible
+        accessibilityRole="header"
         style={[
           styles.resultsHeader,
           styles.withBorderBottom,
@@ -50,12 +52,10 @@ const AreaList: React.FC<AreaListProps> = ({
           styles.listItem,
           { borderBottomColor: colors.border },
         ]}>
+        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
         <Text
-          accessibilityRole="header"
-          style={[styles.title, { color: colors.text }]}>
-          {title}
-        </Text>
-        <Text style={[styles.regular, { color: colors.hourListText }]}>
+          accessibilityLabel=""
+          style={[styles.regular, { color: colors.hourListText }]}>
           {t('remember')}
         </Text>
       </View>

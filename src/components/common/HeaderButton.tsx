@@ -29,7 +29,6 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
     <AccessibleTouchableOpacity
       onPress={onPress}
       accessible
-      accessibilityElementsHidden
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}>

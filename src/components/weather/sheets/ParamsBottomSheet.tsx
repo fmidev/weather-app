@@ -101,7 +101,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
           )}
         {param === RELATIVE_HUMIDITY && (
           <Text
-            accessible={false}
+            accessibilityLabel=""
             style={[
               styles.iconText,
               styles.withMarginRight,
@@ -112,7 +112,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         )}
         {param === PRESSURE && (
           <Text
-            accessible={false}
+            accessibilityLabel=""
             style={[
               styles.iconText,
               styles.withMarginRight,
@@ -123,7 +123,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         )}
         {param === UV_CUMULATED && (
           <Text
-            accessible={false}
+            accessibilityLabel=""
             style={[
               styles.iconText,
               styles.withMarginRight,

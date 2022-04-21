@@ -285,9 +285,12 @@ const SettingsScreen: React.FC<Props> = ({
                     { borderBottomColor: colors.border },
                   ]}>
                   <AccessibleTouchableOpacity
-                    onPress={() => onChangeLanguage(language)}
+                    onPress={() =>
+                      i18n.language === language
+                        ? {}
+                        : onChangeLanguage(language)
+                    }
                     delayPressIn={100}
-                    disabled={i18n.language === language}
                     accessibilityState={{
                       selected: i18n.language === language,
                     }}
@@ -383,9 +386,8 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={() => updateTheme('light')}
+              onPress={() => (theme === 'light' ? {} : updateTheme('light'))}
               delayPressIn={100}
-              disabled={theme === 'light'}
               testID="settings_set_theme_light"
               accessibilityState={{ selected: theme === 'light' }}
               accessibilityRole="button"
@@ -415,9 +417,8 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={() => updateTheme('dark')}
+              onPress={() => (theme === 'dark' ? {} : updateTheme('dark'))}
               delayPressIn={100}
-              disabled={theme === 'dark'}
               testID="settings_set_theme_dark"
               accessibilityState={{ selected: theme === 'dark' }}
               accessibilityRole="button"
@@ -447,15 +448,20 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={() => updateTheme('automatic')}
+              onPress={() =>
+                theme === 'automatic' ? {} : updateTheme('automatic')
+              }
               delayPressIn={100}
-              disabled={theme === 'automatic'}
               testID="settings_set_theme_automatic"
               accessibilityState={{ selected: theme === 'automatic' }}
               accessibilityRole="button"
-              accessibilityHint={`${t('settings:appearanceHint')} ${t(
-                'settings:appearanceAutomatic'
-              )}`}>
+              accessibilityHint={
+                theme === 'automatic'
+                  ? ''
+                  : `${t('settings:appearanceHint')} ${t(
+                      'settings:appearanceAutomatic'
+                    )}`
+              }>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceAutomatic')}

@@ -118,11 +118,11 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
           <Icon name="sun" color={colors.hourListText} />
         </View>
         <View
-          accessible
           style={[styles.row, styles.listContainer, styles.paddingHorizontal]}>
           {isPolarNight && !isMidnightSun && (
             <>
               <View
+                accessible
                 style={[styles.row, styles.alignCenter, styles.listContainer]}>
                 <Icon
                   width={24}
@@ -144,7 +144,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {t('weatherInfoBottomSheet.polarNight')}
                 </Text>
               </View>
-              <View style={[styles.row, styles.alignCenter]}>
+              <View style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -157,9 +157,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
-                  accessibilityLabel={`${t('sunrise')} ${sunrise.format(
-                    `D.M.YYYY [${t('at')}] HH:mm`
-                  )}`}
+                  accessibilityLabel={`${t('sunrise')} ${t(
+                    'at'
+                  )} ${sunrise.format(`D.M.YYYY [${t('at')}] HH:mm`)}`}
                   style={[
                     styles.panelText,
                     styles.bold,
@@ -195,7 +195,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {t('weatherInfoBottomSheet.nightlessNight')}
                 </Text>
               </View>
-              <View style={[styles.row, styles.alignCenter]}>
+              <View style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -208,9 +208,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
-                  accessibilityLabel={`${t('sunset')} ${sunset.format(
-                    `D.M.YYYY [${t('at')}] HH:mm`
-                  )}`}
+                  accessibilityLabel={`${t('sunset')} ${t(
+                    'at'
+                  )} ${sunset.format(`D.M.YYYY [${t('at')}] HH:mm`)}`}
                   style={[
                     styles.panelText,
                     styles.bold,
@@ -228,7 +228,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 styles.listContainer,
                 styles.justifySpaceBetween,
               ]}>
-              <View accessible style={[styles.row, styles.alignCenter]}>
+              <View style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -241,9 +241,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
-                  accessibilityLabel={`${t('sunrise')} ${sunrise.format(
-                    'HH:mm'
-                  )}`}
+                  accessibilityLabel={`${t('sunrise')} ${t(
+                    'at'
+                  )} ${sunrise.format('HH:mm')}`}
                   style={[
                     styles.panelText,
                     styles.bold,
@@ -252,7 +252,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {sunrise.format('HH:mm')}
                 </Text>
               </View>
-              <View style={[styles.row, styles.alignCenter]}>
+              <View style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -263,9 +263,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
-                  accessibilityLabel={`${t('sunset')} ${sunset.format(
-                    'HH:mm'
-                  )}`}
+                  accessibilityLabel={`${t('sunset')} ${t(
+                    'at'
+                  )} ${sunset.format('HH:mm')}`}
                   style={[
                     styles.panelText,
                     styles.bold,
@@ -274,7 +274,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {sunset.format('HH:mm')}
                 </Text>
               </View>
-              <View style={[styles.row, styles.alignCenter]}>
+              <View style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={24}
                   height={24}

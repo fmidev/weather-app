@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   ImageBackground,
   Image,
@@ -6,6 +6,8 @@ import {
   Text,
   View,
   SafeAreaView,
+  findNodeHandle,
+  AccessibilityInfo,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -17,6 +19,7 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { GRAY_1, CustomTheme } from '@utils/colors';
+import { useOrientation } from '@utils/hooks';
 
 type OnboardingScreenProps = {
   navigation: StackNavigationProp<SetupStackParamList, 'Onboarding'>;
@@ -26,6 +29,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const { t } = useTranslation('onboarding');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
+  const titleRef = useRef() as React.MutableRefObject<Text>;
+  const isLandscape = useOrientation();
 
   const onboardingInfo = [
     {
@@ -50,6 +55,20 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     },
   ];
 
+  const handlePress = () => {
+    if (pageIndex === onboardingInfo.length - 1) {
+      navigation.navigate('SetupScreen');
+    } else {
+      if (titleRef && titleRef.current) {
+        const reactTag = findNodeHandle(titleRef.current);
+        if (reactTag) {
+          AccessibilityInfo.setAccessibilityFocus(reactTag);
+        }
+      }
+      setPageIndex((index) => index + 1);
+    }
+  };
+
   const InfoComponent: React.FC<{
     icon: string;
     title: string;
@@ -68,8 +87,13 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         <Icon name={icon} width={32} height={32} color={colors.primaryText} />
       </View>
       <Text
+        ref={titleRef}
         style={[styles.title, { color: colors.primaryText }]}
-        accessibilityRole="header">
+        accessibilityRole="header"
+        accessibilityLabel={`${t('step', {
+          current: pageIndex + 1,
+          total: 4,
+        })}: ${title}`}>
         {title}
       </Text>
       <Text style={[styles.textNormal, { color: colors.hourListText }]}>
@@ -78,11 +102,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
       <AccessibleTouchableOpacity
         accessibilityRole="button"
         style={styles.buttonContainer}
-        onPress={() => {
-          if (pageIndex === onboardingInfo.length - 1) {
-            navigation.navigate('SetupScreen');
-          } else setPageIndex((index) => index + 1);
-        }}>
+        onPress={handlePress}>
         <View style={[styles.button, { borderColor: colors.primaryText }]}>
           <View style={styles.textContainer}>
             <Text style={[styles.text, { color: colors.primaryText }]}>
@@ -114,7 +134,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           style={styles.logo}
         />
       </ImageBackground>
-      <View style={styles.innerContainer}>
+      <View
+        style={[
+          styles.innerContainer,
+          isLandscape && styles.innerContainerLandscape,
+        ]}>
         <InfoComponent
           icon={onboardingInfo[pageIndex].icon}
           title={onboardingInfo[pageIndex].title}
@@ -184,13 +208,17 @@ const styles = StyleSheet.create({
   innerContainer: {
     position: 'absolute',
     bottom: 72,
-    right: 0,
-    left: 0,
+    width: '100%',
+    maxWidth: 600,
     alignSelf: 'center',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
+  },
+  innerContainerLandscape: {
+    position: 'relative',
+    bottom: 10,
   },
   infoContainer: {
     width: '100%',
@@ -270,13 +298,17 @@ const styles = StyleSheet.create({
   row: {
     position: 'absolute',
     bottom: 32,
-    width: '100%',
+    alignSelf: 'center',
     flexDirection: 'row',
   },
   center: {
     justifyContent: 'center',
   },
-  skipButton: { position: 'absolute', right: 40, bottom: 16 },
+  skipButton: {
+    position: 'absolute',
+    right: 40,
+    bottom: 16,
+  },
 });
 
 export default OnboardingScreen;

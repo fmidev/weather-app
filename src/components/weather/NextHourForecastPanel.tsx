@@ -48,7 +48,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   if (loading || !nextHourForecast) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator />
+        <ActivityIndicator accessibilityLabel={t('weather:loading')} />
       </View>
     );
   }
@@ -109,7 +109,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
       <View style={[styles.feelsLikeRow, styles.withMarginBottom]}>
         <View style={styles.row}>
           {activeParameters.includes('uvCumulated') && (
-            <Text style={[styles.text, { color: colors.hourListText }]}>
+            <Text
+              style={[styles.text, { color: colors.hourListText }]}
+              accessibilityLabel={t('params.uvCumulated', {
+                value: numericOrDash(nextHourForecast.uvCumulated),
+              })}>
               {'UV '}
               <Text style={styles.bold}>
                 {numericOrDash(nextHourForecast.uvCumulated)}

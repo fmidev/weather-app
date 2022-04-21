@@ -21,6 +21,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   return (
     <View
       accessible={false}
+      accessibilityElementsHidden
       style={[
         styles.iconColumn,
         {
