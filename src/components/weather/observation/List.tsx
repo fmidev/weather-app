@@ -164,24 +164,38 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
     return (
       <View style={styles.row}>
         {activeParameters.map((param) => {
+          const cellValue = getObservationCellValue(
+            timeStep,
+            param,
+            '',
+            [
+              'pressure',
+              'humidity',
+              'visibility',
+              'snow',
+              'totalCloudCover',
+            ].includes(param)
+              ? 0
+              : 1,
+            ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0
+          );
+
           const accessibilityLabel =
-            param === 'totalCloudCover' &&
-            timeStep.totalCloudCover !== undefined &&
-            timeStep.totalCloudCover !== null
-              ? `${t(`measurements.${param}`)}: ${t(
-                  `cloudcover.${timeStep.totalCloudCover}`
-                )}`
-              : `${t(`measurements.${param}`)}: ${getObservationCellValue(
-                  timeStep,
-                  param,
-                  '',
-                  ['pressure', 'humidity', 'visibility', 'snow'].includes(param)
-                    ? 0
-                    : 1,
-                  ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0
-                ).replace(',', '.')} ${t(
-                  `paramUnits.${getParameterUnit(param)}`
-                )}`;
+            param === 'totalCloudCover'
+              ? `${t(`measurements.${param}`)}: ${
+                  timeStep.totalCloudCover !== null &&
+                  timeStep.totalCloudCover !== undefined
+                    ? t(`cloudcover.${timeStep.totalCloudCover}`)
+                    : t('paramUnits.na')
+                }`
+              : `${t(`measurements.${param}`)}: ${cellValue.replace(
+                  ',',
+                  '.'
+                )} ${
+                  cellValue === '-'
+                    ? t('paramUnits.na')
+                    : t(`paramUnits.${getParameterUnit(param)}`)
+                }`;
           return (
             <Text
               key={`${param}-${timeStep.epochtime}`}
@@ -191,24 +205,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                 { color: colors.hourListText },
               ]}
               accessibilityLabel={accessibilityLabel}>
-              {param === 'totalCloudCover' && (
-                <>
-                  {timeStep.totalCloudCover !== undefined &&
-                  timeStep.totalCloudCover !== null
-                    ? `${timeStep.totalCloudCover}/8`
-                    : '-'}{' '}
-                </>
-              )}
-              {param !== 'totalCloudCover' &&
-                getObservationCellValue(
-                  timeStep,
-                  param,
-                  '',
-                  ['pressure', 'humidity', 'visibility', 'snow'].includes(param)
-                    ? 0
-                    : 1,
-                  ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0
-                )}
+              {param === 'totalCloudCover'
+                ? `${cellValue === '-' ? cellValue : `${cellValue}/8`}`
+                : cellValue}
             </Text>
           );
         })}

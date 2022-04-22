@@ -201,7 +201,8 @@
       "hPa": "hehtopascalia",
       "km": "kilometriä",
       "cm": "senttimetriä",
-      "°": "astetta"
+      "°": "astetta",
+      "na": "ei saatavissa"
     },
     "cloudcover": {
       "0": "Selkeää",

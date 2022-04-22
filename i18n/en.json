@@ -201,7 +201,8 @@
       "hPa": "hectopascal",
       "km": "kilometers",
       "cm": "centimeters",
-      "°": "degrees"
+      "°": "degrees",
+      "na": "not available"
     },
     "cloudcover": {
       "0": "Clear",
