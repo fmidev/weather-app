@@ -203,7 +203,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             />
           )}
 
-          {/ ^\s*$/.test(value) && search.length === 0 && favorites.length > 0 && (
+          {/^\s*$/.test(value) && search.length === 0 && favorites.length > 0 && (
             <AreaList
               elements={favorites}
               title={t('favorites')}
