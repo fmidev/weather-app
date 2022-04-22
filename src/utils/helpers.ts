@@ -1,6 +1,6 @@
 import { Alert, AccessibilityInfo, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import { PERMISSIONS, check } from 'react-native-permissions';
+import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions';
 import { TFunction } from 'react-i18next';
 
 import { Location } from '@store/location/types';
@@ -14,6 +14,60 @@ import { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
 import { Rain } from './colors';
 
+const getPosition = (
+  callback: (arg0: Location, arg1: boolean) => void,
+  t: TFunction<string[] | string>
+) =>
+  Geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      getCurrentPosition(latitude, longitude)
+        .then((json) => {
+          const geoid = Number(Object.keys(json)[0]);
+          const item = Object.values(json)[0][0];
+          const { name, localtz, iso2, country, region } = item;
+
+          AccessibilityInfo.announceForAccessibility(
+            `${t('navigation:locatedTo')} ${name}, ${region}`
+          );
+
+          callback(
+            {
+              lat: latitude,
+              lon: longitude,
+              name,
+              area: iso2 === 'FI' && country === region ? '' : region,
+              id: geoid,
+              timezone: localtz,
+              country: iso2,
+            },
+            true
+          );
+        })
+        .catch((e) => console.error(e));
+    },
+    (error) => {
+      console.log('GEOLOCATION NOT AVAILABLE', error);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 10000,
+    }
+  );
+
+const alertNoPermission = (t: TFunction<string[] | string>) =>
+  Alert.alert(
+    t('map:noLocationPermission'),
+    t('map:noLocationPermissionHint'),
+    [
+      {
+        text: 'OK',
+        onPress: () => {},
+      },
+    ]
+  );
+
 export const getGeolocation = (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>,
@@ -24,56 +78,27 @@ export const getGeolocation = (
       ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
       : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
   ).then((result) => {
-    if (result === 'granted') {
-      return Geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          getCurrentPosition(latitude, longitude)
-            .then((json) => {
-              const geoid = Number(Object.keys(json)[0]);
-              const item = Object.values(json)[0][0];
-              const { name, localtz, iso2, country, region } = item;
-
-              AccessibilityInfo.announceForAccessibility(
-                `${t('navigation:locatedTo')} ${name}, ${region}`
-              );
-
-              callback(
-                {
-                  lat: latitude,
-                  lon: longitude,
-                  name,
-                  area: iso2 === 'FI' && country === region ? '' : region,
-                  id: geoid,
-                  timezone: localtz,
-                  country: iso2,
-                },
-                true
-              );
-            })
-            .catch((e) => console.error(e));
-        },
-        (error) => {
-          console.log('GEOLOCATION NOT AVAILABLE', error);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 10000,
-        }
-      );
+    if (result === RESULTS.GRANTED) {
+      return getPosition(callback, t);
     }
-    if (!failSilently) {
-      Alert.alert(
-        t('map:noLocationPermission'),
-        t('map:noLocationPermissionHint'),
-        [
-          {
-            text: 'OK',
-            onPress: () => {},
-          },
-        ]
-      );
+    if (!failSilently && result === RESULTS.DENIED) {
+      const permission =
+        Platform.OS === 'ios'
+          ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+      request(permission)
+        .then((res) => {
+          if (res === RESULTS.GRANTED) {
+            getPosition(callback, t);
+          }
+          if (res === RESULTS.BLOCKED) {
+            alertNoPermission(t);
+          }
+        })
+        .catch((e) => console.error(e));
+    }
+    if (!failSilently && result === RESULTS.BLOCKED) {
+      alertNoPermission(t);
     }
     return {};
   });

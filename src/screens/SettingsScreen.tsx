@@ -131,9 +131,25 @@ const SettingsScreen: React.FC<Props> = ({
   };
 
   const goToSettings = () => {
-    Permissions.openSettings().catch((e) =>
-      console.warn('cannot open settings', e)
-    );
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+    if (locationPermission === LOCATION_NEVER) {
+      Permissions.request(permission)
+        .then((result) => {
+          if (result === RESULTS.BLOCKED) {
+            Permissions.openSettings().catch((e) =>
+              console.warn('cannot open settings', e)
+            );
+          }
+        })
+        .catch((e) => console.error(e));
+    } else {
+      Permissions.openSettings().catch((e) =>
+        console.warn('cannot open settings', e)
+      );
+    }
   };
 
   const locationPermissionsDisplayString = {
@@ -175,10 +191,6 @@ const SettingsScreen: React.FC<Props> = ({
             <AccessibleTouchableOpacity
               onPress={goToSettings}
               delayPressIn={100}
-              disabled={locationPermission === LOCATION_NEVER}
-              accessibilityState={{
-                selected: locationPermission === LOCATION_NEVER,
-              }}
               accessibilityRole="link"
               accessibilityHint={t('settings:locationSettingHint')}>
               <View style={styles.row}>
