@@ -127,7 +127,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
 
   return (
     <View style={styles.container}>
-      {value.length > 0 && <Text>Hae paikkaa</Text>}
       <View
         style={[
           styles.searchBoxContainer,
