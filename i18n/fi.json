@@ -171,6 +171,7 @@
     "distance": "etäisyys",
     "distanceFromStation": "km ennustepaikasta",
     "panelHeader": "Sää havaintoasemilla",
+    "noObservations": "Ei havaintoja saatavilla",
     "list": "Lista",
     "chart": "Graafi",
     "time": "Aika",
