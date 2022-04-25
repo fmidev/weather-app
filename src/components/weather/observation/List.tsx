@@ -257,13 +257,14 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
       {data &&
         data
           .filter((ob) => ob.epochtime % 3600 === 0)
-          .map((timeStep, i) => {
+          .map((timeStep, i, arr) => {
             const time = moment(timeStep.epochtime * 1000).locale(locale);
+            const previousTime = moment(arr?.[i - 1]?.epochtime * 1000);
             const timeToDisplay = time.format('HH:mm');
 
             return (
               <View key={timeStep.epochtime}>
-                {time.hour() === 23 && i > 0 && (
+                {i > 0 && time.day() !== previousTime.day() && (
                   <View
                     style={[
                       styles.row,
