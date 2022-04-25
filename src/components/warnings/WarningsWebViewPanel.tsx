@@ -50,7 +50,9 @@ const WarningsWebViewPanel: React.FC = () => {
 
   <link rel="stylesheet" href="${webViewUrl}/SmartMetAlertClient.css">
   <style>
-    body { background-color: ${colors.background}; margin: 0 !important }
+    body { overflow-x: hidden; background-color: ${
+      colors.background
+    }; margin: 0 !important }
     .container-fluid { margin-top: 0 !important }
     .day-region-views > h3 { display: none }
     .header-region, .symbol-list { padding-left: 5px !important }

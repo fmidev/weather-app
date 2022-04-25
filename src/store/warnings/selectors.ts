@@ -53,7 +53,10 @@ export const selectDailyWarningData = createSelector(
       const dayEnd = moment(fetchTime).endOf('day').add(i, 'days');
 
       const dailyWarnings = warnings.filter(
-        ({ duration: { startTime, endTime } }) => {
+        ({ severity, duration: { startTime, endTime } }) => {
+          if (!severityList.includes(severity)) {
+            return false;
+          }
           const dsWsDiff = dayStart.diff(moment(startTime));
           const deWsDiff = dayEnd.diff(moment(startTime));
           const dsWeDiff = dayStart.diff(moment(endTime));
