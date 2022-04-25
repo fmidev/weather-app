@@ -52,12 +52,13 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
 
 const styles = StyleSheet.create({
   cardHeader: {
-    height: 44,
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
     paddingHorizontal: 16,
+    paddingVertical: 11,
     borderBottomWidth: 1,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
