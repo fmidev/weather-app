@@ -3,6 +3,7 @@ import i18n from '@i18n';
 import { Location } from '@store/location/types';
 import { WarningsData } from '@store/warnings/types';
 import axiosClient from '@utils/axiosClient';
+import packageJSON from '../../package.json';
 
 const getWarnings = async ({
   lat,
@@ -17,6 +18,7 @@ const getWarnings = async ({
   const params = {
     latlon: `${lat},${lon}`,
     lang: language,
+    who: packageJSON.name,
   };
 
   const { data } = await axiosClient({ url, params });

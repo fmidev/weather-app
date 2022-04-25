@@ -6,6 +6,7 @@ import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
 
 import axiosClient from './axiosClient';
+import packageJSON from '../../package.json';
 
 type BoundingBox = {
   CRS?: string;
@@ -135,6 +136,7 @@ const getTimeseriesData = async (
     format: 'json',
     producer: layer.producer || 'default',
     attributes: 'lonlat,population,name',
+    who: packageJSON.name,
   };
 
   const url = `${sources[layer.source]}/timeseries`;
@@ -192,6 +194,7 @@ const getWMSLayerUrlsAndBounds = async (
         params: {
           service: 'WMS',
           request: 'GetCapabilities',
+          who: packageJSON.name,
           ...(src.includes('smartmet')
             ? {
                 namespace: `/${allLayerNames

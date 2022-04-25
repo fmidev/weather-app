@@ -7,6 +7,7 @@ import { Config } from '@config';
 import i18n from '@i18n';
 import axiosClient from '@utils/axiosClient';
 import { TimeseriesLocation } from '@store/location/types';
+import packageJSON from '../../package.json';
 
 export const getForecast = async (
   location: ForecastLocation
@@ -25,6 +26,7 @@ export const getForecast = async (
     attributes: 'geoid',
     lang: language,
     tz: 'utc',
+    who: packageJSON.name,
   };
 
   const metaParams = [
@@ -102,6 +104,7 @@ export const getObservation = async (
     precision: 'double',
     lang: language,
     attributes: 'fmisid,stationname,distance',
+    who: packageJSON.name,
   };
 
   const { data } = await axiosClient({ url: apiUrl, params });
@@ -123,6 +126,7 @@ const locationQueryParams = {
   timesteps: 1,
   attributes: 'geoid',
   format: 'json',
+  who: packageJSON.name,
 };
 
 export const getCurrentPosition = async (

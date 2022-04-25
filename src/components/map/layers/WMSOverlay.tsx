@@ -14,6 +14,7 @@ import { State } from '@store/types';
 import { Layer, MapOverlay } from '@store/map/types';
 import { selectActiveOverlay, selectSliderTime } from '@store/map/selectors';
 import { useTheme } from '@react-navigation/native';
+import packageJSON from '../../../../package.json';
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
@@ -83,7 +84,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     const theme = dark ? 'dark' : 'light';
     return `${url}&styles=${
       typeof styles === 'string' ? styles : styles[theme]
-    }&time=${timestamp}`;
+    }&time=${timestamp}&who=${packageJSON.name}`;
   };
 
   const borderTimeComparer = (time: string): boolean =>
