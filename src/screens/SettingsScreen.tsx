@@ -131,10 +131,32 @@ const SettingsScreen: React.FC<Props> = ({
   };
 
   const goToSettings = () => {
-    Permissions.openSettings().catch((e) =>
-      console.warn('cannot open settings', e)
-    );
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+    if (locationPermission === LOCATION_NEVER) {
+      Permissions.request(permission)
+        .then((result) => {
+          if (result === RESULTS.BLOCKED) {
+            Permissions.openSettings().catch((e) =>
+              console.warn('cannot open settings', e)
+            );
+          }
+        })
+        .catch((e) => console.error(e));
+    } else {
+      Permissions.openSettings().catch((e) =>
+        console.warn('cannot open settings', e)
+      );
+    }
   };
+
+  const locationPermissionsDisplayString = {
+    [LOCATION_ALWAYS]: t('settings:locationAlways'),
+    [LOCATION_WHEN_IN_USE]: t('settings:locationWhenInUse'),
+    [LOCATION_NEVER]: t('settings:locationNever'),
+  } as { [key: string]: string };
 
   // const unitTypesByKey = (key: string): UnitType[] | undefined =>
   //   UNITS.find((unit) => unit.parameterName === key)?.unitTypes;
@@ -152,7 +174,9 @@ const SettingsScreen: React.FC<Props> = ({
             { borderBottomColor: colors.border },
           ]}>
           <View style={styles.row}>
-            <Text style={[styles.title, { color: colors.text }]}>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
               {t('settings:allowLocation')}
             </Text>
           </View>
@@ -167,77 +191,30 @@ const SettingsScreen: React.FC<Props> = ({
             <AccessibleTouchableOpacity
               onPress={goToSettings}
               delayPressIn={100}
-              disabled={locationPermission === LOCATION_NEVER}>
+              accessibilityRole="link"
+              accessibilityHint={t('settings:locationSettingHint')}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
-                  {t('settings:locationNever')}
+                  {locationPermission
+                    ? locationPermissionsDisplayString[locationPermission]
+                    : '-'}
                 </Text>
-                {locationPermission === LOCATION_NEVER && (
-                  <View>
-                    <Icon
-                      name="checkmark"
-                      size={22}
-                      style={{ color: colors.text }}
-                    />
-                  </View>
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              onPress={goToSettings}
-              delayPressIn={100}
-              disabled={locationPermission === LOCATION_WHEN_IN_USE}>
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
-                  {t('settings:locationWhenInUse')}
-                </Text>
-                {locationPermission === LOCATION_WHEN_IN_USE && (
-                  <View>
-                    <Icon
-                      name="checkmark"
-                      size={22}
-                      style={{ color: colors.text }}
-                    />
-                  </View>
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-          {!isAndroid && (
-            <View
-              style={[
-                styles.rowWrapper,
-                styles.withBorderBottom,
-                { borderBottomColor: colors.border },
-              ]}>
-              <AccessibleTouchableOpacity
-                onPress={goToSettings}
-                delayPressIn={100}
-                disabled={locationPermission === LOCATION_ALWAYS}>
-                <View style={styles.row}>
-                  <Text style={[styles.text, { color: colors.text }]}>
-                    {t('settings:locationAlways')}
+                <View style={styles.editRow}>
+                  <Text
+                    accessibilityLabel=""
+                    style={[styles.editText, { color: colors.text }]}>
+                    {t('settings:edit')}
                   </Text>
-                  {locationPermission === LOCATION_ALWAYS && (
-                    <View>
-                      <Icon
-                        name="checkmark"
-                        size={22}
-                        style={{ color: colors.text }}
-                      />
-                    </View>
-                  )}
+                  <Icon
+                    name="open-in-new"
+                    width={22}
+                    height={22}
+                    style={{ color: colors.text }}
+                  />
                 </View>
-              </AccessibleTouchableOpacity>
-            </View>
-          )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
         </View>
         <View
           style={[
@@ -249,7 +226,8 @@ const SettingsScreen: React.FC<Props> = ({
           <View style={styles.row}>
             <Text
               style={[styles.title, { color: colors.text }]}
-              testID="settings_language_header">
+              testID="settings_language_header"
+              accessibilityRole="header">
               {t('settings:language')}
             </Text>
           </View>
@@ -267,9 +245,19 @@ const SettingsScreen: React.FC<Props> = ({
                     { borderBottomColor: colors.border },
                   ]}>
                   <AccessibleTouchableOpacity
-                    onPress={() => onChangeLanguage(language)}
+                    onPress={() =>
+                      i18n.language === language
+                        ? {}
+                        : onChangeLanguage(language)
+                    }
                     delayPressIn={100}
-                    disabled={i18n.language === language}>
+                    accessibilityState={{
+                      selected: i18n.language === language,
+                    }}
+                    accessibilityRole="button"
+                    accessibilityHint={`${t('settings:languageHint')} ${t(
+                      `settings:${language}`
+                    )}`}>
                     <View style={styles.row}>
                       <Text style={[styles.text, { color: colors.text }]}>
                         {t(`settings:${language}`)}
@@ -344,7 +332,8 @@ const SettingsScreen: React.FC<Props> = ({
           <View style={styles.row}>
             <Text
               style={[styles.title, { color: colors.text }]}
-              testID="settings_theme_header">
+              testID="settings_theme_header"
+              accessibilityRole="header">
               {t('settings:appearance')}
             </Text>
           </View>
@@ -357,10 +346,14 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={() => updateTheme('light')}
+              onPress={() => (theme === 'light' ? {} : updateTheme('light'))}
               delayPressIn={100}
-              disabled={theme === 'light'}
-              testID="settings_set_theme_light">
+              testID="settings_set_theme_light"
+              accessibilityState={{ selected: theme === 'light' }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:appearanceHint')} ${t(
+                'settings:appearanceLight'
+              )}`}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceLight')}
@@ -384,10 +377,14 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={() => updateTheme('dark')}
+              onPress={() => (theme === 'dark' ? {} : updateTheme('dark'))}
               delayPressIn={100}
-              disabled={theme === 'dark'}
-              testID="settings_set_theme_dark">
+              testID="settings_set_theme_dark"
+              accessibilityState={{ selected: theme === 'dark' }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:appearanceHint')} ${t(
+                'settings:appearanceDark'
+              )}`}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceDark')}
@@ -411,10 +408,20 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={() => updateTheme('automatic')}
+              onPress={() =>
+                theme === 'automatic' ? {} : updateTheme('automatic')
+              }
               delayPressIn={100}
-              disabled={theme === 'automatic'}
-              testID="settings_set_theme_automatic">
+              testID="settings_set_theme_automatic"
+              accessibilityState={{ selected: theme === 'automatic' }}
+              accessibilityRole="button"
+              accessibilityHint={
+                theme === 'automatic'
+                  ? ''
+                  : `${t('settings:appearanceHint')} ${t(
+                      'settings:appearanceAutomatic'
+                    )}`
+              }>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>
                   {t('settings:appearanceAutomatic')}
@@ -565,6 +572,15 @@ const styles = StyleSheet.create({
   },
   withMarginTop: {
     marginTop: 16,
+  },
+  editText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Medium',
+    marginRight: 8,
+  },
+  editRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   // sheetContainer: {
   //   borderTopLeftRadius: 10,

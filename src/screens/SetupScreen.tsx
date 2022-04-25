@@ -18,6 +18,7 @@ import { SetupStackParamList } from '@navigators/types';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { GRAY_1, CustomTheme } from '@utils/colors';
+import { useOrientation } from '@utils/hooks';
 
 type SetupScreenProps = {
   setUpDone: () => void;
@@ -29,11 +30,12 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
   const { colors, dark } = useTheme() as CustomTheme;
   const [didViewTerms, setDidViewTerms] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
+  const isLandscape = useOrientation();
 
   const requestLocationPermissions = () => {
     const permission =
       Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.LOCATION_ALWAYS
+        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
     Permissions.request(permission)
       .then((result) => {
@@ -171,7 +173,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
           style={styles.logo}
         />
       </ImageBackground>
-      <View style={styles.innerContainer}>
+      <View
+        style={[
+          styles.innerContainer,
+          isLandscape && styles.innerContainerLandscape,
+        ]}>
         {pageIndex === 0 && (
           <PermissionComponent
             title={t('termsAndConditions')}
@@ -237,11 +243,16 @@ const styles = StyleSheet.create({
   innerContainer: {
     position: 'absolute',
     bottom: 72,
+    maxWidth: 600,
     alignSelf: 'center',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
+  },
+  innerContainerLandscape: {
+    position: 'relative',
+    bottom: 10,
   },
   permissionContainer: {
     width: '100%',

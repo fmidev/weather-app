@@ -46,7 +46,8 @@
       "uvAccessibilityLabel": "Avaa uvgraafi",
       "zeroLine": "Nollapiste"
     },
-    "parameter": "Suure"
+    "parameter": "Suure",
+    "loading": "Ladataan sisältöä"
   },
   "forecast": {
     "nextHourForecast": "Seuraavan tunnin ennuste,",
@@ -62,28 +63,28 @@
     "minutes": "minuuttia",
     "feelsLike": "Tuntuu kuin",
     "temperature": "Lämpötila",
-    "fromTo": "{{ min }}° viiva {{ max }}°",
+    "fromTo": "{{ min }} astetta viiva {{ max }} astetta",
     "hourListOpenAccessibilityLabel": "Avaa tuntiennuste päivälle",
     "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle",
     "at": "klo",
     "table": "Taulukko",
-    "tableAccessibilityHint": "Avaa ennusteen taulukkonäkymä",
+    "tableAccessibilityHint": "Näytä ennusteen taulukkonäkymä",
     "chart": "Graafi",
-    "chartAccessibilityHint": "Avaa ennusteen graafinäkymä",
+    "chartAccessibilityHint": "Näytä ennusteen graafinäkymä",
     "paramsAccessibilityLabel": "Suureet",
     "paramsAccessibilityHint": "Avaa suureiden valinta",
     "active": "valittu",
     "notActive": "ei valittu",
     "params": {
-      "temperature": "lämpötila: {{ value }}°.",
-      "feelsLike": "tuntuu kuin: {{ value }}°.",
-      "dewpoint": "kastepiste: {{ value }}°.",
+      "temperature": "lämpötila: {{ value }} astetta.",
+      "feelsLike": "tuntuu kuin: {{ value }} astetta.",
+      "dewpoint": "kastepiste: {{ value }} astetta.",
       "pop": "sateen todennäköisyys: {{ value }}%.",
-      "hourlymaximumgust": "puuskanopeus: {{ value }}m/s.",
+      "hourlymaximumgust": "puuskanopeus: {{ value }} metriä sekunnissa.",
       "relativeHumidity": "suhteellinen kosteus: {{ value }}%.",
       "precipitation1h": "tunnin sademäärä: {{ value }}mm.",
-      "uvCumulated": "uv indeksi: {{ value }}.",
-      "pressure": "ilmanpaine: {{ value }}hPa."
+      "uvCumulated": "UV indeksi: {{ value }}.",
+      "pressure": "ilmanpaine: {{ value }} hehtopascalia."
     },
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Sulje tuntinäkymän suureiden valinta",
@@ -192,6 +193,17 @@
       "cloudHeight": "Pilven alarajan korkeus",
       "snowDepth": "Lumensyvyys"
     },
+    "paramUnits": {
+      "mm": "millimetriä",
+      "%": "prosenttia",
+      "°C": "celcius astetta",
+      "m/s": "metriä sekunnissa",
+      "hPa": "hehtopascalia",
+      "km": "kilometriä",
+      "cm": "senttimetriä",
+      "°": "astetta",
+      "na": "ei saatavissa"
+    },
     "cloudcover": {
       "0": "Selkeää",
       "1": "Selkeää",
@@ -238,7 +250,9 @@
     "searchInfoAccessibilityHint": "Avaa haku-sivun selitteet",
     "timezone": "Aikavyöhyke",
     "slash": "kautta",
-    "locatedTo": "Paikannettu sijaintiin:"
+    "locatedTo": "Paikannettu sijaintiin:",
+    "navigateTo": "Navigoi sivulle:",
+    "open": "Avaa"
   },
   "placeholder": {
     "weather": "Täällä olisi havaintoa ja ennustetta",
@@ -268,9 +282,13 @@
     "locationNever": "Ei koskaan",
     "locationWhenInUse": "Vain sovellusta käytettäessä",
     "locationAlways": "Aina",
+    "edit": "Muokkaa",
     "fi": "suomi",
     "sv": "på svenska",
-    "en": "in English"
+    "en": "in English",
+    "languageHint": "Vaihda sovelluksen kieleksi:",
+    "appearanceHint": "Vaihda sovelluksen ulkoasuksi:",
+    "locationSettingHint": "Siirry puhelimeen asetuksiin muuttaaksesi sovelluksen lupaa käyttää sijaintia"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",
@@ -315,7 +333,7 @@
       "strong": "rankkaa",
       "showMore": "Näytä lisää",
       "showLess": "Näytä vähemmän",
-      "rainRadarInfo": "Haivatun ja ennustetun sateen voimakkuus esitetään väreinä.",
+      "rainRadarInfo": "Havaitun ja ennustetun sateen voimakkuus esitetään väreinä.",
       "mapLayersInfo": "Kartalla esitettävä sadehavainto on mitattu säätutkalla. Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkakuviin ja sääennustemalleihin. Suomen alueella aika-askel on 15 minuuttia ja Skandinavian alueella yksi tunti.",
       "timeseriesLayerInfo": "Sääennuste kartalla näyttää sääsymbolin ja lämpötilan lukuisille paikkakunnille ympäri maailman. Symbolia painamalla saa esille lisää säätietoa."
     }
@@ -452,8 +470,10 @@
     "noWarnings": "ei varoituksia voimassa",
     "noWarningsText": "Ei voimassa olevia varoituksia",
     "navigateToWarningsPage": "navigoi Varoitus-sivulle",
-    "dateAccessibilityHint": "näytä kaikki päivän aktiiviset varoitukset",
-    "warningAccessibilityHint": "näytä varoituksen tarkemmat tiedot",
+    "dateOpenHint": "näytä kaikki päivän aktiiviset varoitukset",
+    "moreAccessibilityHint": "näytä varoituksen tarkemmat tiedot",
+    "lessAccessibilityHint": "piilota varoituksen tarkemmat tiedot",
+    "infoAccessibilityLabel": "varoitusten selitteet",
     "types": {
       "thunderStorm": "Raju ukonilma",
       "wind": "Tuulivaroitus maa-alueille",
@@ -500,7 +520,8 @@
     "warningsTitle": "Varoitukset",
     "warningsDescription": "Ole tietoinen alueellasi voimassa olevista varoituksista.",
     "customizeTitle": "Muokkaa omanlaiseksi",
-    "customizeDescription": "Voit valita asetuksista, millaista säätietoa haluat katsella ja käyttää sovellusta tummalla teemalla."
+    "customizeDescription": "Voit valita asetuksista, millaista säätietoa haluat katsella ja käyttää sovellusta tummalla teemalla.",
+    "step": "Vaihe {{ current }} kautta {{ total }}"
   },
   "termsAndConditions": {
     "close": "Sulje",
@@ -524,9 +545,10 @@
   },
   "feedback": {
     "title": "Kiitos, että autat meitä kehittämään palvelujamme!",
-    "body1": "Kerro meille palautteesi sovelluksesta Lähetä palautetta -painikkeen kautta. Painikkeesta siirryt puhelimen sähköpostiohjelmaan.",
+    "body1": "Kerro meille palautteesi sovelluksesta Lähetä palautetta -painikkeen kautta. Painikkeesta siirryt laitteen sähköpostiohjelmaan.",
     "body2": "Käsittelemme kaikki palautteet, mutta emme voi taata henkilökohtaista vastausta.",
-    "sendFeedback": "Lähetä palautetta"
+    "sendFeedback": "Lähetä palautetta",
+    "moveToHint": "Siirry laitteen sähköpostiohjelmaan"
   },
   "error": {
     "forecastErrorTitle": "Tapahtui virhe ladattaessa säätietoja",

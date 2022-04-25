@@ -246,7 +246,9 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         )}
       </View>
       <View style={[styles.forecastContainer]}>
-        {loading && <ActivityIndicator />}
+        {loading && (
+          <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+        )}
         {sections && sections.length > 0 && displayFormat === TABLE && (
           <ForecastByHourList
             data={data}

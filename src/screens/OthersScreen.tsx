@@ -40,10 +40,12 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             <AccessibleTouchableOpacity
               delayPressIn={100}
               onPress={() => navigation.navigate('Settings')}
-              testID="navigation_settings">
+              testID="navigation_settings"
+              accessibilityRole="menuitem"
+              accessibilityHint={`${t('navigateTo')} ${t('settings')}`}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>{`${t(
-                  'navigation:settings'
+                  'settings'
                 )}`}</Text>
                 <Icon
                   name="arrow-forward"
@@ -61,8 +63,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               { borderBottomColor: colors.border },
             ]}>
             <View style={styles.row}>
-              <Text style={[styles.text, { color: colors.text }]}>{`${t(
-                'navigation:about'
+              <Text
+                accessibilityRole="header"
+                style={[styles.text, { color: colors.text }]}>{`${t(
+                'about'
               )}`}</Text>
             </View>
           </View>
@@ -74,11 +78,13 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('About')}>
+              onPress={() => navigation.navigate('About')}
+              accessibilityRole="menuitem"
+              accessibilityHint={`${t('navigateTo')} ${t('general')}`}>
               <View style={styles.row}>
                 <Text
                   style={[styles.textRegular, { color: colors.text }]}>{`${t(
-                  'navigation:general'
+                  'general'
                 )}`}</Text>
                 <Icon
                   name="arrow-forward"
@@ -97,11 +103,15 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('TermsAndConditions')}>
+              onPress={() => navigation.navigate('TermsAndConditions')}
+              accessibilityRole="menuitem"
+              accessibilityHint={`${t('navigateTo')} ${t(
+                'termsAndConditions'
+              )}`}>
               <View style={styles.row}>
                 <Text
                   style={[styles.textRegular, { color: colors.text }]}>{`${t(
-                  'navigation:termsAndConditions'
+                  'termsAndConditions'
                 )}`}</Text>
                 <Icon
                   name="arrow-forward"
@@ -121,11 +131,13 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('About')}>
+              onPress={() => navigation.navigate('About')}
+              accessibilityRole="menuitem"
+              accessibilityHint={`${t('navigateTo')} ${t('dataPrivacy')}`}>
               <View style={styles.row}>
                 <Text
                   style={[styles.textRegular, { color: colors.text }]}>{`${t(
-                  'navigation:dataPrivacy'
+                  'dataPrivacy'
                 )}`}</Text>
                 <Icon
                   name="arrow-forward"
@@ -144,11 +156,13 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('About')}>
+              onPress={() => navigation.navigate('About')}
+              accessibilityRole="menuitem"
+              accessibilityHint={`${t('navigateTo')} ${t('accessibility')}`}>
               <View style={styles.row}>
                 <Text
                   style={[styles.textRegular, { color: colors.text }]}>{`${t(
-                  'navigation:accessibility'
+                  'accessibility'
                 )}`}</Text>
                 <Icon
                   name="arrow-forward"
@@ -167,10 +181,12 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('GiveFeedback')}>
+              onPress={() => navigation.navigate('GiveFeedback')}
+              accessibilityRole="menuitem"
+              accessibilityHint={`${t('navigateTo')} ${t('feedback')}`}>
               <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.text }]}>{`${t(
-                  'navigation:feedback'
+                  'feedback'
                 )}`}</Text>
                 <Icon
                   name="arrow-forward"
@@ -195,6 +211,9 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
           </View>
           <View style={styles.socialRow}>
             <AccessibleTouchableOpacity
+              accessibilityLabel="Twitter"
+              accessibilityRole="link"
+              accessibilityHint={`${t('open')} Twitter`}
               onPress={() =>
                 handleSocialPress(
                   'twitter://user?screen_name=meteorologit',
@@ -208,6 +227,9 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               />
             </AccessibleTouchableOpacity>
             <AccessibleTouchableOpacity
+              accessibilityLabel="Instagram"
+              accessibilityRole="link"
+              accessibilityHint={`${t('open')} Instagram`}
               onPress={() =>
                 handleSocialPress(
                   'instagram://user?username=ilmatieteenlaitos',
@@ -221,6 +243,9 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               />
             </AccessibleTouchableOpacity>
             <AccessibleTouchableOpacity
+              accessibilityLabel="YouTube"
+              accessibilityRole="link"
+              accessibilityHint={`${t('open')} YouTube`}
               onPress={() =>
                 handleSocialPress(
                   'youtube://ilmatieteenlaitos',

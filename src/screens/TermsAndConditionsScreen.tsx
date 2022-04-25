@@ -1,7 +1,14 @@
-import React from 'react';
-import { ScrollView, Text, View, StyleSheet } from 'react-native';
+import React, { useRef } from 'react';
+import {
+  ScrollView,
+  Text,
+  View,
+  StyleSheet,
+  AccessibilityInfo,
+  findNodeHandle,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useFocusEffect } from '@react-navigation/native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -18,6 +25,17 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
 }) => {
   const { t } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
+  const titleRef = useRef() as React.MutableRefObject<Text>;
+
+  useFocusEffect(() => {
+    if (titleRef && titleRef.current) {
+      const reactTag = findNodeHandle(titleRef.current);
+      if (reactTag) {
+        AccessibilityInfo.setAccessibilityFocus(reactTag);
+      }
+    }
+  });
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
@@ -25,6 +43,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
         contentContainerStyle={styles.withPaddingBottom}
         showsVerticalScrollIndicator={false}>
         <Text
+          ref={titleRef}
           style={[styles.title, { color: colors.primaryText }]}
           accessibilityRole="header">
           {t('generalTitle')}

@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { useTheme, useRoute } from '@react-navigation/native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  AccessibilityInfo,
+  findNodeHandle,
+} from 'react-native';
+import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { CustomTheme, GRAY_1, RED } from '@utils/colors';
@@ -45,6 +51,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const headerRef = useRef() as React.MutableRefObject<View>;
   const { ageWarning } = Config.get('warnings');
 
   moment.locale(i18n.language);
@@ -52,6 +59,15 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   useEffect(() => {
     setSelectedDay(route.params?.day || 0);
   }, [route.params?.day, setSelectedDay]);
+
+  useFocusEffect(() => {
+    if (headerRef && headerRef.current) {
+      const reactTag = findNodeHandle(headerRef.current);
+      if (reactTag) {
+        AccessibilityInfo.setAccessibilityFocus(reactTag);
+      }
+    }
+  });
 
   if (!updated) {
     return null;
@@ -73,6 +89,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               <View style={styles.filler} />
             </View>
             <View
+              ref={headerRef}
               style={[styles.flex, styles.alignItems]}
               accessible
               accessibilityRole="header">
@@ -95,6 +112,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               </Text>
             </View>
             <AccessibleTouchableOpacity
+              accessibilityLabel={t('infoAccessibilityLabel')}
               onPress={() => infoSheetRef.current.open()}>
               <View style={[styles.iconPadding]}>
                 <Icon
@@ -146,7 +164,9 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                   accessibilityLabel={`${moment(date).format(
                     'dddd DD MMMM'
                   )}, ${t('hasWarnings')}: ${count}`}
-                  accessibilityHint={t('dateAccessibilityHint')}>
+                  accessibilityHint={
+                    index === selectedDay ? '' : t('dateOpenHint')
+                  }>
                   <View
                     style={[
                       styles.warningsSingleDayContainer,

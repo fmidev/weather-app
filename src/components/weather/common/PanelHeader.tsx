@@ -24,7 +24,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
       accessibilityRole="header"
       accessibilityLabel={title}
       accessibilityHint={
-        lastUpdated ? `${t('updated')} ${lastUpdated}` : undefined
+        lastUpdated ? `${t('updated')} ${lastUpdated.time}` : undefined
       }
       style={[
         styles.cardHeader,

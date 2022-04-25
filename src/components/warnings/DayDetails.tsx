@@ -39,7 +39,11 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
           <View style={styles.flex}>
             <AccessibleTouchableOpacity
               accessibilityRole="button"
-              accessibilityHint={t('warningAccessibilityHint')}
+              accessibilityHint={
+                openWarnings[index]
+                  ? t('lessAccessibilityHint')
+                  : t('moreAccessibilityHint')
+              }
               style={styles.row}
               onPress={() =>
                 setOpenWarnings({

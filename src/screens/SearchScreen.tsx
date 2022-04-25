@@ -162,15 +162,22 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         {search.length === 0 && (
-          <View style={styles.locateRow}>
+          <View
+            style={styles.locateRow}
+            accessible
+            accessibilityRole="button"
+            onAccessibilityTap={() => {
+              getGeolocation(setCurrentLocation, t);
+              navigation.goBack();
+            }}>
             <Text style={[styles.title, { color: colors.text }]}>
               {t('locate')}
             </Text>
             <IconButton
               icon="locate"
+              accessibilityLabel=""
               iconColor={colors.text}
               backgroundColor={colors.inputBackground}
-              accessibilityLabel={t('locate')}
               onPress={() => {
                 getGeolocation(setCurrentLocation, t);
                 navigation.goBack();
@@ -194,6 +201,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               }
             />
           )}
+
           {/^\s*$/.test(value) && search.length === 0 && favorites.length > 0 && (
             <AreaList
               elements={favorites}
