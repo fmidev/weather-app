@@ -5,7 +5,7 @@ import Supercluster, { AnyProps, PointFeature } from 'supercluster';
 import { Region } from 'react-native-maps';
 
 import { State } from '@store/types';
-import { MapOverlay, TimeseriesData } from '@store/map/types';
+import { MapOverlay } from '@store/map/types';
 import { selectSliderTime, selectRegion } from '@store/map/selectors';
 
 import TimeseriesMarker from './TimeseriesMarker';
@@ -29,6 +29,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   overlay,
 }) => {
   const { data } = overlay;
+
   const getZoomLevel = (longitudeDelta: number) => {
     const angle = longitudeDelta;
     return Math.round(Math.log(360 / angle) / Math.LN2);
@@ -43,7 +44,6 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
       r.latitude + r.latitudeDelta * (0.5 + padding),
     ];
   };
-  // const getRadius = () => Dimensions.get('window').width * 0.135;
 
   const clusterSelectedPoint = (
     leaves: Supercluster.PointFeature<Supercluster.AnyProps>[]
@@ -60,45 +60,24 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
     })[0];
 
   const getCluster = useCallback(
-    (clusterData: TimeseriesData[] | undefined, clusterRegion: Region) => {
+    (points: PointFeature<AnyProps>[] | undefined, clusterRegion: Region) => {
       const zoom = getZoomLevel(clusterRegion.longitudeDelta);
       const bbox = getBBox(clusterRegion);
-      const radius = 100; // getRadius();
+      const radius = 260;
 
       const markers: PointFeature<AnyProps>[] = [];
 
       const cluster = new Supercluster({
         radius,
         minPoints: 2,
+        extent: 1024,
       } as AnyProps);
 
-      if (!clusterData) {
+      if (!points) {
         return { markers, cluster };
       }
 
       try {
-        const points: PointFeature<AnyProps>[] = Object.entries(
-          clusterData
-        ).map(([lonlat, item]) => {
-          const [population] = Object.keys(item);
-          const [name] = Object.keys(item[population]);
-          const weatherData = Object.values(item[population][name]);
-
-          return {
-            type: 'Feature',
-            properties: {
-              cluster: false,
-              population: Number(population),
-              name,
-              weatherData,
-            },
-            geometry: {
-              type: 'Point',
-              coordinates: lonlat.split(',').map(Number),
-            },
-          };
-        });
-
         cluster.load(points);
         const clusters = cluster.getClusters(bbox, zoom);
 
@@ -123,9 +102,37 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
     []
   );
 
+  const points = useMemo(
+    () =>
+      Object.entries(data || [])
+        .map(([lonlat, item]) => {
+          const [population] = Object.keys(item);
+          const [name] = Object.keys(item[population]);
+          const weatherData = Object.values(item[population][name]);
+
+          return {
+            type: 'Feature',
+            properties: {
+              cluster: false,
+              population: Number(population),
+              name,
+              weatherData,
+            },
+            geometry: {
+              type: 'Point',
+              coordinates: lonlat.split(',').map(Number),
+            },
+          };
+        })
+        .sort((a, b) =>
+          a.properties.population < b.properties.population ? 1 : -1
+        ) as PointFeature<AnyProps>[],
+    [data]
+  );
+
   const { markers } = useMemo(
-    () => getCluster(data, region),
-    [data, region, getCluster]
+    () => getCluster(points, region),
+    [points, region, getCluster]
   );
 
   const renderCluster = () =>
@@ -143,7 +150,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
       return (
         <TimeseriesMarker
-          key={name}
+          key={`${name}-${longitude}-${latitude}`}
           name={name}
           coordinate={{ latitude, longitude }}
           smartSymbol={smartSymbol}
