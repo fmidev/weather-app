@@ -127,6 +127,15 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
 
   return (
     <View style={styles.container}>
+      <Text
+        style={[
+          styles.placeholderText,
+          {
+            color: colors.text,
+          },
+        ]}>
+        {t('label')}
+      </Text>
       <View
         style={[
           styles.searchBoxContainer,
@@ -140,7 +149,12 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         />
         <TextInput
           accessibilityRole="search"
-          style={[styles.input, { color: colors.text }]}
+          style={[
+            styles.input,
+            {
+              color: colors.text,
+            },
+          ]}
           autoCorrect={false}
           maxLength={40}
           placeholder={t('placeholder')}
@@ -161,7 +175,25 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
       <ScrollView
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
-        {search.length === 0 && (
+        <View style={styles.results}>
+          {search.length > 0 && (
+            <AreaList
+              elements={search}
+              title={t('searchResults')}
+              onSelect={(location) => handleSelectLocation(location, true)}
+              onIconPress={(location) => {
+                addFavorite(location as Location);
+                setValue('');
+                Keyboard.dismiss();
+              }}
+              iconNameGetter={(location) =>
+                isFavorite(location) ? 'star-selected' : 'star-unselected'
+              }
+            />
+          )}
+          {!/^\s*$/.test(value) && search.length === 0 && (
+            <Text style={{ color: colors.text }}>{t('noResults')}</Text>
+          )}
           <View
             style={styles.locateRow}
             accessible
@@ -184,25 +216,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               }}
             />
           </View>
-        )}
-        <View style={styles.results}>
-          {search.length > 0 && (
-            <AreaList
-              elements={search}
-              title={t('searchResults')}
-              onSelect={(location) => handleSelectLocation(location, true)}
-              onIconPress={(location) => {
-                addFavorite(location as Location);
-                setValue('');
-                Keyboard.dismiss();
-              }}
-              iconNameGetter={(location) =>
-                isFavorite(location) ? 'star-selected' : 'star-unselected'
-              }
-            />
-          )}
-
-          {/^\s*$/.test(value) && search.length === 0 && favorites.length > 0 && (
+          {favorites.length > 0 && (
             <AreaList
               elements={favorites}
               title={t('favorites')}
@@ -216,7 +230,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               onClear={() => deleteAllFavorites()}
             />
           )}
-          {/^\s*$/.test(value) && search.length === 0 && recent.length > 0 && (
+          {recent.length > 0 && (
             <AreaList
               elements={recent.slice(0).reverse()}
               title={t('recentSearches')}
@@ -233,10 +247,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               onClear={() => deleteAllRecentSearches()}
             />
           )}
-
-          {!/^\s*$/.test(value) && search.length === 0 && (
-            <Text style={{ color: colors.text }}>{t('noResults')}</Text>
-          )}
         </View>
       </ScrollView>
     </View>
@@ -250,11 +260,12 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     height: 48,
-    borderRadius: 6,
     flexDirection: 'row',
     alignItems: 'center',
+    borderRadius: 6,
     paddingHorizontal: 11,
     marginTop: 10,
+    justifyContent: 'center',
   },
   title: {
     fontSize: 16,
@@ -268,7 +279,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    height: '100%',
     flexGrow: 1,
     paddingVertical: 0,
     fontFamily: 'Roboto-Regular',
@@ -284,6 +294,12 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginLeft: 11,
+  },
+  placeholderText: {
+    paddingTop: 10,
+    marginLeft: 16,
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
   },
 });
 

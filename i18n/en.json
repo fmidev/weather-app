@@ -338,7 +338,8 @@
     }
   },
   "searchScreen": {
-    "placeholder": "Search location",
+    "label": "Search location",
+    "placeholder": "Enter location...",
     "recentSearches": "Previous searches",
     "favorites": "My locations",
     "searchResults": "Search results",
