@@ -127,17 +127,15 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
 
   return (
     <View style={styles.container}>
-      {value.length > 0 && (
-        <Text
-          style={[
-            styles.placeholderText,
-            {
-              color: colors.text,
-            },
-          ]}>
-          {t('placeholder')}
-        </Text>
-      )}
+      <Text
+        style={[
+          styles.placeholderText,
+          {
+            color: colors.text,
+          },
+        ]}>
+        {t('label')}
+      </Text>
       <View
         style={[
           styles.searchBoxContainer,
@@ -151,7 +149,12 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         />
         <TextInput
           accessibilityRole="search"
-          style={[styles.input, { color: colors.text }]}
+          style={[
+            styles.input,
+            {
+              color: colors.text,
+            },
+          ]}
           autoCorrect={false}
           maxLength={40}
           placeholder={t('placeholder')}
@@ -257,11 +260,12 @@ const styles = StyleSheet.create({
   },
   searchBoxContainer: {
     height: 48,
-    borderRadius: 6,
     flexDirection: 'row',
     alignItems: 'center',
+    borderRadius: 6,
     paddingHorizontal: 11,
     marginTop: 10,
+    justifyContent: 'center',
   },
   title: {
     fontSize: 16,
@@ -275,7 +279,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    height: '100%',
     flexGrow: 1,
     paddingVertical: 0,
     fontFamily: 'Roboto-Regular',
@@ -293,9 +296,10 @@ const styles = StyleSheet.create({
     marginLeft: 11,
   },
   placeholderText: {
+    paddingTop: 10,
+    marginLeft: 16,
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
-    marginTop: 10,
+    fontFamily: 'Roboto-Bold',
   },
 });
 

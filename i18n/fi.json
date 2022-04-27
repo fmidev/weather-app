@@ -339,7 +339,8 @@
     }
   },
   "searchScreen": {
-    "placeholder": "Hae paikkaa",
+    "label": "Hae paikkaa",
+    "placeholder": "Syötä sijainti...",
     "recentSearches": "Edelliset haut",
     "favorites": "Omat paikat",
     "searchResults": "Hakutulokset",
