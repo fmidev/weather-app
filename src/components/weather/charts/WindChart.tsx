@@ -45,11 +45,12 @@ const WindChart: React.FC<ChartDataProps> = ({
   const WindLabel = (datum: any) => {
     if (!datum || datum === null) return <></>;
     const { index: dIndex, x: dX } = datum;
-    if (labelData.length === 0) {
+    const index = Number(dIndex);
+
+    if (labelData.length === 0 || !labelData[index]) {
       return null;
     }
 
-    const index = Number(dIndex);
     const { x, y } = labelData[index];
     const time = moment(x);
 
