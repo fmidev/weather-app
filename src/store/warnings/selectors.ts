@@ -3,6 +3,7 @@ import { Selector, createSelector } from 'reselect';
 import moment from 'moment';
 import { State } from '../types';
 import { WarningsState } from './types';
+import { knownWarningTypes } from './constants';
 
 const selectWarningsDomain: Selector<State, WarningsState> = (state) =>
   state.warnings;
@@ -53,7 +54,10 @@ export const selectDailyWarningData = createSelector(
       const dayEnd = moment(fetchTime).endOf('day').add(i, 'days');
 
       const dailyWarnings = warnings.filter(
-        ({ severity, duration: { startTime, endTime } }) => {
+        ({ severity, type, duration: { startTime, endTime } }) => {
+          if (!knownWarningTypes.includes(type)) {
+            return false;
+          }
           if (!severityList.includes(severity)) {
             return false;
           }
