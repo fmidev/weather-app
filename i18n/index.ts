@@ -42,7 +42,7 @@ i18n
     resources: languageResources,
     ns: ['navigation'],
     defaultNS: 'navigation',
-    debug: true,
+    debug: false,
     interpolation: {
       escapeValue: false,
     },
