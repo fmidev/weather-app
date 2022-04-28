@@ -4,6 +4,7 @@ import { parse } from 'fast-xml-parser';
 
 import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
+import i18n from '@i18n';
 
 import axiosClient from './axiosClient';
 import packageJSON from '../../package.json';
@@ -117,6 +118,7 @@ const getTimeseriesData = async (
   const overlayMap = new Map();
   const toReturn = { type: 'Timeseries' } as MapOverlay;
   const [layer] = overlay.sources as TimeseriesSource[];
+  const { language } = i18n;
 
   const params = {
     timeStep: overlay.times.timeStep,
@@ -134,6 +136,7 @@ const getTimeseriesData = async (
         ? layer.keyword
         : layer.keyword.join(','),
     format: 'json',
+    lang: language,
     producer: layer.producer || 'default',
     attributes: 'lonlat,population,name',
     who: packageJSON.name,
