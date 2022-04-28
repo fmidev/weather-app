@@ -1,3 +1,5 @@
+import { knownWarningTypes, severityList } from './constants';
+
 export const FETCH_WARNINGS = 'FETCH_WARNINGS';
 export const FETCH_WARNINGS_SUCCESS = 'FETCH_WARNINGS_SUCCESS';
 export const FETCH_WARNINGS_ERROR = 'FETCH_WARNINGS_ERROR';
@@ -24,20 +26,9 @@ export type WarningsActionTypes =
   | FetchWarningsSuccess
   | FetchWarningsError;
 
-export type WarningType =
-  | 'thunderStorm'
-  | 'wind'
-  | 'rain'
-  | 'trafficWeather'
-  | 'pedestrianSafety'
-  | 'forestFireWeather'
-  | 'grassFireWeather'
-  | 'hotWeather'
-  | 'coldWeather'
-  | 'uvNote'
-  | 'flooding';
+export type WarningType = typeof knownWarningTypes[number];
 
-export type Severity = 'Moderate' | 'Severe' | 'Extreme';
+export type Severity = Exclude<typeof severityList[number], ''>;
 
 export interface Warning {
   type: WarningType;

@@ -14,6 +14,7 @@ import CloseButton from '@components/common/CloseButton';
 import { CustomTheme, GREEN, ORANGE, RED, YELLOW } from '@utils/colors';
 import useOrientation from '@utils/hooks';
 import { WarningType } from '@store/warnings/types';
+import { knownWarningTypes } from '@store/warnings/constants';
 import SeverityBar from './SeverityBar';
 import WarningSymbol from './WarningsSymbol';
 
@@ -27,18 +28,6 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   const isLandscape = useOrientation();
   const severities = [0, 1, 2, 3];
   const severityColors = [GREEN, YELLOW, ORANGE, RED];
-  const types: WarningType[] = [
-    'forestFireWeather',
-    'grassFireWeather',
-    'wind',
-    'hotWeather',
-    'coldWeather',
-    'thunderStorm',
-    'uvNote',
-    'trafficWeather',
-    'pedestrianSafety',
-    'flooding',
-  ];
 
   const SeverityBarRow = ({ severity }: { severity: number }) => (
     <View style={styles.row}>
@@ -147,7 +136,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
                 styles.withBorderBottom,
                 { borderBottomColor: colors.border },
               ]}>
-              {types.map((type) => (
+              {knownWarningTypes.map((type) => (
                 <TypeRow key={type} type={type} />
               ))}
               {severities.map((severity) => (
