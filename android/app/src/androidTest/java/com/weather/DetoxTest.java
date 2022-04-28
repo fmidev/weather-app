@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather.dev;
+package fi.fmi.mobileweather;
 
 import com.wix.detox.Detox;
 import com.wix.detox.config.DetoxConfig;
@@ -14,18 +14,18 @@ import androidx.test.rule.ActivityTestRule;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class DetoxTest {
-    @Rule
-    // Replace 'MainActivity' with the value of android:name entry in 
-    // <activity> in AndroidManifest.xml
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class, false, false);
+  @Rule
+  // Replace 'MainActivity' with the value of android:name entry in
+  // <activity> in AndroidManifest.xml
+  public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class, false, false);
 
-    @Test
-    public void runDetoxTests() {
-        DetoxConfig detoxConfig = new DetoxConfig();
-        detoxConfig.idlePolicyConfig.masterTimeoutSec = 90;
-        detoxConfig.idlePolicyConfig.idleResourceTimeoutSec = 60;
-        detoxConfig.rnContextLoadTimeoutSec = (fi.fmi.mobileweather.dev.BuildConfig.DEBUG ? 180 : 60);
+  @Test
+  public void runDetoxTests() {
+    DetoxConfig detoxConfig = new DetoxConfig();
+    detoxConfig.idlePolicyConfig.masterTimeoutSec = 90;
+    detoxConfig.idlePolicyConfig.idleResourceTimeoutSec = 60;
+    detoxConfig.rnContextLoadTimeoutSec = (fi.fmi.mobileweather.BuildConfig.DEBUG ? 180 : 60);
 
-        Detox.runTests(mActivityRule, detoxConfig);
-    }
+    Detox.runTests(mActivityRule, detoxConfig);
+  }
 }

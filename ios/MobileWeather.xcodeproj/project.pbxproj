@@ -796,7 +796,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather;
 				PRODUCT_NAME = MobileWeather;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MobileWeather-Bridging-Header.h";
@@ -825,7 +825,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather;
 				PRODUCT_NAME = MobileWeather;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MobileWeather-Bridging-Header.h";
