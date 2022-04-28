@@ -12,4 +12,4 @@ export const knownWarningTypes = [
   'flooding',
 ] as const;
 
-export default { knownWarningTypes };
+export const severityList = ['', 'Moderate', 'Severe', 'Extreme'] as const;

@@ -1,4 +1,4 @@
-import { knownWarningTypes } from './constants';
+import { knownWarningTypes, severityList } from './constants';
 
 export const FETCH_WARNINGS = 'FETCH_WARNINGS';
 export const FETCH_WARNINGS_SUCCESS = 'FETCH_WARNINGS_SUCCESS';
@@ -28,7 +28,7 @@ export type WarningsActionTypes =
 
 export type WarningType = typeof knownWarningTypes[number];
 
-export type Severity = 'Moderate' | 'Severe' | 'Extreme';
+export type Severity = Exclude<typeof severityList[number], ''>;
 
 export interface Warning {
   type: WarningType;
