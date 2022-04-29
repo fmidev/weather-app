@@ -5,8 +5,9 @@ import { Platform, NativeModules } from 'react-native';
 import { getItem, LOCALE } from '../src/utils/async_storage';
 import en from './en.json';
 import fi from './fi.json';
+import sv from './sv.json';
 
-const languageResources = { en, fi };
+const languageResources = { en, fi, sv };
 
 let systemLng =
   Platform.OS === 'ios'

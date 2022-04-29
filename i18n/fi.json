@@ -288,7 +288,7 @@
     "en": "in English",
     "languageHint": "Vaihda sovelluksen kieleksi:",
     "appearanceHint": "Vaihda sovelluksen ulkoasuksi:",
-    "locationSettingHint": "Siirry puhelimeen asetuksiin muuttaaksesi sovelluksen lupaa käyttää sijaintia"
+    "locationSettingHint": "Siirry puhelimen asetuksiin muuttaaksesi sovelluksen lupaa käyttää sijaintia"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",
@@ -517,7 +517,7 @@
     "weatherTitle": "Sääennuste ja -havainnot",
     "weatherDescription": "Voit katsella monipuolista sääennuste- ja havaintotietoa sinulle sopivassa muodossa.",
     "mapTitle": "Kartta",
-    "mapDescription": "Voit tarkistella kartalla esimerkiksi sateiden liikkeitä lähituntien aikana.",
+    "mapDescription": "Voit tarkastella kartalla esimerkiksi sateiden liikkeitä lähituntien aikana.",
     "warningsTitle": "Varoitukset",
     "warningsDescription": "Ole tietoinen alueellasi voimassa olevista varoituksista.",
     "customizeTitle": "Muokkaa omanlaiseksi",
@@ -540,7 +540,7 @@
     "rightToChangesTitle": "5. Käyttöehtojen muuttaminen ja voimassaolo",
     "rightToChangesDescription": "Käyttöehtojen muuttaminen ja voimassaolo Ilmatieteen laitoksen on oikeus muuttaa sovelluksen sisältöjä ja näitä käyttöehtoja. Käyttöehtojen muutoksesta ja sovelluksen sisältömuutoksista ilmoitetaan käyttäjälle. Jotta käyttäjä voi jatkaa sovelluksen käyttöä käyttöehtojen muutoksen jälkeen, on käyttäjän hyväksyttävä muutetut käyttöehdot sovelluksessa.",
     "applicableLawTitle": "6. Sovellettava laki ja riitatilanteet",
-    "applicableLawDescription": "Käyttöehtoihin sovelletaan Suomen lakia. Mahdolliset riitatilanteet ratkaistaan Helsingin käräjäoikeudessa.",
+    "applicableLawDescription": "Käyttöehtoihin sovelletaan Suomen lakia lukuunottamatta sen lainvalintaan koskevia säännöksiä. Mahdolliset riitatilanteet ratkaistaan Helsingin käräjäoikeudessa.",
     "contactDetailsTitle": "7. Yhteystiedot",
     "contactDetailsDescription": "Ilmatieteen laitos\nPL 503\n00101 Helsinki"
   },

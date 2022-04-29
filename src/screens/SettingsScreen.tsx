@@ -234,45 +234,41 @@ const SettingsScreen: React.FC<Props> = ({
         </View>
         <View>
           {languages &&
-            languages
-              .filter((lang) => lang !== 'sv') // TODO: remove when sv.json is added
-              .map((language) => (
-                <View
-                  key={language}
-                  style={[
-                    styles.rowWrapper,
-                    styles.withBorderBottom,
-                    { borderBottomColor: colors.border },
-                  ]}>
-                  <AccessibleTouchableOpacity
-                    onPress={() =>
-                      i18n.language === language
-                        ? {}
-                        : onChangeLanguage(language)
-                    }
-                    delayPressIn={100}
-                    accessibilityState={{
-                      selected: i18n.language === language,
-                    }}
-                    accessibilityRole="button"
-                    accessibilityHint={`${t('settings:languageHint')} ${t(
-                      `settings:${language}`
-                    )}`}>
-                    <View style={styles.row}>
-                      <Text style={[styles.text, { color: colors.text }]}>
-                        {t(`settings:${language}`)}
-                      </Text>
-                      {i18n.language === language && (
-                        <Icon
-                          name="checkmark"
-                          size={22}
-                          style={{ color: colors.text }}
-                        />
-                      )}
-                    </View>
-                  </AccessibleTouchableOpacity>
-                </View>
-              ))}
+            languages.map((language) => (
+              <View
+                key={language}
+                style={[
+                  styles.rowWrapper,
+                  styles.withBorderBottom,
+                  { borderBottomColor: colors.border },
+                ]}>
+                <AccessibleTouchableOpacity
+                  onPress={() =>
+                    i18n.language === language ? {} : onChangeLanguage(language)
+                  }
+                  delayPressIn={100}
+                  accessibilityState={{
+                    selected: i18n.language === language,
+                  }}
+                  accessibilityRole="button"
+                  accessibilityHint={`${t('settings:languageHint')} ${t(
+                    `settings:${language}`
+                  )}`}>
+                  <View style={styles.row}>
+                    <Text style={[styles.text, { color: colors.text }]}>
+                      {t(`settings:${language}`)}
+                    </Text>
+                    {i18n.language === language && (
+                      <Icon
+                        name="checkmark"
+                        size={22}
+                        style={{ color: colors.text }}
+                      />
+                    )}
+                  </View>
+                </AccessibleTouchableOpacity>
+              </View>
+            ))}
           {/* <View
             style={[
               styles.rowWrapper,
