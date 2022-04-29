@@ -13,10 +13,7 @@ interface Props {
 }
 
 const OthersScreen: React.FC<Props> = ({ navigation }) => {
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation('navigation');
+  const { t } = useTranslation('navigation');
   const { colors, dark } = useTheme();
 
   const handleSocialPress = async (appUrl: string, fallback: string) => {
@@ -200,10 +197,6 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         <View style={styles.withPaddingHorizontal}>
-          <Icon
-            name={`logo-fmi-${language}`}
-            style={[styles.withMarginBottom, { color: colors.text }]}
-          />
           <View style={styles.textWrapper}>
             <Text style={[styles.text, { color: colors.text }]}>
               {t('about:followUs')}
@@ -299,9 +292,6 @@ const styles = StyleSheet.create({
   textWrapper: {
     minHeight: 48,
     justifyContent: 'center',
-  },
-  withMarginBottom: {
-    marginBottom: 24,
   },
   withPaddingHorizontal: {
     paddingHorizontal: 12,
