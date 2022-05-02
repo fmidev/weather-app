@@ -254,12 +254,6 @@
     "navigateTo": "Navigate to:",
     "open": "Open"
   },
-  "placeholder": {
-    "weather": "Some forecast here",
-    "warnings": "Warnings will be here, eventually",
-    "settings": "General settings of the application",
-    "notifications": "Something about notification settings"
-  },
   "about": {
     "versionInfo": "Application version",
     "followUs": "Follow us",

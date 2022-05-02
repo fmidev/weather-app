@@ -254,13 +254,6 @@
     "navigateTo": "Navigoi sivulle:",
     "open": "Avaa"
   },
-  "placeholder": {
-    "weather": "Täällä olisi havaintoa ja ennustetta",
-    "warnings": "Tänne tulisi varoitukset",
-    "about": "Täällä lukisi tietoja sovelluksesta",
-    "settings": "Täällä olisi vaikka sovelluksen yleiset asetukset",
-    "notifications": "Täälä olisi jotain notifikaatioista"
-  },
   "about": {
     "versionInfo": "Sovelluksen versio",
     "followUs": "Seuraa meitä",

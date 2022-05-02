@@ -254,13 +254,6 @@
     "navigateTo": "Navigera till:",
     "open": "Öppna"
   },
-  "placeholder": {
-    "weather": "Här skulle observationer och prognoser finnas",
-    "warnings": "Hit skulle varningarna komma",
-    "about": "Här skulle man kunna läsa information om applikationen",
-    "settings": "Här skulle till exempel allmänna inställningar för applikationen finnas",
-    "notifications": "Här skulle det stå något om notifikationerna"
-  },
   "about": {
     "versionInfo": "Version av applikationen",
     "followUs": "Följ oss",
@@ -521,7 +514,8 @@
     "warningsTitle": "Varningar",
     "warningsDescription": "Var medveten om de varningar som är i kraft i ditt område.",
     "customizeTitle": "Redigera så att den passar dig",
-    "customizeDescription": "I inställningarna kan du välja vilken väderinformation du vill se och använda applikationen med ett mörkt tema."
+    "customizeDescription": "I inställningarna kan du välja vilken väderinformation du vill se och använda applikationen med ett mörkt tema.",
+    "step": "Steg {{ current }} av {{ total }}"
   },
   "termsAndConditions": {
     "close": "Stäng",
