@@ -102,7 +102,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             accessibilityLabel={stepMoment
               .locale(locale)
               .format('dddd, Do MMMM')}>
-            {stepMoment.locale(locale).format('ddd')}{' '}
+            {stepMoment.locale(locale).format('dd')}{' '}
             <Text style={[styles.bold, { color: colors.primaryText }]}>
               {stepMoment.locale(locale).format('D.M.')}
             </Text>
