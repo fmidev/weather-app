@@ -120,7 +120,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             </AccessibleTouchableOpacity>
           </View>
 
-          <View
+          {/* <View
             style={[
               styles.withBorderBottom,
               styles.withMarginLeft,
@@ -144,7 +144,8 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                 />
               </View>
             </AccessibleTouchableOpacity>
-          </View>
+          </View> */}
+
           <View
             style={[
               styles.withBorderBottom,
@@ -153,7 +154,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('About')}
+              onPress={() => navigation.navigate('Accessibility')}
               accessibilityRole="menuitem"
               accessibilityHint={`${t('navigateTo')} ${t('accessibility')}`}>
               <View style={styles.row}>
