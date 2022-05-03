@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather.dev;
+package fi.fmi.mobileweather;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;
@@ -18,6 +18,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "MobileWeatherDev";
+    return "MobileWeather";
   }
 }

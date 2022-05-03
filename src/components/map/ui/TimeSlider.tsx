@@ -99,7 +99,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const currentSliderTime = moment
     .unix(sliderTime)
     .locale(locale)
-    .format('ddd HH:mm');
+    .format('dd HH:mm');
 
   const { sliderStep, sliderTimes } = useMemo(() => {
     const minUnix = getSliderMinUnix(activeOverlayId, overlay);

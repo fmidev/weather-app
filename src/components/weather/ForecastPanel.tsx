@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
+import 'moment/locale/sv';
 import 'moment/locale/en-gb';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';

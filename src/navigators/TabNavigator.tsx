@@ -32,6 +32,7 @@ import FeedbackScreen from '@screens/FeedbackScreen';
 import SettingsScreen from '@screens/SettingsScreen';
 import SearchScreen from '@screens/SearchScreen';
 import AboutScreen from '@screens/AboutScreen';
+import AccessibilityScreen from '@screens/AccessibilityScreen';
 import WarningsScreen from '@screens/WarningsScreen';
 import SetupScreen from '@screens/SetupScreen';
 import OnboardingScreen from '@screens/OnboardingScreen';
@@ -42,6 +43,7 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
+import HeaderIcon from '@components/common/HeaderIcon';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
@@ -286,7 +288,8 @@ const Navigator: React.FC<Props> = ({
         name="StackOthers"
         component={OthersScreen}
         options={{
-          headerShown: false,
+          ...CommonHeaderOptions,
+          headerTitle: () => <HeaderIcon />,
         }}
       />
       <OthersStack.Screen
@@ -313,6 +316,14 @@ const Navigator: React.FC<Props> = ({
         options={{
           ...CommonHeaderOptions,
           headerTitle: `${t('navigation:termsAndConditions')}`,
+        }}
+      />
+      <OthersStack.Screen
+        name="Accessibility"
+        component={AccessibilityScreen}
+        options={{
+          ...CommonHeaderOptions,
+          headerTitle: `${t('navigation:accessibility')}`,
         }}
       />
       <OthersStack.Screen

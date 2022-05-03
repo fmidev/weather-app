@@ -157,18 +157,17 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
             accessibilityLabel={t('paramsBottomSheet.closeAccessibilityLabel')}
           />
         </View>
-
-        <View style={styles.sheetTitle}>
-          <Text
-            accessibilityRole="header"
-            style={[styles.title, { color: colors.primaryText }]}>
-            {t('paramsBottomSheet.title')}
-          </Text>
-        </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={isLandscape && styles.landscape}>
           <TouchableOpacity activeOpacity={1} accessible={false}>
+            <View style={styles.sheetTitle}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}>
+                {t('paramsBottomSheet.title')}
+              </Text>
+            </View>
             <View style={styles.descriptionContainer} accessible>
               <Text style={[styles.text, { color: colors.hourListText }]}>
                 {t('paramsBottomSheet.subTitle')}
