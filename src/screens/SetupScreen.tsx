@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
   },
   permissionContainer: {
     width: '100%',
+    height: 274,
     borderRadius: 8,
     marginBottom: 20,
     alignItems: 'center',
