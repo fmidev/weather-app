@@ -514,7 +514,7 @@
     "warningsTitle": "Warnings",
     "warningsDescription": "Be aware of weather warnings in force in your area.",
     "customizeTitle": "Customize",
-    "customizeDescription": "In settings, you can select which weather data you want to view and select a dark them for the app.",
+    "customizeDescription": "In settings, you can select which weather data you want to view and select a dark theme for the app.",
     "step": "Step {{ current }} of {{ total }}"
   },
   "termsAndConditions": {
