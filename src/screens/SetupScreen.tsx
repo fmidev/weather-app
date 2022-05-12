@@ -251,12 +251,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   innerContainerLandscape: {
-    position: 'relative',
-    bottom: 10,
+    bottom: 25,
   },
   permissionContainer: {
     width: '100%',
-    height: 274,
+    minHeight: 274,
     borderRadius: 8,
     marginBottom: 20,
     alignItems: 'center',
@@ -293,11 +292,10 @@ const styles = StyleSheet.create({
   button: {
     minWidth: 120,
     paddingHorizontal: 24,
-    height: 44,
+    paddingVertical: 12,
     borderRadius: 25,
   },
   textContainer: {
-    height: '100%',
     justifyContent: 'center',
   },
   text: {
