@@ -109,6 +109,13 @@ export default (
           name: action.data[item.id]?.[0]?.name || item.name,
           area: cleanAreaFromTimeseries(action.data[item.id]?.[0]) || item.area,
         })),
+        current: state.current && {
+          ...state.current,
+          name: action.data[state.current.id]?.[0]?.name || state.current.name,
+          area:
+            cleanAreaFromTimeseries(action.data[state.current.id]?.[0]) ||
+            state.current.area,
+        },
       };
     }
 
