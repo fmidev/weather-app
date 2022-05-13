@@ -109,7 +109,7 @@ const Navigator: React.FC<Props> = ({
   didLaunchApp,
   setDidLaunchApp,
 }) => {
-  const { t, ready } = useTranslation(['navigation', 'setUp'], {
+  const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
@@ -118,6 +118,9 @@ const Navigator: React.FC<Props> = ({
     (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
 
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
+  const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
+
+  i18n.on('languageChanged', () => setDidChangeLanguage(true));
 
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
@@ -127,8 +130,10 @@ const Navigator: React.FC<Props> = ({
   }, [theme, ready]);
 
   useEffect(() => {
-    if (didLaunchApp) getGeolocation(setCurrentLocation, t, true);
-  }, [didLaunchApp, setCurrentLocation, t]);
+    if (didLaunchApp && !didChangeLanguage) {
+      getGeolocation(setCurrentLocation, t, true);
+    }
+  }, [didLaunchApp, setCurrentLocation, t, didChangeLanguage]);
 
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {
