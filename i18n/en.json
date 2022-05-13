@@ -128,7 +128,7 @@
       "feelsLikeWarmer": "skin temperature feels like ≥ 2°C above the forecast temperature (°C)",
       "windSpeedAndDirection": "wind direction and speed (m/s)",
       "windDirectionArrow": "wind direction arrow",
-      "hurricane": "hurricane force",
+      "hurricane": "hurricane",
       "storm": "storm",
       "gale": "gale",
       "strongBreeze": "strong breeze",
