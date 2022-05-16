@@ -38,11 +38,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
       title: t('weatherTitle'),
       description: t('weatherDescription'),
     },
-    {
-      icon: 'map',
-      title: t('mapTitle'),
-      description: t('mapDescription'),
-    },
+    // {
+    //   icon: 'map',
+    //   title: t('mapTitle'),
+    //   description: t('mapDescription'),
+    // },
     {
       icon: 'warnings',
       title: t('warningsTitle'),
@@ -92,7 +92,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         accessibilityRole="header"
         accessibilityLabel={`${t('step', {
           current: pageIndex + 1,
-          total: 4,
+          total: 3,
         })}: ${title}`}>
         {title}
       </Text>
@@ -170,12 +170,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
             { backgroundColor: pageIndex === 2 ? colors.primary : GRAY_1 },
           ]}
         />
-        <View
+        {/* <View
           style={[
             styles.pagination,
             { backgroundColor: pageIndex === 3 ? colors.primary : GRAY_1 },
           ]}
-        />
+        /> */}
       </View>
       <AccessibleTouchableOpacity
         accessibilityRole="button"

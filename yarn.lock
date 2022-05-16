@@ -806,6 +806,11 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
+"@hmscore/react-native-hms-location@^5.1.0-303":
+  version "5.1.0-303"
+  resolved "https://registry.yarnpkg.com/@hmscore/react-native-hms-location/-/react-native-hms-location-5.1.0-303.tgz#549cc98e49f529a381c80fbffa5bd8da6b3b09f6"
+  integrity sha512-VpdpzBMcDrgdVos3jkfBp4vP47W6SPZKFSDzdPPL+KnMhaobsva9GfptgA3XlkMdx64U2bHd4lM76Kl7J5Ua7g==
+
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"

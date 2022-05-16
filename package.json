@@ -18,6 +18,7 @@
     "buildAndroidRelease": "cd android && ./gradlew clean bundleRelease"
   },
   "dependencies": {
+    "@hmscore/react-native-hms-location": "^5.1.0-303",
     "@react-native-async-storage/async-storage": "^1.15.11",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/netinfo": "^8.2.0",

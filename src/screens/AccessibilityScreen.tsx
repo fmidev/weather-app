@@ -165,14 +165,14 @@ const TermsAndConditionsScreen: React.FC = () => {
         <Text style={[styles.body, { color: colors.hourListText }]}>
           {t('description5.1')}
         </Text>
-        <Text
+        {/* <Text
           style={[styles.subTitle, { color: colors.primaryText }]}
           accessibilityRole="header">
           {t('subTitle6')}
         </Text>
         <Text style={[styles.body, { color: colors.hourListText }]}>
           {t('description6')}
-        </Text>
+        </Text> */}
         <Text
           style={[styles.title, { color: colors.primaryText }]}
           accessibilityRole="header">

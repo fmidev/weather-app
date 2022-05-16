@@ -65,3 +65,7 @@ buck-out/
 .env.production
 android/app/release/
 defaultConfig.ts
+
+# Huawei
+agconnect-services.json
+*.pem

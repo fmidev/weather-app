@@ -1,5 +1,6 @@
 import { Alert, AccessibilityInfo, Platform } from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+// @ts-ignore
+import HMSLocation from '@hmscore/react-native-hms-location';
 import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions';
 import { TFunction } from 'react-i18next';
 
@@ -18,9 +19,9 @@ const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>
 ) =>
-  Geolocation.getCurrentPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords;
+  HMSLocation.FusedLocation.Native.getLastLocation().then(
+    (pos: { latitude: number; longitude: number }) => {
+      const { latitude, longitude } = pos;
       getCurrentPosition(latitude, longitude)
         .then((json) => {
           const geoid = Number(Object.keys(json)[0]);
@@ -46,7 +47,7 @@ const getPosition = (
         })
         .catch((e) => console.error(e));
     },
-    (error) => {
+    (error: Error) => {
       console.log('GEOLOCATION NOT AVAILABLE', error);
     },
     {

@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
 
 import OthersScreen from '@screens/OthersScreen';
-import MapScreen from '@screens/MapScreen';
+// import MapScreen from '@screens/MapScreen';
 import WeatherScreen from '@screens/WeatherScreen';
 import FeedbackScreen from '@screens/FeedbackScreen';
 import SettingsScreen from '@screens/SettingsScreen';
@@ -95,7 +95,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const Tab = createBottomTabNavigator<TabParamList>();
-const MapStack = createStackNavigator();
+// const MapStack = createStackNavigator();
 const WeatherStack = createStackNavigator();
 const OthersStack = createStackNavigator<OthersStackParamList>();
 const WarningsStack = createStackNavigator();
@@ -238,21 +238,21 @@ const Navigator: React.FC<Props> = ({
     },
   });
 
-  const MapStackScreen = () => (
-    <MapStack.Navigator>
-      <MapStack.Screen
-        name="StackMap"
-        component={MapScreen}
-        options={LocationHeaderOptions}
-      />
-      <MapStack.Screen
-        name="Search"
-        component={SearchScreen}
-        options={SearchScreenOptions}
-        listeners={stackScreenListener}
-      />
-    </MapStack.Navigator>
-  );
+  // const MapStackScreen = () => (
+  //   <MapStack.Navigator>
+  //     <MapStack.Screen
+  //       name="StackMap"
+  //       component={MapScreen}
+  //       options={LocationHeaderOptions}
+  //     />
+  //     <MapStack.Screen
+  //       name="Search"
+  //       component={SearchScreen}
+  //       options={SearchScreenOptions}
+  //       listeners={stackScreenListener}
+  //     />
+  //   </MapStack.Navigator>
+  // );
 
   const WeatherStackScreen = () => (
     <WeatherStack.Navigator>
@@ -448,7 +448,7 @@ const Navigator: React.FC<Props> = ({
             options={{
               tabBarAccessibilityLabel: `${t('navigation:weather')}, 1 ${t(
                 'navigation:slash'
-              )} 4 `,
+              )} 3`,
               headerShown: false,
               tabBarTestID: 'navigation_weather',
               tabBarLabel: `${t('navigation:weather')}`,
@@ -462,7 +462,7 @@ const Navigator: React.FC<Props> = ({
               ),
             }}
           />
-          <Tab.Screen
+          {/* <Tab.Screen
             name="Map"
             component={MapStackScreen}
             options={{
@@ -477,14 +477,14 @@ const Navigator: React.FC<Props> = ({
                 <Icon name="map" style={{ color }} width={size} height={size} />
               ),
             }}
-          />
+          /> */}
           <Tab.Screen
             name="Warnings"
             component={WarningsStackScreen}
             options={{
-              tabBarAccessibilityLabel: `${t('navigation:warnings')}, 3 ${t(
+              tabBarAccessibilityLabel: `${t('navigation:warnings')}, 2 ${t(
                 'navigation:slash'
-              )} 4`,
+              )} 3`,
               headerShown: false,
               tabBarTestID: 'navigation_warnings',
               tabBarLabel: `${t('navigation:warnings')}`,
@@ -502,9 +502,9 @@ const Navigator: React.FC<Props> = ({
             name="Others"
             component={OthersStackScreen}
             options={{
-              tabBarAccessibilityLabel: `${t('navigation:others')}, 4 ${t(
+              tabBarAccessibilityLabel: `${t('navigation:others')}, 3 ${t(
                 'navigation:slash'
-              )} 4`,
+              )} 3`,
               headerShown: false,
               tabBarTestID: 'navigation_others',
               tabBarLabel: `${t('navigation:others')}`,
