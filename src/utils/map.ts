@@ -285,6 +285,13 @@ const getWMSLayerUrlsAndBounds = async (
         ...layerSrc.customParameters,
       };
 
+      const defaultRatio = {
+        width: 1454,
+        height: 2304,
+      };
+
+      const { width, height } = layerSrc?.image || defaultRatio;
+
       const query = new URLSearchParams({
         service: 'WMS',
         version: '1.3.0',
@@ -292,8 +299,8 @@ const getWMSLayerUrlsAndBounds = async (
         transparent: 'true',
         layers: layerSrc.layer,
         bbox,
-        width: '1454',
-        height: '2304',
+        width: `${width}`,
+        height: `${height}`,
         format: 'image/png',
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',

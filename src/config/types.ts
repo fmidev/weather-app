@@ -23,11 +23,17 @@ type BoundingBox = {
   maxy: number;
 };
 
+type Image = {
+  width: number;
+  height: number;
+};
+
 export type WMSSource = {
   source: string;
   layer: string;
   type: 'observation' | 'forecast';
   boundingBox?: BoundingBox;
+  image?: Image;
   customParameters?: {
     [name: string]: string | number | { dark: string; light: string };
   };
