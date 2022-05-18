@@ -286,8 +286,8 @@ const getWMSLayerUrlsAndBounds = async (
       };
 
       const defaultRatio = {
-        width: 1454,
-        height: 2304,
+        width: 1024,
+        height: 1024,
       };
 
       const { width, height } = layerSrc?.image || defaultRatio;

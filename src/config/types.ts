@@ -24,20 +24,28 @@ type BoundingBox = {
 };
 
 type Image = {
-  width: number;
-  height: number;
+  width: 256 | 512 | 1024 | 2048 | number;
+  height: 256 | 512 | 1024 | 2048 | number;
 };
 
-export type WMSSource = {
+type WMSSourceBase = {
   source: string;
   layer: string;
   type: 'observation' | 'forecast';
-  boundingBox?: BoundingBox;
-  image?: Image;
   customParameters?: {
     [name: string]: string | number | { dark: string; light: string };
   };
 };
+
+export type WMSSource =
+  | (WMSSourceBase & {
+      boundingBox: BoundingBox;
+      image: Image;
+    })
+  | (WMSSourceBase & {
+      boundingBox?: never;
+      image?: never;
+    });
 
 export type TimeseriesSource = {
   source: string;
