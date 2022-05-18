@@ -28,24 +28,18 @@ type Image = {
   height: 256 | 512 | 1024 | 2048 | number;
 };
 
-type WMSSourceBase = {
+export type WMSSource = {
   source: string;
   layer: string;
   type: 'observation' | 'forecast';
   customParameters?: {
     [name: string]: string | number | { dark: string; light: string };
   };
+  properties?: {
+    image: Image;
+    boundingBox?: BoundingBox;
+  };
 };
-
-export type WMSSource =
-  | (WMSSourceBase & {
-      boundingBox: BoundingBox;
-      image: Image;
-    })
-  | (WMSSourceBase & {
-      boundingBox?: never;
-      image?: never;
-    });
 
 export type TimeseriesSource = {
   source: string;
