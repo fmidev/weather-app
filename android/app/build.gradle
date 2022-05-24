@@ -229,6 +229,11 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    
+    implementation "androidx.core:core-ktx:1.7.0"
+
+    def work_version = "2.7.1"
+    implementation "androidx.work:work-runtime:$work_version"
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

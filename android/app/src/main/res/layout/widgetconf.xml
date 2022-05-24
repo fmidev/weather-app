@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dip">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:id="@+id/configurationLinearLayout">
+
+            <LinearLayout
+                android:id="@+id/batteryOptimizationWarning"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="64dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_warning_black" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/battery_saving" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/appSettingsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/open_settings" />
+
+            </LinearLayout>
+
+            <TextView
+        android:text="@string/define_widget_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_marginTop="10dip" />
+
+            <TextView
+        android:text="@string/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/title_padding"
+        android:id="@+id/textView" />
+
+            <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/backgroundRadioGroup"
+        android:checkedButton="@+id/optionDarkRadioButton">
+
+        <RadioButton
+            android:text="@string/dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/optionDarkRadioButton"
+            android:paddingTop="@dimen/radiobutton_padding"
+            android:paddingBottom="@dimen/radiobutton_padding"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:text="@string/light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/optionLightRadioButton"
+            android:paddingTop="@dimen/radiobutton_padding"
+            android:paddingBottom="@dimen/radiobutton_padding"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:text="@string/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/optionTransparentRadioButton"
+            android:paddingTop="@dimen/radiobutton_padding"
+            android:paddingBottom="@dimen/radiobutton_padding"
+            android:layout_weight="1" />
+    </RadioGroup>
+
+    <TextView
+        android:text="@string/Forecast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/title_padding"
+        android:id="@+id/forecastTitleTextView" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/forecastRadioGroup"
+        android:checkedButton="@+id/optionHoursRadioButton">
+
+        <RadioButton
+            android:text="@string/next_hours_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/optionHoursRadioButton"
+            android:paddingTop="@dimen/radiobutton_padding"
+            android:paddingBottom="@dimen/radiobutton_padding"
+            android:layout_weight="1" />
+
+        <RadioButton
+            android:text="@string/next_days_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/optionDaysRadioButton"
+            android:paddingTop="@dimen/radiobutton_padding"
+            android:paddingBottom="@dimen/radiobutton_padding"
+            android:layout_weight="1" />
+    </RadioGroup>
+
+    <TextView
+        android:text="@string/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/title_padding"
+        android:id="@+id/locationTextView" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationRadioGroup"
+        android:checkedButton="@+id/optionPositionedRadioButton">
+
+        <RadioButton
+            android:text="@string/positioned_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/optionPositionedRadioButton"
+            android:paddingTop="@dimen/radiobutton_padding"
+            android:paddingBottom="@dimen/radiobutton_padding"
+            android:layout_weight="1" />
+
+    </RadioGroup>
+
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/ready" />
+
+            <TextView
+                android:id="@+id/favoriteInfoTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/widget_favorite_info" />
+
+            <TextView
+        android:text="@string/widget_resize_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/noticeResizeTextview"
+        android:layout_marginTop="10dip" />
+
+            <TextView
+                android:id="@+id/privacyUrlTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:clickable="true"
+                android:linksClickable="true"
+                android:text="@string/privacy_policy" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
