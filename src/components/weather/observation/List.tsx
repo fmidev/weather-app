@@ -106,41 +106,39 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
               </Text>
             )}
             {activeParameters.includes('windDirection') &&
-              !timeStep.windDirection && (
-                <Text
-                  style={[
-                    styles.listText,
-                    styles.rowItem,
-                    styles.wdPadding,
-                    { color: colors.hourListText },
-                  ]}>
-                  -
-                </Text>
-              )}
-            {activeParameters.includes('windDirection') &&
-              !!timeStep.windDirection && (
-                <Icon
-                  accessibilityLabel={
-                    timeStep.windCompass8
-                      ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
-                      : `${t('measurements.windDirection')} ${
-                          timeStep.windDirection
-                        } ${t('paramUnits.°')}.`
-                  }
-                  name="wind-arrow"
-                  style={[
-                    styles.wdPadding,
-                    {
-                      color: colors.hourListText,
-                      transform: [
-                        {
-                          rotate: `${timeStep.windDirection + 45 - 180}deg`,
-                        },
-                      ],
-                    },
-                  ]}
-                />
-              )}
+            typeof timeStep.windDirection === 'number' ? (
+              <Icon
+                accessibilityLabel={
+                  timeStep.windCompass8
+                    ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
+                    : `${t('measurements.windDirection')} ${
+                        timeStep.windDirection
+                      } ${t('paramUnits.°')}.`
+                }
+                name="wind-arrow"
+                style={[
+                  styles.wdPadding,
+                  {
+                    color: colors.hourListText,
+                    transform: [
+                      {
+                        rotate: `${timeStep.windDirection + 45 - 180}deg`,
+                      },
+                    ],
+                  },
+                ]}
+              />
+            ) : (
+              <Text
+                style={[
+                  styles.listText,
+                  styles.rowItem,
+                  styles.wdPadding,
+                  { color: colors.hourListText },
+                ]}>
+                -
+              </Text>
+            )}
           </View>
           {activeParameters.includes('windGust') && (
             <Text
