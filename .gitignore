@@ -30,6 +30,7 @@ local.properties
 keystore.properties
 *.iml
 *.aab
+*.hprof
 
 # node.js
 #
