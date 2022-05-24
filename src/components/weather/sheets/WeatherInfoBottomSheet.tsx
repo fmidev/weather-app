@@ -857,6 +857,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 50,
     marginTop: 30,
+    maxWidth: '100%',
   },
   buttonText: {
     fontSize: 16,
