@@ -118,7 +118,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                 </Text>
               )}
             {activeParameters.includes('windDirection') &&
-              timeStep.windDirection && (
+              !!timeStep.windDirection && (
                 <Icon
                   accessibilityLabel={
                     timeStep.windCompass8
