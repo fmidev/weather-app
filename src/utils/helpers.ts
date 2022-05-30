@@ -127,6 +127,8 @@ export const toStringWithDecimal = (
   return input.toString().replace('.', separator);
 };
 
+const minusParams = ['temperature', 'dewPoint'];
+
 export const getObservationCellValue = (
   item: ObsTimeStepData,
   param: keyof ObsTimeStepData,
@@ -137,6 +139,7 @@ export const getObservationCellValue = (
   const divideWith = divider || 1;
   if (!item || !param) return '-';
   if (item[param] === null || item[param] === undefined) return '-';
+  if (!minusParams.includes(param) && Number(item[param]) < 0) return '-';
   if (item[param] !== null && item[param] !== undefined)
     return `${(Number(item[param]) / divideWith)
       .toFixed(decimal || 0)
