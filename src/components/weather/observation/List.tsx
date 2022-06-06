@@ -106,7 +106,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
               </Text>
             )}
             {activeParameters.includes('windDirection') &&
-              !timeStep.windDirection && (
+              typeof timeStep.windDirection !== 'number' && (
                 <Text
                   style={[
                     styles.listText,
@@ -118,7 +118,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                 </Text>
               )}
             {activeParameters.includes('windDirection') &&
-              timeStep.windDirection && (
+              typeof timeStep.windDirection === 'number' && (
                 <Icon
                   accessibilityLabel={
                     timeStep.windCompass8

@@ -178,6 +178,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const darkGoogleMapsStyle =
     dark && Platform.OS === 'android' ? darkMapStyle : [];
 
+  const mapMaxZoom = Platform.OS === 'android' ? 10 : 9.5;
+  const mapMinZoom = Platform.OS === 'android' ? 4 : 3.5;
+
   return (
     <View style={styles.mapContainer}>
       <MapView
@@ -186,6 +189,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
         testID="map"
         style={styles.map}
         userInterfaceStyle={dark ? 'dark' : 'light'}
+        maxZoomLevel={mapMaxZoom}
+        minZoomLevel={mapMinZoom}
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={initialRegion}
         rotateEnabled={false}
