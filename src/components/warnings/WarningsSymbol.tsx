@@ -14,7 +14,7 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({ type, severity }) => {
   };
 
   const typeMap: { [key in WarningType]: string } = {
-    thunderStorm: 'thunder-storm',
+    thunderstorm: 'thunder-storm',
     wind: 'wind',
     rain: 'rain',
     trafficWeather: 'traffic-weather',
