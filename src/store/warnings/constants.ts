@@ -1,5 +1,5 @@
 export const knownWarningTypes = [
-  'thunderStorm',
+  'thunderstorm',
   'wind',
   'rain',
   'trafficWeather',

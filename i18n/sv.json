@@ -469,7 +469,7 @@
     "lessAccessibilityHint": "dölja närmare uppgifter om varningen",
     "infoAccessibilityLabel": "Varningar förklaringar",
     "types": {
-      "thunderStorm": "Varning för våldsamt åskväder",
+      "thunderstorm": "Varning för våldsamt åskväder",
       "wind": "Vindvarning för landområden",
       "rain": "Nederbördsvarning",
       "trafficWeather": "Trafikvädret",
