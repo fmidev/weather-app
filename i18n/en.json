@@ -469,7 +469,7 @@
     "lessAccessibilityHint": "hide detailed warning description",
     "infoAccessibilityLabel": "warnings info",
     "types": {
-      "thunderStorm": "Severe thunderstorm",
+      "thunderstorm": "Severe thunderstorm",
       "wind": "Wind warning for land areas",
       "rain": "Rain warning",
       "trafficWeather": "Traffic weather",

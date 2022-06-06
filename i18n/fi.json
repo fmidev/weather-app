@@ -469,7 +469,7 @@
     "lessAccessibilityHint": "piilota varoituksen tarkemmat tiedot",
     "infoAccessibilityLabel": "varoitusten selitteet",
     "types": {
-      "thunderStorm": "Raju ukonilma",
+      "thunderstorm": "Raju ukonilma",
       "wind": "Tuulivaroitus maa-alueille",
       "rain": "Sadevaroitus",
       "trafficWeather": "Liikennesää",
