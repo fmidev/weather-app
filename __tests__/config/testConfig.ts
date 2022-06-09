@@ -105,6 +105,9 @@ const defaultConfig: ConfigType = {
     //   Temperature: ['C', 'F'],
     // },
   },
+  announcements: {
+    enabled: false,
+  },
 };
 
 export default defaultConfig;

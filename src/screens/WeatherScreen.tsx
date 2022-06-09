@@ -5,6 +5,7 @@ import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
+import { selectAnnouncements } from '@store/announcements/selectors';
 
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
@@ -18,8 +19,10 @@ import WarningsPanelSlim from '@components/warnings/WarningsPanelSlim';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
+import CrisisStrip from '@components/announcements/CrisisStrip';
 
 const mapStateToProps = (state: State) => ({
+  announcements: selectAnnouncements(state),
   location: selectCurrent(state),
 });
 
@@ -40,6 +43,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   fetchObservation,
   fetchWarnings,
   location,
+  announcements,
 }) => {
   const isFocused = useIsFocused();
   const [forecastUpdated, setForecastUpdated] = useState<number>(Date.now());
@@ -118,7 +122,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         <ScrollView
           style={[styles.container]}
           contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+          stickyHeaderIndices={announcements && [0]}>
+          <CrisisStrip style={styles.crisisStrip} />
           <NextHourForecastPanel />
           <WarningsPanelSlim />
           <ForecastPanel />
@@ -137,6 +143,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 12,
     paddingBottom: 20,
+  },
+  crisisStrip: {
+    marginHorizontal: -12,
+    marginTop: -12,
   },
 });
 

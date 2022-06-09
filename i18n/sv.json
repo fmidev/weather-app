@@ -579,5 +579,9 @@
     "link1": "Lagen om tillhandahållande av digitala tjänster (306/2019)",
     "link2": "Webbplatsen Tillgänglighetskrav",
     "openInBrowser": "Öppna i webbläsaren"
+  },
+  "announcements": {
+    "crisisPrefix": "Varning:",
+    "openInBrowser": "Öppna i webbläsaren"
   }
 }

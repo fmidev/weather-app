@@ -579,5 +579,9 @@
     "link1": "Act on the Provision of Digital Services (306/2019)",
     "link2": "Website on accessibility requirements",
     "openInBrowser": "Open in browser"
+  },
+  "announcements": {
+    "crisisPrefix": "Warning:",
+    "openInBrowser": "Open in browser"
   }
 }

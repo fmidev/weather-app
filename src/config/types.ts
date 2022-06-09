@@ -93,6 +93,20 @@ interface WarningsDisabled extends Partial<Warnings> {
   enabled: false;
 }
 
+interface Announcements {
+  updateInterval: number;
+  api: {
+    [locale: string]: string;
+  };
+}
+interface AnnouncementsEnabled extends Announcements {
+  enabled: true;
+}
+
+interface AnnouncementsDisabled extends Partial<Announcements> {
+  enabled: false;
+}
+
 interface DynamicConfig {
   readonly apiUrl: string;
   interval: number;
@@ -142,4 +156,5 @@ export interface ConfigType {
     //   [type: string]: string[];
     // };
   };
+  announcements: AnnouncementsEnabled | AnnouncementsDisabled;
 }

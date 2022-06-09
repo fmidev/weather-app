@@ -9,6 +9,9 @@ import MapReducer, { mapPersist } from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
 import NavigationReducer, { navigationPersist } from './navigation/reducer';
 import WarningsReducer, { warningsPersist } from './warnings/reducer';
+import AnnouncementsReducer, {
+  announcementsPersist,
+} from './announcements/reducer';
 
 import { PersistConfig } from './types';
 
@@ -42,5 +45,9 @@ export default combineReducers({
   warnings: persistReducer(
     persistReducerConfig(warningsPersist),
     WarningsReducer
+  ),
+  announcements: persistReducer(
+    persistReducerConfig(announcementsPersist),
+    AnnouncementsReducer
   ),
 });
