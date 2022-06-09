@@ -1,3 +1,4 @@
+import { PersistConfig } from '@store/types';
 import {
   AnnouncementsState,
   AnnouncementActionTypes,
@@ -51,4 +52,9 @@ export default (
       return state;
     }
   }
+};
+
+export const announcementsPersist: PersistConfig = {
+  key: 'announcements',
+  whitelist: [],
 };
