@@ -579,5 +579,9 @@
     "link1": "Laki digitaalisten palvelujen tarjoamisesta (306/2019)",
     "link2": "Saavutettavuusvaatimukset-verkkosivusto",
     "openInBrowser": "Avaa selaimessa"
+  },
+  "announcements": {
+    "crisisPrefix": "Varoitus:",
+    "openInBrowser": "Avaa selaimessa"
   }
 }
