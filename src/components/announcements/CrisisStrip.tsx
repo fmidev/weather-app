@@ -50,7 +50,7 @@ const CrisisStrip: React.FC<CrisisStripProps> = ({
   fetchAnnouncements,
   fetchTimestamp,
 }) => {
-  const { t } = useTranslation('accessibility');
+  const { t } = useTranslation('announcements');
   const { shouldReload } = useReloader();
   const isFocused = useIsFocused();
 
@@ -95,7 +95,9 @@ const CrisisStrip: React.FC<CrisisStripProps> = ({
           accessibilityHint={t('openInBrowser')}
           onPress={() => Linking.openURL(crisis.link)}>
           <View style={styles.textContainer}>
-            <Text style={[styles.text, styles.link]}>
+            <Text
+              style={[styles.text, styles.link]}
+              accessibilityLabel={`${t('crisisPrefix')} ${crisis.content}`}>
               {crisis.content}
               <Icon
                 name="open-in-new"
@@ -108,7 +110,11 @@ const CrisisStrip: React.FC<CrisisStripProps> = ({
         </AccessibleTouchableOpacity>
       ) : (
         <View style={styles.textContainer}>
-          <Text style={styles.text}>{crisis.content}</Text>
+          <Text
+            style={styles.text}
+            accessibilityLabel={`${t('crisisPrefix')} ${crisis.content}`}>
+            {crisis.content}
+          </Text>
         </View>
       )}
     </View>
