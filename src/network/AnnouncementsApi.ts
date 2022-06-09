@@ -7,11 +7,9 @@ const getAnnouncements = async (): Promise<Announcement[]> => {
   const { language } = i18n;
   const { api, enabled } = Config.get('announcements');
 
-  if (!enabled) return [];
+  if (!enabled || !api || !api[language]) return [];
 
   const url = api[language];
-
-  if (!url) return [];
 
   const { data } = await axiosClient({ url });
 
