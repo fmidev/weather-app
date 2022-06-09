@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   AppState,
   Appearance,
@@ -48,6 +48,7 @@ import HeaderIcon from '@components/common/HeaderIcon';
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
+import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
 import {
   PRIMARY_BLUE,
@@ -86,6 +87,7 @@ const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
   setNavigationTab: setNavigationTabAction,
   setDidLaunchApp: setDidLaunchAppAction,
+  fetchAnnouncements: fetchAnnouncementsAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -108,6 +110,7 @@ const Navigator: React.FC<Props> = ({
   initialTab,
   didLaunchApp,
   setDidLaunchApp,
+  fetchAnnouncements,
 }) => {
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
@@ -120,7 +123,17 @@ const Navigator: React.FC<Props> = ({
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
 
-  i18n.on('languageChanged', () => setDidChangeLanguage(true));
+  const handleLanguageChanged = useCallback(() => {
+    setDidChangeLanguage(true);
+    fetchAnnouncements();
+  }, [fetchAnnouncements]);
+
+  useEffect(() => {
+    i18n.on('languageChanged', handleLanguageChanged);
+    return () => {
+      i18n.off('languageChanged', handleLanguageChanged);
+    };
+  }, [handleLanguageChanged, i18n]);
 
   // hide splash screen only when theme is known to avoid weird behavior
   useEffect(() => {
@@ -132,8 +145,15 @@ const Navigator: React.FC<Props> = ({
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
       getGeolocation(setCurrentLocation, t, true);
+      fetchAnnouncements();
     }
-  }, [didLaunchApp, setCurrentLocation, t, didChangeLanguage]);
+  }, [
+    didLaunchApp,
+    setCurrentLocation,
+    t,
+    didChangeLanguage,
+    fetchAnnouncements,
+  ]);
 
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {

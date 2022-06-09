@@ -23,15 +23,21 @@ export const selectAnnouncements = createSelector(
 
 export const selectCrisis = createSelector(
   selectAnnouncements,
-  (announcements) => announcements.filter((a) => a.type === 'Crisis')
+  (announcements) =>
+    announcements &&
+    announcements.length > 0 &&
+    announcements.filter((a) => a.type === 'Crisis')[0]
+);
+
+export const selectMaintenance = createSelector(
+  selectAnnouncements,
+  (announcements) =>
+    announcements &&
+    announcements.length > 0 &&
+    announcements.filter((a) => a.type === 'Maintenance')[0]
 );
 
 export const selectFetchTimestamp = createSelector(
   selectAnnouncementsDomain,
   (announcements) => announcements.fetchTimestamp
-);
-
-export const selectAnnouncementsAge = createSelector(
-  selectAnnouncementsDomain,
-  (announcements) => Date.now() - announcements.fetchSuccessTime
 );

@@ -8,12 +8,15 @@ import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import WarningsWebViewPanel from '@components/warnings/WarningsWebViewPanel';
 import WarningsPanel from '@components/warnings/WarningsPanel';
+import CrisisStrip from '@components/announcements/CrisisStrip';
 import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrent } from '@store/location/selector';
+import { selectAnnouncements } from '@store/announcements/selectors';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
+  announcements: selectAnnouncements(state),
 });
 
 const mapDispatchToProps = {
@@ -28,6 +31,7 @@ type WarningsScreenProps = PropsFromRedux;
 const WarningsScreen: React.FC<WarningsScreenProps> = ({
   fetchWarnings,
   location,
+  announcements,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const isFocused = useIsFocused();
@@ -70,7 +74,9 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
       <ScrollView
         style={[styles.container, { backgroundColor: colors.screenBackground }]}
         contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={announcements && [0]}>
+        <CrisisStrip style={styles.crisisStrip} />
         <WarningsPanel />
         <WarningsWebViewPanel />
       </ScrollView>
@@ -88,6 +94,11 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 12,
     paddingBottom: 20,
+  },
+  crisisStrip: {
+    marginHorizontal: -12,
+    marginTop: -12,
+    marginBottom: 12,
   },
 });
 

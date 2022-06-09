@@ -13,6 +13,7 @@ import ArrowRight from '@assets/images/icons/arrow-right.svg';
 import ArrowUp from '@assets/images/icons/arrow-up.svg';
 import Clock from '@assets/images/icons/clock.svg';
 import Close from '@assets/images/icons/close.svg';
+import CrisisStripIcon from '@assets/images/icons/crisis-strip-icon.svg';
 import DewPoint from '@assets/images/icons/dew-point.svg';
 import FeelsLikeColder from '@assets/images/icons/feels-like-colder.svg';
 import FeelsLikeWarmer from '@assets/images/icons/feels-like-warmer.svg';
@@ -151,6 +152,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Clock {...(props as SvgProps)} />;
     case 'close':
       return <Close {...(props as SvgProps)} />;
+    case 'crisis-strip-icon':
+      return <CrisisStripIcon {...(props as SvgProps)} />;
     case 'dew-point':
       return <DewPoint {...(props as SvgProps)} />;
     case 'feels-like-colder':
