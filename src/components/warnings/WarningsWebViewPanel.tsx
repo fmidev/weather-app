@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
 import { useIsFocused, useTheme } from '@react-navigation/native';
@@ -81,7 +81,7 @@ const WarningsWebViewPanel: React.FC = () => {
   </html>`;
 
   return (
-    <View>
+    <View style={styles.cardWrapper}>
       <PanelHeader title={`${t('allWarnings')}`} justifyCenter />
       <WebView
         ref={webViewRef}
@@ -96,5 +96,11 @@ const WarningsWebViewPanel: React.FC = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  cardWrapper: {
+    marginHorizontal: 12,
+  },
+});
 
 export default WarningsWebViewPanel;

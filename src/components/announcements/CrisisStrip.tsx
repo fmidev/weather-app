@@ -91,10 +91,11 @@ const CrisisStrip: React.FC<CrisisStripProps> = ({
       <WarningsIcon />
       {isLink ? (
         <AccessibleTouchableOpacity
+          style={styles.textContainer}
           accessibilityRole="link"
           accessibilityHint={t('openInBrowser')}
           onPress={() => Linking.openURL(crisis.link)}>
-          <View style={styles.textContainer}>
+          <View>
             <Text
               style={[styles.text, styles.link]}
               accessibilityLabel={`${t('crisisPrefix')} ${crisis.content}`}>
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
   textContainer: {
     marginLeft: 12,
     flexShrink: 1,
+    alignItems: 'flex-start',
   },
   link: {
     textDecorationLine: 'underline',
