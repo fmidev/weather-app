@@ -257,6 +257,8 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
 
 const styles = StyleSheet.create({
   cardWrapper: {
+    marginHorizontal: 12,
+    marginTop: 12,
     borderRadius: 8,
     marginBottom: 8,
     shadowOffset: {

@@ -132,6 +132,7 @@ const WarningsPanelSlim: React.FC<WarningsPanelSlimProps> = ({
 
 const styles = StyleSheet.create({
   cardWrapper: {
+    marginHorizontal: 12,
     borderRadius: 8,
     marginBottom: 8,
     shadowOffset: {

@@ -89,16 +89,12 @@ const styles = StyleSheet.create({
   },
   container: {
     minHeight: '100%',
-    paddingHorizontal: 12,
   },
   contentContainer: {
-    paddingTop: 12,
     paddingBottom: 20,
   },
   crisisStrip: {
-    marginHorizontal: -12,
-    marginTop: -12,
-    marginBottom: 12,
+    elevation: 10,
   },
 });
 

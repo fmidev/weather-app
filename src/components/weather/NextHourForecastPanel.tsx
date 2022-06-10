@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 24,
-    paddingHorizontal: 32,
+    paddingHorizontal: 44,
   },
   row: {
     flexDirection: 'row',
