@@ -8,6 +8,10 @@
 
 Follow this [guide](https://reactnative.dev/docs/environment-setup) for setting up React Native development environment.
 
+### **Android**
+
+- Obtain Google Maps API key and place it in `.env`. Guides and troubleshooting from [react-native-maps documentation](https://github.com/react-native-maps/react-native-maps/blob/master/docs/installation.md#the-map-background-is-blank-google-maps)
+
 ## **Installation**
 
 `git clone https://github.com/fmidev/weather-app.git `
@@ -39,16 +43,20 @@ Before running iOS or Android start metro: `yarn start`
 4. Build the APK with Android Studio: Build -> Build Bundles(s) / APK(s) -> Build APK(s).
 5. Copy the built APK to the device and install it to the device.
 6. Check that your device show's in `adb`'s list of devices, for example:
+
 ```
 ➜  sdk ./platform-tools/adb devices
 List of devices attached
 R5CR207HAFP	device
 ```
+
 7. Connect to the development server, for example:
+
 ```
 ➜  sdk ./platform-tools/adb reverse tcp:8081 tcp:8081
 8081
 ```
+
 8. The application should run now when opened in the device.
 
 #### **Run in development environment (iOS)**
