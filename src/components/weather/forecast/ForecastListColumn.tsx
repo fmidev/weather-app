@@ -30,7 +30,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
     ({ parameters }) => parameters
   );
 
-  const time = moment.unix(data.epochtime).format('HH:mm');
+  const time = moment.unix(data.epochtime).format('HH');
   const smartSymbol = weatherSymbolGetter(
     (data.smartSymbol || 0).toString(),
     dark
@@ -42,7 +42,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
       key={data.epochtime}
       style={[
         styles.hourColumn,
-        ...(time === '00:00'
+        ...(time === '00'
           ? [
               styles.dayChangeBorder,
               {
