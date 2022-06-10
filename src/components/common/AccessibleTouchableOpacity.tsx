@@ -8,7 +8,7 @@ import {
 
 const AccessibleTouchableOpacity: React.FC<TouchableOpacityProps> = (props) => {
   const { style } = props;
-  return <TouchableOpacity {...props} style={[style, styles.minDimensions]} />;
+  return <TouchableOpacity {...props} style={[styles.minDimensions, style]} />;
 };
 const styles = StyleSheet.create({
   minDimensions: {
