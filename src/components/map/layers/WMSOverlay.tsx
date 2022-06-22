@@ -13,7 +13,7 @@ import {
 import { State } from '@store/types';
 import { Layer, MapOverlay } from '@store/map/types';
 import { selectActiveOverlay, selectSliderTime } from '@store/map/selectors';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useIsFocused } from '@react-navigation/native';
 import packageJSON from '../../../../package.json';
 
 const mapStateToProps = (state: State) => ({
@@ -37,6 +37,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const { dark } = useTheme();
   const observation = overlay.observation as Layer;
   const forecast = overlay.forecast as Layer;
+  const isFocused = useIsFocused();
 
   const [borderTime, setBorderTime] = useState<{
     time: string;
@@ -146,7 +147,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const image = formatUrlWithStyles(current) as ImageURISource;
 
   // return null until something to return
-  if (!image || !bounds || sliderTime === 0) return null;
+  if (!image || !bounds || sliderTime === 0 || !isFocused) return null;
 
   return <Overlay bounds={bounds} image={image} />;
 };
