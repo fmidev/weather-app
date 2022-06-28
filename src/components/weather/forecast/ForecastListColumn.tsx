@@ -55,11 +55,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
       <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
         <Text
           accessibilityLabel={`${t('forecast:at')} ${time}.`}
-          style={[
-            styles.hourText,
-            styles.medium,
-            { color: colors.hourListText },
-          ]}>
+          style={[styles.hourText, { color: colors.hourListText }]}>
           {time}
         </Text>
       </View>
@@ -112,7 +108,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               {activeParameters.includes('windSpeedMS') && (
                 <Text
                   style={[
-                    styles.hourText,
+                    styles.regularText,
                     styles.withMarginTop,
                     { color: colors.hourListText },
                   ]}>
@@ -134,10 +130,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
               ]}>
               <Text
-                style={[
-                  styles.hourText,
-                  { color: colors.hourListText },
-                ]}>{`${data.temperature}`}</Text>
+                style={[styles.regularText, { color: colors.hourListText }]}>
+                {`${data.temperature}`}°
+              </Text>
             </View>
           );
         }
@@ -154,7 +149,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               ]}>
               <Text
                 style={[
-                  styles.hourText,
+                  styles.regularText,
                   { color: colors.hourListText },
                 ]}>{`${data.feelsLike}`}</Text>
             </View>
@@ -174,7 +169,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   value: data.dewPoint,
                 })}
                 style={[
-                  styles.hourText,
+                  styles.regularText,
                   { color: colors.hourListText },
                 ]}>{`${data.dewPoint}`}</Text>
             </View>
@@ -196,7 +191,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               accessibilityLabel={t(`forecast:params:${param}`, {
                 value: toDisplay,
               })}
-              style={[styles.hourText, { color: colors.hourListText }]}>
+              style={[styles.regularText, { color: colors.hourListText }]}>
               {param === constants.PRECIPITATION_1H &&
               typeof toDisplay === 'number' &&
               toDisplay >= 0
@@ -211,9 +206,6 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
 };
 
 const styles = StyleSheet.create({
-  medium: {
-    fontFamily: 'Roboto-Medium',
-  },
   withMarginTop: {
     marginTop: 2,
   },
@@ -235,6 +227,10 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  regularText: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
   },
 });
 

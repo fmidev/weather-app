@@ -29,7 +29,9 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         },
       ]}>
       <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
-        <Icon name="clock" color={colors.hourListText} />
+        <Text style={[styles.hourBlockText, { color: colors.hourListText }]}>
+          klo
+        </Text>
       </View>
       {displayParams.map(([i, param], index) => {
         if (param === constants.WIND_SPEED_AND_DIRECTION) {
@@ -167,6 +169,10 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  hourBlockText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Medium',
   },
   panelText: {
     fontSize: 14,
