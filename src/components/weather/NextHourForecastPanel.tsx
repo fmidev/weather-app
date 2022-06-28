@@ -63,9 +63,6 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     dark
   );
 
-  const sunrise = moment(`${nextHourForecast.sunrise}Z`);
-  const sunset = moment(`${nextHourForecast.sunset}Z`);
-
   const numericOrDash = (val: number | undefined | null): string => {
     if (!Number.isInteger(val)) return '-';
     return `${val}`;
@@ -74,7 +71,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.alignCenter} accessible accessibilityRole="header">
-        <Text style={[styles.text, { color: colors.primaryText }]}>
+        <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
           {t('nextHourForecast')}
         </Text>
         <Text
@@ -108,20 +105,6 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
         )}
       </View>
       <View style={[styles.feelsLikeRow, styles.withMarginBottom]}>
-        <View style={styles.row}>
-          {activeParameters.includes('uvCumulated') && (
-            <Text
-              style={[styles.text, { color: colors.hourListText }]}
-              accessibilityLabel={t('params.uvCumulated', {
-                value: numericOrDash(nextHourForecast.uvCumulated),
-              })}>
-              {'UV '}
-              <Text style={styles.bold}>
-                {numericOrDash(nextHourForecast.uvCumulated)}
-              </Text>
-            </Text>
-          )}
-        </View>
         <View style={[styles.row, styles.alignEnd]}>
           {activeParameters.includes('feelsLike') && (
             <>
@@ -150,8 +133,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           )}
         </View>
       </View>
-      <View style={[styles.separator, styles.withMarginBottom]} />
-      <View style={[styles.row, styles.justifySpaceBetween]}>
+      <View style={[styles.separator]} />
+      <View
+        style={[styles.row, styles.justifySpaceBetween, styles.bottomInfoRow]}>
         <View
           accessible
           style={styles.row}
@@ -194,10 +178,8 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                   ]}>
                   {numericOrDash(nextHourForecast.windSpeedMS)}
                 </Text>
-              </View>
-              <View style={styles.row}>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
-                  m/s
+                  {' m/s'}
                 </Text>
               </View>
             </View>
@@ -224,53 +206,19 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             </>
           )}
         </View>
-        <View
-          accessible
-          style={styles.row}
-          accessibilityLabel={`${t('forecast:sunrise')} ${t(
-            'forecast:at'
-          )} ${sunrise.format('HH:mm')} ${t('forecast:sunset')} ${t(
-            'at'
-          )} ${sunset.format('HH:mm')}`}>
-          <Icon
-            name="sun"
-            color={colors.hourListText}
-            style={styles.withSmallMarginRight}
-          />
-          <View>
-            <View style={styles.row}>
-              <Icon
-                name="sun-arrow-up"
-                size={14}
-                color={colors.hourListText}
-                style={styles.withSmallMarginRight}
-              />
-              <Text
-                style={[
-                  styles.text,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {sunrise.format('HH:mm')}
+        <View style={styles.row}>
+          {activeParameters.includes('uvCumulated') && (
+            <Text
+              style={[styles.text, { color: colors.hourListText }]}
+              accessibilityLabel={t('params.uvCumulated', {
+                value: numericOrDash(nextHourForecast.uvCumulated),
+              })}>
+              {'UV '}
+              <Text style={styles.bold}>
+                {numericOrDash(nextHourForecast.uvCumulated)}
               </Text>
-            </View>
-            <View style={styles.row}>
-              <Icon
-                name="sun-arrow-down"
-                size={14}
-                color={colors.hourListText}
-                style={styles.withSmallMarginRight}
-              />
-              <Text
-                style={[
-                  styles.text,
-                  styles.bold,
-                  { color: colors.hourListText },
-                ]}>
-                {sunset.format('HH:mm')}
-              </Text>
-            </View>
-          </View>
+            </Text>
+          )}
         </View>
       </View>
     </View>
@@ -279,7 +227,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 24,
+    paddingTop: 24,
     paddingHorizontal: 44,
   },
   row: {
@@ -292,8 +240,8 @@ const styles = StyleSheet.create({
   },
   feelsLikeRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    justifyContent: 'center',
+    marginHorizontal: 'auto',
   },
   alignStart: {
     alignItems: 'flex-start',
@@ -303,9 +251,6 @@ const styles = StyleSheet.create({
   },
   withMarginRight: {
     marginRight: 8,
-  },
-  withSmallMarginRight: {
-    marginRight: 4,
   },
   alignEnd: {
     alignItems: 'flex-end',
@@ -318,13 +263,14 @@ const styles = StyleSheet.create({
     height: 1,
     opacity: 0.2,
     backgroundColor: GRAY_1,
+    marginBottom: 8,
   },
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
   },
   unitText: {
-    fontSize: 20,
+    fontSize: 24,
     fontFamily: 'Roboto-Regular',
     paddingTop: 12,
   },
@@ -337,6 +283,9 @@ const styles = StyleSheet.create({
   temperatureText: {
     fontSize: 72,
     fontFamily: 'Roboto-Light',
+  },
+  bottomInfoRow: {
+    marginBottom: 11,
   },
 });
 
