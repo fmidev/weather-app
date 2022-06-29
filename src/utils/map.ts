@@ -197,6 +197,7 @@ const getWMSLayerUrlsAndBounds = async (
         params: {
           service: 'WMS',
           request: 'GetCapabilities',
+          layout: 'flat',
           who: packageJSON.name,
           ...(src.includes('smartmet')
             ? {
