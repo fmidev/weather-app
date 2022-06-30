@@ -78,7 +78,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   const formatUrlWithStyles = (timestamp: string): string | false => {
     const isForecast = borderTimeComparer(timestamp);
-    const { url, styles } = isForecast ? forecast : observation;
+    const { url, styles } = (isForecast ? forecast : observation) || {};
     if (!url) {
       return false;
     }
