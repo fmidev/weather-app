@@ -8,12 +8,12 @@ export const WHITE_TRANSPARENT = 'rgba(255,255,255,0.0)';
 export const WHITE_OPACITY = 'rgba(255,255,255,0.07)';
 export const TRANSPARENT = 'transparent';
 
-export const FREEZING = 'rgb(206,218,255)';
-export const REALLY_COLD = 'rgb(214,233,254)';
-export const COLD = '#E3EEFC';
-export const WARM = '#FEF3D9';
-export const REALLY_WARM = 'rgb(255,240,204)';
-export const HOT = 'rgb(253,227,193)';
+export const FREEZING = '#CCDAFF';
+export const REALLY_COLD = '#CBE2FE';
+export const COLD = '#DEEEFF';
+export const WARM = '#FEEFCB';
+export const REALLY_WARM = '#FEE9B7';
+export const HOT = '#FDDCB6';
 
 export const BLACK = '#000000';
 export const GRAY_8 = '#E6E6E6';
