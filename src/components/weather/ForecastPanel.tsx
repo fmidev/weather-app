@@ -306,9 +306,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
 
 const styles = StyleSheet.create({
   panelWrapper: {
-    marginHorizontal: 12,
     borderRadius: 8,
-    marginBottom: 8,
     shadowOffset: {
       width: -2,
       height: 2,
@@ -328,8 +326,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forecastContainer: {
-    marginLeft: 8,
-    marginBottom: 8,
     flex: 1,
   },
   forecastText: {

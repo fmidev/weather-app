@@ -15,7 +15,6 @@ import GradientWrapper from '@components/weather/GradientWrapper';
 import NextHourForecastPanel from '@components/weather/NextHourForecastPanel';
 import ForecastPanel from '@components/weather/ForecastPanel';
 import ObservationPanel from '@components/weather/ObservationPanel';
-import WarningsPanelSlim from '@components/warnings/WarningsPanelSlim';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
@@ -126,7 +125,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           stickyHeaderIndices={announcements && [0]}>
           <CrisisStrip style={styles.crisisStrip} />
           <NextHourForecastPanel />
-          <WarningsPanelSlim />
           <ForecastPanel />
           <ObservationPanel />
         </ScrollView>
