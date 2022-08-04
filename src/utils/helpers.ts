@@ -13,6 +13,7 @@ import { getCurrentPosition } from '@network/WeatherApi';
 import { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
 import { Rain } from './colors';
+import { converter } from './units';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -134,37 +135,42 @@ export const getObservationCellValue = (
   param: keyof ObsTimeStepData,
   unit: string,
   decimal?: number,
-  divider?: number
+  divider?: number,
+  showUnit?: boolean
 ): string => {
   const divideWith = divider || 1;
   if (!item || !param) return '-';
   if (item[param] === null || item[param] === undefined) return '-';
   if (!minusParams.includes(param) && Number(item[param]) < 0) return '-';
   if (item[param] !== null && item[param] !== undefined)
-    return `${(Number(item[param]) / divideWith)
+    return `${(
+      converter(unit.replace('°', ''), Number(item[param])) / divideWith
+    )
       .toFixed(decimal || 0)
       .toString()
-      .replace('.', ',')} ${unit}`.trim();
+      .replace('.', ',')} ${showUnit ? unit : ''}`.trim();
   return '-';
 };
 
 export const getParameterUnit = (
   param: keyof (ObsTimeStepData | ForTimeStepData)
 ): string => {
+  const { wind, temperature, precipitation, pressure } =
+    Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
     case 'ri_10min':
-      return 'mm';
+      return precipitation;
     case 'humidity':
       return '%';
     case 'temperature':
     case 'dewPoint':
-      return '°C';
+      return `°${temperature}`;
     case 'windSpeedMS':
     case 'windGust':
-      return 'm/s';
+      return wind;
     case 'pressure':
-      return 'hPa';
+      return pressure;
     case 'visibility':
       return 'km';
     case 'snowDepth':

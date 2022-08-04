@@ -152,9 +152,12 @@ export interface ConfigType {
   warnings: WarningsEnabled | WarningsDisabled;
   settings: {
     languages: string[];
-    // units: {
-    //   [type: string]: string[];
-    // };
+    units: {
+      temperature: string;
+      precipitation: string;
+      wind: string;
+      pressure: string;
+    };
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
 }

@@ -93,7 +93,8 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
             : parameter,
           unit,
           decimals,
-          divider || 1
+          divider || 1,
+          true
         );
 
         if (parameter === 'totalCloudCover' && value !== '-') {
