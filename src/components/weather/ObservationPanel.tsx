@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   },
   panelContainer: {
     paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingHorizontal: 18,
   },
   panelText: {
     fontSize: 14,
@@ -309,7 +309,6 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   panelWrapper: {
-    marginHorizontal: 12,
     borderRadius: 8,
     marginBottom: 8,
     shadowOffset: {

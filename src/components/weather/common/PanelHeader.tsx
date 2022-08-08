@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme, RED } from '@utils/colors';
+import { CustomTheme, RED, WHITE } from '@utils/colors';
 
 type PanelHeaderProps = {
   title: string;
@@ -30,18 +30,16 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
         styles.cardHeader,
         justifyCenter && styles.justifyCenter,
         {
-          backgroundColor: colors.background,
+          backgroundColor: colors.cardHeader,
           borderBottomColor: colors.border,
         },
       ]}>
-      <Text style={[styles.headerTitle, { color: colors.primaryText }]}>
-        {title}
-      </Text>
+      <Text style={[styles.headerTitle, { color: WHITE }]}>{title}</Text>
       {lastUpdated?.time && (
         <Text
           style={[
             styles.updatedText,
-            { color: lastUpdated.ageCheck ? RED : colors.hourListText },
+            { color: lastUpdated.ageCheck ? RED : WHITE },
           ]}>
           {t('updated')} <Text style={styles.bold}>{lastUpdated.time}</Text>
         </Text>
@@ -52,8 +50,6 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
 
 const styles = StyleSheet.create({
   cardHeader: {
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 11,
     borderBottomWidth: 1,

@@ -257,10 +257,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
 
 const styles = StyleSheet.create({
   cardWrapper: {
-    marginHorizontal: 12,
     marginTop: 12,
-    borderRadius: 8,
-    marginBottom: 8,
     shadowOffset: {
       width: -2,
       height: 2,
@@ -311,7 +308,6 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     paddingVertical: 12,
-    paddingHorizontal: 12,
   },
   cardText: {
     fontSize: 14,
@@ -334,8 +330,8 @@ const styles = StyleSheet.create({
   },
   weekWarningsContainer: {
     marginTop: 20,
-    borderWidth: 1,
-    borderRadius: 4,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
     marginVertical: 12,
   },
   warningDaysContainer: {
