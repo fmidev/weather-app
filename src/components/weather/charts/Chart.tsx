@@ -13,6 +13,7 @@ import moment from 'moment';
 import { chartTickValues, chartXDomain, chartYDomain } from '@utils/chart';
 
 import { Config } from '@config';
+import { converter } from '@utils/units';
 import { ChartData, ChartType, ChartValues, ChartMinMax } from './types';
 import ChartLegend from './Legend';
 import chartSettings from './settings';
@@ -43,6 +44,7 @@ const Chart: React.FC<ChartProps> = ({
   const { t, i18n } = useTranslation('weather');
   moment.locale(i18n.language);
 
+  const units = useMemo(() => Config.get('settings').units, []);
   const { timePeriod } = Config.get('weather').observation;
 
   const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
@@ -99,7 +101,7 @@ const Chart: React.FC<ChartProps> = ({
         data?.map((step) => {
           const x = step.epochtime * 1000;
           // @ts-ignore
-          const y = step[param];
+          const y = converter(units[chartType], step[param]);
           if (param !== 'windDirection' && param !== 'pop') {
             minMax.push(y);
           }
@@ -109,7 +111,7 @@ const Chart: React.FC<ChartProps> = ({
     });
 
     return { chartValues: values, chartMinMax: minMax };
-  }, [data, params]);
+  }, [data, params, units, chartType]);
 
   const tickValues = useMemo(
     () =>
