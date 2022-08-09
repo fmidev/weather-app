@@ -13,7 +13,7 @@ import { getCurrentPosition } from '@network/WeatherApi';
 import { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
 import { Rain } from './colors';
-import { converter } from './units';
+import { converter, toPrecision, UNITS } from './units';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -130,6 +130,18 @@ export const toStringWithDecimal = (
 
 const minusParams = ['temperature', 'dewPoint'];
 
+export const convertValueToUnitPrecision = (
+  unit: string,
+  unitAbb: string,
+  val: number | undefined | null
+) => {
+  const result =
+    val || val === 0
+      ? toPrecision(unit, unitAbb, converter(unitAbb, val))
+      : null;
+  return result;
+};
+
 export const getObservationCellValue = (
   item: ObsTimeStepData,
   param: keyof ObsTimeStepData,
@@ -138,17 +150,33 @@ export const getObservationCellValue = (
   divider?: number,
   showUnit?: boolean
 ): string => {
+  const unitAbb = unit.replace('°', ''); // get rid of ° in temperature units
+  const unitParameterObject = UNITS.find((x) =>
+    x.unitTypes.find((unitDefinition) => unitDefinition.unitAbb === unitAbb)
+  );
+
   const divideWith = divider || 1;
   if (!item || !param) return '-';
   if (item[param] === null || item[param] === undefined) return '-';
   if (!minusParams.includes(param) && Number(item[param]) < 0) return '-';
-  if (item[param] !== null && item[param] !== undefined)
-    return `${(
-      converter(unit.replace('°', ''), Number(item[param])) / divideWith
+  if (item[param] !== null && item[param] !== undefined) {
+    const dividedValue = Number(item[param]) / divideWith;
+    const value = unitParameterObject
+      ? convertValueToUnitPrecision(
+          unitParameterObject.parameterName,
+          unitAbb,
+          Number(dividedValue)
+        )
+      : dividedValue;
+    if (!value) return '-';
+
+    return `${(unitParameterObject
+      ? value
+      : Number(value).toFixed(decimal || 0)
     )
-      .toFixed(decimal || 0)
       .toString()
       .replace('.', ',')} ${showUnit ? unit : ''}`.trim();
+  }
   return '-';
 };
 
