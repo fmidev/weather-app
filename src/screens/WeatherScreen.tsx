@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Platform } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
@@ -138,7 +138,11 @@ const styles = StyleSheet.create({
     minHeight: '100%',
   },
   contentContainer: {
-    paddingBottom: 20,
+    ...Platform.select({
+      android: {
+        paddingBottom: 28,
+      },
+    }),
   },
   crisisStrip: {
     elevation: 10,
