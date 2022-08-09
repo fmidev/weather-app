@@ -22,7 +22,7 @@ import { CustomTheme, GRAY_1 } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
-import { converter } from '@utils/units';
+import { converter, toPrecision } from '@utils/units';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -68,18 +68,44 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     dark
   );
 
-  const numericOrDash = (val: number | undefined | null): string => {
-    if (Number.isNaN(val)) return '-';
-    return `${Math.round(val)}`;
+  const numericOrDash = (val: string | undefined | null): string =>
+    val && !Number.isNaN(val) ? val : '-';
+
+  const convertValue = (
+    unit: string,
+    unitAbb: string,
+    val: number | undefined | null
+  ) => {
+    const result =
+      val || val === 0
+        ? toPrecision(unit, unitAbb, converter(unitAbb, val))
+        : null;
+    return result;
   };
 
-  const temperatureValue =
-    nextHourForecast.temperature &&
-    converter(temperatureUnit, nextHourForecast.temperature);
+  const temperatureValue = convertValue(
+    'temperature',
+    temperatureUnit,
+    nextHourForecast.temperature
+  );
 
-  const feelsLikeValue =
-    nextHourForecast.feelsLike &&
-    converter(temperatureUnit, nextHourForecast.feelsLike);
+  const feelsLikeValue = convertValue(
+    'temperature',
+    temperatureUnit,
+    nextHourForecast.feelsLike
+  );
+
+  const windSpeedValue = convertValue(
+    'wind',
+    windUnit,
+    nextHourForecast.windSpeedMS
+  );
+
+  const precipitationValue = convertValue(
+    'precipitation',
+    precipitationUnit,
+    nextHourForecast.precipitation1h
+  );
 
   return (
     <View style={styles.container}>
@@ -189,10 +215,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                     styles.bold,
                     { color: colors.hourListText },
                   ]}>
-                  {numericOrDash(
-                    nextHourForecast.windSpeedMS &&
-                      converter(windUnit, nextHourForecast.windSpeedMS)
-                  )}
+                  {numericOrDash(windSpeedValue)}
                 </Text>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {` ${windUnit}`}
@@ -213,13 +236,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                     .replace('.', ',') || (0).toFixed(1).replace('.', ',')
                 } ${t('forecast:millimeters')}`}>
                 <Text style={styles.bold}>{`${
-                  (nextHourForecast.precipitation1h?.toString() &&
-                    converter(
-                      precipitationUnit,
-                      nextHourForecast.precipitation1h
-                    )
-                      ?.toString()
-                      .replace('.', ',')) ||
+                  precipitationValue?.replace('.', ',') ||
                   (0).toFixed(1).replace('.', ',')
                 }`}</Text>
                 {` ${precipitationUnit}`}
@@ -232,11 +249,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             <Text
               style={[styles.text, { color: colors.hourListText }]}
               accessibilityLabel={t('params.uvCumulated', {
-                value: numericOrDash(nextHourForecast.uvCumulated),
+                value: numericOrDash(`${nextHourForecast.uvCumulated}`),
               })}>
               {'UV '}
               <Text style={styles.bold}>
-                {numericOrDash(nextHourForecast.uvCumulated)}
+                {numericOrDash(`${nextHourForecast.uvCumulated}`)}
               </Text>
             </Text>
           )}
