@@ -44,7 +44,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   useEffect(() => {
     if (activeDayIndex >= 0 && dayData && dayData.length) {
       dayStripRef.current.scrollTo({
-        x: activeDayIndex * 90,
+        x: activeDayIndex * 100,
         animated: true,
       });
     }
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   dayBlock: {
-    minWidth: 90,
+    minWidth: 100,
     borderWidth: 1,
     padding: 6,
     flex: 1,
