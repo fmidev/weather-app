@@ -26,6 +26,7 @@ import {
 
 import { useOrientation } from '@utils/hooks';
 import { GRAY_1, CustomTheme } from '@utils/colors';
+import { Config } from '@config';
 
 const mapStateToProps = (state: State) => ({
   uniqueSmartSymbols: selectUniqueSmartSymbols(state),
@@ -64,6 +65,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   const currentSymbols = symbolsArr.filter((el) =>
     uniqueSymbolKeys.includes(el.key)
   ).length;
+
+  const { units } = Config.get('settings');
 
   return (
     <View style={styles.wrapper}>
@@ -204,7 +207,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 />
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.hourlyForecastedTemperature')}
+                {t('weatherInfoBottomSheet.hourlyForecastedTemperature', {
+                  unit: units.temperature,
+                })}
               </Text>
             </View>
             <View style={styles.row}>
@@ -218,7 +223,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 />
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.feelsLikeTemperature')}
+                {t('weatherInfoBottomSheet.feelsLikeTemperature', {
+                  unit: units.temperature,
+                })}
               </Text>
             </View>
             {/* <View style={[styles.row, styles.withMarginLeft]}>
@@ -259,7 +266,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 />
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.windSpeedAndDirection')}
+                {t('weatherInfoBottomSheet.windSpeedAndDirection', {
+                  unit: units.wind,
+                })}
               </Text>
             </View>
             <View style={[styles.row, styles.withMarginLeft]}>
@@ -388,7 +397,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 />
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.precipitation')}
+                {t('weatherInfoBottomSheet.precipitation', {
+                  unit: units.precipitation,
+                })}
               </Text>
             </View>
             <View style={styles.row}>
@@ -444,7 +455,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 />
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.dewPoint')}
+                {t('weatherInfoBottomSheet.dewPoint', {
+                  unit: units.temperature,
+                })}
               </Text>
             </View>
             <View style={styles.row}>
@@ -474,11 +487,11 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       color: colors.hourListText,
                     },
                   ]}>
-                  hPa
+                  {units.pressure}
                 </Text>
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.pressure')}
+                {t('weatherInfoBottomSheet.pressure', { unit: units.pressure })}
               </Text>
             </View>
             <View style={styles.row}>
