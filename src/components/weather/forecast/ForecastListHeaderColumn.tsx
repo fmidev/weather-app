@@ -121,7 +121,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
               ]}>
               <Text style={[styles.panelText, { color: colors.hourListText }]}>
-                hPa
+                {units.pressure}
               </Text>
             </View>
           );

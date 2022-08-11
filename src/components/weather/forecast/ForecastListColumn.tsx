@@ -209,6 +209,34 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           );
         }
 
+        if (param === constants.PRESSURE) {
+          const pressureUnit = Config.get('settings').units.pressure;
+          const convertedPressure = data.pressure
+            ? toPrecision(
+                'pressure',
+                pressureUnit,
+                converter(pressureUnit, data.pressure)
+              )
+            : '-';
+          return (
+            <View
+              key={`${param}-${i}`}
+              style={[
+                styles.hourBlock,
+                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+              ]}>
+              <Text
+                accessibilityLabel={t('forecast:params:pressure', {
+                  value: convertedPressure,
+                })}
+                style={[
+                  styles.regularText,
+                  { color: colors.hourListText },
+                ]}>{`${convertedPressure}`}</Text>
+            </View>
+          );
+        }
+
         const toDisplay =
           data[String(param)] !== null && data[String(param)] !== undefined
             ? data[String(param)]
