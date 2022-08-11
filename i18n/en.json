@@ -99,7 +99,7 @@
       "hourlymaximumgust": "Gust speed ({{ unit }})",
       "precipitation1h": "Precipitation ({{ unit }})",
       "pop": "Probability of precipitation (%)",
-      "dewPoint": "Dew point ({{ unit }})",
+      "dewPoint": "Dew point (°{{ unit }})",
       "relativeHumidity": "Relative humidity (%)",
       "pressure": "Pressure ({{ unit }})",
       "uvCumulated": "UV index",

@@ -153,10 +153,10 @@ export interface ConfigType {
   settings: {
     languages: string[];
     units: {
-      temperature: string;
-      precipitation: string;
-      wind: string;
-      pressure: string;
+      temperature: 'C' | 'F';
+      precipitation: 'mm' | 'in';
+      wind: 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
+      pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
     };
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
