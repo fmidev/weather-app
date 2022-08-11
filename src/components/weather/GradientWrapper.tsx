@@ -40,7 +40,7 @@ const GradientWrapper: React.FC<GradientWrapperProps> = ({
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
 
-  const colorsDark = [colors.screenBackground, colors.screenBackground];
+  const colorsDark = [colors.background, colors.background];
 
   const tempColor = () => {
     if (typeof nextHourForecast?.temperature === 'undefined') {

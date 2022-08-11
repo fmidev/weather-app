@@ -53,6 +53,7 @@ import { getGeolocation } from '@utils/helpers';
 import {
   PRIMARY_BLUE,
   WHITE,
+  HEADER_DARK,
   GRAY_1,
   TRANSPARENT,
   SHADOW_DARK,
@@ -69,6 +70,7 @@ import {
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
 import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import ErrorComponent from '@components/common/ErrorComponent';
+
 import { lightTheme, darkTheme } from './themes';
 import {
   TabParamList,
@@ -197,7 +199,8 @@ const Navigator: React.FC<Props> = ({
     },
     headerStyle: {
       ...styles.header,
-      shadowColor: useDarkTheme ? SHADOW_DARK : SHADOW_LIGHT,
+      shadowColor:
+        useDarkTheme || Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
     },
     headerTitleAlign: 'center',
     headerBackImage: ({ tintColor }: { tintColor: string }) => (
@@ -418,11 +421,7 @@ const Navigator: React.FC<Props> = ({
   return (
     <>
       <StatusBar
-        backgroundColor={
-          useDarkTheme
-            ? darkTheme.colors.headerBackground
-            : lightTheme.colors.headerBackground
-        }
+        backgroundColor={useDarkTheme ? HEADER_DARK : WHITE}
         barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
       />
       <NavigationContainer
