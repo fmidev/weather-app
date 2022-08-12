@@ -95,3 +95,33 @@ R5CR207HAFP	device
 1. `cp defaultConfig.ts.example defaultConfig.ts`
 
 2. `edit defaultConfig.ts`
+
+### **Units**
+
+The units supported by the application are described on the table below.
+Note that you can only use the depicted unit abbreviations.
+
+| Parameter     | Units                             |
+| ------------- | --------------------------------- |
+| temperature   | 'C', 'F'                          |
+| precipitation | 'mm', 'in'                        |
+| wind          | 'm/s', 'km/h', 'mph', 'bft', 'kn' |
+| pressure      | 'hPa', 'inHg', 'mmHg', 'mbar'     |
+
+Table of abbreviations and their corresponding units.
+
+| Abbreviation | Unit                  |
+| ------------ | --------------------- |
+| 'C'          | celsius               |
+| 'F'          | fahrenheit            |
+| 'mm'         | millimeter            |
+| 'in'         | inch                  |
+| 'm/s'        | meters per second     |
+| 'km/h'       | kilometers per hour   |
+| 'mph'        | miles per hour        |
+| 'bft'        | beaufort              |
+| 'kn'         | knot                  |
+| 'hPa'        | hehtopascal           |
+| 'inHg'       | inch of mercury       |
+| 'mmHg'       | millimeter of mercury |
+| 'mbar'       | millibar              |

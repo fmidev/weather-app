@@ -60,30 +60,46 @@ const defaultConfig: ConfigType = {
     forecast: {
       updateInterval: 5,
       timePeriod: 'data',
-      producer: 'default',
-      parameters: ['Temperature'],
+      data: [
+        { producer: 'default', parameters: ['temperature'] }
+      ],
+      defaultParameters: [
+        'temperature'
+      ],
     },
     observation: {
       enabled: true,
       updateInterval: 5,
       numberOfStations: 10,
-      producer: 'observation_producer',
+      producer: { default: 'observation_producer' },
       timePeriod: 24,
-      parameters: ['Temperature'],
+      parameters: ['temperature'],
     },
   },
   warnings: {
     enabled: true,
     updateInterval: 5,
-    apiUrl:
-      'url',
+    webViewUrl: 'url',
+    apiUrl: {
+      FI: 'url'
+    },
   },
   settings: {
     languages: ['fi', 'en', 'sv'],
-    units: {
-      Temperature: ['C', 'F'],
+     units: {
+      temperature: 'C',
+      precipitation: 'mm',
+      wind: 'm/s',
+      pressure: 'hPa',
     },
   },
+  announcements: {
+    enabled: true,
+    updateInterval: 5,
+    api: {
+      fi: 'url',
+    }
+  }
 };
 
 export default defaultConfig;
