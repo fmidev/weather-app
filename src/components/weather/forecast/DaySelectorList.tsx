@@ -9,6 +9,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import { CustomTheme } from '@utils/colors';
 import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
+import { converter, toPrecision } from '@utils/units';
 import PrecipitationStrip from './PrecipitationStrip';
 
 type DaySelectorListProps = {
@@ -40,6 +41,8 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
   );
+
+  const { temperature: temperatureUnit } = Config.get('settings').units;
 
   useEffect(() => {
     if (activeDayIndex >= 0 && dayData && dayData.length) {
@@ -73,6 +76,17 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       dark
     );
     const isActive = index === activeDayIndex;
+
+    const convertedMaxTemperature = toPrecision(
+      'temperature',
+      temperatureUnit,
+      converter(temperatureUnit, maxTemperature)
+    );
+    const convertedMinTemperature = toPrecision(
+      'temperature',
+      temperatureUnit,
+      converter(temperatureUnit, minTemperature)
+    );
 
     return (
       <View
@@ -119,9 +133,9 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             <Text
               style={[styles.forecastText, { color: colors.primaryText }]}
               accessibilityLabel={t('forecast:fromTo', {
-                min: minTemperature,
-                max: maxTemperature,
-              })}>{`${minTemperature} ... ${maxTemperature}°C`}</Text>
+                min: convertedMinTemperature,
+                max: convertedMaxTemperature,
+              })}>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${temperatureUnit}`}</Text>
           )}
         </AccessibleTouchableOpacity>
         {activeParameters.includes('precipitation1h') && (

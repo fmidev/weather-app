@@ -4,6 +4,7 @@ import {
   ChartMinMax,
   ChartType,
 } from '@components/weather/charts/types';
+import { Config } from '@config';
 import moment from 'moment';
 
 export const chartXDomain = (tickValues: number[]): ChartDomain => ({
@@ -105,19 +106,20 @@ ${time.format('D.M.')}`;
 };
 
 export const chartYLabelText = (chartType: ChartType) => {
+  const { units } = Config.get('settings');
   switch (chartType) {
     case 'humidity':
       return ['%'];
     case 'temperature':
-      return ['°C'];
+      return [`°${units.temperature}`];
     case 'pressure':
-      return ['hPa'];
+      return [units.pressure];
     case 'visCloud':
       return ['km', 'weather:charts:totalCloudCover'];
     case 'precipitation':
-      return ['mm', '%'];
+      return [units.precipitation, '%'];
     case 'wind':
-      return ['m/s'];
+      return [units.wind];
     case 'uv':
       return ['UV'];
     case 'snowDepth':

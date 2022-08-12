@@ -8,6 +8,7 @@ import * as constants from '@store/forecast/constants';
 
 import { isOdd } from '@utils/helpers';
 import { DisplayParameters } from '@store/forecast/types';
+import { Config } from '@config';
 
 type ForecastListHeaderColumnProps = {
   displayParams: [number, DisplayParameters][];
@@ -17,6 +18,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   displayParams,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+  const { units } = Config.get('settings');
 
   return (
     <View
@@ -42,7 +44,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
               ]}>
               <Icon name="wind" color={colors.hourListText} />
               <Text style={[styles.panelText, { color: colors.hourListText }]}>
-                m/s
+                {units.wind}
               </Text>
             </View>
           );
@@ -57,7 +59,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
               ]}>
               <Icon name="gust" color={colors.hourListText} />
               <Text style={[styles.panelText, { color: colors.hourListText }]}>
-                m/s
+                {units.wind}
               </Text>
             </View>
           );
@@ -72,7 +74,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
               ]}>
               <Icon name="precipitation" color={colors.hourListText} />
               <Text style={[styles.panelText, { color: colors.hourListText }]}>
-                mm
+                {units.precipitation}
               </Text>
             </View>
           );
@@ -119,7 +121,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
               ]}>
               <Text style={[styles.panelText, { color: colors.hourListText }]}>
-                hPa
+                {units.pressure}
               </Text>
             </View>
           );

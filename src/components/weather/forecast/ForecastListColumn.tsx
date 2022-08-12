@@ -14,6 +14,7 @@ import * as constants from '@store/forecast/constants';
 
 import { isOdd } from '@utils/helpers';
 import { Config } from '@config';
+import { converter, toPrecision } from '@utils/units';
 
 type ForecastListColumnProps = {
   data: TimeStepData;
@@ -77,14 +78,22 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           );
         }
         if (param === constants.WIND_SPEED_AND_DIRECTION) {
+          const windSpeedUnit = Config.get('settings').units.wind;
+          const convertedWindSpeed = data.windSpeedMS
+            ? toPrecision(
+                'wind',
+                windSpeedUnit,
+                converter(windSpeedUnit, data.windSpeedMS)
+              )
+            : '-';
           return (
             <View
               accessibilityLabel={
                 data.windCompass8
-                  ? `${t(`observation:windDirection:${data.windCompass8}`)} ${
-                      data.windSpeedMS
-                    } ${t('forecast:metersPerSecond')}.`
-                  : `${data.windSpeedMS} ${t('forecast:metersPerSecond')}`
+                  ? `${t(
+                      `observation:windDirection:${data.windCompass8}`
+                    )} ${convertedWindSpeed} ${t('forecast:metersPerSecond')}.`
+                  : `${convertedWindSpeed} ${t('forecast:metersPerSecond')}`
               }
               key={`${param}-${i}`}
               style={[
@@ -112,18 +121,26 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     styles.withMarginTop,
                     { color: colors.hourListText },
                   ]}>
-                  {data.windSpeedMS}
+                  {convertedWindSpeed}
                 </Text>
               )}
             </View>
           );
         }
         if (param === constants.TEMPERATURE) {
+          const temperatureUnit = Config.get('settings').units.temperature;
+          const convertedTemperature = data.temperature
+            ? toPrecision(
+                'temperature',
+                temperatureUnit,
+                converter(temperatureUnit, data.temperature)
+              )
+            : '-';
           return (
             <View
               key={`${param}-${i}`}
               accessibilityLabel={t('forecast:params:temperature', {
-                value: data.temperature,
+                value: convertedTemperature,
               })}
               style={[
                 styles.hourBlock,
@@ -131,17 +148,25 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               ]}>
               <Text
                 style={[styles.regularText, { color: colors.hourListText }]}>
-                {`${data.temperature}`}°
+                {`${convertedTemperature}`}°
               </Text>
             </View>
           );
         }
         if (param === constants.FEELS_LIKE) {
+          const temperatureUnit = Config.get('settings').units.temperature;
+          const convertedFeelsLike = data.feelsLike
+            ? toPrecision(
+                'temperature',
+                temperatureUnit,
+                converter(temperatureUnit, data.feelsLike)
+              )
+            : '-';
           return (
             <View
               key={`${param}-${i}`}
               accessibilityLabel={t('forecast:params:feelsLike', {
-                value: data.feelsLike,
+                value: convertedFeelsLike,
               })}
               style={[
                 styles.hourBlock,
@@ -151,12 +176,20 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 style={[
                   styles.regularText,
                   { color: colors.hourListText },
-                ]}>{`${data.feelsLike}`}</Text>
+                ]}>{`${convertedFeelsLike}`}</Text>
             </View>
           );
         }
 
         if (param === constants.DEW_POINT) {
+          const temperatureUnit = Config.get('settings').units.temperature;
+          const convertedDewPoint = data.dewPoint
+            ? toPrecision(
+                'temperature',
+                temperatureUnit,
+                converter(temperatureUnit, data.dewPoint)
+              )
+            : '-';
           return (
             <View
               key={`${param}-${i}`}
@@ -166,12 +199,40 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               ]}>
               <Text
                 accessibilityLabel={t('forecast:params:dewpoint', {
-                  value: data.dewPoint,
+                  value: convertedDewPoint,
                 })}
                 style={[
                   styles.regularText,
                   { color: colors.hourListText },
-                ]}>{`${data.dewPoint}`}</Text>
+                ]}>{`${convertedDewPoint}`}</Text>
+            </View>
+          );
+        }
+
+        if (param === constants.PRESSURE) {
+          const pressureUnit = Config.get('settings').units.pressure;
+          const convertedPressure = data.pressure
+            ? toPrecision(
+                'pressure',
+                pressureUnit,
+                converter(pressureUnit, data.pressure)
+              )
+            : '-';
+          return (
+            <View
+              key={`${param}-${i}`}
+              style={[
+                styles.hourBlock,
+                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+              ]}>
+              <Text
+                accessibilityLabel={t('forecast:params:pressure', {
+                  value: convertedPressure,
+                })}
+                style={[
+                  styles.regularText,
+                  { color: colors.hourListText },
+                ]}>{`${convertedPressure}`}</Text>
             </View>
           );
         }
@@ -180,6 +241,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           data[String(param)] !== null && data[String(param)] !== undefined
             ? data[String(param)]
             : '-';
+
+        const precipitationUnit = Config.get('settings').units.precipitation;
         return (
           <View
             key={`${param}-${i}`}
@@ -195,7 +258,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               {param === constants.PRECIPITATION_1H &&
               typeof toDisplay === 'number' &&
               toDisplay >= 0
-                ? `${toDisplay.toFixed(1)}`.replace('.', ',')
+                ? `${converter(precipitationUnit, toDisplay).toFixed(
+                    1
+                  )}`.replace('.', ',')
                 : toDisplay}
             </Text>
           </View>

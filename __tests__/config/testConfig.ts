@@ -101,9 +101,12 @@ const defaultConfig: ConfigType = {
   },
   settings: {
     languages: ['fi', 'sv', 'en'],
-    // units: {
-    //   Temperature: ['C', 'F'],
-    // },
+    units: {
+      temperature: 'C',
+      precipitation: 'mm',
+      wind: 'm/s',
+      pressure: 'hPa',
+    },
   },
   announcements: {
     enabled: false,

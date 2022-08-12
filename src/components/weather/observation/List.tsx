@@ -87,6 +87,24 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
 
   const getRowValues = (timeStep: TimeStepData) => {
     if (parameter === 'wind') {
+      const windSpeedObservationCellValue = getObservationCellValue(
+        timeStep,
+        'windSpeedMS',
+        getParameterUnit('windSpeedMS'),
+        undefined,
+        undefined,
+        false
+      );
+
+      const windGustObservationCellValue = getObservationCellValue(
+        timeStep,
+        'windGust',
+        getParameterUnit('windGust'),
+        undefined,
+        undefined,
+        false
+      );
+
       return (
         <View style={styles.row}>
           <View style={[styles.windColumn]}>
@@ -99,10 +117,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                 ]}
                 accessibilityLabel={`${t(
                   'measurements.windSpeedMS'
-                )} ${getObservationCellValue(timeStep, 'windSpeedMS', '')} ${t(
-                  'forecast:metersPerSecond'
-                )}.`}>
-                {getObservationCellValue(timeStep, 'windSpeedMS', '')}
+                )} ${windSpeedObservationCellValue}
+                ${t('forecast:metersPerSecond')}.`}>
+                {windSpeedObservationCellValue}
               </Text>
             )}
             {activeParameters.includes('windDirection') &&
@@ -151,10 +168,10 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
               ]}
               accessibilityLabel={`${t(
                 'measurements.windGust'
-              )} ${getObservationCellValue(timeStep, 'windGust', '')} ${t(
+              )} ${windGustObservationCellValue} ${t(
                 'forecast:metersPerSecond'
               )}`}>
-              {getObservationCellValue(timeStep, 'windGust', '')}
+              {windGustObservationCellValue}
             </Text>
           )}
         </View>
@@ -164,10 +181,11 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
     return (
       <View style={styles.row}>
         {activeParameters.map((param) => {
+          const parameterUnit = getParameterUnit(param);
           const cellValue = getObservationCellValue(
             timeStep,
             param,
-            '',
+            parameterUnit,
             [
               'pressure',
               'humidity',
@@ -194,7 +212,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                 )} ${
                   cellValue === '-'
                     ? t('paramUnits.na')
-                    : t(`paramUnits.${getParameterUnit(param)}`)
+                    : t(`paramUnits.${parameterUnit}`)
                 }`;
           return (
             <Text

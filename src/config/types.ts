@@ -152,9 +152,12 @@ export interface ConfigType {
   warnings: WarningsEnabled | WarningsDisabled;
   settings: {
     languages: string[];
-    // units: {
-    //   [type: string]: string[];
-    // };
+    units: {
+      temperature: 'C' | 'F';
+      precipitation: 'mm' | 'in';
+      wind: 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
+      pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
+    };
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
 }

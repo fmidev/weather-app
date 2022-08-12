@@ -75,6 +75,26 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
     regex.test(constant)
   ) as DisplayParameters[];
 
+  const { units } = Config.get('settings');
+
+  const getUnitForParameter = (parameter: DisplayParameters) => {
+    switch (parameter) {
+      case 'temperature':
+      case 'feelsLike':
+      case 'dewPoint':
+        return units.temperature;
+      case 'windSpeedMSwindDirection':
+      case 'hourlymaximumgust':
+        return units.wind;
+      case 'precipitation1h':
+        return units.precipitation;
+      case 'pressure':
+        return units.pressure;
+      default:
+        return null;
+    }
+  };
+
   const rowRenderer = (param: DisplayParameters, index: number) => (
     <View
       accessible
@@ -118,7 +138,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               styles.withMarginRight,
               { color: colors.hourListText },
             ]}>
-            hPa
+            {units.pressure}
           </Text>
         )}
         {param === UV_CUMULATED && (
@@ -133,7 +153,9 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
           </Text>
         )}
         <Text style={[styles.text, { color: colors.hourListText }]}>
-          {t(`paramsBottomSheet.${param}`)}
+          {t(`paramsBottomSheet.${param}`, {
+            unit: getUnitForParameter(param),
+          })}
         </Text>
       </View>
 
