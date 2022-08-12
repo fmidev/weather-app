@@ -150,7 +150,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               ]}>
               <Text
                 style={[styles.regularText, { color: colors.hourListText }]}>
-                {`${convertedTemperature}`}°
+                {`${convertedTemperature}°`}
               </Text>
             </View>
           );
@@ -179,7 +179,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 style={[
                   styles.regularText,
                   { color: colors.hourListText },
-                ]}>{`${convertedFeelsLike}`}</Text>
+                ]}>{`${convertedFeelsLike}°`}</Text>
             </View>
           );
         }
@@ -208,7 +208,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 style={[
                   styles.regularText,
                   { color: colors.hourListText },
-                ]}>{`${convertedDewPoint}`}</Text>
+                ]}>{`${convertedDewPoint}°`}</Text>
             </View>
           );
         }

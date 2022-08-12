@@ -83,7 +83,7 @@ export const UNITS: Unit[] = [
         unitId: 1,
         unitAbb: 'hPa',
         unit: 'hehtopascal',
-        unitPrecision: 1,
+        unitPrecision: 0,
       },
       {
         unitId: 2,
