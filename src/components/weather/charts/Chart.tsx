@@ -72,11 +72,13 @@ const Chart: React.FC<ChartProps> = ({
       const dayIndex = calculateDayIndex(scrollIndex);
       if (activeDayIndex === 0 && dayIndex !== activeDayIndex) {
         scrollRef.current.scrollTo({ x: 0, animated: true });
+        setScrollIndex(0);
       }
       if (activeDayIndex > 0 && dayIndex !== activeDayIndex) {
         const off = currentDayOffset * stepLength;
         const offsetX = off + (activeDayIndex - 1) * 24 * stepLength;
         scrollRef.current.scrollTo({ x: offsetX, animated: true });
+        setScrollIndex(offsetX);
       }
     }
   }, [
