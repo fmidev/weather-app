@@ -309,8 +309,6 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   panelWrapper: {
-    borderRadius: 8,
-    marginBottom: 8,
     shadowOffset: {
       width: -2,
       height: 2,

@@ -14,7 +14,7 @@ export const UPDATE_FORECAST_CHART_PARAMETER =
 type DisplayParametersKeys = keyof typeof displayParameters;
 export type DisplayParameters = typeof displayParameters[Exclude<
   DisplayParametersKeys,
-  'default'
+  'default' | 'PARAMS_TO_ICONS'
 >];
 
 interface FetchForecast {

@@ -73,7 +73,6 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
     <View style={styles.safeArea}>
       <ScrollView
         style={[styles.container, { backgroundColor: colors.screenBackground }]}
-        contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={announcements && [0]}>
         <CrisisStrip style={styles.crisisStrip} />
@@ -89,9 +88,6 @@ const styles = StyleSheet.create({
   },
   container: {
     minHeight: '100%',
-  },
-  contentContainer: {
-    paddingBottom: 20,
   },
   crisisStrip: {
     elevation: 10,
