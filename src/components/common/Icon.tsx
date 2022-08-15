@@ -99,9 +99,9 @@ import WarningsWindOrange from '@assets/images/icons/warnings-wind-orange.svg';
 import WarningsWindRed from '@assets/images/icons/warnings-wind-red.svg';
 import WarningsWindYellow from '@assets/images/icons/warnings-wind-yellow.svg';
 import Warnings from '@assets/images/icons/warnings.svg';
-import WarningLight from '@assets/images/icons/warning-light.svg';
-import WarningYellowLight from '@assets/images/icons/warning-yellow-light.svg';
-import WarningRedLight from '@assets/images/icons/warning-red-light.svg';
+import WarningsOrange from '@assets/images/icons/warnings-orange.svg';
+import WarningsYellow from '@assets/images/icons/warnings-yellow.svg';
+import WarningsRed from '@assets/images/icons/warnings-red.svg';
 import WeatherSymbol from '@assets/images/icons/weather-symbol.svg';
 import Weather from '@assets/images/icons/weather.svg';
 import WindArrow from '@assets/images/icons/wind-arrow.svg';
@@ -330,12 +330,12 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WarningsWindYellow {...(props as SvgProps)} />;
     case 'warnings':
       return <Warnings {...(props as SvgProps)} />;
-    case 'warning-light':
-      return <WarningLight {...(props as SvgProps)} />;
-    case 'warning-yellow-light':
-      return <WarningYellowLight {...(props as SvgProps)} />;
-    case 'warning-red-light':
-      return <WarningRedLight {...(props as SvgProps)} />;
+    case 'warnings-orange':
+      return <WarningsOrange {...(props as SvgProps)} />;
+    case 'warnings-yellow':
+      return <WarningsYellow {...(props as SvgProps)} />;
+    case 'warnings-red':
+      return <WarningsRed {...(props as SvgProps)} />;
     case 'weather-symbol':
       return <WeatherSymbol {...(props as SvgProps)} />;
     case 'weather':
