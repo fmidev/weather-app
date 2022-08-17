@@ -3,14 +3,15 @@ import {
   UPDATE_UNITS,
   UPDATE_THEME,
   SettingsActionTypes,
-  UnitType,
+  Units,
+  ValueOf,
   Theme,
 } from './types';
 
 export const updateUnits =
-  (key: string, unitType: UnitType) =>
+  (param: keyof Units, unit: ValueOf<Units>) =>
   (dispatch: Dispatch<SettingsActionTypes>) => {
-    dispatch({ type: UPDATE_UNITS, units: { [key]: unitType } });
+    dispatch({ type: UPDATE_UNITS, param, unit });
   };
 
 export const updateTheme =

@@ -1,5 +1,9 @@
-import Config from 'react-native-config';
-import { UnitType, UnitMap } from '@store/settings/types';
+export type UnitType = {
+  unitId: number;
+  unitAbb: string;
+  unit: string;
+  unitPrecision: number;
+};
 
 export type Unit = {
   parameterName: string;
@@ -106,33 +110,6 @@ export const UNITS: Unit[] = [
     ],
   },
 ];
-
-const defaultUnitMapper = {
-  temperature: parseInt(Config.UNIT_TEMPERATURE, 10),
-  precipitation: parseInt(Config.UNIT_PRECIPITATION, 10),
-  wind: parseInt(Config.UNIT_WIND, 10),
-  pressure: parseInt(Config.UNIT_PRESSURE, 10),
-};
-
-export const getDefaultUnits = (): UnitMap | undefined => {
-  const unitNames = Config.UNITS && Config.UNITS.split(',');
-  const defaultUnits =
-    unitNames &&
-    unitNames.reduce((res, name: string) => {
-      const unit = UNITS.find((u) => u.parameterName === name);
-      if (!unit) return res;
-      let unitType =
-        unit &&
-        unit.unitTypes.find(
-          (type) => type.unitId === (defaultUnitMapper as any)[name]
-        );
-      if (!unitType) {
-        [unitType] = unit.unitTypes;
-      }
-      return { ...res, [name]: unitType };
-    }, {});
-  return defaultUnits as UnitMap;
-};
 
 export const toPrecision = (
   unit: string,

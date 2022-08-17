@@ -2,26 +2,25 @@ export const INIT_SETTINGS = 'INIT_SETTINGS';
 export const UPDATE_UNITS = 'UPDATE_UNITS';
 export const UPDATE_THEME = 'UPDATE_THEME';
 
-export type UnitType = {
-  unitId: number;
-  unitAbb: string;
-  unit: string;
-  unitPrecision: number;
+export type Units = {
+  temperature: 'C' | 'F';
+  precipitation: 'mm' | 'in';
+  wind: 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
+  pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
 };
 
-export interface UnitMap {
-  [key: string]: UnitType;
-}
+export type ValueOf<T> = T[keyof T];
 
 interface InitSettings {
   type: typeof INIT_SETTINGS;
-  units: UnitMap | undefined;
+  units: Units;
   theme: Theme;
 }
 
 interface UpdateUnits {
   type: typeof UPDATE_UNITS;
-  units: UnitMap;
+  param: keyof Units;
+  unit: ValueOf<Units>;
 }
 
 interface UpdateTheme {
@@ -34,6 +33,6 @@ export type Theme = 'light' | 'dark' | 'automatic';
 export type SettingsActionTypes = InitSettings | UpdateUnits | UpdateTheme;
 
 export interface SettingsState {
-  units: UnitMap | undefined;
+  units: Partial<Units> | undefined;
   theme: Theme;
 }

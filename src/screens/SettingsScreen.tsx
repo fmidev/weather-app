@@ -9,7 +9,6 @@ import {
   AppState,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-// import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
@@ -17,18 +16,16 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { setItem, LOCALE } from '@utils/async_storage';
-// import { UNITS } from '@utils/units';
+import { UNITS } from '@utils/units';
 import { State } from '@store/types';
-import { selectUnits, selectTheme } from '@store/settings/selectors';
+import { selectCurrentUnits, selectTheme } from '@store/settings/selectors';
+import { Units } from '@store/settings/types';
 import {
   updateUnits as updateUnitsAction,
   updateTheme as updateThemeAction,
 } from '@store/settings/actions';
 import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
-// import { UnitType } from '@store/settings/types';
 import { selectStoredGeoids } from '@store/location/selector';
-// import { GRAY_1 } from '@utils/colors';
-
 import { Config } from '@config';
 
 const LOCATION_ALWAYS = 'location_always';
@@ -36,7 +33,7 @@ const LOCATION_WHEN_IN_USE = 'location_when_in_use';
 const LOCATION_NEVER = 'location_never';
 
 const mapStateToProps = (state: State) => ({
-  units: selectUnits(state),
+  units: selectCurrentUnits(state),
   theme: selectTheme(state),
   geoids: selectStoredGeoids(state),
 });
@@ -56,8 +53,8 @@ type Props = PropsFromRedux;
 const SettingsScreen: React.FC<Props> = ({
   theme,
   geoids,
-  // units,
-  // updateUnits,
+  units,
+  updateUnits,
   updateTheme,
   updateLocationsLocales,
 }) => {
@@ -67,12 +64,7 @@ const SettingsScreen: React.FC<Props> = ({
   const { t, i18n } = useTranslation('settings');
   const { colors } = useTheme();
   const isAndroid = Platform.OS === 'android';
-  // const sheetRefs = {
-  //   temperature: useRef(),
-  //   precipitation: useRef(),
-  //   wind: useRef(),
-  //   pressure: useRef(),
-  // } as { [key: string]: React.MutableRefObject<RBSheet> };
+
   const { languages } = Config.get('settings');
 
   useEffect(() => {
@@ -157,9 +149,6 @@ const SettingsScreen: React.FC<Props> = ({
     [LOCATION_WHEN_IN_USE]: t('settings:locationWhenInUse'),
     [LOCATION_NEVER]: t('settings:locationNever'),
   } as { [key: string]: string };
-
-  // const unitTypesByKey = (key: string): UnitType[] | undefined =>
-  //   UNITS.find((unit) => unit.parameterName === key)?.unitTypes;
 
   return (
     <View style={styles.container}>
@@ -269,54 +258,6 @@ const SettingsScreen: React.FC<Props> = ({
                 </AccessibleTouchableOpacity>
               </View>
             ))}
-          {/* <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              onPress={() => onChangeLanguage('fi')}
-              delayPressIn={100}
-              disabled={i18n.language === 'fi'}
-              testID="settings_set_language_fi">
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>suomi</Text>
-                {i18n.language === 'fi' && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              onPress={() => onChangeLanguage('en')}
-              delayPressIn={100}
-              disabled={i18n.language === 'en'}
-              testID="settings_set_language_en">
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
-                  in English
-                </Text>
-                {i18n.language === 'en' && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View> */}
         </View>
         <View
           style={[
@@ -435,103 +376,65 @@ const SettingsScreen: React.FC<Props> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        {/* {units && (
-          <>
-            <View style={styles.titleContainer} testID="settings_units_header">
-              <Text style={[styles.title, { color: colors.text }]}>
-                {t('settings:units')}
-              </Text>
-            </View>
-            <View>
-              {Object.keys(units).map((key, i) => (
+        {units &&
+          UNITS &&
+          UNITS.map((unit, i) => (
+            <View
+              key={unit.parameterName}
+              style={i + 1 === UNITS.length && styles.withMarginBottom}>
+              <View
+                style={[
+                  styles.rowWrapper,
+                  styles.withBorderBottom,
+                  styles.withMarginTop,
+                  { borderBottomColor: colors.border },
+                ]}>
+                <View style={styles.row}>
+                  <Text
+                    style={[styles.title, { color: colors.text }]}
+                    accessibilityRole="header">
+                    {unit.parameterName}
+                  </Text>
+                </View>
+              </View>
+              {unit.unitTypes.map((type) => (
                 <View
-                  key={key}
+                  key={type.unitAbb}
                   style={[
                     styles.rowWrapper,
-                    i < Object.keys(units).length - 1
-                      ? {
-                          ...styles.withBorderBottom,
-                          borderBottomColor: colors.border,
-                        }
-                      : null,
+                    styles.withBorderBottom,
+                    { borderBottomColor: colors.border },
                   ]}>
                   <AccessibleTouchableOpacity
-                    onPress={() => sheetRefs[key].current.open()}
-                    testID={`settings_set_${key}`}>
+                    delayPressIn={100}
+                    onPress={() =>
+                      updateUnits(
+                        unit.parameterName as keyof Units,
+                        type.unitAbb as Units[keyof Units]
+                      )
+                    }>
                     <View style={styles.row}>
-                      <Text style={[styles.text, { color: colors.text }]}>
-                        {t(`settings:${key}`)}
-                      </Text>
                       <Text
-                        style={[styles.text, { color: colors.text }]}
-                        testID={`${key}_unitAbb`}>
-                        {key === 'temperature' ? '°' : ''}
-                        {units[key].unitAbb}
-                      </Text>
-                    </View>
-                    {unitTypesByKey(key) && (
-                      <RBSheet
-                        ref={sheetRefs[key]}
-                        height={400}
-                        closeOnDragDown
-                        customStyles={{
-                          container: {
-                            ...styles.sheetContainer,
-                            backgroundColor: colors.background,
-                          },
-                          draggableIcon: styles.draggableIcon,
-                        }}>
-                        <View
-                          style={styles.sheetListContainer}
-                          testID="unit_sheet_container">
-                          <View
-                            style={styles.sheetTitle}
-                            testID={`${key}_unit_sheet_title`}>
-                            <Text
-                              style={[styles.title, { color: colors.text }]}>
-                              {t(`settings:${key}`)}
-                            </Text>
-                          </View>
-                          {unitTypesByKey(key)?.map((type, j) => (
-                            <View
-                              key={type.unitId}
-                              style={[
-                                styles.rowWrapper,
-                                styles.withBorderBottom,
-                                { borderBottomColor: colors.border },
-                              ]}>
-                              <AccessibleTouchableOpacity
-                                onPress={() => updateUnits(key, type)}
-                                testID={`settings_units_${key}_${type.unit}`}>
-                                <View style={styles.row}>
-                                  <Text
-                                    style={[
-                                      styles.text,
-                                      { color: colors.text },
-                                    ]}>
-                                    {key === 'temperature' ? '°' : ''}
-                                    {type.unitAbb}
-                                  </Text>
-                                  {units[key].unitId === type.unitId && (
-                                    <Icon
-                                      name="checkmark"
-                                      size={22}
-                                      style={{ color: colors.text }}
-                                    />
-                                  )}
-                                </View>
-                              </AccessibleTouchableOpacity>
-                            </View>
-                          ))}
+                        style={[
+                          styles.text,
+                          { color: colors.text },
+                        ]}>{`${type.unit} (${type.unitAbb})`}</Text>
+                      {units[unit.parameterName as keyof Units] ===
+                        type.unitAbb && (
+                        <View testID="settings_theme_automatic">
+                          <Icon
+                            name="checkmark"
+                            size={22}
+                            style={{ color: colors.text }}
+                          />
                         </View>
-                      </RBSheet>
-                    )}
+                      )}
+                    </View>
                   </AccessibleTouchableOpacity>
                 </View>
               ))}
             </View>
-           </>
-        )} */}
+          ))}
       </ScrollView>
     </View>
   );
@@ -569,6 +472,9 @@ const styles = StyleSheet.create({
   withMarginTop: {
     marginTop: 16,
   },
+  withMarginBottom: {
+    marginBottom: 16,
+  },
   editText: {
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
@@ -578,23 +484,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  // sheetContainer: {
-  //   borderTopLeftRadius: 10,
-  //   borderTopRightRadius: 10,
-  // },
-  // sheetListContainer: {
-  //   flex: 1,
-  //   paddingTop: 20,
-  // },
-  // sheetTitle: {
-  //   flexDirection: 'row',
-  //   paddingLeft: 20,
-  //   paddingBottom: 10,
-  // },
-  // draggableIcon: {
-  //   width: 65,
-  //   backgroundColor: GRAY_1,
-  // },
 });
 
 export default connector(SettingsScreen);

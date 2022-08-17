@@ -1,5 +1,4 @@
 import { PersistConfig } from '@store/types';
-import { getDefaultUnits } from '@utils/units';
 import {
   UPDATE_UNITS,
   UPDATE_THEME,
@@ -8,7 +7,7 @@ import {
 } from './types';
 
 const INITIAL_STATE: SettingsState = {
-  units: getDefaultUnits(),
+  units: undefined,
   theme: 'automatic',
 };
 
@@ -20,7 +19,7 @@ export default (
     case UPDATE_UNITS: {
       return {
         ...state,
-        units: { ...state.units, ...action.units },
+        units: { ...state.units, [action.param]: action.unit },
       };
     }
 
@@ -39,5 +38,5 @@ export default (
 
 export const settingsPersist: PersistConfig = {
   key: 'settings',
-  whitelist: ['theme'],
+  whitelist: ['theme', 'units'],
 };
