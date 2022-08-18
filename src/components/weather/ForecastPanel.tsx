@@ -20,6 +20,7 @@ import {
   selectDisplayFormat,
   selectForecastAge,
 } from '@store/forecast/selectors';
+import { selectCurrentUnits } from '@store/settings/selectors';
 
 import { GRAY_1, CustomTheme } from '@utils/colors';
 
@@ -47,6 +48,7 @@ const mapStateToProps = (state: State) => ({
   forecastAge: selectForecastAge(state),
   timezone: selectTimeZone(state),
   displayFormat: selectDisplayFormat(state),
+  units: selectCurrentUnits(state),
 });
 
 const mapDispatchToProps = {
@@ -69,6 +71,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   timezone,
   displayFormat,
   updateDisplayFormat,
+  units,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
@@ -243,6 +246,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             activeDayIndex={activeDayIndex}
             setActiveDayIndex={setActiveDayIndex}
             dayData={headerLevelForecast}
+            units={units}
           />
         )}
       </View>

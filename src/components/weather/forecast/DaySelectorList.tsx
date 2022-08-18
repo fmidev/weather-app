@@ -10,6 +10,7 @@ import { CustomTheme } from '@utils/colors';
 import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';
+import { Units } from '@store/settings/types';
 import PrecipitationStrip from './PrecipitationStrip';
 
 type DaySelectorListProps = {
@@ -26,12 +27,14 @@ type DaySelectorListProps = {
       timestamp: number;
     }[];
   }[];
+  units: Units;
 };
 
 const DaySelectorList: React.FC<DaySelectorListProps> = ({
   activeDayIndex,
   setActiveDayIndex,
   dayData,
+  units,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
@@ -42,7 +45,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     ({ parameters }) => parameters
   );
 
-  const { temperature: temperatureUnit } = Config.get('settings').units;
+  const { temperature: temperatureUnit } = units;
 
   useEffect(() => {
     if (activeDayIndex >= 0 && dayData && dayData.length) {

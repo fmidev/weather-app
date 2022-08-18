@@ -281,7 +281,22 @@
     "en": "in English",
     "languageHint": "Förändra applikation språket till:",
     "appearanceHint": "Förändra applikation utseende till:",
-    "locationSettingHint": "Gå till telefonens inställningar för att ändra appens behörighet att använda positionering"
+    "locationSettingHint": "Gå till telefonens inställningar för att ändra appens behörighet att använda positionering",
+    "abbreviations": {
+      "C": "Celsius",
+      "F": "Fahrenheit",
+      "mm": "Millimeter",
+      "in": "Tum",
+      "m/s": "Meter per sekund",
+      "km/h": "Kilometer per timme",
+      "mph": "Mil per timme",
+      "bft": "Beaufort",
+      "kn": "Knop",
+      "hPa": "Hektopascal",
+      "inHg": "Tum kvicksilver",
+      "mmHg": "Millimeter kvicksilver",
+      "mbar": "Millibar"
+    }
   },
   "map": {
     "searchButtonAccessibilityLabel": "Sök plats",

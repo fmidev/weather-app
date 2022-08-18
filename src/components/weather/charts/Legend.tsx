@@ -7,21 +7,22 @@ import { CustomTheme, TRANSPARENT } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
+import { Units } from '@store/settings/types';
 import { ChartType } from './types';
 
 type ChartLegendProps = {
   chartType: ChartType;
   observation: boolean | undefined;
+  units: Units;
 };
 
 const ChartLegend: React.FC<ChartLegendProps> = ({
   chartType,
   observation,
+  units,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
-
-  const { units } = Config.get('settings');
 
   const obsParameters = Config.get('weather').observation.parameters;
   const forParameters = Config.get('weather').forecast.data.flatMap(

@@ -281,7 +281,22 @@
     "en": "in English",
     "languageHint": "Vaihda sovelluksen kieleksi:",
     "appearanceHint": "Vaihda sovelluksen ulkoasuksi:",
-    "locationSettingHint": "Siirry puhelimen asetuksiin muuttaaksesi sovelluksen lupaa käyttää sijaintia"
+    "locationSettingHint": "Siirry puhelimen asetuksiin muuttaaksesi sovelluksen lupaa käyttää sijaintia",
+    "abbreviations": {
+      "C": "Celsius",
+      "F": "Fahrenheit",
+      "mm": "Millimetri",
+      "in": "Tuuma",
+      "m/s": "Metriä sekunnissa",
+      "km/h": "Kilometriä tunnissa",
+      "mph": "Mailia tunnissa",
+      "bft": "Bofori",
+      "kn": "Solmu",
+      "hPa": "Hehtopascal",
+      "inHg": "Elohopeatuuma",
+      "mmHg": "Elohopeamillimetri",
+      "mbar": "Millibaari"
+    }
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",

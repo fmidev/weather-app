@@ -4,45 +4,25 @@ import * as types from '../../src/store/settings/types';
 describe('settings reducer', () => {
   it('should handle UPDATE_UNITS', () => {
     const units = {
-      temperature: {
-        unitId: 1,
-        unitAbb: 'C',
-        unit: 'celsius',
-        unitPrecision: 0,
-      },
-      precipitation: {
-        unitId: 1,
-        unitAbb: 'mm',
-        unit: 'millimeter',
-        unitPrecision: 1,
-      },
-    };
+      temperature: 'C',
+      precipitation: 'mm',
+      wind: 'm/s',
+      pressure: 'hPa',
+    } as types.Units;
     expect(
       reducer(
         { units, theme: 'automatic' },
         {
           type: types.UPDATE_UNITS,
-          units: {
-            ...units,
-            temperature: {
-              unitId: 2,
-              unitAbb: 'F',
-              unit: 'fahrenheit',
-              unitPrecision: 0,
-            },
-          },
+          param: 'temperature',
+          unit: 'F',
         }
       )
     ).toEqual({
       theme: 'automatic',
       units: {
         ...units,
-        temperature: {
-          unitId: 2,
-          unitAbb: 'F',
-          unit: 'fahrenheit',
-          unitPrecision: 0,
-        },
+        temperature: 'F',
       },
     });
   });

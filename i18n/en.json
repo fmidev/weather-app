@@ -281,7 +281,22 @@
     "en": "in English",
     "languageHint": "Change application language to:",
     "appearanceHint": "Change application appearance to:",
-    "locationSettingHint": "Navigate to device settings to change app's location permissions"
+    "locationSettingHint": "Navigate to device settings to change app's location permissions",
+    "abbreviations": {
+      "C": "Celsius",
+      "F": "Fahrenheit",
+      "mm": "Millimeter",
+      "in": "Inch",
+      "m/s": "Meters per second",
+      "km/h": "Kilometers per hour",
+      "mph": "Miles per hour",
+      "bft": "Beaufort",
+      "kn": "Knot",
+      "hPa": "Hehtopascal",
+      "inHg": "Inch of mercury",
+      "mmHg": "Millimeter of mercury",
+      "mbar": "Millibar"
+    }
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search for a location",

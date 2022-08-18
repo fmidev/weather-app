@@ -6,6 +6,7 @@ import { State } from '@store/types';
 import { ForecastParameters, TimeStepData } from '@store/forecast/types';
 
 import { selectChartDisplayParameter } from '@store/forecast/selectors';
+import { selectCurrentUnits } from '@store/settings/selectors';
 import { updateChartParameter as updateChartParameterAction } from '@store/forecast/actions';
 
 import { Config } from '@config';
@@ -16,6 +17,7 @@ import { forecastTypeParameters } from '../charts/settings';
 
 const mapStateToProps = (state: State) => ({
   chartParameter: selectChartDisplayParameter(state),
+  units: selectCurrentUnits(state),
 });
 
 const mapDispatchToProps = {
@@ -40,6 +42,7 @@ const ChartList: React.FC<ChartListProps> = ({
   activeDayIndex,
   setActiveDayIndex,
   currentDayOffset,
+  units,
 }) => {
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
@@ -80,6 +83,7 @@ const ChartList: React.FC<ChartListProps> = ({
           activeDayIndex={activeDayIndex}
           setActiveDayIndex={setActiveDayIndex}
           currentDayOffset={currentDayOffset}
+          units={units}
         />
       )}
     </View>

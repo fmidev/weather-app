@@ -15,6 +15,7 @@ import {
   selectStationId,
   selectStationList,
 } from '@store/observation/selector';
+import { selectCurrentUnits } from '@store/settings/selectors';
 
 import {
   setStationId as setStationIdAction,
@@ -48,6 +49,7 @@ const mapStateToProps = (state: State) => ({
   stationList: selectStationList(state),
   chartParameter: selectChartDisplayParameter(state),
   displayFormat: selectDisplayFormat(state),
+  units: selectCurrentUnits(state),
 });
 
 const mapDispatchToProps = {
@@ -76,6 +78,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   updateChartParameter,
   displayFormat,
   updateDisplayFormat,
+  units,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('observation');
@@ -239,7 +242,12 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           />
           {displayFormat === LIST && <List data={data} parameter={parameter} />}
           {displayFormat === CHART && (
-            <Chart chartType={parameter} data={data} observation />
+            <Chart
+              chartType={parameter}
+              data={data}
+              observation
+              units={units}
+            />
           )}
         </View>
       )}

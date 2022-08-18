@@ -14,6 +14,7 @@ import { chartTickValues, chartXDomain, chartYDomain } from '@utils/chart';
 
 import { Config } from '@config';
 import { converter } from '@utils/units';
+import { Units } from '@store/settings/types';
 import { ChartData, ChartType, ChartValues, ChartMinMax } from './types';
 import ChartLegend from './Legend';
 import chartSettings from './settings';
@@ -27,6 +28,7 @@ type ChartProps = {
   activeDayIndex?: number;
   setActiveDayIndex?: (i: number) => void;
   currentDayOffset?: number;
+  units: Units;
 };
 
 const Chart: React.FC<ChartProps> = ({
@@ -36,6 +38,7 @@ const Chart: React.FC<ChartProps> = ({
   activeDayIndex,
   setActiveDayIndex,
   currentDayOffset,
+  units,
 }) => {
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
   const [scrollIndex, setScrollIndex] = useState<number>(
@@ -44,7 +47,6 @@ const Chart: React.FC<ChartProps> = ({
   const { t, i18n } = useTranslation('weather');
   moment.locale(i18n.language);
 
-  const units = useMemo(() => Config.get('settings').units, []);
   const { timePeriod } = Config.get('weather').observation;
 
   const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
@@ -207,7 +209,11 @@ const Chart: React.FC<ChartProps> = ({
           right
         />
       </View>
-      <ChartLegend chartType={chartType} observation={observation} />
+      <ChartLegend
+        chartType={chartType}
+        observation={observation}
+        units={units}
+      />
     </View>
   );
 };

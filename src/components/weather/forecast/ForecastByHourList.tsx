@@ -17,6 +17,7 @@ import Icon from '@components/common/Icon';
 import { State } from '@store/types';
 import { TimeStepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
+import { selectCurrentUnits } from '@store/settings/selectors';
 import {
   BLACK_OPACITY,
   WHITE_TRANSPARENT,
@@ -30,6 +31,7 @@ import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
 const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
+  units: selectCurrentUnits(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -51,6 +53,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   setActiveDayIndex,
   currentDayOffset,
   displayParams,
+  units,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
@@ -336,7 +339,11 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               console.warn(`scroll to index: ${index} failed`);
             }}
             renderItem={({ item }: any) => (
-              <ForecastListColumn data={item} displayParams={displayParams} />
+              <ForecastListColumn
+                data={item}
+                displayParams={displayParams}
+                units={units}
+              />
             )}
             horizontal
             showsHorizontalScrollIndicator={false}

@@ -393,7 +393,7 @@ const SettingsScreen: React.FC<Props> = ({
                   <Text
                     style={[styles.title, { color: colors.text }]}
                     accessibilityRole="header">
-                    {unit.parameterName}
+                    {t(`${unit.parameterName}`)}
                   </Text>
                 </View>
               </View>
@@ -408,17 +408,23 @@ const SettingsScreen: React.FC<Props> = ({
                   <AccessibleTouchableOpacity
                     delayPressIn={100}
                     onPress={() =>
-                      updateUnits(
-                        unit.parameterName as keyof Units,
-                        type.unitAbb as Units[keyof Units]
-                      )
-                    }>
+                      units[unit.parameterName as keyof Units] === type.unitAbb
+                        ? {}
+                        : updateUnits(
+                            unit.parameterName as keyof Units,
+                            type.unitAbb as Units[keyof Units]
+                          )
+                    }
+                    accessibilityState={{
+                      selected:
+                        units[unit.parameterName as keyof Units] ===
+                        type.unitAbb,
+                    }}
+                    accessibilityRole="button">
                     <View style={styles.row}>
-                      <Text
-                        style={[
-                          styles.text,
-                          { color: colors.text },
-                        ]}>{`${type.unit} (${type.unitAbb})`}</Text>
+                      <Text style={[styles.text, { color: colors.text }]}>{`${t(
+                        `abbreviations.${type.unitAbb}`
+                      )} (${type.unitAbb})`}</Text>
                       {units[unit.parameterName as keyof Units] ===
                         type.unitAbb && (
                         <View testID="settings_theme_automatic">

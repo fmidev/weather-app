@@ -6,7 +6,7 @@ import { SettingsState } from './types';
 export const selectSettingsDomain: Selector<State, SettingsState> = (state) =>
   state.settings;
 
-export const selectUnits = createSelector(
+export const selectUserUnits = createSelector(
   selectSettingsDomain,
   (settings) => settings.units
 );
@@ -16,7 +16,7 @@ export const selectTheme = createSelector(
   (settings) => settings.theme
 );
 
-export const selectCurrentUnits = createSelector(selectUnits, (units) => {
+export const selectCurrentUnits = createSelector(selectUserUnits, (units) => {
   const defaultUnits = Config.get('settings').units;
   return { ...defaultUnits, ...units };
 });
