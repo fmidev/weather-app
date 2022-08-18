@@ -188,7 +188,9 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
     if (background.equals("dark"))
       main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#80000000"));
     else if (background.equals("light")) {
-      main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.argb(100, 238, 238, 238));
+      main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.rgb(255, 255, 255));
+      main.setInt(R.id.locationTextView, "setTextColor", Color.rgb(48, 49, 147));
+      main.setInt(R.id.observationTitleTextView, "setTextColor", Color.rgb(48, 49, 147));
     } else
       main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
 
@@ -337,6 +339,9 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
             cell.setTextViewText(R.id.timeTextView, hourformat.format(date));
           else
             cell.setTextViewText(R.id.timeTextView, shortdayformat.format(date));
+
+          if (background.equals("light"))
+            cell.setInt(R.id.timeTextView, "setTextColor", Color.rgb(48, 49, 147));
         } catch (Exception e) {
           continue;
         }
@@ -344,6 +349,9 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
         iso2 = current.getString("iso2");
         String temperature = current.getString("Temperature");
         cell.setTextViewText(R.id.temperatureTextView, temperature + "°");
+
+        if (background.equals("light"))
+          cell.setInt(R.id.temperatureTextView, "setTextColor", Color.rgb(48, 49, 147));
 
         String weathersymbol = current.getString("SmartSymbol");
 
@@ -449,10 +457,14 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
 
         if (dpiwidth < 400)
           column1 = new RemoteViews(context.getPackageName(), R.layout.parametertextviewsmall);
-        else
+         else
           column1 = new RemoteViews(context.getPackageName(), R.layout.parametertextview);
 
         column1.setTextViewText(R.id.emptyTextView, parameters);
+        if (background.equals("light")) {
+          column1.setInt(R.id.emptyTextView, "setTextColor", Color.rgb(48, 49, 147));
+        }
+
         main.addView(R.id.observationsLinearLayout, column1);
 
         RemoteViews column2 = null;
@@ -463,6 +475,10 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
           column2 = new RemoteViews(context.getPackageName(), R.layout.valuetextview);
 
         column2.setTextViewText(R.id.emptyTextView, values);
+        if (background.equals("light")) {
+          column2.setInt(R.id.emptyTextView, "setTextColor", Color.rgb(48, 49, 147));
+        }
+
         main.addView(R.id.observationsLinearLayout, column2);
 
         parameters = "";
@@ -527,6 +543,10 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
           column3 = new RemoteViews(context.getPackageName(), R.layout.parametertextview);
 
         column3.setTextViewText(R.id.emptyTextView, parameters);
+        if (background.equals("light")) {
+          column3.setInt(R.id.emptyTextView, "setTextColor", Color.rgb(48, 49, 147));
+        }
+
         main.addView(R.id.observationsLinearLayout, column3);
 
         RemoteViews column4 = null;
@@ -537,6 +557,10 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
           column4 = new RemoteViews(context.getPackageName(), R.layout.valuetextview);
 
         column4.setTextViewText(R.id.emptyTextView, values);
+        if (background.equals("light")) {
+          column4.setInt(R.id.emptyTextView, "setTextColor", Color.rgb(48, 49, 147));
+        }
+
         main.addView(R.id.observationsLinearLayout, column4);
 
         break;
