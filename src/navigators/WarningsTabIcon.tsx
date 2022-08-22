@@ -6,7 +6,7 @@ import { selectTheme } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { connect } from 'react-redux';
 import { Warning } from '@store/warnings/types';
-import { Theme } from '@store/settings/types';
+import { useTheme } from '@react-navigation/native';
 
 const mapStateToProps = (state: State) => ({
   warningData: selectCurrentDayWarningData(state),
@@ -25,35 +25,32 @@ type WarningData = {
 type Props = {
   color: string;
   size: number;
-  theme: Theme;
   warningData: WarningData[];
 };
 
-const getIconName = (severity: number, theme: Theme): string => {
+const getIconName = (severity: number, dark: boolean): string => {
   switch (severity) {
     case 1:
-      return `warnings-yellow${theme === 'dark' ? '-dark' : ''}`;
+      return `warnings-yellow-${dark ? 'dark' : 'light'}`;
     case 2:
-      return `warnings-orange${theme === 'dark' ? '-dark' : ''}`;
+      return `warnings-orange-${dark ? 'dark' : 'light'}`;
     case 3:
-      return `warnings-red${theme === 'dark' ? '-dark' : ''}`;
+      return `warnings-red-${dark ? 'dark' : 'light'}`;
     default:
       return 'warnings';
   }
 };
 
-const WarningsTabIcon: React.FC<Props> = ({
-  color,
-  theme,
-  size,
-  warningData,
-}) => (
-  <Icon
-    name={getIconName(warningData[0].severity, theme)}
-    style={{ color }}
-    width={size}
-    height={size}
-  />
-);
+const WarningsTabIcon: React.FC<Props> = ({ color, size, warningData }) => {
+  const { dark } = useTheme();
+  return (
+    <Icon
+      name={getIconName(warningData[0].severity, dark)}
+      style={{ color }}
+      width={size}
+      height={size}
+    />
+  );
+};
 
 export default connector(WarningsTabIcon);

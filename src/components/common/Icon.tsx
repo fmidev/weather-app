@@ -99,11 +99,11 @@ import WarningsWindOrange from '@assets/images/icons/warnings-wind-orange.svg';
 import WarningsWindRed from '@assets/images/icons/warnings-wind-red.svg';
 import WarningsWindYellow from '@assets/images/icons/warnings-wind-yellow.svg';
 import Warnings from '@assets/images/icons/warnings.svg';
-import WarningsOrange from '@assets/images/icons/warnings-orange.svg';
+import WarningsOrangeLight from '@assets/images/icons/warnings-orange-light.svg';
 import WarningsOrangeDark from '@assets/images/icons/warnings-orange-dark.svg';
-import WarningsYellow from '@assets/images/icons/warnings-yellow.svg';
+import WarningsYellowLight from '@assets/images/icons/warnings-yellow-light.svg';
 import WarningsYellowDark from '@assets/images/icons/warnings-yellow-dark.svg';
-import WarningsRed from '@assets/images/icons/warnings-red.svg';
+import WarningsRedLight from '@assets/images/icons/warnings-red-light.svg';
 import WarningsRedDark from '@assets/images/icons/warnings-red-dark.svg';
 import WeatherSymbol from '@assets/images/icons/weather-symbol.svg';
 import Weather from '@assets/images/icons/weather.svg';
@@ -333,16 +333,16 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WarningsWindYellow {...(props as SvgProps)} />;
     case 'warnings':
       return <Warnings {...(props as SvgProps)} />;
-    case 'warnings-orange':
-      return <WarningsOrange {...(props as SvgProps)} />;
+    case 'warnings-orange-light':
+      return <WarningsOrangeLight {...(props as SvgProps)} />;
     case 'warnings-orange-dark':
       return <WarningsOrangeDark {...(props as SvgProps)} />;
-    case 'warnings-yellow':
-      return <WarningsYellow {...(props as SvgProps)} />;
+    case 'warnings-yellow-light':
+      return <WarningsYellowLight {...(props as SvgProps)} />;
     case 'warnings-yellow-dark':
       return <WarningsYellowDark {...(props as SvgProps)} />;
-    case 'warnings-red':
-      return <WarningsRed {...(props as SvgProps)} />;
+    case 'warnings-red-light':
+      return <WarningsRedLight {...(props as SvgProps)} />;
     case 'warnings-red-dark':
       return <WarningsRedDark {...(props as SvgProps)} />;
     case 'weather-symbol':
