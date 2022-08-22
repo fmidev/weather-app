@@ -186,7 +186,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
     }
 
     if (background.equals("dark"))
-      main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#80000000"));
+      main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
     else if (background.equals("light")) {
       main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.rgb(255, 255, 255));
       main.setInt(R.id.locationTextView, "setTextColor", Color.rgb(48, 49, 147));
@@ -592,7 +592,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
     main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
     if (background.equals("dark"))
-      main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#80000000"));
+      main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
     else if (background.equals("light")) {
       main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.argb(100, 238, 238, 238));
     } else
