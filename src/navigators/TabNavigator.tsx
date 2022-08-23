@@ -78,6 +78,7 @@ import {
   MapStackParamList,
   WeatherStackParamList,
 } from './types';
+import WarningsTabIcon from './WarningsTabIcon';
 
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
@@ -508,12 +509,7 @@ const Navigator: React.FC<Props> = ({
               tabBarTestID: 'navigation_warnings',
               tabBarLabel: `${t('navigation:warnings')}`,
               tabBarIcon: ({ color, size }) => (
-                <Icon
-                  name="warnings"
-                  style={{ color }}
-                  width={size}
-                  height={size}
-                />
+                <WarningsTabIcon color={color} size={size} />
               ),
             }}
           />
