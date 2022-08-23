@@ -258,7 +258,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
           String weathersymbol = current.getString("SmartSymbol");
 
           Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-              context.getResources().getIdentifier("s" + weathersymbol, "drawable", context.getPackageName()));
+              context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
 
           main.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
@@ -356,7 +356,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
         String weathersymbol = current.getString("SmartSymbol");
 
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-            context.getResources().getIdentifier("s" + weathersymbol, "drawable", context.getPackageName()));
+            context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
 
         cell.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
