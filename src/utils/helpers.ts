@@ -133,11 +133,12 @@ const minusParams = ['temperature', 'dewPoint'];
 export const convertValueToUnitPrecision = (
   unit: string,
   unitAbb: string,
-  val: number | undefined | null
+  val: number | undefined | null,
+  decimals?: number
 ) => {
   const result =
     val || val === 0
-      ? toPrecision(unit, unitAbb, converter(unitAbb, val))
+      ? toPrecision(unit, unitAbb, converter(unitAbb, val), decimals)
       : null;
   return result;
 };
@@ -146,7 +147,7 @@ export const getObservationCellValue = (
   item: ObsTimeStepData,
   param: keyof ObsTimeStepData,
   unit: string,
-  decimal?: number,
+  decimals?: number,
   divider?: number,
   showUnit?: boolean
 ): string => {
@@ -165,14 +166,15 @@ export const getObservationCellValue = (
       ? convertValueToUnitPrecision(
           unitParameterObject.parameterName,
           unitAbb,
-          Number(dividedValue)
+          Number(dividedValue),
+          decimals
         )
       : dividedValue;
     if (!value) return '-';
 
     return `${(unitParameterObject
       ? value
-      : Number(value).toFixed(decimal || 0)
+      : Number(value).toFixed(decimals || 0)
     )
       .toString()
       .replace('.', ',')} ${showUnit ? unit : ''}`.trim();

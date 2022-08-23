@@ -137,14 +137,15 @@ export const getDefaultUnits = (): UnitMap | undefined => {
 export const toPrecision = (
   unit: string,
   unitAbb: string,
-  value: number
+  value: number,
+  decimals?: number
 ): string => {
   const unitTypes = UNITS.find((u) => u.parameterName === unit)?.unitTypes;
   if (!unitTypes) return value.toString();
   const type: UnitType | undefined = unitTypes.find(
     (t) => t.unitAbb === unitAbb
   );
-  if (type) return value.toFixed(type.unitPrecision);
+  if (type) return value.toFixed(decimals ?? type.unitPrecision);
   return value.toString();
 };
 
