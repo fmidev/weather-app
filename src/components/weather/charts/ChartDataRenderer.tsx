@@ -4,7 +4,7 @@ import { VictoryAxis, VictoryChart } from 'victory-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
-import { tickFormat } from '@utils/chart';
+import { getTickFormat } from '@utils/chart';
 import { ChartDataProps, ChartDomain, ChartType, ChartValues } from './types';
 
 type ChartDataRendererProps = {
@@ -14,6 +14,7 @@ type ChartDataRendererProps = {
   chartType: ChartType;
   chartValues: ChartValues;
   Component: React.FC<ChartDataProps>;
+  locale: string;
 };
 const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartDimensions,
@@ -22,6 +23,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartType,
   chartValues,
   Component,
+  locale,
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
@@ -41,7 +43,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
       scale={{ x: 'linear' }}>
       <VictoryAxis
         scale={{ x: 'linear' }}
-        tickFormat={tickFormat}
+        tickFormat={getTickFormat(locale)}
         tickValues={tickValues}
         orientation="bottom"
         style={{

@@ -90,7 +90,7 @@ export const chartTickValues = (
 export const capitalize = ([first, ...rest]: string) =>
   first.toUpperCase() + rest.join('');
 
-export const tickFormat = (tick: any): string | number => {
+export const tickFormat = (tick: any, locale: string): string | number => {
   const time = moment(tick);
   const hour = time.hour();
   const minutes = time.minutes();
@@ -99,11 +99,14 @@ export const tickFormat = (tick: any): string | number => {
     return '';
   }
   if (hour === 0) {
-    return `${capitalize(time.format('dd'))}
+    return `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))}
 ${time.format('D.M.')}`;
   }
   return time.format('HH');
 };
+
+export const getTickFormat = (locale: string) => (tick: any) =>
+  tickFormat(tick, locale);
 
 export const chartYLabelText = (chartType: ChartType) => {
   const { units } = Config.get('settings');
