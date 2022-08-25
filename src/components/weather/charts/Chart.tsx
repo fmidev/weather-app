@@ -196,6 +196,7 @@ const Chart: React.FC<ChartProps> = ({
             chartType={chartType}
             Component={Component}
             chartValues={chartValues}
+            locale={i18n.language}
           />
         </ScrollView>
         <ChartYAxis

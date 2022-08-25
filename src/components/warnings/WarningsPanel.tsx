@@ -73,6 +73,9 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
     return null;
   }
 
+  const locale = i18n.language;
+  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+
   return (
     <View
       style={[
@@ -199,7 +202,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                           color: colors.text,
                         },
                       ]}>
-                      {moment(date).format('dd')}
+                      {moment(date).format(weekdayAbbreviationFormat)}
                     </Text>
                     <Text
                       style={[

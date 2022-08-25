@@ -88,6 +88,8 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       converter(temperatureUnit, minTemperature)
     );
 
+    const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+
     return (
       <View
         key={timeStamp}
@@ -116,7 +118,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             accessibilityLabel={stepMoment
               .locale(locale)
               .format('dddd, Do MMMM')}>
-            {stepMoment.locale(locale).format('dd')}{' '}
+            {stepMoment.locale(locale).format(weekdayAbbreviationFormat)}{' '}
             <Text style={[styles.bold, { color: colors.primaryText }]}>
               {stepMoment.locale(locale).format('D.M.')}
             </Text>

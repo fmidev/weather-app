@@ -96,10 +96,12 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       Number(moment(overlay.observation.end).format('X'))) ||
     0;
 
+  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+
   const currentSliderTime = moment
     .unix(sliderTime)
     .locale(locale)
-    .format('dd HH:mm');
+    .format(`${weekdayAbbreviationFormat} HH:mm`);
 
   const { sliderStep, sliderTimes } = useMemo(() => {
     const minUnix = getSliderMinUnix(activeOverlayId, overlay);

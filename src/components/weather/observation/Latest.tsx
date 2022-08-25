@@ -21,12 +21,14 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
   const locale = i18n.language;
   const { parameters } = Config.get('weather').observation;
 
+  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+
   const [latestObservation] = data || [];
   const latestObservationTime =
     latestObservation &&
     moment(latestObservation.epochtime * 1000)
       .locale(locale)
-      .format(`dd D.M. [${t('at')}] HH:mm`);
+      .format(`${weekdayAbbreviationFormat} D.M. [${t('at')}] HH:mm`);
 
   const latestParameters: {
     [key in keyof Partial<ObservationParameters>]: {
