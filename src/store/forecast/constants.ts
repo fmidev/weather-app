@@ -10,6 +10,7 @@ export const DEW_POINT = 'dewPoint';
 export const RELATIVE_HUMIDITY = 'relativeHumidity';
 export const PRESSURE = 'pressure';
 export const UV_CUMULATED = 'uvCumulated';
+export const DAY_LENGTH = 'dayLength';
 
 export const PARAMS_TO_ICONS = {
   smartSymbol: 'weather-symbol',
@@ -20,6 +21,7 @@ export const PARAMS_TO_ICONS = {
   precipitation1h: 'precipitation',
   pop: 'precipitation',
   dewPoint: 'dew-point',
+  dayLength: 'time',
 } as { [key: string]: string };
 
 export default [
@@ -35,4 +37,5 @@ export default [
   RELATIVE_HUMIDITY,
   PRESSURE,
   UV_CUMULATED,
+  DAY_LENGTH,
 ];
