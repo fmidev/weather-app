@@ -23,7 +23,7 @@
                                     <constraint firstAttribute="width" secondItem="jId-4J-nZW" secondAttribute="height" multiplier="1:1" id="njq-XH-8Vx"/>
                                 </constraints>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FmiLogo" translatesAutoresizingMaskIntoConstraints="NO" id="jEE-qh-axV">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ProviderLogo" translatesAutoresizingMaskIntoConstraints="NO" id="jEE-qh-axV">
                                 <rect key="frame" x="40" y="84" width="216" height="40"/>
                             </imageView>
                         </subviews>
@@ -44,7 +44,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="FmiLogo" width="216" height="40"/>
+        <image name="ProviderLogo" width="216" height="40"/>
         <image name="SplashBackground" width="520" height="520"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

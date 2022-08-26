@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "fmi-logo-light.png",
+      "filename" : "provider-logo-light.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "fmi-logo-dark.png",
+      "filename" : "provider-logo-dark.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "fmi-logo-light@2x.png",
+      "filename" : "provider-logo-light@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "fmi-logo-dark@2x.png",
+      "filename" : "provider-logo-dark@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "fmi-logo-light@3x.png",
+      "filename" : "provider-logo-light@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "fmi-logo-dark@3x.png",
+      "filename" : "provider-logo-dark@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
