@@ -58,6 +58,7 @@ export interface MapLayer {
   // legend: string;
   sources: WMSSource[] | TimeseriesSource[];
   times: Times;
+  tileSize?: number;
 }
 
 interface Observation {

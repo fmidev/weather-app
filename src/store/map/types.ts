@@ -102,6 +102,7 @@ export interface MapOverlay {
   forecast?: Layer | TimeseriesLayer;
   data?: TimeseriesData[];
   step: number;
+  tileSize?: number;
 }
 
 export interface Error {

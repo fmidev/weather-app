@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Image, ImageURISource } from 'react-native';
-import { Overlay } from 'react-native-maps';
 import moment from 'moment';
 
 import {
@@ -15,6 +13,7 @@ import { Layer, MapOverlay } from '@store/map/types';
 import { selectActiveOverlay, selectSliderTime } from '@store/map/selectors';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import packageJSON from '../../../../package.json';
+import MemoizedWMSTile from './MemoizedWMSTile';
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
@@ -43,7 +42,11 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     time: string;
     type: 'observation' | 'forecast';
   }>({ time: moment.utc().toISOString(), type: 'observation' });
+  const [urlMap, setUrlMap] = useState<Map<string, string>>(new Map());
 
+  const updateUrlMap = (k: string, v: string) => {
+    setUrlMap(new Map(urlMap.set(k, v)));
+  };
   const current = moment.unix(sliderTime).toISOString();
 
   const currentStep = getSliderStepSeconds(overlay.step);
@@ -56,25 +59,6 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     () => getSliderMaxUnix(activeOverlayId, overlay),
     [activeOverlayId, overlay]
   );
-
-  const prefetchImages = async (urls: string[]) => {
-    try {
-      return await Promise.all(urls.map((url) => Image.prefetch(url)));
-    } catch (e) {
-      return false;
-    }
-  };
-
-  const checkCache = async (urls: string[]) => {
-    try {
-      if (Image.queryCache) {
-        return await Image.queryCache(urls);
-      }
-      return false;
-    } catch (e) {
-      return false;
-    }
-  };
 
   const formatUrlWithStyles = (timestamp: string): string | false => {
     const isForecast = borderTimeComparer(timestamp);
@@ -118,38 +102,25 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
         moment.unix(unix).toISOString()
       );
 
-      const urls = timeStamps.map((stamp) => formatUrlWithStyles(stamp));
-
-      const filteredUrls = urls.filter((x) => !!x) as string[];
-
-      prefetchImages(filteredUrls).then((data) => {
-        if (data) console.log('prefetch done');
-      });
-
-      // DEV: only to check if prefetch was succesful
-      checkCache(filteredUrls).then((data) => {
-        if (data) console.log('cache hit');
+      timeStamps.forEach((stamp) => {
+        const formatted = formatUrlWithStyles(stamp);
+        if (formatted) updateUrlMap(stamp, formatted);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [observation, forecast]);
   if (!overlay.observation && !overlay.forecast) return null;
 
-  const layerBounds = borderTimeComparer(current)
-    ? (forecast?.bounds as { [key: string]: [number, number] })
-    : (observation?.bounds as { [key: string]: [number, number] });
-
-  const bounds: [[number, number], [number, number]] = [
-    layerBounds?.bottomLeft,
-    layerBounds?.topRight,
-  ];
-
-  const image = formatUrlWithStyles(current) as ImageURISource;
-
   // return null until something to return
-  if (!image || !bounds || sliderTime === 0 || !isFocused) return null;
+  if (!urlMap || !urlMap.has(current) || sliderTime === 0 || !isFocused)
+    return null;
 
-  return <Overlay bounds={bounds} image={image} />;
+  return (
+    <MemoizedWMSTile
+      urlTemplate={urlMap.get(current) as string}
+      tileSize={overlay.tileSize}
+    />
+  );
 };
 
 export default connector(WMSOverlay);

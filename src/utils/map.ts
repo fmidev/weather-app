@@ -1,5 +1,5 @@
 import moment from 'moment';
-import proj4 from 'proj4';
+// import proj4 from 'proj4';
 import { parse } from 'fast-xml-parser';
 
 import { MapOverlay } from '@store/map/types';
@@ -262,16 +262,16 @@ const getWMSLayerUrlsAndBounds = async (
         Number(maxx),
         Number(maxy),
       ];
-      const [minX, minY] = proj4('WGS84', 'EPSG:3857', [
-        numMinX,
-        numMinY < -85 ? 85 : numMinY,
-      ]);
-      const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [
-        numMaxX,
-        numMaxY > 85 ? 85 : numMaxY,
-      ]);
+      // const [minX, minY] = proj4('WGS84', 'EPSG:3857', [
+      //   numMinX,
+      //   numMinY < -85 ? 85 : numMinY,
+      // ]);
+      // const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [
+      //   numMaxX,
+      //   numMaxY > 85 ? 85 : numMaxY,
+      // ]);
 
-      const bbox = `${minX},${minY},${maxX},${maxY}`;
+      // const bbox = `${minX},${minY},${maxX},${maxY}`;
 
       const overlayBounds = {
         bottomLeft: [numMinY, numMinX],
@@ -287,12 +287,12 @@ const getWMSLayerUrlsAndBounds = async (
         ...layerSrc.customParameters,
       };
 
-      const defaultRatio = {
-        width: 1024,
-        height: 1024,
-      };
+      // const defaultRatio = {
+      //   width: 1024,
+      //   height: 1024,
+      // };
 
-      const { width, height } = layerSrc.properties?.image || defaultRatio;
+      // const { width, height } = layerSrc.properties?.image || defaultRatio;
 
       const query = new URLSearchParams({
         service: 'WMS',
@@ -300,9 +300,12 @@ const getWMSLayerUrlsAndBounds = async (
         request: 'GetMap',
         transparent: 'true',
         layers: layerSrc.layer,
-        bbox,
-        width: `${width}`,
-        height: `${height}`,
+        // bbox,
+        // width: `${width}`,
+        // height: `${height}`,
+        bbox: '{minX},{minY},{maxX},{maxY}',
+        width: '{width}',
+        height: '{height}',
         format: 'image/png',
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
@@ -320,6 +323,7 @@ const getWMSLayerUrlsAndBounds = async (
           styles,
         },
         step: layer.times.timeStep,
+        tileSize: layer.tileSize,
       });
     });
 
