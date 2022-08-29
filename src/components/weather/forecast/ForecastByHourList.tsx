@@ -104,7 +104,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
           styles.forecastHeader,
           {
             borderColor: colors.border,
-            backgroundColor: isOdd(displayParams.length)
+            backgroundColor: !isOdd(displayParams.length)
               ? colors.listTint
               : undefined,
           },
