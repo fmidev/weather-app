@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
+import { Platform } from 'react-native';
 import moment from 'moment';
 
 import {
@@ -104,22 +105,55 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
       timeStamps.forEach((stamp) => {
         const formatted = formatUrlWithStyles(stamp);
-        if (formatted) updateUrlMap(stamp, formatted);
+        if (formatted) {
+          updateUrlMap(stamp, formatted);
+        }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [observation, forecast]);
+
   if (!overlay.observation && !overlay.forecast) return null;
 
   // return null until something to return
-  if (!urlMap || !urlMap.has(current) || sliderTime === 0 || !isFocused)
-    return null;
+  if (!urlMap.has(current) || sliderTime === 0 || !isFocused) return null;
+
+  if (Platform.OS === 'ios') {
+    const tiles = [...urlMap.keys()];
+    const currentTile = tiles.indexOf(current);
+    const renderTiles = [
+      ...new Set([
+        tiles[currentTile],
+        tiles[currentTile !== 0 ? currentTile - 1 : 0],
+        tiles[currentTile !== tiles.length - 1 ? currentTile + 1 : 0],
+      ]),
+    ];
+
+    return (
+      <>
+        {renderTiles.map((k) => (
+          <MemoizedWMSTile
+            key={k}
+            urlTemplate={urlMap.get(k) as string}
+            opacity={k === current ? 1 : 0}
+            tileSize={overlay.tileSize}
+          />
+        ))}
+      </>
+    );
+  }
 
   return (
-    <MemoizedWMSTile
-      urlTemplate={urlMap.get(current) as string}
-      tileSize={overlay.tileSize}
-    />
+    <>
+      {[...urlMap.keys()].map((k) => (
+        <MemoizedWMSTile
+          key={k}
+          urlTemplate={urlMap.get(k) as string}
+          opacity={k === current ? 1 : 0}
+          tileSize={overlay.tileSize}
+        />
+      ))}
+    </>
   );
 };
 
