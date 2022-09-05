@@ -125,6 +125,7 @@ const Navigator: React.FC<Props> = ({
 
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
+  const [warningsSeverity, setWarningsSeverity] = useState<number>(0);
 
   const handleLanguageChanged = useCallback(() => {
     setDidChangeLanguage(true);
@@ -504,12 +505,20 @@ const Navigator: React.FC<Props> = ({
             options={{
               tabBarAccessibilityLabel: `${t('navigation:warnings')}, 3 ${t(
                 'navigation:slash'
-              )} 4`,
+              )} 4, ${t(
+                warningsSeverity > 0
+                  ? 'warnings:hasWarnings'
+                  : 'warnings:noWarnings'
+              )}`,
               headerShown: false,
               tabBarTestID: 'navigation_warnings',
               tabBarLabel: `${t('navigation:warnings')}`,
               tabBarIcon: ({ color, size }) => (
-                <WarningsTabIcon color={color} size={size} />
+                <WarningsTabIcon
+                  color={color}
+                  size={size}
+                  updateWarningsSeverity={setWarningsSeverity}
+                />
               ),
             }}
           />

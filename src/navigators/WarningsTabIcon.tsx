@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Icon from '@components/common/Icon';
 
 import { selectCurrentDayWarningData } from '@store/warnings/selectors';
@@ -26,6 +26,7 @@ type Props = {
   color: string;
   size: number;
   warningData: WarningData[];
+  updateWarningsSeverity: Function;
 };
 
 const getIconName = (severity: number, dark: boolean): string => {
@@ -41,8 +42,18 @@ const getIconName = (severity: number, dark: boolean): string => {
   }
 };
 
-const WarningsTabIcon: React.FC<Props> = ({ color, size, warningData }) => {
+const WarningsTabIcon: React.FC<Props> = ({
+  color,
+  size,
+  warningData,
+  updateWarningsSeverity,
+}) => {
   const { dark } = useTheme();
+
+  useEffect(() => {
+    updateWarningsSeverity(warningData[0].severity);
+  }, [warningData, updateWarningsSeverity]);
+
   return (
     <Icon
       name={getIconName(warningData[0].severity, dark)}
