@@ -103,6 +103,7 @@
       "relativeHumidity": "Relative humidity (%)",
       "pressure": "Pressure ({{ unit }})",
       "uvCumulated": "UV index",
+      "dayLength": "Day length",
       "selectAccessibilityHint": "Double tap to select parameter",
       "unSelectAccessibilityHint": "Double tap to deselect parameter",
       "restoreDefaultHint": "Restore default selection"

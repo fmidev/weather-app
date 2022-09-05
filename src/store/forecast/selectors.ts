@@ -7,7 +7,7 @@ import { Config } from '@config';
 import { getIndexForDaySmartSymbol } from '@utils/helpers';
 import { State } from '../types';
 import { DisplayParameters, ForecastState, TimeStepData } from './types';
-import constants from './constants';
+import constants, { DAY_LENGTH } from './constants';
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
@@ -166,9 +166,8 @@ export const selectDisplayParams = createSelector(
   (forecast) => {
     const { data, defaultParameters } = Config.get('weather').forecast;
     const regex = new RegExp(
-      data.flatMap(({ parameters }) => parameters).join('|')
+      [...data.flatMap(({ parameters }) => parameters), DAY_LENGTH].join('|')
     );
-
     return (
       forecast.displayParams.length > 0
         ? forecast.displayParams

@@ -103,6 +103,7 @@
       "relativeHumidity": "Suhteellinen kosteus (%)",
       "pressure": "Ilmanpaine ({{ unit }})",
       "uvCumulated": "UV indeksi",
+      "dayLength": "Päivän pituus",
       "selectAccessibilityHint": "Kaksoisnapauta valitaksesi",
       "unSelectAccessibilityHint": "Kaksoisnapauta poistaaksesi valinta",
       "restoreDefaultHint": "Palauta oletusvalinta"

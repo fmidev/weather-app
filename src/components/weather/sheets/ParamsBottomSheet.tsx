@@ -26,6 +26,7 @@ import constants, {
   PRESSURE,
   UV_CUMULATED,
   PARAMS_TO_ICONS,
+  DAY_LENGTH,
 } from '@store/forecast/constants';
 
 import { useOrientation } from '@utils/hooks';
@@ -70,7 +71,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   } = Config.get('weather').forecast;
   const activeParameters = data.flatMap(({ parameters }) => parameters);
 
-  const regex = new RegExp(activeParameters.join('|'));
+  const regex = new RegExp([...activeParameters, DAY_LENGTH].join('|'));
   const activeConstants = constants.filter((constant) =>
     regex.test(constant)
   ) as DisplayParameters[];

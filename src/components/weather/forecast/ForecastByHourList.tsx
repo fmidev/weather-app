@@ -25,6 +25,7 @@ import {
 } from '@utils/colors';
 
 import { isOdd } from '@utils/helpers';
+import { DAY_LENGTH } from '@store/forecast/constants';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
@@ -103,7 +104,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
           styles.forecastHeader,
           {
             borderColor: colors.border,
-            backgroundColor: isOdd(displayParams.length)
+            backgroundColor: !isOdd(displayParams.length)
               ? colors.listTint
               : undefined,
           },
@@ -349,7 +350,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
           />
         </View>
       </View>
-      <DayDurationRow />
+      {displayParams
+        .map((displayParam) => displayParam[1])
+        .includes(DAY_LENGTH) && <DayDurationRow />}
       <LinearGradient
         pointerEvents="none"
         style={[styles.gradient, styles.gradientLeft]}

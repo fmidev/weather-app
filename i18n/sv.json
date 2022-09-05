@@ -103,6 +103,7 @@
       "relativeHumidity": "Relativ fuktighet (%)",
       "pressure": "Lufttryck ({{ unit }})",
       "uvCumulated": "UV index",
+      "dayLength": "Dagens längd",
       "selectAccessibilityHint": "Dubbelklicka för att välja",
       "unSelectAccessibilityHint": "Dubbelklicka för att ta bort valet",
       "restoreDefaultHint": "Återställ standardval"
