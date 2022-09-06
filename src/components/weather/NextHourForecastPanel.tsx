@@ -1,6 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
+import {
+  ActivityIndicator,
+  View,
+  Text,
+  StyleSheet,
+  GestureResponderEvent,
+} from 'react-native';
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/sv';
@@ -14,7 +20,11 @@ import {
   selectLoading,
   selectNextHourForecast,
 } from '@store/forecast/selectors';
-import { selectTimeZone } from '@store/location/selector';
+import {
+  selectTimeZone,
+  selectFavorites,
+  selectCurrent,
+} from '@store/location/selector';
 import { weatherSymbolGetter } from '@assets/images';
 
 import { getFeelsLikeIconName } from '@utils/helpers';
@@ -23,14 +33,21 @@ import { CustomTheme, GRAY_1 } from '@utils/colors';
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';
+import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
   nextHourForecast: selectNextHourForecast(state),
   timezone: selectTimeZone(state),
+  favorites: selectFavorites(state),
+  currentLocation: selectCurrent(state),
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = {
+  setCurrentLocation: setCurrentLocationAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -40,9 +57,35 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   loading,
   nextHourForecast,
   timezone,
+  favorites,
+  currentLocation,
+  setCurrentLocation,
 }) => {
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
+  const [locationIndex, setLocationIndex] = useState<number>(0);
+
+  const [initialLocation, setInitialLocation] = useState(currentLocation);
+
+  const allowUpdatingInitialLocationRef = useRef(true);
+
+  useEffect(() => {
+    if (
+      currentLocation.id !== initialLocation.id &&
+      allowUpdatingInitialLocationRef.current
+    ) {
+      setInitialLocation(currentLocation);
+      setLocationIndex(0);
+    }
+
+    allowUpdatingInitialLocationRef.current = true; // re-enable changing initial location after swipe
+  }, [currentLocation, initialLocation]);
+
+  const locations = useMemo(
+    () => [initialLocation, ...favorites],
+    [initialLocation, favorites]
+  );
+
   useEffect(() => {
     moment.tz.setDefault(timezone);
   }, [timezone]);
@@ -107,8 +150,38 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     nextHourForecast.precipitation1h
   );
 
+  let touchX: number | undefined;
+
+  const onTouchStart = (e: GestureResponderEvent) => {
+    const { pageX } = e.nativeEvent;
+    touchX = pageX;
+  };
+
+  const onTouchEnd = (e: GestureResponderEvent) => {
+    allowUpdatingInitialLocationRef.current = false; // do not update initial location when location is changed by swiping
+    const { pageX } = e.nativeEvent;
+    if (touchX !== undefined && pageX !== touchX) {
+      if (pageX > touchX) {
+        // left swipe
+        if (locationIndex > 0) {
+          setCurrentLocation(locations[locationIndex - 1]);
+          setLocationIndex(locationIndex - 1);
+        }
+      }
+      // right swipe
+      else if (locationIndex < locations.length - 1) {
+        setCurrentLocation(locations[locationIndex + 1]);
+        setLocationIndex(locationIndex + 1);
+      }
+    }
+    touchX = undefined;
+  };
+
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}>
       <View style={styles.alignCenter} accessible accessibilityRole="header">
         <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
           {t('nextHourForecast')}
@@ -262,6 +335,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
