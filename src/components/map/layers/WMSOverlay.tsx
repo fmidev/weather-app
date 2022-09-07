@@ -48,6 +48,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const updateUrlMap = (k: string, v: string) => {
     setUrlMap(new Map(urlMap.set(k, v)));
   };
+
   const current = moment.unix(sliderTime).toISOString();
 
   const currentStep = getSliderStepSeconds(overlay.step);
@@ -110,6 +111,9 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
         }
       });
     }
+
+    return () => urlMap.clear();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [observation, forecast]);
 
@@ -118,34 +122,24 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   // return null until something to return
   if (!urlMap.has(current) || sliderTime === 0 || !isFocused) return null;
 
-  if (Platform.OS === 'ios') {
-    const tiles = [...urlMap.keys()];
-    const currentTile = tiles.indexOf(current);
-    const renderTiles = [
+  const tiles = [...urlMap.keys()];
+
+  const iosTiles = () => {
+    const currentTileIndex = tiles.indexOf(current);
+    return [
       ...new Set([
-        tiles[currentTile],
-        tiles[currentTile !== 0 ? currentTile - 1 : 0],
-        tiles[currentTile !== tiles.length - 1 ? currentTile + 1 : 0],
+        tiles[currentTileIndex],
+        tiles[currentTileIndex !== 0 ? currentTileIndex - 1 : 0],
+        tiles[currentTileIndex !== tiles.length - 1 ? currentTileIndex + 1 : 0],
       ]),
     ];
+  };
 
-    return (
-      <>
-        {renderTiles.map((k) => (
-          <MemoizedWMSTile
-            key={k}
-            urlTemplate={urlMap.get(k) as string}
-            opacity={k === current ? 1 : 0}
-            tileSize={overlay.tileSize}
-          />
-        ))}
-      </>
-    );
-  }
+  const renderTiles = Platform.OS === 'ios' ? iosTiles() : tiles;
 
   return (
     <>
-      {[...urlMap.keys()].map((k) => (
+      {renderTiles.map((k) => (
         <MemoizedWMSTile
           key={k}
           urlTemplate={urlMap.get(k) as string}
