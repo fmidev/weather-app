@@ -40,14 +40,10 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const isFocused = useIsFocused();
 
   const [borderTime, setBorderTime] = useState<{
-    time: string;
+    time?: string;
     type: 'observation' | 'forecast';
-  }>({ time: moment.utc().toISOString(), type: 'observation' });
+  }>({ type: 'observation' });
   const [urlMap, setUrlMap] = useState<Map<string, string>>(new Map());
-
-  const updateUrlMap = (k: string, v: string) => {
-    setUrlMap(new Map(urlMap.set(k, v)));
-  };
 
   const current = moment.unix(sliderTime).toISOString();
 
@@ -64,6 +60,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   const formatUrlWithStyles = (timestamp: string): string | false => {
     const isForecast = borderTimeComparer(timestamp);
+
     const { url, styles } = (isForecast ? forecast : observation) || {};
     if (!url) {
       return false;
@@ -74,10 +71,12 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     }&time=${timestamp}&who=${packageJSON.name}`;
   };
 
-  const borderTimeComparer = (time: string): boolean =>
-    borderTime.type === 'forecast'
+  const borderTimeComparer = (time: string): boolean => {
+    if (!borderTime.time) return true;
+    return borderTime.type === 'forecast'
       ? time >= borderTime.time
       : time > borderTime.time;
+  };
 
   useEffect(() => {
     if (forecast && forecast.start) {
@@ -93,7 +92,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   }, [forecast, observation]);
 
   useEffect(() => {
-    if (!!observation?.url || !!forecast?.url) {
+    if ((!!observation?.url || !!forecast?.url) && borderTime.time) {
       let allDatesUnix: number[] = [];
       let curr = memoizedMinUnix;
       while (curr <= memoizedMaxUnix) {
@@ -104,18 +103,23 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
         moment.unix(unix).toISOString()
       );
 
-      timeStamps.forEach((stamp) => {
-        const formatted = formatUrlWithStyles(stamp);
-        if (formatted) {
-          updateUrlMap(stamp, formatted);
-        }
-      });
+      const map = timeStamps
+        .map((stamp) => {
+          const formatted = formatUrlWithStyles(stamp);
+          if (formatted) {
+            return [stamp, formatted];
+          }
+          return undefined;
+        })
+        .filter((x) => !!x) as [string, string][];
+
+      if (map && map.length > 0) {
+        setUrlMap(new Map(map));
+      }
     }
 
-    return () => urlMap.clear();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [observation, forecast]);
+  }, [observation, forecast, borderTime]);
 
   if (!overlay.observation && !overlay.forecast) return null;
 
