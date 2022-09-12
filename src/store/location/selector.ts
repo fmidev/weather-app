@@ -50,3 +50,13 @@ export const selectStoredGeoids = createSelector(
   [selectFavorites, selectRecent],
   (favorites, recent) => [...favorites, ...recent].map(({ id }) => id)
 );
+
+export const selectWeatherScreenInitialLocation = createSelector(
+  selectLocationDomain,
+  (location) => location.weatherScreenInitialLocation
+);
+
+export const selectWeatherScreenLocationIndex = createSelector(
+  selectLocationDomain,
+  (location) => location.weatherScreenLocationIndex
+);

@@ -14,6 +14,8 @@ import {
   FETCH_AUTOCOMPLETE,
   RESET_AUTOCOMPLETE,
   UPDATE_LOCATIONS_LOCALES,
+  UPDATE_WEATHER_SCREEN_INITIAL_LOCATION,
+  SET_WEATHER_SCREEN_LOCATION_INDEX,
 } from './types';
 
 export const setCurrentLocation =
@@ -72,4 +74,14 @@ export const updateLocationsLocales =
     getLocationsLocales(geoids).then((data) => {
       dispatch({ type: UPDATE_LOCATIONS_LOCALES, data });
     });
+  };
+
+export const updateWeatherScreenInitialLocation =
+  (location: Location) => (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: UPDATE_WEATHER_SCREEN_INITIAL_LOCATION, location });
+  };
+
+export const setWeatherScreenLocationIndex =
+  (index: Number) => (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: SET_WEATHER_SCREEN_LOCATION_INDEX, index });
   };

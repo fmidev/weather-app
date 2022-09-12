@@ -33,6 +33,8 @@ import {
   updateRecentSearches as updateRecentSearchesAction,
   deleteAllRecentSearches as deleteAllRecentSearchesAction,
   setCurrentLocation as setCurrentLocationAction,
+  updateWeatherScreenInitialLocation as updateWeatherScreenInitialLocationAction,
+  setWeatherScreenLocationIndex as setWeatherScreenLocationIndexAction,
   searchLocation as searchLocationAction,
   resetSearch as resetSearchAction,
 } from '@store/location/actions';
@@ -61,6 +63,8 @@ const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
   searchLocation: searchLocationAction,
   resetSearch: resetSearchAction,
+  updateWeatherScreenInitialLocation: updateWeatherScreenInitialLocationAction,
+  setWeatherScreenLocationIndex: setWeatherScreenLocationIndexAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -85,6 +89,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   updateRecentSearches,
   deleteAllRecentSearches,
   setCurrentLocation,
+  updateWeatherScreenInitialLocation,
+  setWeatherScreenLocationIndex,
   searchLocation,
   resetSearch,
   navigation,
@@ -119,6 +125,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     }
 
     setCurrentLocation(location);
+    updateWeatherScreenInitialLocation(location);
+    setWeatherScreenLocationIndex(0);
     navigation.goBack();
   };
 

@@ -14,6 +14,12 @@ export const RESET_AUTOCOMPLETE = 'RESET_AUTOCOMPLETE';
 
 export const UPDATE_LOCATIONS_LOCALES = 'UPDATE_LOCATIONS_LOCALES';
 
+export const UPDATE_WEATHER_SCREEN_INITIAL_LOCATION =
+  'UPDATE_WEATHER_SCREEN_INITIAL_LOCATION';
+
+export const SET_WEATHER_SCREEN_LOCATION_INDEX =
+  'SET_WEATHER_SCREEN_LOCATION_INDEX';
+
 export type Location = {
   name: string;
   area: string;
@@ -103,6 +109,16 @@ interface LocationsToLocale {
   data: { [geoid: string]: TimeseriesLocation[] };
 }
 
+interface UpdateWeatherScreenInitialLocation {
+  type: typeof UPDATE_WEATHER_SCREEN_INITIAL_LOCATION;
+  location: Location;
+}
+
+interface SetWeatherScreenInitialLocation {
+  type: typeof SET_WEATHER_SCREEN_LOCATION_INDEX;
+  index: Number;
+}
+
 export type LocationActionTypes =
   | AddFavorite
   | DeleteAllFavorites
@@ -114,7 +130,9 @@ export type LocationActionTypes =
   | ResetAutocomplete
   | SetCurrentLocation
   | UpdateRecentSearches
-  | LocationsToLocale;
+  | LocationsToLocale
+  | UpdateWeatherScreenInitialLocation
+  | SetWeatherScreenInitialLocation;
 
 export interface LocationState {
   favorites: Location[] | [];
@@ -122,4 +140,6 @@ export interface LocationState {
   search: Location[] | [];
   current: Location | undefined;
   isGeolocation?: boolean;
+  weatherScreenInitialLocation?: Location;
+  weatherScreenLocationIndex: number;
 }

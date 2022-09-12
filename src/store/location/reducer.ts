@@ -12,6 +12,8 @@ import {
   RESET_AUTOCOMPLETE,
   UPDATE_LOCATIONS_LOCALES,
   TimeseriesLocation,
+  UPDATE_WEATHER_SCREEN_INITIAL_LOCATION,
+  SET_WEATHER_SCREEN_LOCATION_INDEX,
 } from './types';
 
 const INITIAL_STATE: LocationState = {
@@ -20,6 +22,8 @@ const INITIAL_STATE: LocationState = {
   search: [],
   current: undefined,
   isGeolocation: undefined,
+  weatherScreenInitialLocation: undefined,
+  weatherScreenLocationIndex: 0,
 };
 
 const cleanAreaFromTimeseries = (location: TimeseriesLocation) =>
@@ -116,6 +120,20 @@ export default (
             cleanAreaFromTimeseries(action.data[state.current.id]?.[0]) ||
             state.current.area,
         },
+      };
+    }
+
+    case UPDATE_WEATHER_SCREEN_INITIAL_LOCATION: {
+      return {
+        ...state,
+        weatherScreenInitialLocation: action.location,
+      };
+    }
+
+    case SET_WEATHER_SCREEN_LOCATION_INDEX: {
+      return {
+        ...state,
+        weatherScreenLocationIndex: action.index,
       };
     }
 

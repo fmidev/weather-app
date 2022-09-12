@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   ActivityIndicator,
@@ -23,7 +23,8 @@ import {
 import {
   selectTimeZone,
   selectFavorites,
-  selectCurrent,
+  selectWeatherScreenInitialLocation,
+  selectWeatherScreenLocationIndex,
 } from '@store/location/selector';
 import { weatherSymbolGetter } from '@assets/images';
 
@@ -33,18 +34,23 @@ import { CustomTheme, GRAY_1 } from '@utils/colors';
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';
-import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
+import {
+  setCurrentLocation as setCurrentLocationAction,
+  setWeatherScreenLocationIndex as setWeatherScreenLocationIndexAction,
+} from '@store/location/actions';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
   nextHourForecast: selectNextHourForecast(state),
   timezone: selectTimeZone(state),
   favorites: selectFavorites(state),
-  currentLocation: selectCurrent(state),
+  weatherScreenInitialLocation: selectWeatherScreenInitialLocation(state),
+  weatherScreenLocationIndex: selectWeatherScreenLocationIndex(state),
 });
 
 const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
+  setWeatherScreenLocationIndex: setWeatherScreenLocationIndexAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -58,37 +64,22 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   nextHourForecast,
   timezone,
   favorites,
-  currentLocation,
+  weatherScreenInitialLocation,
+  weatherScreenLocationIndex,
   setCurrentLocation,
+  setWeatherScreenLocationIndex,
 }) => {
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
-  const [locationIndex, setLocationIndex] = useState<number>(0);
-
-  const [initialLocation, setInitialLocation] = useState(currentLocation);
-
-  const allowUpdatingInitialLocationRef = useRef(true);
-
-  useEffect(() => {
-    if (
-      currentLocation.id !== initialLocation.id &&
-      allowUpdatingInitialLocationRef.current
-    ) {
-      setInitialLocation(currentLocation);
-      setLocationIndex(0);
-    }
-
-    allowUpdatingInitialLocationRef.current = true; // re-enable changing initial location after swipe
-  }, [currentLocation, initialLocation]);
-
-  const locations = useMemo(
-    () => [initialLocation, ...favorites],
-    [initialLocation, favorites]
-  );
 
   useEffect(() => {
     moment.tz.setDefault(timezone);
   }, [timezone]);
+
+  const locations = useMemo(
+    () => [weatherScreenInitialLocation, ...favorites],
+    [weatherScreenInitialLocation, favorites]
+  );
 
   if (loading || !nextHourForecast) {
     return (
@@ -158,23 +149,23 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   };
 
   const onTouchEnd = (e: GestureResponderEvent) => {
-    allowUpdatingInitialLocationRef.current = false; // do not update initial location when location is changed by swiping
     const { pageX } = e.nativeEvent;
+    const locationIndex = weatherScreenLocationIndex;
     if (touchX !== undefined && pageX !== touchX) {
       if (pageX > touchX) {
         // left swipe
         if (locationIndex > 0) {
           setCurrentLocation(locations[locationIndex - 1]);
-          setLocationIndex(locationIndex - 1);
+          setWeatherScreenLocationIndex(locationIndex - 1);
         }
       }
       // right swipe
       else if (locationIndex < locations.length - 1) {
         setCurrentLocation(locations[locationIndex + 1]);
-        setLocationIndex(locationIndex + 1);
+        setWeatherScreenLocationIndex(locationIndex + 1);
       }
+      touchX = undefined;
     }
-    touchX = undefined;
   };
 
   return (

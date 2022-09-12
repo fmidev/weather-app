@@ -47,7 +47,11 @@ import HeaderIcon from '@components/common/HeaderIcon';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
-import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
+import {
+  setCurrentLocation as setCurrentLocationAction,
+  updateWeatherScreenInitialLocation as updateWeatherScreenInitialLocationAction,
+  setWeatherScreenLocationIndex as setWeatherScreenLocationIndexAction,
+} from '@store/location/actions';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
 import {
@@ -91,6 +95,8 @@ const mapDispatchToProps = {
   setNavigationTab: setNavigationTabAction,
   setDidLaunchApp: setDidLaunchAppAction,
   fetchAnnouncements: fetchAnnouncementsAction,
+  updateWeatherScreenInitialLocation: updateWeatherScreenInitialLocationAction,
+  setWeatherScreenLocationIndex: setWeatherScreenLocationIndexAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -114,6 +120,8 @@ const Navigator: React.FC<Props> = ({
   didLaunchApp,
   setDidLaunchApp,
   fetchAnnouncements,
+  updateWeatherScreenInitialLocation,
+  setWeatherScreenLocationIndex,
 }) => {
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
@@ -147,13 +155,20 @@ const Navigator: React.FC<Props> = ({
   }, [theme, ready]);
 
   useEffect(() => {
+    const callback = (arg) => {
+      setCurrentLocation(arg);
+      updateWeatherScreenInitialLocation(arg);
+      setWeatherScreenLocationIndex(0);
+    };
     if (didLaunchApp && !didChangeLanguage) {
-      getGeolocation(setCurrentLocation, t, true);
+      getGeolocation(callback, t, true);
       fetchAnnouncements();
     }
   }, [
     didLaunchApp,
     setCurrentLocation,
+    updateWeatherScreenInitialLocation,
+    setWeatherScreenLocationIndex,
     t,
     didChangeLanguage,
     fetchAnnouncements,
@@ -224,7 +239,13 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel={t('navigation:locate')}
         accessibilityHint={t('navigation:locateAccessibilityLabel')}
         icon="locate"
-        onPress={() => getGeolocation(setCurrentLocation, t)}
+        onPress={() =>
+          getGeolocation((location) => {
+            setCurrentLocation(location);
+            updateWeatherScreenInitialLocation(location);
+            setWeatherScreenLocationIndex(0);
+          }, t)
+        }
       />
     ),
     headerTitle: () => (
