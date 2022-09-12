@@ -52,6 +52,7 @@ import {
   updateWeatherScreenInitialLocation as updateWeatherScreenInitialLocationAction,
   setWeatherScreenLocationIndex as setWeatherScreenLocationIndexAction,
 } from '@store/location/actions';
+import { Location } from '@store/location/types';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
 import {
@@ -155,9 +156,9 @@ const Navigator: React.FC<Props> = ({
   }, [theme, ready]);
 
   useEffect(() => {
-    const callback = (arg) => {
-      setCurrentLocation(arg);
-      updateWeatherScreenInitialLocation(arg);
+    const callback = (arg0: Location) => {
+      setCurrentLocation(arg0);
+      updateWeatherScreenInitialLocation(arg0);
       setWeatherScreenLocationIndex(0);
     };
     if (didLaunchApp && !didChangeLanguage) {

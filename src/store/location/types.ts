@@ -116,7 +116,7 @@ interface UpdateWeatherScreenInitialLocation {
 
 interface SetWeatherScreenInitialLocation {
   type: typeof SET_WEATHER_SCREEN_LOCATION_INDEX;
-  index: Number;
+  index: number;
 }
 
 export type LocationActionTypes =
@@ -141,5 +141,5 @@ export interface LocationState {
   current: Location | undefined;
   isGeolocation?: boolean;
   weatherScreenInitialLocation?: Location;
-  weatherScreenLocationIndex: number;
+  weatherScreenLocationIndex?: number;
 }

@@ -154,15 +154,24 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     if (touchX !== undefined && pageX !== touchX) {
       if (pageX > touchX) {
         // left swipe
-        if (locationIndex > 0) {
-          setCurrentLocation(locations[locationIndex - 1]);
-          setWeatherScreenLocationIndex(locationIndex - 1);
+        if (locationIndex !== undefined && locationIndex > 0) {
+          const newLocation = locations[locationIndex - 1];
+          if (newLocation) {
+            setCurrentLocation(newLocation);
+            setWeatherScreenLocationIndex(locationIndex - 1);
+          }
         }
       }
       // right swipe
-      else if (locationIndex < locations.length - 1) {
-        setCurrentLocation(locations[locationIndex + 1]);
-        setWeatherScreenLocationIndex(locationIndex + 1);
+      else if (
+        locationIndex !== undefined &&
+        locationIndex < locations.length - 1
+      ) {
+        const newLocation = locations[locationIndex + 1];
+        if (newLocation) {
+          setCurrentLocation(newLocation);
+          setWeatherScreenLocationIndex(locationIndex + 1);
+        }
       }
       touchX = undefined;
     }

@@ -82,6 +82,6 @@ export const updateWeatherScreenInitialLocation =
   };
 
 export const setWeatherScreenLocationIndex =
-  (index: Number) => (dispatch: Dispatch<LocationActionTypes>) => {
+  (index: number) => (dispatch: Dispatch<LocationActionTypes>) => {
     dispatch({ type: SET_WEATHER_SCREEN_LOCATION_INDEX, index });
   };
