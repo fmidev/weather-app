@@ -8,18 +8,31 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import { CustomTheme } from '@utils/colors';
 import { Warning } from '@store/warnings/types';
 import { useTranslation } from 'react-i18next';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '@store/types';
+import { selectClockType } from '@store/settings/selectors';
 import WarningSymbol from './WarningsSymbol';
 
-type DayDetailsProps = {
+const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type DayDetailsProps = PropsFromRedux & {
   warnings: Warning[];
 };
 
-const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
+const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
   const { t } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
   const [openWarnings, setOpenWarnings] = useState<{
     [index: number]: boolean;
   }>([]);
+
+  const timeFormat = clockType === 12 ? 'hh:mm A' : 'HH:mm';
 
   useEffect(() => {
     setOpenWarnings([]);
@@ -61,12 +74,16 @@ const DayDetails: React.FC<DayDetailsProps> = ({ warnings }) => {
                   accessibilityLabel={`${t(`types.${type}`)} - ${t(
                     'valid'
                   )} ${moment(duration.startTime).format(
-                    'DD MMMM HH:mm'
-                  )} - ${moment(duration.endTime).format('DD MMMM HH:mm')}`}>
+                    `DD MMMM ${timeFormat}`
+                  )} - ${moment(duration.endTime).format(
+                    `DD MMMM ${timeFormat}`
+                  )}`}>
                   <Text style={styles.bold}>{`${t(`types.${type}`)}`}</Text>
                   {` – ${t('valid')} ${moment(duration.startTime).format(
-                    'D.M. HH:mm'
-                  )} - ${moment(duration.endTime).format('D.M. HH:mm')} `}
+                    `D.M. ${timeFormat}`
+                  )} - ${moment(duration.endTime).format(
+                    `D.M. ${timeFormat}`
+                  )} `}
                 </Text>
               </View>
               <View style={styles.iconPadding}>
@@ -132,4 +149,4 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
 });
-export default DayDetails;
+export default connector(DayDetails);
