@@ -282,7 +282,11 @@
     "en": "in English",
     "languageHint": "Förändra applikation språket till:",
     "appearanceHint": "Förändra applikation utseende till:",
-    "locationSettingHint": "Gå till telefonens inställningar för att ändra appens behörighet att använda positionering"
+    "locationSettingHint": "Gå till telefonens inställningar för att ändra appens behörighet att använda positionering",
+    "clockSettingHint": "Förändra applikation klocka till:",
+    "clock": "Klockan",
+    "12-hour-clock": "12-timmarsklocka",
+    "24-hour-clock": "24-timmarsklocka",
   },
   "map": {
     "searchButtonAccessibilityLabel": "Sök plats",
