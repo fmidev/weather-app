@@ -23,8 +23,10 @@ import { CustomTheme, GRAY_1 } from '@utils/colors';
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';
+import { selectClockType } from '@store/settings/selectors';
 
 const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
   loading: selectLoading(state),
   nextHourForecast: selectNextHourForecast(state),
   timezone: selectTimeZone(state),
@@ -37,6 +39,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type NextHourForecastPanelProps = PropsFromRedux;
 
 const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
+  clockType,
   loading,
   nextHourForecast,
   timezone,
@@ -118,7 +121,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             styles.text,
             styles.bold,
             { color: colors.primaryText },
-          ]}>{`${t('at')} ${currentTime.format('HH:mm')}`}</Text>
+          ]}>{`${t('at')} ${currentTime.format(
+          clockType === 12 ? 'hh:mm A' : 'HH:mm'
+        )}`}</Text>
       </View>
       <View style={styles.row}>
         <View

@@ -26,10 +26,12 @@ import {
 
 import { isOdd } from '@utils/helpers';
 import { DAY_LENGTH } from '@store/forecast/constants';
+import { selectClockType } from '@store/settings/selectors';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
 const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
   displayParams: selectDisplayParams(state),
 });
 
@@ -52,6 +54,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   setActiveDayIndex,
   currentDayOffset,
   displayParams,
+  clockType,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
@@ -96,6 +99,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const isPolarNight = !step.sunriseToday && sunset.isBefore(sunrise);
 
     const isMidnightSun = !step.sunsetToday && sunrise.isBefore(sunset);
+
+    const dateFormat =
+      clockType === 12
+        ? `D.M.YYYY [${t('at')}] hh:mm A`
+        : `D.M.YYYY [${t('at')}] HH:mm`;
+
+    const timeFormat = clockType === 12 ? 'hh:mm A' : 'HH:mm';
 
     return (
       <View
@@ -160,13 +170,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 <Text
                   accessibilityLabel={`${t('sunrise')} ${t(
                     'at'
-                  )} ${sunrise.format(`D.M.YYYY [${t('at')}] HH:mm`)}`}
+                  )} ${sunrise.format(dateFormat)}`}
                   style={[
                     styles.panelText,
                     styles.bold,
                     { color: colors.hourListText },
                   ]}>
-                  {sunrise.format(`D.M.YYYY [${t('at')}] HH:mm`)}
+                  {sunrise.format(dateFormat)}
                 </Text>
               </View>
             </>
@@ -211,13 +221,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 <Text
                   accessibilityLabel={`${t('sunset')} ${t(
                     'at'
-                  )} ${sunset.format(`D.M.YYYY [${t('at')}] HH:mm`)}`}
+                  )} ${sunset.format(dateFormat)}`}
                   style={[
                     styles.panelText,
                     styles.bold,
                     { color: colors.hourListText },
                   ]}>
-                  {sunset.format(`D.M.YYYY [${t('at')}] HH:mm`)}
+                  {sunset.format(dateFormat)}
                 </Text>
               </View>
             </>
@@ -244,13 +254,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 <Text
                   accessibilityLabel={`${t('sunrise')} ${t(
                     'at'
-                  )} ${sunrise.format('HH:mm')}`}
+                  )} ${sunrise.format(timeFormat)}`}
                   style={[
                     styles.panelText,
                     styles.bold,
                     { color: colors.hourListText },
                   ]}>
-                  {sunrise.format('HH:mm')}
+                  {sunrise.format(timeFormat)}
                 </Text>
               </View>
               <View style={[styles.row, styles.alignCenter]} accessible>
@@ -266,13 +276,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 <Text
                   accessibilityLabel={`${t('sunset')} ${t(
                     'at'
-                  )} ${sunset.format('HH:mm')}`}
+                  )} ${sunset.format(timeFormat)}`}
                   style={[
                     styles.panelText,
                     styles.bold,
                     { color: colors.hourListText },
                   ]}>
-                  {sunset.format('HH:mm')}
+                  {sunset.format(timeFormat)}
                 </Text>
               </View>
               <View style={[styles.row, styles.alignCenter]} accessible>

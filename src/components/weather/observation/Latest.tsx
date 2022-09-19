@@ -10,25 +10,38 @@ import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 
 import { capitalize } from '@utils/chart';
 import { Config } from '@config';
+import { selectClockType } from '@store/settings/selectors';
+import { State } from '@store/types';
+import { connect, ConnectedProps } from 'react-redux';
 
-type LatestProps = {
+const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
+});
+
+const connector = connect(mapStateToProps, {});
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type LatestProps = PropsFromRedux & {
   data: TimeStepData[];
 };
 
-const Latest: React.FC<LatestProps> = ({ data }) => {
+const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const { parameters } = Config.get('weather').observation;
 
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+  const dateFormat =
+    clockType === 12 ? `D.M. [${t('at')}] hh:mm A` : `D.M. [${t('at')}] HH:mm`;
 
   const [latestObservation] = data || [];
   const latestObservationTime =
     latestObservation &&
     moment(latestObservation.epochtime * 1000)
       .locale(locale)
-      .format(`${weekdayAbbreviationFormat} D.M. [${t('at')}] HH:mm`);
+      .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
 
   const latestParameters: {
     [key in keyof Partial<ObservationParameters>]: {
@@ -201,4 +214,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-export default Latest;
+export default connector(Latest);
