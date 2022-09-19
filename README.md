@@ -90,6 +90,17 @@ R5CR207HAFP	device
 
 2. `npx react-native run-ios`
 
+### Troubleshooting
+
+#### Changing Metro server port
+By default, the Metro server and the application use port 8081 to communicate with each other. In some environments, the port can be reserved, which causes the application to fail with the following error message:
+
+*"Unable to load script. Make sure you're either running Metro (run 'npx react-native start') or that your bundle 'index.android.bundle' is packaged correctly for release."*
+
+This behaviour can be fixed by changing the port to e.g. 8080. To change the port, the following commands must be run:
+- `yarn start --port 8080`
+- `yarn android --port 8080` (or `npx react-native run-android --port 8080`)
+
 ## **Config**
 
 1. `cp defaultConfig.ts.example defaultConfig.ts`
