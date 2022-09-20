@@ -347,7 +347,11 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               console.warn(`scroll to index: ${index} failed`);
             }}
             renderItem={({ item }: any) => (
-              <ForecastListColumn data={item} displayParams={displayParams} />
+              <ForecastListColumn
+                clockType={clockType}
+                data={item}
+                displayParams={displayParams}
+              />
             )}
             horizontal
             showsHorizontalScrollIndicator={false}

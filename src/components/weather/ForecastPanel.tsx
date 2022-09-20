@@ -74,7 +74,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   updateDisplayFormat,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation('forecast');
+  const { t, i18n } = useTranslation('forecast');
+  const locale = i18n.language;
   const [activeDayIndex, setActiveDayIndex] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
@@ -106,7 +107,9 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const forecastLastUpdated = {
     time: forecastLastUpdatedMoment
       ? forecastLastUpdatedMoment.format(
-          `D.M. [${t('at')}] ${clockType === 12 ? 'hh:mm A' : 'HH:mm'}`
+          `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] ${
+            clockType === 12 ? 'hh:mm A' : 'HH:mm'
+          }`
         )
       : undefined,
     ageCheck: forecastAge > (ageWarning ?? 720) * 60 * 1000,

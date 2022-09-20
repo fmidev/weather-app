@@ -34,7 +34,9 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
 
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   const dateFormat =
-    clockType === 12 ? `D.M. [${t('at')}] hh:mm A` : `D.M. [${t('at')}] HH:mm`;
+    clockType === 12
+      ? `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] hh:mm A`
+      : `D.M. [${t('at')}] HH:mm`;
 
   const [latestObservation] = data || [];
   const latestObservationTime =

@@ -89,6 +89,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     );
 
     const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+    const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
 
     return (
       <View
@@ -120,7 +121,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
               .format('dddd, Do MMMM')}>
             {stepMoment.locale(locale).format(weekdayAbbreviationFormat)}{' '}
             <Text style={[styles.bold, { color: colors.primaryText }]}>
-              {stepMoment.locale(locale).format('D.M.')}
+              {stepMoment.locale(locale).format(dateFormat)}
             </Text>
           </Text>
           <View
