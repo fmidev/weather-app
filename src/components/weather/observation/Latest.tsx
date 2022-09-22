@@ -30,6 +30,10 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
       .locale(locale)
       .format(`${weekdayAbbreviationFormat} D.M. [${t('at')}] HH:mm`);
 
+  const timeSinceLatestObservation =
+    latestObservation?.epochtime &&
+    moment.duration(Date.now() - latestObservation.epochtime * 1000).asHours();
+
   const latestParameters: {
     [key in keyof Partial<ObservationParameters>]: {
       decimals: number;
@@ -134,7 +138,8 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
 
   return (
     <>
-      {!!latestObservation && (
+      {timeSinceLatestObservation > 2 && <Text>{t('tooOld')}</Text>}
+      {!!latestObservation && timeSinceLatestObservation <= 2 && (
         <View>
           <View style={[styles.row]}>
             <View style={[styles.latestObservation]} accessible>

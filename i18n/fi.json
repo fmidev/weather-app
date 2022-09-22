@@ -178,6 +178,7 @@
     "chart": "Graafi",
     "time": "Aika",
     "at": "klo",
+    "tooOld": "Aseman viimeisimmät säähavainnot ovat liian vanhoja.",
     "measurements": {
       "temperature": "Lämpötila",
       "dewPoint": "Kastepiste",

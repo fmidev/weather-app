@@ -178,6 +178,7 @@
     "chart": "Graf",
     "time": "Tid",
     "at": "kl.",
+    "tooOld": "Stationens väderobservationer är föråldrade.",
     "measurements": {
       "temperature": "Temperatur",
       "dewPoint": "Daggpunkt",

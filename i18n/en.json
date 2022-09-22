@@ -178,6 +178,7 @@
     "chart": "Graph",
     "time": "Time",
     "at": "at",
+    "tooOld": "Observations found, but they are too old.",
     "measurements": {
       "temperature": "Temperature",
       "dewPoint": "Dew point",
