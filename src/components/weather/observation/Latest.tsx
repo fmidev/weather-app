@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme, GRAY_1_OPACITY_15, GRAY_4, WHITE } from '@utils/colors';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 
@@ -16,7 +16,7 @@ type LatestProps = {
 };
 
 const Latest: React.FC<LatestProps> = ({ data }) => {
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const { parameters } = Config.get('weather').observation;
@@ -138,7 +138,13 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
 
   return (
     <>
-      {timeSinceLatestObservation > 2 && <Text>{t('tooOld')}</Text>}
+      {timeSinceLatestObservation > 2 && (
+        <View style={[styles.tooOldView]}>
+          <Text style={[styles.tooOldText, { color: dark ? WHITE : GRAY_4 }]}>
+            {t('tooOld')}
+          </Text>
+        </View>
+      )}
       {!!latestObservation && timeSinceLatestObservation <= 2 && (
         <View>
           <View style={[styles.row]}>
@@ -204,6 +210,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flex: 1,
+  },
+  tooOldText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+  },
+  tooOldView: {
+    backgroundColor: GRAY_1_OPACITY_15,
+    padding: 14,
+    marginTop: 8,
+    marginHorizontal: -6,
   },
 });
 export default Latest;
