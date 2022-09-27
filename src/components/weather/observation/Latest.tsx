@@ -30,7 +30,7 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
       .locale(locale)
       .format(`${weekdayAbbreviationFormat} D.M. [${t('at')}] HH:mm`);
 
-  const timeSinceLatestObservation =
+  const hoursSinceLatestObservation =
     latestObservation?.epochtime &&
     moment.duration(Date.now() - latestObservation.epochtime * 1000).asHours();
 
@@ -138,14 +138,14 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
 
   return (
     <>
-      {timeSinceLatestObservation > 2 && (
+      {hoursSinceLatestObservation > 2 && (
         <View style={[styles.tooOldView]}>
           <Text style={[styles.tooOldText, { color: dark ? WHITE : GRAY_4 }]}>
             {t('tooOld')}
           </Text>
         </View>
       )}
-      {!!latestObservation && timeSinceLatestObservation <= 2 && (
+      {!!latestObservation && hoursSinceLatestObservation <= 2 && (
         <View>
           <View style={[styles.row]}>
             <View style={[styles.latestObservation]} accessible>
@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
     backgroundColor: GRAY_1_OPACITY_15,
     padding: 14,
     marginTop: 8,
+    marginBottom: 50,
     marginHorizontal: -6,
   },
 });

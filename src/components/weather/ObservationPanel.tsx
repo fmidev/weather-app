@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-
+import moment from 'moment';
 import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
@@ -82,6 +82,11 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const { enabled, parameters } = Config.get('weather').observation;
 
+  const [latestObservation] = data || [];
+  const hoursSinceLatestObservation =
+    latestObservation?.epochtime &&
+    moment.duration(Date.now() - latestObservation.epochtime * 1000).asHours();
+
   useEffect(() => {
     const sid = stationList[0]?.id;
     if (sid && !stationId && dataId) {
@@ -153,7 +158,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         )}
         <Latest data={data} />
       </View>
-      {data.length > 0 && (
+      {hoursSinceLatestObservation <= 2 && data.length > 0 && (
         <View style={styles.panelContainer}>
           <View style={[styles.row]}>
             <View style={[styles.row, styles.justifyStart]}>
@@ -230,7 +235,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           </View>
         </View>
       )}
-      {data.length > 0 && (
+      {hoursSinceLatestObservation <= 2 && data.length > 0 && (
         <View style={styles.observationContainer}>
           <ParameterSelector
             chartTypes={charts}
@@ -244,7 +249,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         </View>
       )}
 
-      {data.length === 0 && (
+      {hoursSinceLatestObservation <= 2 && data.length === 0 && (
         <View style={styles.observationContainer}>
           <Text
             style={[styles.observationText, { color: colors.hourListText }]}>
