@@ -219,7 +219,6 @@ const styles = StyleSheet.create({
     backgroundColor: GRAY_1_OPACITY_15,
     padding: 14,
     marginTop: 8,
-    marginBottom: 50,
     marginHorizontal: -6,
   },
 });
