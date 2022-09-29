@@ -216,60 +216,64 @@ const SettingsScreen: React.FC<Props> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        <View
-          style={[
-            styles.rowWrapper,
-            styles.withBorderBottom,
-            styles.withMarginTop,
-            { borderBottomColor: colors.border },
-          ]}>
-          <View style={styles.row}>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              testID="settings_language_header"
-              accessibilityRole="header">
-              {t('settings:language')}
-            </Text>
-          </View>
-        </View>
-        <View>
-          {languages &&
-            languages.map((language) => (
-              <View
-                key={language}
-                style={[
-                  styles.rowWrapper,
-                  styles.withBorderBottom,
-                  { borderBottomColor: colors.border },
-                ]}>
-                <AccessibleTouchableOpacity
-                  onPress={() =>
-                    i18n.language === language ? {} : onChangeLanguage(language)
-                  }
-                  delayPressIn={100}
-                  accessibilityState={{
-                    selected: i18n.language === language,
-                  }}
-                  accessibilityRole="button"
-                  accessibilityHint={`${t('settings:languageHint')} ${t(
-                    `settings:${language}`
-                  )}`}>
-                  <View style={styles.row}>
-                    <Text style={[styles.text, { color: colors.text }]}>
-                      {t(`settings:${language}`)}
-                    </Text>
-                    {i18n.language === language && (
-                      <Icon
-                        name="checkmark"
-                        size={22}
-                        style={{ color: colors.text }}
-                      />
-                    )}
-                  </View>
-                </AccessibleTouchableOpacity>
+        {languages?.length > 1 && (
+          <>
+            <View
+              style={[
+                styles.rowWrapper,
+                styles.withBorderBottom,
+                styles.withMarginTop,
+                { borderBottomColor: colors.border },
+              ]}>
+              <View style={styles.row}>
+                <Text
+                  style={[styles.title, { color: colors.text }]}
+                  testID="settings_language_header"
+                  accessibilityRole="header">
+                  {t('settings:language')}
+                </Text>
               </View>
-            ))}
-          {/* <View
+            </View>
+            <View>
+              {languages &&
+                languages.map((language) => (
+                  <View
+                    key={language}
+                    style={[
+                      styles.rowWrapper,
+                      styles.withBorderBottom,
+                      { borderBottomColor: colors.border },
+                    ]}>
+                    <AccessibleTouchableOpacity
+                      onPress={() =>
+                        i18n.language === language
+                          ? {}
+                          : onChangeLanguage(language)
+                      }
+                      delayPressIn={100}
+                      accessibilityState={{
+                        selected: i18n.language === language,
+                      }}
+                      accessibilityRole="button"
+                      accessibilityHint={`${t('settings:languageHint')} ${t(
+                        `settings:${language}`
+                      )}`}>
+                      <View style={styles.row}>
+                        <Text style={[styles.text, { color: colors.text }]}>
+                          {t(`settings:${language}`)}
+                        </Text>
+                        {i18n.language === language && (
+                          <Icon
+                            name="checkmark"
+                            size={22}
+                            style={{ color: colors.text }}
+                          />
+                        )}
+                      </View>
+                    </AccessibleTouchableOpacity>
+                  </View>
+                ))}
+              {/* <View
             style={[
               styles.rowWrapper,
               styles.withBorderBottom,
@@ -317,7 +321,9 @@ const SettingsScreen: React.FC<Props> = ({
               </View>
             </AccessibleTouchableOpacity>
           </View> */}
-        </View>
+            </View>
+          </>
+        )}
         <View
           style={[
             styles.rowWrapper,
