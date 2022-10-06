@@ -14,3 +14,8 @@ export const selectTheme = createSelector(
   selectSettingsDomain,
   (settings) => settings.theme
 );
+
+export const selectClockType = createSelector(
+  selectSettingsDomain,
+  (settings) => settings.clockType
+);

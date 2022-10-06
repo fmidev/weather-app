@@ -5,11 +5,13 @@ import {
   UPDATE_THEME,
   SettingsState,
   SettingsActionTypes,
+  UPDATE_CLOCK_TYPE,
 } from './types';
 
 const INITIAL_STATE: SettingsState = {
   units: getDefaultUnits(),
   theme: 'automatic',
+  clockType: 24,
 };
 
 export default (
@@ -31,6 +33,13 @@ export default (
       };
     }
 
+    case UPDATE_CLOCK_TYPE: {
+      return {
+        ...state,
+        clockType: action.clockType,
+      };
+    }
+
     default: {
       return state;
     }
@@ -39,5 +48,5 @@ export default (
 
 export const settingsPersist: PersistConfig = {
   key: 'settings',
-  whitelist: ['theme'],
+  whitelist: ['theme', 'clockType'],
 };

@@ -5,7 +5,13 @@ import {
   SettingsActionTypes,
   UnitType,
   Theme,
+  ClockType,
+  UPDATE_CLOCK_TYPE,
 } from './types';
+
+export const updateClockType =
+  (clockType: ClockType) => (dispatch: Dispatch<SettingsActionTypes>) =>
+    dispatch({ type: UPDATE_CLOCK_TYPE, clockType });
 
 export const updateUnits =
   (key: string, unitType: UnitType) =>

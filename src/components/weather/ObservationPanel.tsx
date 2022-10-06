@@ -28,6 +28,7 @@ import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
 import { ObservationParameters } from '@store/observation/types';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import { selectClockType } from '@store/settings/selectors';
 import Chart from './charts/Chart';
 import { ChartType } from './charts/types';
 import ParameterSelector from './common/ParameterSelector';
@@ -48,6 +49,7 @@ const mapStateToProps = (state: State) => ({
   stationList: selectStationList(state),
   chartParameter: selectChartDisplayParameter(state),
   displayFormat: selectDisplayFormat(state),
+  clockType: selectClockType(state),
 });
 
 const mapDispatchToProps = {
@@ -76,6 +78,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   updateChartParameter,
   displayFormat,
   updateDisplayFormat,
+  clockType,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('observation');
@@ -237,7 +240,9 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             parameter={parameter}
             setParameter={updateChartParameter}
           />
-          {displayFormat === LIST && <List data={data} parameter={parameter} />}
+          {displayFormat === LIST && (
+            <List data={data} parameter={parameter} clockType={clockType} />
+          )}
           {displayFormat === CHART && (
             <Chart chartType={parameter} data={data} observation />
           )}

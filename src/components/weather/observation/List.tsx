@@ -11,14 +11,16 @@ import { GRAY_1_OPACITY, CustomTheme } from '@utils/colors';
 import { capitalize } from '@utils/chart';
 import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 import { Config } from '@config';
+import { ClockType } from '@store/settings/types';
 import { ChartType } from '../charts/types';
 
 type ListProps = {
+  clockType: ClockType;
   data: TimeStepData[];
   parameter: ChartType;
 };
 
-const List: React.FC<ListProps> = ({ data, parameter }) => {
+const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
   const { t, i18n } = useTranslation('observation');
   const { colors } = useTheme() as CustomTheme;
   const { parameters } = Config.get('weather').observation;
@@ -247,7 +249,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
             ]}>
             {moment(data[0].epochtime * 1000)
               .locale(locale)
-              .format(`dddd D.M.`)}
+              .format(locale === 'en' ? `dddd D MMM` : `dddd D.M.`)}
           </Text>
         )}
       </View>
@@ -278,7 +280,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
           .map((timeStep, i, arr) => {
             const time = moment(timeStep.epochtime * 1000).locale(locale);
             const previousTime = moment(arr?.[i - 1]?.epochtime * 1000);
-            const timeToDisplay = time.format('HH:mm');
+            const timeToDisplay = time.format(
+              clockType === 12 ? 'h.mm a' : 'HH.mm'
+            );
 
             return (
               <View key={timeStep.epochtime}>
@@ -297,7 +301,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.capitalize,
                         { color: colors.hourListText },
                       ]}>
-                      {time.format(`dddd D.M.`)}
+                      {time.format(
+                        locale === 'en' ? 'dddd D MMM' : `dddd D.M.`
+                      )}
                     </Text>
                   </View>
                 )}
