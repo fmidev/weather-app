@@ -107,7 +107,7 @@ export const tickFormat = (
     return `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))}
 ${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
   }
-  return time.format(clockType === 12 ? 'hh A' : 'HH');
+  return time.format(clockType === 12 ? 'h a' : 'HH');
 };
 
 export const getTickFormat =

@@ -80,8 +80,8 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   const lastUpdatedDateTimeFormat =
     clockType === 12
-      ? `D.M. [${t('forecast:at')}] hh:mm A`
-      : `D.M. [${t('forecast:at')}] HH:mm`;
+      ? `D.M. [${t('forecast:at')}] h.mm a`
+      : `D.M. [${t('forecast:at')}] HH.mm`;
   return (
     <View
       style={[

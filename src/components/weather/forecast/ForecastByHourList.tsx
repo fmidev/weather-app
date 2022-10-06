@@ -102,10 +102,10 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
     const dateFormat =
       clockType === 12
-        ? `D.M.YYYY [${t('at')}] hh:mm A`
-        : `D.M.YYYY [${t('at')}] HH:mm`;
+        ? `D.M.YYYY [${t('at')}] h.mm a`
+        : `D.M.YYYY [${t('at')}] HH.mm`;
 
-    const timeFormat = clockType === 12 ? 'hh:mm A' : 'HH:mm';
+    const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
 
     return (
       <View

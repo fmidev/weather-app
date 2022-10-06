@@ -36,7 +36,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
 
   const time = moment
     .unix(data.epochtime)
-    .format(clockType === 12 ? 'hh A' : 'HH');
+    .format(clockType === 12 ? 'h a' : 'HH');
   const smartSymbol = weatherSymbolGetter(
     (data.smartSymbol || 0).toString(),
     dark
@@ -48,7 +48,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
       key={data.epochtime}
       style={[
         styles.hourColumn,
-        ...(time === '00'
+        ...(time === '00' || time === '12 am'
           ? [
               styles.dayChangeBorder,
               {

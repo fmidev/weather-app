@@ -108,7 +108,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
     time: forecastLastUpdatedMoment
       ? forecastLastUpdatedMoment.format(
           `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] ${
-            clockType === 12 ? 'hh:mm A' : 'HH:mm'
+            clockType === 12 ? 'h.mm a' : 'HH.mm'
           }`
         )
       : undefined,

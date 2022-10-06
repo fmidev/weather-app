@@ -105,7 +105,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     .unix(sliderTime)
     .locale(locale)
     .format(
-      `${weekdayAbbreviationFormat} ${clockType === 12 ? 'hh:mm A' : 'HH:mm'}`
+      `${weekdayAbbreviationFormat} ${clockType === 12 ? 'h.mm a' : 'HH.mm'}`
     );
 
   const currentSliderTimeCapitalized =

@@ -32,7 +32,7 @@ const SliderStep: React.FC<SliderStepProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const hour =
     item % STEP_60 === 0 &&
-    moment.unix(item).format(clockType === 12 ? 'hh A' : 'HH');
+    moment.unix(item).format(clockType === 12 ? 'h a' : 'HH');
   if (isLast)
     return (
       <View

@@ -281,7 +281,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
             const time = moment(timeStep.epochtime * 1000).locale(locale);
             const previousTime = moment(arr?.[i - 1]?.epochtime * 1000);
             const timeToDisplay = time.format(
-              clockType === 12 ? 'hh:mm A' : 'HH:mm'
+              clockType === 12 ? 'h.mm a' : 'HH.mm'
             );
 
             return (

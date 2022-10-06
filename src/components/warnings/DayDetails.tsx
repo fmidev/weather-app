@@ -32,7 +32,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
     [index: number]: boolean;
   }>([]);
 
-  const timeFormat = clockType === 12 ? 'hh:mm A' : 'HH:mm';
+  const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
 
   useEffect(() => {
     setOpenWarnings([]);
