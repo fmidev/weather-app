@@ -111,6 +111,7 @@ const defaultConfig: ConfigType = {
   announcements: {
     enabled: false,
   },
+  socialMediaLinks: [],
 };
 
 export default defaultConfig;
