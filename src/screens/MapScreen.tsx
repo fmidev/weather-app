@@ -84,13 +84,15 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
 
+  const location = currentLocation ?? Config.get('location').default;
+
   const initialRegion = {
-    latitude: currentLocation.lat ?? INITIAL_REGION.latitude,
-    longitude: currentLocation.lon ?? INITIAL_REGION.longitude,
-    longitudeDelta: currentLocation
+    latitude: location.lat ?? INITIAL_REGION.latitude,
+    longitude: location.lon ?? INITIAL_REGION.longitude,
+    longitudeDelta: location
       ? ANIMATE_ZOOM.longitudeDelta
       : INITIAL_REGION.longitudeDelta,
-    latitudeDelta: currentLocation
+    latitudeDelta: location
       ? ANIMATE_ZOOM.latitudeDelta
       : INITIAL_REGION.latitudeDelta,
   };
@@ -124,11 +126,11 @@ const MapScreen: React.FC<MapScreenProps> = ({
   ]);
 
   useEffect(() => {
-    if (currentLocation) {
-      const { lat: latitude, lon: longitude } = currentLocation;
+    if (location) {
+      const { lat: latitude, lon: longitude } = location;
       mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
     }
-  }, [currentLocation]);
+  }, [location]);
 
   const handleZoomIn = () => {
     mapRef.current.getCamera().then((cam: Camera) => {
@@ -152,8 +154,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const onRegionChangeComplete = (region: Region) => {
     updateRegion(region);
-    if (currentLocation) {
-      const { lat: latitude, lon: longitude } = currentLocation;
+    if (location) {
+      const { lat: latitude, lon: longitude } = location;
       const distance = getDistance(region, { latitude, longitude });
       if (distance >= 10000) {
         setMarkerOutOfBounds(true);
@@ -170,8 +172,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
   };
 
   const animateToCurrentLocation = () => {
-    if (currentLocation) {
-      const { lat: latitude, lon: longitude } = currentLocation;
+    if (location) {
+      const { lat: latitude, lon: longitude } = location;
       mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
     }
   };
@@ -206,8 +208,8 @@ const MapScreen: React.FC<MapScreenProps> = ({
         {displayLocation && currentLocation && (
           <MapMarker
             coordinates={{
-              latitude: currentLocation?.lat,
-              longitude: currentLocation?.lon,
+              latitude: location?.lat,
+              longitude: location?.lon,
             }}
           />
         )}
