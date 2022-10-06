@@ -208,6 +208,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             <View style={styles.socialRow}>
               {socialMediaLinks.map((socialMediaLink) => (
                 <AccessibleTouchableOpacity
+                  key={socialMediaLink.name}
                   accessibilityLabel={socialMediaLink.name}
                   accessibilityRole="link"
                   accessibilityHint={`${t('open')} ${socialMediaLink.name}`}
