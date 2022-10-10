@@ -4,10 +4,8 @@ import { initReactI18next } from 'react-i18next';
 import { Platform, NativeModules } from 'react-native';
 import { getItem, LOCALE } from '../src/utils/async_storage';
 import en from './en.json';
-import fi from './fi.json';
-import sv from './sv.json';
 
-const languageResources = { en, fi, sv };
+const languageResources = { en };
 
 let systemLng =
   Platform.OS === 'ios'
@@ -28,7 +26,7 @@ const languageDetector = <LanguageDetectorAsyncModule>{
   detect: async (callback: any) => {
     const savedDataJSON = await getItem(LOCALE);
     const lng = savedDataJSON || null;
-    const selectLanguage = lng || systemLng || Config.DEFAULT_LANGUAGE || 'fi';
+    const selectLanguage = lng || systemLng || Config.DEFAULT_LANGUAGE || 'en';
     callback(selectLanguage);
   },
   cacheUserLanguage: () => {},
@@ -39,7 +37,7 @@ i18n
   .use(initReactI18next)
   .init({
     compatibilityJSON: 'v3',
-    fallbackLng: 'fi',
+    fallbackLng: 'en',
     resources: languageResources,
     ns: ['navigation'],
     defaultNS: 'navigation',
