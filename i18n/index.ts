@@ -1,4 +1,3 @@
-import Config from 'react-native-config';
 import i18n, { LanguageDetectorAsyncModule } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { Platform, NativeModules } from 'react-native';
@@ -26,7 +25,7 @@ const languageDetector = <LanguageDetectorAsyncModule>{
   detect: async (callback: any) => {
     const savedDataJSON = await getItem(LOCALE);
     const lng = savedDataJSON || null;
-    const selectLanguage = lng || systemLng || Config.DEFAULT_LANGUAGE || 'en';
+    const selectLanguage = lng || systemLng || 'fi';
     callback(selectLanguage);
   },
   cacheUserLanguage: () => {},

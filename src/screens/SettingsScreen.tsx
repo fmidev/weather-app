@@ -19,10 +19,15 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import { setItem, LOCALE } from '@utils/async_storage';
 // import { UNITS } from '@utils/units';
 import { State } from '@store/types';
-import { selectUnits, selectTheme } from '@store/settings/selectors';
+import {
+  selectUnits,
+  selectTheme,
+  selectClockType,
+} from '@store/settings/selectors';
 import {
   updateUnits as updateUnitsAction,
   updateTheme as updateThemeAction,
+  updateClockType as updateClockTypeAction,
 } from '@store/settings/actions';
 import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
 // import { UnitType } from '@store/settings/types';
@@ -39,12 +44,14 @@ const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
   theme: selectTheme(state),
   geoids: selectStoredGeoids(state),
+  clockType: selectClockType(state),
 });
 
 const mapDispatchToProps = {
   updateUnits: updateUnitsAction,
   updateTheme: updateThemeAction,
   updateLocationsLocales: updateLocationsLocalesAction,
+  updateClockType: updateClockTypeAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -54,10 +61,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux;
 
 const SettingsScreen: React.FC<Props> = ({
+  clockType,
   theme,
   geoids,
   // units,
   // updateUnits,
+  updateClockType,
   updateTheme,
   updateLocationsLocales,
 }) => {
@@ -216,60 +225,64 @@ const SettingsScreen: React.FC<Props> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        <View
-          style={[
-            styles.rowWrapper,
-            styles.withBorderBottom,
-            styles.withMarginTop,
-            { borderBottomColor: colors.border },
-          ]}>
-          <View style={styles.row}>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              testID="settings_language_header"
-              accessibilityRole="header">
-              {t('settings:language')}
-            </Text>
-          </View>
-        </View>
-        <View>
-          {languages &&
-            languages.map((language) => (
-              <View
-                key={language}
-                style={[
-                  styles.rowWrapper,
-                  styles.withBorderBottom,
-                  { borderBottomColor: colors.border },
-                ]}>
-                <AccessibleTouchableOpacity
-                  onPress={() =>
-                    i18n.language === language ? {} : onChangeLanguage(language)
-                  }
-                  delayPressIn={100}
-                  accessibilityState={{
-                    selected: i18n.language === language,
-                  }}
-                  accessibilityRole="button"
-                  accessibilityHint={`${t('settings:languageHint')} ${t(
-                    `settings:${language}`
-                  )}`}>
-                  <View style={styles.row}>
-                    <Text style={[styles.text, { color: colors.text }]}>
-                      {t(`settings:${language}`)}
-                    </Text>
-                    {i18n.language === language && (
-                      <Icon
-                        name="checkmark"
-                        size={22}
-                        style={{ color: colors.text }}
-                      />
-                    )}
-                  </View>
-                </AccessibleTouchableOpacity>
+        {languages?.length > 1 && (
+          <>
+            <View
+              style={[
+                styles.rowWrapper,
+                styles.withBorderBottom,
+                styles.withMarginTop,
+                { borderBottomColor: colors.border },
+              ]}>
+              <View style={styles.row}>
+                <Text
+                  style={[styles.title, { color: colors.text }]}
+                  testID="settings_language_header"
+                  accessibilityRole="header">
+                  {t('settings:language')}
+                </Text>
               </View>
-            ))}
-          {/* <View
+            </View>
+            <View>
+              {languages &&
+                languages.map((language) => (
+                  <View
+                    key={language}
+                    style={[
+                      styles.rowWrapper,
+                      styles.withBorderBottom,
+                      { borderBottomColor: colors.border },
+                    ]}>
+                    <AccessibleTouchableOpacity
+                      onPress={() =>
+                        i18n.language === language
+                          ? {}
+                          : onChangeLanguage(language)
+                      }
+                      delayPressIn={100}
+                      accessibilityState={{
+                        selected: i18n.language === language,
+                      }}
+                      accessibilityRole="button"
+                      accessibilityHint={`${t('settings:languageHint')} ${t(
+                        `settings:${language}`
+                      )}`}>
+                      <View style={styles.row}>
+                        <Text style={[styles.text, { color: colors.text }]}>
+                          {t(`settings:${language}`)}
+                        </Text>
+                        {i18n.language === language && (
+                          <Icon
+                            name="checkmark"
+                            size={22}
+                            style={{ color: colors.text }}
+                          />
+                        )}
+                      </View>
+                    </AccessibleTouchableOpacity>
+                  </View>
+                ))}
+              {/* <View
             style={[
               styles.rowWrapper,
               styles.withBorderBottom,
@@ -317,7 +330,9 @@ const SettingsScreen: React.FC<Props> = ({
               </View>
             </AccessibleTouchableOpacity>
           </View> */}
-        </View>
+            </View>
+          </>
+        )}
         <View
           style={[
             styles.rowWrapper,
@@ -430,6 +445,81 @@ const SettingsScreen: React.FC<Props> = ({
                       style={{ color: colors.text }}
                     />
                   </View>
+                )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              styles.withMarginTop,
+              { borderBottomColor: colors.border },
+            ]}>
+            <View style={styles.row}>
+              <Text
+                style={[styles.title, { color: colors.text }]}
+                accessibilityRole="header">
+                {t('settings:clock')}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              onPress={() => updateClockType(12)}
+              delayPressIn={100}
+              accessibilityState={{
+                selected: clockType === 12,
+              }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:clockSettingHint')} ${t(
+                '12-hour-clock'
+              )}`}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {t('12-hour-clock')}
+                </Text>
+                {clockType === 12 && (
+                  <Icon
+                    name="checkmark"
+                    size={22}
+                    style={{ color: colors.text }}
+                  />
+                )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              onPress={() => updateClockType(24)}
+              delayPressIn={100}
+              accessibilityState={{
+                selected: clockType === 24,
+              }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:clockSettingHint')} ${t(
+                'settings:24-hour-clock'
+              )}`}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {t('settings:24-hour-clock')}
+                </Text>
+                {clockType === 24 && (
+                  <Icon
+                    name="checkmark"
+                    size={22}
+                    style={{ color: colors.text }}
+                  />
                 )}
               </View>
             </AccessibleTouchableOpacity>

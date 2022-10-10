@@ -19,7 +19,7 @@ describe('settings reducer', () => {
     };
     expect(
       reducer(
-        { units, theme: 'automatic' },
+        { units, theme: 'automatic', clockType: 24 },
         {
           type: types.UPDATE_UNITS,
           units: {
@@ -44,6 +44,7 @@ describe('settings reducer', () => {
           unitPrecision: 0,
         },
       },
+      clockType: 24,
     });
   });
 
@@ -53,6 +54,17 @@ describe('settings reducer', () => {
     ).toEqual({
       units: undefined,
       theme: 'light',
+      clockType: 24,
+    });
+  });
+
+  it('should handle UPDATE_CLOCK_TYPE', () => {
+    expect(
+      reducer(undefined, { type: types.UPDATE_CLOCK_TYPE, clockType: 24 })
+    ).toEqual({
+      units: undefined,
+      theme: 'automatic',
+      clockType: 24,
     });
   });
 });

@@ -127,8 +127,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         <Image
           source={
             dark
-              ? require('../assets/images/fmi-logo-dark.png')
-              : require('../assets/images/fmi-logo-light.png')
+              ? require('../assets/images/provider-logo-dark.png')
+              : require('../assets/images/provider-logo-light.png')
           }
           resizeMode="contain"
           style={styles.logo}

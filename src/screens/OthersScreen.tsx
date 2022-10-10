@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { OthersStackParamList } from '@navigators/types';
+import { Config } from '@config';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'StackOthers'>;
@@ -16,6 +17,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
   const { t } = useTranslation('navigation');
   const { colors, dark } = useTheme();
 
+  const socialMediaLinks = Config.get('socialMediaLinks');
   const handleSocialPress = async (appUrl: string, fallback: string) => {
     const supported = await Linking.canOpenURL(appUrl);
     if (supported) {
@@ -196,64 +198,36 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             </AccessibleTouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.withPaddingHorizontal}>
-          <View style={styles.textWrapper}>
-            <Text style={[styles.text, { color: colors.text }]}>
-              {t('about:followUs')}
-            </Text>
+        {socialMediaLinks.length > 0 && (
+          <View style={styles.withPaddingHorizontal}>
+            <View style={styles.textWrapper}>
+              <Text style={[styles.text, { color: colors.text }]}>
+                {t('about:followUs')}
+              </Text>
+            </View>
+            <View style={styles.socialRow}>
+              {socialMediaLinks.map((socialMediaLink) => (
+                <AccessibleTouchableOpacity
+                  key={socialMediaLink.name}
+                  accessibilityLabel={socialMediaLink.name}
+                  accessibilityRole="link"
+                  accessibilityHint={`${t('open')} ${socialMediaLink.name}`}
+                  onPress={() =>
+                    handleSocialPress(
+                      socialMediaLink.appUrl,
+                      socialMediaLink.url
+                    )
+                  }
+                  style={styles.withMarginRight}>
+                  <Icon
+                    name={socialMediaLink.icon + (dark ? '-dark' : '-light')}
+                    style={{ color: colors.text }}
+                  />
+                </AccessibleTouchableOpacity>
+              ))}
+            </View>
           </View>
-          <View style={styles.socialRow}>
-            <AccessibleTouchableOpacity
-              accessibilityLabel="Twitter"
-              accessibilityRole="link"
-              accessibilityHint={`${t('open')} Twitter`}
-              onPress={() =>
-                handleSocialPress(
-                  'twitter://user?screen_name=meteorologit',
-                  'https://twitter.com/meteorologit'
-                )
-              }
-              style={styles.withMarginRight}>
-              <Icon
-                name={dark ? 'social-twitter-dark' : 'social-twitter-light'}
-                style={{ color: colors.text }}
-              />
-            </AccessibleTouchableOpacity>
-            <AccessibleTouchableOpacity
-              accessibilityLabel="Instagram"
-              accessibilityRole="link"
-              accessibilityHint={`${t('open')} Instagram`}
-              onPress={() =>
-                handleSocialPress(
-                  'instagram://user?username=ilmatieteenlaitos',
-                  'https://www.instagram.com/ilmatieteenlaitos/'
-                )
-              }
-              style={styles.withMarginRight}>
-              <Icon
-                name={dark ? 'social-instagram-dark' : 'social-instagram-light'}
-                style={{ color: colors.text }}
-              />
-            </AccessibleTouchableOpacity>
-            <AccessibleTouchableOpacity
-              accessibilityLabel="YouTube"
-              accessibilityRole="link"
-              accessibilityHint={`${t('open')} YouTube`}
-              onPress={() =>
-                handleSocialPress(
-                  'youtube://ilmatieteenlaitos',
-                  'https://www.youtube.com/user/ilmatieteenlaitos'
-                )
-              }
-              style={styles.withMarginRight}>
-              <Icon
-                name={dark ? 'social-youtube-dark' : 'social-youtube-light'}
-                style={{ color: colors.text }}
-              />
-            </AccessibleTouchableOpacity>
-          </View>
-        </View>
+        )}
       </View>
     </SafeAreaView>
   );

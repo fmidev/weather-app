@@ -105,6 +105,13 @@ interface DynamicConfigDisabled extends Partial<DynamicConfig> {
   enabled: false;
 }
 
+interface SocialMediaLink {
+  name: string;
+  icon: string;
+  appUrl: string;
+  url: string;
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -145,4 +152,5 @@ export interface ConfigType {
     };
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
+  socialMediaLinks: SocialMediaLink[];
 }

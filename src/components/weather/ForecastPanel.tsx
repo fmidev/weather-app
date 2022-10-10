@@ -28,6 +28,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import { selectTimeZone } from '@store/location/selector';
 import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecast/actions';
 import { Config } from '@config';
+import { selectClockType } from '@store/settings/selectors';
 import PanelHeader from './common/PanelHeader';
 import DaySelectorList from './forecast/DaySelectorList';
 import ForecastByHourList from './forecast/ForecastByHourList';
@@ -39,6 +40,7 @@ const TABLE = 'table';
 const CHART = 'chart';
 
 const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
   loading: selectLoading(state),
   forecastByDay: selectForecastByDay(state),
   data: selectForecast(state),
@@ -60,6 +62,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ForecastPanelProps = PropsFromRedux;
 
 const ForecastPanel: React.FC<ForecastPanelProps> = ({
+  clockType,
   loading,
   forecastByDay,
   data,
@@ -71,7 +74,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   updateDisplayFormat,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation('forecast');
+  const { t, i18n } = useTranslation('forecast');
+  const locale = i18n.language;
   const [activeDayIndex, setActiveDayIndex] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
@@ -102,7 +106,11 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
 
   const forecastLastUpdated = {
     time: forecastLastUpdatedMoment
-      ? forecastLastUpdatedMoment.format(`D.M. [${t('at')}] HH:mm`)
+      ? forecastLastUpdatedMoment.format(
+          `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] ${
+            clockType === 12 ? 'h.mm a' : 'HH.mm'
+          }`
+        )
       : undefined,
     ageCheck: forecastAge > (ageWarning ?? 720) * 60 * 1000,
   };
