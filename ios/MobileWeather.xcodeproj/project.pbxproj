@@ -338,7 +338,6 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = DJHT89EW79;
 						LastSwiftMigration = 1240;
 						ProvisioningStyle = Automatic;
 					};
@@ -796,7 +795,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather;
+				PRODUCT_BUNDLE_IDENTIFIER = jm.gov.metservice;
 				PRODUCT_NAME = MobileWeather;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MobileWeather-Bridging-Header.h";
@@ -825,7 +824,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather;
+				PRODUCT_BUNDLE_IDENTIFIER = jm.gov.metservice;
 				PRODUCT_NAME = MobileWeather;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MobileWeather-Bridging-Header.h";
