@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "fi.fmi.mobileweather",
+    package = "jm.gov.metservice",
 )
 
 android_resource(
     name = "res",
-    package = "fi.fmi.mobileweather",
+    package = "jm.gov.metservice",
     res = "src/main/res",
 )
 
