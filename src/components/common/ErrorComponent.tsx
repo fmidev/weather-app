@@ -18,6 +18,7 @@ import { updateOverlays as updateOverlaysAction } from '@store/map/actions';
 
 import { YELLOW, BLACK } from '@utils/colors';
 
+import { Config } from '@config';
 import Icon from './Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
@@ -52,6 +53,7 @@ type Messages = {
   observation: Message;
   overlays: Message;
   noInternet: Message;
+  outOfServiceArea?: Message;
 };
 
 const ErrorComponent: React.FC<PropsFromRedux> = ({
@@ -66,7 +68,7 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
   fetchWarnings,
   updateOverlays,
 }) => {
-  const { t } = useTranslation('error');
+  const { t, i18n } = useTranslation('error');
   const [errorType, setErrorType] = useState<keyof Messages | undefined>(
     undefined
   );
@@ -121,6 +123,13 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
     overlays: {
       title: t('overlaysErrorTitle'),
     },
+    outOfServiceArea: (() => {
+      const messageFromConfig = Config.get('unresolvedGeoIdErrorMessage');
+      if (messageFromConfig) {
+        return messageFromConfig[i18n.language];
+      }
+      return undefined;
+    })(),
   };
 
   useEffect(() => {
@@ -130,7 +139,14 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
       }
       if (state.isConnected) {
         if (forecastError) {
-          setErrorType('forecast');
+          if (
+            typeof forecastError === 'object' &&
+            forecastError.message.includes('400')
+          ) {
+            setErrorType('outOfServiceArea');
+          } else {
+            setErrorType('forecast');
+          }
         }
         if (observationError) {
           setErrorType('observation');
@@ -148,7 +164,7 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
   return errorType ? (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.title}>{messages[errorType].title}</Text>
+        <Text style={styles.title}>{messages[errorType]?.title}</Text>
         <AccessibleTouchableOpacity
           onPress={() => setErrorType(undefined)}
           style={styles.closeButton}>
@@ -158,14 +174,18 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
       {errorType === 'noInternet' ? (
         <Text style={styles.text}>{messages[errorType].additionalInfo}</Text>
       ) : (
-        <AccessibleTouchableOpacity
-          onPress={() => tryAgainFunctions[errorType]()}>
-          <View style={styles.tryAgainButton}>
-            <View style={styles.textContainer}>
-              <Text style={styles.buttonText}>{t('tryAgain')}</Text>
-            </View>
-          </View>
-        </AccessibleTouchableOpacity>
+        <>
+          {errorType !== 'outOfServiceArea' && (
+            <AccessibleTouchableOpacity
+              onPress={() => tryAgainFunctions[errorType]()}>
+              <View style={styles.tryAgainButton}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.buttonText}>{t('tryAgain')}</Text>
+                </View>
+              </View>
+            </AccessibleTouchableOpacity>
+          )}
+        </>
       )}
     </View>
   ) : null;
