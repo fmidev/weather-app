@@ -62,12 +62,12 @@ type Props = PropsFromRedux;
 
 const SettingsScreen: React.FC<Props> = ({
   clockType,
-  theme,
+  // theme,
   geoids,
   // units,
   // updateUnits,
   updateClockType,
-  updateTheme,
+  // updateTheme,
   updateLocationsLocales,
 }) => {
   const [locationPermission, setLocationPermission] = useState<
@@ -333,7 +333,7 @@ const SettingsScreen: React.FC<Props> = ({
             </View>
           </>
         )}
-        <View
+        {/* <View
           style={[
             styles.rowWrapper,
             styles.withBorderBottom,
@@ -348,8 +348,8 @@ const SettingsScreen: React.FC<Props> = ({
               {t('settings:appearance')}
             </Text>
           </View>
-        </View>
-        <View>
+        </View> */}
+        {/* <View>
           <View
             style={[
               styles.rowWrapper,
@@ -380,8 +380,8 @@ const SettingsScreen: React.FC<Props> = ({
                 )}
               </View>
             </AccessibleTouchableOpacity>
-          </View>
-          <View
+          </View> */}
+        {/* <View
             style={[
               styles.rowWrapper,
               styles.withBorderBottom,
@@ -411,8 +411,8 @@ const SettingsScreen: React.FC<Props> = ({
                 )}
               </View>
             </AccessibleTouchableOpacity>
-          </View>
-          <View
+          </View> */}
+        {/* <View
             style={[
               styles.rowWrapper,
               styles.withBorderBottom,
@@ -448,83 +448,83 @@ const SettingsScreen: React.FC<Props> = ({
                 )}
               </View>
             </AccessibleTouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              styles.withMarginTop,
-              { borderBottomColor: colors.border },
-            ]}>
-            <View style={styles.row}>
-              <Text
-                style={[styles.title, { color: colors.text }]}
-                accessibilityRole="header">
-                {t('settings:clock')}
-              </Text>
-            </View>
-          </View>
-          <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              onPress={() => updateClockType(12)}
-              delayPressIn={100}
-              accessibilityState={{
-                selected: clockType === 12,
-              }}
-              accessibilityRole="button"
-              accessibilityHint={`${t('settings:clockSettingHint')} ${t(
-                '12-hour-clock'
-              )}`}>
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
-                  {t('12-hour-clock')}
-                </Text>
-                {clockType === 12 && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              onPress={() => updateClockType(24)}
-              delayPressIn={100}
-              accessibilityState={{
-                selected: clockType === 24,
-              }}
-              accessibilityRole="button"
-              accessibilityHint={`${t('settings:clockSettingHint')} ${t(
-                'settings:24-hour-clock'
-              )}`}>
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
-                  {t('settings:24-hour-clock')}
-                </Text>
-                {clockType === 24 && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
+          </View> */}
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            styles.withMarginTop,
+            { borderBottomColor: colors.border },
+          ]}>
+          <View style={styles.row}>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('settings:clock')}
+            </Text>
           </View>
         </View>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            { borderBottomColor: colors.border },
+          ]}>
+          <AccessibleTouchableOpacity
+            onPress={() => updateClockType(12)}
+            delayPressIn={100}
+            accessibilityState={{
+              selected: clockType === 12,
+            }}
+            accessibilityRole="button"
+            accessibilityHint={`${t('settings:clockSettingHint')} ${t(
+              '12-hour-clock'
+            )}`}>
+            <View style={styles.row}>
+              <Text style={[styles.text, { color: colors.text }]}>
+                {t('12-hour-clock')}
+              </Text>
+              {clockType === 12 && (
+                <Icon
+                  name="checkmark"
+                  size={22}
+                  style={{ color: colors.text }}
+                />
+              )}
+            </View>
+          </AccessibleTouchableOpacity>
+        </View>
+        <View
+          style={[
+            styles.rowWrapper,
+            styles.withBorderBottom,
+            { borderBottomColor: colors.border },
+          ]}>
+          <AccessibleTouchableOpacity
+            onPress={() => updateClockType(24)}
+            delayPressIn={100}
+            accessibilityState={{
+              selected: clockType === 24,
+            }}
+            accessibilityRole="button"
+            accessibilityHint={`${t('settings:clockSettingHint')} ${t(
+              'settings:24-hour-clock'
+            )}`}>
+            <View style={styles.row}>
+              <Text style={[styles.text, { color: colors.text }]}>
+                {t('settings:24-hour-clock')}
+              </Text>
+              {clockType === 24 && (
+                <Icon
+                  name="checkmark"
+                  size={22}
+                  style={{ color: colors.text }}
+                />
+              )}
+            </View>
+          </AccessibleTouchableOpacity>
+        </View>
+        {/* </View> */}
         {/* {units && (
           <>
             <View style={styles.titleContainer} testID="settings_units_header">

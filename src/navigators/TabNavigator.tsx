@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   AppState,
-  Appearance,
+  // Appearance,
   Platform,
   AppStateStatus,
   StyleSheet,
@@ -53,7 +53,7 @@ import { getGeolocation } from '@utils/helpers';
 import {
   PRIMARY_BLUE,
   WHITE,
-  HEADER_DARK,
+  // HEADER_DARK,
   GRAY_1,
   TRANSPARENT,
   SHADOW_DARK,
@@ -71,7 +71,10 @@ import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
 import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import ErrorComponent from '@components/common/ErrorComponent';
 
-import { lightTheme, darkTheme } from './themes';
+import {
+  lightTheme,
+  // darkTheme
+} from './themes';
 import {
   TabParamList,
   OthersStackParamList,
@@ -119,11 +122,11 @@ const Navigator: React.FC<Props> = ({
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const isDark = (currentTheme: string): boolean =>
-    currentTheme === 'dark' ||
-    (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
+  // const isDark = (currentTheme: string): boolean =>
+  //   currentTheme === 'dark' ||
+  //   (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
 
-  const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
+  // const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
   const [warningsSeverity, setWarningsSeverity] = useState<number>(0);
 
@@ -161,7 +164,7 @@ const Navigator: React.FC<Props> = ({
 
   const handleAppStateChange = (state: AppStateStatus) => {
     if (state === 'active') {
-      setUseDarkTheme(isDark(theme));
+      // setUseDarkTheme(isDark(theme));
     }
   };
 
@@ -173,7 +176,7 @@ const Navigator: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setUseDarkTheme(isDark(theme));
+    // setUseDarkTheme(isDark(theme));
     const appStateSubscriber = AppState.addEventListener(
       'change',
       handleAppStateChange
@@ -195,14 +198,13 @@ const Navigator: React.FC<Props> = ({
   );
 
   const CommonHeaderOptions: StackNavigationOptions = {
-    headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+    headerTintColor: PRIMARY_BLUE,
     headerTitleStyle: {
       fontFamily: 'Roboto-Bold',
     },
     headerStyle: {
       ...styles.header,
-      shadowColor:
-        useDarkTheme || Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
+      shadowColor: Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
     },
     headerTitleAlign: 'center',
     headerBackImage: ({ tintColor }: { tintColor: string }) => (
@@ -414,7 +416,7 @@ const Navigator: React.FC<Props> = ({
 
   if (!didLaunchApp) {
     return (
-      <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
+      <NavigationContainer theme={lightTheme}>
         <SetupStackScreen />
       </NavigationContainer>
     );
@@ -422,28 +424,19 @@ const Navigator: React.FC<Props> = ({
 
   return (
     <>
-      <StatusBar
-        backgroundColor={useDarkTheme ? HEADER_DARK : WHITE}
-        barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
-      />
+      <StatusBar backgroundColor={WHITE} barStyle="dark-content" />
       <NavigationContainer
         onStateChange={navigationTabChanged}
-        theme={useDarkTheme ? darkTheme : lightTheme}>
+        theme={lightTheme}>
         <Tab.Navigator
           initialRouteName={initialTab}
           screenOptions={{
             tabBarHideOnKeyboard: true,
-            tabBarActiveTintColor: useDarkTheme
-              ? darkTheme.colors.tabBarActive
-              : lightTheme.colors.tabBarActive,
-            tabBarInactiveTintColor: useDarkTheme
-              ? darkTheme.colors.tabBarInactive
-              : lightTheme.colors.tabBarInactive,
+            tabBarActiveTintColor: lightTheme.colors.tabBarActive,
+            tabBarInactiveTintColor: lightTheme.colors.tabBarInactive,
             tabBarLabelStyle: styles.tabText,
             tabBarButton: ({ style, accessibilityState, ...rest }) => {
-              const activeColor = useDarkTheme
-                ? darkTheme.colors.tabBarActive
-                : lightTheme.colors.tabBarActive;
+              const activeColor = lightTheme.colors.tabBarActive;
 
               return (
                 <AccessibleTouchableOpacity
@@ -550,9 +543,7 @@ const Navigator: React.FC<Props> = ({
           customStyles={{
             container: {
               ...styles.sheetContainer,
-              backgroundColor: useDarkTheme
-                ? darkTheme.colors.headerBackground
-                : lightTheme.colors.headerBackground,
+              backgroundColor: lightTheme.colors.headerBackground,
             },
             draggableIcon: styles.draggableIcon,
           }}>
