@@ -115,6 +115,7 @@ interface SocialMediaLink {
 interface UnresolvedGeoIdErrorMessage {
   [language: string]: {
     title: string;
+    additionalInfo?: string;
   };
 }
 

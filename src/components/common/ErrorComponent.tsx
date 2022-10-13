@@ -171,11 +171,12 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
           <Icon name="close-outline" size={24} color={BLACK} />
         </AccessibleTouchableOpacity>
       </View>
-      {errorType === 'noInternet' ? (
-        <Text style={styles.text}>{messages[errorType].additionalInfo}</Text>
+      {['noInternet', 'outOfServiceArea'].includes(errorType) &&
+      messages[errorType]?.additionalInfo ? (
+        <Text style={styles.text}>{messages[errorType]?.additionalInfo}</Text>
       ) : (
         <>
-          {errorType !== 'outOfServiceArea' && (
+          {errorType !== 'outOfServiceArea' && errorType !== 'noInternet' && (
             <AccessibleTouchableOpacity
               onPress={() => tryAgainFunctions[errorType]()}>
               <View style={styles.tryAgainButton}>
