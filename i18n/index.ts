@@ -25,7 +25,7 @@ const languageDetector = <LanguageDetectorAsyncModule>{
   detect: async (callback: any) => {
     const savedDataJSON = await getItem(LOCALE);
     const lng = savedDataJSON || null;
-    const selectLanguage = lng || systemLng || 'fi';
+    const selectLanguage = lng || systemLng || 'en';
     callback(selectLanguage);
   },
   cacheUserLanguage: () => {},
