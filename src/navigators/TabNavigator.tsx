@@ -1,10 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  AppState,
-  // Appearance,
   Platform,
-  AppStateStatus,
   StyleSheet,
   StatusBar,
   StyleProp,
@@ -53,7 +50,6 @@ import { getGeolocation } from '@utils/helpers';
 import {
   PRIMARY_BLUE,
   WHITE,
-  // HEADER_DARK,
   GRAY_1,
   TRANSPARENT,
   SHADOW_DARK,
@@ -71,10 +67,7 @@ import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
 import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import ErrorComponent from '@components/common/ErrorComponent';
 
-import {
-  lightTheme,
-  // darkTheme
-} from './themes';
+import { lightTheme } from './themes';
 import {
   TabParamList,
   OthersStackParamList,
@@ -122,11 +115,7 @@ const Navigator: React.FC<Props> = ({
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  // const isDark = (currentTheme: string): boolean =>
-  //   currentTheme === 'dark' ||
-  //   (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
 
-  // const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
   const [warningsSeverity, setWarningsSeverity] = useState<number>(0);
 
@@ -162,29 +151,12 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements,
   ]);
 
-  const handleAppStateChange = (state: AppStateStatus) => {
-    if (state === 'active') {
-      // setUseDarkTheme(isDark(theme));
-    }
-  };
-
   const navigationTabChanged = (state: NavigationState | undefined) => {
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
     if (Number.isInteger(NavigationTabValues[navigationTab])) {
       setNavigationTab(navigationTab);
     }
   };
-
-  useEffect(() => {
-    // setUseDarkTheme(isDark(theme));
-    const appStateSubscriber = AppState.addEventListener(
-      'change',
-      handleAppStateChange
-    );
-    return () => appStateSubscriber.remove();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [theme]);
 
   const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
     <View style={styles.headerBackImage}>
