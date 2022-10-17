@@ -33,7 +33,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   setActiveDayIndex,
   dayData,
 }) => {
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const dayStripRef = useRef() as React.MutableRefObject<ScrollView>;
@@ -71,10 +71,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   }) => {
     const { timeStamp, maxTemperature, minTemperature, smartSymbol } = item;
     const stepMoment = moment.unix(timeStamp);
-    const daySmartSymbol = weatherSymbolGetter(
-      (smartSymbol || 0).toString(),
-      dark
-    );
+    const daySmartSymbol = weatherSymbolGetter((smartSymbol || 0).toString());
     const isActive = index === activeDayIndex;
 
     const convertedMaxTemperature = toPrecision(

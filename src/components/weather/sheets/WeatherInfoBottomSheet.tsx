@@ -18,11 +18,7 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
-import {
-  symbolsLight,
-  symbolsDark,
-  weatherSymbolKeyParser,
-} from '@assets/images';
+import { symbols, weatherSymbolKeyParser } from '@assets/images';
 
 import { useOrientation } from '@utils/hooks';
 import { GRAY_1, CustomTheme } from '@utils/colors';
@@ -53,7 +49,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
       uniqueSmartSymbols.map((s) => weatherSymbolKeyParser((s || 0).toString()))
     ),
   ];
-  const symbols = dark ? symbolsDark : symbolsLight;
+
   const symbolsArr = Object.entries(symbols).map(([key, value]) => ({
     key,
     ...value,
