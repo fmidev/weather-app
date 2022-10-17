@@ -112,6 +112,13 @@ interface SocialMediaLink {
   url: string;
 }
 
+interface UnresolvedGeoIdErrorMessage {
+  [language: string]: {
+    title: string;
+    additionalInfo?: string;
+  };
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -153,4 +160,5 @@ export interface ConfigType {
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
+  unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
 }
