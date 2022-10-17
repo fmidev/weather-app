@@ -141,7 +141,8 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
         if (forecastError) {
           if (
             typeof forecastError === 'object' &&
-            forecastError.message.includes('400')
+            forecastError.message.includes('400') &&
+            messages.outOfServiceArea
           ) {
             setErrorType('outOfServiceArea');
           } else {
@@ -159,7 +160,13 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
         }
       }
     });
-  }, [forecastError, observationError, warningsError, overlaysError]);
+  }, [
+    forecastError,
+    observationError,
+    warningsError,
+    overlaysError,
+    messages.outOfServiceArea,
+  ]);
 
   return errorType ? (
     <View style={styles.container}>
