@@ -71,6 +71,7 @@ import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
 import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import ErrorComponent from '@components/common/ErrorComponent';
 
+import { Config } from '@config';
 import { lightTheme, darkTheme } from './themes';
 import {
   TabParamList,
@@ -122,6 +123,8 @@ const Navigator: React.FC<Props> = ({
   const isDark = (currentTheme: string): boolean =>
     currentTheme === 'dark' ||
     (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
+
+  const warningsEnabled = Config.get('warnings').enabled;
 
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
@@ -499,29 +502,31 @@ const Navigator: React.FC<Props> = ({
               ),
             }}
           />
-          <Tab.Screen
-            name="Warnings"
-            component={WarningsStackScreen}
-            options={{
-              tabBarAccessibilityLabel: `${t('navigation:warnings')}, 3 ${t(
-                'navigation:slash'
-              )} 4, ${t(
-                warningsSeverity > 0
-                  ? 'warnings:hasWarnings'
-                  : 'warnings:noWarnings'
-              )}`,
-              headerShown: false,
-              tabBarTestID: 'navigation_warnings',
-              tabBarLabel: `${t('navigation:warnings')}`,
-              tabBarIcon: ({ color, size }) => (
-                <WarningsTabIcon
-                  color={color}
-                  size={size}
-                  updateWarningsSeverity={setWarningsSeverity}
-                />
-              ),
-            }}
-          />
+          {warningsEnabled && (
+            <Tab.Screen
+              name="Warnings"
+              component={WarningsStackScreen}
+              options={{
+                tabBarAccessibilityLabel: `${t('navigation:warnings')}, 3 ${t(
+                  'navigation:slash'
+                )} 4, ${t(
+                  warningsSeverity > 0
+                    ? 'warnings:hasWarnings'
+                    : 'warnings:noWarnings'
+                )}`,
+                headerShown: false,
+                tabBarTestID: 'navigation_warnings',
+                tabBarLabel: `${t('navigation:warnings')}`,
+                tabBarIcon: ({ color, size }) => (
+                  <WarningsTabIcon
+                    color={color}
+                    size={size}
+                    updateWarningsSeverity={setWarningsSeverity}
+                  />
+                ),
+              }}
+            />
+          )}
           <Tab.Screen
             name="Others"
             component={OthersStackScreen}
