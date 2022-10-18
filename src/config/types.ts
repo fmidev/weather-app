@@ -161,4 +161,5 @@ export interface ConfigType {
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
   unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
+  clockType: 12 | 24;
 }

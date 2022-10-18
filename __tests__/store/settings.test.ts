@@ -54,7 +54,7 @@ describe('settings reducer', () => {
     ).toEqual({
       units: undefined,
       theme: 'light',
-      clockType: 24,
+      clockType: undefined,
     });
   });
 

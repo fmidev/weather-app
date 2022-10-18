@@ -112,6 +112,7 @@ const defaultConfig: ConfigType = {
     enabled: false,
   },
   socialMediaLinks: [],
+  clockType: 24,
 };
 
 export default defaultConfig;
