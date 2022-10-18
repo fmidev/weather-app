@@ -16,34 +16,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="SplashBackground" translatesAutoresizingMaskIntoConstraints="NO" id="jId-4J-nZW">
-                                <rect key="frame" x="0.0" y="249" width="428" height="428"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="jId-4J-nZW" secondAttribute="height" multiplier="1:1" id="njq-XH-8Vx"/>
-                                </constraints>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ProviderLogo" translatesAutoresizingMaskIntoConstraints="NO" id="jEE-qh-axV">
-                                <rect key="frame" x="40" y="84" width="216" height="40"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Klw-Tk-8HD">
+                                <rect key="frame" x="139" y="388" width="150" height="150"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="jEE-qh-axV" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="40" id="0M7-lw-kNn"/>
-                            <constraint firstItem="jId-4J-nZW" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="7gp-bS-yoe"/>
-                            <constraint firstAttribute="trailing" secondItem="jId-4J-nZW" secondAttribute="trailing" id="I1U-Go-Cta"/>
-                            <constraint firstItem="jEE-qh-axV" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="40" id="nla-Uq-xe0"/>
-                            <constraint firstItem="jId-4J-nZW" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="yDn-56-PUZ"/>
+                            <constraint firstItem="Klw-Tk-8HD" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Mzl-TR-mgg"/>
+                            <constraint firstItem="Klw-Tk-8HD" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Ney-cH-h5X"/>
                         </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="169.56521739130437" y="368.97321428571428"/>
+            <point key="canvasLocation" x="168.22429906542055" y="368.68250539956807"/>
         </scene>
     </scenes>
     <resources>
-        <image name="ProviderLogo" width="216" height="40"/>
-        <image name="SplashBackground" width="520" height="520"/>
+        <image name="SplashIcon" width="150" height="150"/>
     </resources>
 </document>
