@@ -157,9 +157,9 @@ export interface ConfigType {
       wind: 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
       pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
     };
+    clockType: 12 | 24;
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
   unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
-  clockType: 12 | 24;
 }

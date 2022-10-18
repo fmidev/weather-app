@@ -107,12 +107,12 @@ const defaultConfig: ConfigType = {
       wind: 'm/s',
       pressure: 'hPa',
     },
+    clockType: 24,
   },
   announcements: {
     enabled: false,
   },
   socialMediaLinks: [],
-  clockType: 24,
 };
 
 export default defaultConfig;

@@ -19,7 +19,7 @@ export const selectTheme = createSelector(
 export const selectClockType = createSelector(
   selectSettingsDomain,
   (settings) => {
-    const configClockType = Config.get('clockType');
+    const configClockType = Config.get('settings').clockType;
     return settings.clockType ?? configClockType;
   }
 );
