@@ -37,10 +37,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   const time = moment
     .unix(data.epochtime)
     .format(clockType === 12 ? 'h a' : 'HH');
-  const smartSymbol = weatherSymbolGetter(
-    (data.smartSymbol || 0).toString(),
-    dark
-  );
+  const smartSymbol = weatherSymbolGetter((data.smartSymbol || 0).toString());
 
   return (
     <View

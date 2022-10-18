@@ -63,10 +63,7 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
           },
         ]}>
         <View style={styles.mainRow}>
-          {weatherSymbolGetter(
-            smartSymbol.toString(),
-            false
-          )?.({
+          {weatherSymbolGetter(smartSymbol.toString())?.({
             width: 40,
             height: 40,
           })}

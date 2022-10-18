@@ -45,7 +45,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   timezone,
 }) => {
   const { t } = useTranslation('forecast');
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   useEffect(() => {
     moment.tz.setDefault(timezone);
   }, [timezone]);
@@ -67,8 +67,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
 
   const currentTime = moment.unix(nextHourForecast.epochtime);
   const smartSymbol = weatherSymbolGetter(
-    nextHourForecast?.smartSymbol?.toString() || '0',
-    dark
+    nextHourForecast?.smartSymbol?.toString() || '0'
   );
 
   const numericOrDash = (val: string | undefined | null): string =>
