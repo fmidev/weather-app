@@ -158,7 +158,6 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           <View style={styles.legendRow}>
             <Bar color={colors.rain[1]} />
             <Bar color={colors.rain[2]} />
-            <Bar color={colors.rain[3]} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationLight', {
                 unit: units.precipitation,
@@ -166,8 +165,8 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             </Text>
           </View>
           <View style={styles.legendRow}>
+            <Bar color={colors.rain[3]} />
             <Bar color={colors.rain[4]} />
-            <Bar color={colors.rain[5]} />
             <Bar color={TRANSPARENT} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationModerate', {
@@ -176,6 +175,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             </Text>
           </View>
           <View style={styles.legendRow}>
+            <Bar color={colors.rain[5]} />
             <Bar color={colors.rain[6]} />
             <Bar color={colors.rain[7]} />
             <Bar color={colors.rain[8]} />
