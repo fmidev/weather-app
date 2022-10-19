@@ -40,8 +40,11 @@ type ObservationStationListBottomSheetProps = PropsFromRedux & {
 const ObservationStationListBottomSheet: React.FC<
   ObservationStationListBottomSheetProps
 > = ({ onClose, dataId, stationId, setStationId, stationList }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
   const { colors } = useTheme() as CustomTheme;
+
+  const decimalSeparator = locale === 'en' ? '.' : ',';
 
   return (
     <View style={styles.wrapper}>
@@ -83,7 +86,10 @@ const ObservationStationListBottomSheet: React.FC<
                 <Text style={[styles.text, { color: colors.text }]}>
                   {`${station.name} – ${t(
                     'observation:distance'
-                  )} ${toStringWithDecimal(station.distance, ',')} km`}
+                  )} ${toStringWithDecimal(
+                    station.distance,
+                    decimalSeparator
+                  )} km`}
                 </Text>
                 <Icon
                   name={

@@ -81,7 +81,9 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   clockType,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation('observation');
+  const { t, i18n } = useTranslation('observation');
+  const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const { enabled, parameters } = Config.get('weather').observation;
 
@@ -121,7 +123,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   );
   const title = `${currentStation?.name || ''} – ${t(
     'distance'
-  )} ${toStringWithDecimal(currentStation?.distance, ',')} km`;
+  )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} km`;
   return (
     <View
       style={[
