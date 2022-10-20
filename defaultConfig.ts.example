@@ -50,7 +50,8 @@ const defaultConfig: ConfigType = {
     apiUrl: 'url',
     forecast: {
       updateInterval: 5,
-      timePeriod: 'data',
+      timePeriod: 'data', // accepts also: 5, '+5d', '+120h'
+      forecastLengthTitle: 10, // optional, defaults to 10
       data: [{ producer: 'default', parameters: ['temperature'] }],
       defaultParameters: ['temperature'],
     },
@@ -68,7 +69,7 @@ const defaultConfig: ConfigType = {
     updateInterval: 5,
     webViewUrl: 'url',
     apiUrl: {
-      FI: 'url',
+      FI: 'url', // [countryCode]: 'url' 
     },
   },
   settings: {
