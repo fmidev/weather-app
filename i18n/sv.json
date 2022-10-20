@@ -54,7 +54,7 @@
     "precipitation": "regn",
     "metersPerSecond": "meter per sekund",
     "millimeters": "millimeter",
-    "panelHeader": "10 dygnsprognos",
+    "panelHeader": "{{ forecastLength }} dygnsprognos",
     "updated": "Uppdaterad",
     "sunrise": "Solen stiger",
     "sunset": "Solen går ner",
@@ -286,7 +286,7 @@
     "clockSettingHint": "Förändra applikation klocka till:",
     "clock": "Klockan",
     "12-hour-clock": "12-timmarsklocka",
-    "24-hour-clock": "24-timmarsklocka",
+    "24-hour-clock": "24-timmarsklocka"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Sök plats",
