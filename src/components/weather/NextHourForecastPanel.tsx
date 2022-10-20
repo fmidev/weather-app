@@ -44,7 +44,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   nextHourForecast,
   timezone,
 }) => {
-  const { t } = useTranslation('forecast');
+  const { t, i18n } = useTranslation('forecast');
+  const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
   const { colors, dark } = useTheme() as CustomTheme;
   useEffect(() => {
     moment.tz.setDefault(timezone);
@@ -238,11 +240,12 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                 accessibilityLabel={`${t('forecast:precipitation')} ${
                   nextHourForecast.precipitation1h
                     ?.toString()
-                    .replace('.', ',') || (0).toFixed(1).replace('.', ',')
+                    .replace('.', decimalSeparator) ||
+                  (0).toFixed(1).replace('.', decimalSeparator)
                 } ${t('forecast:millimeters')}`}>
                 <Text style={styles.bold}>{`${
-                  precipitationValue?.replace('.', ',') ||
-                  (0).toFixed(1).replace('.', ',')
+                  precipitationValue?.replace('.', decimalSeparator) ||
+                  (0).toFixed(1).replace('.', decimalSeparator)
                 }`}</Text>
                 {` ${precipitationUnit}`}
               </Text>

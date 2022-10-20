@@ -31,7 +31,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const { parameters } = Config.get('weather').observation;
-
+  const decimalSeparator = locale === 'en' ? '.' : ',';
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   const dateFormat =
     clockType === 12
@@ -111,7 +111,8 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
           unit,
           decimals,
           divider || 1,
-          true
+          true,
+          decimalSeparator
         );
 
         if (parameter === 'totalCloudCover' && value !== '-') {
