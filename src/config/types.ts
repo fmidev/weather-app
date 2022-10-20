@@ -139,7 +139,8 @@ export interface ConfigType {
     forecast: {
       ageWarning?: number;
       updateInterval: number;
-      timePeriod: number | 'data';
+      timePeriod: number | string | 'data';
+      forecastLengthTitle?: number;
       data: {
         producer?: string;
         parameters: (keyof ForecastParameters)[];

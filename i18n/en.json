@@ -54,7 +54,7 @@
     "precipitation": "precipitation",
     "metersPerSecond": "meters per second",
     "millimeters": "millimeters",
-    "panelHeader": "10-day forecast",
+    "panelHeader": "{{ forecastLength }}-day forecast",
     "updated": "Updated",
     "sunrise": "Sunrise",
     "sunset": "Sunset",
@@ -286,7 +286,7 @@
     "clockSettingHint": "Change application clock to:",
     "clock": "Clock",
     "12-hour-clock": "12-hour clock",
-    "24-hour-clock": "24-hour clock",
+    "24-hour-clock": "24-hour clock"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search for a location",
