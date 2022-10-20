@@ -82,7 +82,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   );
   const paramSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const { ageWarning } = Config.get('weather').forecast;
+  const { ageWarning, forecastLengthTitle } = Config.get('weather').forecast;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
 
@@ -124,7 +124,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
           shadowColor: colors.shadow,
         },
       ]}>
-      <PanelHeader title={t('panelHeader')} lastUpdated={forecastLastUpdated} />
+      <PanelHeader
+        title={t('panelHeader', { forecastLength: forecastLengthTitle || 10 })}
+        lastUpdated={forecastLastUpdated}
+      />
       <View style={styles.panelContainer}>
         <View style={[styles.row]}>
           <View style={[styles.row, styles.justifyStart]}>
