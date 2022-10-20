@@ -22,29 +22,21 @@ const defaultConfig: ConfigType = {
     maxFavorite: 10,
   },
   map: {
-    latitudeDelta: 0.15,
     updateInterval: 5,
     sources: {
-      key: 'url',
-      key2: 'url',
+      sourceKey: 'url',
+      sourceKey2: 'url',
     },
     layers: [
       {
         id: 1,
         name: { fi: 'name' },
         type: 'WMS',
-        legend: 'urlString',
         sources: [
           {
             source: 'sourceKey',
             layer: 'layerName',
             type: 'observation',
-             boundingBox: {
-              minx: -10.908,
-              miny: 51.113,
-              maxx: 37.162,
-              maxy: 72.002,
-            },
           },
         ],
         times: {
@@ -55,17 +47,12 @@ const defaultConfig: ConfigType = {
     ],
   },
   weather: {
-    apiUrl:
-      'url',
+    apiUrl: 'url',
     forecast: {
       updateInterval: 5,
       timePeriod: 'data',
-      data: [
-        { producer: 'default', parameters: ['temperature'] }
-      ],
-      defaultParameters: [
-        'temperature'
-      ],
+      data: [{ producer: 'default', parameters: ['temperature'] }],
+      defaultParameters: ['temperature'],
     },
     observation: {
       enabled: true,
@@ -81,25 +68,34 @@ const defaultConfig: ConfigType = {
     updateInterval: 5,
     webViewUrl: 'url',
     apiUrl: {
-      FI: 'url'
+      FI: 'url',
     },
   },
   settings: {
     languages: ['fi', 'en', 'sv'],
-     units: {
+    units: {
       temperature: 'C',
       precipitation: 'mm',
       wind: 'm/s',
       pressure: 'hPa',
     },
+    clockType: 24,
   },
   announcements: {
     enabled: true,
     updateInterval: 5,
     api: {
       fi: 'url',
-    }
-  }
+    },
+  },
+  socialMediaLinks: [
+    {
+      name: 'SocialMedia1',
+      icon: 'social-media',
+      appUrl: 'socialMedia://user?username=example',
+      url: 'https://www.socialmedia.example',
+    },
+  ],
 };
 
 export default defaultConfig;

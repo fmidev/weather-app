@@ -28,7 +28,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   data,
   displayParams,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
   const { colors, dark } = useTheme() as CustomTheme;
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
@@ -284,7 +286,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 toDisplay >= 0
                   ? `${converter(precipitationUnit, toDisplay).toFixed(
                       1
-                    )}`.replace('.', ',')
+                    )}`.replace('.', decimalSeparator)
                   : toDisplay}
               </Text>
             </View>

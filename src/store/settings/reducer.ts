@@ -11,7 +11,7 @@ import {
 const INITIAL_STATE: SettingsState = {
   units: getDefaultUnits(),
   theme: 'automatic',
-  clockType: 24,
+  clockType: undefined,
 };
 
 export default (

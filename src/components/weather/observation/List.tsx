@@ -26,6 +26,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
   const { parameters } = Config.get('weather').observation;
 
   const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
 
   const listParameters: {
     [key in ChartType]: {
@@ -197,7 +198,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
             ].includes(param)
               ? 0
               : 1,
-            ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0
+            ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0,
+            undefined,
+            decimalSeparator
           );
 
           const accessibilityLabel =

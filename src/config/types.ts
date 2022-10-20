@@ -112,6 +112,13 @@ interface SocialMediaLink {
   url: string;
 }
 
+interface UnresolvedGeoIdErrorMessage {
+  [language: string]: {
+    title: string;
+    additionalInfo?: string;
+  };
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -150,7 +157,9 @@ export interface ConfigType {
       wind: 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
       pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
     };
+    clockType: 12 | 24;
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
+  unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
 }

@@ -149,7 +149,8 @@ export const getObservationCellValue = (
   unit: string,
   decimals?: number,
   divider?: number,
-  showUnit?: boolean
+  showUnit?: boolean,
+  decimalSeparator: ',' | '.' = ','
 ): string => {
   const unitAbb = unit.replace('°', ''); // get rid of ° in temperature units
   const unitParameterObject = UNITS.find((x) =>
@@ -177,7 +178,7 @@ export const getObservationCellValue = (
       : Number(value).toFixed(decimals || 0)
     )
       .toString()
-      .replace('.', ',')} ${showUnit ? unit : ''}`.trim();
+      .replace('.', decimalSeparator)} ${showUnit ? unit : ''}`.trim();
   }
   return '-';
 };
