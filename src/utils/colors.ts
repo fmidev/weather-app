@@ -49,14 +49,14 @@ export const YELLOW = '#F8F800';
 export const ORANGE = '#FFB700';
 export const RED = '#D0021B';
 
-export const RAIN_1_LIGHT = '#3A698E';
-export const RAIN_2_LIGHT = '#6BB1C9';
-export const RAIN_3_LIGHT = '#C5FBF2';
-export const RAIN_4_LIGHT = '#589D6B';
-export const RAIN_5_LIGHT = '#F9F961';
-export const RAIN_6_LIGHT = '#D29F00';
-export const RAIN_7_LIGHT = '#AE5200';
-export const RAIN_8_LIGHT = '#760000';
+export const RAIN_1_LIGHT = 'rgb(208,219,239)';
+export const RAIN_2_LIGHT = 'rgb(208,219,239)';
+export const RAIN_3_LIGHT = 'rgb(134,152,211)';
+export const RAIN_4_LIGHT = 'rgb(134,152,211)';
+export const RAIN_5_LIGHT = 'rgb(11,89,178)';
+export const RAIN_6_LIGHT = 'rgb(11,89,178)';
+export const RAIN_7_LIGHT = 'rgb(91,26,142)';
+export const RAIN_8_LIGHT = 'rgb(91,26,142)';
 
 export const RAIN_1_DARK = '#C1FAFB';
 export const RAIN_2_DARK = '#6BB1C9';

@@ -141,12 +141,6 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       { backgroundColor: colors.rain[2] },
                     ]}
                   />
-                  <View
-                    style={[
-                      styles.rainIntensityBlock,
-                      { backgroundColor: colors.rain[3] },
-                    ]}
-                  />
                 </View>
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -159,16 +153,18 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   <View
                     style={[
                       styles.rainIntensityBlock,
+
                       styles.withSmallMarginRight,
-                      {
-                        backgroundColor: colors.rain[4],
-                      },
+                      { backgroundColor: colors.rain[3] },
                     ]}
                   />
                   <View
                     style={[
                       styles.rainIntensityBlock,
-                      { backgroundColor: colors.rain[5] },
+                      styles.withSmallMarginRight,
+                      {
+                        backgroundColor: colors.rain[4],
+                      },
                     ]}
                   />
                 </View>
@@ -180,6 +176,13 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             <View style={styles.row}>
               <View style={[styles.iconWrapper, styles.withMarginRight]}>
                 <View style={styles.row}>
+                  <View
+                    style={[
+                      styles.rainIntensityBlock,
+                      styles.withSmallMarginRight,
+                      { backgroundColor: colors.rain[5] },
+                    ]}
+                  />
                   <View
                     style={[
                       styles.rainIntensityBlock,
