@@ -1,7 +1,5 @@
 import React, { useState, useRef } from 'react';
 import {
-  ImageBackground,
-  Image,
   StyleSheet,
   Text,
   View,
@@ -27,7 +25,7 @@ type OnboardingScreenProps = {
 
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const { t } = useTranslation('onboarding');
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
   const titleRef = useRef() as React.MutableRefObject<Text>;
   const isLandscape = useOrientation();
@@ -77,12 +75,20 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     <View
       style={[
         styles.infoContainer,
-        { backgroundColor: colors.background, shadowColor: colors.shadow },
+        {
+          backgroundColor: colors.inputBackground, // colors.background,
+          shadowColor: colors.shadow,
+          borderColor: colors.primaryText,
+        },
       ]}>
       <View
         style={[
           styles.iconContainer,
-          { backgroundColor: colors.background, shadowColor: colors.shadow },
+          {
+            backgroundColor: colors.background,
+            shadowColor: colors.shadow,
+            borderColor: colors.primaryText,
+          },
         ]}>
         <Icon name={icon} width={32} height={32} color={colors.primaryText} />
       </View>
@@ -103,7 +109,14 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         accessibilityRole="button"
         style={styles.buttonContainer}
         onPress={handlePress}>
-        <View style={[styles.button, { borderColor: colors.primaryText }]}>
+        <View
+          style={[
+            styles.button,
+            {
+              borderColor: colors.primaryText,
+              backgroundColor: colors.background,
+            },
+          ]}>
           <View style={styles.textContainer}>
             <Text style={[styles.text, { color: colors.primaryText }]}>
               {t('next')}
@@ -116,24 +129,6 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground
-        style={styles.imageBackground}
-        resizeMode="contain"
-        source={
-          dark
-            ? require('../assets/images/weather-background-dark.png')
-            : require('../assets/images/weather-background-light.png')
-        }>
-        <Image
-          source={
-            dark
-              ? require('../assets/images/provider-logo-dark.png')
-              : require('../assets/images/provider-logo-light.png')
-          }
-          resizeMode="contain"
-          style={styles.logo}
-        />
-      </ImageBackground>
       <View
         style={[
           styles.innerContainer,
@@ -193,18 +188,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  imageBackground: {
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    position: 'absolute',
-    top: 40,
-    left: 40,
-    height: 40,
-    width: 190,
-  },
   innerContainer: {
     position: 'absolute',
     bottom: 72,
@@ -233,6 +216,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOpacity: 1,
     elevation: 10,
+    borderWidth: 2,
   },
   iconContainer: {
     position: 'absolute',
@@ -249,6 +233,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOpacity: 1,
     elevation: 10,
+    borderWidth: 2,
   },
   title: {
     fontSize: 16,

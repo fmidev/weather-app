@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ImageBackground,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  Platform,
-  SafeAreaView,
-} from 'react-native';
+import { StyleSheet, Text, View, Platform, SafeAreaView } from 'react-native';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -27,7 +19,7 @@ type SetupScreenProps = {
 
 const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
   const { t } = useTranslation('setUp');
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const [didViewTerms, setDidViewTerms] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const isLandscape = useOrientation();
@@ -67,7 +59,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
     <View
       style={[
         styles.permissionContainer,
-        { backgroundColor: colors.background, shadowColor: colors.shadow },
+        {
+          backgroundColor: colors.inputBackground,
+          shadowColor: colors.shadow,
+          borderColor: colors.primaryText,
+        },
       ]}>
       <Text
         style={[styles.title, { color: colors.primaryText }]}
@@ -155,24 +151,6 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground
-        style={styles.imageBackground}
-        resizeMode="contain"
-        source={
-          dark
-            ? require('../assets/images/weather-background-dark.png')
-            : require('../assets/images/weather-background-light.png')
-        }>
-        <Image
-          source={
-            dark
-              ? require('../assets/images/provider-logo-dark.png')
-              : require('../assets/images/provider-logo-light.png')
-          }
-          resizeMode="contain"
-          style={styles.logo}
-        />
-      </ImageBackground>
       <View
         style={[
           styles.innerContainer,
@@ -228,18 +206,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  imageBackground: {
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    position: 'absolute',
-    top: 40,
-    left: 40,
-    height: 40,
-    width: 190,
-  },
   innerContainer: {
     position: 'absolute',
     bottom: 72,
@@ -267,6 +233,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOpacity: 1,
     elevation: 10,
+    borderWidth: 2,
   },
   title: {
     fontSize: 16,
