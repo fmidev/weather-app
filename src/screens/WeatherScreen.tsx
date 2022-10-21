@@ -120,7 +120,12 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       <View>
         <ScrollView
           style={[styles.container]}
-          contentContainerStyle={styles.contentContainer}
+          contentContainerStyle={[
+            styles.contentContainer,
+            !weatherConfig.observation.enabled
+              ? styles.extraPaddingBottom
+              : undefined,
+          ]}
           showsVerticalScrollIndicator={false}
           stickyHeaderIndices={announcements && [0]}>
           <CrisisStrip style={styles.crisisStrip} />
@@ -141,6 +146,13 @@ const styles = StyleSheet.create({
     ...Platform.select({
       android: {
         paddingBottom: 28,
+      },
+    }),
+  },
+  extraPaddingBottom: {
+    ...Platform.select({
+      android: {
+        paddingBottom: 56,
       },
     }),
   },
