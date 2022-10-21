@@ -29,7 +29,7 @@ export const forecastTypeParameters: TypeParameters = {
   pressure: ['pressure'],
   precipitation: ['precipitation1h', 'pop'],
   temperature: ['temperature', 'feelsLike', 'dewPoint'],
-  humidity: ['relativeHumidity'],
+  humidity: ['humidity'],
   wind: ['windSpeedMS', 'hourlymaximumgust', 'windDirection'],
   snowDepth: [],
   visCloud: [],

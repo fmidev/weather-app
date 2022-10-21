@@ -264,7 +264,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {observation
                 ? t('weather:charts:humidity').toLocaleLowerCase()
-                : t('weather:charts:relativeHumidity').toLocaleLowerCase()}{' '}
+                : t('weather:charts:humidity').toLocaleLowerCase()}{' '}
               (%)
             </Text>
           </View>

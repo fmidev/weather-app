@@ -500,7 +500,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   </Text>
                 </View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
-                  {t('weatherInfoBottomSheet.relativeHumidity')}
+                  {t('weatherInfoBottomSheet.humidity')}
                 </Text>
               </View>
             )}

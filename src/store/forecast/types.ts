@@ -71,7 +71,7 @@ export interface ForecastParameters {
   windDirection: number;
   windCompass8: string;
   hourlymaximumgust: number;
-  relativeHumidity: number;
+  humidity: number;
   precipitation1h: number;
   feelsLike: number;
   dewPoint: number;
