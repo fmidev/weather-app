@@ -1,4 +1,4 @@
-# This is a basic workflow to run tests, build Android app and supply it to Play Store
+# This is a basic workflow to run tests, build Android app and supply it to Play Store. Version 1.
 
 name: CI / CD
 
