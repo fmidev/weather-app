@@ -26,12 +26,13 @@ type DayDetailsProps = PropsFromRedux & {
 };
 
 const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
-  const { t } = useTranslation('warnings');
+  const { t, i18n } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
   const [openWarnings, setOpenWarnings] = useState<{
     [index: number]: boolean;
   }>([]);
 
+  const locale = i18n.language;
   const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
 
   useEffect(() => {
@@ -80,9 +81,13 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
                   )}`}>
                   <Text style={styles.bold}>{`${t(`types.${type}`)}`}</Text>
                   {` – ${t('valid')} ${moment(duration.startTime).format(
-                    `D.M. ${timeFormat}`
+                    locale === 'en'
+                      ? `MMM D ${timeFormat}`
+                      : `D.M. ${timeFormat}`
                   )} - ${moment(duration.endTime).format(
-                    `D.M. ${timeFormat}`
+                    locale === 'en'
+                      ? `MMM D ${timeFormat}`
+                      : `D.M. ${timeFormat}`
                   )} `}
                 </Text>
               </View>

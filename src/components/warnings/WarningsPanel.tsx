@@ -78,10 +78,11 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
 
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-  const lastUpdatedDateTimeFormat =
-    clockType === 12
-      ? `D.M. [${t('forecast:at')}] h.mm a`
-      : `D.M. [${t('forecast:at')}] HH.mm`;
+  const timeFormat = clockType === 12 ? 'h.mm ' : 'HH.mm';
+  const dateFormat = locale === 'en' ? 'MMM D' : 'D.M.';
+  const lastUpdatedDateTimeFormat = `${dateFormat} [${t(
+    'forecast:at'
+  )}] ${timeFormat}`;
   return (
     <View
       style={[
@@ -219,7 +220,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                           color: colors.text,
                         },
                       ]}>
-                      {moment(date).format('D.M.')}
+                      {moment(date).format(locale === 'en' ? 'MMM D' : 'D.M.')}
                     </Text>
                     <SeverityBar severity={severity} />
                   </View>
