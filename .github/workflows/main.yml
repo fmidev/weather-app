@@ -36,6 +36,13 @@ jobs:
      # Install dependencies
      - name: Install dependencies
        run: yarn install
+     - name: Get defaultConfig
+       env:
+         defaultConfig: ${{ secrets.DEFAULTCONFIG }}
+       shell: bash
+       run: |
+         touch defaultConfig.ts
+         echo "$defaultConfig" >> defaultConfig.ts
      - name: Run Eslint tests
        run: yarn lint
      - name: Run Jest tests  
