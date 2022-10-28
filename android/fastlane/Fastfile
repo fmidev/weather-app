@@ -20,7 +20,10 @@ platform :android do
   # lane :test do
   #  gradle(task: "test")
   # end
+  
+  # Set Slack webhook
   slack_url = ENV["SLACK_WEB_HOOK_URL"]
+  
   # Sign, build and deploy to Google Play Store
   desc "Sign, build, and deploy to Google Play Store"
      lane :build_sign_and_deploy do
@@ -39,6 +42,7 @@ platform :android do
 	android_get_version_name(app_project_dir: './android/app/')
   end
 
+  # Validate Google Play Store key, build and sign aab
   desc "Release for the Android beta"
     lane :build_and_sign do
 	# Validate Google Play Store key
@@ -55,7 +59,8 @@ platform :android do
             "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"]
         })
    end
-
+  
+  # Deploy to Google Play Store
   desc "Deploy a new version to the Google Play"
     lane :deploy do
 	  # Supply via Fastlane supply -command to Google Play Store
