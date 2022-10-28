@@ -37,7 +37,7 @@ platform :android do
 	# ensure_git_status_clean
 	android_get_version_code(app_project_dir: './android/app/')
 	android_get_version_name(app_project_dir: './android/app/')
-     end
+  end
 
   desc "Release for the Android beta"
     lane :build_and_sign do
@@ -59,13 +59,13 @@ platform :android do
   desc "Deploy a new version to the Google Play"
     lane :deploy do
 	  # Supply via Fastlane supply -command to Google Play Store
-	  supply(package_name: 'com.tokaprojekti', json_key: ENV["GPLAY_JSON_KEY_FILE"], track: 'internal', release_status: 'draft')
+	  supply(package_name: 'jm.gov.metservice', json_key: ENV["GPLAY_JSON_KEY_FILE"], track: 'internal', release_status: 'draft')
   end
 	
   # Build uploading success message to Slack, if lanes are completed successfully
   after_all do |lane|
     	slack(
-              message: "Android Aab built and uploaded successfully to Google Play Stor !",
+              message: "Android Aab built and uploaded successfully to Google Play Store !",
               success: true,
               slack_url: slack_url
 	)
@@ -78,5 +78,5 @@ platform :android do
               success: false,
               slack_url: slack_url
 	)
-  end
+    end
 end
