@@ -10,7 +10,7 @@ import {
 
 const INITIAL_STATE: SettingsState = {
   units: getDefaultUnits(),
-  theme: 'automatic',
+  theme: undefined,
   clockType: undefined,
 };
 

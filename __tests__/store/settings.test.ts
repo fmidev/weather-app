@@ -63,7 +63,7 @@ describe('settings reducer', () => {
       reducer(undefined, { type: types.UPDATE_CLOCK_TYPE, clockType: 24 })
     ).toEqual({
       units: undefined,
-      theme: 'automatic',
+      theme: undefined,
       clockType: 24,
     });
   });

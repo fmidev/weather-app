@@ -120,9 +120,10 @@ const Navigator: React.FC<Props> = ({
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const isDark = (currentTheme: string): boolean =>
+  const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
-    (currentTheme === 'automatic' && Appearance.getColorScheme() === 'dark');
+    ((!currentTheme || currentTheme === 'automatic') &&
+      Appearance.getColorScheme() === 'dark');
 
   const warningsEnabled = Config.get('warnings').enabled;
 
