@@ -20,9 +20,9 @@ export const selectStationList = createSelector(
   (observation) => observation.stations.sort((a, b) => a.distance - b.distance)
 );
 
-const selectDataSets = createSelector(
+const selectHourlyDataSets = createSelector(
   selectObservationDomain,
-  (observation) => observation.data
+  (observation) => observation.hourlyData
 );
 
 const selectStationIdList = createSelector(
@@ -40,8 +40,8 @@ export const selectStationId = createSelector(
   (id, stations) => (stations?.[id] ? stations[id] : 0)
 );
 
-export const selectData = createSelector(
-  [selectDataSets, selectStationId],
+export const selectHourlyData = createSelector(
+  [selectHourlyDataSets, selectStationId],
   (data, id) => (data?.[id] ? data[id] : [])
 );
 

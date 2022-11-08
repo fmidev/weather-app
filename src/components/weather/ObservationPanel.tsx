@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
-  selectData,
+  selectHourlyData,
   selectDataId,
   selectDisplayFormat,
   selectLoading,
@@ -47,7 +47,7 @@ import ObservationStationListBottomSheet from './sheets/ObservationStationListBo
 import { observationTypeParameters } from './charts/settings';
 
 const mapStateToProps = (state: State) => ({
-  data: selectData(state),
+  data: selectHourlyData(state),
   dataId: selectDataId(state),
   location: selectCurrent(state),
   loading: selectLoading(state),

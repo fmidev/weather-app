@@ -114,7 +114,8 @@ export type StationId = {
 };
 
 export interface ObservationState {
-  data: ObservationData | undefined;
+  hourlyData: ObservationData | undefined;
+  dailyData: ObservationData | undefined;
   stations: StationInfo[] | [];
   stationId: StationId | undefined;
   id: Id;
