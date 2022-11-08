@@ -178,6 +178,7 @@
     "chart": "Graafi",
     "time": "Aika",
     "at": "klo",
+    "onlyDailyValues": "Tältä havaintoasemalta on saatavilla vain vuorokausiarvoja.",
     "measurements": {
       "temperature": "Lämpötila",
       "dewPoint": "Kastepiste",

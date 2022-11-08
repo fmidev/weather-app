@@ -178,6 +178,7 @@
     "chart": "Graph",
     "time": "Time",
     "at": "at",
+    "onlyDailyValues": "Only daily values are available from this observation station.",
     "measurements": {
       "temperature": "Temperature",
       "dewPoint": "Dew point",

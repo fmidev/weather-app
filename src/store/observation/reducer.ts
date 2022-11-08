@@ -58,7 +58,7 @@ export default (
     case FETCH_OBSERVATION_SUCCESS: {
       return {
         ...state,
-        ...formatData(action.payload.data),
+        ...formatData(action.payload.data[0]),
         id:
           action.payload.location.geoid || action.payload.location.latlon || 0,
         loading: false,

@@ -23,7 +23,13 @@ import {
 } from '@store/observation/actions';
 
 import { State } from '@store/types';
-import { CustomTheme, GRAY_1 } from '@utils/colors';
+import {
+  CustomTheme,
+  GRAY_1,
+  GRAY_1_OPACITY_15,
+  GRAY_4,
+  WHITE,
+} from '@utils/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
 import { ObservationParameters } from '@store/observation/types';
@@ -80,12 +86,13 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   updateDisplayFormat,
   clockType,
 }) => {
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const { enabled, parameters } = Config.get('weather').observation;
+  const { enabled, parameters, timePeriod } = Config.get('weather').observation;
+  const numberOfDays = (timePeriod || 0) / 24;
 
   useEffect(() => {
     const sid = stationList[0]?.id;
@@ -242,11 +249,22 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             parameter={parameter}
             setParameter={updateChartParameter}
           />
-          {displayFormat === LIST && (
+          {data.length > numberOfDays && displayFormat === LIST && (
             <List data={data} parameter={parameter} clockType={clockType} />
           )}
-          {displayFormat === CHART && (
+          {data.length > numberOfDays && displayFormat === CHART && (
             <Chart chartType={parameter} data={data} observation />
+          )}
+          {data.length <= numberOfDays && (
+            <View style={[styles.dailyValuesInfoView]}>
+              <Text
+                style={[
+                  styles.dailyValuesInfoText,
+                  { color: dark ? WHITE : GRAY_4 },
+                ]}>
+                {t('onlyDailyValues')}
+              </Text>
+            </View>
           )}
         </View>
       )}
@@ -343,6 +361,16 @@ const styles = StyleSheet.create({
   draggableIcon: {
     backgroundColor: GRAY_1,
     width: 65,
+  },
+  dailyValuesInfoText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+  },
+  dailyValuesInfoView: {
+    backgroundColor: GRAY_1_OPACITY_15,
+    padding: 14,
+    marginTop: 8,
+    marginHorizontal: -6,
   },
 });
 

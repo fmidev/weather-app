@@ -178,6 +178,7 @@
     "chart": "Graf",
     "time": "Tid",
     "at": "kl.",
+    "onlyDailyValues": "Bara dygnsvärden är tillgängliga från denna väderstation.",
     "measurements": {
       "temperature": "Temperatur",
       "dewPoint": "Daggpunkt",
