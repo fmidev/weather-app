@@ -287,13 +287,10 @@ export const getIndexForDaySmartSymbol = (
   dayArray: TimeStepData[],
   dayIndex: number
 ): number => {
-  if (dayArray.length === 24) {
-    return 16;
-  }
   const index = dayArray.findIndex((d) => {
     const dateObj = new Date(d.epochtime * 1000);
-    const hours = dateObj.getHours();
-    return hours === 15;
+    const utcHours = dateObj.getUTCHours();
+    return utcHours === 12;
   });
 
   if (dayIndex === 0 && index < 0) {
