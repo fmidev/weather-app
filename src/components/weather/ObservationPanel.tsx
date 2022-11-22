@@ -9,6 +9,7 @@ import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
   selectHourlyData,
+  selectDailyData,
   selectDataId,
   selectDisplayFormat,
   selectLoading,
@@ -32,7 +33,10 @@ import {
 } from '@utils/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
-import { ObservationParameters } from '@store/observation/types';
+import {
+  DailyObservationParameters,
+  ObservationParameters,
+} from '@store/observation/types';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectClockType } from '@store/settings/selectors';
 import Chart from './charts/Chart';
@@ -47,7 +51,8 @@ import ObservationStationListBottomSheet from './sheets/ObservationStationListBo
 import { observationTypeParameters } from './charts/settings';
 
 const mapStateToProps = (state: State) => ({
-  data: selectHourlyData(state),
+  hourlyData: selectHourlyData(state),
+  dailyData: selectDailyData(state),
   dataId: selectDataId(state),
   location: selectCurrent(state),
   loading: selectLoading(state),
@@ -75,7 +80,8 @@ const CHART = 'chart';
 
 const ObservationPanel: React.FC<ObservationPanelProps> = ({
   loading,
-  data,
+  hourlyData,
+  dailyData,
   dataId,
   stationList,
   stationId,
@@ -91,7 +97,8 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const { enabled, parameters, timePeriod } = Config.get('weather').observation;
+  const { enabled, parameters, dailyParameters, timePeriod } =
+    Config.get('weather').observation;
   const numberOfDays = (timePeriod || 0) / 24;
 
   useEffect(() => {
@@ -104,7 +111,6 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   if (!enabled) {
     return null;
   }
-
   let charts: ChartType[] = [
     'temperature',
     'precipitation',
@@ -114,12 +120,17 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'visCloud',
     'cloud',
     'snowDepth',
+    'daily',
   ];
   charts = charts.filter((type) => {
     const typeParameters = observationTypeParameters[type];
     return (
-      typeParameters.filter((typeParameter) =>
-        parameters?.includes(typeParameter as keyof ObservationParameters)
+      typeParameters.filter(
+        (typeParameter) =>
+          parameters?.includes(typeParameter as keyof ObservationParameters) ||
+          dailyParameters?.includes(
+            typeParameter as keyof DailyObservationParameters
+          )
       ).length > 0
     );
   });
@@ -163,9 +174,9 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             </View>
           </View>
         )}
-        <Latest data={data} />
+        <Latest data={hourlyData} />
       </View>
-      {data.length > 0 && (
+      {hourlyData.length > 0 && (
         <View style={styles.panelContainer}>
           <View style={[styles.row]}>
             <View style={[styles.row, styles.justifyStart]}>
@@ -242,20 +253,31 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           </View>
         </View>
       )}
-      {data.length > 0 && (
+      {hourlyData.length > 0 && (
         <View style={styles.observationContainer}>
           <ParameterSelector
             chartTypes={charts}
             parameter={parameter}
             setParameter={updateChartParameter}
           />
-          {data.length > numberOfDays && displayFormat === LIST && (
-            <List data={data} parameter={parameter} clockType={clockType} />
-          )}
-          {data.length > numberOfDays && displayFormat === CHART && (
-            <Chart chartType={parameter} data={data} observation />
-          )}
-          {data.length <= numberOfDays && (
+          {(hourlyData.length > numberOfDays || parameter === 'daily') &&
+            displayFormat === LIST && (
+              <List
+                data={parameter === 'daily' ? dailyData : hourlyData}
+                parameter={parameter}
+                clockType={clockType}
+              />
+            )}
+          {(hourlyData.length > numberOfDays || parameter === 'daily') &&
+            displayFormat === CHART && (
+              <Chart
+                chartType={parameter}
+                data={parameter === 'daily' ? dailyData : hourlyData}
+                observation
+                daily={parameter === 'daily'}
+              />
+            )}
+          {hourlyData.length <= numberOfDays && parameter !== 'daily' && (
             <View style={[styles.dailyValuesInfoView]}>
               <Text
                 style={[
@@ -269,7 +291,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         </View>
       )}
 
-      {data.length === 0 && (
+      {hourlyData.length === 0 && (
         <View style={styles.observationContainer}>
           <Text
             style={[styles.observationText, { color: colors.hourListText }]}>

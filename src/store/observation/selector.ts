@@ -25,6 +25,11 @@ const selectHourlyDataSets = createSelector(
   (observation) => observation.hourlyData
 );
 
+const selectDailyDataSets = createSelector(
+  selectObservationDomain,
+  (observation) => observation.dailyData
+);
+
 const selectStationIdList = createSelector(
   selectObservationDomain,
   (observation) => observation.stationId
@@ -42,6 +47,11 @@ export const selectStationId = createSelector(
 
 export const selectHourlyData = createSelector(
   [selectHourlyDataSets, selectStationId],
+  (data, id) => (data?.[id] ? data[id] : [])
+);
+
+export const selectDailyData = createSelector(
+  [selectDailyDataSets, selectStationId],
   (data, id) => (data?.[id] ? data[id] : [])
 );
 

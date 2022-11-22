@@ -7,6 +7,7 @@
       "observationAccessibilityHint": "Samma data presenteras i tillgängligt format i vyn Lista",
       "cloud": "Molnets höjd",
       "cloudAccessibilityLabel": "Öppna molnhöjdsgrafen",
+      "daily": "Dygnsvärden",
       "dewPoint": "Daggpunkt",
       "humidity": "Fuktighet",
       "relativeHumidity": "Relativ fuktighet",
@@ -193,7 +194,13 @@
       "visibility": "Sikt",
       "totalCloudCover": "Molnighet",
       "cloudHeight": "Höjd på molnets nedre gräns",
-      "snowDepth": "Snödjup"
+      "snowDepth": "Snödjup",
+      "rrday": "Nederbörd",
+      "maximumTemperature": "Högsta temperaturen",
+      "minimumTemperature": "Lägsta temperaturen",
+      "maxAndMinTemperatures": "Extremtemperaturer",
+      "minimumGroundTemperature06": "Markens lägsta temperatur",
+      "snowDepth06": "Snödjup på morgonen"
     },
     "paramsUnits": {
       "mm": "millimeter",

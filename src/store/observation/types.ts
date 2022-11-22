@@ -75,7 +75,8 @@ export interface DailyObservationParameters {
   snowDepth06: number | null;
 }
 
-export interface TimeStepData extends Partial<ObservationParameters> {
+export interface TimeStepData
+  extends Partial<ObservationParameters & DailyObservationParameters> {
   epochtime: number;
 }
 

@@ -11,6 +11,8 @@ import {
   StationInfo,
   UPDATE_OBSERVATION_DISPLAY_FORMAT,
   UPDATE_OBSERVATION_CHART_PARAMETER,
+  TimeStepData,
+  DailyObservationParameters,
 } from './types';
 
 const INITIAL_STATE: ObservationState = {
@@ -43,6 +45,53 @@ const formatData = (
   return { data, stations };
 };
 
+const areEpochTimesInTheSameDay = (
+  epochtime1: number | undefined,
+  epochtime2: number | undefined
+) => {
+  if (!epochtime1 || !epochtime2) return false;
+
+  const date1 = new Date(epochtime1 * 1000);
+  const date2 = new Date(epochtime2 * 1000);
+
+  return date1.getDay() === date2.getDay();
+};
+
+// Places all daily values at a single point in time (some daily values are reported for different times within a single day)
+const consolidateDailyValues = (data: ObservationData): ObservationData => {
+  const consolidatedData: ObservationData = {};
+
+  Object.keys(data)
+    .map(Number)
+    .forEach((stationId: number) => {
+      const dayData: TimeStepData[] = [];
+      data[stationId].forEach((day: TimeStepData) => {
+        const currentDay = day.epochtime;
+        const previousDay =
+          dayData.length === 0
+            ? undefined
+            : dayData[dayData.length - 1].epochtime;
+        if (areEpochTimesInTheSameDay(currentDay, previousDay)) {
+          Object.keys(day).forEach((dailyParameter: string) => {
+            if (
+              !dayData[dayData.length - 1][
+                dailyParameter as keyof DailyObservationParameters
+              ]
+            ) {
+              dayData[dayData.length - 1][
+                dailyParameter as keyof DailyObservationParameters
+              ] = day[dailyParameter as keyof DailyObservationParameters];
+            }
+          });
+        } else {
+          dayData.push(day);
+        }
+      });
+      consolidatedData[stationId] = dayData;
+    });
+  return consolidatedData as ObservationData;
+};
+
 export default (
   state = INITIAL_STATE,
   action: ObservationActionTypes
@@ -62,7 +111,7 @@ export default (
       const newState = {
         ...state,
         hourlyData,
-        dailyData,
+        dailyData: consolidateDailyValues(dailyData),
         stations,
         id:
           action.payload.location.geoid || action.payload.location.latlon || 0,

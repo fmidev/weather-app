@@ -7,6 +7,7 @@
       "observationAccessibilityHint": "The same data is presented in an accessible format in the List view",
       "cloud": "Cloud base",
       "cloudAccessibilityLabel": "Open the cloud base graphic",
+      "daily": "Daily values",
       "dewPoint": "Dew point",
       "humidity": "Humidity",
       "relativeHumidity": "Relative humidity",
@@ -193,7 +194,13 @@
       "visibility": "Visibility",
       "totalCloudCover": "Cloud cover",
       "cloudHeight": "Cloud base",
-      "snowDepth": "Snow depth"
+      "snowDepth": "Snow depth",
+      "rrday": "Precipitation",
+      "maximumTemperature": "Maximum temperature",
+      "minimumTemperature": "Minimum temperature",
+      "maxAndMinTemperatures": "Min/max temperatures",
+      "minimumGroundTemperature06": "Grass minimum temperature",
+      "snowDepth06": "Snow depth (morning)"
     },
     "paramUnits": {
       "mm": "millimeters",

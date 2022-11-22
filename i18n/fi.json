@@ -7,6 +7,7 @@
       "observationAccessibilityHint": "Sama data on esitetty saavutettavassa muodossa Lista-näkymässä",
       "cloud": "Pilven korkeus",
       "cloudAccessibilityLabel": "Avaa pilvenkorkeusgraafi",
+      "daily": "Vuorokausiarvot",
       "dewPoint": "Kastepiste",
       "humidity": "Kosteus",
       "relativeHumidity": "Suhteellinen kosteus",
@@ -193,7 +194,13 @@
       "visibility": "Näkyvyys",
       "totalCloudCover": "Pilvisyys",
       "cloudHeight": "Pilven alarajan korkeus",
-      "snowDepth": "Lumensyvyys"
+      "snowDepth": "Lumensyvyys",
+      "rrday": "Sademäärä",
+      "maximumTemperature": "Suurin lämpötila",
+      "minimumTemperature": "Alin lämpötila",
+      "maxAndMinTemperatures": "Äärilämpötilat",
+      "minimumGroundTemperature06": "Maanpinnan alin lämpotila",
+      "snowDepth06": "Lumensyvyys aamulla"
     },
     "paramUnits": {
       "mm": "millimetriä",

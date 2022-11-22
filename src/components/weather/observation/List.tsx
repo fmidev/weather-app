@@ -6,7 +6,11 @@ import { useTranslation } from 'react-i18next';
 
 import Icon from '@components/common/Icon';
 
-import { ObservationParameters, TimeStepData } from '@store/observation/types';
+import {
+  DailyObservationParameters,
+  ObservationParameters,
+  TimeStepData,
+} from '@store/observation/types';
 import { GRAY_1_OPACITY, CustomTheme } from '@utils/colors';
 import { capitalize } from '@utils/chart';
 import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
@@ -23,14 +27,17 @@ type ListProps = {
 const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
   const { t, i18n } = useTranslation('observation');
   const { colors } = useTheme() as CustomTheme;
-  const { parameters } = Config.get('weather').observation;
+  const { parameters, dailyParameters } = Config.get('weather').observation;
 
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
 
   const listParameters: {
     [key in ChartType]: {
-      parameters: (keyof Partial<ObservationParameters>)[];
+      parameters: (
+        | keyof Partial<ObservationParameters>
+        | keyof Partial<DailyObservationParameters>
+      )[];
     };
   } = {
     temperature: {
@@ -60,18 +67,45 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
     uv: {
       parameters: [],
     },
+    daily: {
+      parameters: [
+        'rrday',
+        'maximumTemperature',
+        'minimumTemperature',
+        'minimumGroundTemperature06',
+      ],
+    },
   };
 
   const activeParameters = listParameters[parameter].parameters.filter(
-    (param) => parameters?.includes(param)
+    (param) =>
+      parameters?.includes(param as keyof ObservationParameters) ||
+      dailyParameters?.includes(param as keyof DailyObservationParameters)
   );
 
   const getHeaderLabels = () => (
     <View style={styles.row}>
       {activeParameters.map((param) => {
-        if (param === 'windDirection') {
+        if (['windDirection', 'minimumTemperature'].includes(param)) {
           return null;
         }
+        if (param === 'maximumTemperature') {
+          return (
+            <Text
+              key={param}
+              style={[
+                styles.rowItem,
+                styles.listText,
+                styles.bold,
+                { color: colors.hourListText },
+              ]}>
+              {`${t(`measurements.maxAndMinTemperatures`)} ${getParameterUnit(
+                param
+              )}`}
+            </Text>
+          );
+        }
+
         return (
           <Text
             key={param}
@@ -184,8 +218,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
     return (
       <View style={styles.row}>
         {activeParameters.map((param) => {
+          if (param === 'minimumTemperature') return null;
           const parameterUnit = getParameterUnit(param);
-          const cellValue = getObservationCellValue(
+          let cellValue = getObservationCellValue(
             timeStep,
             param,
             parameterUnit,
@@ -202,6 +237,18 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
             undefined,
             decimalSeparator
           );
+
+          if (param === 'maximumTemperature') {
+            cellValue = `${getObservationCellValue(
+              timeStep,
+              'minimumTemperature',
+              parameterUnit,
+              1,
+              0,
+              undefined,
+              decimalSeparator
+            )} ... ${cellValue}`;
+          }
 
           const accessibilityLabel =
             param === 'totalCloudCover'
@@ -265,15 +312,17 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
             borderBottomColor: colors.border,
           },
         ]}>
-        <Text
-          style={[
-            styles.rowItem,
-            styles.listText,
-            styles.bold,
-            { color: colors.hourListText },
-          ]}>
-          {t('time')}
-        </Text>
+        {parameter !== 'daily' && (
+          <Text
+            style={[
+              styles.rowItem,
+              styles.listText,
+              styles.bold,
+              { color: colors.hourListText },
+            ]}>
+            {t('time')}
+          </Text>
+        )}
         {getHeaderLabels()}
       </View>
 
@@ -320,18 +369,20 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                           i % 2 !== 0 ? GRAY_1_OPACITY : undefined,
                       },
                     ]}>
-                    <Text
-                      style={[
-                        styles.rowItem,
-                        styles.listText,
-                        styles.bold,
-                        { color: colors.hourListText },
-                      ]}
-                      accessibilityLabel={`${t(
-                        'forecast:at'
-                      )} ${timeToDisplay}`}>
-                      {capitalize(timeToDisplay)}
-                    </Text>
+                    {parameter !== 'daily' && (
+                      <Text
+                        style={[
+                          styles.rowItem,
+                          styles.listText,
+                          styles.bold,
+                          { color: colors.hourListText },
+                        ]}
+                        accessibilityLabel={`${t(
+                          'forecast:at'
+                        )} ${timeToDisplay}`}>
+                        {capitalize(timeToDisplay)}
+                      </Text>
+                    )}
                     {getRowValues(timeStep)}
                   </View>
                 </View>

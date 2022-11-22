@@ -8,7 +8,10 @@ import {
   TimeStepData as ForTimeStepData,
   TimeStepData,
 } from '@store/forecast/types';
-import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
+import {
+  DailyObservationParameters,
+  TimeStepData as ObsTimeStepData,
+} from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
@@ -128,7 +131,13 @@ export const toStringWithDecimal = (
   return input.toString().replace('.', separator);
 };
 
-const minusParams = ['temperature', 'dewPoint'];
+const minusParams = [
+  'temperature',
+  'dewPoint',
+  'maximumTemperature',
+  'minimumTemperature',
+  'minimumGroundTemperature06',
+];
 
 export const convertValueToUnitPrecision = (
   unit: string,
@@ -145,7 +154,7 @@ export const convertValueToUnitPrecision = (
 
 export const getObservationCellValue = (
   item: ObsTimeStepData,
-  param: keyof ObsTimeStepData,
+  param: keyof ObsTimeStepData | keyof DailyObservationParameters,
   unit: string,
   decimals?: number,
   divider?: number,
@@ -184,18 +193,25 @@ export const getObservationCellValue = (
 };
 
 export const getParameterUnit = (
-  param: keyof (ObsTimeStepData | ForTimeStepData)
+  param:
+    | keyof ObsTimeStepData
+    | keyof ForTimeStepData
+    | keyof DailyObservationParameters
 ): string => {
   const { wind, temperature, precipitation, pressure } =
     Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
     case 'ri_10min':
+    case 'rrday':
       return precipitation;
     case 'humidity':
       return '%';
     case 'temperature':
     case 'dewPoint':
+    case 'maximumTemperature':
+    case 'minimumTemperature':
+    case 'minimumGroundTemperature06':
       return `°${temperature}`;
     case 'windSpeedMS':
     case 'windGust':
@@ -205,6 +221,7 @@ export const getParameterUnit = (
     case 'visibility':
       return 'km';
     case 'snowDepth':
+    case 'snowDepth06':
       return 'cm';
     case 'windDirection':
       return '°';
