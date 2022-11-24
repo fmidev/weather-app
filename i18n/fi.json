@@ -45,7 +45,10 @@
       "uvIndex": "Ultraviolettisäteilyn indeksi",
       "uv": "UV-indeksi",
       "uvAccessibilityLabel": "Avaa uvgraafi",
-      "zeroLine": "Nollapiste"
+      "zeroLine": "Nollapiste",
+      "maxAndMinTemperatures": "Äärilämpötilat",
+      "minimumGroundTemperature06": "Maanpinnan alin lämpotila",
+      "rrday": "Sademäärä"
     },
     "parameter": "Suure",
     "loading": "Ladataan sisältöä"

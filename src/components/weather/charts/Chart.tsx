@@ -32,6 +32,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type ChartProps = PropsFromRedux & {
   data: ChartData;
+  daily?: boolean;
   chartType: ChartType;
   observation?: boolean;
   activeDayIndex?: number;
@@ -42,6 +43,7 @@ type ChartProps = PropsFromRedux & {
 const Chart: React.FC<ChartProps> = ({
   clockType,
   data,
+  daily,
   chartType,
   observation,
   activeDayIndex,
@@ -59,23 +61,31 @@ const Chart: React.FC<ChartProps> = ({
   const { timePeriod } = Config.get('weather').observation;
 
   const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
+  const dailyObservationTickInterval = 24;
+
   const stepLength = tickInterval === 1 ? 20 : 8;
+  const dailyObservationStepLength = 24;
 
   const chartDimensions = useMemo(
     () => ({
       y: 300,
       x:
         observation && timePeriod
-          ? timePeriod * stepLength
-          : data.length * stepLength,
+          ? timePeriod * (daily ? dailyObservationStepLength : stepLength)
+          : data.length * (daily ? dailyObservationStepLength : stepLength),
     }),
-    [observation, data, stepLength, timePeriod]
+    [observation, daily, data, stepLength, timePeriod]
   );
 
   const calculateDayIndex = useCallback(
     (index: number) =>
-      Math.ceil((index / stepLength - (currentDayOffset || 0) + 1) / 24),
-    [currentDayOffset, stepLength]
+      Math.ceil(
+        (index / (daily ? dailyObservationStepLength : stepLength) -
+          (currentDayOffset || 0) +
+          1) /
+          24
+      ),
+    [currentDayOffset, daily, stepLength]
   );
 
   useEffect(() => {
@@ -86,14 +96,20 @@ const Chart: React.FC<ChartProps> = ({
         setScrollIndex(0);
       }
       if (activeDayIndex > 0 && dayIndex !== activeDayIndex) {
-        const off = currentDayOffset * stepLength;
-        const offsetX = off + (activeDayIndex - 1) * 24 * stepLength;
+        const off =
+          currentDayOffset * (daily ? dailyObservationStepLength : stepLength);
+        const offsetX =
+          off +
+          (activeDayIndex - 1) *
+            24 *
+            (daily ? dailyObservationStepLength : stepLength);
         scrollRef.current.scrollTo({ x: offsetX, animated: true });
         setScrollIndex(offsetX);
       }
     }
   }, [
     activeDayIndex,
+    daily,
     stepLength,
     currentDayOffset,
     scrollIndex,
@@ -130,11 +146,11 @@ const Chart: React.FC<ChartProps> = ({
     () =>
       chartTickValues(
         data,
-        tickInterval,
+        daily ? dailyObservationTickInterval : tickInterval,
         observation ?? false,
-        timePeriod ?? 24
+        daily ? 720 : timePeriod ?? 24
       ),
-    [data, tickInterval, observation, timePeriod]
+    [data, daily, tickInterval, observation, timePeriod]
   );
 
   const chartDomain = useMemo(
@@ -209,6 +225,7 @@ const Chart: React.FC<ChartProps> = ({
             chartValues={chartValues}
             locale={i18n.language}
             clockType={clockType}
+            daily={daily}
           />
         </ScrollView>
         <ChartYAxis

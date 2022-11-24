@@ -45,7 +45,10 @@
       "uvIndex": "Index för ultraviolett strålning",
       "uv": "UV-index",
       "uvAccessibilityLabel": "Öppna UV-graf",
-      "zeroLine": "Nollpunkt"
+      "zeroLine": "Nollpunkt",
+      "maxAndMinTemperatures": "Extremtemperaturer",
+      "minimumGroundTemperature06": "Markens lägsta temperatur",
+      "rrday": "Nederbörd"
     },
     "parameter": "Storhet",
     "loading": "Laddar innehål"

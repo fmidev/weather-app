@@ -45,7 +45,12 @@
       "uvIndex": "Ultraviolet index",
       "uv": "UV index",
       "uvAccessibilityLabel": "Open the UV graph",
-      "zeroLine": "Zero point"
+      "zeroLine": "Zero point",
+      "rrday": "Precipitation",
+      "maximumTemperature": "Maximum temperature",
+      "minimumTemperature": "Minimum temperature",
+      "maxAndMinTemperatures": "Min/max temperatures",
+      "minimumGroundTemperature06": "Minimum ground temperature"
     },
     "parameter": "Parameter",
     "loading": "Loading content"
@@ -199,7 +204,7 @@
       "maximumTemperature": "Maximum temperature",
       "minimumTemperature": "Minimum temperature",
       "maxAndMinTemperatures": "Min/max temperatures",
-      "minimumGroundTemperature06": "Grass minimum temperature",
+      "minimumGroundTemperature06": "Minimum ground temperature",
       "snowDepth06": "Snow depth (morning)"
     },
     "paramUnits": {

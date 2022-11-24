@@ -28,10 +28,11 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
-
+  console.log('chartMinMax', chartMinMax);
+  console.log('chartDomain', chartDomain);
   if (
     right &&
-    ((observation && chartType !== 'visCloud') ||
+    ((observation && !['visCloud', 'daily'].includes(chartType)) ||
       (!observation && chartType !== 'precipitation'))
   ) {
     return null;
@@ -77,6 +78,15 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
     }
     if (chartType === 'visCloud') {
       return right ? `${tick * 8}/8` : tick * 60;
+    }
+    if (chartType === 'daily') {
+      return right
+        ? tick -
+            Math.min(
+              (chartDomain.y && chartDomain?.y[0]) ?? 0,
+              (chartDomain.y && chartDomain?.y[1]) ?? 0
+            )
+        : tick;
     }
     return tick;
   };

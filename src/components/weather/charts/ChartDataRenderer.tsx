@@ -17,6 +17,7 @@ type ChartDataRendererProps = {
   Component: React.FC<ChartDataProps>;
   locale: string;
   clockType: ClockType;
+  daily?: boolean;
 };
 const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartDimensions,
@@ -27,6 +28,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   Component,
   locale,
   clockType,
+  daily,
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
@@ -46,8 +48,12 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
       scale={{ x: 'linear' }}>
       <VictoryAxis
         scale={{ x: 'linear' }}
-        tickFormat={getTickFormat(locale, clockType)}
-        tickValues={tickValues}
+        tickFormat={getTickFormat(locale, clockType, daily)}
+        tickValues={
+          chartType !== 'daily'
+            ? tickValues
+            : chartValues.rrday.map(({ x }) => x)
+        }
         orientation="bottom"
         style={{
           grid: {
@@ -59,7 +65,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
           tickLabels: {
             fill: colors.hourListText,
             fontWeight: ({ tick }) =>
-              moment(tick).hour() === 0 ? 'bold' : 'normal',
+              daily || moment(tick).hour() === 0 ? 'bold' : 'normal',
           },
         }}
         offsetY={50}

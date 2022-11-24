@@ -89,6 +89,17 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     />
   );
 
+  const ScatterPoint = ({ color }: { color: string }) => (
+    <View
+      style={[
+        styles.legendScatterPoint,
+        {
+          backgroundColor: color,
+        },
+      ]}
+    />
+  );
+
   const Arrow = () => (
     <Icon
       name="wind-arrow"
@@ -382,6 +393,28 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           </View>
         </>
       )}
+      {chartType === 'daily' && (
+        <>
+          <View style={styles.legendRow}>
+            <Bar color="rgb(30, 110, 214)" />
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
+              {t('weather:charts:rrday')}
+            </Text>
+          </View>
+          <View style={styles.legendRow}>
+            <ScatterPoint color="rgb(176, 176, 0)" />
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
+              {t('weather:charts:minimumGroundTemperature06')}
+            </Text>
+          </View>
+          <View style={styles.legendRow}>
+            <Bar color="rgb(145, 0, 0)" />
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
+              {t('weather:charts:maxAndMinTemperatures')}
+            </Text>
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -434,6 +467,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 4,
     marginRight: 2,
+  },
+  legendScatterPoint: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   iconMargin: {
     marginLeft: -4,

@@ -8,6 +8,7 @@ import CloudHeightChart from './CloudHeightChart';
 import { ChartSettings, ChartType, Parameter } from './types';
 import SnowDepthChart from './SnowDepth';
 import UvChart from './UvChart';
+import DailyChart from './DailyChart';
 
 type TypeParameters = {
   [key in ChartType]: Parameter[];
@@ -23,6 +24,12 @@ export const observationTypeParameters: TypeParameters = {
   visCloud: ['visibility', 'totalCloudCover'],
   cloud: ['cloudHeight'],
   uv: [],
+  daily: [
+    'rrday',
+    'maximumTemperature',
+    'minimumTemperature',
+    'minimumGroundTemperature06',
+  ],
 };
 
 export const forecastTypeParameters: TypeParameters = {
@@ -35,6 +42,7 @@ export const forecastTypeParameters: TypeParameters = {
   visCloud: [],
   cloud: [],
   uv: ['uvCumulated'],
+  daily: [],
 };
 
 const chartSettings = (
@@ -91,6 +99,12 @@ const chartSettings = (
         params,
         Component: UvChart,
       };
+    case 'daily': {
+      return {
+        params,
+        Component: DailyChart,
+      };
+    }
     default: {
       return { params: [], Component: TemperatureChart };
     }
