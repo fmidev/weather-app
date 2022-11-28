@@ -97,6 +97,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                 styles.rowItem,
                 styles.listText,
                 styles.bold,
+                styles.centeredText,
                 { color: colors.hourListText },
               ]}>
               {`${t(`measurements.maxAndMinTemperatures`)} ${getParameterUnit(
@@ -113,6 +114,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
               styles.rowItem,
               styles.listText,
               styles.bold,
+              parameter === 'daily' && styles.centeredText,
               { color: colors.hourListText },
             ]}>
             {`${t(`measurements.${param}`)} ${getParameterUnit(param)}`}
@@ -272,7 +274,10 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
               style={[
                 styles.listText,
                 styles.rowItem,
-                { color: colors.hourListText },
+                parameter === 'daily' && styles.centeredText,
+                {
+                  color: colors.hourListText,
+                },
               ]}
               accessibilityLabel={accessibilityLabel}>
               {param === 'totalCloudCover'
@@ -436,6 +441,9 @@ const styles = StyleSheet.create({
   },
   capitalize: {
     textTransform: 'capitalize',
+  },
+  centeredText: {
+    textAlign: 'center',
   },
 });
 
