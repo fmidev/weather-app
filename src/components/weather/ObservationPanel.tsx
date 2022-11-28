@@ -92,7 +92,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   updateDisplayFormat,
   clockType,
 }) => {
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
@@ -278,15 +278,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
               />
             )}
           {hourlyData.length <= numberOfDays && parameter !== 'daily' && (
-            <View style={[styles.dailyValuesInfoView]}>
-              <Text
-                style={[
-                  styles.dailyValuesInfoText,
-                  { color: dark ? WHITE : GRAY_4 },
-                ]}>
-                {t('onlyDailyValues')}
-              </Text>
-            </View>
+            <InfoMessage translationKey="onlyDailyValues" />
           )}
         </View>
       )}
@@ -316,6 +308,22 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           onClose={() => stationSheetRef.current.close()}
         />
       </RBSheet>
+    </View>
+  );
+};
+
+const InfoMessage: React.FC<{ translationKey: string }> = ({
+  translationKey,
+}) => {
+  const { dark } = useTheme() as CustomTheme;
+  const { t } = useTranslation('observation');
+
+  return (
+    <View style={[styles.dailyValuesInfoView]}>
+      <Text
+        style={[styles.dailyValuesInfoText, { color: dark ? WHITE : GRAY_4 }]}>
+        {t(translationKey)}
+      </Text>
     </View>
   );
 };
