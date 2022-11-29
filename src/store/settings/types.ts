@@ -48,5 +48,5 @@ export type SettingsActionTypes =
 export interface SettingsState {
   clockType?: ClockType;
   units: UnitMap | undefined;
-  theme: Theme;
+  theme?: Theme;
 }

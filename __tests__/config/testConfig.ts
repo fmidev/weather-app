@@ -108,6 +108,10 @@ const defaultConfig: ConfigType = {
       pressure: 'hPa',
     },
     clockType: 24,
+    themes: {
+      light: true,
+      dark: true,
+    },
   },
   announcements: {
     enabled: false,

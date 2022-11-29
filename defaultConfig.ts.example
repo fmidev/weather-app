@@ -80,6 +80,10 @@ const defaultConfig: ConfigType = {
       wind: 'm/s',
       pressure: 'hPa',
     },
+    themes: {
+      light: true,
+      dark: true,
+    },
     clockType: 24,
   },
   announcements: {
