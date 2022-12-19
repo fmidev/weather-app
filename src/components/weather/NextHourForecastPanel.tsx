@@ -22,7 +22,11 @@ import { CustomTheme, GRAY_1 } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
-import { converter, toPrecision } from '@utils/units';
+import {
+  converter,
+  toPrecision,
+  getForecastParameterUnitTranslationKey,
+} from '@utils/units';
 import { selectClockType } from '@store/settings/selectors';
 
 const mapStateToProps = (state: State) => ({
@@ -112,31 +116,6 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     nextHourForecast.precipitation1h
   );
 
-  const getParameterUnitTranslationKey = (unit: string) => {
-    switch (unit) {
-      case '°C':
-        return 'celsius';
-      case '°F':
-        return 'fahrenheit';
-      case 'm/s':
-        return 'metersPerSecond';
-      case 'km/h':
-        return 'kilometersPerHour';
-      case 'mph':
-        return 'milesPerHour';
-      case 'kn':
-        return 'knots';
-      case 'bft':
-        return 'beaufort';
-      case 'mm':
-        return 'millimeters';
-      case 'in':
-        return 'inches';
-      default:
-        return '';
-    }
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.alignCenter} accessible accessibilityRole="header">
@@ -172,7 +151,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             <Text
               style={[styles.unitText, { color: colors.primaryText }]}
               accessibilityLabel={`${numericOrDash(temperatureValue)} ${t(
-                getParameterUnitTranslationKey(`°${temperatureUnit}`)
+                getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
               )} `}>
               °{temperatureUnit}
             </Text>
@@ -188,7 +167,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                 accessibilityLabel={`${t('feelsLike')} ${numericOrDash(
                   feelsLikeValue
                 )} ${t(
-                  getParameterUnitTranslationKey(`°${temperatureUnit}`)
+                  getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
                 )}`}>
                 <Text
                   style={[
@@ -227,7 +206,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
               ? `${t(
                   `observation:windDirection:${nextHourForecast.windCompass8}`
                 )} ${windSpeedValue} ${t(
-                  `forecast:${getParameterUnitTranslationKey(windUnit)}`
+                  `forecast:${getForecastParameterUnitTranslationKey(windUnit)}`
                 )}`
               : undefined
           }>
@@ -280,7 +259,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                     .replace('.', decimalSeparator) ||
                   (0).toFixed(1).replace('.', decimalSeparator)
                 } ${t(
-                  `forecast:${getParameterUnitTranslationKey(
+                  `forecast:${getForecastParameterUnitTranslationKey(
                     precipitationUnit
                   )}`
                 )}`}>

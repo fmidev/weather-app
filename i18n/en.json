@@ -61,6 +61,10 @@
     "beaufort": "beaufort",
     "millimeters": "millimeters",
     "inches": "inches",
+    "hectopascals": "hectopascals",
+    "millibars": "millibars",
+    "millimetersOfMercury": "millimeters of mercury",
+    "inchesOfMercury": "inches of mercury",
     "panelHeader": "{{ forecastLength }}-day forecast",
     "updated": "Updated",
     "sunrise": "Sunrise",
@@ -83,15 +87,15 @@
     "active": "selected",
     "notActive": "not selected",
     "params": {
-      "temperature": "temperature: {{ value }} degrees.",
-      "feelsLike": "feels like: {{ value }} degrees.",
-      "dewpoint": "dewpoint: {{ value }} degrees.",
+      "temperature": "temperature: {{ value }} {{ unit }}.",
+      "feelsLike": "feels like: {{ value }} {{ unit }}.",
+      "dewpoint": "dewpoint: {{ value }} {{ unit }}.",
       "pop": "precipitation probability: {{ value }}%.",
-      "hourlymaximumgust": "gust speed: {{ value }} meters per second.",
+      "hourlymaximumgust": "gust speed: {{ value }} {{ unit }}.",
       "relativeHumidity": "relative humidity: {{ value }}%.",
-      "precipitation1h": "precipitation: {{ value }}mm.",
+      "precipitation1h": "precipitation: {{ value }} {{ unit }}.",
       "uvCumulated": "UV index: {{ value }}.",
-      "pressure": "pressure: {{ value }} hectopascal."
+      "pressure": "pressure: {{ value }} {{ unit }}."
     },
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Close hourly parameter selection",

@@ -61,6 +61,10 @@
     "beaufort": "beaufort",
     "millimeters": "millimeter",
     "inches": "tum",
+    "hectopascals": "hektopascal",
+    "millibars": "millibar",
+    "millimetersOfMercury": "millimeter kvicksilver",
+    "inchesOfMercury": "tum kvicksilver",
     "panelHeader": "{{ forecastLength }} dygnsprognos",
     "updated": "Uppdaterad",
     "sunrise": "Solen stiger",
@@ -83,15 +87,15 @@
     "active": "vald",
     "notActive": "ej vald",
     "params": {
-      "temperature": "temperatur: {{ value }}°.",
-      "feelsLike": "känns som: {{ value }}°.",
-      "dewpoint": "daggpunkt: {{ value }}°.",
+      "temperature": "temperatur: {{ value }} {{ unit }}.",
+      "feelsLike": "känns som: {{ value }} {{ unit }}.",
+      "dewpoint": "daggpunkt: {{ value }} {{ unit }}.",
       "pop": "sannolikheten för nederbörd: {{ value }}%.",
-      "hourlymaximumgust": "Vindbyarnas hastighet: {{ value }}m/s.",
+      "hourlymaximumgust": "Vindbyarnas hastighet: {{ value }} {{ unit }}.",
       "relativeHumidity": "relativ fuktighet: {{ value }}%.",
-      "precipitation1h": "en timmes nederbörd: {{ value }}mm.",
+      "precipitation1h": "en timmes nederbörd: {{ value }} {{ unit }}.",
       "uvCumulated": "uv index: {{ value }}",
-      "pressure": "lufttryck: {{ value }} hPa."
+      "pressure": "lufttryck: {{ value }} {{ unit }}."
     },
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Stäng valet av storheter i timvyn",

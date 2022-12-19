@@ -61,6 +61,10 @@
     "beaufort": "boforia",
     "millimeters": "millimetriä",
     "inches": "tuumaa",
+    "hectopascals": "hehtopascalia",
+    "millibars": "millibaaria",
+    "millimetersOfMercury": "elohopeamillimetriä",
+    "inchesOfMercury": "elohopeatuumaa",
     "panelHeader": "{{ forecastLength }} vrk ennuste",
     "updated": "Päivitetty",
     "sunrise": "Aurinko nousee",
@@ -83,15 +87,15 @@
     "active": "valittu",
     "notActive": "ei valittu",
     "params": {
-      "temperature": "lämpötila: {{ value }} astetta.",
-      "feelsLike": "tuntuu kuin: {{ value }} astetta.",
-      "dewpoint": "kastepiste: {{ value }} astetta.",
+      "temperature": "lämpötila: {{ value }} {{ unit }}.",
+      "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
+      "dewpoint": "kastepiste: {{ value }} {{ unit }}.",
       "pop": "sateen todennäköisyys: {{ value }}%.",
-      "hourlymaximumgust": "puuskanopeus: {{ value }} metriä sekunnissa.",
+      "hourlymaximumgust": "puuskanopeus: {{ value }} {{ unit }}.",
       "relativeHumidity": "suhteellinen kosteus: {{ value }}%.",
-      "precipitation1h": "tunnin sademäärä: {{ value }}mm.",
+      "precipitation1h": "tunnin sademäärä: {{ value }} {{ unit }}.",
       "uvCumulated": "UV indeksi: {{ value }}.",
-      "pressure": "ilmanpaine: {{ value }} hehtopascalia."
+      "pressure": "ilmanpaine: {{ value }} {{ unit }}."
     },
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Sulje tuntinäkymän suureiden valinta",
