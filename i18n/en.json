@@ -70,7 +70,7 @@
     "minutes": "minutes",
     "feelsLike": "Feels like",
     "temperature": "Temperature",
-    "fromTo": "From {{ min }} degrees to {{ max }} degrees",
+    "fromTo": "From {{ min }} {{ unit }} to {{ max }} {{ unit }}",
     "hourListOpenAccessibilityLabel": "Open hourly forecast for the day",
     "hourListCloseAccessibilityLabel": "Close hourly forecast for the day",
     "at": "at",

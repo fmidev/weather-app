@@ -70,7 +70,7 @@
     "minutes": "minuuttia",
     "feelsLike": "Tuntuu kuin",
     "temperature": "Lämpötila",
-    "fromTo": "{{ min }} astetta viiva {{ max }} astetta",
+    "fromTo": "{{ min }} {{ unit }} viiva {{ max }} {{ unit }}",
     "hourListOpenAccessibilityLabel": "Avaa tuntiennuste päivälle",
     "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle",
     "at": "klo",

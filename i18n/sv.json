@@ -70,7 +70,7 @@
     "minutes": "minuter",
     "feelsLike": "Känns som",
     "temperature": "Temperatur",
-    "fromTo": "{{ min }} ° linje {{ max }}°",
+    "fromTo": "{{ min }} {{ unit }} linje {{ max }} {{ unit }}",
     "hourListOpenAccessibilityLabel": "Öppna timprognos för dagen",
     "hourListCloseAccessibilityLabel": "Stäng timprognosen för dagen",
     "at": "kl.",
