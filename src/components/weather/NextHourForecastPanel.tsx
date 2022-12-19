@@ -112,6 +112,31 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     nextHourForecast.precipitation1h
   );
 
+  const getParameterUnitTranslationKey = (unit: string) => {
+    switch (unit) {
+      case '°C':
+        return 'celsius';
+      case '°F':
+        return 'fahrenheit';
+      case 'm/s':
+        return 'metersPerSecond';
+      case 'km/h':
+        return 'kilometersPerHour';
+      case 'mph':
+        return 'milesPerHour';
+      case 'kn':
+        return 'knots';
+      case 'bft':
+        return 'beaufort';
+      case 'mm':
+        return 'millimeters';
+      case 'in':
+        return 'inches';
+      default:
+        return '';
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.alignCenter} accessible accessibilityRole="header">
@@ -144,7 +169,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
               style={[styles.temperatureText, { color: colors.primaryText }]}>
               {numericOrDash(temperatureValue)}
             </Text>
-            <Text style={[styles.unitText, { color: colors.primaryText }]}>
+            <Text
+              style={[styles.unitText, { color: colors.primaryText }]}
+              accessibilityLabel={`${numericOrDash(temperatureValue)} ${t(
+                getParameterUnitTranslationKey(`°${temperatureUnit}`)
+              )} `}>
               °{temperatureUnit}
             </Text>
           </View>
@@ -154,18 +183,26 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
         <View style={[styles.row, styles.alignEnd]}>
           {activeParameters.includes('feelsLike') && (
             <>
-              <Text
-                style={[
-                  styles.text,
-                  styles.withMarginRight,
-                  { color: colors.hourListText },
-                ]}>
-                {t('feelsLike')}{' '}
-                <Text style={[styles.bold, styles.feelsLikeText]}>
-                  {numericOrDash(feelsLikeValue)}
+              <View
+                accessible
+                accessibilityLabel={`${t('feelsLike')} ${numericOrDash(
+                  feelsLikeValue
+                )} ${t(
+                  getParameterUnitTranslationKey(`°${temperatureUnit}`)
+                )}`}>
+                <Text
+                  style={[
+                    styles.text,
+                    styles.withMarginRight,
+                    { color: colors.hourListText },
+                  ]}>
+                  {t('feelsLike')}{' '}
+                  <Text style={[styles.bold, styles.feelsLikeText]}>
+                    {numericOrDash(feelsLikeValue)}
+                  </Text>
+                  <Text style={styles.feelsLikeText}>°{temperatureUnit}</Text>
                 </Text>
-                <Text style={styles.feelsLikeText}>°{temperatureUnit}</Text>
-              </Text>
+              </View>
               <Icon
                 name={getFeelsLikeIconName(
                   nextHourForecast,
@@ -189,8 +226,8 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             nextHourForecast.windCompass8
               ? `${t(
                   `observation:windDirection:${nextHourForecast.windCompass8}`
-                )} ${nextHourForecast.windSpeedMS} ${t(
-                  'forecast:metersPerSecond'
+                )} ${windSpeedValue} ${t(
+                  `forecast:${getParameterUnitTranslationKey(windUnit)}`
                 )}`
               : undefined
           }>
@@ -238,11 +275,15 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
               <Text
                 style={[styles.text, { color: colors.hourListText }]}
                 accessibilityLabel={`${t('forecast:precipitation')} ${
-                  nextHourForecast.precipitation1h
+                  precipitationValue
                     ?.toString()
                     .replace('.', decimalSeparator) ||
                   (0).toFixed(1).replace('.', decimalSeparator)
-                } ${t('forecast:millimeters')}`}>
+                } ${t(
+                  `forecast:${getParameterUnitTranslationKey(
+                    precipitationUnit
+                  )}`
+                )}`}>
                 <Text style={styles.bold}>{`${
                   precipitationValue?.replace('.', decimalSeparator) ||
                   (0).toFixed(1).replace('.', decimalSeparator)
