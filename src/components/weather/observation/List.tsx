@@ -12,6 +12,7 @@ import { capitalize } from '@utils/chart';
 import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 import { Config } from '@config';
 import { ClockType } from '@store/settings/types';
+import { getForecastParameterUnitTranslationKey } from '@utils/units';
 import { ChartType } from '../charts/types';
 
 type ListProps = {
@@ -61,6 +62,8 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
       parameters: [],
     },
   };
+
+  const { wind: windSpeedUnit } = Config.get('settings').units;
 
   const activeParameters = listParameters[parameter].parameters.filter(
     (param) => parameters?.includes(param)
@@ -121,7 +124,11 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                 accessibilityLabel={`${t(
                   'measurements.windSpeedMS'
                 )} ${windSpeedObservationCellValue}
-                ${t('forecast:metersPerSecond')}.`}>
+                ${t(
+                  `forecast:${getForecastParameterUnitTranslationKey(
+                    windSpeedUnit
+                  )}`
+                )}`}>
                 {windSpeedObservationCellValue}
               </Text>
             )}
@@ -172,7 +179,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
               accessibilityLabel={`${t(
                 'measurements.windGust'
               )} ${windGustObservationCellValue} ${t(
-                'forecast:metersPerSecond'
+                `paramUnits.${getParameterUnit('windGust')}`
               )}`}>
               {windGustObservationCellValue}
             </Text>
