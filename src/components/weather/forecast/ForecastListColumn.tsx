@@ -301,6 +301,13 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           const precipitationUnit = Config.get('settings').units.precipitation;
           const windSpeedUnit = Config.get('settings').units.wind;
 
+          const precipitation1hValue =
+            typeof toDisplay === 'number' &&
+            `${converter(precipitationUnit, toDisplay).toFixed(1)}`.replace(
+              '.',
+              decimalSeparator
+            );
+
           return (
             <View
               key={`${param}-${i}`}
@@ -310,7 +317,10 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               ]}>
               <Text
                 accessibilityLabel={t(`forecast:params:${param}`, {
-                  value: toDisplay,
+                  value:
+                    param === constants.PRECIPITATION_1H
+                      ? precipitation1hValue ?? toDisplay
+                      : toDisplay,
                   unit:
                     [constants.PRECIPITATION_1H, constants.WIND_GUST].includes(
                       param
@@ -325,11 +335,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 })}
                 style={[styles.regularText, { color: colors.hourListText }]}>
                 {param === constants.PRECIPITATION_1H &&
-                typeof toDisplay === 'number' &&
+                precipitation1hValue &&
                 toDisplay >= 0
-                  ? `${converter(precipitationUnit, toDisplay).toFixed(
-                      1
-                    )}`.replace('.', decimalSeparator)
+                  ? precipitation1hValue
                   : toDisplay}
               </Text>
             </View>
