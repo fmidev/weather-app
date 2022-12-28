@@ -13,7 +13,7 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-PROJECT_NAME = "TVTVAwesomeTSProject"
+PROJECT_NAME = "MobileWeather"
 XCODE_PROJECT = "./#{PROJECT_NAME}.xcodeproj"
 XCODE_WORKSPACE = "./#{PROJECT_NAME}.xcworkspace"
 
