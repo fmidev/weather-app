@@ -24,13 +24,7 @@ import {
 } from '@store/observation/actions';
 
 import { State } from '@store/types';
-import {
-  CustomTheme,
-  GRAY_1,
-  GRAY_1_OPACITY_15,
-  GRAY_4,
-  WHITE,
-} from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@utils/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
 import {
@@ -49,6 +43,7 @@ import List from './observation/List';
 import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
 import { observationTypeParameters } from './charts/settings';
+import InfoMessage from './InfoMessage';
 
 const mapStateToProps = (state: State) => ({
   hourlyData: selectHourlyData(state),
@@ -312,22 +307,6 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   );
 };
 
-const InfoMessage: React.FC<{ translationKey: string }> = ({
-  translationKey,
-}) => {
-  const { dark } = useTheme() as CustomTheme;
-  const { t } = useTranslation('observation');
-
-  return (
-    <View style={[styles.dailyValuesInfoView]}>
-      <Text
-        style={[styles.dailyValuesInfoText, { color: dark ? WHITE : GRAY_4 }]}>
-        {t(translationKey)}
-      </Text>
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
   observationContainer: {
     marginHorizontal: 8,
@@ -391,16 +370,6 @@ const styles = StyleSheet.create({
   draggableIcon: {
     backgroundColor: GRAY_1,
     width: 65,
-  },
-  dailyValuesInfoText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-  },
-  dailyValuesInfoView: {
-    backgroundColor: GRAY_1_OPACITY_15,
-    padding: 14,
-    marginTop: 8,
-    marginHorizontal: -6,
   },
 });
 
