@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
-import { CustomTheme, GRAY_1_OPACITY_15, GRAY_4, WHITE } from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 
@@ -13,6 +13,7 @@ import { Config } from '@config';
 import { selectClockType } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
+import InfoMessage from '../InfoMessage';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -27,7 +28,7 @@ type LatestProps = PropsFromRedux & {
 };
 
 const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const { parameters } = Config.get('weather').observation;
@@ -155,11 +156,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
   return (
     <>
       {hoursSinceLatestObservation > 2 && (
-        <View style={[styles.tooOldView]}>
-          <Text style={[styles.tooOldText, { color: dark ? WHITE : GRAY_4 }]}>
-            {t('tooOld')}
-          </Text>
-        </View>
+        <InfoMessage translationKey="tooOld" />
       )}
       {!!latestObservation && hoursSinceLatestObservation <= 2 && (
         <View>
@@ -226,16 +223,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flex: 1,
-  },
-  tooOldText: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Regular',
-  },
-  tooOldView: {
-    backgroundColor: GRAY_1_OPACITY_15,
-    padding: 14,
-    marginTop: 8,
-    marginHorizontal: -6,
   },
 });
 export default connector(Latest);
