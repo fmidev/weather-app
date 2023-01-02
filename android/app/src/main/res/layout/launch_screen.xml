@@ -25,6 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="40dp"
-        android:src="@drawable/fmi_logo" />
+        android:src="@drawable/provider_logo" />
 
 </RelativeLayout>

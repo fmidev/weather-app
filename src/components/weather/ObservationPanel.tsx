@@ -27,6 +27,7 @@ import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
 import { ObservationParameters } from '@store/observation/types';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import { selectClockType } from '@store/settings/selectors';
 import Chart from './charts/Chart';
 import { ChartType } from './charts/types';
 import ParameterSelector from './common/ParameterSelector';
@@ -47,6 +48,7 @@ const mapStateToProps = (state: State) => ({
   stationList: selectStationList(state),
   chartParameter: selectChartDisplayParameter(state),
   displayFormat: selectDisplayFormat(state),
+  clockType: selectClockType(state),
 });
 
 const mapDispatchToProps = {
@@ -75,9 +77,12 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   updateChartParameter,
   displayFormat,
   updateDisplayFormat,
+  clockType,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation('observation');
+  const { t, i18n } = useTranslation('observation');
+  const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const { enabled, parameters } = Config.get('weather').observation;
 
@@ -117,7 +122,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   );
   const title = `${currentStation?.name || ''} – ${t(
     'distance'
-  )} ${toStringWithDecimal(currentStation?.distance, ',')} km`;
+  )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} km`;
   return (
     <View
       style={[
@@ -236,7 +241,9 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             parameter={parameter}
             setParameter={updateChartParameter}
           />
-          {displayFormat === LIST && <List data={data} parameter={parameter} />}
+          {displayFormat === LIST && (
+            <List data={data} parameter={parameter} clockType={clockType} />
+          )}
           {displayFormat === CHART && (
             <Chart chartType={parameter} data={data} observation />
           )}

@@ -149,7 +149,8 @@ export const getObservationCellValue = (
   unit: string,
   decimals?: number,
   divider?: number,
-  showUnit?: boolean
+  showUnit?: boolean,
+  decimalSeparator: ',' | '.' = ','
 ): string => {
   const unitAbb = unit.replace('°', ''); // get rid of ° in temperature units
   const unitParameterObject = UNITS.find((x) =>
@@ -177,7 +178,7 @@ export const getObservationCellValue = (
       : Number(value).toFixed(decimals || 0)
     )
       .toString()
-      .replace('.', ',')} ${showUnit ? unit : ''}`.trim();
+      .replace('.', decimalSeparator)} ${showUnit ? unit : ''}`.trim();
   }
   return '-';
 };
@@ -287,12 +288,15 @@ export const getIndexForDaySmartSymbol = (
   dayIndex: number
 ): number => {
   if (dayArray.length === 24) {
-    return 16;
+    return 14; // choose 14:00 (2.00 PM) local time as the default time
+  }
+  if (dayArray.length >= 10) {
+    return 14 - (24 - dayArray.length); // choose index of 14:00 if available from a list with fewer than 24 hourly forecasts
   }
   const index = dayArray.findIndex((d) => {
     const dateObj = new Date(d.epochtime * 1000);
     const hours = dateObj.getHours();
-    return hours === 15;
+    return hours === 14;
   });
 
   if (dayIndex === 0 && index < 0) {

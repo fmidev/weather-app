@@ -14,7 +14,7 @@ const HeaderIcon: React.FC = () => {
   return (
     <View style={styles.container}>
       <Icon
-        name={`logo-fmi-${language}`}
+        name={`provider-logo-${language}`}
         style={{ color: colors.text }}
         height={30}
       />

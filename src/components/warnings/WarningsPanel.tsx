@@ -23,11 +23,13 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import { selectCurrent } from '@store/location/selector';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Config } from '@config';
+import { selectClockType } from '@store/settings/selectors';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
 
 const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
   dailyWarnings: selectDailyWarningData(state),
   updated: selectUpdated(state),
   location: selectCurrent(state),
@@ -41,6 +43,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type WarningsPanelProps = PropsFromRedux & {};
 
 const WarningsPanel: React.FC<WarningsPanelProps> = ({
+  clockType,
   dailyWarnings,
   updated,
   location,
@@ -75,7 +78,11 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
 
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-
+  const timeFormat = clockType === 12 ? 'h.mm ' : 'HH.mm';
+  const dateFormat = locale === 'en' ? 'MMM D' : 'D.M.';
+  const lastUpdatedDateTimeFormat = `${dateFormat} [${t(
+    'forecast:at'
+  )}] ${timeFormat}`;
   return (
     <View
       style={[
@@ -213,7 +220,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                           color: colors.text,
                         },
                       ]}>
-                      {moment(date).format('D.M.')}
+                      {moment(date).format(locale === 'en' ? 'MMM D' : 'D.M.')}
                     </Text>
                     <SeverityBar severity={severity} />
                   </View>
@@ -236,7 +243,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
             ]}>
             {t('lastUpdated')}{' '}
             <Text style={styles.bold}>
-              {moment(updated).format(`D.M. [${t('forecast:at')}] HH:mm`)}
+              {moment(updated).format(lastUpdatedDateTimeFormat)}
             </Text>
           </Text>
         </View>
