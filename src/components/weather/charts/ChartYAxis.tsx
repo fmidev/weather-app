@@ -28,8 +28,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
-  console.log('chartMinMax', chartMinMax);
-  console.log('chartDomain', chartDomain);
+
   if (
     right &&
     ((observation && !['visCloud', 'daily'].includes(chartType)) ||
