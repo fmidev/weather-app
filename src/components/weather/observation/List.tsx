@@ -218,6 +218,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
     return (
       <View style={styles.row}>
         {activeParameters.map((param) => {
+          console.log('activeParameters', activeParameters);
           if (param === 'minimumTemperature') return null;
           const parameterUnit = getParameterUnit(param);
           let cellValue = getObservationCellValue(
@@ -272,7 +273,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
               style={[
                 styles.listText,
                 styles.rowItem,
-                parameter === 'daily' && styles.centeredText,
+                parameter === 'daily' &&
+                  activeParameters.length > 1 &&
+                  styles.centeredText,
                 {
                   color: colors.hourListText,
                 },
