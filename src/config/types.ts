@@ -123,6 +123,17 @@ interface UnresolvedGeoIdErrorMessage {
   };
 }
 
+interface LightThemeEnabled {
+  light: true;
+  dark: boolean;
+}
+interface DarkThemeEnabled {
+  light: boolean;
+  dark: true;
+}
+
+type Themes = LightThemeEnabled | DarkThemeEnabled;
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -163,6 +174,7 @@ export interface ConfigType {
       pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
     };
     clockType: 12 | 24;
+    themes: Themes;
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
