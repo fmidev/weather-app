@@ -82,7 +82,8 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
           },
           grid: {
             stroke: ({ tick }) =>
-              chartType === 'temperature' && tick === 0
+              (chartType === 'temperature' || chartType === 'daily') &&
+              tick === 0
                 ? colors.secondaryBorder
                 : colors.chartGrid,
           },
