@@ -108,9 +108,23 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'cloud',
     'snowDepth',
   ];
+
   charts = charts.filter((type) => {
     const typeParameters = observationTypeParameters[type];
+    const dataForParameter = typeParameters.map((typeParam) =>
+      data.map(
+        (dataPoint) => dataPoint[typeParam as keyof ObservationParameters]
+      )
+    );
+    const observationDataExistsForParameter = dataForParameter.some(
+      (parameterData) =>
+        parameterData.some(
+          (dataPoint) => dataPoint !== null && dataPoint !== undefined
+        )
+    );
+
     return (
+      observationDataExistsForParameter &&
       typeParameters.filter((typeParameter) =>
         parameters?.includes(typeParameter as keyof ObservationParameters)
       ).length > 0
