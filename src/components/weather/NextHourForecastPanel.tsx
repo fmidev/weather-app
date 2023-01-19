@@ -38,8 +38,10 @@ import {
   setCurrentLocation as setCurrentLocationAction,
   setWeatherScreenLocationIndex as setWeatherScreenLocationIndexAction,
 } from '@store/location/actions';
+import { selectClockType } from '@store/settings/selectors';
 
 const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
   loading: selectLoading(state),
   nextHourForecast: selectNextHourForecast(state),
   timezone: selectTimeZone(state),
@@ -60,6 +62,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type NextHourForecastPanelProps = PropsFromRedux;
 
 const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
+  clockType,
   loading,
   nextHourForecast,
   timezone,
@@ -69,7 +72,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   setCurrentLocation,
   setWeatherScreenLocationIndex,
 }) => {
-  const { t } = useTranslation('forecast');
+  const { t, i18n } = useTranslation('forecast');
+  const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
   const { colors, dark } = useTheme() as CustomTheme;
 
   useEffect(() => {
@@ -191,7 +196,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             styles.text,
             styles.bold,
             { color: colors.primaryText },
-          ]}>{`${t('at')} ${currentTime.format('HH:mm')}`}</Text>
+          ]}>{`${t('at')} ${currentTime.format(
+          clockType === 12 ? 'h.mm a' : 'HH.mm'
+        )}`}</Text>
       </View>
       <View style={styles.row}>
         <View
@@ -306,11 +313,12 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                 accessibilityLabel={`${t('forecast:precipitation')} ${
                   nextHourForecast.precipitation1h
                     ?.toString()
-                    .replace('.', ',') || (0).toFixed(1).replace('.', ',')
+                    .replace('.', decimalSeparator) ||
+                  (0).toFixed(1).replace('.', decimalSeparator)
                 } ${t('forecast:millimeters')}`}>
                 <Text style={styles.bold}>{`${
-                  precipitationValue?.replace('.', ',') ||
-                  (0).toFixed(1).replace('.', ',')
+                  precipitationValue?.replace('.', decimalSeparator) ||
+                  (0).toFixed(1).replace('.', decimalSeparator)
                 }`}</Text>
                 {` ${precipitationUnit}`}
               </Text>

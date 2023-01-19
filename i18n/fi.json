@@ -54,7 +54,7 @@
     "precipitation": "sadetta",
     "metersPerSecond": "metriä sekunnissa",
     "millimeters": "millimetriä",
-    "panelHeader": "10 vrk ennuste",
+    "panelHeader": "{{ forecastLength }} vrk ennuste",
     "updated": "Päivitetty",
     "sunrise": "Aurinko nousee",
     "sunset": "Aurinko laskee",
@@ -282,7 +282,11 @@
     "en": "in English",
     "languageHint": "Vaihda sovelluksen kieleksi:",
     "appearanceHint": "Vaihda sovelluksen ulkoasuksi:",
-    "locationSettingHint": "Siirry puhelimen asetuksiin muuttaaksesi sovelluksen lupaa käyttää sijaintia"
+    "locationSettingHint": "Siirry puhelimen asetuksiin muuttaaksesi sovelluksen lupaa käyttää sijaintia",
+    "clockSettingHint": "Vaihda sovelluksen kelloksi:",
+    "clock": "Kello",
+    "12-hour-clock": "12 tunnin kello",
+    "24-hour-clock": "24 tunnin kello"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",

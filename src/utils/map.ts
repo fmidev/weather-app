@@ -1,5 +1,4 @@
 import moment from 'moment';
-import proj4 from 'proj4';
 import { parse } from 'fast-xml-parser';
 
 import { MapOverlay } from '@store/map/types';
@@ -242,43 +241,12 @@ const getWMSLayerUrlsAndBounds = async (
         .get(layerSrc.source)
         .find((src: WmsLayer) => src.Name === layerSrc.layer);
 
-      const { BoundingBox } = wmsLayer;
       const steps = Array.isArray(wmsLayer.Dimension)
         ? wmsLayer.Dimension[0].text.split(/[,/]/)
         : wmsLayer.Dimension.text.split(/[,/]/);
 
       const layerStart = steps[0];
       const layerEnd = steps.length > 3 ? steps[steps.length - 1] : steps[1];
-
-      const boundingBox84 = BoundingBox.find(
-        (box: BoundingBox) => box.CRS === 'CRS:84'
-      );
-
-      const { minx, miny, maxx, maxy } =
-        layerSrc.properties?.boundingBox || boundingBox84;
-      const [numMinX, numMinY, numMaxX, numMaxY] = [
-        Number(minx),
-        Number(miny),
-        Number(maxx),
-        Number(maxy),
-      ];
-      const [minX, minY] = proj4('WGS84', 'EPSG:3857', [
-        numMinX,
-        numMinY < -85 ? 85 : numMinY,
-      ]);
-      const [maxX, maxY] = proj4('WGS84', 'EPSG:3857', [
-        numMaxX,
-        numMaxY > 85 ? 85 : numMaxY,
-      ]);
-
-      const bbox = `${minX},${minY},${maxX},${maxY}`;
-
-      const overlayBounds = {
-        bottomLeft: [numMinY, numMinX],
-        bottomRight: [numMinY, numMaxX],
-        topLeft: [numMaxY, numMinX],
-        topRight: [numMaxY, numMaxX],
-      } as { [key: string]: [number, number] };
 
       const url = sources[layerSrc.source];
 
@@ -287,22 +255,15 @@ const getWMSLayerUrlsAndBounds = async (
         ...layerSrc.customParameters,
       };
 
-      const defaultRatio = {
-        width: 1024,
-        height: 1024,
-      };
-
-      const { width, height } = layerSrc.properties?.image || defaultRatio;
-
       const query = new URLSearchParams({
         service: 'WMS',
         version: '1.3.0',
         request: 'GetMap',
         transparent: 'true',
         layers: layerSrc.layer,
-        bbox,
-        width: `${width}`,
-        height: `${height}`,
+        bbox: '{minX},{minY},{maxX},{maxY}',
+        width: '{width}',
+        height: '{height}',
         format: 'image/png',
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
@@ -313,13 +274,13 @@ const getWMSLayerUrlsAndBounds = async (
 
       Object.assign(toReturn, {
         [layerSrc.type]: {
-          bounds: overlayBounds,
           url: overlayUrl,
           start: layerStart,
           end: layerEnd,
           styles,
         },
         step: layer.times.timeStep,
+        tileSize: layer.tileSize,
       });
     });
 

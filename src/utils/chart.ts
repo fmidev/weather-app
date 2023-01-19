@@ -5,6 +5,7 @@ import {
   ChartType,
 } from '@components/weather/charts/types';
 import { Config } from '@config';
+import { ClockType } from '@store/settings/types';
 import moment from 'moment';
 
 export const chartXDomain = (tickValues: number[]): ChartDomain => ({
@@ -90,7 +91,11 @@ export const chartTickValues = (
 export const capitalize = ([first, ...rest]: string) =>
   first.toUpperCase() + rest.join('');
 
-export const tickFormat = (tick: any, locale: string): string | number => {
+export const tickFormat = (
+  tick: any,
+  locale: string,
+  clockType: ClockType
+): string | number => {
   const time = moment(tick);
   const hour = time.hour();
   const minutes = time.minutes();
@@ -100,13 +105,14 @@ export const tickFormat = (tick: any, locale: string): string | number => {
   }
   if (hour === 0) {
     return `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))}
-${time.format('D.M.')}`;
+${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
   }
-  return time.format('HH');
+  return time.format(clockType === 12 ? 'h a' : 'HH');
 };
 
-export const getTickFormat = (locale: string) => (tick: any) =>
-  tickFormat(tick, locale);
+export const getTickFormat =
+  (locale: string, clockType: ClockType) => (tick: any) =>
+    tickFormat(tick, locale, clockType);
 
 export const chartYLabelText = (chartType: ChartType) => {
   const { units } = Config.get('settings');

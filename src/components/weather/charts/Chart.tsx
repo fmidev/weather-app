@@ -14,13 +14,23 @@ import { chartTickValues, chartXDomain, chartYDomain } from '@utils/chart';
 
 import { Config } from '@config';
 import { converter } from '@utils/units';
+import { State } from '@store/types';
+import { selectClockType } from '@store/settings/selectors';
+import { connect, ConnectedProps } from 'react-redux';
 import { ChartData, ChartType, ChartValues, ChartMinMax } from './types';
 import ChartLegend from './Legend';
 import chartSettings from './settings';
 import ChartDataRenderer from './ChartDataRenderer';
 import ChartYAxis from './ChartYAxis';
 
-type ChartProps = {
+const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
+});
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type ChartProps = PropsFromRedux & {
   data: ChartData;
   chartType: ChartType;
   observation?: boolean;
@@ -30,6 +40,7 @@ type ChartProps = {
 };
 
 const Chart: React.FC<ChartProps> = ({
+  clockType,
   data,
   chartType,
   observation,
@@ -197,6 +208,7 @@ const Chart: React.FC<ChartProps> = ({
             Component={Component}
             chartValues={chartValues}
             locale={i18n.language}
+            clockType={clockType}
           />
         </ScrollView>
         <ChartYAxis
@@ -225,4 +237,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Chart;
+export default connector(Chart);

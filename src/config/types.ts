@@ -16,28 +16,12 @@ type BaseTimes = {
   forecast?: number;
 };
 
-type BoundingBox = {
-  minx: number;
-  miny: number;
-  maxx: number;
-  maxy: number;
-};
-
-type Image = {
-  width: 256 | 512 | 1024 | 2048 | number;
-  height: 256 | 512 | 1024 | 2048 | number;
-};
-
 export type WMSSource = {
   source: string;
   layer: string;
   type: 'observation' | 'forecast';
   customParameters?: {
     [name: string]: string | number | { dark: string; light: string };
-  };
-  properties?: {
-    image: Image;
-    boundingBox?: BoundingBox;
   };
 };
 
@@ -58,6 +42,7 @@ export interface MapLayer {
   // legend: string;
   sources: WMSSource[] | TimeseriesSource[];
   times: Times;
+  tileSize?: number;
 }
 
 interface Observation {
@@ -120,6 +105,31 @@ interface DynamicConfigDisabled extends Partial<DynamicConfig> {
   enabled: false;
 }
 
+interface SocialMediaLink {
+  name: string;
+  icon: string;
+  appUrl: string;
+  url: string;
+}
+
+interface UnresolvedGeoIdErrorMessage {
+  [language: string]: {
+    title: string;
+    additionalInfo?: string;
+  };
+}
+
+interface LightThemeEnabled {
+  light: true;
+  dark: boolean;
+}
+interface DarkThemeEnabled {
+  light: boolean;
+  dark: true;
+}
+
+type Themes = LightThemeEnabled | DarkThemeEnabled;
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -140,7 +150,8 @@ export interface ConfigType {
     forecast: {
       ageWarning?: number;
       updateInterval: number;
-      timePeriod: number | 'data';
+      timePeriod: number | string | 'data';
+      forecastLengthTitle?: number;
       data: {
         producer?: string;
         parameters: (keyof ForecastParameters)[];
@@ -158,6 +169,10 @@ export interface ConfigType {
       wind: 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
       pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
     };
+    clockType: 12 | 24;
+    themes: Themes;
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
+  socialMediaLinks: SocialMediaLink[];
+  unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
 }

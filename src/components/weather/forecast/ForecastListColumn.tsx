@@ -15,23 +15,30 @@ import * as constants from '@store/forecast/constants';
 import { isOdd } from '@utils/helpers';
 import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';
+import { ClockType } from '@store/settings/types';
 
 type ForecastListColumnProps = {
+  clockType: ClockType;
   data: TimeStepData;
   displayParams: [number, DisplayParameters][];
 };
 
 const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
+  clockType,
   data,
   displayParams,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
   const { colors, dark } = useTheme() as CustomTheme;
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
   );
 
-  const time = moment.unix(data.epochtime).format('HH');
+  const time = moment
+    .unix(data.epochtime)
+    .format(clockType === 12 ? 'h a' : 'HH');
   const smartSymbol = weatherSymbolGetter(
     (data.smartSymbol || 0).toString(),
     dark
@@ -43,7 +50,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
       key={data.epochtime}
       style={[
         styles.hourColumn,
-        ...(time === '00'
+        ...(time === '00' || time === '12 am'
           ? [
               styles.dayChangeBorder,
               {
@@ -282,7 +289,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 toDisplay >= 0
                   ? `${converter(precipitationUnit, toDisplay).toFixed(
                       1
-                    )}`.replace('.', ',')
+                    )}`.replace('.', decimalSeparator)
                   : toDisplay}
               </Text>
             </View>

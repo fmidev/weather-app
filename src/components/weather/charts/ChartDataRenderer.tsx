@@ -5,6 +5,7 @@ import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 import { getTickFormat } from '@utils/chart';
+import { ClockType } from '@store/settings/types';
 import { ChartDataProps, ChartDomain, ChartType, ChartValues } from './types';
 
 type ChartDataRendererProps = {
@@ -15,6 +16,7 @@ type ChartDataRendererProps = {
   chartValues: ChartValues;
   Component: React.FC<ChartDataProps>;
   locale: string;
+  clockType: ClockType;
 };
 const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartDimensions,
@@ -24,6 +26,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartValues,
   Component,
   locale,
+  clockType,
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
@@ -43,7 +46,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
       scale={{ x: 'linear' }}>
       <VictoryAxis
         scale={{ x: 'linear' }}
-        tickFormat={getTickFormat(locale)}
+        tickFormat={getTickFormat(locale, clockType)}
         tickValues={tickValues}
         orientation="bottom"
         style={{

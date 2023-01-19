@@ -1,3 +1,4 @@
+import { Config } from '@config';
 import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
 import { SettingsState } from './types';
@@ -10,7 +11,26 @@ export const selectUnits = createSelector(
   (settings) => settings.units
 );
 
-export const selectTheme = createSelector(
+export const selectTheme = createSelector(selectSettingsDomain, (settings) => {
+  if (settings.theme) return settings.theme;
+
+  const configThemes = Config.get('settings').themes;
+  let theme;
+  if (configThemes.light && !configThemes.dark) {
+    theme = 'light';
+  } else if (configThemes.dark && !configThemes.light) {
+    theme = 'dark';
+  } else if (configThemes.light && configThemes.dark) {
+    theme = 'automatic';
+  }
+
+  return theme;
+});
+
+export const selectClockType = createSelector(
   selectSettingsDomain,
-  (settings) => settings.theme
+  (settings) => {
+    const configClockType = Config.get('settings').clockType;
+    return settings.clockType ?? configClockType;
+  }
 );
