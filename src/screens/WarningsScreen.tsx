@@ -13,6 +13,7 @@ import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrent } from '@store/location/selector';
 import { selectAnnouncements } from '@store/announcements/selectors';
+import CapWarningsView from '@components/warnings/CapWarningsView';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
@@ -39,6 +40,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
 
   const warningsConfig = Config.get('warnings');
+  const { useCapView } = warningsConfig;
 
   const updateWarnings = useCallback(() => {
     if (warningsConfig.enabled && warningsConfig.apiUrl[location.country]) {
@@ -76,12 +78,19 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={announcements && [0]}>
         <CrisisStrip style={styles.crisisStrip} />
-        <WarningsPanel />
-        <WarningsWebViewPanel />
+        {useCapView ? (
+          <CapWarningsView />
+        ) : (
+          <>
+            <WarningsPanel />
+            <WarningsWebViewPanel />
+          </>
+        )}
       </ScrollView>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,

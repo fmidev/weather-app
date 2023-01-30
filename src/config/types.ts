@@ -65,6 +65,7 @@ interface Warnings {
   apiUrl: {
     [country: string]: string;
   };
+  useCapView?: boolean;
   updateInterval: number;
   ageWarning?: number;
   webViewUrl?: string;

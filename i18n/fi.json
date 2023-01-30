@@ -462,6 +462,8 @@
   "warnings": {
     "panelTitle": "Varoitukset maa-alueilla",
     "panelTitleSlim": "Varoitukset",
+    "panelTitleCap": "Varoitukset",
+    "capUpdated": "Päivitetty",
     "lastUpdated": "Päivitetty viimeksi",
     "allWarnings": "Koko Suomen varoitukset",
     "valid": "voimassa",
