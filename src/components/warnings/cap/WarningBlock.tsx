@@ -5,7 +5,7 @@ import { CustomTheme, GRAYISH_BLUE, WHITE } from '@utils/colors';
 import React, { useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Icon from '@components/common/Icon';
-import WarningSymbol from './WarningsSymbol';
+import WarningSymbol from '../WarningsSymbol';
 import CapSeverityBar from './CapSeverityBar';
 
 function WarningBlock({
@@ -32,7 +32,7 @@ function WarningBlock({
             size={32}
           />
           <View style={styles.headingMainContent}>
-            <View style={styles.row}>
+            <View style={[styles.row, styles.severityBarContainer]}>
               <CapSeverityBar severities={[0, 0, 0, 0]} />
               <CapSeverityBar severities={[0, 0, 1, 1]} />
               <CapSeverityBar severities={[2, 2, 3, 2]} />
@@ -46,7 +46,7 @@ function WarningBlock({
               {text}
             </Text>
           </View>
-          <View style={styles.flex}>
+          <View style={styles.accordionArrow}>
             <Icon
               name={open ? 'arrow-up' : 'arrow-down'}
               height={24}
@@ -91,15 +91,23 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     width: '100%',
   },
+  severityBarContainer: {
+    marginBottom: 12,
+  },
   accordionContentHeading: {
     flexDirection: 'column',
     marginVertical: 15,
     marginLeft: 16,
   },
+  accordionArrow: {
+    padding: 10,
+    marginRight: 14,
+  },
   headingMainContent: {
     flexDirection: 'column',
     marginVertical: 15,
     marginLeft: 16,
+    flexGrow: 1,
   },
   headingTitle: {
     fontFamily: 'Roboto-Bold',
@@ -111,9 +119,6 @@ const styles = StyleSheet.create({
   openableContent: {
     paddingHorizontal: 16,
     paddingVertical: 24,
-  },
-  flex: {
-    display: 'flex',
   },
   row: {
     flexDirection: 'row',
