@@ -111,7 +111,6 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             <DateIndicator weekDay="Pe" date="27.1." />
           </View>
         </View>
-
         <WarningBlock
           title="Pakkasvaroitus maa-alueille"
           text="voimassa to 24.11. - la 26.11."

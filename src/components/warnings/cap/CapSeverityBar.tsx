@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 1,
     marginRight: 2,
-    marginBottom: 12,
     borderRadius: 4,
   },
   bar: {

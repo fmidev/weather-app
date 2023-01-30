@@ -13,7 +13,7 @@ import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrent } from '@store/location/selector';
 import { selectAnnouncements } from '@store/announcements/selectors';
-import CapWarningsView from '@components/warnings/CapWarningsView';
+import CapWarningsView from '@components/warnings/cap/CapWarningsView';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
