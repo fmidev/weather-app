@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 import React from 'react';
 import {
   Text,
@@ -17,6 +18,7 @@ import {
   CAP_WARNING_RED,
 } from '@utils/colors';
 import { useTheme } from '@react-navigation/native';
+import { t } from 'i18next';
 import CapSeverityBar from './CapSeverityBar';
 import TypeColorRow from '../TypeColorRow';
 
@@ -37,7 +39,7 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
         <TouchableOpacity activeOpacity={1} accessible={false}>
           <View style={[styles.contentContainer, styles.borderBottom]}>
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
-              Aikajana – vuorokausikohtaiset selitykset
+              {t('warnings:capInfo:dailyTitle')}
             </Text>
             <View style={styles.legendRow}>
               <CapSeverityBar severities={[0, 0, 0, 0]} />
@@ -46,7 +48,7 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
                   styles.severityBarLegendText,
                   { color: colors.hourListText },
                 ]}>
-                ei vaaraa
+                {t('warnings:severities:0')}
               </Text>
             </View>
             <View style={styles.legendRow}>
@@ -56,7 +58,7 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
                   styles.severityBarLegendText,
                   { color: colors.hourListText },
                 ]}>
-                mahdollisesti vaarallinen
+                {t('warnings:severities:1')}
               </Text>
             </View>
             <View style={styles.legendRow}>
@@ -66,7 +68,7 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
                   styles.severityBarLegendText,
                   { color: colors.hourListText },
                 ]}>
-                vaarallinen
+                {t('warnings:severities:2')}
               </Text>
             </View>
             <View style={styles.legendRow}>
@@ -76,11 +78,13 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
                   styles.severityBarLegendText,
                   { color: colors.hourListText },
                 ]}>
-                hyvin vaarallinen
+                {t('warnings:severities:3')}
               </Text>
             </View>
             <View>
-              <Text style={{ color: colors.hourListText }}>esimerkki</Text>
+              <Text style={{ color: colors.hourListText }}>
+                {t('warnings:capInfo:example')}
+              </Text>
             </View>
             <View style={styles.legendRow}>
               <CapSeverityBar severities={[0, 0, 1, 1]} />
@@ -89,7 +93,7 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
                   styles.severityBarLegendText,
                   { color: colors.hourListText },
                 ]}>
-                mahdollisesti vaarallinen sää vuorokauden jälkipuoliskolla
+                {t('warnings:capInfo:example1Text')}
               </Text>
             </View>
             <View style={styles.legendRow}>
@@ -99,22 +103,21 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
                   styles.severityBarLegendText,
                   { color: colors.hourListText },
                 ]}>
-                sää kehittyy mahdollisesti vaarallisesta hyvin vaaralliseen
-                vuorokauden edetessä
+                {t('warnings:capInfo:example2Text')}
               </Text>
             </View>
           </View>
           <View style={styles.contentContainer}>
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
-              Varoitusten selitykset maa-alueilla
+              {t('warnings:capInfo:warningExplanationsOnLand')}
             </Text>
             <Text style={{ color: colors.hourListText }}>
-              // TODO: add warning symbols
+              // TODO: add warning symbols{' '}
             </Text>
           </View>
           <View style={styles.contentContainer}>
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
-              Varoitusten selitykset merialueilla
+              {t('warnings:capInfo:warningExplanationsAtSea')}
             </Text>
             <Text style={{ color: colors.hourListText }}>
               // TODO: add warning symbols
@@ -122,7 +125,7 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
           </View>
           <View style={[styles.contentContainer, styles.borderBottom]}>
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
-              Varoitusvärien selitykset
+              {t('warnings:capInfo:warningColorsExplanation')}
             </Text>
             <View>
               <TypeColorRow severity={0} severityColors={severityColors} />
@@ -139,11 +142,10 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
           </View>
           <View style={[styles.contentContainer]}>
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
-              Aikavyöhyke
+              {t('warnings:capInfo:timezone')}
             </Text>
             <Text style={{ color: colors.hourListText }}>
-              Kaikki sovelluksen kellonakat esitetään valitun aikavyöhykkeen
-              sijainnin ajan mukaan.
+              {t('warnings:capInfo:timezoneText')}
             </Text>
           </View>
         </TouchableOpacity>

@@ -500,6 +500,17 @@
       "mapTitle": "Varoitusten selitykset",
       "timezone": "Aikavyöhyke",
       "timezoneText": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan."
+    },
+    "capInfo": {
+      "dailyTitle": "Aikajana - vuorokausikohtaiset selitykset",
+      "example": "Esimerkki",
+      "example1Text": "Mahdollisesti vaarallinen säää vuorokauden jälkipuoliskolla",
+      "example2Text": "Sää kehittyy mahdollisesti vaarallisesta hyvin vaaralliseen vuorokauden edetessä",
+      "warningExplanationsOnLand": "Varoitusten selitykset maa-alueilla",
+      "warningExplanationsAtSea": "Varoitusten selitykset merialueilla",
+      "warningColorsExplanation": "Varoitusvärien selitykset",
+      "timezone": "Aikavyöhyke",
+      "timezoneText": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan.",
     }
   },
   "setUp": {
