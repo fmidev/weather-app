@@ -13,6 +13,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import WarningBlock from './WarningBlock';
 import CapWarningsLegend from './CapWarningsLegend';
+import DaySelectorList from './DaySelectorList';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
@@ -97,6 +98,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         </View>
         <View style={styles.mapContainer}>
           <Text>KARTTA</Text>
+          <DaySelectorList />
         </View>
         <PanelHeader
           title={`Varoitukset 5 vrk - ${currentLocation?.name}`}

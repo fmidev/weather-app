@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
   },
   severityBarLegendText: {
     marginLeft: 14,
+    flexWrap: 'wrap',
   },
 });
 
