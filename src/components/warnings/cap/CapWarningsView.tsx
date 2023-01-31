@@ -4,7 +4,7 @@ import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
 import SelectorButton from '@components/common/SelectorButton';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme, GRAY_8, WHITE } from '@utils/colors';
+import { CustomTheme, WHITE } from '@utils/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Icon from '@components/common/Icon';
 import { State } from '@store/types';
@@ -13,7 +13,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import WarningBlock from './WarningBlock';
 import CapWarningsLegend from './CapWarningsLegend';
-import DaySelectorList from './DaySelectorList';
+import MapView from './MapView';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
@@ -96,10 +96,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        <View style={styles.mapContainer}>
-          <Text>KARTTA</Text>
-          <DaySelectorList />
-        </View>
+        <MapView />
         <PanelHeader
           title={`Varoitukset 5 vrk - ${currentLocation?.name}`}
           justifyCenter
@@ -184,7 +181,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginLeft: 64,
-    // justifyContent: 'center',
   },
   dateIndicatorEntry: {
     display: 'flex',
@@ -195,13 +191,6 @@ const styles = StyleSheet.create({
   },
   infoButton: {
     marginRight: 8,
-  },
-  mapContainer: {
-    backgroundColor: GRAY_8,
-    height: 400,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 
