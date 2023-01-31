@@ -1,7 +1,7 @@
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { useTheme } from '@react-navigation/native';
 import { WarningType, Severity } from '@store/warnings/types';
-import { CustomTheme, GRAYISH_BLUE, WHITE } from '@utils/colors';
+import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
 import React, { useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Icon from '@components/common/Icon';
@@ -20,12 +20,15 @@ function WarningBlock({
   severity: Severity;
 }) {
   const [open, setOpen] = useState(false);
-
   const { colors } = useTheme() as CustomTheme;
   return (
     <View>
       <AccessibleTouchableOpacity onPress={() => setOpen(!open)}>
-        <View style={styles.headingContainer}>
+        <View
+          style={[
+            styles.headingContainer,
+            { backgroundColor: colors.background },
+          ]}>
           <WarningSymbol
             type={warningSymbolType}
             severity={severity}
@@ -84,7 +87,6 @@ const styles = StyleSheet.create({
   headingContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: WHITE,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: GRAYISH_BLUE,

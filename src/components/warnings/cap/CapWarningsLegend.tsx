@@ -11,7 +11,6 @@ import CloseButton from '@components/common/CloseButton';
 import {
   CustomTheme,
   GRAYISH_BLUE,
-  WHITE,
   CAP_WARNING_NEUTRAL,
   CAP_WARNING_YELLOW,
   CAP_WARNING_ORANGE,
@@ -156,7 +155,6 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: WHITE,
     flex: 1,
   },
   contentContainer: {

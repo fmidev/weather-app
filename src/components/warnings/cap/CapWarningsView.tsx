@@ -4,7 +4,7 @@ import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
 import SelectorButton from '@components/common/SelectorButton';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme, WHITE } from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Icon from '@components/common/Icon';
 import { State } from '@store/types';
@@ -46,7 +46,11 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
     <View>
       <View>
         <PanelHeader title={t('panelTitleCap')} justifyCenter />
-        <View style={styles.dataSourcePanelContainer}>
+        <View
+          style={[
+            styles.dataSourcePanelContainer,
+            { backgroundColor: colors.background },
+          ]}>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -55,7 +59,13 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             <SelectorButton text="Koko Suomi" />
             <SelectorButton text="Merialueet" />
           </ScrollView>
-          <View style={[styles.flex, styles.row, styles.spaceBetween]}>
+          <View
+            style={[
+              styles.flex,
+              styles.row,
+              styles.spaceBetween,
+              { backgroundColor: colors.background },
+            ]}>
             <View
               style={[
                 styles.row,
@@ -101,7 +111,11 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
           title={`Varoitukset 5 vrk - ${currentLocation?.name}`}
           justifyCenter
         />
-        <View style={styles.dateIndicatorPanel}>
+        <View
+          style={[
+            styles.dateIndicatorPanel,
+            { backgroundColor: colors.background },
+          ]}>
           <View style={styles.dateIndicatorRow}>
             <DateIndicator weekDay="Ma" date="23.1." />
             <DateIndicator weekDay="Ti" date="24.1." />
@@ -134,7 +148,11 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         height={600}
         closeOnDragDown
         customStyles={{
-          container: { borderTopRightRadius: 10, borderTopLeftRadius: 10 },
+          container: {
+            borderTopRightRadius: 10,
+            borderTopLeftRadius: 10,
+            backgroundColor: colors.background,
+          },
         }}>
         <CapWarningsLegend onClose={() => legendSheetRef.current?.close()} />
       </RBSheet>
@@ -162,7 +180,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
   },
   dataSourcePanelContainer: {
-    backgroundColor: WHITE,
     paddingTop: 18,
   },
   dataSourcePanel: {
@@ -174,7 +191,6 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   dateIndicatorPanel: {
-    backgroundColor: WHITE,
     paddingVertical: 12,
   },
   dateIndicatorRow: {

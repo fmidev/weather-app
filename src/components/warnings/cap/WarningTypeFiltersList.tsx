@@ -1,5 +1,6 @@
+import { useTheme } from '@react-navigation/native';
 import { Severity, WarningType } from '@store/warnings/types';
-import { GRAYISH_BLUE, WHITE } from '@utils/colors';
+import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import WarningSymbol from '../WarningsSymbol';
@@ -16,21 +17,22 @@ const warningTypes: { severity: Severity; type: WarningType }[] = [
   { severity: 'Moderate', type: 'forestFireWeather' },
 ];
 
-const WarningTypeFiltersList = () => (
-  <ScrollView
-    style={styles.row}
-    horizontal
-    showsHorizontalScrollIndicator={false}>
-    {warningTypes.slice(0).map(({ severity, type }) => (
-      <View style={styles.filterButton}>
-        <WarningSymbol severity={severity} type={type} />
-      </View>
-    ))}
-    <View style={styles.filterButton}>
-      <WarningSymbol severity="Severe" type="coldWeather" />
-    </View>
-  </ScrollView>
-);
+const WarningTypeFiltersList = () => {
+  const { colors } = useTheme() as CustomTheme;
+  return (
+    <ScrollView
+      style={styles.row}
+      horizontal
+      showsHorizontalScrollIndicator={false}>
+      {warningTypes.slice(0).map(({ severity, type }) => (
+        <View
+          style={[styles.filterButton, { backgroundColor: colors.background }]}>
+          <WarningSymbol severity={severity} type={type} />
+        </View>
+      ))}
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   row: {
@@ -41,7 +43,6 @@ const styles = StyleSheet.create({
     right: 12,
   },
   filterButton: {
-    backgroundColor: WHITE,
     padding: 8,
     borderRadius: 7,
     marginRight: 12,

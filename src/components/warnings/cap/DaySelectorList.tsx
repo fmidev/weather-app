@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme, GRAYISH_BLUE, WHITE } from '@utils/colors';
+import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CapSeverityBar from './CapSeverityBar';
 
@@ -43,9 +43,11 @@ const DaySelector = ({
           index === 0 && styles.roundedLeftCorners,
           last && styles.roundedRightCorners,
           {
-            borderTopColor: active ? colors.tabBarActive : WHITE,
+            borderTopColor: active ? colors.tabBarActive : colors.background,
             borderRightColor: GRAYISH_BLUE,
-            backgroundColor: active ? colors.screenBackground : WHITE,
+            backgroundColor: active
+              ? colors.screenBackground
+              : colors.background,
           },
         ]}>
         <Text style={[styles.text, { color: colors.primaryText }]}>
@@ -93,7 +95,6 @@ const styles = StyleSheet.create({
   dayBlock: {
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: WHITE,
     borderTopWidth: 3,
     width: 70,
     paddingVertical: 8,
