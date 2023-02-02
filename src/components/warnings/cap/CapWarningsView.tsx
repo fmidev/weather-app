@@ -1,10 +1,16 @@
-import React, { useRef } from 'react';
-import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import React, { useRef, useState } from 'react';
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
 import SelectorButton from '@components/common/SelectorButton';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Icon from '@components/common/Icon';
 import { State } from '@store/types';
@@ -42,6 +48,8 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   const { t } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
 
+  const [xOffset, setXOffset] = useState<number>(0);
+  const { width } = useWindowDimensions();
   return (
     <View>
       <View>
@@ -116,31 +124,40 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             styles.dateIndicatorPanel,
             { backgroundColor: colors.background },
           ]}>
-          <View style={styles.dateIndicatorRow}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={[styles.dateIndicatorRow, { width: width - 136 }]}
+            onScroll={(e) => setXOffset(e.nativeEvent.contentOffset.x)}>
             <DateIndicator weekDay="Ma" date="23.1." />
             <DateIndicator weekDay="Ti" date="24.1." />
             <DateIndicator weekDay="Ke" date="25.1." />
             <DateIndicator weekDay="To" date="26.1." />
             <DateIndicator weekDay="Pe" date="27.1." />
-          </View>
+            {true && <DateIndicator weekDay="La" date="28.1." />}
+            {true && <DateIndicator weekDay="Su" date="29.1." />}
+          </ScrollView>
         </View>
         <WarningBlock
           title="Pakkasvaroitus maa-alueille"
           text="voimassa to 24.11. - la 26.11."
           warningSymbolType="coldWeather"
           severity="Extreme"
+          xOffset={xOffset}
         />
         <WarningBlock
           title="Liikenteen säävaroitus"
           text="voimassa to 24.11. - la 26.11."
           warningSymbolType="trafficWeather"
           severity="Severe"
+          xOffset={xOffset}
         />
         <WarningBlock
           title="Tuulivaroitus maa-alueille"
           text="voimassa to 24.11. - la 26.11."
           warningSymbolType="wind"
           severity="Moderate"
+          xOffset={xOffset}
         />
       </View>
       <RBSheet
@@ -192,6 +209,8 @@ const styles = StyleSheet.create({
   },
   dateIndicatorPanel: {
     paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: GRAYISH_BLUE,
   },
   dateIndicatorRow: {
     display: 'flex',
