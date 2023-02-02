@@ -17,6 +17,8 @@ import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { connect, ConnectedProps } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { Config } from '@config';
+import moment from 'moment';
 import WarningBlock from './WarningBlock';
 import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
@@ -29,7 +31,9 @@ function DateIndicator({ weekDay, date }: { weekDay: string; date: string }) {
   const { colors } = useTheme() as CustomTheme;
   return (
     <View style={styles.dateIndicatorEntry}>
-      <Text style={{ color: colors.hourListText }}>{weekDay}</Text>
+      <Text style={[styles.capitalized, { color: colors.hourListText }]}>
+        {weekDay}
+      </Text>
       <Text style={{ color: colors.hourListText }}>{date}</Text>
     </View>
   );
@@ -45,11 +49,42 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   currentLocation,
 }) => {
   const legendSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const { t } = useTranslation('warnings');
+
+  const { t, i18n } = useTranslation('warnings');
+  const locale = i18n.language;
+  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+  const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
+
   const { colors } = useTheme() as CustomTheme;
 
   const [xOffset, setXOffset] = useState<number>(0);
   const { width } = useWindowDimensions();
+  const capViewSettings = Config.get('warnings')?.capViewSettings;
+
+  const getDateIndicatorDates = () => {
+    const today = new Date();
+    const dates = [
+      {
+        date: moment(today).locale(locale).format(dateFormat),
+        weekday: moment(today).locale(locale).format(weekdayAbbreviationFormat),
+      },
+    ];
+    if (capViewSettings) {
+      for (let i = 1; i < capViewSettings?.numberOfDays; i += 1) {
+        const momentObject = moment(today).add(i * 86400, 'seconds');
+        dates.push({
+          date: momentObject.locale(locale).format(dateFormat),
+          weekday: momentObject
+            .locale(locale)
+            .format(weekdayAbbreviationFormat),
+        });
+      }
+    }
+    return dates;
+  };
+
+  const dates = getDateIndicatorDates();
+
   return (
     <View>
       <View>
@@ -114,7 +149,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        <MapView />
+        <MapView dates={dates} />
         <PanelHeader
           title={`Varoitukset 5 vrk - ${currentLocation?.name}`}
           justifyCenter
@@ -129,13 +164,9 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             showsHorizontalScrollIndicator={false}
             style={[styles.dateIndicatorRow, { width: width - 136 }]}
             onScroll={(e) => setXOffset(e.nativeEvent.contentOffset.x)}>
-            <DateIndicator weekDay="Ma" date="23.1." />
-            <DateIndicator weekDay="Ti" date="24.1." />
-            <DateIndicator weekDay="Ke" date="25.1." />
-            <DateIndicator weekDay="To" date="26.1." />
-            <DateIndicator weekDay="Pe" date="27.1." />
-            {true && <DateIndicator weekDay="La" date="28.1." />}
-            {true && <DateIndicator weekDay="Su" date="29.1." />}
+            {dates.map(({ weekday, date }) => (
+              <DateIndicator weekDay={weekday} date={date} />
+            ))}
           </ScrollView>
         </View>
         <WarningBlock
@@ -178,6 +209,9 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
 };
 
 const styles = StyleSheet.create({
+  capitalized: {
+    textTransform: 'capitalize',
+  },
   flex: {
     display: 'flex',
   },

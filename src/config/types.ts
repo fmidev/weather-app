@@ -61,6 +61,11 @@ interface ObservationDisabled extends Partial<Observation> {
   enabled: false;
 }
 
+interface CapViewSettings {
+  mapHeight?: number;
+  numberOfDays: number;
+}
+
 interface Warnings {
   apiUrl: {
     [country: string]: string;
@@ -69,6 +74,7 @@ interface Warnings {
   updateInterval: number;
   ageWarning?: number;
   webViewUrl?: string;
+  capViewSettings?: CapViewSettings;
 }
 
 interface WarningsEnabled extends Warnings {

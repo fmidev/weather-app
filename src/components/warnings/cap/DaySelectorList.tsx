@@ -5,14 +5,14 @@ import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CapSeverityBar from './CapSeverityBar';
 
-const data = [
-  { weekday: 'Ke', date: '23.11.', severities: [2, 2, 2, 2] },
-  { weekday: 'To', date: '24.11.', severities: [3, 3, 2, 2] },
-  { weekday: 'Pe', date: '25.11.', severities: [2, 2, 1, 0] },
-  { weekday: 'La', date: '26.11.', severities: [0, 0, 0, 0] },
-  { weekday: 'Su', date: '27.11.', severities: [0, 0, 0, 0] },
-  { weekday: 'Ma', date: '28.11.', severities: [0, 0, 0, 0] },
-  { weekday: 'Ti', date: '29.11.', severities: [3, 3, 3, 3] },
+const severitiesMock = [
+  [2, 2, 2, 2],
+  [3, 3, 2, 2],
+  [2, 2, 1, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [3, 3, 3, 3],
 ];
 
 const DaySelector = ({
@@ -50,7 +50,12 @@ const DaySelector = ({
               : colors.background,
           },
         ]}>
-        <Text style={[styles.text, { color: colors.primaryText }]}>
+        <Text
+          style={[
+            styles.text,
+            styles.capitalized,
+            { color: colors.primaryText },
+          ]}>
           {weekday}
         </Text>
         <Text style={[styles.text, { color: colors.primaryText }]}>{date}</Text>
@@ -62,7 +67,11 @@ const DaySelector = ({
   );
 };
 
-const DaySelectorList = () => {
+const DaySelectorList = ({
+  dates,
+}: {
+  dates: { weekday: string; date: string }[];
+}) => {
   const [activeDay, setActiveDay] = useState(1);
   return (
     <ScrollView
@@ -70,16 +79,16 @@ const DaySelectorList = () => {
       horizontal
       showsHorizontalScrollIndicator={false}>
       <View style={styles.row}>
-        {data.slice(0, 5).map(({ weekday, date, severities }, index) => (
+        {dates.map(({ weekday, date }, index) => (
           <DaySelector
             active={index === activeDay}
             key={weekday}
             weekday={weekday}
             date={date}
             onSelect={() => setActiveDay(index)}
-            severities={severities}
+            severities={severitiesMock[index]}
             index={index}
-            last={index === data.length - 1}
+            last={index === dates.length - 1}
           />
         ))}
       </View>
@@ -88,6 +97,9 @@ const DaySelectorList = () => {
 };
 
 const styles = StyleSheet.create({
+  capitalized: {
+    textTransform: 'capitalize',
+  },
   container: {
     position: 'absolute',
     top: 12,
