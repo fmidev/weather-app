@@ -463,6 +463,7 @@
     "panelTitle": "Warnings on land areas",
     "panelTitleSlim": "Warnings",
     "panelTitleCap": "Warnings",
+    "warningsForNDays": "Warnings {{ days }} days",
     "capUpdated": "Updated",
     "lastUpdated": "Last updated",
     "allWarnings": "Warnings in the whole Finland",

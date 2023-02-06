@@ -86,7 +86,7 @@ const DaySelectorList = ({
             weekday={weekday}
             date={date}
             onSelect={() => setActiveDay(index)}
-            severities={severitiesMock[index]}
+            severities={severitiesMock[index] ?? [3, 3, 3, 3]}
             index={index}
             last={index === dates.length - 1}
           />

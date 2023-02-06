@@ -463,6 +463,7 @@
     "panelTitle": "Varningar för landområden",
     "panelTitleSlim": "Varningar",
     "panelTitleCap": "Varningar",
+    "warningsForNDays": "Varningar {{ days }} dygn",
     "capUpdated": "Uppdaterad",
     "lastUpdated": "Uppdaterad senast",
     "allWarnings": "Varningar för hela Finland",

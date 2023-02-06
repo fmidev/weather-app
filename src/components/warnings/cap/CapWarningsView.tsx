@@ -151,7 +151,9 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         </View>
         <MapView dates={dates} />
         <PanelHeader
-          title={`Varoitukset 5 vrk - ${currentLocation?.name}`}
+          title={`${t('warningsForNDays', {
+            days: capViewSettings?.numberOfDays,
+          })} - ${currentLocation?.name}`}
           justifyCenter
         />
         <View
