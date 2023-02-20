@@ -60,10 +60,15 @@ interface ObservationEnabled extends Observation {
 interface ObservationDisabled extends Partial<Observation> {
   enabled: false;
 }
-
+interface CapDataSource {
+  id: number;
+  url: string;
+  urlIcons: string;
+}
 interface CapViewSettings {
   mapHeight?: number;
   numberOfDays: number;
+  datasources: CapDataSource[];
 }
 
 interface Warnings {

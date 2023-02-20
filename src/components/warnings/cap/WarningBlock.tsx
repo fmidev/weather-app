@@ -1,8 +1,8 @@
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { useTheme } from '@react-navigation/native';
-import { WarningType, Severity } from '@store/warnings/types';
+import { Severity, CapWarning } from '@store/warnings/types';
 import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import {
   Text,
   View,
@@ -11,49 +11,47 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import Icon from '@components/common/Icon';
+import { useTranslation } from 'react-i18next';
+import moment from 'moment';
 import WarningSymbol from '../WarningsSymbol';
 import CapSeverityBar from './CapSeverityBar';
 
-function WarningBlock({
-  title,
-  text,
-  warningSymbolType,
-  severity,
-  xOffset,
+const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
+
+const WarningItem = ({
+  warning,
+  scrollViewRef,
+  width,
+  timespan,
+  includeSeverityBars,
+  open,
+  includeArrow,
+  showDescription,
 }: {
-  title: string;
-  text: string;
-  warningSymbolType: WarningType;
-  severity: Severity;
-  xOffset?: number;
-}) {
-  const [open, setOpen] = useState(false);
+  warning: CapWarning;
+  scrollViewRef?: React.MutableRefObject<ScrollView>;
+  width: number;
+  timespan: string;
+  includeSeverityBars: boolean;
+  open?: boolean;
+  includeArrow: boolean | undefined;
+  showDescription?: boolean;
+}) => {
   const { colors } = useTheme() as CustomTheme;
-  const scrollViewRef = useRef() as React.MutableRefObject<ScrollView>;
-  const { width } = useWindowDimensions();
-
-  useEffect(() => {
-    scrollViewRef.current?.scrollTo({
-      x: xOffset ?? 0,
-      y: 0,
-      animated: true,
-    });
-  }, [xOffset]);
-
   return (
     <View>
-      <AccessibleTouchableOpacity onPress={() => setOpen(!open)}>
-        <View
-          style={[
-            styles.headingContainer,
-            { backgroundColor: colors.background },
-          ]}>
-          <WarningSymbol
-            type={warningSymbolType}
-            severity={severity}
-            size={32}
-          />
-          <View style={[styles.headingMainContent, { width: width - 136 }]}>
+      <View
+        style={[
+          styles.headingContainer,
+          { backgroundColor: !showDescription ? colors.background : undefined },
+        ]}>
+        <WarningSymbol
+          type="coldWeather"
+          severity={warning.info.severity}
+          size={32}
+        />
+        <View style={[styles.headingMainContent, { width: width - 136 }]}>
+          {includeSeverityBars && (
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -71,14 +69,19 @@ function WarningBlock({
               <CapSeverityBar severities={[0, 1, 2, 3]} />
               <CapSeverityBar severities={[0, 1, 2, 3]} />
               <CapSeverityBar severities={[0, 1, 2, 3]} />
+              <CapSeverityBar severities={[0, 0, 0, 0]} />
+              <CapSeverityBar severities={[0, 0, 0, 0]} />
+              <CapSeverityBar severities={[0, 0, 0, 0]} />
             </ScrollView>
-            <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
-              {title}
-            </Text>
-            <Text style={[styles.headingText, { color: colors.hourListText }]}>
-              {text}
-            </Text>
-          </View>
+          )}
+          <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
+            {warning.info.event}
+          </Text>
+          <Text style={[styles.headingText, { color: colors.hourListText }]}>
+            {timespan}
+          </Text>
+        </View>
+        {includeArrow && (
           <View style={styles.accordionArrow}>
             <Icon
               name={open ? 'arrow-up' : 'arrow-down'}
@@ -87,7 +90,97 @@ function WarningBlock({
               color={colors.primaryText}
             />
           </View>
+        )}
+      </View>
+
+      {showDescription && (
+        <View>
+          <Text>{warning.info.description}</Text>
         </View>
+      )}
+    </View>
+  );
+};
+function WarningBlock({
+  warnings,
+  xOffset,
+}: {
+  warnings: CapWarning[];
+  xOffset?: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const { colors } = useTheme() as CustomTheme;
+  const scrollViewRef = useRef() as React.MutableRefObject<ScrollView>;
+  const { width } = useWindowDimensions();
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
+  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+  const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollTo({
+      x: xOffset ?? 0,
+      y: 0,
+      animated: true,
+    });
+  }, [xOffset]);
+
+  const headerWarning = useMemo(() => {
+    let mostSevere = warnings[0];
+    warnings.forEach((warning) => {
+      const currentSeverity = severities.indexOf(mostSevere.info.severity);
+      const severity = severities.indexOf(warning.info.severity);
+      if (severity > currentSeverity) {
+        mostSevere = warning;
+      }
+    });
+    return mostSevere;
+  }, [warnings]);
+
+  const getHeaderWarningTimeSpans = (capWarnings: CapWarning[]): string[] => {
+    const onsetSet = new Set<Date>();
+    const expiresSet = new Set<Date>();
+    capWarnings.forEach((warning: CapWarning) => {
+      onsetSet.add(warning.info.onset);
+      expiresSet.add(warning.info.expires);
+    });
+    const uniqueOnsetDates = [...onsetSet];
+    const uniqueExpiryDates = [...expiresSet];
+    const intervals: { onsetDate: Date; expiryDate: Date }[] = [];
+
+    uniqueOnsetDates.forEach((onsetDate) => {
+      const expiryDate = uniqueExpiryDates[0];
+      intervals.push({ onsetDate, expiryDate });
+    });
+
+    return intervals.map((interval) => {
+      const start = moment(interval.onsetDate)
+        .locale(locale)
+        .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+
+      const end = moment(interval.expiryDate)
+        .locale(locale)
+        .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+
+      return start === end ? start : `${start} - ${end}`;
+    });
+  };
+  const timeSpanString = [...new Set(getHeaderWarningTimeSpans(warnings))].join(
+    ', '
+  );
+
+  return (
+    <View>
+      <AccessibleTouchableOpacity onPress={() => setOpen(!open)}>
+        <WarningItem
+          warning={headerWarning}
+          includeArrow
+          includeSeverityBars
+          open={open}
+          scrollViewRef={scrollViewRef}
+          timespan={timeSpanString}
+          width={width}
+        />
       </AccessibleTouchableOpacity>
       {open && (
         <View
@@ -95,19 +188,20 @@ function WarningBlock({
             styles.openableContent,
             { backgroundColor: colors.accordionContentBackground },
           ]}>
-          <View style={[styles.row]}>
-            <WarningSymbol
-              type={warningSymbolType}
-              severity={severity}
-              size={32}
-            />
-            <View style={styles.accordionContentHeading}>
-              <Text
-                style={[styles.headingTitle, { color: colors.hourListText }]}>
-                Test
-              </Text>
-            </View>
-          </View>
+          {warnings.map((warning) => (
+            <>
+              <WarningItem
+                warning={warning}
+                includeArrow={false}
+                includeSeverityBars={false}
+                width={width}
+                showDescription
+                timespan={moment(warning.info.onset)
+                  .locale(locale)
+                  .format(`${weekdayAbbreviationFormat} ${dateFormat}`)}
+              />
+            </>
+          ))}
         </View>
       )}
     </View>
@@ -127,11 +221,6 @@ const styles = StyleSheet.create({
   severityBarContainer: {
     marginBottom: 12,
   },
-  accordionContentHeading: {
-    flexDirection: 'column',
-    marginVertical: 15,
-    marginLeft: 16,
-  },
   accordionArrow: {
     padding: 10,
     marginRight: 14,
@@ -149,10 +238,7 @@ const styles = StyleSheet.create({
   headingText: {
     fontSize: 16,
   },
-  openableContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 24,
-  },
+  openableContent: {},
   row: {
     flexDirection: 'row',
   },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
@@ -68,33 +68,34 @@ const DaySelector = ({
 };
 
 const DaySelectorList = ({
+  activeDay,
   dates,
+  onDayChange,
 }: {
-  dates: { weekday: string; date: string }[];
-}) => {
-  const [activeDay, setActiveDay] = useState(1);
-  return (
-    <ScrollView
-      style={styles.container}
-      horizontal
-      showsHorizontalScrollIndicator={false}>
-      <View style={styles.row}>
-        {dates.map(({ weekday, date }, index) => (
-          <DaySelector
-            active={index === activeDay}
-            key={weekday}
-            weekday={weekday}
-            date={date}
-            onSelect={() => setActiveDay(index)}
-            severities={severitiesMock[index] ?? [3, 3, 3, 3]}
-            index={index}
-            last={index === dates.length - 1}
-          />
-        ))}
-      </View>
-    </ScrollView>
-  );
-};
+  activeDay: number;
+  dates: { weekday: string; date: string; time: number }[];
+  onDayChange: (arg0: number) => void;
+}) => (
+  <ScrollView
+    style={styles.container}
+    horizontal
+    showsHorizontalScrollIndicator={false}>
+    <View style={styles.row}>
+      {dates.map(({ time, weekday, date }, index) => (
+        <DaySelector
+          active={activeDay === index}
+          key={time}
+          weekday={weekday}
+          date={date}
+          onSelect={() => onDayChange(index)}
+          severities={severitiesMock[index] ?? [3, 3, 3, 3]}
+          index={index}
+          last={index === dates.length - 1}
+        />
+      ))}
+    </View>
+  </ScrollView>
+);
 
 const styles = StyleSheet.create({
   capitalized: {

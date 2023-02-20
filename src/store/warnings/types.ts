@@ -41,6 +41,33 @@ export interface Warning {
   description: string;
 }
 
+export interface CapWarning {
+  identifier: string;
+  sender: string;
+  sent: Date;
+  status: string;
+  msgType: string;
+  scope: string;
+  info: {
+    language: string;
+    category: string;
+    event: string;
+    urgency: string;
+    severity: Severity;
+    certainty: string;
+    effective: Date;
+    onset: Date;
+    expires: Date;
+    senderName: string;
+    description: string;
+    web: string;
+    area: {
+      areaDesc: string;
+      polygon: string;
+    };
+  };
+}
+
 export interface LocationWarnings {
   [id: number]: WarningsData;
 }

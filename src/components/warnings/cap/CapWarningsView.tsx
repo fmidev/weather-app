@@ -1,16 +1,10 @@
-import React, { useRef, useState } from 'react';
-import {
-  Text,
-  View,
-  ScrollView,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Text, View, ScrollView, StyleSheet } from 'react-native';
 import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
 import SelectorButton from '@components/common/SelectorButton';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
+import { CustomTheme } from '@utils/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Icon from '@components/common/Icon';
 import { State } from '@store/types';
@@ -19,25 +13,15 @@ import { connect, ConnectedProps } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Config } from '@config';
 import moment from 'moment';
-import WarningBlock from './WarningBlock';
+import getCapWarnings from '@network/CapWarningsApi';
+import { CapWarning } from '@store/warnings/types';
 import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
+import TextList from './TextList';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
 });
-
-function DateIndicator({ weekDay, date }: { weekDay: string; date: string }) {
-  const { colors } = useTheme() as CustomTheme;
-  return (
-    <View style={styles.dateIndicatorEntry}>
-      <Text style={[styles.capitalized, { color: colors.hourListText }]}>
-        {weekDay}
-      </Text>
-      <Text style={{ color: colors.hourListText }}>{date}</Text>
-    </View>
-  );
-}
 
 const connector = connect(mapStateToProps, {});
 
@@ -57,22 +41,27 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
 
   const { colors } = useTheme() as CustomTheme;
 
-  const [xOffset, setXOffset] = useState<number>(0);
-  const { width } = useWindowDimensions();
+  const [capData, setCapData] = useState<CapWarning[]>();
+
   const capViewSettings = Config.get('warnings')?.capViewSettings;
+  useEffect(() => {
+    getCapWarnings().then((data) => setCapData(data));
+  }, []);
 
   const getDateIndicatorDates = () => {
     const today = new Date();
     const dates = [
       {
+        time: today.getTime(),
         date: moment(today).locale(locale).format(dateFormat),
         weekday: moment(today).locale(locale).format(weekdayAbbreviationFormat),
       },
     ];
     if (capViewSettings) {
       for (let i = 1; i < capViewSettings?.numberOfDays; i += 1) {
-        const momentObject = moment(today).add(i * 86400, 'seconds');
+        const momentObject = moment(today).add(i, 'days');
         dates.push({
+          time: momentObject.toDate().getTime(),
           date: momentObject.locale(locale).format(dateFormat),
           weekday: momentObject
             .locale(locale)
@@ -149,49 +138,14 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        <MapView dates={dates} />
+        <MapView dates={dates} capData={capData} />
         <PanelHeader
           title={`${t('warningsForNDays', {
             days: capViewSettings?.numberOfDays,
           })} - ${currentLocation?.name}`}
           justifyCenter
         />
-        <View
-          style={[
-            styles.dateIndicatorPanel,
-            { backgroundColor: colors.background },
-          ]}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={[styles.dateIndicatorRow, { width: width - 136 }]}
-            onScroll={(e) => setXOffset(e.nativeEvent.contentOffset.x)}>
-            {dates.map(({ weekday, date }) => (
-              <DateIndicator weekDay={weekday} date={date} />
-            ))}
-          </ScrollView>
-        </View>
-        <WarningBlock
-          title="Pakkasvaroitus maa-alueille"
-          text="voimassa to 24.11. - la 26.11."
-          warningSymbolType="coldWeather"
-          severity="Extreme"
-          xOffset={xOffset}
-        />
-        <WarningBlock
-          title="Liikenteen säävaroitus"
-          text="voimassa to 24.11. - la 26.11."
-          warningSymbolType="trafficWeather"
-          severity="Severe"
-          xOffset={xOffset}
-        />
-        <WarningBlock
-          title="Tuulivaroitus maa-alueille"
-          text="voimassa to 24.11. - la 26.11."
-          warningSymbolType="wind"
-          severity="Moderate"
-          xOffset={xOffset}
-        />
+        <TextList capData={capData} dates={dates} />
       </View>
       <RBSheet
         ref={legendSheetRef}
@@ -211,9 +165,6 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
 };
 
 const styles = StyleSheet.create({
-  capitalized: {
-    textTransform: 'capitalize',
-  },
   flex: {
     display: 'flex',
   },
@@ -242,23 +193,6 @@ const styles = StyleSheet.create({
   },
   dataSourcePanelUpdatedRow: {
     marginLeft: 12,
-  },
-  dateIndicatorPanel: {
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderColor: GRAYISH_BLUE,
-  },
-  dateIndicatorRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginLeft: 64,
-  },
-  dateIndicatorEntry: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginRight: 7,
-    width: 45,
   },
   infoButton: {
     marginRight: 8,
