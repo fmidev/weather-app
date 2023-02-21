@@ -9,7 +9,7 @@ import {
   GRAY_8,
 } from '@utils/colors';
 import moment from 'moment';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import Map, { Polygon } from 'react-native-maps';
 import darkMapStyle from '@utils/dark_map_style.json';
@@ -39,12 +39,25 @@ const MapView = ({
   capData?: CapWarning[];
 }) => {
   const [selectedDay, setSelectedDay] = useState<number>(0);
+  const [selectedFilters, setSelectedFilters] = useState<
+    { severity: Severity; event: string }[]
+  >([]);
 
-  const date = moment(dates[selectedDay].time);
-
-  const applicableWarnings = capData?.filter((warning) =>
-    date.isBetween(moment(warning.info.onset), moment(warning.info.expires))
+  const date = useMemo(
+    () => moment(dates[selectedDay].time),
+    [selectedDay, dates]
   );
+
+  useEffect(() => setSelectedFilters([]), [date]);
+
+  const applicableWarnings = useMemo(() => {
+    const warnings = capData?.filter((warning) =>
+      date.isBetween(moment(warning.info.onset), moment(warning.info.expires))
+    );
+
+    warnings?.sort((warning) => SEVERITIES.indexOf(warning.info.severity));
+    return warnings;
+  }, [capData, date]);
 
   const mapRef = useRef() as React.MutableRefObject<Map>;
   const { dark } = useTheme() as CustomTheme;
@@ -57,6 +70,7 @@ const MapView = ({
     applicableWarnings
       ?.map((warning) => ({
         identifier: warning.identifier,
+        event: warning.info.event,
         severity: warning?.info?.severity,
         polygons: [warning?.info.area.polygon].flat().map((polygon, index) => ({
           key: `${warning.identifier}-${index}`,
@@ -73,7 +87,25 @@ const MapView = ({
       }))
       .flat() || [];
 
-  polygonArray?.sort(({ severity }) => -1 * SEVERITIES.indexOf(severity));
+  const handleWarningTypePress = (warning: CapWarning) => {
+    const { severity, event } = warning.info;
+
+    if (
+      selectedFilters.find(
+        (selectedFilter) =>
+          selectedFilter?.severity === severity &&
+          selectedFilter.event === event
+      )
+    ) {
+      setSelectedFilters((filters) =>
+        filters.filter(
+          (filter) => filter.event !== event || filter.severity !== severity
+        )
+      );
+    } else {
+      setSelectedFilters((filters) => [...filters, { severity, event }]);
+    }
+  };
 
   return (
     <View
@@ -96,22 +128,34 @@ const MapView = ({
         scrollEnabled
         zoomEnabled={false}>
         {polygonArray?.length > 0 &&
-          polygonArray.map(({ severity, polygons }) =>
-            polygons.map((polygon) => (
-              <Polygon
-                coordinates={polygon.latLng}
-                key={polygon.key}
-                fillColor={SEVERITY_COLORS[severity]}
-              />
-            ))
-          )}
+          polygonArray
+            .filter(
+              ({ event, severity }) =>
+                !selectedFilters.find(
+                  (filter) =>
+                    filter.event === event && filter.severity === severity
+                )
+            )
+            .map(({ severity, polygons }) =>
+              polygons.map((polygon) => (
+                <Polygon
+                  coordinates={polygon.latLng}
+                  key={polygon.key}
+                  fillColor={SEVERITY_COLORS[severity]}
+                  zIndex={SEVERITIES.indexOf(severity)}
+                />
+              ))
+            )}
       </Map>
       <DaySelectorList
         dates={dates}
         activeDay={selectedDay}
         onDayChange={(index) => setSelectedDay(index)}
       />
-      <WarningTypeFiltersList />
+      <WarningTypeFiltersList
+        warnings={applicableWarnings}
+        onWarningTypePress={handleWarningTypePress}
+      />
     </View>
   );
 };
@@ -122,7 +166,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: -30,
+    paddingBottom: -30,
     marginTop: -30,
   },
   map: {
