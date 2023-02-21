@@ -10,8 +10,9 @@ import {
 } from '@utils/colors';
 import moment from 'moment';
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import Map, { Polygon } from 'react-native-maps';
+import darkMapStyle from '@utils/dark_map_style.json';
 import DaySelectorList from './DaySelectorList';
 import WarningTypeFiltersList from './WarningTypeFiltersList';
 
@@ -49,6 +50,9 @@ const MapView = ({
   const { dark } = useTheme() as CustomTheme;
   const capViewSettings = Config.get('warnings')?.capViewSettings;
 
+  const darkGoogleMapsStyle =
+    dark && Platform.OS === 'android' ? darkMapStyle : [];
+
   const polygonArray =
     applicableWarnings
       ?.map((warning) => ({
@@ -82,6 +86,7 @@ const MapView = ({
         ref={mapRef}
         testID="map"
         userInterfaceStyle={dark ? 'dark' : 'light'}
+        customMapStyle={darkGoogleMapsStyle}
         initialRegion={INITIAL_REGION}
         rotateEnabled={false}
         toolbarEnabled={false}
