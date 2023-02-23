@@ -49,10 +49,10 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   }, []);
 
   const getDateIndicatorDates = () => {
-    const today = new Date();
+    const today = moment(new Date()).hours(12).minutes(0);
     const dates = [
       {
-        time: today.getTime(),
+        time: today.toDate().getTime(),
         date: moment(today).locale(locale).format(dateFormat),
         weekday: moment(today).locale(locale).format(weekdayAbbreviationFormat),
       },

@@ -10,8 +10,9 @@ import {
 } from '@store/forecast/types';
 import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
-import { MomentObjectOutput } from 'moment';
+import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
+import { CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from './colors';
 import { converter, toPrecision, UNITS } from './units';
 
@@ -306,4 +307,57 @@ export const getIndexForDaySmartSymbol = (
     return dayArray.length - 1;
   }
   return index;
+};
+
+const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
+
+const getSeveritiesForTimePeriod = (
+  warnings: CapWarning[],
+  currentMoment: moment.Moment
+) => {
+  const severitiesForTimePeriod = warnings
+    ?.filter(
+      (warning) =>
+        moment(warning.info.onset).isBefore(currentMoment) &&
+        moment(warning.info.expires).isAfter(currentMoment)
+    )
+    .map((warning) => severities.indexOf(warning.info.severity) + 1);
+
+  const maxSeverity = Math.max(...(severitiesForTimePeriod ?? [0]));
+  return maxSeverity;
+};
+export const getSeveritiesForDays = (
+  warnings: CapWarning[] | undefined,
+  dates: number[]
+) => {
+  if (!warnings) return [];
+
+  const dailySeverities: number[][] = [];
+  dates.forEach((date) => {
+    const daySeverities: number[] = [];
+
+    const momentObject = moment(date);
+    momentObject.hour(0).minute(0);
+    daySeverities.push(
+      Math.max(0, getSeveritiesForTimePeriod(warnings, momentObject))
+    );
+
+    momentObject.add(6, 'hours');
+    daySeverities.push(
+      Math.max(0, getSeveritiesForTimePeriod(warnings, momentObject))
+    );
+
+    momentObject.add(6, 'hours');
+    daySeverities.push(
+      Math.max(0, getSeveritiesForTimePeriod(warnings, momentObject))
+    );
+
+    momentObject.add(6, 'hours');
+    daySeverities.push(
+      Math.max(0, getSeveritiesForTimePeriod(warnings, momentObject))
+    );
+
+    dailySeverities.push(daySeverities);
+  });
+  return dailySeverities;
 };

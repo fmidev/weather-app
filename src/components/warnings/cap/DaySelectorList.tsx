@@ -5,16 +5,6 @@ import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CapSeverityBar from './CapSeverityBar';
 
-const severitiesMock = [
-  [2, 2, 2, 2],
-  [3, 3, 2, 2],
-  [2, 2, 1, 0],
-  [0, 0, 0, 0],
-  [0, 0, 0, 0],
-  [0, 0, 0, 0],
-  [3, 3, 3, 3],
-];
-
 const DaySelector = ({
   active,
   onSelect,
@@ -27,7 +17,7 @@ const DaySelector = ({
   active: boolean;
   onSelect: (arg0: number) => void;
   index: number;
-  severities: number[];
+  severities?: number[];
   weekday: string;
   date: string;
   last?: boolean;
@@ -60,7 +50,7 @@ const DaySelector = ({
         </Text>
         <Text style={[styles.text, { color: colors.primaryText }]}>{date}</Text>
         <View style={styles.severityBarContainer}>
-          <CapSeverityBar severities={severities} />
+          <CapSeverityBar severities={severities ?? [0, 0, 0, 0]} />
         </View>
       </View>
     </AccessibleTouchableOpacity>
@@ -70,10 +60,12 @@ const DaySelector = ({
 const DaySelectorList = ({
   activeDay,
   dates,
+  dailySeverities,
   onDayChange,
 }: {
   activeDay: number;
   dates: { weekday: string; date: string; time: number }[];
+  dailySeverities: number[][];
   onDayChange: (arg0: number) => void;
 }) => (
   <ScrollView
@@ -88,7 +80,7 @@ const DaySelectorList = ({
           weekday={weekday}
           date={date}
           onSelect={() => onDayChange(index)}
-          severities={severitiesMock[index] ?? [3, 3, 3, 3]}
+          severities={dailySeverities[index]}
           index={index}
           last={index === dates.length - 1}
         />

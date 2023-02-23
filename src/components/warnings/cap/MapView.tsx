@@ -13,6 +13,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import Map, { Polygon } from 'react-native-maps';
 import darkMapStyle from '@utils/dark_map_style.json';
+import { getSeveritiesForDays } from '@utils/helpers';
 import DaySelectorList from './DaySelectorList';
 import WarningTypeFiltersList from './WarningTypeFiltersList';
 
@@ -30,7 +31,6 @@ const SEVERITY_COLORS: { [key: string]: string } = {
 };
 
 const SEVERITIES: Severity[] = ['Moderate', 'Severe', 'Extreme'];
-
 const MapView = ({
   dates,
   capData,
@@ -52,10 +52,12 @@ const MapView = ({
 
   const applicableWarnings = useMemo(() => {
     const warnings = capData?.filter((warning) =>
-      date.isBetween(moment(warning.info.onset), moment(warning.info.expires))
+      date.isBetween(
+        moment(warning.info.onset).hours(0).minutes(0),
+        moment(warning.info.expires).hours(24).minutes(0)
+      )
     );
 
-    warnings?.sort((warning) => SEVERITIES.indexOf(warning.info.severity));
     return warnings;
   }, [capData, date]);
 
@@ -107,6 +109,15 @@ const MapView = ({
     }
   };
 
+  const dailySeverities = useMemo<number[][]>(
+    () =>
+      getSeveritiesForDays(
+        capData,
+        dates.map(({ time }) => time)
+      ),
+    [capData, dates]
+  );
+
   return (
     <View
       style={
@@ -151,6 +162,7 @@ const MapView = ({
         dates={dates}
         activeDay={selectedDay}
         onDayChange={(index) => setSelectedDay(index)}
+        dailySeverities={dailySeverities}
       />
       <WarningTypeFiltersList
         warnings={applicableWarnings}

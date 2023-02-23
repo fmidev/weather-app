@@ -78,6 +78,7 @@ const TextList = ({
       </View>
       {Object.keys(groupedWarnings)?.map((warningGroup) => (
         <WarningBlock
+          dates={dates}
           warnings={groupedWarnings[warningGroup]}
           key={warningGroup}
           xOffset={xOffset}

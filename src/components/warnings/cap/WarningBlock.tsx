@@ -13,6 +13,7 @@ import {
 import Icon from '@components/common/Icon';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+import { getSeveritiesForDays } from '@utils/helpers';
 import WarningSymbol from '../WarningsSymbol';
 import CapSeverityBar from './CapSeverityBar';
 
@@ -20,19 +21,23 @@ const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
 
 const WarningItem = ({
   warning,
+  warningCount,
   scrollViewRef,
   width,
   timespan,
   includeSeverityBars,
+  dailySeverities,
   open,
   includeArrow,
   showDescription,
 }: {
   warning: CapWarning;
+  warningCount?: number;
   scrollViewRef?: React.MutableRefObject<ScrollView>;
   width: number;
   timespan: string;
   includeSeverityBars: boolean;
+  dailySeverities?: number[][];
   open?: boolean;
   includeArrow: boolean | undefined;
   showDescription?: boolean;
@@ -62,20 +67,13 @@ const WarningItem = ({
                 { width: width - 136 },
               ]}
               ref={scrollViewRef}>
-              <CapSeverityBar severities={[0, 0, 0, 0]} />
-              <CapSeverityBar severities={[0, 0, 1, 1]} />
-              <CapSeverityBar severities={[2, 2, 3, 2]} />
-              <CapSeverityBar severities={[0, 1, 2, 3]} />
-              <CapSeverityBar severities={[0, 1, 2, 3]} />
-              <CapSeverityBar severities={[0, 1, 2, 3]} />
-              <CapSeverityBar severities={[0, 1, 2, 3]} />
-              <CapSeverityBar severities={[0, 0, 0, 0]} />
-              <CapSeverityBar severities={[0, 0, 0, 0]} />
-              <CapSeverityBar severities={[0, 0, 0, 0]} />
+              {dailySeverities?.map((daySeverities) => (
+                <CapSeverityBar severities={daySeverities} />
+              ))}
             </ScrollView>
           )}
           <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
-            {warning.info.event}
+            {warning.info.event} {warningCount ? `(${warningCount})` : ''}
           </Text>
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
@@ -102,9 +100,11 @@ const WarningItem = ({
   );
 };
 function WarningBlock({
+  dates,
   warnings,
   xOffset,
 }: {
+  dates: { time: number; date: string; weekday: string }[];
   warnings: CapWarning[];
   xOffset?: number;
 }) {
@@ -116,6 +116,11 @@ function WarningBlock({
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
+
+  const dailySeverities = getSeveritiesForDays(
+    warnings,
+    dates.map(({ time }) => time)
+  );
 
   useEffect(() => {
     scrollViewRef.current?.scrollTo({
@@ -165,8 +170,19 @@ function WarningBlock({
       return start === end ? start : `${start} - ${end}`;
     });
   };
-  const timeSpanString = [...new Set(getHeaderWarningTimeSpans(warnings))].join(
-    ', '
+  const headerTimeSpanString = [
+    ...new Set(getHeaderWarningTimeSpans(warnings)),
+  ].join(', ');
+
+  const warningTimeSpans = warnings.map(
+    (warning) =>
+      `${moment(warning.info.onset)
+        .locale(locale)
+        .format(`${weekdayAbbreviationFormat} ${dateFormat}`)} - ${moment(
+        warning.info.expires
+      )
+        .locale(locale)
+        .format(`${weekdayAbbreviationFormat} ${dateFormat}`)}`
   );
 
   return (
@@ -174,11 +190,13 @@ function WarningBlock({
       <AccessibleTouchableOpacity onPress={() => setOpen(!open)}>
         <WarningItem
           warning={headerWarning}
+          warningCount={warnings.length}
           includeArrow
           includeSeverityBars
+          dailySeverities={dailySeverities}
           open={open}
           scrollViewRef={scrollViewRef}
-          timespan={timeSpanString}
+          timespan={headerTimeSpanString}
           width={width}
         />
       </AccessibleTouchableOpacity>
@@ -188,7 +206,7 @@ function WarningBlock({
             styles.openableContent,
             { backgroundColor: colors.accordionContentBackground },
           ]}>
-          {warnings.map((warning) => (
+          {warnings.map((warning, index) => (
             <>
               <WarningItem
                 warning={warning}
@@ -196,9 +214,7 @@ function WarningBlock({
                 includeSeverityBars={false}
                 width={width}
                 showDescription
-                timespan={moment(warning.info.onset)
-                  .locale(locale)
-                  .format(`${weekdayAbbreviationFormat} ${dateFormat}`)}
+                timespan={warningTimeSpans[index]}
               />
             </>
           ))}
