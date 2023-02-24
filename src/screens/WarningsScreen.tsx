@@ -3,7 +3,10 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 
-import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
+import {
+  fetchWarnings as fetchWarningsAction,
+  fetchCapWarnings as fetchCapWarningsAction,
+} from '@store/warnings/actions';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import WarningsWebViewPanel from '@components/warnings/WarningsWebViewPanel';
@@ -22,6 +25,7 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = {
   fetchWarnings: fetchWarningsAction,
+  fetchCapWarnings: fetchCapWarningsAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -31,6 +35,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type WarningsScreenProps = PropsFromRedux;
 const WarningsScreen: React.FC<WarningsScreenProps> = ({
   fetchWarnings,
+  fetchCapWarnings,
   location,
   announcements,
 }) => {
@@ -43,11 +48,15 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   const { useCapView } = warningsConfig;
 
   const updateWarnings = useCallback(() => {
-    if (warningsConfig.enabled && warningsConfig.apiUrl[location.country]) {
-      fetchWarnings(location);
+    if (warningsConfig.enabled) {
+      if (warningsConfig.useCapView) {
+        fetchCapWarnings();
+      } else if (warningsConfig.apiUrl[location.country]) {
+        fetchWarnings(location);
+      }
       setWarningsUpdated(Date.now());
     }
-  }, [fetchWarnings, location, warningsConfig]);
+  }, [fetchWarnings, fetchCapWarnings, location, warningsConfig]);
 
   useEffect(() => {
     const now = Date.now();

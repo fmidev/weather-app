@@ -20,7 +20,9 @@ const WarningTypeFiltersList = ({
       horizontal
       showsHorizontalScrollIndicator={false}>
       {warnings?.slice(0).map((warning) => (
-        <AccessibleTouchableOpacity onPress={() => onWarningTypePress(warning)}>
+        <AccessibleTouchableOpacity
+          key={`${warning.info.event}-${warning.info.severity}`}
+          onPress={() => onWarningTypePress(warning)}>
           <View
             style={[
               styles.filterButton,

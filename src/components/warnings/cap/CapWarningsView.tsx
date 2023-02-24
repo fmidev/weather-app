@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Text, View, ScrollView, StyleSheet } from 'react-native';
 import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
@@ -13,14 +13,14 @@ import { connect, ConnectedProps } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Config } from '@config';
 import moment from 'moment';
-import getCapWarnings from '@network/CapWarningsApi';
-import { CapWarning } from '@store/warnings/types';
+import { selectCapWarningData } from '@store/warnings/selectors';
 import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
 import TextList from './TextList';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
+  capWarnings: selectCapWarningData(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -31,6 +31,7 @@ type CapWarningsViewProps = PropsFromRedux;
 
 const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   currentLocation,
+  capWarnings,
 }) => {
   const legendSheetRef = useRef() as React.MutableRefObject<RBSheet>;
 
@@ -41,13 +42,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
 
   const { colors } = useTheme() as CustomTheme;
 
-  const [capData, setCapData] = useState<CapWarning[]>();
-
   const capViewSettings = Config.get('warnings')?.capViewSettings;
-  useEffect(() => {
-    getCapWarnings().then((data) => setCapData(data));
-  }, []);
-
   const getDateIndicatorDates = () => {
     const today = moment(new Date()).hours(12).minutes(0);
     const dates = [
@@ -138,14 +133,14 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        <MapView dates={dates} capData={capData} />
+        <MapView dates={dates} capData={capWarnings} />
         <PanelHeader
           title={`${t('warningsForNDays', {
             days: capViewSettings?.numberOfDays,
           })} - ${currentLocation?.name}`}
           justifyCenter
         />
-        <TextList capData={capData} dates={dates} />
+        <TextList capData={capWarnings} dates={dates} />
       </View>
       <RBSheet
         ref={legendSheetRef}

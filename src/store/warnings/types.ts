@@ -4,6 +4,9 @@ export const FETCH_WARNINGS = 'FETCH_WARNINGS';
 export const FETCH_WARNINGS_SUCCESS = 'FETCH_WARNINGS_SUCCESS';
 export const FETCH_WARNINGS_ERROR = 'FETCH_WARNINGS_ERROR';
 
+export const FETCH_CAP_WARNINGS = 'FETCH_CAP_WARNINGS';
+export const FETCH_CAP_WARNINGS_SUCCESS = 'FETCH_CAP_WARNINGS_SUCCESS';
+
 interface FetchWarnings {
   type: typeof FETCH_WARNINGS;
 }
@@ -21,10 +24,22 @@ interface FetchWarningsError {
   timestamp: number;
 }
 
+interface FetchCapWarnings {
+  type: typeof FETCH_CAP_WARNINGS;
+}
+
+interface FetchCapWarningsSuccess {
+  type: typeof FETCH_CAP_WARNINGS_SUCCESS;
+  data: CapWarning[];
+  timestamp: number;
+}
+
 export type WarningsActionTypes =
   | FetchWarnings
   | FetchWarningsSuccess
-  | FetchWarningsError;
+  | FetchWarningsError
+  | FetchCapWarnings
+  | FetchCapWarningsSuccess;
 
 export type WarningType = typeof knownWarningTypes[number];
 
@@ -85,6 +100,7 @@ export interface Error {
 
 export interface WarningsState {
   data: LocationWarnings;
+  capData: CapWarning[] | undefined;
   loading: boolean;
   error: boolean | Error | string;
   fetchTimestamp: number;

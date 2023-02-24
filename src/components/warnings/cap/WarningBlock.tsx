@@ -14,10 +14,20 @@ import Icon from '@components/common/Icon';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { getSeveritiesForDays } from '@utils/helpers';
+import { State } from '@store/types';
+import { selectClockType } from '@store/settings/selectors';
+import { connect } from 'react-redux';
+import { ClockType } from '@store/settings/types';
 import WarningSymbol from '../WarningsSymbol';
 import CapSeverityBar from './CapSeverityBar';
 
 const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
+
+const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
+});
+
+const connector = connect(mapStateToProps);
 
 const WarningItem = ({
   warning,
@@ -99,11 +109,14 @@ const WarningItem = ({
     </View>
   );
 };
+
 function WarningBlock({
+  clockType,
   dates,
   warnings,
   xOffset,
 }: {
+  clockType: ClockType;
   dates: { time: number; date: string; weekday: string }[];
   warnings: CapWarning[];
   xOffset?: number;
@@ -116,6 +129,7 @@ function WarningBlock({
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
+  const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
 
   const dailySeverities = getSeveritiesForDays(
     warnings,
@@ -178,11 +192,11 @@ function WarningBlock({
     (warning) =>
       `${moment(warning.info.onset)
         .locale(locale)
-        .format(`${weekdayAbbreviationFormat} ${dateFormat}`)} - ${moment(
-        warning.info.expires
-      )
+        .format(
+          `${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`
+        )} - ${moment(warning.info.expires)
         .locale(locale)
-        .format(`${weekdayAbbreviationFormat} ${dateFormat}`)}`
+        .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`)}`
   );
 
   return (
@@ -260,4 +274,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WarningBlock;
+export default connector(WarningBlock);
