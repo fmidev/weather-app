@@ -257,11 +257,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             <Text
               style={[styles.text, { color: colors.hourListText }]}
               accessibilityLabel={t('params.uvCumulated', {
-                value: numericOrDash(`${nextHourForecast.uvCumulated}`),
+                value: numericOrDash(nextHourForecast.uvCumulated?.toString()),
               })}>
               {'UV '}
               <Text style={styles.bold}>
-                {numericOrDash(`${nextHourForecast.uvCumulated}`)}
+                {numericOrDash(nextHourForecast.uvCumulated?.toString())}
               </Text>
             </Text>
           )}
