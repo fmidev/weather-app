@@ -3,6 +3,7 @@ import {
   SECONDARY_BLUE,
   GRAYISH_BLUE,
   LIGHT_BLUE,
+  HEADER_BLUE,
   WHITE,
   GRAY_8,
   GRAY_7,
@@ -35,6 +36,7 @@ import {
   RAIN_7_LIGHT,
   RAIN_8_LIGHT,
   TRANSPARENT,
+  OBSERVATION_LIST_GRAY,
 } from '@utils/colors';
 
 export const lightTheme = {
@@ -43,9 +45,9 @@ export const lightTheme = {
     primary: SECONDARY_BLUE,
     background: WHITE,
     card: WHITE,
-    text: PRIMARY_BLUE,
+    text: BLACK,
     notification: WHITE,
-    primaryText: PRIMARY_BLUE,
+    primaryText: BLACK,
     secondaryText: GRAY_3,
     border: GRAYISH_BLUE,
     inputBackground: LIGHT_BLUE,
@@ -53,7 +55,7 @@ export const lightTheme = {
     mapButtonBackground: WHITE,
     relocateButtonBackground: SECONDARY_BLUE,
     mapButtonBorder: GRAYISH_BLUE,
-    headerBackground: WHITE,
+    headerBackground: HEADER_BLUE,
     timeStepBackground: LIGHT_BLUE,
     shadow: SHADOW_LIGHT,
     screenBackground: LIGHT_BLUE,
@@ -71,7 +73,7 @@ export const lightTheme = {
     tabBarActive: SECONDARY_BLUE,
     timeSliderObservationText: GRAY_3,
     timeSliderTick: GRAY_2,
-    listTint: GRAY_1_OPACITY,
+    listTint: OBSERVATION_LIST_GRAY,
     rain: {
       0: TRANSPARENT,
       1: RAIN_1_LIGHT,

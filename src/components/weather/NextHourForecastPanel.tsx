@@ -113,19 +113,6 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.alignCenter} accessible accessibilityRole="header">
-        <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
-          {t('nextHourForecast')}
-        </Text>
-        <Text
-          style={[
-            styles.text,
-            styles.bold,
-            { color: colors.primaryText },
-          ]}>{`${t('at')} ${currentTime.format(
-          clockType === 12 ? 'h.mm a' : 'HH.mm'
-        )}`}</Text>
-      </View>
       <View style={styles.row}>
         <View
           accessible
@@ -138,14 +125,34 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           })}
         </View>
         {activeParameters.includes('temperature') && (
-          <View style={[styles.row, styles.alignStart]} accessible>
-            <Text
-              style={[styles.temperatureText, { color: colors.primaryText }]}>
-              {numericOrDash(temperatureValue)}
-            </Text>
-            <Text style={[styles.unitText, { color: colors.primaryText }]}>
-              °{temperatureUnit}
-            </Text>
+          <View style={styles.alignStart}>
+            <View accessible accessibilityRole="header">
+              <Text
+                style={[
+                  styles.text,
+                  styles.bold,
+                  { color: colors.primaryText },
+                ]}>
+                {t('nextHourForecast')}
+              </Text>
+              <Text
+                style={[
+                  styles.text,
+                  styles.bold,
+                  { color: colors.primaryText },
+                ]}>{`${t('at')} ${currentTime.format(
+                clockType === 12 ? 'h.mm a' : 'HH.mm'
+              )}`}</Text>
+            </View>
+            <View style={[styles.row, styles.alignStart]} accessible>
+              <Text
+                style={[styles.temperatureText, { color: colors.primaryText }]}>
+                {numericOrDash(temperatureValue)}
+              </Text>
+              <Text style={[styles.unitText, { color: colors.primaryText }]}>
+                °{temperatureUnit}
+              </Text>
+            </View>
           </View>
         )}
       </View>
@@ -299,9 +306,6 @@ const styles = StyleSheet.create({
   },
   alignEnd: {
     alignItems: 'flex-end',
-  },
-  alignCenter: {
-    alignItems: 'center',
   },
   separator: {
     width: '100%',

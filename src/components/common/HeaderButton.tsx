@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 
 import { useOrientation } from '@utils/hooks';
+import { WHITE } from '@utils/colors';
 import Icon from './Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
@@ -24,7 +24,6 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
   right,
 }) => {
   const isLandscape = useOrientation();
-  const { colors } = useTheme();
   return (
     <AccessibleTouchableOpacity
       onPress={onPress}
@@ -41,19 +40,13 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
           isLandscape ? styles.row : undefined,
           isLandscape && right ? styles.rowReverse : undefined,
         ]}>
-        <Icon
-          name={icon}
-          style={{ color: colors.text }}
-          width={24}
-          height={24}
-        />
+        <Icon name={icon} style={{ color: WHITE }} width={24} height={24} />
         {!!title && (
           <Text
             style={[
               styles.text,
               isLandscape && right ? styles.marginRight : undefined,
               isLandscape && !right ? styles.marginLeft : undefined,
-              { color: colors.text },
             ]}>
             {title}
           </Text>
@@ -83,6 +76,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontFamily: 'Roboto-Medium',
+    color: WHITE,
   },
   marginBottom: {
     marginBottom: 10,
