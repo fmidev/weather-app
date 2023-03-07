@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Text, View, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { State } from '@store/types';
 import { selectCurrent, selectIsGeolocation } from '@store/location/selector';
 
 import { useOrientation } from '@utils/hooks';
+import { WHITE } from '@utils/colors';
 import Icon from './Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
@@ -30,7 +30,6 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
   onPress,
 }) => {
   const { t } = useTranslation('navigation');
-  const { colors } = useTheme();
   const isLandscape = useOrientation();
 
   const title = (): string => {
@@ -50,18 +49,14 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
       <AccessibleTouchableOpacity onPress={onPress}>
         <View style={styles.row}>
           {isGeolocation && (
-            <Icon
-              name="map-marker"
-              style={{ color: colors.text }}
-              height={12}
-            />
+            <Icon name="map-marker" style={{ color: WHITE }} height={12} />
           )}
           <Text
             accessibilityRole="header"
             accessibilityLabel={
               isGeolocation ? `${title()}, ${t('currentLocation')}` : title()
             }
-            style={[styles.title, { color: colors.text }]}>
+            style={[styles.title]}>
             {title()}
           </Text>
         </View>
@@ -70,7 +65,6 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
             style={[
               styles.timezone,
               !isLandscape && styles.timeZoneMarginBottom,
-              { color: colors.text },
             ]}>{`${t('timezone')}: ${currentLocation.timezone}`}</Text>
         )}
       </AccessibleTouchableOpacity>
@@ -90,10 +84,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
     textAlign: 'center',
+    color: WHITE,
   },
   timezone: {
     fontFamily: 'Roboto-Regular',
     fontSize: 12,
+    color: WHITE,
   },
   row: {
     flexDirection: 'row',

@@ -40,7 +40,6 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
-import HeaderIcon from '@components/common/HeaderIcon';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
@@ -54,6 +53,7 @@ import {
   TRANSPARENT,
   SHADOW_DARK,
   SHADOW_LIGHT,
+  HEADER_BLUE,
 } from '@utils/colors';
 import {
   selectInitialTab,
@@ -176,15 +176,14 @@ const Navigator: React.FC<Props> = ({
     headerTintColor: PRIMARY_BLUE,
     headerTitleStyle: {
       fontFamily: 'Roboto-Bold',
+      color: WHITE,
     },
     headerStyle: {
       ...styles.header,
       shadowColor: Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
     },
     headerTitleAlign: 'center',
-    headerBackImage: ({ tintColor }: { tintColor: string }) => (
-      <HeaderBackImage tintColor={tintColor} />
-    ),
+    headerBackImage: () => <HeaderBackImage tintColor={WHITE} />,
     headerBackTitleVisible: false,
     headerBackAccessibilityLabel: t('navigation:backAccessibilityLabel'),
   };
@@ -296,7 +295,7 @@ const Navigator: React.FC<Props> = ({
         component={OthersScreen}
         options={{
           ...CommonHeaderOptions,
-          headerTitle: () => <HeaderIcon />,
+          headerTitle: () => null,
         }}
       />
       <OthersStack.Screen
@@ -399,7 +398,7 @@ const Navigator: React.FC<Props> = ({
 
   return (
     <>
-      <StatusBar backgroundColor={WHITE} barStyle="dark-content" />
+      <StatusBar backgroundColor={HEADER_BLUE} barStyle="dark-content" />
       <NavigationContainer
         onStateChange={navigationTabChanged}
         theme={lightTheme}>
@@ -567,6 +566,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 1,
     elevation: 8,
+    backgroundColor: HEADER_BLUE,
   },
 });
 

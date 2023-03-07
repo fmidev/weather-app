@@ -68,6 +68,8 @@ export const RAIN_7_DARK = '#AE5200';
 export const RAIN_8_DARK = '#760000';
 
 export const CHART_BLUE = '#7594EB';
+export const HEADER_BLUE = '#10399E';
+export const OBSERVATION_LIST_GRAY = '#F0F0F0';
 
 export type Rain = {
   0: string;

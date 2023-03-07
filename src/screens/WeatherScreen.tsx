@@ -11,7 +11,6 @@ import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
 import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
 
-import GradientWrapper from '@components/weather/GradientWrapper';
 import NextHourForecastPanel from '@components/weather/NextHourForecastPanel';
 import ForecastPanel from '@components/weather/ForecastPanel';
 import ObservationPanel from '@components/weather/ObservationPanel';
@@ -116,25 +115,18 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   }, [location, updateForecast, updateObservation, updateWarnings]);
 
   return (
-    <GradientWrapper>
-      <View>
-        <ScrollView
-          style={[styles.container]}
-          contentContainerStyle={[
-            styles.contentContainer,
-            !weatherConfig.observation.enabled
-              ? styles.extraPaddingBottom
-              : undefined,
-          ]}
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={announcements && [0]}>
-          <CrisisStrip style={styles.crisisStrip} />
-          <NextHourForecastPanel />
-          <ForecastPanel />
-          <ObservationPanel />
-        </ScrollView>
-      </View>
-    </GradientWrapper>
+    <View>
+      <ScrollView
+        style={[styles.container]}
+        contentContainerStyle={[styles.contentContainer]}
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={announcements && [0]}>
+        <CrisisStrip style={styles.crisisStrip} />
+        <NextHourForecastPanel />
+        <ForecastPanel />
+        <ObservationPanel />
+      </ScrollView>
+    </View>
   );
 };
 
@@ -145,14 +137,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     ...Platform.select({
       android: {
-        paddingBottom: 28,
-      },
-    }),
-  },
-  extraPaddingBottom: {
-    ...Platform.select({
-      android: {
-        paddingBottom: 56,
+        paddingBottom: 0,
       },
     }),
   },
