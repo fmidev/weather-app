@@ -105,7 +105,9 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             borderTopColor: isActive ? colors.tabBarActive : colors.border,
           },
         ]}>
-        <AccessibleTouchableOpacity onPress={() => setActiveDayIndex(index)}>
+        <AccessibleTouchableOpacity
+          accessibilityState={{ selected: isActive }}
+          onPress={() => setActiveDayIndex(index)}>
           <Text
             style={[
               styles.dateText,
