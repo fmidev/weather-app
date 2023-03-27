@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-
 import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
