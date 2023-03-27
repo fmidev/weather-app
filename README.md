@@ -100,6 +100,10 @@ end`
 4. Delete VALID_ARCHS from main project's and Pods project's build settings.
 5. Clean project + rebuild
 
+If you have problems you might need to do these as well:
+
+`rm -rf ~/Library/Developer/Xcode/DerivedData/ && pod deintegrate && pod update`
+
 Run project:
 1. `cd ios && pod install && cd ..`
 2. `npx react-native run-ios`
