@@ -97,10 +97,12 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
             height: 40,
           })}
           <Text
-            style={[
-              styles.tempText,
-              { color: colors.text },
-            ]}>{`${temperatureValue}°${temperatureUnit}`}</Text>
+            accessibilityLabel={`${temperatureValue} ${t(
+              `observation:paramUnits:°${temperatureUnit}`
+            )}`}
+            style={[styles.tempText, { color: colors.text }]}>
+            {`${temperatureValue}°${temperatureUnit}`}
+          </Text>
         </View>
         {selectedCallout && selectedCallout === name && (
           <View style={styles.calloutContainer}>
@@ -123,7 +125,11 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
                   ],
                 }}
               />
-              <Text style={[styles.calloutText, { color: colors.text }]}>
+              <Text
+                style={[styles.calloutText, { color: colors.text }]}
+                accessibilityLabel={`${windSpeedValue} ${t(
+                  `observation:paramUnits:${windUnit}`
+                )}`}>
                 {`${windSpeedValue} ${windUnit}`}
               </Text>
             </View>

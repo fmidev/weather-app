@@ -111,7 +111,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
           unit,
           decimals,
           divider || 1,
-          true,
+          false,
           decimalSeparator
         );
 
@@ -139,8 +139,12 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
               </Text>
             </View>
             <View style={styles.flex}>
-              <Text style={[styles.panelValue, { color: colors.hourListText }]}>
-                {value}
+              <Text
+                style={[styles.panelValue, { color: colors.hourListText }]}
+                accessibilityLabel={`${value} ${
+                  unit ? t(`paramUnits.${unit}`) : ''
+                }`}>
+                {value} {unit}
               </Text>
             </View>
           </View>
