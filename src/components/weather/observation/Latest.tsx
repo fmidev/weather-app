@@ -13,6 +13,7 @@ import { Config } from '@config';
 import { selectClockType } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
+import InfoMessage from '../InfoMessage';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -44,6 +45,10 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
     moment(latestObservation.epochtime * 1000)
       .locale(locale)
       .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+
+  const hoursSinceLatestObservation =
+    latestObservation?.epochtime &&
+    moment.duration(Date.now() - latestObservation.epochtime * 1000).asHours();
 
   const latestParameters: {
     [key in keyof Partial<ObservationParameters>]: {
@@ -154,7 +159,10 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
 
   return (
     <>
-      {!!latestObservation && (
+      {hoursSinceLatestObservation > 2 && (
+        <InfoMessage translationKey="tooOld" />
+      )}
+      {!!latestObservation && hoursSinceLatestObservation <= 2 && (
         <View>
           <View style={[styles.row]}>
             <View style={[styles.latestObservation]} accessible>
