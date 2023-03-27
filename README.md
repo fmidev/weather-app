@@ -47,7 +47,7 @@ Follow this [guide](https://reactnative.dev/docs/environment-setup) for setting 
 
 ## **Development**
 
-Before running iOS or Android start metro: `yarn start`
+Before running iOS or Android start metro: `yarn start`. Also make sure you have a valid DefaultConfig.ts.
 
 #### **Run in development environment (Android)**
 
@@ -86,8 +86,26 @@ R5CR207HAFP	device
 
 #### **Run in development environment (iOS)**
 
-1. `cd ios && pod install && cd ..`
+**If you have arm-based mac, do these before running:**
+1. Open Project's build settings in Xcode (Project not Targets)
+2. Add Any iOS Simulator SDK + "arm64" to Debug and Release under Architectures - Excluded Architectures
+3. Add following lines to end of your Podfile under ios -folder:
 
+`post_install do |installer|
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+  end
+end`
+
+4. Delete VALID_ARCHS from main project's and Pods project's build settings.
+5. Clean project + rebuild
+
+If you have problems you might need to do these as well:
+
+`rm -rf ~/Library/Developer/Xcode/DerivedData/ && pod deintegrate && pod update`
+
+Run project:
+1. `cd ios && pod install && cd ..`
 2. `npx react-native run-ios`
 
 ### Troubleshooting
