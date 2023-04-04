@@ -11,7 +11,7 @@ const getCapWarnings = async () => {
   const { feed } = parse(feedData, { ignoreAttributes: false });
   const capWarnings: CapWarning[] = (
     await Promise.all(
-      feed.entry.map((entry) =>
+      feed.entry.map((entry: { link: { '@_href': string } }) =>
         axiosClient({
           url: `http://10.0.2.2:3001/url?url=${entry.link['@_href']}`,
         })
