@@ -7,16 +7,18 @@ const getCapWarnings = async () => {
   const { capViewSettings } = Config.get('warnings');
 
   const url = capViewSettings?.datasources[0]?.url;
-
-  const results = await Promise.all(
-    [1, 2, 3, 4, 5, 6, 7, 8].map((num) =>
-      axiosClient({ url: `${url}${num - 1}` })
+  const { data: feedData } = await axiosClient({ url });
+  const { feed } = parse(feedData, { ignoreAttributes: false });
+  const capWarnings: CapWarning[] = (
+    await Promise.all(
+      feed.entry.map((entry) =>
+        axiosClient({
+          url: `http://10.0.2.2:3001/url?url=${entry.link['@_href']}`,
+        })
+      )
     )
-  );
-  const parsedData: CapWarning[] = results.map(
-    (result) => parse(result.data).alert
-  );
-  return parsedData;
+  ).map(({ data }) => parse(data).alert);
+  return capWarnings;
 };
 
 export default getCapWarnings;

@@ -69,6 +69,12 @@ interface CapViewSettings {
   mapHeight?: number;
   numberOfDays: number;
   datasources: CapDataSource[];
+  initialRegion: {
+    latitude: number;
+    longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
+  };
 }
 
 interface Warnings {

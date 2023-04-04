@@ -1,7 +1,7 @@
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { useTheme } from '@react-navigation/native';
-import { Severity, CapWarning } from '@store/warnings/types';
-import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
+import { Severity, CapWarning, WarningType } from '@store/warnings/types';
+import { CustomTheme, GRAYISH_BLUE, GRAY_4 } from '@utils/colors';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import {
   Text,
@@ -53,15 +53,20 @@ const WarningItem = ({
   showDescription?: boolean;
 }) => {
   const { colors } = useTheme() as CustomTheme;
+  const { t } = useTranslation('warnings');
+
   return (
     <View>
       <View
         style={[
           styles.headingContainer,
-          { backgroundColor: !showDescription ? colors.background : undefined },
+          showDescription && styles.noBorderBottom,
+          {
+            backgroundColor: !showDescription ? colors.background : undefined,
+          },
         ]}>
         <WarningSymbol
-          type="coldWeather"
+          type={warning.info.event as WarningType}
           severity={warning.info.severity}
           size={32}
         />
@@ -83,7 +88,10 @@ const WarningItem = ({
             </ScrollView>
           )}
           <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
-            {warning.info.event} {warningCount ? `(${warningCount})` : ''}
+            {(warning.info.event as WarningType)
+              ? t(`types.${warning.info.event}`)
+              : ''}
+            {warningCount && warningCount > 1 ? ` (${warningCount})` : ''}
           </Text>
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
@@ -102,8 +110,8 @@ const WarningItem = ({
       </View>
 
       {showDescription && (
-        <View>
-          <Text>{warning.info.description}</Text>
+        <View style={styles.warningDescription}>
+          <Text style={{ color: GRAY_4 }}>{warning.info.description}</Text>
         </View>
       )}
     </View>
@@ -157,47 +165,87 @@ function WarningBlock({
   }, [warnings]);
 
   const getHeaderWarningTimeSpans = (capWarnings: CapWarning[]): string[] => {
-    const onsetSet = new Set<Date>();
-    const expiresSet = new Set<Date>();
-    capWarnings.forEach((warning: CapWarning) => {
-      onsetSet.add(warning.info.onset);
-      expiresSet.add(warning.info.expires);
-    });
-    const uniqueOnsetDates = [...onsetSet];
-    const uniqueExpiryDates = [...expiresSet];
-    const intervals: { onsetDate: Date; expiryDate: Date }[] = [];
+    const timespans = capWarnings.map((warning) => ({
+      onset: warning.info.onset,
+      expiry: warning.info.expires,
+    }));
+    timespans.sort(
+      (span1, span2) =>
+        moment(span1.onset).toDate().getTime() -
+        moment(span2.onset).toDate().getTime()
+    );
+    const intervals = [];
 
-    uniqueOnsetDates.forEach((onsetDate) => {
-      const expiryDate = uniqueExpiryDates[0];
-      intervals.push({ onsetDate, expiryDate });
-    });
+    let index = 0;
+    let currentTimespan = timespans[index];
+    let spans = [];
 
-    return intervals.map((interval) => {
-      const start = moment(interval.onsetDate)
+    while (index < timespans.length) {
+      const span = timespans[index];
+      // Get all timespans that begin before current has ended
+
+      if (
+        moment(span.onset).toDate().getTime() <
+        moment(currentTimespan.expiry).toDate().getTime()
+      ) {
+        spans.push({
+          timespan: span,
+          time: moment(span.expiry).toDate().getTime(),
+          index,
+        });
+      } else {
+        const lastToExpire = Math.max(...spans.map((s) => s.time));
+        intervals.push({
+          onset: moment(currentTimespan.onset),
+          expiry: moment(lastToExpire),
+        });
+        currentTimespan = timespans[index];
+        spans = [];
+      }
+
+      index += 1;
+    }
+
+    if (currentTimespan && (spans.length === 0 || intervals.length === 0)) {
+      intervals.push({
+        onset: moment(currentTimespan.onset),
+        expiry: moment(currentTimespan.expiry),
+      });
+    }
+
+    return intervals.map(({ onset, expiry }) => {
+      const onsetFormatted = onset
         .locale(locale)
         .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
 
-      const end = moment(interval.expiryDate)
+      if (onset.isSame(expiry, 'day')) return onsetFormatted;
+
+      const expiryFormatted = expiry
         .locale(locale)
         .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
-
-      return start === end ? start : `${start} - ${end}`;
+      return `${onsetFormatted} - ${expiryFormatted}`;
     });
   };
   const headerTimeSpanString = [
     ...new Set(getHeaderWarningTimeSpans(warnings)),
   ].join(', ');
 
-  const warningTimeSpans = warnings.map(
-    (warning) =>
-      `${moment(warning.info.onset)
-        .locale(locale)
-        .format(
-          `${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`
-        )} - ${moment(warning.info.expires)
-        .locale(locale)
-        .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`)}`
-  );
+  const warningTimeSpans = warnings.map((warning) => {
+    const start = moment(warning.info.onset);
+    const end = moment(warning.info.expires);
+    const startFormatted = start
+      .locale(locale)
+      .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`);
+
+    const endFormatted = end
+      .locale(locale)
+      .format(
+        start.isSame(end, 'day')
+          ? timeFormat
+          : `${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`
+      );
+    return `${startFormatted} - ${endFormatted}`;
+  });
 
   return (
     <View>
@@ -248,6 +296,9 @@ const styles = StyleSheet.create({
     width: '100%',
     flexGrow: 0,
   },
+  noBorderBottom: {
+    borderBottomWidth: 0,
+  },
   severityBarContainer: {
     marginBottom: 12,
   },
@@ -271,6 +322,12 @@ const styles = StyleSheet.create({
   openableContent: {},
   row: {
     flexDirection: 'row',
+  },
+  warningDescription: {
+    marginHorizontal: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: GRAYISH_BLUE,
   },
 });
 

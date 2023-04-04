@@ -17,13 +17,6 @@ import { getSeveritiesForDays } from '@utils/helpers';
 import DaySelectorList from './DaySelectorList';
 import WarningTypeFiltersList from './WarningTypeFiltersList';
 
-const INITIAL_REGION = {
-  latitude: 17.99702,
-  longitude: -77.25,
-  latitudeDelta: 1,
-  longitudeDelta: 2.5,
-};
-
 const SEVERITY_COLORS: { [key: string]: string } = {
   Extreme: CAP_WARNING_RED,
   Severe: CAP_WARNING_ORANGE,
@@ -48,18 +41,31 @@ const MapView = ({
     [selectedDay, dates]
   );
 
-  useEffect(() => setSelectedFilters([]), [date]);
-
   const applicableWarnings = useMemo(() => {
-    const warnings = capData?.filter((warning) =>
-      date.isBetween(
-        moment(warning.info.onset).hours(0).minutes(0),
-        moment(warning.info.expires).hours(24).minutes(0)
-      )
-    );
+    const dayStart = date.hours(0).minutes(0);
+    const dayEnd = date.clone().add(1, 'days');
+    const warnings = capData?.filter((warning) => {
+      const onsetMoment = moment(warning.info.onset);
+      const expiryMoment = moment(warning.info.expires);
+
+      const endsDuringDay =
+        onsetMoment.isBefore(dayStart) && expiryMoment.isAfter(dayStart);
+      const isContainedInDay =
+        onsetMoment.isAfter(dayStart) && expiryMoment.isBefore(dayEnd);
+      const startsDuringDay =
+        onsetMoment.isBefore(dayEnd) && expiryMoment.isAfter(dayEnd);
+      const dayContained =
+        onsetMoment.isBefore(dayStart) && expiryMoment.isAfter(dayEnd);
+
+      return (
+        endsDuringDay || isContainedInDay || startsDuringDay || dayContained
+      );
+    });
 
     return warnings;
   }, [capData, date]);
+
+  useEffect(() => setSelectedFilters([]), [date]);
 
   const mapRef = useRef() as React.MutableRefObject<Map>;
   const { dark } = useTheme() as CustomTheme;
@@ -130,7 +136,7 @@ const MapView = ({
         testID="map"
         userInterfaceStyle={dark ? 'dark' : 'light'}
         customMapStyle={darkGoogleMapsStyle}
-        initialRegion={INITIAL_REGION}
+        initialRegion={capViewSettings?.initialRegion}
         rotateEnabled={false}
         toolbarEnabled={false}
         onRegionChangeComplete={() => {}}
@@ -167,6 +173,7 @@ const MapView = ({
       <WarningTypeFiltersList
         warnings={applicableWarnings}
         onWarningTypePress={handleWarningTypePress}
+        activeWarnings={selectedFilters}
       />
     </View>
   );

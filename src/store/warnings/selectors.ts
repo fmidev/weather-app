@@ -110,3 +110,8 @@ export const selectCapWarningData = createSelector(
   selectWarningsDomain,
   (warnings) => warnings.capData
 );
+
+export const selectFetchSuccessTime = createSelector(
+  selectWarningsDomain,
+  (warnings) => warnings.fetchSuccessTime
+);

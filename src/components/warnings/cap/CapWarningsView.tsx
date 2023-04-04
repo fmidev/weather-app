@@ -13,7 +13,10 @@ import { connect, ConnectedProps } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Config } from '@config';
 import moment from 'moment';
-import { selectCapWarningData } from '@store/warnings/selectors';
+import {
+  selectCapWarningData,
+  selectFetchSuccessTime,
+} from '@store/warnings/selectors';
 import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
 import TextList from './TextList';
@@ -21,6 +24,7 @@ import TextList from './TextList';
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
   capWarnings: selectCapWarningData(state),
+  updated: selectFetchSuccessTime(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -30,6 +34,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type CapWarningsViewProps = PropsFromRedux;
 
 const CapWarningsView: React.FC<CapWarningsViewProps> = ({
+  updated,
   currentLocation,
   capWarnings,
 }) => {
@@ -115,7 +120,9 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                     color: colors.hourListText,
                   },
                 ]}>
-                23.11. klo 22:00
+                {moment(updated)
+                  .locale(locale)
+                  .format(locale === 'en' ? 'DD MMM' : 'D.M. HH.mm')}
               </Text>
             </View>
             <AccessibleTouchableOpacity

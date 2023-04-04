@@ -1,7 +1,7 @@
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { useTheme } from '@react-navigation/native';
-import { CapWarning } from '@store/warnings/types';
-import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
+import { CapWarning, Severity, WarningType } from '@store/warnings/types';
+import { CustomTheme, SECONDARY_BLUE } from '@utils/colors';
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import WarningSymbol from '../WarningsSymbol';
@@ -9,9 +9,11 @@ import WarningSymbol from '../WarningsSymbol';
 const WarningTypeFiltersList = ({
   warnings,
   onWarningTypePress,
+  activeWarnings,
 }: {
   warnings?: CapWarning[];
   onWarningTypePress: (arg0: CapWarning) => void;
+  activeWarnings: { severity: Severity; event: string }[];
 }) => {
   const { colors } = useTheme() as CustomTheme;
   return (
@@ -26,11 +28,20 @@ const WarningTypeFiltersList = ({
           <View
             style={[
               styles.filterButton,
-              { backgroundColor: colors.background },
+
+              {
+                backgroundColor: colors.background,
+                borderColor: colors.background,
+              },
+              !activeWarnings.find(
+                ({ severity, event }) =>
+                  warning.info.severity === severity &&
+                  warning.info.event === event
+              ) && styles.activeFilter,
             ]}>
             <WarningSymbol
               severity={warning.info.severity}
-              type="coldWeather"
+              type={warning.info.event as WarningType}
             />
           </View>
         </AccessibleTouchableOpacity>
@@ -51,8 +62,10 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 7,
     marginRight: 12,
-    borderWidth: 1,
-    borderColor: GRAYISH_BLUE,
+    borderWidth: 2,
+  },
+  activeFilter: {
+    borderColor: SECONDARY_BLUE,
   },
 });
 
