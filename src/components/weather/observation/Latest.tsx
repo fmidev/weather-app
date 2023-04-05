@@ -132,6 +132,8 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
           } (${value})`;
         }
 
+        if (value === '-') return null;
+
         return (
           <View key={parameter} style={styles.observationRow} accessible>
             <View style={styles.flex}>
