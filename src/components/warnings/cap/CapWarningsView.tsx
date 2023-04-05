@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
-import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
-import SelectorButton from '@components/common/SelectorButton';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
@@ -83,14 +82,6 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
             styles.dataSourcePanelContainer,
             { backgroundColor: colors.background },
           ]}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.dataSourcePanel}>
-            <SelectorButton active text={currentLocation?.name} />
-            <SelectorButton text="Koko Suomi" />
-            <SelectorButton text="Merialueet" />
-          </ScrollView>
           <View
             style={[
               styles.flex,
@@ -187,11 +178,6 @@ const styles = StyleSheet.create({
   },
   dataSourcePanelContainer: {
     paddingTop: 18,
-  },
-  dataSourcePanel: {
-    flexDirection: 'row',
-    marginBottom: 16,
-    marginLeft: 12,
   },
   dataSourcePanelUpdatedRow: {
     marginLeft: 12,
