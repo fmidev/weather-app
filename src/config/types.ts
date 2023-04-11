@@ -75,6 +75,9 @@ interface CapViewSettings {
     latitudeDelta: number;
     longitudeDelta: number;
   };
+  mapZoomEnabled?: boolean;
+  mapScrollEnabled?: boolean;
+  mapToolbarEnabled?: boolean;
 }
 
 interface Warnings {

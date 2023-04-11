@@ -138,12 +138,12 @@ const MapView = ({
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={capViewSettings?.initialRegion}
         rotateEnabled={false}
-        toolbarEnabled={false}
+        toolbarEnabled={capViewSettings?.mapToolbarEnabled}
         onRegionChangeComplete={() => {}}
         onPress={() => {}}
         moveOnMarkerPress={false}
-        scrollEnabled
-        zoomEnabled={false}>
+        scrollEnabled={capViewSettings?.mapScrollEnabled}
+        zoomEnabled={capViewSettings?.mapZoomEnabled}>
         {polygonArray?.length > 0 &&
           polygonArray
             .filter(
