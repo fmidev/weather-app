@@ -26,6 +26,7 @@ export const GRAY_2 = '#5E626E';
 export const GRAY_1 = '#898D9B';
 
 export const GRAY_1_OPACITY = 'rgba(142,142,147,0.08)';
+export const GRAY_1_OPACITY_15 = 'rgba(142,142,147,0.15)';
 
 export const GRAY_6_TRANSPARENT = 'rgba(28,28,30,0.0)';
 export const GRAY_6_95 = 'rgba(28,28,30,0.95)';
@@ -57,6 +58,10 @@ export const RAIN_5_LIGHT = 'rgb(11,89,178)';
 export const RAIN_6_LIGHT = 'rgb(11,89,178)';
 export const RAIN_7_LIGHT = 'rgb(91,26,142)';
 export const RAIN_8_LIGHT = 'rgb(91,26,142)';
+export const CAP_WARNING_NEUTRAL = '#E4F7F3';
+export const CAP_WARNING_YELLOW = '#FFFB7B';
+export const CAP_WARNING_ORANGE = '#FFCB5F';
+export const CAP_WARNING_RED = '#FF5A5A';
 
 export const RAIN_1_DARK = '#C1FAFB';
 export const RAIN_2_DARK = '#6BB1C9';
@@ -119,5 +124,6 @@ export type CustomTheme = {
     timeSliderTick: string;
     listTint: string;
     rain: Rain;
+    accordionContentBackground: string;
   };
 };

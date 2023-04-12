@@ -13,6 +13,7 @@ import { Config } from '@config';
 import { selectClockType } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
+import InfoMessage from '../InfoMessage';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -44,6 +45,10 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
     moment(latestObservation.epochtime * 1000)
       .locale(locale)
       .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+
+  const hoursSinceLatestObservation =
+    latestObservation?.epochtime &&
+    moment.duration(Date.now() - latestObservation.epochtime * 1000).asHours();
 
   const latestParameters: {
     [key in keyof Partial<ObservationParameters>]: {
@@ -111,7 +116,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
           unit,
           decimals,
           divider || 1,
-          true,
+          false,
           decimalSeparator
         );
 
@@ -127,6 +132,8 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
           } (${value})`;
         }
 
+        if (value === '-') return null;
+
         return (
           <View key={parameter} style={styles.observationRow} accessible>
             <View style={styles.flex}>
@@ -139,8 +146,12 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
               </Text>
             </View>
             <View style={styles.flex}>
-              <Text style={[styles.panelValue, { color: colors.hourListText }]}>
-                {value}
+              <Text
+                style={[styles.panelValue, { color: colors.hourListText }]}
+                accessibilityLabel={`${value} ${
+                  unit ? t(`paramUnits.${unit}`) : ''
+                }`}>
+                {value} {unit}
               </Text>
             </View>
           </View>
@@ -150,7 +161,10 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
 
   return (
     <>
-      {!!latestObservation && (
+      {hoursSinceLatestObservation > 2 && (
+        <InfoMessage translationKey="tooOld" />
+      )}
+      {!!latestObservation && hoursSinceLatestObservation <= 2 && (
         <View>
           <View style={[styles.row]}>
             <View style={[styles.latestObservation]} accessible>

@@ -181,3 +181,38 @@ export const converter = (unitAbb: string, value: number): number => {
       return value;
   }
 };
+
+export const getForecastParameterUnitTranslationKey = (unit: string) => {
+  switch (unit) {
+    case '°C':
+    case 'C':
+      return 'celsius';
+    case '°F':
+    case 'F':
+      return 'fahrenheit';
+    case 'm/s':
+      return 'metersPerSecond';
+    case 'km/h':
+      return 'kilometersPerHour';
+    case 'mph':
+      return 'milesPerHour';
+    case 'kn':
+      return 'knots';
+    case 'bft':
+      return 'beaufort';
+    case 'mm':
+      return 'millimeters';
+    case 'in':
+      return 'inches';
+    case 'hPa':
+      return 'hectopascals';
+    case 'mbar':
+      return 'millibars';
+    case 'mmHg':
+      return 'millimetersOfMercury';
+    case 'inHg':
+      return 'inchesOfMercury';
+    default:
+      return '';
+  }
+};
