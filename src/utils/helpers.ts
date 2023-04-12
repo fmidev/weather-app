@@ -10,8 +10,9 @@ import {
 } from '@store/forecast/types';
 import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
-import { MomentObjectOutput } from 'moment';
+import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
+import { CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from './colors';
 import { converter, toPrecision, UNITS } from './units';
 
@@ -306,4 +307,79 @@ export const getIndexForDaySmartSymbol = (
     return dayArray.length - 1;
   }
   return index;
+};
+
+const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
+
+const getSeveritiesForTimePeriod = (
+  warnings: CapWarning[],
+  start: moment.Moment,
+  end: moment.Moment
+) => {
+  const severitiesForTimePeriod = warnings
+    ?.filter((warning) => {
+      const onset = moment(warning.info.onset);
+      const expires = moment(warning.info.expires);
+      const beginsDuringPeriod = onset.isBetween(start, end);
+      const endsDuringPeriod = expires.isBetween(start, end);
+      const periodContained = onset.isBefore(start) && expires.isAfter(end);
+      return beginsDuringPeriod || endsDuringPeriod || periodContained;
+    })
+    .map((warning) => severities.indexOf(warning.info.severity) + 1);
+
+  const maxSeverity = Math.max(...(severitiesForTimePeriod ?? [0]));
+  return maxSeverity;
+};
+export const getSeveritiesForDays = (
+  warnings: CapWarning[] | undefined,
+  dates: number[]
+) => {
+  if (!warnings) return [];
+
+  const dailySeverities: number[][] = [];
+  dates.forEach((date) => {
+    const daySeverities: number[] = [];
+
+    const startMomentObject = moment(date);
+    startMomentObject.hour(0).minute(0);
+    const endMomentObject = startMomentObject.clone().add(6, 'hours');
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    dailySeverities.push(daySeverities);
+  });
+  return dailySeverities;
 };

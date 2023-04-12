@@ -71,6 +71,25 @@ const defaultConfig: ConfigType = {
     apiUrl: {
       FI: 'url', // [countryCode]: 'url' 
     },
+    capViewSettings: {
+      mapHeight: 500,
+      numberOfDays: 10,
+      datasources: [
+        {
+          id: 1,
+          url: 'url',
+          urlIcons: '',
+        },
+      ],
+      initialRegion: {
+        latitude: 17.99702,
+        longitude: -77.25,
+        latitudeDelta: 1,
+        longitudeDelta: 2.5,
+      },
+      mapZoomEnabled: true,
+      mapScrollEnabled: false,
+    },
   },
   settings: {
     languages: ['fi', 'en', 'sv'],
