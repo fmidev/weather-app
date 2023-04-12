@@ -62,12 +62,12 @@ type Props = PropsFromRedux;
 
 const SettingsScreen: React.FC<Props> = ({
   clockType,
-  // theme,
+  theme,
   geoids,
   // units,
   // updateUnits,
   updateClockType,
-  // updateTheme,
+  updateTheme,
   updateLocationsLocales,
 }) => {
   const [locationPermission, setLocationPermission] = useState<
@@ -82,7 +82,7 @@ const SettingsScreen: React.FC<Props> = ({
   //   wind: useRef(),
   //   pressure: useRef(),
   // } as { [key: string]: React.MutableRefObject<RBSheet> };
-  const { languages } = Config.get('settings');
+  const { languages, themes } = Config.get('settings');
 
   useEffect(() => {
     const subscriber = AppState.addEventListener(
@@ -333,81 +333,194 @@ const SettingsScreen: React.FC<Props> = ({
             </View>
           </>
         )}
+        {themes.light && themes.dark && (
+          <>
+            <View
+              style={[
+                styles.rowWrapper,
+                styles.withBorderBottom,
+                styles.withMarginTop,
+                { borderBottomColor: colors.border },
+              ]}>
+              <View style={styles.row}>
+                <Text
+                  style={[styles.title, { color: colors.text }]}
+                  testID="settings_theme_header"
+                  accessibilityRole="header">
+                  {t('settings:appearance')}
+                </Text>
+              </View>
+            </View>
+          </>
+        )}
+        <View>
+          {themes.light && themes.dark && (
+            <>
+              <View
+                style={[
+                  styles.rowWrapper,
+                  styles.withBorderBottom,
+                  { borderBottomColor: colors.border },
+                ]}>
+                <AccessibleTouchableOpacity
+                  onPress={() =>
+                    theme === 'light' ? {} : updateTheme('light')
+                  }
+                  delayPressIn={100}
+                  testID="settings_set_theme_light"
+                  accessibilityState={{ selected: theme === 'light' }}
+                  accessibilityRole="button"
+                  accessibilityHint={`${t('settings:appearanceHint')} ${t(
+                    'settings:appearanceLight'
+                  )}`}>
+                  <View style={styles.row}>
+                    <Text style={[styles.text, { color: colors.text }]}>
+                      {t('settings:appearanceLight')}
+                    </Text>
+                    {theme === 'light' && (
+                      <View testID="settings_theme_light">
+                        <Icon
+                          name="checkmark"
+                          size={22}
+                          style={{ color: colors.text }}
+                        />
+                      </View>
+                    )}
+                  </View>
+                </AccessibleTouchableOpacity>
+              </View>
+              <View
+                style={[
+                  styles.rowWrapper,
+                  styles.withBorderBottom,
+                  { borderBottomColor: colors.border },
+                ]}>
+                <AccessibleTouchableOpacity
+                  onPress={() => (theme === 'dark' ? {} : updateTheme('dark'))}
+                  delayPressIn={100}
+                  testID="settings_set_theme_dark"
+                  accessibilityState={{ selected: theme === 'dark' }}
+                  accessibilityRole="button"
+                  accessibilityHint={`${t('settings:appearanceHint')} ${t(
+                    'settings:appearanceDark'
+                  )}`}>
+                  <View style={styles.row}>
+                    <Text style={[styles.text, { color: colors.text }]}>
+                      {t('settings:appearanceDark')}
+                    </Text>
+                    {theme === 'dark' && (
+                      <View testID="settings_theme_dark">
+                        <Icon
+                          name="checkmark"
+                          size={22}
+                          style={{ color: colors.text }}
+                        />
+                      </View>
+                    )}
+                  </View>
+                </AccessibleTouchableOpacity>
+              </View>
+              <View
+                style={[
+                  styles.rowWrapper,
+                  styles.withBorderBottom,
+                  { borderBottomColor: colors.border },
+                ]}>
+                <AccessibleTouchableOpacity
+                  onPress={() =>
+                    theme === 'automatic' ? {} : updateTheme('automatic')
+                  }
+                  delayPressIn={100}
+                  testID="settings_set_theme_automatic"
+                  accessibilityState={{ selected: theme === 'automatic' }}
+                  accessibilityRole="button"
+                  accessibilityHint={
+                    theme === 'automatic'
+                      ? ''
+                      : `${t('settings:appearanceHint')} ${t(
+                          'settings:appearanceAutomatic'
+                        )}`
+                  }>
+                  <View style={styles.row}>
+                    <Text style={[styles.text, { color: colors.text }]}>
+                      {t('settings:appearanceAutomatic')}
+                    </Text>
+                    {theme === 'automatic' && (
+                      <View testID="settings_theme_automatic">
+                        <Icon
+                          name="checkmark"
+                          size={22}
+                          style={{ color: colors.text }}
+                        />
+                      </View>
+                    )}
+                  </View>
+                </AccessibleTouchableOpacity>
+              </View>
+            </>
+          )}
 
-        <View
-          style={[
-            styles.rowWrapper,
-            styles.withBorderBottom,
-            styles.withMarginTop,
-            { borderBottomColor: colors.border },
-          ]}>
-          <View style={styles.row}>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('settings:clock')}
-            </Text>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              styles.withMarginTop,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              onPress={() => updateClockType(12)}
+              delayPressIn={100}
+              accessibilityState={{
+                selected: clockType === 12,
+              }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:clockSettingHint')} ${t(
+                '12-hour-clock'
+              )}`}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {t('12-hour-clock')}
+                </Text>
+                {clockType === 12 && (
+                  <Icon
+                    name="checkmark"
+                    size={22}
+                    style={{ color: colors.text }}
+                  />
+                )}
+              </View>
+            </AccessibleTouchableOpacity>
           </View>
-        </View>
-        <View
-          style={[
-            styles.rowWrapper,
-            styles.withBorderBottom,
-            { borderBottomColor: colors.border },
-          ]}>
-          <AccessibleTouchableOpacity
-            onPress={() => updateClockType(12)}
-            delayPressIn={100}
-            accessibilityState={{
-              selected: clockType === 12,
-            }}
-            accessibilityRole="button"
-            accessibilityHint={`${t('settings:clockSettingHint')} ${t(
-              '12-hour-clock'
-            )}`}>
-            <View style={styles.row}>
-              <Text style={[styles.text, { color: colors.text }]}>
-                {t('12-hour-clock')}
-              </Text>
-              {clockType === 12 && (
-                <Icon
-                  name="checkmark"
-                  size={22}
-                  style={{ color: colors.text }}
-                />
-              )}
-            </View>
-          </AccessibleTouchableOpacity>
-        </View>
-        <View
-          style={[
-            styles.rowWrapper,
-            styles.withBorderBottom,
-            { borderBottomColor: colors.border },
-          ]}>
-          <AccessibleTouchableOpacity
-            onPress={() => updateClockType(24)}
-            delayPressIn={100}
-            accessibilityState={{
-              selected: clockType === 24,
-            }}
-            accessibilityRole="button"
-            accessibilityHint={`${t('settings:clockSettingHint')} ${t(
-              'settings:24-hour-clock'
-            )}`}>
-            <View style={styles.row}>
-              <Text style={[styles.text, { color: colors.text }]}>
-                {t('settings:24-hour-clock')}
-              </Text>
-              {clockType === 24 && (
-                <Icon
-                  name="checkmark"
-                  size={22}
-                  style={{ color: colors.text }}
-                />
-              )}
-            </View>
-          </AccessibleTouchableOpacity>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              onPress={() => updateClockType(24)}
+              delayPressIn={100}
+              accessibilityState={{
+                selected: clockType === 24,
+              }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:clockSettingHint')} ${t(
+                'settings:24-hour-clock'
+              )}`}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {t('settings:24-hour-clock')}
+                </Text>
+                {clockType === 24 && (
+                  <Icon
+                    name="checkmark"
+                    size={22}
+                    style={{ color: colors.text }}
+                  />
+                )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
         </View>
         {/* </View> */}
         {/* {units && (

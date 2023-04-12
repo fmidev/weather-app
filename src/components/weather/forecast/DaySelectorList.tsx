@@ -106,6 +106,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
           },
         ]}>
         <AccessibleTouchableOpacity
+          accessible
           accessibilityState={{ selected: isActive }}
           onPress={() => setActiveDayIndex(index)}>
           <Text
@@ -137,6 +138,11 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
               accessibilityLabel={t('forecast:fromTo', {
                 min: convertedMinTemperature,
                 max: convertedMaxTemperature,
+                unit: t(
+                  temperatureUnit === 'C'
+                    ? 'forecast:celsius'
+                    : 'forecast:fahrenheit'
+                ),
               })}>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${temperatureUnit}`}</Text>
           )}
         </AccessibleTouchableOpacity>
