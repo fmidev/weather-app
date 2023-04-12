@@ -23,6 +23,39 @@ platform :android do
   
   # Set Slack webhook
   slack_url = ENV["SLACK_WEB_HOOK_URL"]
+	
+  desc "Increment build and version number and push to repository - Build number = version code, version number = version name"
+  lane :increment_android_version do |options|
+    should_commit = options.fetch(:should_commit, false)
+    commit_message = options.fetch(:commit_message, "android: bump build and version number (version code) [skip ci]")
+    should_push = options.fetch(:should_push, false)
+    package = load_json(json_path: '../package.json')
+    git_pull
+    # ensure_git_status_clean if should_commit
+    vc_params = {
+      :app_project_dir => './app/'
+    }
+    if options[:build_number]
+      params[:version_code] = options[:build_number].to_i
+    end
+    android_increment_version_code(vc_params)
+    vn_params = {
+      app_project_dir: './app/',
+      version_name: package['version']
+    }
+    android_increment_version_name(vn_params)
+    new_version_code = Actions.lane_context[Actions::SharedValues::ANDROID_VERSION_CODE]
+    UI.important("Incremented android version code to #{new_version_code}")
+    new_version_name = Actions.lane_context[Actions::SharedValues::ANDROID_VERSION_NAME]
+    UI.important("Incremented android version name to #{new_version_name}")
+    if should_commit
+      gradle_path = "./app/build.gradle"
+      git_add(path: gradle_path)
+      git_commit(path: gradle_path, message: commit_message)
+      # Push the new commit and tag back to your git remote
+      push_to_git_remote if should_push
+    end
+  end
   
   # Sign, build and deploy to Google Play Store
   desc "Sign, build, and deploy to Google Play Store"
@@ -37,51 +70,58 @@ platform :android do
   # Google Play store version code.
   desc "Get version code and version name"
      lane :get_version_code_and_version_name do
-	# ensure_git_status_clean
-	android_get_version_code(app_project_dir: './android/app/')
-	android_get_version_name(app_project_dir: './android/app/')
-  end
-
+	android_get_version_code(app_project_dir: './app/')
+	android_get_version_name(app_project_dir: './app/')
+   end
+  
   # Validate Google Play Store key, build and sign aab
   desc "Release for the Android beta"
     lane :build_and_sign do
 	# Validate Google Play Store key
 	validate_play_store_json_key(
-  		json_key: ENV["ANDROID_JSON_KEY_FILE"]
+		json_key: ENV["GPLAY_JSON_KEY_FILE"]
 	)
 	# Gradle clean
-        gradle(task: 'clean', project_dir: './android')
+        gradle(task: 'clean', project_dir: './')
 	# Gradle sign aab -file
-	gradle(task: 'bundle', build_type: "Release", project_dir: './android',properties: {
+	gradle(task: 'bundle', build_type: "Release", project_dir: './',properties: {
             "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_FILE"],
             "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASSWORD"],
             "android.injected.signing.key.alias" => ENV["ANDROID_KEYSTORE_ALIAS"],
             "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"]
         })
    end
-  
+	
   # Deploy to Google Play Store
   desc "Deploy a new version to the Google Play"
     lane :deploy do
 	  # Supply via Fastlane supply -command to Google Play Store
-	  supply(package_name: 'fi.fmi.mobileweather', json_key: ENV["GPLAY_JSON_KEY_FILE"], track: 'internal', release_status: 'draft')
+	  supply(package_name: ENV["ANDROID_PACKAGE_NAME"], json_key: ENV["GPLAY_JSON_KEY_FILE"], track: 'internal', release_status: 'draft')
   end
 	
   # Build uploading success message to Slack, if lanes are completed successfully
-  after_all do |lane|
+	after_all do |lane|
+		if lane != :increment_android_version
     	slack(
               message: "Android Aab built and uploaded successfully to Google Play Store !",
               success: true,
               slack_url: slack_url
 	)
-   end
-	
+		else
+			puts "Skip slack"
+		end
+	end
+   
    # Error message to Slack
-   error do |lane, exception|
+	error do |lane, exception|
+		if lane != :increment_android_version
     	slack(
       	      message: exception.message,
               success: false,
               slack_url: slack_url
-	)
-    end
+		)
+		else
+			puts "Skip Slack"
+		end
+	end
 end

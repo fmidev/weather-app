@@ -2,4 +2,5 @@
 #
 # Ensure this file is checked in to source control!
 
+gem 'fastlane-plugin-android_version_manager'
 gem 'fastlane-plugin-load_json'
