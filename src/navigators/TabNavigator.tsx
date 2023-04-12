@@ -126,7 +126,7 @@ const Navigator: React.FC<Props> = ({
       Appearance.getColorScheme() === 'dark');
 
   const warningsEnabled = Config.get('warnings').enabled;
-
+  const onboardingWizardEnabled = Config.get('onboardingWizard').enabled;
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
   const [warningsSeverity, setWarningsSeverity] = useState<number>(0);
@@ -416,7 +416,7 @@ const Navigator: React.FC<Props> = ({
     return null;
   }
 
-  if (!didLaunchApp) {
+  if (!didLaunchApp && onboardingWizardEnabled) {
     return (
       <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
         <SetupStackScreen />
