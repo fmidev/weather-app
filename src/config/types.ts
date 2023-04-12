@@ -130,6 +130,10 @@ interface DarkThemeEnabled {
 
 type Themes = LightThemeEnabled | DarkThemeEnabled;
 
+interface OnboardingWizard {
+  enabled: boolean;
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -175,4 +179,5 @@ export interface ConfigType {
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
   unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
+  onboardingWizard: OnboardingWizard;
 }

@@ -101,6 +101,9 @@ const defaultConfig: ConfigType = {
       url: 'https://www.socialmedia.example',
     },
   ],
+  onboardingWizard: {
+    enabled: true,
+  }
 };
 
 export default defaultConfig;
