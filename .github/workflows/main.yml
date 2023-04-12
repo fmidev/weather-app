@@ -110,6 +110,11 @@ jobs:
         with:
           ruby-version: '2.7.6'
           
+      # Update bundler
+      - name: Update bundler
+        run: bundle update --bundler
+        working-directory: android
+          
       # Bundle install
       - name: Bundle install
         run: gem install bundler && bundle install
