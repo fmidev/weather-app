@@ -154,7 +154,7 @@ jobs:
              ANDROID_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
              ANDROID_PACKAGE_NAME: ${{secrets.ANDROID_PACKAGE_NAME}}
              GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
-             SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
+             # SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
         working-directory: android
       # Upload artifact
       - name: Upload build artifacts
@@ -244,7 +244,7 @@ jobs:
          IOS_DEVELOPER_TEAM_ID: ${{secrets.IOS_DEVELOPER_TEAM_ID}}
          IOS_PROVISIONINGPROFILE_NAME: ${{SECRETS.IOS_PROVISIONINGPROFILE_NAME}}
          IOS_CODE_SIGNING_IDENTITY: ${{secrets.IOS_CODE_SIGNING_IDENTITY}}
-         SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
+         # SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
         working-directory: ios
  
       - name: Upload app-store ipa and dsyms to artifacts
