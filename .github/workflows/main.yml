@@ -155,7 +155,7 @@ jobs:
           WEATHER_APP_RELEASE_STORE_PASSWORD: ${{ secrets.WEATHER_APP_RELEASE_STORE_PASSWORD }}
           WEATHER_APP_RELEASE_KEY_ALIAS: ${{ secrets.WEATHER_APP_RELEASE_KEY_ALIAS }}
           WEATHER_APP_RELEASE_KEY_PASSWORD: ${{ secrets.WEATHER_APP_RELEASE_KEY_PASSWORD }}
-          SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+          SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
         run: |
           echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
           chmod +x ./gradlew
@@ -243,14 +243,14 @@ jobs:
          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
          ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-         IOS_KEYCHAIN_PASSWORD: ${{secrets.IOS_KEYCHAIN_PASSWORD}}
+         IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
          CERTIFICATE_PATH: ${{runner.temp}}/build_certificate.p12
          IOS_DIST_SIGNING_KEY_PASSWORD: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
-         IOS_APP_IDENTIFIER: ${{secrets.IOS_APP_IDENTIFIER}}
-         IOS_DEVELOPER_TEAM_ID: ${{secrets.IOS_DEVELOPER_TEAM_ID}}
-         IOS_PROVISIONINGPROFILE_NAME: ${{SECRETS.IOS_PROVISIONINGPROFILE_NAME}}
-         IOS_CODE_SIGNING_IDENTITY: ${{secrets.IOS_CODE_SIGNING_IDENTITY}}
-         SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
+         IOS_APP_IDENTIFIER: ${{ secrets.IOS_APP_IDENTIFIER }}
+         IOS_DEVELOPER_TEAM_ID: ${{ secrets.IOS_DEVELOPER_TEAM_ID }}
+         IOS_PROVISIONINGPROFILE_NAME: ${{ secrets.IOS_PROVISIONINGPROFILE_NAME }}
+         IOS_CODE_SIGNING_IDENTITY: ${{ secrets.IOS_CODE_SIGNING_IDENTITY }}
+         SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
         working-directory: ios
 
       - name: Upload app-store ipa and dsyms to artifacts
