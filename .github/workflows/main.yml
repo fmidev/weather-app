@@ -157,10 +157,11 @@ jobs:
           WEATHER_APP_RELEASE_KEY_PASSWORD: ${{ secrets.WEATHER_APP_RELEASE_KEY_PASSWORD }}
           SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
         run: |
-          env
+          echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
           chmod +x ./gradlew
           bundle exec fastlane android build_sign_and_deploy
         working-directory: android
+
       # Upload artifact
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
