@@ -145,16 +145,12 @@ jobs:
       # Build and sign
       - name: Build
         env:
-          ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-          ANDROID_KEYSTORE_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          KEYSTORE: ${{ steps.android_keystore.outputs.filePath }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
           GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
-          WEATHER_APP_RELEASE_STORE_FILE: ${{ secrets.WEATHER_APP_RELEASE_STORE_FILE }}
-          WEATHER_APP_RELEASE_STORE_PASSWORD: ${{ secrets.WEATHER_APP_RELEASE_STORE_PASSWORD }}
-          WEATHER_APP_RELEASE_KEY_ALIAS: ${{ secrets.WEATHER_APP_RELEASE_KEY_ALIAS }}
-          WEATHER_APP_RELEASE_KEY_PASSWORD: ${{ secrets.WEATHER_APP_RELEASE_KEY_PASSWORD }}
           SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
         run: |
           echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env

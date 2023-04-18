@@ -84,7 +84,6 @@ platform :android do
 	# Gradle clean
         gradle(task: 'clean', project_dir: './')
 	# Gradle sign aab -file
-  puts ENV["KEYSTORE"]
 	gradle(task: 'bundle', build_type: "Release", project_dir: './',properties: {
             "android.injected.signing.store.file" => ENV["KEYSTORE"],
             "android.injected.signing.store.password" => ENV["SIGNING_STORE_PASSWORD"],
