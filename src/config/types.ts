@@ -182,6 +182,7 @@ export interface ConfigType {
         parameters: (keyof ForecastParameters)[];
       }[];
       defaultParameters: DisplayParameters[];
+      excludeDayLength?: boolean;
     };
     observation: ObservationEnabled | ObservationDisabled;
   };

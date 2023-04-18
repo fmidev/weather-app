@@ -68,10 +68,16 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   const {
     data,
     defaultParameters: [defaultParameter],
+    excludeDayLength,
   } = Config.get('weather').forecast;
   const activeParameters = data.flatMap(({ parameters }) => parameters);
 
-  const regex = new RegExp([...activeParameters, DAY_LENGTH].join('|'));
+  const regex = new RegExp(
+    (excludeDayLength
+      ? [...activeParameters]
+      : [...activeParameters, DAY_LENGTH]
+    ).join('|')
+  );
   const activeConstants = constants.filter((constant) =>
     regex.test(constant)
   ) as DisplayParameters[];
