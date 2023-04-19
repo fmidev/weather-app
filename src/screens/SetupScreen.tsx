@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { SetupStackParamList } from '@navigators/typesa';
+import { SetupStackParamList } from '@navigators/types';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
