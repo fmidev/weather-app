@@ -202,11 +202,18 @@ jobs:
         with:
           ruby-version: '2.7.6'
 
+      # Yarn install
       - name: Install dependencies
         run: yarn install
 
+      # Gem install bundler + bundle install
       - name: Install Ruby Dependencies
         run: gem install bundler && bundle install
+        working-directory: ios
+
+      # Update bundler
+      - name: Update bundler
+        run: bundle update --bundler
         working-directory: ios
 
       # Install Pods
