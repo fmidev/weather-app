@@ -63,7 +63,7 @@ platform :ios do
      app_store_connect_api_key(
       key_id: ENV["ASC_KEY_ID"],
       issuer_id: ENV["ASC_ISSUER_ID"],
-      key_content: ENV["ASC_KEY"],
+      key_content: "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgKi5M0mi/UpBoN9+8\nEotD547qpbf8dcyN9LNNPQOUxfOgCgYIKoZIzj0DAQehRANCAATVhyLvnmtVvhE2\n7yZygszJ8rOjlWAX2FvOYfw8RfdbZIeppGjtCIV7AfaxfvhdRhS/70bCp7imVFeQ\n05frMSnn\n-----END PRIVATE KEY-----",  #ENV["ASC_KEY"],
       is_key_content_base64: true,
       in_house: false # detecting this via ASC private key not currently supported
       )
