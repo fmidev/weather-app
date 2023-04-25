@@ -336,6 +336,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 9U8VDS92K8;
 						LastSwiftMigration = 1240;
 						ProvisioningStyle = Automatic;
 					};
@@ -778,8 +779,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 228;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 229;
+				DEVELOPMENT_TEAM = 9U8VDS92K8;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -789,7 +790,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = jm.gov.metservice;
+				PRODUCT_BUNDLE_IDENTIFIER = jm.gov.metservice.weather;
 				PRODUCT_NAME = MobileWeather;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MobileWeather-Bridging-Header.h";
@@ -808,8 +809,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 228;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 229;
+				DEVELOPMENT_TEAM = 9U8VDS92K8;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -818,7 +819,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = jm.gov.metservice;
+				PRODUCT_BUNDLE_IDENTIFIER = jm.gov.metservice.weather;
 				PRODUCT_NAME = MobileWeather;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MobileWeather-Bridging-Header.h";
