@@ -121,7 +121,7 @@ const defaultConfig: ConfigType = {
     },
   ],
   onboardingWizard: {
-    enabled: true,
+    enabled: false,
   }
 };
 
