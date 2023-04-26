@@ -27,6 +27,7 @@ import {
 import { isOdd } from '@utils/helpers';
 import { DAY_LENGTH } from '@store/forecast/constants';
 import { selectClockType } from '@store/settings/selectors';
+import { Config } from '@config';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
@@ -59,6 +60,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
+  const { excludeDayLength } = Config.get('weather').forecast;
 
   const virtualizedList = useRef() as React.MutableRefObject<
     VirtualizedList<TimeStepData>
@@ -366,7 +368,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
       </View>
       {displayParams
         .map((displayParam) => displayParam[1])
-        .includes(DAY_LENGTH) && <DayDurationRow />}
+        .includes(DAY_LENGTH) &&
+        !excludeDayLength && <DayDurationRow />}
       <LinearGradient
         pointerEvents="none"
         style={[styles.gradient, styles.gradientLeft]}
