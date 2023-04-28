@@ -131,7 +131,7 @@ def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitect
 def areUploadKeystoreEnvsSet = System.getenv("WEATHER_APP_RELEASE_STORE_FILE") != null &&
                                 System.getenv("WEATHER_APP_RELEASE_STORE_PASSWORD") != null &&
                                 System.getenv("WEATHER_APP_RELEASE_KEY_ALIAS") != null &&
-                                System.getenv("WEATHER_RELEASE_KEY_PASSWORD") != null
+                                System.getenv("WEATHER_APP_RELEASE_KEY_PASSWORD") != null
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystorePropertiesFileExists = keystorePropertiesFile.exists()
 def keystoreProperties = new Properties()
