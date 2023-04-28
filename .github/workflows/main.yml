@@ -16,7 +16,7 @@ on:
       name:
         type: choice
         description: Select Platform(s)
-        options: 
+        options:
         - iOS
         - Android
         - Android and iOS
@@ -61,7 +61,7 @@ jobs:
        run: |
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
-         
+
      # Run lint -tests
      - name: Run Eslint tests
        if: ${{ false }}
@@ -94,7 +94,7 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install
-          
+
       # Get defaultConfig
       - name: Get defaultConfig
         env:
@@ -103,7 +103,7 @@ jobs:
         run: |
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
-         
+
       # Install Ruby
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
@@ -114,12 +114,12 @@ jobs:
       - name: Update bundler
         run: bundle update --bundler
         working-directory: android
-          
+
       # Bundle install
       - name: Bundle install
         run: gem install bundler && bundle install
         working-directory: android
-        
+
       # Decode upload keystore and Play Store json -key
       - name: Decode Service Account Key JSON File
         uses: timheuer/base64-to-file@v1
@@ -133,7 +133,7 @@ jobs:
         with:
           fileName: "android_keystore.keystore"
           encodedString: ${{ secrets.KEYSTORE }}
-      
+
       - name: Fastlane Increment Version Code and Version Name
         if: ${{ github.event.inputs.increment == 'true' }}
         run: |
@@ -141,7 +141,7 @@ jobs:
           git config user.name "actions"
           bundle exec fastlane android increment_android_version should_commit:true should_push:true
         working-directory: android
-        
+
       # Build and sign
       - name: Build
         run: |
@@ -157,6 +157,7 @@ jobs:
              GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
              SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
         working-directory: android
+
       # Upload artifact
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
@@ -185,7 +186,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-          
+
       # Get defaultConfig
       - name: Get defaultConfig
         env:
@@ -194,25 +195,25 @@ jobs:
         run: |
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
-         
+
       # Install Ruby
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7.6'
-          
+
       - name: Install dependencies
         run: yarn install
 
       - name: Install Ruby Dependencies
         run: gem install bundler && bundle install
         working-directory: ios
-        
+
       # Install Pods
       - name: Install pods
         run: pod install
         working-directory: ios
-          
+
       # Create and encode p12 certificate and import certificate to keychain 
       - name: Install the Apple certificate and provisioning profile
         env:
@@ -223,7 +224,7 @@ jobs:
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           # import certificate from secrets
           echo -n "$IOS_DIST_SIGNIN_KEY" | base64 --decode --output $CERTIFICATE_PATH
-          
+
       - name: Fastlane Increment Build and Version Number
         if: ${{ github.event.inputs.increment == 'true' }}
         run: |
@@ -231,23 +232,23 @@ jobs:
           git config user.name "actions"
           bundle exec fastlane ios increment_version should_commit:true should_push:true
         working-directory: ios
-    
+
       - name: Build & upload iOS binary
         run: bundle exec fastlane ios build_upload_testflight
         env:
          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
          ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-         IOS_KEYCHAIN_PASSWORD: ${{secrets.IOS_KEYCHAIN_PASSWORD}}
+         IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
          CERTIFICATE_PATH: ${{runner.temp}}/build_certificate.p12
          IOS_DIST_SIGNING_KEY_PASSWORD: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
-         IOS_APP_IDENTIFIER: ${{secrets.IOS_APP_IDENTIFIER}}
-         IOS_DEVELOPER_TEAM_ID: ${{secrets.IOS_DEVELOPER_TEAM_ID}}
-         IOS_PROVISIONINGPROFILE_NAME: ${{SECRETS.IOS_PROVISIONINGPROFILE_NAME}}
-         IOS_CODE_SIGNING_IDENTITY: ${{secrets.IOS_CODE_SIGNING_IDENTITY}}
-         SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
+         IOS_APP_IDENTIFIER: ${{ secrets.IOS_APP_IDENTIFIER }}
+         IOS_DEVELOPER_TEAM_ID: ${{ secrets.IOS_DEVELOPER_TEAM_ID }}
+         IOS_PROVISIONINGPROFILE_NAME: ${{ secrets.IOS_PROVISIONINGPROFILE_NAME }}
+         IOS_CODE_SIGNING_IDENTITY: ${{ secrets.IOS_CODE_SIGNING_IDENTITY }}
+         SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
         working-directory: ios
- 
+
       - name: Upload app-store ipa and dsyms to artifacts
         uses: actions/upload-artifact@v3
         with:
