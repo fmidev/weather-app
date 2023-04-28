@@ -145,6 +145,7 @@ jobs:
       # Build and sign
       - name: Build
         run: |
+          echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
           chmod +x ./gradlew
           bundle exec fastlane android build_sign_and_deploy
         env:
