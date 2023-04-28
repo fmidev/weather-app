@@ -53,7 +53,6 @@ const WarningItem = ({
   showDescription?: boolean;
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation('warnings');
 
   return (
     <View>
@@ -88,10 +87,8 @@ const WarningItem = ({
             </ScrollView>
           )}
           <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
-            {(warning.info.event as WarningType)
-              ? t(`types.${warning.info.event}`)
-              : ''}
-            {warningCount && warningCount > 1 ? ` (${warningCount})` : ''}
+            {(warning.info.event as WarningType) ? warning.info.event : ''}
+            {warningCount && warningCount > 1 ? ` (${warningCount} pcs)` : ''}
           </Text>
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
