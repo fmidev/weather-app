@@ -53,7 +53,10 @@ const WarningItem = ({
   showDescription?: boolean;
 }) => {
   const { colors } = useTheme() as CustomTheme;
-
+  const areaDesc = warning.info.area.areaDesc
+    .charAt(0)
+    .toUpperCase()
+    .concat(warning.info.area.areaDesc.substring(1));
   return (
     <View>
       <View
@@ -93,6 +96,7 @@ const WarningItem = ({
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
           </Text>
+          <Text style={[styles.headingText]}>{areaDesc}</Text>
         </View>
         {includeArrow && (
           <View style={styles.accordionArrow}>
