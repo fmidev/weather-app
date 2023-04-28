@@ -109,6 +109,11 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7.6'
+
+      # Update bundler
+      - name: Update bundler
+        run: bundle update --bundler
+        working-directory: android
           
       # Bundle install
       - name: Bundle install
