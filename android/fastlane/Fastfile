@@ -85,10 +85,10 @@ platform :android do
         gradle(task: 'clean', project_dir: './')
 	# Gradle sign aab -file
 	gradle(task: 'bundle', build_type: "Release", project_dir: './',properties: {
-            "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_FILE"],
-            "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASSWORD"],
-            "android.injected.signing.key.alias" => ENV["ANDROID_KEYSTORE_ALIAS"],
-            "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"]
+            "android.injected.signing.store.file" => ENV["KEYSTORE"],
+            "android.injected.signing.store.password" => ENV["SIGNING_STORE_PASSWORD"],
+            "android.injected.signing.key.alias" => ENV["SIGNING_KEY_ALIAS"],
+            "android.injected.signing.key.password" => ENV["SIGNING_KEY_PASSWORD"]
         })
    end
 	
