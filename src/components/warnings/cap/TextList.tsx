@@ -84,6 +84,16 @@ const TextList = ({
           xOffset={xOffset}
         />
       ))}
+
+      {Object.keys(groupedWarnings).length === 0 && (
+        <View
+          style={[
+            styles.noActiveWarningsPanel,
+            { backgroundColor: colors.background },
+          ]}>
+          <Text>No active warnings</Text>
+        </View>
+      )}
     </>
   );
 };
@@ -108,6 +118,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 7,
     width: 45,
+  },
+  noActiveWarningsPanel: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingVertical: 12,
   },
 });
 
