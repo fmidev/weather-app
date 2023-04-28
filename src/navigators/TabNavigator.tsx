@@ -74,7 +74,7 @@ import {
   OthersStackParamList,
   MapStackParamList,
   WeatherStackParamList,
-} from './types';
+} from './types_a';
 import WarningsTabIcon from './WarningsTabIcon';
 
 const mapStateToProps = (state: State) => ({

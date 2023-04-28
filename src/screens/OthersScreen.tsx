@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-import { OthersStackParamList } from '@navigators/types';
+import { OthersStackParamList } from '@navigators/types_a';
 import { Config } from '@config';
 
 interface Props {

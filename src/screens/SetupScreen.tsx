@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { SetupStackParamList } from '@navigators/types';
+import { SetupStackParamList } from '@navigators/types_a';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 

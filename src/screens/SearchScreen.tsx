@@ -16,7 +16,7 @@ import { useTheme } from '@react-navigation/native';
 import Icon from '@components/common/Icon';
 import CloseButton from '@components/common/CloseButton';
 
-import { MapStackParamList, WeatherStackParamList } from '@navigators/Types';
+import { MapStackParamList, WeatherStackParamList } from '@navigators/types_a';
 
 import { State } from '@store/types';
 
