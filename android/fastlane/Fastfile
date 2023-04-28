@@ -22,7 +22,7 @@ platform :android do
   # end
   
   # Set Slack webhook
-  slack_url = ENV["SLACK_WEB_HOOK_URL"]
+  slack_url = ENV["SLACK_WEB_HOOK_URL"] ? ENV["SLACK_WEB_HOOK_URL"] : ''
 	
   desc "Increment build and version number and push to repository - Build number = version code, version number = version name"
   lane :increment_android_version do |options|
@@ -101,7 +101,7 @@ platform :android do
 	
   # Build uploading success message to Slack, if lanes are completed successfully
 	after_all do |lane|
-		if lane != :increment_android_version
+		if lane != :increment_android_version && slack_url != ''
     	slack(
               message: "Android Aab built and uploaded successfully to Google Play Store !",
               success: true,
@@ -114,7 +114,7 @@ platform :android do
    
    # Error message to Slack
 	error do |lane, exception|
-		if lane != :increment_android_version
+		if lane != :increment_android_version && slack_url != ''
     	slack(
       	      message: exception.message,
               success: false,

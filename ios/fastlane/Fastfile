@@ -21,7 +21,7 @@ default_platform(:ios)
 
 platform :ios do
   # Set Slack webhook
-  ios_slack_url = ENV["SLACK_WEB_HOOK_URL"]
+  ios_slack_url = ENV["SLACK_WEB_HOOK_URL"] ? ENV["SLACK_WEB_HOOK_URL"] : ''
   
    desc "Increment build and version number and push to repository"
    lane :increment_version do |options|
@@ -153,7 +153,7 @@ platform :ios do
 	
    # Build uploading success message to Slack, if lanes are completed successfully
    after_all do |lane|
-	if lane != :increment_version
+	if lane != :increment_version && ios_slack_url != ''
     	slack(
               message: "iOS ipa built and uploaded successfully to Testflight !",
               success: true,
@@ -166,7 +166,7 @@ platform :ios do
 	
     # Error message to Slack
     error do |lane, exception|
-	if lane != :increment_version
+	if lane != :increment_version && ios_slack_url != ''
     	slack(
       	      message: exception.message,
               success: false,
