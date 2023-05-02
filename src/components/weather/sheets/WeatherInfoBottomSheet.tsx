@@ -496,7 +496,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                         color: colors.hourListText,
                       },
                     ]}>
-                    RH%
+                    Hum%
                   </Text>
                 </View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
