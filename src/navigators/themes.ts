@@ -59,7 +59,7 @@ export const lightTheme = {
     timeStepBackground: LIGHT_BLUE,
     shadow: SHADOW_LIGHT,
     screenBackground: LIGHT_BLUE,
-    cardHeader: PRIMARY_BLUE,
+    cardHeader: HEADER_BLUE,
     cardShadow: GRAYISH_BLUE,
     warningsIconFill: PRIMARY_BLUE,
     selectedDayBackground: LIGHT_BLUE,
