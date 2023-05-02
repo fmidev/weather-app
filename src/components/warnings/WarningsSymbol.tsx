@@ -18,19 +18,7 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({
     Extreme: 'red',
   };
 
-  const typeMap: { [key in WarningType]: string } = {
-    thunderstorm: 'thunder-storm',
-    wind: 'wind',
-    rain: 'rain',
-    trafficWeather: 'traffic-weather',
-    pedestrianSafety: 'pedestrian-safety',
-    forestFireWeather: 'forest-fire-weather',
-    grassFireWeather: 'grass-fire-weather',
-    hotWeather: 'hot-weather',
-    coldWeather: 'hot-weather',
-    uvNote: 'uv-note',
-    flooding: 'flooding',
-  };
+  const typeMap: { [key in WarningType]?: string } = {};
 
   let name = 'warnings';
   const typeName = typeMap[type];
@@ -39,6 +27,8 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({
     if (!['uvNote', 'grassFireWeather', 'pedestrianSafety'].includes(type)) {
       name += `-${colorMap[severity]}`;
     }
+  } else {
+    name += `-generic-${colorMap[severity]}`;
   }
 
   return <Icon name={name} width={size ?? 24} height={size ?? 24} />;

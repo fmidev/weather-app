@@ -73,6 +73,9 @@ import TemperatureLowestLight from '@assets/images/icons/temperature-lowest-ligh
 import Temperature from '@assets/images/icons/temperature.svg';
 import Thunder from '@assets/images/icons/thunder.svg';
 import Time from '@assets/images/icons/time.svg';
+import WarningsGenericRed from '@assets/images/icons/Generic Warning-Red.svg';
+import WarningsGenericYellow from '@assets/images/icons/Generic Warning-Yellow.svg';
+import WarningsGenericAmber from '@assets/images/icons/Generic Warning-Amber.svg';
 import WarningsFloodingYellow from '@assets/images/icons/warnings-flooding-yellow.svg';
 import WarningsFloodingOrange from '@assets/images/icons/warnings-flooding-orange.svg';
 import WarningsFloodingRed from '@assets/images/icons/warnings-flooding-red.svg';
@@ -278,6 +281,12 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Thunder {...(props as SvgProps)} />;
     case 'time':
       return <Time {...(props as SvgProps)} />;
+    case 'warnings-generic-yellow':
+      return <WarningsGenericYellow {...(props as SvgProps)} />;
+    case 'warnings-generic-orange':
+      return <WarningsGenericAmber {...(props as SvgProps)} />;
+    case 'warnings-generic-red':
+      return <WarningsGenericRed {...(props as SvgProps)} />;
     case 'warnings-flooding-yellow':
       return <WarningsFloodingYellow {...(props as SvgProps)} />;
     case 'warnings-flooding-orange':
