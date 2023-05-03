@@ -134,7 +134,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               styles.withMarginRight,
               { color: colors.hourListText },
             ]}>
-            RH%
+            Hum%
           </Text>
         )}
         {param === PRESSURE && (

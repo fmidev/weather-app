@@ -123,7 +123,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 ]}>
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  RH%
+                  Hum%
                 </Text>
               </View>
             );

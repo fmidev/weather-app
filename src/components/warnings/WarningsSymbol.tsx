@@ -18,27 +18,57 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({
     Extreme: 'red',
   };
 
-  const typeMap: { [key in WarningType]: string } = {
-    thunderstorm: 'thunder-storm',
-    wind: 'wind',
-    rain: 'rain',
-    trafficWeather: 'traffic-weather',
-    pedestrianSafety: 'pedestrian-safety',
-    forestFireWeather: 'forest-fire-weather',
-    grassFireWeather: 'grass-fire-weather',
-    hotWeather: 'hot-weather',
-    coldWeather: 'hot-weather',
-    uvNote: 'uv-note',
-    flooding: 'flooding',
+  const typeMap: { [key in WarningType]?: string } = {
+    'Aerodrome Warning For Visibility': 'Aerodrome Warning For Visibility',
+    'Aerodrome Warning For Wind': 'Aerodrome Warning For Wind',
+    'Bush Fire Advisory': 'Bush Fire Advisory',
+    'Bush Fire Warning': 'Bush Fire Warning',
+    'Bush Fire Watch': 'Bush Fire Watch',
+    'Drought Alert': 'Drought Alert',
+    'Drought Warning': 'Drought Warning',
+    'Falling Temperatures Advisory': 'Falling Temperatures Advisory',
+    'Flash Flood Advisory': 'Flash Flood Advisory',
+    'Flash Flood Warning': 'Flash Flood Warning',
+    'Flash Flood Watch': 'Flash Flood Watch',
+    'Flooding Advisory': 'Flooding Advisory',
+    'Flooding Warning': 'Flooding Warning',
+    'Flooding Watch': 'Flooding Watch',
+    'Heat Advisory': 'Heat Advisory',
+    'Heat Warning': 'Heat Warning',
+    'Heat Watch': 'Heat Watch',
+    'High Humidity Advisory': 'High Humidity Advisory',
+    'High Humidity Warning': 'High Humidity Warning',
+    'High Surf Advisory': 'High Surf Advisory',
+    'High Surf Warning': 'High Surf Warning',
+    'Hurricane Advisory': 'Hurricane Advisory',
+    'Hurricane Warning': 'Hurricane Warning',
+    'Hurricane Watch': 'Hurricane Watch',
+    'Landslide Advisory': 'Landslide Advisory',
+    'Landslide Warning': 'Landslide Warning',
+    'Landslide Watch': 'Landslide Watch',
+    'Large Wave Warning for Small Craft 2':
+      'Large Wave Warning for Small Craft 2',
+    'Large Wave Warning for Small Craft': 'Large Wave Warning for Small Craft',
+    'Poor Visibility': 'Poor Visibility',
+    'Rainfall Outlook': 'Rainfall Outlook',
+    'Severe Weather Alert': 'Severe Weather Alert',
+    'Strong Wind Advisory': 'Strong Wind Advisory',
+    'Strong Wind and Large Wave Warning': 'Strong Wind and Large Wave Warning',
+    'Strong Wind and Large Waves Advisory':
+      'Strong Wind and Large Waves Advisory',
+    'Strong Wind Warning': 'Strong Wind Warning',
+    'Strong Wind Watch': 'Strong Wind Watch',
+    'Tropical Storm Advisory': 'Tropical Storm Advisory',
+    'Tropical Storm Warning': 'Tropical Storm Warning',
+    'Tropical Storm Watch': 'Tropical Storm Watch',
   };
 
-  let name = 'warnings';
+  let name;
   const typeName = typeMap[type];
   if (typeName) {
-    name += `-${typeMap[type]}`;
-    if (!['uvNote', 'grassFireWeather', 'pedestrianSafety'].includes(type)) {
-      name += `-${colorMap[severity]}`;
-    }
+    name = typeName;
+  } else {
+    name = `warnings-generic-${colorMap[severity]}`;
   }
 
   return <Icon name={name} width={size ?? 24} height={size ?? 24} />;
