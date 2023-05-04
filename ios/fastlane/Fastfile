@@ -80,7 +80,7 @@ platform :ios do
     
     delete_keychain(
      name: keychain_name,
-    ) if File.exist? path
+    ) if File.exist? keychain_path
     create_keychain(
      name: keychain_name,
      path: keychain_path,
