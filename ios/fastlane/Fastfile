@@ -80,15 +80,16 @@ platform :ios do
     ) if File.exist? File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
     create_keychain(
      name: ENV['KEYCHAIN_NAME'],
-     password: ENV['IOS_KEYCHAIN_PASSWORD'],
      unlock: true,
      timeout: 0,
      default_keychain: true
     )
+    # password: ENV['IOS_KEYCHAIN_PASSWORD'],
+
+    # certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"] || "default",
+    # keychain_password: ENV["IOS_KEYCHAIN_PASSWORD"],
     import_certificate(
      certificate_path: ENV["CERTIFICATE_PATH"],
-     certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"] || "default",
-     keychain_password: ENV["IOS_KEYCHAIN_PASSWORD"],
      log_output: true
     )
 	    
