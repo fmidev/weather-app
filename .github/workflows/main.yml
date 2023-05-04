@@ -155,7 +155,7 @@ jobs:
              SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
              ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
              GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
-             SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+             SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
         working-directory: android
 
       # Upload artifact
