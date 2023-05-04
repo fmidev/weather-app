@@ -81,15 +81,15 @@ platform :ios do
     create_keychain(
      name: ENV['KEYCHAIN_NAME'],
      unlock: true,
+     password: 'salasana',
      timeout: 0,
      default_keychain: true
     )
-    # password: ENV['IOS_KEYCHAIN_PASSWORD'],
 
     # certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"] || "default",
-    # keychain_password: ENV["IOS_KEYCHAIN_PASSWORD"],
     import_certificate(
      certificate_path: ENV["CERTIFICATE_PATH"],
+     keychain_password: 'salasana',
      log_output: true
     )
 	    
