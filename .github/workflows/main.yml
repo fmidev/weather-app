@@ -153,9 +153,9 @@ jobs:
              SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
              SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
              SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-             ANDROID_PACKAGE_NAME: ${{secrets.ANDROID_PACKAGE_NAME}}
+             ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
              GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
-             SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
+             SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
         working-directory: android
 
       # Upload artifact
@@ -238,7 +238,7 @@ jobs:
         env:
          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-         ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+         ASC_KEY: ${{ secrets.ASC_KEY }}
          IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
          CERTIFICATE_PATH: ${{runner.temp}}/build_certificate.p12
          IOS_DIST_SIGNING_KEY_PASSWORD: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
