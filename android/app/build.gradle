@@ -179,10 +179,10 @@ android {
         }
         release {
             if (areUploadKeystoreEnvsSet) {
-                storeFile rootProject.file(String.valueOf(System.getenv("WEATHER_APP_RELEASE_STORE_FILE")))
-                storePassword String.valueOf(System.getenv("WEATHER_APP_RELEASE_STORE_PASSWORD"))
-                keyAlias String.valueOf(System.getenv("WEATHER_APP_RELEASE_KEY_ALIAS"))
-                keyPassword String.valueOf(System.getenv("WEATHER_APP_RELEASE_KEY_PASSWORD"))
+                storeFile rootProject.file(String.valueOf(System.getenv("KEYSTORE")))
+                storePassword String.valueOf(System.getenv("SIGNING_STORE_PASSWORD"))
+                keyAlias String.valueOf(System.getenv("SIGNING_KEY_ALIAS"))
+                keyPassword String.valueOf(System.getenv("SIGNING_KEY_PASSWORD"))
             } else {
                 storeFile rootProject.file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
