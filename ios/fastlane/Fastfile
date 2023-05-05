@@ -126,6 +126,9 @@ platform :ios do
      build_configurations: ["Release"] # only toggle code signing settings for Release configurations
    )
    
+   # Set xcode version (14 doesn't work)
+   xcodes(version: "13.4")
+
    # Build the app
    gym(
      clean: true,
