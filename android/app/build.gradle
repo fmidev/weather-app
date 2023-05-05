@@ -155,7 +155,7 @@ android {
         applicationId "jm.gov.metservice"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3000044
+        versionCode 3000045
         versionName "4.0.0"
         testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
