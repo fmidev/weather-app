@@ -77,9 +77,6 @@ platform :ios do
     keychain_name = 'my-custom-keychain.keychain'
     keychain_path = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
     keychain_passwd = 'salasana'
-    
-    puts keychain_name
-    puts keychain_path
 
     delete_keychain(
      name: keychain_name,
@@ -92,12 +89,12 @@ platform :ios do
      default_keychain: true
     )
 
-    # certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"] || "default",
     import_certificate(
      certificate_path: ENV["CERTIFICATE_PATH"],
      keychain_name: keychain_name,
      keychain_path: keychain_path,
      keychain_password: keychain_passwd,
+     certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"],
      log_output: true
     )
 	    
