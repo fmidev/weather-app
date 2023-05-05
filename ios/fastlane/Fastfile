@@ -129,7 +129,7 @@ platform :ios do
    # Build the app
    gym(
      clean: true,
-     xcodebuild_formatter: '',
+     # xcodebuild_formatter: '',
      scheme: PROJECT_NAME, # replace with name of your project’s scheme,
      configuration: "Release",
      workspace: XCODE_WORKSPACE,
