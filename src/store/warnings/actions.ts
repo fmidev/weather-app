@@ -34,11 +34,11 @@ const fetchCapWarnings = () => (dispatch: Dispatch<WarningsActionTypes>) => {
   dispatch({ type: FETCH_CAP_WARNINGS });
 
   getCapWarnings()
-    .then((capData) => {
+    .then((data) => {
       dispatch({
         type: FETCH_CAP_WARNINGS_SUCCESS,
-        data: capData,
-        timestamp: Date.now(),
+        data: data.warnings,
+        timestamp: data.updated,
       });
     })
     .catch((error: Error) => {
