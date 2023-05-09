@@ -45,17 +45,17 @@ const MapView = ({
     const dayStart = date.hours(0).minutes(0);
     const dayEnd = date.clone().add(1, 'days');
     const warnings = capData?.filter((warning) => {
-      const onsetMoment = moment(warning.info.onset);
+      const effectiveMoment = moment(warning.info.effective);
       const expiryMoment = moment(warning.info.expires);
 
       const endsDuringDay =
-        onsetMoment.isBefore(dayStart) && expiryMoment.isAfter(dayStart);
+        effectiveMoment.isBefore(dayStart) && expiryMoment.isAfter(dayStart);
       const isContainedInDay =
-        onsetMoment.isAfter(dayStart) && expiryMoment.isBefore(dayEnd);
+        effectiveMoment.isAfter(dayStart) && expiryMoment.isBefore(dayEnd);
       const startsDuringDay =
-        onsetMoment.isBefore(dayEnd) && expiryMoment.isAfter(dayEnd);
+        effectiveMoment.isBefore(dayEnd) && expiryMoment.isAfter(dayEnd);
       const dayContained =
-        onsetMoment.isBefore(dayStart) && expiryMoment.isAfter(dayEnd);
+        effectiveMoment.isBefore(dayStart) && expiryMoment.isAfter(dayEnd);
 
       return (
         endsDuringDay || isContainedInDay || startsDuringDay || dayContained

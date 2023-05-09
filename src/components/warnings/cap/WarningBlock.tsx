@@ -168,13 +168,13 @@ function WarningBlock({
 
   const getHeaderWarningTimeSpans = (capWarnings: CapWarning[]): string[] => {
     const timespans = capWarnings.map((warning) => ({
-      onset: warning.info.onset,
+      effective: warning.info.effective,
       expiry: warning.info.expires,
     }));
     timespans.sort(
       (span1, span2) =>
-        moment(span1.onset).toDate().getTime() -
-        moment(span2.onset).toDate().getTime()
+        moment(span1.effective).toDate().getTime() -
+        moment(span2.effective).toDate().getTime()
     );
     const intervals = [];
 
@@ -187,7 +187,7 @@ function WarningBlock({
       // Get all timespans that begin before current has ended
 
       if (
-        moment(span.onset).toDate().getTime() <
+        moment(span.effective).toDate().getTime() <
         moment(currentTimespan.expiry).toDate().getTime()
       ) {
         spans.push({
@@ -198,7 +198,7 @@ function WarningBlock({
       } else {
         const lastToExpire = Math.max(...spans.map((s) => s.time));
         intervals.push({
-          onset: moment(currentTimespan.onset),
+          effective: moment(currentTimespan.effective),
           expiry: moment(lastToExpire),
         });
         currentTimespan = timespans[index];
@@ -210,22 +210,22 @@ function WarningBlock({
 
     if (currentTimespan && (spans.length === 0 || intervals.length === 0)) {
       intervals.push({
-        onset: moment(currentTimespan.onset),
+        effective: moment(currentTimespan.effective),
         expiry: moment(currentTimespan.expiry),
       });
     }
 
-    return intervals.map(({ onset, expiry }) => {
-      const onsetFormatted = onset
+    return intervals.map(({ effective, expiry }) => {
+      const effectiveFormatted = effective
         .locale(locale)
         .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
 
-      if (onset.isSame(expiry, 'day')) return onsetFormatted;
+      if (effective.isSame(expiry, 'day')) return effectiveFormatted;
 
       const expiryFormatted = expiry
         .locale(locale)
         .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
-      return `${onsetFormatted} - ${expiryFormatted}`;
+      return `${effectiveFormatted} - ${expiryFormatted}`;
     });
   };
   const headerTimeSpanString = [
@@ -233,7 +233,7 @@ function WarningBlock({
   ].join(', ');
 
   const warningTimeSpans = warnings.map((warning) => {
-    const start = moment(warning.info.onset);
+    const start = moment(warning.info.effective);
     const end = moment(warning.info.expires);
     const startFormatted = start
       .locale(locale)
