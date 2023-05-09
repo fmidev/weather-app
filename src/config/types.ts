@@ -183,6 +183,9 @@ export interface ConfigType {
       }[];
       defaultParameters: DisplayParameters[];
       excludeDayLength?: boolean;
+      infoBottomSheet?: {
+        showAllSymbols?: boolean;
+      };
     };
     observation: ObservationEnabled | ObservationDisabled;
   };

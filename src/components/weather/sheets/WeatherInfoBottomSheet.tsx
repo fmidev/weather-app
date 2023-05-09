@@ -58,7 +58,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   uniqueSmartSymbols,
   onClose,
 }) => {
-  const [symbolsOpen, setSymbolsOpen] = useState<boolean>(false);
+  const showAllSymbols =
+    Config.get('weather').forecast.infoBottomSheet?.showAllSymbols || false;
+  const [symbolsOpen, setSymbolsOpen] = useState<boolean>(showAllSymbols);
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
@@ -885,32 +887,35 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   )
                 )}
             </View>
-            <AccessibleTouchableOpacity
-              style={[
-                styles.row,
-                styles.buttonContainer,
-                {
-                  borderColor: colors.primaryText,
-                },
-              ]}
-              onPress={() => setSymbolsOpen((prev) => !prev)}>
-              <Text style={[styles.buttonText, { color: colors.primaryText }]}>
-                {!symbolsOpen
-                  ? `${t('weatherInfoBottomSheet.showRest')} (${
-                      filteredSymbolsArr.length - currentSymbols
-                    })`
-                  : t('weatherInfoBottomSheet.showLess')}
-              </Text>
-              <Icon
-                name={symbolsOpen ? 'arrow-up' : 'arrow-down'}
-                width={24}
-                height={24}
+            {!showAllSymbols && (
+              <AccessibleTouchableOpacity
                 style={[
-                  styles.withSmallMarginLeft,
-                  { color: colors.primaryText },
+                  styles.row,
+                  styles.buttonContainer,
+                  {
+                    borderColor: colors.primaryText,
+                  },
                 ]}
-              />
-            </AccessibleTouchableOpacity>
+                onPress={() => setSymbolsOpen((prev) => !prev)}>
+                <Text
+                  style={[styles.buttonText, { color: colors.primaryText }]}>
+                  {!symbolsOpen
+                    ? `${t('weatherInfoBottomSheet.showRest')} (${
+                        filteredSymbolsArr.length - currentSymbols
+                      })`
+                    : t('weatherInfoBottomSheet.showLess')}
+                </Text>
+                <Icon
+                  name={symbolsOpen ? 'arrow-up' : 'arrow-down'}
+                  width={24}
+                  height={24}
+                  style={[
+                    styles.withSmallMarginLeft,
+                    { color: colors.primaryText },
+                  ]}
+                />
+              </AccessibleTouchableOpacity>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </View>
