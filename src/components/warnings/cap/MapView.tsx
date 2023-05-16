@@ -62,7 +62,21 @@ const MapView = ({
       );
     });
 
-    return warnings;
+    const uniqueWarnings: CapWarning[] = [];
+
+    warnings?.forEach((warning) => {
+      if (
+        !uniqueWarnings.find(
+          (w) =>
+            w.info.event === warning.info.event &&
+            w.info.severity === warning.info.severity
+        )
+      ) {
+        uniqueWarnings.push(warning);
+      }
+    });
+
+    return uniqueWarnings;
   }, [capData, date]);
 
   useEffect(() => setSelectedFilters([]), [date]);
