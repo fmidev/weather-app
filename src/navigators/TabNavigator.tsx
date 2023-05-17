@@ -518,7 +518,7 @@ const Navigator: React.FC<Props> = ({
           customStyles={{
             container: {
               ...styles.sheetContainer,
-              backgroundColor: lightTheme.colors.headerBackground,
+              backgroundColor: WHITE,
             },
             draggableIcon: styles.draggableIcon,
           }}>
