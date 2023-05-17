@@ -95,8 +95,6 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const step = data[adjustedStepIndex];
     const sunrise = moment(`${step.sunrise}Z`);
     const sunset = moment(`${step.sunset}Z`);
-    const dayHours = Math.floor(step.dayLength / 60);
-    const dayMinutes = step.dayLength % 60;
 
     const isPolarNight = !step.sunriseToday && sunset.isBefore(sunrise);
 
@@ -239,9 +237,10 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               style={[
                 styles.row,
                 styles.listContainer,
-                styles.justifySpaceBetween,
+                styles.maxWidth,
+                styles.justifyContentCenter,
               ]}>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              <View style={[styles.row]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -265,7 +264,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {sunrise.format(timeFormat)}
                 </Text>
               </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              <View style={[styles.row]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -285,28 +284,6 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                     { color: colors.hourListText },
                   ]}>
                   {sunset.format(timeFormat)}
-                </Text>
-              </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
-                <Icon
-                  width={24}
-                  height={24}
-                  name="time"
-                  style={[
-                    styles.withMarginRight,
-                    { color: colors.hourListText },
-                  ]}
-                />
-                <Text
-                  accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
-                    'hours'
-                  )} ${dayMinutes} ${t('minutes')}`}
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
-                  {`${dayHours} h ${dayMinutes} min`}
                 </Text>
               </View>
             </View>
@@ -407,8 +384,8 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
   },
-  justifySpaceBetween: {
-    justifyContent: 'space-between',
+  justifyContentCenter: {
+    justifyContent: 'center',
   },
   bold: {
     fontFamily: 'Roboto-Bold',
@@ -427,6 +404,9 @@ const styles = StyleSheet.create({
   },
   displayNone: {
     display: 'none',
+  },
+  maxWidth: {
+    width: '100%',
   },
   alignCenter: {
     alignItems: 'center',
