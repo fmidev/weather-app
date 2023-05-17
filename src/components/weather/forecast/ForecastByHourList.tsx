@@ -240,7 +240,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 styles.maxWidth,
                 styles.justifyContentCenter,
               ]}>
-              <View style={[styles.row]} accessible>
+              <View style={[styles.row, styles.withMarginRight5]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -396,6 +396,9 @@ const styles = StyleSheet.create({
   },
   withMarginRight: {
     marginRight: 6,
+  },
+  withMarginRight5: {
+    marginRight: 5,
   },
   forecastHeader: {
     height: 52,
