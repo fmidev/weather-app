@@ -16,7 +16,7 @@ const FeedbackScreen: React.FC = () => {
     Platform.OS === 'ios' ? Platform.constants.systemName : 'android'
   }/${Platform.Version}/${packageJSON.version})`;
 
-  const mailToUrl = `mailto:mobiili@fmi.fi?subject=Ilmatieteen laitoksen sää palaute ${platformInfo}`;
+  const mailToUrl = `mailto:mdirector1@metservice.gov.jm?subject=Weather App feedback ${platformInfo}`;
 
   return (
     <View>
