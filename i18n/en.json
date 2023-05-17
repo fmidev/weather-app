@@ -602,11 +602,6 @@
     "subTitle2": "Did you notice shortcomings in accessibility?",
     "description2": "We are constantly working to improve the accessibility of the application. If you discover any issues that are not described on this page, please let us know and we will do our best to remedy them. We will respond as soon as possible or within two weeks at the latest. You can contact us by email at:",
     "email": "director1@metservice.gov.jm",
-    "subTitle3": "Accessibility enforcement",
-    "description3": "The Regional State Administrative Agency for Southern Finland enforces the implementation of accessibility requirements. If you are not happy with the reply you receive, or if you receive no reply within two weeks, you can give feedback to the Regional State Administrative Agency for Southern Finland. The Regional State Administrative Agency for Southern Finland website has details on how to lodge a complaint and how the matter will be processed.\nRegional State Administrative Agency for Southern Finland,\nAccessibility Enforcement Unit ",
-    "website": "www.saavutettavuusvaatimukset.fi",
-    "email2": "saavutettavuus@avi.fi",
-    "phone": "telephone number for switchboard +385 295 016 000",
     "subTitle4": "Details on technical accessibility",
     "description4": "The application is not yet fully accessible.",
     "subTitle5": "Content or functions that are not yet accessible",
@@ -616,8 +611,6 @@
     "description6": "The application provides map-based weather information. Under legislation, maps and map services do not have to meet accessibility requirements. The data visualised on maps is available elsewhere in the application in an accessible format.",
     "subTitle7": "How have we tested accessibility?",
     "description7": "The observations in this accessibility statement are based on a third-party assessment of whether the online service meets the legal requirements. The application was published on 10 May 2022. This statement was prepared on 21 April 2022. The statement was last updated on 21 April 2022.",
-    "link1": "Act on the Provision of Digital Services (306/2019)",
-    "link2": "Website on accessibility requirements",
     "openInBrowser": "Open in browser"
   },
   "announcements": {
