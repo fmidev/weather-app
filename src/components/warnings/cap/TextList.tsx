@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { GRAYISH_BLUE, CustomTheme } from '@utils/colors';
 import { CapWarning } from '@store/warnings/types';
 import WarningBlock from './WarningBlock';
@@ -39,6 +40,7 @@ const TextList = ({
   const { colors } = useTheme() as CustomTheme;
   const { width } = useWindowDimensions();
   const [xOffset, setXOffset] = useState<number>(0);
+  const { t } = useTranslation('warnings');
 
   const groupAlerts = useCallback((data?: CapWarning[]) => {
     const alerts: { [key: string]: CapWarning[] } = {};
@@ -91,7 +93,7 @@ const TextList = ({
             styles.noActiveWarningsPanel,
             { backgroundColor: colors.background },
           ]}>
-          <Text>No active warnings</Text>
+          <Text>{t('noWarningsText')}</Text>
         </View>
       )}
     </>
