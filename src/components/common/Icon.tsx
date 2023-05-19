@@ -73,9 +73,7 @@ import TemperatureLowestLight from '@assets/images/icons/temperature-lowest-ligh
 import Temperature from '@assets/images/icons/temperature.svg';
 import Thunder from '@assets/images/icons/thunder.svg';
 import Time from '@assets/images/icons/time.svg';
-import WarningsGenericRed from '@assets/images/icons/Generic Warning-Red.svg';
-import WarningsGenericYellow from '@assets/images/icons/Generic Warning-Yellow.svg';
-import WarningsGenericAmber from '@assets/images/icons/Generic Warning-Amber.svg';
+
 import WarningsFloodingYellow from '@assets/images/icons/warnings-flooding-yellow.svg';
 import WarningsFloodingOrange from '@assets/images/icons/warnings-flooding-orange.svg';
 import WarningsFloodingRed from '@assets/images/icons/warnings-flooding-red.svg';
@@ -108,6 +106,7 @@ import WarningsYellowLight from '@assets/images/icons/warnings-yellow-light.svg'
 import WarningsYellowDark from '@assets/images/icons/warnings-yellow-dark.svg';
 import WarningsRedLight from '@assets/images/icons/warnings-red-light.svg';
 import WarningsRedDark from '@assets/images/icons/warnings-red-dark.svg';
+
 import WeatherSymbol from '@assets/images/icons/weather-symbol.svg';
 import Weather from '@assets/images/icons/weather.svg';
 import WindArrow from '@assets/images/icons/wind-arrow.svg';
@@ -134,54 +133,80 @@ import FeelsLikeWinter from '@assets/images/feelslike/winter.svg';
 import FeelsLikeXmas from '@assets/images/feelslike/xmas.svg';
 
 // Jamaica icons
-import AerodromeWarningForVisibility from '@assets/images/icons/Aerodrome Warning For Visibility.svg';
-import AerodromeWarningForWind from '@assets/images/icons/Aerodrome Warning For Wind.svg';
-import BushFireAdvisory from '@assets/images/icons/Bush Fire Advisory.svg';
-import BushFireWarning from '@assets/images/icons/Bush Fire Warning.svg';
-import BushFireWatch from '@assets/images/icons/Bush Fire Watch.svg';
-import DroughtAlert from '@assets/images/icons/Drought Alert.svg';
-import DroughtWarning from '@assets/images/icons/Drought Warning.svg';
-import FallingTemperaturesAdvisory from '@assets/images/icons/Falling Temperatures Advisory.svg';
-import FlashFloodAdvisory from '@assets/images/icons/Flash Flood Advisory.svg';
-import FlashFloodWarning from '@assets/images/icons/Flash Flood Warning.svg';
-import FlashFloodWatch from '@assets/images/icons/Flash Flood Watch.svg';
-import FloodingAdvisory from '@assets/images/icons/Flooding Advisory.svg';
-import FloodingWarning from '@assets/images/icons/Flooding Warning.svg';
-import FloodingWatch from '@assets/images/icons/Flooding Watch.svg';
-import HeatAdvisory from '@assets/images/icons/Heat Advisory.svg';
-import HeatWarning from '@assets/images/icons/Heat Warning.svg';
-import HeatWatch from '@assets/images/icons/Heat Watch.svg';
-import HeavyRainAtSeaAdvisory from '@assets/images/icons/Heavy Rain at Sea Advisory.svg';
-import HeavyRainAtSeaWarning from '@assets/images/icons/Heavy Rain at Sea Warning.svg';
-import HeavyRainfallAdvisory from '@assets/images/icons/Heavy Rainfall Advisory.svg';
-import HeavyRainfallWatch from '@assets/images/icons/Heavy Rainfall Watch.svg';
-import HeavyRainfallWarning from '@assets/images/icons/Heavy Rainfall Warning.svg';
-import HighHumidityAdvisory from '@assets/images/icons/High Humidity Advisory.svg';
-import HighHumidityWarning from '@assets/images/icons/High Humidity Warning.svg';
-import HighSurfAdvisory from '@assets/images/icons/High Surf Advisory.svg';
-import HighSurfWarning from '@assets/images/icons/High Surf Warning.svg';
-import HurricaneAdvisory from '@assets/images/icons/Hurricane Advisory.svg';
-import HurricaneWarning from '@assets/images/icons/Hurricane Warning.svg';
-import HurricaneWatch from '@assets/images/icons/Hurricane Watch.svg';
-import LandslideAdvisory from '@assets/images/icons/Landslide Advisory.svg';
-import LandslideWarning from '@assets/images/icons/Landslide Warning.svg';
-import LandslideWatch from '@assets/images/icons/Landslide Watch.svg';
-import LargeWaveWarningForSmallCraft from '@assets/images/icons/Large Wave Warning for Small Craft.svg';
-import PoorVisibility from '@assets/images/icons/Poor Visibility.svg';
-import RainfallOutlook from '@assets/images/icons/Rainfall Outlook.svg';
-import SevereWeatherAlert from '@assets/images/icons/Severe Weather Alert.svg';
-import StrongWindAdvisory from '@assets/images/icons/Strong Wind Advisory.svg';
-import StrongWindAndLargeWaveWarning from '@assets/images/icons/Strong Wind and Large Wave Warning.svg';
-import StrongWindAndLargeWavesAdvisory from '@assets/images/icons/Strong Wind and Large Waves Advisory.svg';
-import StrongWindWarning from '@assets/images/icons/Strong Wind Warning.svg';
-import StrongWindWatch from '@assets/images/icons/Strong Wind Watch.svg';
-import ThunderstormAdvisory from '@assets/images/icons/Thunderstorm Advisory.svg';
-import ThunderstormWatch from '@assets/images/icons/Thunderstorm Watch.svg';
-import ThunderstormWarning from '@assets/images/icons/Thunderstorm Warning.svg';
-import ThunderstormAtSeaWarning from '@assets/images/icons/Thunderstorm at Sea Warning.svg';
-import TropicalStormAdvisory from '@assets/images/icons/Tropical Storm Advisory.svg';
-import TropicalStormWarning from '@assets/images/icons/Tropical Storm Warning.svg';
-import TropicalStormWatch from '@assets/images/icons/Tropical Storm Watch.svg';
+import AerodromeWarningForTsunami from '@assets/images/icons/warnings/Aerodrome Warning for Tsunami.svg';
+import AerodromeWarningForVisibility from '@assets/images/icons/warnings/Aerodrome Warning for Visibility.svg';
+import AerodromeWarningForWind from '@assets/images/icons/warnings/Aerodrome Warning for Wind.svg';
+import BushFireAdvisory from '@assets/images/icons/warnings/Bush Fire Advisory.svg';
+import BushFireWarning from '@assets/images/icons/warnings/Bush Fire Warning.svg';
+import BushFireWatch from '@assets/images/icons/warnings/Bush Fire Watch.svg';
+import DroughtAlert from '@assets/images/icons/warnings/Drought Alert.svg';
+import DroughtWarning from '@assets/images/icons/warnings/Drought Warning.svg';
+import FallingTemperaturesAdvisory from '@assets/images/icons/warnings/Falling Temperatures Advisory.svg';
+import FlashFloodAdvisoryDiscontinuation from '@assets/images/icons/warnings/Flash Flood Advisory Discontinuation.svg';
+import FlashFloodAdvisory from '@assets/images/icons/warnings/Flash Flood Advisory.svg';
+import FlashFloodWarningDiscontinuation from '@assets/images/icons/warnings/Flash Flood Warning Discontinuation.svg';
+import FlashFloodWarning from '@assets/images/icons/warnings/Flash Flood Warning.svg';
+import FlashFloodWatchDiscontinuation from '@assets/images/icons/warnings/Flash Flood Watch Discontinuation.svg';
+import FlashFloodWatch from '@assets/images/icons/warnings/Flash Flood Watch.svg';
+import FloodAdvisory from '@assets/images/icons/warnings/Flood Advisory.svg';
+import FloodWarning from '@assets/images/icons/warnings/Flood Warning.svg';
+import FloodWatch from '@assets/images/icons/warnings/Flood Watch.svg';
+import WarningsGenericYellow from '@assets/images/icons/warnings/Generic Warning-Yellow.svg';
+import WarningsGenericAmber from '@assets/images/icons/warnings/Generic Warning-Amber.svg';
+import WarningsGenericRed from '@assets/images/icons/warnings/Generic Warning-Red.svg';
+import HeatAdvisory from '@assets/images/icons/warnings/Heat Advisory.svg';
+import HeatWarning from '@assets/images/icons/warnings/Heat Warning.svg';
+import HeatWatch from '@assets/images/icons/warnings/Heat Watch.svg';
+import HeavyRainAtSeaAdvisory from '@assets/images/icons/warnings/Heavy Rain at Sea Advisory.svg';
+import HeavyRainAtSeaWarning from '@assets/images/icons/warnings/Heavy Rain at Sea Warning.svg';
+import HeavyRainfallAdvisory from '@assets/images/icons/warnings/Heavy Rainfall Advisory.svg';
+import HeavyRainfallWatch from '@assets/images/icons/warnings/Heavy Rainfall Watch.svg';
+import HeavyRainfallWarning from '@assets/images/icons/warnings/Heavy Rainfall Warning.svg';
+import HighHumidityAdvisory from '@assets/images/icons/warnings/High Humidity Advisory.svg';
+import HighHumidityWarning from '@assets/images/icons/warnings/High Humidity Warning.svg';
+import HighSurfAdvisory from '@assets/images/icons/warnings/High Surf Advisory.svg';
+import HighSurfWarning from '@assets/images/icons/warnings/High Surf Warning.svg';
+import HurricaneAdvisoryDiscontinuation from '@assets/images/icons/warnings/Hurricane Advisory Discontinuation.svg';
+import HurricaneAdvisory from '@assets/images/icons/warnings/Hurricane Advisory.svg';
+import HurricaneWarningDiscontinuation from '@assets/images/icons/warnings/Hurricane Warning Discontinuation.svg';
+import HurricaneWarning from '@assets/images/icons/warnings/Hurricane Warning.svg';
+import HurricaneWatchDiscontinuation from '@assets/images/icons/warnings/Hurricane Watch Discontinuation.svg';
+import HurricaneWatch from '@assets/images/icons/warnings/Hurricane Watch.svg';
+import LandslideAdvisory from '@assets/images/icons/warnings/Landslide Advisory.svg';
+import LandslideWarning from '@assets/images/icons/warnings/Landslide Warning.svg';
+import LandslideWatch from '@assets/images/icons/warnings/Landslide Watch.svg';
+import LargeWaveWarningForSmallCraft from '@assets/images/icons/warnings/Large Wave Warning for Small Craft.svg'; // event code: Large Wave Warning for Small Craft, 2
+// import LargeWaveWarningForSmallCraft2 from '@assets/images/icons/warnings/Large Wave Warning for Small Craft 2.svg'; // event code: Large Wave Warning for Small Craft, 3...15
+import PoorVisibility from '@assets/images/icons/warnings/Poor Visibility.svg';
+import RainfallOutlookDrought from '@assets/images/icons/warnings/Rainfall Outlook Drought.svg'; // event code Rainfall Outlook, Below-normal
+import RainfallOutlookHeavyRain from '@assets/images/icons/warnings/Rainfall Outlook Heavy Rain.svg'; // event code Rainfall Outlook, Above-normal
+import SevereWeatherAlert from '@assets/images/icons/warnings/Severe Weather Alert.svg';
+import StormSurgeAdvisory from '@assets/images/icons/warnings/Storm Surge Advisory.svg';
+import StormSurgeWarning from '@assets/images/icons/warnings/Storm Surge Warning.svg';
+import StrongWindAdvisory from '@assets/images/icons/warnings/Strong Wind Advisory.svg';
+import StrongWindWarning from '@assets/images/icons/warnings/Strong Wind Warning.svg'; // event code: Strong Wind Warning, 64..117 - should be watch?
+// import StrongWindWarning from '@assets/images/icons/warnings/Strong Wind Warning.svg'; // event code: Strong Wind Warning, 118...252
+import StrongWindAndLargeWaveWarning from '@assets/images/icons/warnings/Strong Wind and Large Wave Warning.svg'; // Wave or Waves?
+import StrongWindAndLargeWavesAdvisory from '@assets/images/icons/warnings/Strong Wind and Large Waves Advisory.svg'; // event code: Strong Wind and Large Waves Advisory, 20-25kt
+// import StrongWindAndLargeWavesAdvisory from '@assets/images/icons/warnings/Strong Wind and Large Waves Advisory.svg'; // event code: Strong Wind and Large Waves Advisory, 25-34kt
+import TemperatureOutlook from '@assets/images/icons/warnings/Temperature Outlook.svg';
+import ThunderstormAdvisory from '@assets/images/icons/warnings/Thunderstorm Advisory.svg';
+import ThunderstormWatch from '@assets/images/icons/warnings/Thunderstorm Watch.svg';
+import ThunderstormWarning from '@assets/images/icons/warnings/Thunderstorm Warning.svg';
+import ThunderstormAtSeaWarning from '@assets/images/icons/warnings/Thunderstorm at Sea Warning.svg';
+import TropicalStormAdvisoryDiscontinuation from '@assets/images/icons/warnings/Tropical Storm Advisory Discontinuation.svg';
+import TropicalStormAdvisory from '@assets/images/icons/warnings/Tropical Storm Advisory.svg';
+import TropicalStormWarningDiscontinuation from '@assets/images/icons/warnings/Tropical Storm Warning Discontinuation.svg';
+import TropicalStormWarning from '@assets/images/icons/warnings/Tropical Storm Warning.svg';
+import TropicalStormWatchDiscontinuation from '@assets/images/icons/warnings/Tropical Storm Watch Discontinuation.svg';
+import TropicalStormWatch from '@assets/images/icons/warnings/Tropical Storm Watch.svg';
+import TsunamiAlertDiscontinuation from '@assets/images/icons/warnings/Tsunami Alert Discontinuation.svg';
+import TsunamiAlert from '@assets/images/icons/warnings/Tsunami Alert.svg';
+import TsunamiWarningDiscontinuation from '@assets/images/icons/warnings/Tsunami Warning Discontinuation.svg';
+import TsunamiWarning from '@assets/images/icons/warnings/Tsunami Warning.svg';
+import TsunamiWatchDiscontinuation from '@assets/images/icons/warnings/Tsunami Watch Discontinuation.svg';
+import TsunamiWatch from '@assets/images/icons/warnings/Tsunami Watch.svg';
+import VeryPoorVisibility from '@assets/images/icons/warnings/Very Poor Visibility.svg';
 import { SvgProps } from 'react-native-svg';
 
 type CustomIconProps = IconProps & {
@@ -448,6 +473,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
     case 'feels-like-xmas':
       return <FeelsLikeXmas {...(props as SvgProps)} />;
     // Jamaica warning icons
+    case 'Aerodrome Warning For Tsunami':
+      return <AerodromeWarningForTsunami {...(props as SvgProps)} />;
     case 'Aerodrome Warning For Visibility':
       return <AerodromeWarningForVisibility {...(props as SvgProps)} />;
     case 'Aerodrome Warning For Wind':
@@ -464,18 +491,24 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <DroughtWarning {...(props as SvgProps)} />;
     case 'Falling Temperatures Advisory':
       return <FallingTemperaturesAdvisory {...(props as SvgProps)} />;
+    case 'Flash Flood Advisory Discontinuation':
+      return <FlashFloodAdvisoryDiscontinuation {...(props as SvgProps)} />;
     case 'Flash Flood Advisory':
       return <FlashFloodAdvisory {...(props as SvgProps)} />;
+    case 'Flash Flood Warning Discontinuation':
+      return <FlashFloodWarningDiscontinuation {...(props as SvgProps)} />;
     case 'Flash Flood Warning':
       return <FlashFloodWarning {...(props as SvgProps)} />;
+    case 'Flash Flood Watch Discontinuation':
+      return <FlashFloodWatchDiscontinuation {...(props as SvgProps)} />;
     case 'Flash Flood Watch':
       return <FlashFloodWatch {...(props as SvgProps)} />;
-    case 'Flooding Advisory':
-      return <FloodingAdvisory {...(props as SvgProps)} />;
-    case 'Flooding Warning':
-      return <FloodingWarning {...(props as SvgProps)} />;
-    case 'Flooding Watch':
-      return <FloodingWatch {...(props as SvgProps)} />;
+    case 'Flood Advisory':
+      return <FloodAdvisory {...(props as SvgProps)} />;
+    case 'Flood Warning':
+      return <FloodWarning {...(props as SvgProps)} />;
+    case 'Flood Watch':
+      return <FloodWatch {...(props as SvgProps)} />;
     case 'Heat Advisory':
       return <HeatAdvisory {...(props as SvgProps)} />;
     case 'Heat Warning':
@@ -500,10 +533,16 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <HighSurfAdvisory {...(props as SvgProps)} />;
     case 'High Surf Warning':
       return <HighSurfWarning {...(props as SvgProps)} />;
+    case 'Hurricane Advisory Discontinuation':
+      return <HurricaneAdvisoryDiscontinuation {...(props as SvgProps)} />;
     case 'Hurricane Advisory':
       return <HurricaneAdvisory {...(props as SvgProps)} />;
+    case 'Hurricane Warning Discontinuation':
+      return <HurricaneWarningDiscontinuation {...(props as SvgProps)} />;
     case 'Hurricane Warning':
       return <HurricaneWarning {...(props as SvgProps)} />;
+    case 'Hurricane Watch Discontinuation':
+      return <HurricaneWatchDiscontinuation {...(props as SvgProps)} />;
     case 'Hurricane Watch':
       return <HurricaneWatch {...(props as SvgProps)} />;
     case 'Landslide Advisory':
@@ -516,20 +555,26 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <LargeWaveWarningForSmallCraft {...(props as SvgProps)} />;
     case 'Poor Visibility':
       return <PoorVisibility {...(props as SvgProps)} />;
-    case 'Rainfall Outlook':
-      return <RainfallOutlook {...(props as SvgProps)} />;
+    case 'Rainfall Outlook Drought':
+      return <RainfallOutlookDrought {...(props as SvgProps)} />;
+    case 'Rainfall Outlook Heavy Rain':
+      return <RainfallOutlookHeavyRain {...(props as SvgProps)} />;
     case 'Severe Weather Alert':
       return <SevereWeatherAlert {...(props as SvgProps)} />;
+    case 'Storm Surge Advisory':
+      return <StormSurgeAdvisory {...(props as SvgProps)} />;
+    case 'Storm Surge Warning':
+      return <StormSurgeWarning {...(props as SvgProps)} />;
     case 'Strong Wind Advisory':
       return <StrongWindAdvisory {...(props as SvgProps)} />;
     case 'Strong Wind and Large Wave Warning':
       return <StrongWindAndLargeWaveWarning {...(props as SvgProps)} />;
-    case 'Strong Wind and Large Wawes Advisory':
+    case 'Strong Wind and Large Waves Advisory':
       return <StrongWindAndLargeWavesAdvisory {...(props as SvgProps)} />;
     case 'Strong Wind Warning':
       return <StrongWindWarning {...(props as SvgProps)} />;
-    case 'Strong Wind Watch':
-      return <StrongWindWatch {...(props as SvgProps)} />;
+    case 'Temperature Outlook':
+      return <TemperatureOutlook {...(props as SvgProps)} />;
     case 'Thunderstorm Advisory':
       return <ThunderstormAdvisory {...(props as SvgProps)} />;
     case 'Thunderstorm Watch':
@@ -538,12 +583,32 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <ThunderstormWarning {...(props as SvgProps)} />;
     case 'Thunderstorm at Sea Warning':
       return <ThunderstormAtSeaWarning {...(props as SvgProps)} />;
-    case 'Tropical StormA dvisory':
+    case 'Tropical Storm Advisory Discontinuation':
+      return <TropicalStormAdvisoryDiscontinuation {...(props as SvgProps)} />;
+    case 'Tropical Storm Advisory':
       return <TropicalStormAdvisory {...(props as SvgProps)} />;
+    case 'Tropical Storm Warning Discontinuation':
+      return <TropicalStormWarningDiscontinuation {...(props as SvgProps)} />;
     case 'Tropical Storm Warning':
       return <TropicalStormWarning {...(props as SvgProps)} />;
+    case 'Tropical Storm Watch Discontinuation':
+      return <TropicalStormWatchDiscontinuation {...(props as SvgProps)} />;
     case 'Tropical Storm Watch':
       return <TropicalStormWatch {...(props as SvgProps)} />;
+    case 'Tsunami Alert Discontinuation':
+      return <TsunamiAlertDiscontinuation {...(props as SvgProps)} />;
+    case 'Tsunami Alert':
+      return <TsunamiAlert {...(props as SvgProps)} />;
+    case 'Tsunami Warning Discontinuation':
+      return <TsunamiWarningDiscontinuation {...(props as SvgProps)} />;
+    case 'Tsunami Warning':
+      return <TsunamiWarning {...(props as SvgProps)} />;
+    case 'Tsunami Watch Discontinuation':
+      return <TsunamiWatchDiscontinuation {...(props as SvgProps)} />;
+    case 'Tsunami Watch':
+      return <TsunamiWatch {...(props as SvgProps)} />;
+    case 'Very Poor Visibility':
+      return <VeryPoorVisibility {...(props as SvgProps)} />;
     default:
       return <IonIcon name={name} {...props} />;
   }
