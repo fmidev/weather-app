@@ -155,8 +155,8 @@ android {
         applicationId "jm.gov.metservice"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3000040
-        versionName "4.0.0"
+        versionCode 3000049
+        versionName "0.0.1"
         testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         missingDimensionStrategy 'detox', 'full'
@@ -179,10 +179,10 @@ android {
         }
         release {
             if (areUploadKeystoreEnvsSet) {
-                storeFile rootProject.file(String.valueOf(System.getenv("WEATHER_APP_RELEASE_STORE_FILE")))
-                storePassword String.valueOf(System.getenv("WEATHER_APP_RELEASE_STORE_PASSWORD"))
-                keyAlias String.valueOf(System.getenv("WEATHER_APP_RELEASE_KEY_ALIAS"))
-                keyPassword String.valueOf(System.getenv("WEATHER_APP_RELEASE_KEY_PASSWORD"))
+                storeFile rootProject.file(String.valueOf(System.getenv("KEYSTORE")))
+                storePassword String.valueOf(System.getenv("SIGNING_STORE_PASSWORD"))
+                keyAlias String.valueOf(System.getenv("SIGNING_KEY_ALIAS"))
+                keyPassword String.valueOf(System.getenv("SIGNING_KEY_PASSWORD"))
             } else {
                 storeFile rootProject.file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']

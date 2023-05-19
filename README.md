@@ -37,10 +37,10 @@ Follow this [guide](https://reactnative.dev/docs/environment-setup) for setting 
    Alternatively these can be provided as environment variables (e.g. in CI/CD pipeline):
 
    ```
-   WEATHER_APP_RELEASE_STORE_PASSWORD=YOUR_STORE_PASSWORD
-   WEATHER_APP_RELEASE_KEY_PASSWORD=YOUR_KEY_PASSWORD
-   WEATHER_APP_RELEASE_KEY_ALIAS=YOUR_KEY_ALIAS
-   WEATHER_APP_RELEASE_STORE_FILE=YOUR_KEYSTORE_FILE
+   SIGNING_STORE_PASSWORD=YOUR_STORE_PASSWORD
+   SIGNING_KEY_PASSWORD=YOUR_KEY_PASSWORD
+   SIGNING_KEY_ALIAS=YOUR_KEY_ALIAS
+   KEYSTORE=YOUR_KEYSTORE_FILE
    ```
 
    Gradle will throw an error if one of the above is missing on `yarn android`.

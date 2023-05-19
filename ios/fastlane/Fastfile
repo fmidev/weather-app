@@ -74,21 +74,27 @@ platform :ios do
     app_identifier = ENV["IOS_APP_IDENTIFIER"]
     api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # replace with the name of your existing profile
-    ENV['KEYCHAIN_NAME'] = 'my-custom-keychain.keychain'
+    keychain_name = 'my-custom-keychain.keychain'
+    keychain_path = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
+    keychain_passwd = 'salasana'
+
     delete_keychain(
-     name: ENV['KEYCHAIN_NAME'],
-    ) if File.exist? File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
+     name: keychain_name,
+    ) if File.exist? keychain_path
     create_keychain(
-     name: ENV['KEYCHAIN_NAME'],
-     password: ENV['IOS_KEYCHAIN_PASSWORD'],
+     name: keychain_name,
      unlock: true,
+     password: keychain_passwd,
      timeout: 0,
      default_keychain: true
     )
+
     import_certificate(
      certificate_path: ENV["CERTIFICATE_PATH"],
-     certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"] || "default",
-     keychain_password: ENV["IOS_KEYCHAIN_PASSWORD"],
+     keychain_name: keychain_name,
+     keychain_path: keychain_path,
+     keychain_password: keychain_passwd,
+     certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"],
      log_output: true
     )
 	    
@@ -103,7 +109,7 @@ platform :ios do
    # Update signing settings and build iOS app for release
    desc "Build the iOS app for release"
     lane :build_release do |options|
-    xcode_select("/Applications/Xcode_14.1.app")
+    xcode_select("/Applications/Xcode.app")
     app_identifier = ENV["IOS_APP_IDENTIFIER"]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the build
     export_method = "app-store" # specify the export method
@@ -119,11 +125,11 @@ platform :ios do
      profile_name: profile_name,
      build_configurations: ["Release"] # only toggle code signing settings for Release configurations
    )
-   
+
    # Build the app
    gym(
      clean: true,
-     xcodebuild_formatter: '',
+     # xcodebuild_formatter: '',
      scheme: PROJECT_NAME, # replace with name of your project’s scheme,
      configuration: "Release",
      workspace: XCODE_WORKSPACE,

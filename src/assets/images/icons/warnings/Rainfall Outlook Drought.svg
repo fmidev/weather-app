@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_3"
+   viewBox="0 0 120 120"
+   version="1.1"
+   sodipodi:docname="Rainfall Outlook Drought.svg"
+   inkscape:version="1.0.1 (c497b03c, 2020-09-10)">
+  <metadata
+     id="metadata19039">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="689"
+     inkscape:window-height="480"
+     id="namedview19037"
+     showgrid="false"
+     inkscape:zoom="6.95"
+     inkscape:cx="60"
+     inkscape:cy="60"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Layer_3" />
+  <defs
+     id="defs19002">
+    <style
+       id="style19000">.cls-1{fill:#fff;}.cls-2{fill:#f18913;}.cls-3{fill:#562712;}.cls-4{fill:#572610;}</style>
+  </defs>
+  <g
+     id="g19022">
+    <path
+       class="cls-2"
+       d="M35.403,16.411V5.568h4.217v10.842l-.983-.096c-.384-.037-.772-.056-1.153-.055-.366,0-.735,.019-1.096,.055l-.984,.096Z"
+       id="path19004" />
+    <path
+       class="cls-2"
+       d="M51.587,21.296l7.814-7.814,3.007,3.007-7.813,7.813-.632-.77c-.247-.301-.511-.591-.783-.862-.262-.261-.538-.51-.822-.742l-.771-.632Z"
+       id="path19006" />
+    <path
+       class="cls-2"
+       d="M59.988,36.186h10.955v4.217h-10.955l.097-.983c.038-.384,.056-.772,.055-1.153,0-.366-.02-.735-.055-1.096l-.097-.984Z"
+       id="path19008" />
+    <path
+       class="cls-2"
+       d="M54.794,52.948l7.814,7.814-3.007,3.007-7.813-7.813,.77-.632c.301-.247,.591-.511,.862-.783,.261-.262,.51-.538,.742-.822l.632-.771Z"
+       id="path19010" />
+    <path
+       class="cls-2"
+       d="M39.62,61.278v11.05h-4.217v-11.05l.983,.098c.384,.038,.772,.057,1.153,.056,.366,0,.735-.02,1.096-.056l.984-.098Z"
+       id="path19012" />
+    <path
+       class="cls-2"
+       d="M23.142,56.154l-7.814,7.814-3.007-3.007,7.813-7.813,.632,.77c.247,.301,.511,.591,.783,.862,.262,.261,.538,.51,.822,.742l.771,.632Z"
+       id="path19014" />
+    <path
+       class="cls-2"
+       d="M15.035,41.005H4.08v-4.217H15.035l-.097,.983c-.038,.384-.056,.772-.055,1.153,0,.366,.02,.735,.055,1.096l.097,.984Z"
+       id="path19016" />
+    <path
+       class="cls-2"
+       d="M19.936,24.502l-7.814-7.814,3.007-3.007,7.813,7.813-.77,.632c-.301,.247-.591,.511-.862,.783-.261,.262-.51,.538-.742,.822l-.632,.771Z"
+       id="path19018" />
+    <circle
+       class="cls-2"
+       cx="37.21"
+       cy="38.595"
+       r="19.878"
+       id="circle19020" />
+  </g>
+  <polygon
+     class="cls-4"
+     points="106.301 74.482 109.116 58.098 104.188 57.251 101.145 74.967 92.342 80.393 92.342 61.406 98.038 40.151 110.305 38.19 109.516 33.253 99.456 34.861 103.29 20.552 98.461 19.257 90.144 50.294 87.25 34.173 83.85 23.45 72.913 19.473 65.569 29.211 69.562 32.222 74.679 25.436 79.833 27.31 82.357 35.218 87.288 62.685 87.342 62.675 87.342 82.886 71.415 68.799 68.102 72.544 74.197 77.935 67.047 78.334 67.26 82.168 78.288 81.554 87.342 89.562 87.342 97.587 92.342 97.587 92.342 87.395 92.385 87.347 92.342 87.309 92.342 86.267 103.916 79.133 112.729 80.719 113.615 75.798 106.301 74.482"
+     id="polygon19024" />
+  <polygon
+     class="cls-1"
+     points="68.701 110.198 64.271 104.823 57.532 104.779 57.538 103.779 64.746 103.827 69.473 109.562 68.701 110.198"
+     id="polygon19026" />
+  <g
+     id="g19032">
+    <path
+       class="cls-3"
+       d="M64.503,98.332c.002,1.998,.004,3.996,.006,5.994"
+       id="path19028" />
+    <rect
+       class="cls-1"
+       x="64.006"
+       y="98.333"
+       width="1"
+       height="5.993"
+       id="rect19030" />
+  </g>
+  <path
+     class="cls-3"
+     d="M105.883,95.087l-5.848,3.657-.332,2.531-.992-.131,.395-2.998,4.893-3.059h-22.181l-.625,6.49,1.805,1.805-.707,.707-1.599-1.599-2.475,2.757-.744-.668,2.717-3.027,.623-6.465h-30.067l-5.951,4.905v3.979h-1v-3.688l-5.861,.315-.053-.998,6.222-.335,5.07-4.178H23.531l6.305,5.196v4.451h-1v-3.979l-6.878-5.669H12.729v14.202H97.538l-3.885-4.715h-2.553v-1h3.023l4.711,5.715h11.878v-14.202h-4.829Z"
+     id="path19034" />
+</svg>
