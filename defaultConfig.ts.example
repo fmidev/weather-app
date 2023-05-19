@@ -54,6 +54,10 @@ const defaultConfig: ConfigType = {
       forecastLengthTitle: 10, // optional, defaults to 10
       data: [{ producer: 'default', parameters: ['temperature'] }],
       defaultParameters: ['temperature'],
+      excludeDayLength: false,
+      infoBottomSheet: {
+        showAllSymbols: false,
+      }
     },
     observation: {
       enabled: true,

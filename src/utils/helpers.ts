@@ -318,11 +318,11 @@ const getSeveritiesForTimePeriod = (
 ) => {
   const severitiesForTimePeriod = warnings
     ?.filter((warning) => {
-      const onset = moment(warning.info.onset);
+      const effective = moment(warning.info.effective);
       const expires = moment(warning.info.expires);
-      const beginsDuringPeriod = onset.isBetween(start, end);
+      const beginsDuringPeriod = effective.isBetween(start, end);
       const endsDuringPeriod = expires.isBetween(start, end);
-      const periodContained = onset.isBefore(start) && expires.isAfter(end);
+      const periodContained = effective.isBefore(start) && expires.isAfter(end);
       return beginsDuringPeriod || endsDuringPeriod || periodContained;
     })
     .map((warning) => severities.indexOf(warning.info.severity) + 1);
