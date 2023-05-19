@@ -50,6 +50,7 @@ export const knownWarningTypes = [
   'Strong Wind Advisory',
   'Strong Wind Watch',
   'Strong Wind Warning',
+  'Temperature Outlook',
   'Thunderstorm Advisory',
   'Thunderstorm Watch',
   'Thunderstorm Warning',

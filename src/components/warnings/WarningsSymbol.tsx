@@ -73,6 +73,7 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({
     'Strong Wind Advisory': 'Strong Wind Advisory',
     'Strong Wind Warning': 'Strong Wind Warning',
     'Strong Wind Watch': 'Strong Wind Watch',
+    'Temperature Outlook': 'Temperature Outlook',
     'Thunderstorm Advisory': 'Thunderstorm Advisory',
     'Thunderstorm Watch': 'Thunderstorm Watch',
     'Thunderstorm Warning': 'Thunderstorm Warning',
