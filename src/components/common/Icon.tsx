@@ -154,6 +154,7 @@ import FloodWatch from '@assets/images/icons/warnings/Flood Watch.svg';
 import WarningsGenericYellow from '@assets/images/icons/warnings/Generic Warning-Yellow.svg';
 import WarningsGenericAmber from '@assets/images/icons/warnings/Generic Warning-Amber.svg';
 import WarningsGenericRed from '@assets/images/icons/warnings/Generic Warning-Red.svg';
+import WarningsGenericGreen from '@assets/images/icons/warnings/Generic Warning-Green.svg';
 import HeatAdvisory from '@assets/images/icons/warnings/Heat Advisory.svg';
 import HeatWarning from '@assets/images/icons/warnings/Heat Warning.svg';
 import HeatWatch from '@assets/images/icons/warnings/Heat Watch.svg';
@@ -361,6 +362,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WarningsGenericAmber {...(props as SvgProps)} />;
     case 'warnings-generic-red':
       return <WarningsGenericRed {...(props as SvgProps)} />;
+    case 'warnings-generic-green':
+      return <WarningsGenericGreen {...(props as SvgProps)} />;
     case 'warnings-flooding-yellow':
       return <WarningsFloodingYellow {...(props as SvgProps)} />;
     case 'warnings-flooding-orange':
