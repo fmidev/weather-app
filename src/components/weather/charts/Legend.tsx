@@ -91,7 +91,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
 
   const Arrow = () => (
     <Icon
-      name="wind-arrow"
+      name="wind-arrowS"
       width={20}
       height={20}
       style={[
