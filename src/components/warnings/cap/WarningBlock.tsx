@@ -170,10 +170,13 @@ function WarningBlock({
     return mostSevere;
   }, [warnings]);
 
-  const headerWarningAreas = warnings
-    .map((warning) => warning.info.area.areaDesc)
-    .map((area) => area.charAt(0).toUpperCase().concat(area.substring(1)))
-    .join(', ');
+  const headerWarningAreas = [
+    ...new Set(
+      warnings
+        .map((warning) => warning.info.area.areaDesc)
+        .map((area) => area.charAt(0).toUpperCase().concat(area.substring(1)))
+    ),
+  ].join(', ');
 
   const getHeaderWarningTimeSpans = (capWarnings: CapWarning[]): string[] => {
     const timespans = capWarnings.map((warning) => ({
