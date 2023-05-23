@@ -156,6 +156,14 @@ jobs:
           echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
           chmod +x ./gradlew
           bundle exec fastlane android build_sign_and_deploy
+        env:
+             ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
+             ANDROID_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+             ANDROID_KEYSTORE_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+             ANDROID_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+             ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
+             GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
+             # SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
         working-directory: android
 
       # Upload artifact
@@ -253,7 +261,7 @@ jobs:
          IOS_DEVELOPER_TEAM_ID: ${{ secrets.IOS_DEVELOPER_TEAM_ID }}
          IOS_PROVISIONINGPROFILE_NAME: ${{ secrets.IOS_PROVISIONINGPROFILE_NAME }}
          IOS_CODE_SIGNING_IDENTITY: ${{ secrets.IOS_CODE_SIGNING_IDENTITY }}
-         SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
+         # SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
         working-directory: ios
 
       - name: Upload app-store ipa and dsyms to artifacts
