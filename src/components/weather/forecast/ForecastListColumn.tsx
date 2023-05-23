@@ -110,7 +110,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
 
             // wind direction can be with either one degree accuracy or uses cardinals (N,NE,E,...)
             const useCardinals =
-              Config.get('weather').forecast.useCardinalsForWindDirection;
+              Config.get('weather').useCardinalsForWindDirection;
             let direction = 0;
             if (useCardinals) {
               const tempDir = data.windDirection || 0;

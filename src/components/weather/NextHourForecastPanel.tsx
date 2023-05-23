@@ -117,8 +117,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   );
 
   // wind direction can be with either one degree accuracy or uses cardinals (N,NE,E,...)
-  const useCardinals =
-    Config.get('weather').forecast.useCardinalsForWindDirection;
+  const useCardinals = Config.get('weather').useCardinalsForWindDirection;
   let direction = 0;
   if (useCardinals) {
     const tempDir = nextHourForecast.windDirection || 0;
