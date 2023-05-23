@@ -78,6 +78,7 @@ interface CapViewSettings {
   mapZoomEnabled?: boolean;
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;
+  includeAreaInTitle?: boolean;
 }
 
 interface Warnings {
@@ -182,6 +183,10 @@ export interface ConfigType {
         parameters: (keyof ForecastParameters)[];
       }[];
       defaultParameters: DisplayParameters[];
+      excludeDayLength?: boolean;
+      infoBottomSheet?: {
+        showAllSymbols?: boolean;
+      };
     };
     observation: ObservationEnabled | ObservationDisabled;
   };

@@ -58,7 +58,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   uniqueSmartSymbols,
   onClose,
 }) => {
-  const [symbolsOpen, setSymbolsOpen] = useState<boolean>(false);
+  const showAllSymbols =
+    Config.get('weather').forecast.infoBottomSheet?.showAllSymbols || false;
+  const [symbolsOpen, setSymbolsOpen] = useState<boolean>(showAllSymbols);
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
@@ -81,7 +83,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   ).length;
 
   const { units } = Config.get('settings');
-  const { data } = Config.get('weather').forecast;
+  const { data, excludeDayLength } = Config.get('weather').forecast;
   const forecastParams = data.flatMap(({ parameters }) => parameters);
   const regex = new RegExp([...forecastParams].join('|'));
   const activeConstants = constants.filter((constant) =>
@@ -614,6 +616,102 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
               </>
             )}
+            {!excludeDayLength && (
+              <>
+                <View style={styles.row}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      name="sun"
+                      width={22}
+                      height={22}
+                      style={[
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.sunriseAndSunset')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      name="sun-arrow-up"
+                      size={14}
+                      style={[
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.sunrise')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      name="sun-arrow-down"
+                      size={14}
+                      style={[
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.sunset')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      width={22}
+                      height={22}
+                      name="polar-night"
+                      style={styles.withMarginRight}
+                      color={colors.hourListText}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.polarNight')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      width={22}
+                      height={22}
+                      name="midnight-sun"
+                      style={styles.withMarginRight}
+                      color={colors.hourListText}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.nightlessNight')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      name="time"
+                      width={22}
+                      height={22}
+                      style={[
+                        styles.withMarginRight,
+                        {
+                          color: colors.hourListText,
+                        },
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.dayDuration')}
+                  </Text>
+                </View>
+              </>
+            )}
             <View style={styles.row}>
               <View style={styles.iconWrapper}>
                 <Icon
@@ -789,32 +887,35 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   )
                 )}
             </View>
-            <AccessibleTouchableOpacity
-              style={[
-                styles.row,
-                styles.buttonContainer,
-                {
-                  borderColor: colors.primaryText,
-                },
-              ]}
-              onPress={() => setSymbolsOpen((prev) => !prev)}>
-              <Text style={[styles.buttonText, { color: colors.primaryText }]}>
-                {!symbolsOpen
-                  ? `${t('weatherInfoBottomSheet.showRest')} (${
-                      filteredSymbolsArr.length - currentSymbols
-                    })`
-                  : t('weatherInfoBottomSheet.showLess')}
-              </Text>
-              <Icon
-                name={symbolsOpen ? 'arrow-up' : 'arrow-down'}
-                width={24}
-                height={24}
+            {!showAllSymbols && (
+              <AccessibleTouchableOpacity
                 style={[
-                  styles.withSmallMarginLeft,
-                  { color: colors.primaryText },
+                  styles.row,
+                  styles.buttonContainer,
+                  {
+                    borderColor: colors.primaryText,
+                  },
                 ]}
-              />
-            </AccessibleTouchableOpacity>
+                onPress={() => setSymbolsOpen((prev) => !prev)}>
+                <Text
+                  style={[styles.buttonText, { color: colors.primaryText }]}>
+                  {!symbolsOpen
+                    ? `${t('weatherInfoBottomSheet.showRest')} (${
+                        filteredSymbolsArr.length - currentSymbols
+                      })`
+                    : t('weatherInfoBottomSheet.showLess')}
+                </Text>
+                <Icon
+                  name={symbolsOpen ? 'arrow-up' : 'arrow-down'}
+                  width={24}
+                  height={24}
+                  style={[
+                    styles.withSmallMarginLeft,
+                    { color: colors.primaryText },
+                  ]}
+                />
+              </AccessibleTouchableOpacity>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </View>

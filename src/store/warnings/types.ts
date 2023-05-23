@@ -63,6 +63,7 @@ export interface CapWarning {
   status: string;
   msgType: string;
   scope: string;
+  references: string;
   info: {
     language: string;
     category: string;
@@ -79,6 +80,7 @@ export interface CapWarning {
     area: {
       areaDesc: string;
       polygon: string;
+      circle: string;
     };
   };
 }

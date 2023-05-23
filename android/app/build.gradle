@@ -128,20 +128,20 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitectures")
 
 
-def areUploadKeystoreEnvsSet = System.getenv("WEATHER_APP_RELEASE_STORE_FILE") != null &&
-                                System.getenv("WEATHER_APP_RELEASE_STORE_PASSWORD") != null &&
-                                System.getenv("WEATHER_APP_RELEASE_KEY_ALIAS") != null &&
-                                System.getenv("WEATHER_RELEASE_KEY_PASSWORD") != null
+def areUploadKeystoreEnvsSet = System.getenv("KEYSTORE") != null &&
+                                System.getenv("SIGNING_STORE_PASSWORD") != null &&
+                                System.getenv("SIGNING_KEY_ALIAS") != null &&
+                                System.getenv("SIGNING_KEY_PASSWORD") != null
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystorePropertiesFileExists = keystorePropertiesFile.exists()
 def keystoreProperties = new Properties()
 if (!(keystorePropertiesFileExists || areUploadKeystoreEnvsSet)) {
     throw new InvalidUserDataException('''\
 You must have a keystore.properties file in the <rn-root-folder>/android/ folder or set the environments variables:
-  WEATHER_APP_RELEASE_STORE_FILE
-  WEATHER_APP_RELEASE_STORE_PASSWORD
-  WEATHER_APP_RELEASE_KEY_ALIAS
-  WEATHER_APP_RELEASE_KEY_PASSWORD
+  KEYSTORE
+  SIGNING_STORE_PASSWORD
+  SIGNING_KEY_ALIAS
+  SIGNING_KEY_PASSWORD
 ''')
 }
 keystorePropertiesFileExists && keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -155,8 +155,8 @@ android {
         applicationId "fi.fmi.mobileweather"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3000035
-        versionName "3.0.5"
+        versionCode 3000036
+        versionName "3.0.51"
         testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         missingDimensionStrategy 'detox', 'full'
@@ -179,10 +179,10 @@ android {
         }
         release {
             if (areUploadKeystoreEnvsSet) {
-                storeFile rootProject.file(String.valueOf(System.getenv("WEATHER_APP_RELEASE_STORE_FILE")))
-                storePassword String.valueOf(System.getenv("WEATHER_APP_RELEASE_STORE_PASSWORD"))
-                keyAlias String.valueOf(System.getenv("WEATHER_APP_RELEASE_KEY_ALIAS"))
-                keyPassword String.valueOf(System.getenv("WEATHER_APP_RELEASE_KEY_PASSWORD"))
+                storeFile rootProject.file(String.valueOf(System.getenv("KEYSTORE")))
+                storePassword String.valueOf(System.getenv("SIGNING_STORE_PASSWORD"))
+                keyAlias String.valueOf(System.getenv("SIGNING_KEY_ALIAS"))
+                keyPassword String.valueOf(System.getenv("SIGNING_KEY_PASSWORD"))
             } else {
                 storeFile rootProject.file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
