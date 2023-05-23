@@ -78,6 +78,7 @@ interface CapViewSettings {
   mapZoomEnabled?: boolean;
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;
+  includeAreaInTitle?: boolean;
 }
 
 interface Warnings {
