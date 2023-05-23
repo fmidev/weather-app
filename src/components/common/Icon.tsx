@@ -109,12 +109,13 @@ import WarningsRedDark from '@assets/images/icons/warnings-red-dark.svg';
 
 import WeatherSymbol from '@assets/images/icons/weather-symbol.svg';
 import Weather from '@assets/images/icons/weather.svg';
-import WindArrow from '@assets/images/icons/wind-arrow.svg';
-import WindArrowS from '@assets/images/icons/wind-arrow-s.svg';
 import WindDark from '@assets/images/icons/wind-dark.svg';
-// import WindLight from '@assets/images/icons/wind-light.svg';
-// import WindLightMap from '@assets/images/icons/wind-light-map.svg';
-// import WindNextHour from '@assets/images/icons/wind-next-hour.svg';
+/* eslint-disable import/no-duplicates */
+import WindArrow from '@assets/images/icons/wind-arrow.svg';
+import WindLight from '@assets/images/icons/wind-arrow.svg';
+import WindLightMap from '@assets/images/icons/wind-arrow.svg';
+import WindNextHour from '@assets/images/icons/wind-arrow.svg';
+/* eslint-enable import/no-duplicates */
 import Wind from '@assets/images/icons/wind.svg';
 
 // FeelsLike Icons
@@ -433,18 +434,16 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WeatherSymbol {...(props as SvgProps)} />;
     case 'weather':
       return <Weather {...(props as SvgProps)} />;
-    case 'wind-arrow2':
+    case 'wind-arrow':
       return <WindArrow {...(props as SvgProps)} />;
-    case 'wind-arrowS':
-      return <WindArrowS {...(props as SvgProps)} />;
     case 'wind-dark':
       return <WindDark {...(props as SvgProps)} />;
     case 'wind-light':
-      return <WindArrowS {...(props as SvgProps)} />;
+      return <WindLight {...(props as SvgProps)} />;
     case 'wind-light-map':
-      return <WindArrowS {...(props as SvgProps)} />;
+      return <WindLightMap {...(props as SvgProps)} />;
     case 'wind-next-hour':
-      return <WindArrowS {...(props as SvgProps)} />;
+      return <WindNextHour {...(props as SvgProps)} />;
     case 'wind':
       return <Wind {...(props as SvgProps)} />;
     case 'feels-like-basic':
