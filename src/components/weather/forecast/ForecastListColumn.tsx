@@ -107,6 +107,40 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 windSpeedUnit
               )}`
             );
+
+            // wind direction can be with either one degree accuracy or uses cardinals (N,NE,E,...)
+            const useCardinals =
+              Config.get('weather').forecast.useCardinalsForWindDirection;
+            let direction = 0;
+            if (useCardinals) {
+              const tempDir = data.windDirection || 0;
+              if (
+                (tempDir >= 338 && tempDir <= 360) ||
+                (tempDir >= 0 && tempDir <= 22)
+              ) {
+                direction = 0; // N
+              } else if (tempDir >= 23 && tempDir <= 67) {
+                direction = 45; // NE
+              } else if (tempDir >= 68 && tempDir <= 112) {
+                direction = 90; // E
+              } else if (tempDir >= 113 && tempDir <= 157) {
+                direction = 135; // SE
+              } else if (tempDir >= 158 && tempDir <= 202) {
+                direction = 180; // S
+              } else if (tempDir >= 203 && tempDir <= 247) {
+                direction = 225; // SW
+              } else if (tempDir >= 248 && tempDir <= 292) {
+                direction = 270; // W
+              } else if (tempDir >= 293 && tempDir <= 337) {
+                direction = 315; // NW
+              }
+              // for some reason icon is pointing NW instead of N => +45
+              // wind value needs 180 degree switch to show correctly where wind is coming from
+              direction = direction + 45 - 180;
+            } else {
+              direction = (data.windDirection || 0) + 45 - 180;
+            }
+
             return (
               <View
                 accessibilityLabel={
@@ -132,7 +166,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     style={{
                       transform: [
                         {
-                          rotate: `${(data.windDirection || 0) + 45 - 180}deg`,
+                          rotate: `${direction}deg`,
                         },
                       ],
                     }}

@@ -182,6 +182,7 @@ export interface ConfigType {
         producer?: string;
         parameters: (keyof ForecastParameters)[];
       }[];
+      useCardinalsForWindDirection?: boolean;
       defaultParameters: DisplayParameters[];
       excludeDayLength?: boolean;
       infoBottomSheet?: {
