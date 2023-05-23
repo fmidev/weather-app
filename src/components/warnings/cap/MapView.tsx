@@ -7,6 +7,7 @@ import {
   CAP_WARNING_YELLOW,
   CustomTheme,
   GRAY_8,
+  GREEN,
 } from '@utils/colors';
 import moment from 'moment';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -21,9 +22,10 @@ const SEVERITY_COLORS: { [key: string]: string } = {
   Extreme: CAP_WARNING_RED,
   Severe: CAP_WARNING_ORANGE,
   Moderate: CAP_WARNING_YELLOW,
+  Minor: GREEN,
 };
 
-const SEVERITIES: Severity[] = ['Moderate', 'Severe', 'Extreme'];
+const SEVERITIES: Severity[] = ['Minor', 'Moderate', 'Severe', 'Extreme'];
 const MapView = ({
   dates,
   capData,

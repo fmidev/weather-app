@@ -7,12 +7,14 @@ import {
   CAP_WARNING_YELLOW,
   CAP_WARNING_ORANGE,
   CAP_WARNING_RED,
+  GREEN,
 } from '@utils/colors';
 
 function CapSeverityBar({ severities }: { severities: number[] }) {
   const { colors } = useTheme() as CustomTheme;
   const severityColors = [
     CAP_WARNING_NEUTRAL,
+    GREEN,
     CAP_WARNING_YELLOW,
     CAP_WARNING_ORANGE,
     CAP_WARNING_RED,
