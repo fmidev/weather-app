@@ -309,7 +309,7 @@ export const getIndexForDaySmartSymbol = (
   return index;
 };
 
-const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
+const severities: Severity[] = ['Minor', 'Moderate', 'Severe', 'Extreme'];
 
 const getSeveritiesForTimePeriod = (
   warnings: CapWarning[],

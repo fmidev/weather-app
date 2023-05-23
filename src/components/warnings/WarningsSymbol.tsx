@@ -12,7 +12,8 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({
   severity,
   size,
 }) => {
-  const colorMap: { [key in Severity]: string } = {
+  const colorMap: { [key in Severity]?: string } = {
+    Minor: 'green',
     Moderate: 'yellow',
     Severe: 'orange',
     Extreme: 'red',

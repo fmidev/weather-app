@@ -70,4 +70,10 @@ export const knownWarningTypes = [
   'Very Poor Visibility',
 ] as const;
 
-export const severityList = ['', 'Moderate', 'Severe', 'Extreme'] as const;
+export const severityList = [
+  '',
+  'Minor',
+  'Moderate',
+  'Severe',
+  'Extreme',
+] as const;
