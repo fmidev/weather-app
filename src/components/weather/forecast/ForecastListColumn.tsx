@@ -12,7 +12,7 @@ import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
 import * as constants from '@store/forecast/constants';
 
-import { isOdd } from '@utils/helpers';
+import { isOdd, getWindDirection } from '@utils/helpers';
 import { Config } from '@config';
 import {
   converter,
@@ -104,6 +104,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 windSpeedUnit
               )}`
             );
+
             return (
               <View
                 accessibilityLabel={
@@ -129,7 +130,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     style={{
                       transform: [
                         {
-                          rotate: `${(data.windDirection || 0) + 45 - 180}deg`,
+                          rotate: `${getWindDirection(data.windDirection)}deg`,
                         },
                       ],
                     }}
