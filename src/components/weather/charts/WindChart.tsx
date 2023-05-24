@@ -65,7 +65,7 @@ const WindChart: React.FC<ChartDataProps> = ({
     return (
       <View style={[styles.arrowStyle, { left: dX - labelSize / 2 }]}>
         <Icon
-          name="wind-arrowS"
+          name="wind-arrow"
           width={labelSize}
           height={labelSize}
           style={{

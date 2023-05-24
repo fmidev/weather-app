@@ -158,7 +158,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                           timeStep.windDirection
                         )} ${t('paramUnits.°')}.`
                   }
-                  name="wind-arrowS"
+                  name="wind-arrow"
                   style={[
                     styles.wdPadding,
                     {
