@@ -17,7 +17,7 @@ import {
 import { selectTimeZone } from '@store/location/selector';
 import { weatherSymbolGetter } from '@assets/images';
 
-import { getFeelsLikeIconName } from '@utils/helpers';
+import { getFeelsLikeIconName, getWindDirection } from '@utils/helpers';
 import { CustomTheme, GRAY_1 } from '@utils/colors';
 
 import Icon from '@components/common/Icon';
@@ -220,9 +220,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                 {
                   transform: [
                     {
-                      rotate: `${
-                        (nextHourForecast.windDirection || 0) + 45 - 180
-                      }deg`,
+                      rotate: `${getWindDirection(
+                        nextHourForecast.windDirection
+                      )}deg`,
                     },
                   ],
                 },

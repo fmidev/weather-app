@@ -189,6 +189,7 @@ export interface ConfigType {
       };
     };
     observation: ObservationEnabled | ObservationDisabled;
+    useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;
   settings: {
