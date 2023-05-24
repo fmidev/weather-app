@@ -118,7 +118,7 @@ export const getPrecipitationLevel = (amount: number): keyof Rain => {
   return 0;
 };
 
-export const getWindDirection = (dataValue: number): number => {
+export const getWindDirection = (dataValue): number => {
   const useCardinals = Config.get('weather').useCardinalsForWindDirection;
   let direction = 0;
   if (useCardinals) {
