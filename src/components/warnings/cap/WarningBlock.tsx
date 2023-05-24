@@ -30,6 +30,7 @@ const mapStateToProps = (state: State) => ({
 const connector = connect(mapStateToProps);
 
 const WarningItem = ({
+  areasDescription,
   warning,
   warningCount,
   scrollViewRef,
@@ -41,6 +42,7 @@ const WarningItem = ({
   includeArrow,
   showDescription,
 }: {
+  areasDescription?: string;
   warning: CapWarning;
   warningCount?: number;
   scrollViewRef?: React.MutableRefObject<ScrollView>;
@@ -97,7 +99,9 @@ const WarningItem = ({
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
           </Text>
-          <Text style={[styles.headingText]}>{areaDesc}</Text>
+          <Text style={[styles.headingText]}>
+            {areasDescription || areaDesc}
+          </Text>
         </View>
         {includeArrow && (
           <View style={styles.accordionArrow}>
@@ -165,6 +169,14 @@ function WarningBlock({
     });
     return mostSevere;
   }, [warnings]);
+
+  const headerWarningAreas = [
+    ...new Set(
+      warnings
+        .map((warning) => warning.info.area.areaDesc)
+        .map((area) => area.charAt(0).toUpperCase().concat(area.substring(1)))
+    ),
+  ].join(', ');
 
   const getHeaderWarningTimeSpans = (capWarnings: CapWarning[]): string[] => {
     const timespans = capWarnings.map((warning) => ({
@@ -253,6 +265,7 @@ function WarningBlock({
     <View>
       <AccessibleTouchableOpacity onPress={() => setOpen(!open)}>
         <WarningItem
+          areasDescription={headerWarningAreas}
           warning={headerWarning}
           warningCount={warnings.length}
           includeArrow

@@ -45,7 +45,9 @@ const getCapWarnings = async () => {
         })
       )
     )
-  ).map(({ data }) => parse(data).alert);
+  )
+    .map(({ data }) => parse(data).alert)
+    .filter((warning) => warning); // remove undefined, null
 
   const relevantMessages = capWarnings.filter(isRelevantMessage);
   const updatedMessages = relevantMessages
