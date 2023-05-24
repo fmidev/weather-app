@@ -9,7 +9,11 @@ import Icon from '@components/common/Icon';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import { GRAY_1_OPACITY, CustomTheme } from '@utils/colors';
 import { capitalize } from '@utils/chart';
-import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
+import {
+  getObservationCellValue,
+  getParameterUnit,
+  getWindDirection,
+} from '@utils/helpers';
 import { Config } from '@config';
 import { ClockType } from '@store/settings/types';
 import { getForecastParameterUnitTranslationKey } from '@utils/units';
@@ -111,38 +115,6 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
         false
       );
 
-      // wind direction can be with either one degree accuracy or uses cardinals (N,NE,E,...)
-      const useCardinals = Config.get('weather').useCardinalsForWindDirection;
-      let direction = 0;
-      if (useCardinals) {
-        const tempDir = timeStep.windDirection || 0;
-        if (
-          (tempDir >= 338 && tempDir <= 360) ||
-          (tempDir >= 0 && tempDir <= 22)
-        ) {
-          direction = 0; // N
-        } else if (tempDir >= 23 && tempDir <= 67) {
-          direction = 45; // NE
-        } else if (tempDir >= 68 && tempDir <= 112) {
-          direction = 90; // E
-        } else if (tempDir >= 113 && tempDir <= 157) {
-          direction = 135; // SE
-        } else if (tempDir >= 158 && tempDir <= 202) {
-          direction = 180; // S
-        } else if (tempDir >= 203 && tempDir <= 247) {
-          direction = 225; // SW
-        } else if (tempDir >= 248 && tempDir <= 292) {
-          direction = 270; // W
-        } else if (tempDir >= 293 && tempDir <= 337) {
-          direction = 315; // NW
-        }
-        // for some reason icon is pointing NW instead of N => +45
-        // wind value needs 180 degree switch to show correctly where wind is coming from
-        direction = direction + 45 - 180;
-      } else {
-        direction = (timeStep.windDirection || 0) + 45 - 180;
-      }
-
       return (
         <View style={styles.row}>
           <View style={[styles.windColumn]}>
@@ -182,9 +154,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                   accessibilityLabel={
                     timeStep.windCompass8
                       ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
-                      : `${t('measurements.windDirection')} ${direction} ${t(
-                          'paramUnits.°'
-                        )}.`
+                      : `${t('measurements.windDirection')} ${getWindDirection(
+                          timeStep.windDirection
+                        )} ${t('paramUnits.°')}.`
                   }
                   name="wind-arrow"
                   style={[
@@ -193,7 +165,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                       color: colors.hourListText,
                       transform: [
                         {
-                          rotate: `${direction}deg`,
+                          rotate: `${getWindDirection(
+                            timeStep.windDirection
+                          )}deg`,
                         },
                       ],
                     },
