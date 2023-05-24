@@ -109,11 +109,13 @@ import WarningsRedDark from '@assets/images/icons/warnings-red-dark.svg';
 
 import WeatherSymbol from '@assets/images/icons/weather-symbol.svg';
 import Weather from '@assets/images/icons/weather.svg';
-import WindArrow from '@assets/images/icons/wind-arrow.svg';
 import WindDark from '@assets/images/icons/wind-dark.svg';
-import WindLight from '@assets/images/icons/wind-light.svg';
-import WindLightMap from '@assets/images/icons/wind-light-map.svg';
-import WindNextHour from '@assets/images/icons/wind-next-hour.svg';
+/* eslint-disable import/no-duplicates */
+import WindArrow from '@assets/images/icons/wind-arrow.svg';
+import WindLight from '@assets/images/icons/wind-arrow.svg';
+import WindLightMap from '@assets/images/icons/wind-arrow.svg';
+import WindNextHour from '@assets/images/icons/wind-arrow.svg';
+/* eslint-enable import/no-duplicates */
 import Wind from '@assets/images/icons/wind.svg';
 
 // FeelsLike Icons
