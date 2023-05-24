@@ -47,6 +47,14 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   const { colors } = useTheme() as CustomTheme;
 
   const capViewSettings = Config.get('warnings')?.capViewSettings;
+
+  let textViewTitle = `${t('warningsForNDays', {
+    days: capViewSettings?.numberOfDays,
+  })}`;
+
+  if (capViewSettings?.includeAreaInTitle)
+    textViewTitle += ` - ${currentLocation?.name}`;
+
   const getDateIndicatorDates = () => {
     const today = moment(new Date()).hours(12).minutes(0);
     const dates = [
@@ -132,12 +140,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
           </View>
         </View>
         <MapView dates={dates} capData={capWarnings} />
-        <PanelHeader
-          title={`${t('warningsForNDays', {
-            days: capViewSettings?.numberOfDays,
-          })} - ${currentLocation?.name}`}
-          justifyCenter
-        />
+        <PanelHeader title={textViewTitle} justifyCenter />
         <TextList capData={capWarnings} dates={dates} />
       </View>
       <RBSheet

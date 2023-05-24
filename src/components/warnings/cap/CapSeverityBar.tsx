@@ -4,6 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import {
   CustomTheme,
   CAP_WARNING_NEUTRAL,
+  CAP_WARNING_GREEN,
   CAP_WARNING_YELLOW,
   CAP_WARNING_ORANGE,
   CAP_WARNING_RED,
@@ -13,6 +14,7 @@ function CapSeverityBar({ severities }: { severities: number[] }) {
   const { colors } = useTheme() as CustomTheme;
   const severityColors = [
     CAP_WARNING_NEUTRAL,
+    CAP_WARNING_GREEN,
     CAP_WARNING_YELLOW,
     CAP_WARNING_ORANGE,
     CAP_WARNING_RED,

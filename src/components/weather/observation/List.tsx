@@ -9,7 +9,11 @@ import Icon from '@components/common/Icon';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import { GRAY_1_OPACITY, CustomTheme } from '@utils/colors';
 import { capitalize } from '@utils/chart';
-import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
+import {
+  getObservationCellValue,
+  getParameterUnit,
+  getWindDirection,
+} from '@utils/helpers';
 import { Config } from '@config';
 import { ClockType } from '@store/settings/types';
 import { getForecastParameterUnitTranslationKey } from '@utils/units';
@@ -150,9 +154,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                   accessibilityLabel={
                     timeStep.windCompass8
                       ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
-                      : `${t('measurements.windDirection')} ${
+                      : `${t('measurements.windDirection')} ${getWindDirection(
                           timeStep.windDirection
-                        } ${t('paramUnits.°')}.`
+                        )} ${t('paramUnits.°')}.`
                   }
                   name="wind-arrowS"
                   style={[
@@ -161,7 +165,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                       color: colors.hourListText,
                       transform: [
                         {
-                          rotate: `${timeStep.windDirection + 45 - 180}deg`,
+                          rotate: `${getWindDirection(
+                            timeStep.windDirection
+                          )}deg`,
                         },
                       ],
                     },

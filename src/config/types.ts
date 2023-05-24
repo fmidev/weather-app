@@ -78,6 +78,7 @@ interface CapViewSettings {
   mapZoomEnabled?: boolean;
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;
+  includeAreaInTitle?: boolean;
 }
 
 interface Warnings {
@@ -188,6 +189,7 @@ export interface ConfigType {
       };
     };
     observation: ObservationEnabled | ObservationDisabled;
+    useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;
   settings: {

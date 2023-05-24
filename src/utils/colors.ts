@@ -59,6 +59,7 @@ export const RAIN_6_LIGHT = 'rgb(11,89,178)';
 export const RAIN_7_LIGHT = 'rgb(91,26,142)';
 export const RAIN_8_LIGHT = 'rgb(91,26,142)';
 export const CAP_WARNING_NEUTRAL = '#E4F7F3';
+export const CAP_WARNING_GREEN = '#76C81D';
 export const CAP_WARNING_YELLOW = '#FFFB7B';
 export const CAP_WARNING_ORANGE = '#FFCB5F';
 export const CAP_WARNING_RED = '#FF5A5A';
