@@ -78,12 +78,6 @@ const MapView = ({
         currentUniqueWarnings.push(warning);
       }
     });
-    console.log(
-      'Applicable',
-      applicableWarnings,
-      'Unique',
-      currentUniqueWarnings
-    );
     return currentUniqueWarnings;
   }, [applicableWarnings]);
 
