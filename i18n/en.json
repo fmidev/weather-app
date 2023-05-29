@@ -353,7 +353,7 @@
       "showMore": "Show more",
       "showLess": "Show less",
       "rainRadarInfo": "The intensity of the observed and forecasted precipitation is expressed in colors.",
-      "mapLayersInfo": "The observed rainfall on the map has been measured using a weather radar. Precipitation forecast is a short-term rain forecast based on radar images and weather forecasting models. In Finland, the timestep is 15 minutes and in Scandinavia, one hour.",
+      "mapLayersInfo": "The observed rainfall on the map has been measured using a weather radar. Precipitation forecast is a short-term rain forecast based on radar images and weather forecasting models.",
       "timeseriesLayerInfo": "The weather forecast on the map shows the weather symbol and temperature for numerous locations around the world. Tap the symbol to display more weather information."
     }
   },
