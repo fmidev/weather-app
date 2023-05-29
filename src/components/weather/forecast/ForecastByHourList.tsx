@@ -98,7 +98,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const dayHours = Math.floor(step.dayLength / 60);
     const dayMinutes = step.dayLength % 60;
 
-    const { excludePolarNightAndMidnightSun } = Config.get('weather').forecast;
+    const { excludeDayDuration, excludePolarNightAndMidnightSun } =
+      Config.get('weather').forecast;
 
     const isPolarNight =
       (excludePolarNightAndMidnightSun === undefined ||
@@ -249,9 +250,12 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               style={[
                 styles.row,
                 styles.listContainer,
-                styles.justifySpaceBetween,
+                styles.maxWidth,
+                styles.justifyContentCenter,
               ]}>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              <View
+                style={[styles.row, styles.alignCenter, styles.withMarginRight]}
+                accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -297,28 +301,39 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {sunset.format(timeFormat)}
                 </Text>
               </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
-                <Icon
-                  width={24}
-                  height={24}
-                  name="time"
-                  style={[
-                    styles.withMarginRight,
-                    { color: colors.hourListText },
-                  ]}
-                />
-                <Text
-                  accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
-                    'hours'
-                  )} ${dayMinutes} ${t('minutes')}`}
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
-                  {`${dayHours} h ${dayMinutes} min`}
-                </Text>
-              </View>
+              {(excludeDayDuration === undefined || !excludeDayDuration) && (
+                <>
+                  <View
+                    style={[
+                      styles.row,
+                      styles.alignCenter,
+                      styles.withMarginLeft,
+                    ]}
+                    accessible>
+                    <Icon
+                      width={24}
+                      height={24}
+                      name="time"
+                      style={[
+                        styles.alignCenter,
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                    <Text
+                      accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
+                        'hours'
+                      )} ${dayMinutes} ${t('minutes')}`}
+                      style={[
+                        styles.panelText,
+                        styles.bold,
+                        { color: colors.hourListText },
+                      ]}>
+                      {`${dayHours} h ${dayMinutes} min`}
+                    </Text>
+                  </View>
+                </>
+              )}
             </View>
           )}
         </View>
@@ -417,8 +432,8 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
   },
-  justifySpaceBetween: {
-    justifyContent: 'space-between',
+  justifyContentCenter: {
+    justifyContent: 'center',
   },
   bold: {
     fontFamily: 'Roboto-Bold',
@@ -430,6 +445,9 @@ const styles = StyleSheet.create({
   withMarginRight: {
     marginRight: 6,
   },
+  withMarginLeft: {
+    marginLeft: 6,
+  },
   forecastHeader: {
     height: 52,
     borderLeftWidth: 1,
@@ -437,6 +455,9 @@ const styles = StyleSheet.create({
   },
   displayNone: {
     display: 'none',
+  },
+  maxWidth: {
+    width: '100%',
   },
   alignCenter: {
     alignItems: 'center',
