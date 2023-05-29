@@ -98,9 +98,19 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const dayHours = Math.floor(step.dayLength / 60);
     const dayMinutes = step.dayLength % 60;
 
-    const isPolarNight = !step.sunriseToday && sunset.isBefore(sunrise);
+    const { excludePolarNightAndMidnightSun } = Config.get('weather').forecast;
 
-    const isMidnightSun = !step.sunsetToday && sunrise.isBefore(sunset);
+    const isPolarNight =
+      (excludePolarNightAndMidnightSun === undefined ||
+        !excludePolarNightAndMidnightSun) &&
+      !step.sunriseToday &&
+      sunset.isBefore(sunrise);
+
+    const isMidnightSun =
+      (excludePolarNightAndMidnightSun === undefined ||
+        !excludePolarNightAndMidnightSun) &&
+      !step.sunsetToday &&
+      sunrise.isBefore(sunset);
 
     const dateFormat =
       clockType === 12
