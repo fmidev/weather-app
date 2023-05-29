@@ -254,7 +254,11 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 styles.justifyContentCenter,
               ]}>
               <View
-                style={[styles.row, styles.alignCenter, styles.withMarginRight]}
+                style={[
+                  styles.row,
+                  styles.alignCenter,
+                  styles.withMarginRight20,
+                ]}
                 accessible>
                 <Icon
                   width={14}
@@ -307,7 +311,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                     style={[
                       styles.row,
                       styles.alignCenter,
-                      styles.withMarginLeft,
+                      styles.withMarginLeft20,
                     ]}
                     accessible>
                     <Icon
@@ -442,11 +446,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Roboto-Medium',
   },
+  withMarginRight20: {
+    marginRight: 20,
+  },
+  withMarginLeft20: {
+    marginLeft: 20,
+  },
   withMarginRight: {
     marginRight: 6,
-  },
-  withMarginLeft: {
-    marginLeft: 6,
   },
   forecastHeader: {
     height: 52,
