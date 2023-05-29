@@ -61,23 +61,25 @@ const MapView = ({
         endsDuringDay || isContainedInDay || startsDuringDay || dayContained
       );
     });
+    return warnings;
+  }, [capData, date]);
 
-    const uniqueWarnings: CapWarning[] = [];
+  const uniqueWarnings = useMemo(() => {
+    const currentUniqueWarnings: CapWarning[] = [];
 
-    warnings?.forEach((warning) => {
+    applicableWarnings?.forEach((warning) => {
       if (
-        !uniqueWarnings.find(
+        !currentUniqueWarnings.find(
           (w) =>
             w.info.event === warning.info.event &&
             w.info.severity === warning.info.severity
         )
       ) {
-        uniqueWarnings.push(warning);
+        currentUniqueWarnings.push(warning);
       }
     });
-
-    return uniqueWarnings;
-  }, [capData, date]);
+    return currentUniqueWarnings;
+  }, [applicableWarnings]);
 
   useEffect(() => setSelectedFilters([]), [date]);
 
@@ -185,7 +187,7 @@ const MapView = ({
         dailySeverities={dailySeverities}
       />
       <WarningTypeFiltersList
-        warnings={applicableWarnings}
+        warnings={uniqueWarnings}
         onWarningTypePress={handleWarningTypePress}
         activeWarnings={selectedFilters}
       />
