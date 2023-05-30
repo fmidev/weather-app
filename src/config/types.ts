@@ -184,6 +184,7 @@ export interface ConfigType {
       }[];
       defaultParameters: DisplayParameters[];
       excludeDayLength?: boolean;
+      excludeDayDuration?: boolean;
       infoBottomSheet?: {
         showAllSymbols?: boolean;
       };

@@ -83,8 +83,12 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   ).length;
 
   const { units } = Config.get('settings');
-  const { data, excludeDayLength, excludePolarNightAndMidnightSun } =
-    Config.get('weather').forecast;
+  const {
+    data,
+    excludeDayLength,
+    excludeDayDuration,
+    excludePolarNightAndMidnightSun,
+  } = Config.get('weather').forecast;
   const forecastParams = data.flatMap(({ parameters }) => parameters);
   const regex = new RegExp([...forecastParams].join('|'));
   const activeConstants = constants.filter((constant) =>
@@ -700,24 +704,29 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     </View>
                   </>
                 )}
-                <View style={[styles.row, styles.withMarginLeft]}>
-                  <View style={styles.iconWrapper}>
-                    <Icon
-                      name="time"
-                      width={22}
-                      height={22}
-                      style={[
-                        styles.withMarginRight,
-                        {
-                          color: colors.hourListText,
-                        },
-                      ]}
-                    />
-                  </View>
-                  <Text style={[styles.text, { color: colors.hourListText }]}>
-                    {t('weatherInfoBottomSheet.dayDuration')}
-                  </Text>
-                </View>
+                {(excludeDayDuration === undefined || !excludeDayDuration) && (
+                  <>
+                    <View style={[styles.row, styles.withMarginLeft]}>
+                      <View style={styles.iconWrapper}>
+                        <Icon
+                          name="time"
+                          width={22}
+                          height={22}
+                          style={[
+                            styles.withMarginRight,
+                            {
+                              color: colors.hourListText,
+                            },
+                          ]}
+                        />
+                      </View>
+                      <Text
+                        style={[styles.text, { color: colors.hourListText }]}>
+                        {t('weatherInfoBottomSheet.dayDuration')}
+                      </Text>
+                    </View>
+                  </>
+                )}
               </>
             )}
 
