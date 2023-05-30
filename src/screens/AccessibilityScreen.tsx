@@ -48,186 +48,282 @@ const TermsAndConditionsScreen: React.FC = () => {
         style={styles.scrollContainer}
         contentContainerStyle={styles.withPaddingBottom}
         showsVerticalScrollIndicator={false}>
-        <Text
-          ref={titleRef}
-          style={[styles.title, { color: colors.primaryText }]}
-          accessibilityRole="header">
-          {t('generalTitle')}
-        </Text>
-        <Text
-          style={[styles.body, styles.bold, { color: colors.hourListText }]}>
-          {t('generalAbout')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('generalDescription')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.primaryText }]}
-          accessibilityRole="header">
-          {t('subTitle1')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('description1')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.primaryText }]}
-          accessibilityRole="header">
-          {t('subTitle2')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('description2')}
-        </Text>
-        <AccessibleTouchableOpacity
-          accessibilityRole="link"
-          accessibilityHint={t('feedback:moveToHint')}
-          onPress={() => Linking.openURL(fmiMailToUrl)}>
-          <View style={[styles.link, { borderBottomColor: colors.primary }]}>
+        {t('generalTitle') !== 'generalTitle' && (
+          <>
+            <Text
+              ref={titleRef}
+              style={[styles.title, { color: colors.primaryText }]}
+              accessibilityRole="header">
+              {t('generalTitle')}
+            </Text>
+          </>
+        )}
+        {t('generalAbout') !== 'generalAbout' && (
+          <>
             <Text
               style={[
-                styles.linkText,
-                {
-                  color: colors.primaryText,
-                },
+                styles.body,
+                styles.bold,
+                { color: colors.hourListText },
               ]}>
-              {t('email')}
+              {t('generalAbout')}
             </Text>
-          </View>
-        </AccessibleTouchableOpacity>
-        <Text
-          style={[styles.title, { color: colors.primaryText }]}
-          accessibilityRole="header">
-          {t('subTitle3')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('description3')}
-        </Text>
-        <AccessibleTouchableOpacity
-          accessibilityRole="link"
-          accessibilityHint={t('openInBrowser')}
-          onPress={() =>
-            language === 'sv'
-              ? Linking.openURL(accessibilitySv)
-              : Linking.openURL(accessibility)
-          }>
-          <View style={[styles.link, { borderBottomColor: colors.primary }]}>
-            <Text
-              style={[
-                styles.linkText,
-                {
-                  color: colors.primaryText,
-                },
-              ]}>
-              {t('website')}
+          </>
+        )}
+        {t('generalDescription') !== 'generalDescription' && (
+          <>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('generalDescription')}
             </Text>
-            <Icon name="open-in-new" color={colors.primaryText} height={18} />
-          </View>
-        </AccessibleTouchableOpacity>
-        <AccessibleTouchableOpacity
-          accessibilityRole="link"
-          accessibilityHint={t('feedback:moveToHint')}
-          onPress={() => Linking.openURL(`mailto:${t('email2')}`)}>
-          <View style={[styles.link, { borderBottomColor: colors.primary }]}>
-            <Text
-              style={[
-                styles.linkText,
-                {
-                  color: colors.primaryText,
-                },
-              ]}>
-              {t('email2')}
+          </>
+        )}
+        {t('subTitle1') !== 'subTitle1' &&
+          t('description1') !== 'description1' && (
+            <>
+              <Text
+                style={[styles.title, { color: colors.primaryText }]}
+                accessibilityRole="header">
+                {t('subTitle1')}
+              </Text>
+              <Text style={[styles.body, { color: colors.hourListText }]}>
+                {t('description1')}
+              </Text>
+            </>
+          )}
+        {t('subTitle2') !== 'subTitle2' &&
+          t('description2') !== 'description2' && (
+            <>
+              <Text
+                style={[styles.title, { color: colors.primaryText }]}
+                accessibilityRole="header">
+                {t('subTitle2')}
+              </Text>
+              <Text style={[styles.body, { color: colors.hourListText }]}>
+                {t('description2')}
+              </Text>
+            </>
+          )}
+        {t('email') !== 'email' && (
+          <>
+            <AccessibleTouchableOpacity
+              accessibilityRole="link"
+              accessibilityHint={t('feedback:moveToHint')}
+              onPress={() => Linking.openURL(fmiMailToUrl)}>
+              <View
+                style={[styles.link, { borderBottomColor: colors.primary }]}>
+                <Text
+                  style={[
+                    styles.linkText,
+                    {
+                      color: colors.primaryText,
+                    },
+                  ]}>
+                  {t('email')}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
+          </>
+        )}
+        {t('subTitle3') !== 'subTitle3' &&
+          t('description3') !== 'description3' && (
+            <>
+              <Text
+                style={[styles.title, { color: colors.primaryText }]}
+                accessibilityRole="header">
+                {t('subTitle3')}
+              </Text>
+              <Text style={[styles.body, { color: colors.hourListText }]}>
+                {t('description3')}
+              </Text>
+            </>
+          )}
+        {t('website') !== 'website' && (
+          <>
+            <AccessibleTouchableOpacity
+              accessibilityRole="link"
+              accessibilityHint={t('openInBrowser')}
+              onPress={() =>
+                language === 'sv'
+                  ? Linking.openURL(accessibilitySv)
+                  : Linking.openURL(accessibility)
+              }>
+              <View
+                style={[styles.link, { borderBottomColor: colors.primary }]}>
+                <Text
+                  style={[
+                    styles.linkText,
+                    {
+                      color: colors.primaryText,
+                    },
+                  ]}>
+                  {t('website')}
+                </Text>
+                <Icon
+                  name="open-in-new"
+                  color={colors.primaryText}
+                  height={18}
+                />
+              </View>
+            </AccessibleTouchableOpacity>
+          </>
+        )}
+        {t('email2') !== 'email2' && (
+          <>
+            <AccessibleTouchableOpacity
+              accessibilityRole="link"
+              accessibilityHint={t('feedback:moveToHint')}
+              onPress={() => Linking.openURL(`mailto:${t('email2')}`)}>
+              <View
+                style={[styles.link, { borderBottomColor: colors.primary }]}>
+                <Text
+                  style={[
+                    styles.linkText,
+                    {
+                      color: colors.primaryText,
+                    },
+                  ]}>
+                  {t('email2')}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
+          </>
+        )}
+        {t('phone') !== 'phone' && (
+          <>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('phone')}
             </Text>
-          </View>
-        </AccessibleTouchableOpacity>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('phone')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.primaryText }]}
-          accessibilityRole="header">
-          {t('subTitle4')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('description4')}
-        </Text>
-        <Text
-          style={[styles.subTitle, { color: colors.primaryText }]}
-          accessibilityRole="header">
-          {t('subTitle5')}
-        </Text>
-        <Text
-          style={[
-            styles.body,
-            styles.withMarginBottom,
-            { color: colors.hourListText },
-          ]}>
-          {t('description5')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('description5.1')}
-        </Text>
-        <Text
-          style={[styles.subTitle, { color: colors.primaryText }]}
-          accessibilityRole="header">
-          {t('subTitle6')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('description6')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.primaryText }]}
-          accessibilityRole="header">
-          {t('subTitle7')}
-        </Text>
-        <Text
-          style={[
-            styles.body,
-            styles.withMarginBottom,
-            { color: colors.hourListText },
-          ]}>
-          {t('description7')}
-        </Text>
-        <AccessibleTouchableOpacity
-          accessibilityRole="link"
-          accessibilityHint={t('openInBrowser')}
-          onPress={() =>
-            language === 'sv'
-              ? Linking.openURL(legalSv)
-              : Linking.openURL(legal)
-          }>
-          <View style={[styles.link, { borderBottomColor: colors.primary }]}>
-            <Text
-              style={[
-                styles.linkText,
-                {
-                  color: colors.primaryText,
-                },
-              ]}>
-              {t('link1')}
-            </Text>
-            <Icon name="open-in-new" color={colors.primaryText} height={18} />
-          </View>
-        </AccessibleTouchableOpacity>
-        <AccessibleTouchableOpacity
-          accessibilityRole="link"
-          accessibilityHint={t('openInBrowser')}
-          onPress={() =>
-            language === 'sv'
-              ? Linking.openURL(accessibilitySv)
-              : Linking.openURL(accessibility)
-          }>
-          <View style={[styles.link, { borderBottomColor: colors.primary }]}>
-            <Text
-              style={[
-                styles.linkText,
-                {
-                  color: colors.primaryText,
-                },
-              ]}>
-              {t('link2')}
-            </Text>
-            <Icon name="open-in-new" color={colors.primaryText} height={18} />
-          </View>
-        </AccessibleTouchableOpacity>
+          </>
+        )}
+        {t('subTitle4') !== 'subTitle4' &&
+          t('description4') !== 'description4' && (
+            <>
+              <Text
+                style={[styles.title, { color: colors.primaryText }]}
+                accessibilityRole="header">
+                {t('subTitle4')}
+              </Text>
+              <Text style={[styles.body, { color: colors.hourListText }]}>
+                {t('description4')}
+              </Text>
+            </>
+          )}
+        {t('subTitle5') !== 'subTitle5' &&
+          t('description5') !== 'description5' && (
+            <>
+              <Text
+                style={[styles.subTitle, { color: colors.primaryText }]}
+                accessibilityRole="header">
+                {t('subTitle5')}
+              </Text>
+              <Text
+                style={[
+                  styles.body,
+                  styles.withMarginBottom,
+                  { color: colors.hourListText },
+                ]}>
+                {t('description5')}
+              </Text>
+              {t('description5.1') !== 'description5.1' && (
+                <>
+                  <Text style={[styles.body, { color: colors.hourListText }]}>
+                    {t('description5.1')}
+                  </Text>
+                </>
+              )}
+            </>
+          )}
+        {t('subTitle6') !== 'subTitle6' &&
+          t('description6') !== 'description6' && (
+            <>
+              <Text
+                style={[styles.subTitle, { color: colors.primaryText }]}
+                accessibilityRole="header">
+                {t('subTitle6')}
+              </Text>
+              <Text style={[styles.body, { color: colors.hourListText }]}>
+                {t('description6')}
+              </Text>
+            </>
+          )}
+        {t('subTitle7') !== 'subTitle7' &&
+          t('description7') !== 'description7' && (
+            <>
+              <Text
+                style={[styles.title, { color: colors.primaryText }]}
+                accessibilityRole="header">
+                {t('subTitle7')}
+              </Text>
+              <Text
+                style={[
+                  styles.body,
+                  styles.withMarginBottom,
+                  { color: colors.hourListText },
+                ]}>
+                {t('description7')}
+              </Text>
+            </>
+          )}
+        {t('link1') !== 'link1' && (
+          <>
+            <AccessibleTouchableOpacity
+              accessibilityRole="link"
+              accessibilityHint={t('openInBrowser')}
+              onPress={() =>
+                language === 'sv'
+                  ? Linking.openURL(legalSv)
+                  : Linking.openURL(legal)
+              }>
+              <View
+                style={[styles.link, { borderBottomColor: colors.primary }]}>
+                <Text
+                  style={[
+                    styles.linkText,
+                    {
+                      color: colors.primaryText,
+                    },
+                  ]}>
+                  {t('link1')}
+                </Text>
+                <Icon
+                  name="open-in-new"
+                  color={colors.primaryText}
+                  height={18}
+                />
+              </View>
+            </AccessibleTouchableOpacity>
+          </>
+        )}
+        {t('link2') !== 'link2' && (
+          <>
+            <AccessibleTouchableOpacity
+              accessibilityRole="link"
+              accessibilityHint={t('openInBrowser')}
+              onPress={() =>
+                language === 'sv'
+                  ? Linking.openURL(accessibilitySv)
+                  : Linking.openURL(accessibility)
+              }>
+              <View
+                style={[styles.link, { borderBottomColor: colors.primary }]}>
+                <Text
+                  style={[
+                    styles.linkText,
+                    {
+                      color: colors.primaryText,
+                    },
+                  ]}>
+                  {t('link2')}
+                </Text>
+                <Icon
+                  name="open-in-new"
+                  color={colors.primaryText}
+                  height={18}
+                />
+              </View>
+            </AccessibleTouchableOpacity>
+          </>
+        )}
       </ScrollView>
     </View>
   );
