@@ -129,7 +129,8 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   }, [activeOverlayId, overlay]);
 
   const stepWidth =
-    (sliderStep >= STEP_60 ? 4 : 1) * multiplier * QUARTER_WIDTH;
+    (sliderStep >= STEP_60 ? 4 : 1) * multiplier * QUARTER_WIDTH +
+    (clockType === 12 ? 20 : 0);
 
   const isFocused = useIsFocused();
 
