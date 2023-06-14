@@ -231,11 +231,9 @@ const getWMSLayerUrlsAndBounds = async (
         filteredLayers = Layer.filter((L: WmsLayer) =>
           allLayerNames.includes(L.Name)
         );
-      } else if (Object.prototype.toString.call(Layer) === '[object Object]') {
+      } else if (allLayerNames.includes(Layer.Name)) {
         // layer is the only layer returned
-        if (allLayerNames.includes(Layer.Name)) {
-          filteredLayers.push(Layer);
-        }
+        filteredLayers.push(Layer);
       }
 
       capabilitiesData.set(src, filteredLayers);
