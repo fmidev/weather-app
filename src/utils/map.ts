@@ -226,7 +226,7 @@ const getWMSLayerUrlsAndBounds = async (
       } = parsedResponse;
 
       let filteredLayers = [];
-      if (Object.prototype.toString.call(Layer) === '[object Array]') {
+      if (Array.isArray(Layer)) {
         // there is a list of layers
         filteredLayers = Layer.filter((L: WmsLayer) =>
           allLayerNames.includes(L.Name)
