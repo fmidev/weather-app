@@ -148,6 +148,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   });
 
   const parameter = chartParameter ?? charts[0];
+  const displayedParameter = charts.includes(parameter) ? parameter : charts[0];
   const currentStation = stationList.find(
     (station) => station.id === stationId
   );
@@ -269,29 +270,32 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         <View style={styles.observationContainer}>
           <ParameterSelector
             chartTypes={charts}
-            parameter={charts.includes(parameter) ? parameter : charts[0]}
+            parameter={displayedParameter}
             setParameter={updateChartParameter}
           />
-          {(hourlyData.length > numberOfDays || parameter === 'daily') &&
+          {(hourlyData.length > numberOfDays ||
+            displayedParameter === 'daily') &&
             displayFormat === LIST && (
               <List
-                data={parameter === 'daily' ? dailyData : hourlyData}
-                parameter={charts.includes(parameter) ? parameter : charts[0]}
+                data={displayedParameter === 'daily' ? dailyData : hourlyData}
+                parameter={displayedParameter}
                 clockType={clockType}
               />
             )}
-          {(hourlyData.length > numberOfDays || parameter === 'daily') &&
+          {(hourlyData.length > numberOfDays ||
+            displayedParameter === 'daily') &&
             displayFormat === CHART && (
               <Chart
-                chartType={charts.includes(parameter) ? parameter : charts[0]}
-                data={parameter === 'daily' ? dailyData : hourlyData}
+                chartType={displayedParameter}
+                data={displayedParameter === 'daily' ? dailyData : hourlyData}
                 observation
-                daily={parameter === 'daily'}
+                daily={displayedParameter === 'daily'}
               />
             )}
-          {hourlyData.length <= numberOfDays && parameter !== 'daily' && (
-            <InfoMessage translationKey="onlyDailyValues" />
-          )}
+          {hourlyData.length <= numberOfDays &&
+            displayedParameter !== 'daily' && (
+              <InfoMessage translationKey="onlyDailyValues" />
+            )}
         </View>
       )}
 
