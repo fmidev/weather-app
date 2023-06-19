@@ -493,6 +493,9 @@
   "warnings": {
     "panelTitle": "Varoitukset maa-alueilla",
     "panelTitleSlim": "Varoitukset",
+    "panelTitleCap": "Varoitukset",
+    "warningsForNDays": "Varoitukset {{ days }} vrk",
+    "capUpdated": "Päivitetty",
     "lastUpdated": "Päivitetty viimeksi",
     "allWarnings": "Koko Suomen varoitukset",
     "valid": "voimassa",
@@ -527,6 +530,17 @@
       "dailyTitle": "Vuorokausikohtaiset selitykset",
       "dailyBadge": "vuorokauden aikana on voimassa 2 varoitusta",
       "mapTitle": "Varoitusten selitykset",
+      "timezone": "Aikavyöhyke",
+      "timezoneText": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan."
+    },
+    "capInfo": {
+      "dailyTitle": "Aikajana - vuorokausikohtaiset selitykset",
+      "example": "Esimerkki",
+      "example1Text": "Mahdollisesti vaarallinen sää vuorokauden jälkipuoliskolla",
+      "example2Text": "Sää kehittyy mahdollisesti vaarallisesta hyvin vaaralliseen vuorokauden edetessä",
+      "warningExplanationsOnLand": "Varoitusten selitykset maa-alueilla",
+      "warningExplanationsAtSea": "Varoitusten selitykset merialueilla",
+      "warningColorsExplanation": "Varoitusvärien selitykset",
       "timezone": "Aikavyöhyke",
       "timezoneText": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan."
     }

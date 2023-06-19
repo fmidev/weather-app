@@ -83,6 +83,7 @@ export const lightTheme = {
       7: RAIN_7_LIGHT,
       8: RAIN_8_LIGHT,
     },
+    accordionContentBackground: 'rgb(246,249,253)',
   },
 };
 
@@ -132,5 +133,6 @@ export const darkTheme = {
       7: RAIN_7_DARK,
       8: RAIN_8_DARK,
     },
+    accordionContentBackground: 'rgb(246,249,253)',
   },
 };

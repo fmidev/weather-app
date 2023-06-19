@@ -13,8 +13,9 @@ import {
   TimeStepData as ObsTimeStepData,
 } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
-import { MomentObjectOutput } from 'moment';
+import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
+import { CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from './colors';
 import { converter, toPrecision, UNITS } from './units';
 
@@ -48,10 +49,10 @@ const getPosition = (
             true
           );
         })
-        .catch((e) => console.error(e));
+        .catch((e) => console.error(e)); // eslint-disable-line no-console
     },
     (error) => {
-      console.log('GEOLOCATION NOT AVAILABLE', error);
+      console.log('GEOLOCATION NOT AVAILABLE', error); // eslint-disable-line no-console
     },
     {
       enableHighAccuracy: true,
@@ -99,7 +100,7 @@ export const getGeolocation = (
             alertNoPermission(t);
           }
         })
-        .catch((e) => console.error(e));
+        .catch((e) => console.error(e)); // eslint-disable-line no-console
     }
     if (!failSilently && result === RESULTS.BLOCKED) {
       alertNoPermission(t);
@@ -120,6 +121,37 @@ export const getPrecipitationLevel = (amount: number): keyof Rain => {
   return 0;
 };
 
+export const getWindDirection = (dataValue: number | undefined): number => {
+  const useCardinals = Config.get('weather').useCardinalsForWindDirection;
+  let direction = 0;
+  if (useCardinals) {
+    const tempDir = dataValue || 0;
+    if ((tempDir >= 338 && tempDir <= 360) || (tempDir >= 0 && tempDir <= 22)) {
+      direction = 0; // N
+    } else if (tempDir >= 23 && tempDir <= 67) {
+      direction = 45; // NE
+    } else if (tempDir >= 68 && tempDir <= 112) {
+      direction = 90; // E
+    } else if (tempDir >= 113 && tempDir <= 157) {
+      direction = 135; // SE
+    } else if (tempDir >= 158 && tempDir <= 202) {
+      direction = 180; // S
+    } else if (tempDir >= 203 && tempDir <= 247) {
+      direction = 225; // SW
+    } else if (tempDir >= 248 && tempDir <= 292) {
+      direction = 270; // W
+    } else if (tempDir >= 293 && tempDir <= 337) {
+      direction = 315; // NW
+    }
+    // for some reason icon is pointing NW instead of N => +45
+    // wind value needs 180 degree switch to show correctly where wind is coming from
+    direction = direction + 45 - 180;
+  } else {
+    direction = (dataValue || 0) + 45 - 180;
+  }
+  return direction;
+};
+
 type DotOrComma = ',' | '.';
 
 export const toStringWithDecimal = (
@@ -138,6 +170,9 @@ const minusParams = [
   'minimumTemperature',
   'minimumGroundTemperature06',
 ];
+
+export const isNegativeValueAllowed = (parameter: string) =>
+  minusParams.includes(parameter);
 
 export const convertValueToUnitPrecision = (
   unit: string,
@@ -323,4 +358,79 @@ export const getIndexForDaySmartSymbol = (
     return dayArray.length - 1;
   }
   return index;
+};
+
+const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
+
+const getSeveritiesForTimePeriod = (
+  warnings: CapWarning[],
+  start: moment.Moment,
+  end: moment.Moment
+) => {
+  const severitiesForTimePeriod = warnings
+    ?.filter((warning) => {
+      const effective = moment(warning.info.effective);
+      const expires = moment(warning.info.expires);
+      const beginsDuringPeriod = effective.isBetween(start, end);
+      const endsDuringPeriod = expires.isBetween(start, end);
+      const periodContained = effective.isBefore(start) && expires.isAfter(end);
+      return beginsDuringPeriod || endsDuringPeriod || periodContained;
+    })
+    .map((warning) => severities.indexOf(warning.info.severity) + 1);
+
+  const maxSeverity = Math.max(...(severitiesForTimePeriod ?? [0]));
+  return maxSeverity;
+};
+export const getSeveritiesForDays = (
+  warnings: CapWarning[] | undefined,
+  dates: number[]
+) => {
+  if (!warnings) return [];
+
+  const dailySeverities: number[][] = [];
+  dates.forEach((date) => {
+    const daySeverities: number[] = [];
+
+    const startMomentObject = moment(date);
+    startMomentObject.hour(0).minute(0);
+    const endMomentObject = startMomentObject.clone().add(6, 'hours');
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    dailySeverities.push(daySeverities);
+  });
+  return dailySeverities;
 };

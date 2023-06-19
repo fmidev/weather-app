@@ -493,6 +493,9 @@
   "warnings": {
     "panelTitle": "Varningar för landområden",
     "panelTitleSlim": "Varningar",
+    "panelTitleCap": "Varningar",
+    "warningsForNDays": "Varningar {{ days }} dygn",
+    "capUpdated": "Uppdaterad",
     "lastUpdated": "Uppdaterad senast",
     "allWarnings": "Varningar för hela Finland",
     "valid": "i kraft",
@@ -527,6 +530,17 @@
       "dailyTitle": "Dygnsspecifika förklaringar",
       "dailyBadge": "under ett dygn är 2 varningar i kraft",
       "mapTitle": "Förklaringar till varningarna",
+      "timezone": "Tidszon",
+      "timezoneText": "Alla klockslag för applikationen anges enligt den valda tidszonens placering."
+    },
+    "capInfo": {
+      "dailyTitle": "Tidslinje - dygnsspecifika förklaringar",
+      "example": "Exempel",
+      "example1Text": "Möjligt farligt väder på den senare hälften av dygnet",
+      "example2Text": "Vädret utvecklar från möjligt farligt till mycket farligt under dygnet",
+      "warningExplanationsOnLand": "Förklaringar till varningarna för landområden",
+      "warningExplanationsAtSea": "Förklaringar till varningarna för havsområden",
+      "warningColorsExplanation": "Förklaringar till varningsfärger",
       "timezone": "Tidszon",
       "timezoneText": "Alla klockslag för applikationen anges enligt den valda tidszonens placering."
     }

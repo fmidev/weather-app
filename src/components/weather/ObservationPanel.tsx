@@ -24,7 +24,7 @@ import {
 
 import { State } from '@store/types';
 import { CustomTheme, GRAY_1 } from '@utils/colors';
-import { toStringWithDecimal } from '@utils/helpers';
+import { isNegativeValueAllowed, toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
 import {
   DailyObservationParameters,
@@ -116,16 +116,34 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'snowDepth',
     'daily',
   ];
+
   charts = charts.filter((type) => {
     const typeParameters = observationTypeParameters[type];
+    const data = type === 'daily' ? dailyData : hourlyData;
+    const dataForParameter = typeParameters.map((typeParam) =>
+      data.map(
+        (dataPoint) => dataPoint[typeParam as keyof ObservationParameters]
+      )
+    );
+    const observationDataExistsForParameter = dataForParameter.some(
+      (parameterData) =>
+        parameterData.some(
+          (dataPoint) =>
+            dataPoint !== null &&
+            dataPoint !== undefined &&
+            (isNegativeValueAllowed(type) || (dataPoint as number) >= 0)
+        )
+    );
+
     return (
+      observationDataExistsForParameter &&
       typeParameters.filter(
         (typeParameter) =>
           parameters?.includes(typeParameter as keyof ObservationParameters) ||
           dailyParameters?.includes(
             typeParameter as keyof DailyObservationParameters
           )
-      ).length > 0
+      )
     );
   });
 
@@ -251,21 +269,21 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         <View style={styles.observationContainer}>
           <ParameterSelector
             chartTypes={charts}
-            parameter={parameter}
+            parameter={charts.includes(parameter) ? parameter : charts[0]}
             setParameter={updateChartParameter}
           />
           {(hourlyData.length > numberOfDays || parameter === 'daily') &&
             displayFormat === LIST && (
               <List
                 data={parameter === 'daily' ? dailyData : hourlyData}
-                parameter={parameter}
+                parameter={charts.includes(parameter) ? parameter : charts[0]}
                 clockType={clockType}
               />
             )}
           {(hourlyData.length > numberOfDays || parameter === 'daily') &&
             displayFormat === CHART && (
               <Chart
-                chartType={parameter}
+                chartType={charts.includes(parameter) ? parameter : charts[0]}
                 data={parameter === 'daily' ? dailyData : hourlyData}
                 observation
                 daily={parameter === 'daily'}

@@ -64,14 +64,36 @@ interface ObservationEnabled extends Observation {
 interface ObservationDisabled extends Partial<Observation> {
   enabled: false;
 }
+interface CapDataSource {
+  id: number;
+  url: string;
+  urlIcons: string;
+}
+interface CapViewSettings {
+  mapHeight?: number;
+  numberOfDays: number;
+  datasources: CapDataSource[];
+  initialRegion: {
+    latitude: number;
+    longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
+  };
+  mapZoomEnabled?: boolean;
+  mapScrollEnabled?: boolean;
+  mapToolbarEnabled?: boolean;
+  includeAreaInTitle?: boolean;
+}
 
 interface Warnings {
   apiUrl: {
     [country: string]: string;
   };
+  useCapView?: boolean;
   updateInterval: number;
   ageWarning?: number;
   webViewUrl?: string;
+  capViewSettings?: CapViewSettings;
 }
 
 interface WarningsEnabled extends Warnings {
@@ -134,6 +156,10 @@ interface DarkThemeEnabled {
 
 type Themes = LightThemeEnabled | DarkThemeEnabled;
 
+interface OnboardingWizard {
+  enabled: boolean;
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -161,8 +187,15 @@ export interface ConfigType {
         parameters: (keyof ForecastParameters)[];
       }[];
       defaultParameters: DisplayParameters[];
+      excludeDayLength?: boolean;
+      excludeDayDuration?: boolean;
+      infoBottomSheet?: {
+        showAllSymbols?: boolean;
+      };
+      excludePolarNightAndMidnightSun?: boolean;
     };
     observation: ObservationEnabled | ObservationDisabled;
+    useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;
   settings: {
@@ -179,4 +212,5 @@ export interface ConfigType {
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
   unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
+  onboardingWizard: OnboardingWizard;
 }

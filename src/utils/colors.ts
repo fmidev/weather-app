@@ -50,6 +50,11 @@ export const YELLOW = '#F8F800';
 export const ORANGE = '#FFB700';
 export const RED = '#D0021B';
 
+export const CAP_WARNING_NEUTRAL = '#E4F7F3';
+export const CAP_WARNING_YELLOW = '#FFFB7B';
+export const CAP_WARNING_ORANGE = '#FFCB5F';
+export const CAP_WARNING_RED = '#FF5A5A';
+
 export const RAIN_1_LIGHT = '#3A698E';
 export const RAIN_2_LIGHT = '#6BB1C9';
 export const RAIN_3_LIGHT = '#C5FBF2';
@@ -118,5 +123,6 @@ export type CustomTheme = {
     timeSliderTick: string;
     listTint: string;
     rain: Rain;
+    accordionContentBackground: string;
   };
 };

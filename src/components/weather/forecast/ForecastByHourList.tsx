@@ -27,6 +27,7 @@ import {
 import { isOdd } from '@utils/helpers';
 import { DAY_LENGTH } from '@store/forecast/constants';
 import { selectClockType } from '@store/settings/selectors';
+import { Config } from '@config';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
@@ -59,6 +60,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
+  const { excludeDayLength } = Config.get('weather').forecast;
 
   const virtualizedList = useRef() as React.MutableRefObject<
     VirtualizedList<TimeStepData>
@@ -96,9 +98,20 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const dayHours = Math.floor(step.dayLength / 60);
     const dayMinutes = step.dayLength % 60;
 
-    const isPolarNight = !step.sunriseToday && sunset.isBefore(sunrise);
+    const { excludeDayDuration, excludePolarNightAndMidnightSun } =
+      Config.get('weather').forecast;
 
-    const isMidnightSun = !step.sunsetToday && sunrise.isBefore(sunset);
+    const isPolarNight =
+      (excludePolarNightAndMidnightSun === undefined ||
+        !excludePolarNightAndMidnightSun) &&
+      !step.sunriseToday &&
+      sunset.isBefore(sunrise);
+
+    const isMidnightSun =
+      (excludePolarNightAndMidnightSun === undefined ||
+        !excludePolarNightAndMidnightSun) &&
+      !step.sunsetToday &&
+      sunrise.isBefore(sunset);
 
     const dateFormat =
       clockType === 12
@@ -237,9 +250,16 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               style={[
                 styles.row,
                 styles.listContainer,
-                styles.justifySpaceBetween,
+                styles.maxWidth,
+                styles.justifyContentCenter,
               ]}>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              <View
+                style={[
+                  styles.row,
+                  styles.alignCenter,
+                  styles.withMarginRight20,
+                ]}
+                accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -285,28 +305,39 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   {sunset.format(timeFormat)}
                 </Text>
               </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
-                <Icon
-                  width={24}
-                  height={24}
-                  name="time"
-                  style={[
-                    styles.withMarginRight,
-                    { color: colors.hourListText },
-                  ]}
-                />
-                <Text
-                  accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
-                    'hours'
-                  )} ${dayMinutes} ${t('minutes')}`}
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
-                  {`${dayHours} h ${dayMinutes} min`}
-                </Text>
-              </View>
+              {(excludeDayDuration === undefined || !excludeDayDuration) && (
+                <>
+                  <View
+                    style={[
+                      styles.row,
+                      styles.alignCenter,
+                      styles.withMarginLeft20,
+                    ]}
+                    accessible>
+                    <Icon
+                      width={24}
+                      height={24}
+                      name="time"
+                      style={[
+                        styles.alignCenter,
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                    <Text
+                      accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
+                        'hours'
+                      )} ${dayMinutes} ${t('minutes')}`}
+                      style={[
+                        styles.panelText,
+                        styles.bold,
+                        { color: colors.hourListText },
+                      ]}>
+                      {`${dayHours} h ${dayMinutes} min`}
+                    </Text>
+                  </View>
+                </>
+              )}
             </View>
           )}
         </View>
@@ -344,7 +375,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             getItem={(items, index) => items[index]}
             getItemCount={(items) => items && items.length}
             onScrollToIndexFailed={({ index }) => {
-              console.warn(`scroll to index: ${index} failed`);
+              console.warn(`scroll to index: ${index} failed`); // eslint-disable-line no-console
             }}
             renderItem={({ item }: any) => (
               <ForecastListColumn
@@ -366,7 +397,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
       </View>
       {displayParams
         .map((displayParam) => displayParam[1])
-        .includes(DAY_LENGTH) && <DayDurationRow />}
+        .includes(DAY_LENGTH) &&
+        !excludeDayLength && <DayDurationRow />}
       <LinearGradient
         pointerEvents="none"
         style={[styles.gradient, styles.gradientLeft]}
@@ -404,8 +436,8 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
   },
-  justifySpaceBetween: {
-    justifyContent: 'space-between',
+  justifyContentCenter: {
+    justifyContent: 'center',
   },
   bold: {
     fontFamily: 'Roboto-Bold',
@@ -413,6 +445,12 @@ const styles = StyleSheet.create({
   panelText: {
     fontSize: 14,
     fontFamily: 'Roboto-Medium',
+  },
+  withMarginRight20: {
+    marginRight: 20,
+  },
+  withMarginLeft20: {
+    marginLeft: 20,
   },
   withMarginRight: {
     marginRight: 6,
@@ -424,6 +462,9 @@ const styles = StyleSheet.create({
   },
   displayNone: {
     display: 'none',
+  },
+  maxWidth: {
+    width: '100%',
   },
   alignCenter: {
     alignItems: 'center',

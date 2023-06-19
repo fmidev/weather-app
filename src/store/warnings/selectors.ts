@@ -105,3 +105,13 @@ export const selectCurrentDayWarningData = createSelector(
   selectWarnings,
   (warnings) => getWarningDataForDays(warnings, 1)
 );
+
+export const selectCapWarningData = createSelector(
+  selectWarningsDomain,
+  (warnings) => warnings.capData
+);
+
+export const selectFetchSuccessTime = createSelector(
+  selectWarningsDomain,
+  (warnings) => warnings.fetchSuccessTime
+);

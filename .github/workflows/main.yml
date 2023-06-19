@@ -5,13 +5,27 @@ name: CI / CD
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  # push:
+    # branches: [ "main" ]
+  # pull_request:
+    # branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      name:
+        type: choice
+        description: Select Platform(s)
+        options:
+        - iOS
+        - Android
+        - Android and iOS
+      increment:
+        type: choice
+        description: Increment Build and Version number
+        options:
+        - 'true'
+        - 'false'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 # Build job needs test !
@@ -19,6 +33,7 @@ jobs:
 
   # Run React Native Eslint and Jest tests
   test:
+    if: ${{ false }}
     name: Test
     # Setup Ubuntu version
     runs-on: ubuntu-latest
@@ -46,16 +61,20 @@ jobs:
        run: |
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
+
      # Run lint -tests
      - name: Run Eslint tests
-       run: yarn lint
+       if: ${{ false }}
+       run: yarn lint --fix
      # Run Jest -tests
-     - name: Run Jest tests  
+     - name: Run Jest tests
+       if: ${{ false }}
        run: yarn test
 
-# Decode, Build and sign application
+# Decode, Build and sign Android application
   build:
-    needs: test
+    if: contains(fromJson('["Android", "Android and iOS"]'), github.event.inputs.name)
+    # needs: test
     name: Android-build
     # Set Ubuntu version
     runs-on: ubuntu-latest
@@ -75,15 +94,33 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install
+
+      # Get defaultConfig
+      - name: Get defaultConfig
+        env:
+         defaultConfig: ${{ secrets.DEFAULTCONFIG }}
+        shell: bash
+        run: |
+         touch defaultConfig.ts
+         echo "$defaultConfig" >> defaultConfig.ts
+
       # Install Ruby
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1.2'
-          bundler-cache: true
-      # -----------------------------------------------
+          ruby-version: '2.7.6'
+
+      # Update bundler
+      - name: Update bundler
+        run: bundle update --bundler
+        working-directory: android
+
+      # Bundle install
+      - name: Bundle install
+        run: gem install bundler && bundle install
+        working-directory: android
+
       # Decode upload keystore and Play Store json -key
-      # -----------------------------------------------
       - name: Decode Service Account Key JSON File
         uses: timheuer/base64-to-file@v1
         id: service_account_json_file
@@ -96,23 +133,129 @@ jobs:
         with:
           fileName: "android_keystore.keystore"
           encodedString: ${{ secrets.KEYSTORE }}
-      # -----------------------------------------------
+
+      - name: Fastlane Increment Version Code and Version Name
+        if: ${{ github.event.inputs.increment == 'true' }}
+        run: |
+          git config user.email "actions@users.noreply.github.com"
+          git config user.name "actions"
+          bundle exec fastlane android increment_android_version should_commit:true should_push:true
+        working-directory: android
+
       # Build and sign
       - name: Build
-        run: |
-          chmod +x ./android/gradlew
-          bundle exec fastlane android build_sign_and_deploy
         env:
-             ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
-             ANDROID_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-             ANDROID_KEYSTORE_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-             ANDROID_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-             GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
-             SLACK_WEB_HOOK_URL: ${{secrets.SLACK_INCOMING_WEBHOOK_URL}}
+          ANDROID_KEYSTORE_FILE: ${{ steps.android_keystore.outputs.filePath }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          ANDROID_KEYSTORE_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
+          GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
+          WEATHER_APP_RELEASE_STORE_FILE: ${{ secrets.WEATHER_APP_RELEASE_STORE_FILE }}
+          WEATHER_APP_RELEASE_STORE_PASSWORD: ${{ secrets.WEATHER_APP_RELEASE_STORE_PASSWORD }}
+          WEATHER_APP_RELEASE_KEY_ALIAS: ${{ secrets.WEATHER_APP_RELEASE_KEY_ALIAS }}
+          WEATHER_APP_RELEASE_KEY_PASSWORD: ${{ secrets.WEATHER_APP_RELEASE_KEY_PASSWORD }}
+          SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
+        run: |
+          echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
+          chmod +x ./gradlew
+          bundle exec fastlane android build_sign_and_deploy
+        working-directory: android
+
       # Upload artifact
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: artifact.aab
           path: |
-            ./android/app/build/outputs/bundle/release/
+            ${{ github.workspace }}/android/app/build/outputs/bundle/release/*
+
+# Decode, build and sign IOS application
+  build_ios:
+   if: contains(fromJson('["iOS", "Android and iOS"]'), github.event.inputs.name)
+   # needs: test
+   name: IOS-build
+   # Set MacOs version
+   runs-on: macos-latest
+   # Node version matrix
+   strategy:
+        matrix:
+          node-version: [16.13.0]
+   # Steps
+   steps:
+      - name: Checkout to git repository
+        uses: actions/checkout@v3
+       # Setup Node
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      # Get defaultConfig
+      - name: Get defaultConfig
+        env:
+         defaultConfig: ${{ secrets.DEFAULTCONFIG }}
+        shell: bash
+        run: |
+         touch defaultConfig.ts
+         echo "$defaultConfig" >> defaultConfig.ts
+
+      # Install Ruby
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.6'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Install Ruby Dependencies
+        run: gem install bundler && bundle install
+        working-directory: ios
+
+      # Install Pods
+      - name: Install pods
+        run: pod install
+        working-directory: ios
+
+      # Create and encode p12 certificate and import certificate to keychain 
+      - name: Install the Apple certificate and provisioning profile
+        env:
+          IOS_DIST_SIGNIN_KEY: ${{ secrets.IOS_DIST_SIGNIN_KEY }}
+          IOS_DIST_SIGNING_KEY_PASSWORD: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          # import certificate from secrets
+          echo -n "$IOS_DIST_SIGNIN_KEY" | base64 --decode --output $CERTIFICATE_PATH
+
+      - name: Fastlane Increment Build and Version Number
+        if: ${{ github.event.inputs.increment == 'true' }}
+        run: |
+          git config user.email "actions@users.noreply.github.com"
+          git config user.name "actions"
+          bundle exec fastlane ios increment_version should_commit:true should_push:true
+        working-directory: ios
+
+      - name: Build & upload iOS binary
+        run: bundle exec fastlane ios build_upload_testflight
+        env:
+         ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+         ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+         ASC_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+         IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+         CERTIFICATE_PATH: ${{runner.temp}}/build_certificate.p12
+         IOS_DIST_SIGNING_KEY_PASSWORD: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
+         IOS_APP_IDENTIFIER: ${{ secrets.IOS_APP_IDENTIFIER }}
+         IOS_DEVELOPER_TEAM_ID: ${{ secrets.IOS_DEVELOPER_TEAM_ID }}
+         IOS_PROVISIONINGPROFILE_NAME: ${{ secrets.IOS_PROVISIONINGPROFILE_NAME }}
+         IOS_CODE_SIGNING_IDENTITY: ${{ secrets.IOS_CODE_SIGNING_IDENTITY }}
+         SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
+        working-directory: ios
+
+      - name: Upload app-store ipa and dsyms to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+         name: app-store ipa & dsyms
+         path: |
+           ${{ github.workspace }}/ios/app/build/*

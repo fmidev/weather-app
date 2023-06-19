@@ -495,6 +495,9 @@
   "warnings": {
     "panelTitle": "Warnings on land areas",
     "panelTitleSlim": "Warnings",
+    "panelTitleCap": "Warnings",
+    "warningsForNDays": "Warnings {{ days }} days",
+    "capUpdated": "Updated",
     "lastUpdated": "Last updated",
     "allWarnings": "Warnings in the whole Finland",
     "valid": "valid between",
@@ -529,6 +532,17 @@
       "dailyTitle": "Daily legends",
       "dailyBadge": "2 warnings are valid during the day",
       "mapTitle": "Map legends",
+      "timezone": "Time zone",
+      "timezoneText": "All times on the application are displayed according to the selected time zone."
+    },
+    "capInfo": {
+      "dailyTitle": "Timeline - daily legends",
+      "example": "Example",
+      "example1Text": "Potentially dangerous weather in the latter half of the day",
+      "example2Text": "The weather develops from potentially dangerous to very dangerous as the day progresses",
+      "warningExplanationsOnLand": "Explanations of warnings for land areas",
+      "warningExplanationsAtSea": "Explanations of warnings for sea areas",
+      "warningColorsExplanation": "Explanations of warning colors",
       "timezone": "Time zone",
       "timezoneText": "All times on the application are displayed according to the selected time zone."
     }

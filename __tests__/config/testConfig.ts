@@ -117,6 +117,9 @@ const defaultConfig: ConfigType = {
     enabled: false,
   },
   socialMediaLinks: [],
+  onboardingWizard: {
+    enabled: true,
+  },
 };
 
 export default defaultConfig;
