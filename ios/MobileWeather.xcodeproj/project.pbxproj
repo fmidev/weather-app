@@ -338,7 +338,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = DJHT89EW79;
+						DevelopmentTeam = "";
 						LastSwiftMigration = 1240;
 						ProvisioningStyle = Automatic;
 					};
@@ -786,7 +786,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 239;
-				DEVELOPMENT_TEAM = DJHT89EW79;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -816,7 +816,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 239;
-				DEVELOPMENT_TEAM = DJHT89EW79;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MobileWeather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
