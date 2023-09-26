@@ -225,9 +225,16 @@ const getWMSLayerUrlsAndBounds = async (
         },
       } = parsedResponse;
 
-      const filteredLayers = Layer.filter((L: WmsLayer) =>
-        allLayerNames.includes(L.Name)
-      );
+      let filteredLayers = [];
+      if (Array.isArray(Layer)) {
+        // there is a list of layers
+        filteredLayers = Layer.filter((L: WmsLayer) =>
+          allLayerNames.includes(L.Name)
+        );
+      } else if (allLayerNames.includes(Layer.Name)) {
+        // layer is the only layer returned
+        filteredLayers.push(Layer);
+      }
 
       capabilitiesData.set(src, filteredLayers);
     })

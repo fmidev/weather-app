@@ -12,7 +12,7 @@ import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
 import * as constants from '@store/forecast/constants';
 
-import { isOdd } from '@utils/helpers';
+import { isOdd, getWindDirection } from '@utils/helpers';
 import { Config } from '@config';
 import {
   converter,
@@ -107,6 +107,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 windSpeedUnit
               )}`
             );
+
             return (
               <View
                 accessibilityLabel={
@@ -132,7 +133,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     style={{
                       transform: [
                         {
-                          rotate: `${(data.windDirection || 0) + 45 - 180}deg`,
+                          rotate: `${getWindDirection(data.windDirection)}deg`,
                         },
                       ],
                     }}
@@ -308,6 +309,41 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               decimalSeparator
             );
 
+          const windGustValue =
+            typeof toDisplay === 'number' &&
+            `${converter(windSpeedUnit, toDisplay).toFixed(0)}`;
+
+          const getAccessibilityLabel = () => {
+            const values: { [key: string]: string | false } = {
+              [constants.PRECIPITATION_1H]: precipitation1hValue,
+              [constants.WIND_GUST]: windGustValue,
+            };
+
+            return t(`forecast:params:${param}`, {
+              value: values[param] || toDisplay,
+              unit:
+                [constants.PRECIPITATION_1H, constants.WIND_GUST].includes(
+                  param
+                ) &&
+                t(
+                  `forecast:${getForecastParameterUnitTranslationKey(
+                    param === constants.PRECIPITATION_1H
+                      ? precipitationUnit
+                      : windSpeedUnit
+                  )}`
+                ),
+            });
+          };
+
+          const getTextValue = () => {
+            const values: { [key: string]: string | false } = {
+              [constants.PRECIPITATION_1H]: precipitation1hValue,
+              [constants.WIND_GUST]: windGustValue,
+            };
+
+            return values[param] || toDisplay;
+          };
+
           return (
             <View
               key={`${param}-${i}`}
@@ -316,29 +352,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 { backgroundColor: isOdd(index) ? colors.listTint : undefined },
               ]}>
               <Text
-                accessibilityLabel={t(`forecast:params:${param}`, {
-                  value:
-                    param === constants.PRECIPITATION_1H
-                      ? precipitation1hValue ?? toDisplay
-                      : toDisplay,
-                  unit:
-                    [constants.PRECIPITATION_1H, constants.WIND_GUST].includes(
-                      param
-                    ) &&
-                    t(
-                      `forecast:${getForecastParameterUnitTranslationKey(
-                        param === constants.PRECIPITATION_1H
-                          ? precipitationUnit
-                          : windSpeedUnit
-                      )}`
-                    ),
-                })}
+                accessibilityLabel={getAccessibilityLabel()}
                 style={[styles.regularText, { color: colors.hourListText }]}>
-                {param === constants.PRECIPITATION_1H &&
-                precipitation1hValue &&
-                toDisplay >= 0
-                  ? precipitation1hValue
-                  : toDisplay}
+                {getTextValue()}
               </Text>
             </View>
           );

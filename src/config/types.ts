@@ -189,6 +189,7 @@ export interface ConfigType {
       infoBottomSheet?: {
         showAllSymbols?: boolean;
       };
+      excludePolarNightAndMidnightSun?: boolean;
     };
     observation: ObservationEnabled | ObservationDisabled;
     useCardinalsForWindDirection?: boolean;

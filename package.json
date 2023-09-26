@@ -8,6 +8,7 @@
     "start": "react-native start",
     "test": "jest --verbose",
     "lint": "tsc --noEmit && eslint .",
+    "lint-fix": "eslint --fix .",
     "lint:js": "eslint .",
     "lint:ts": "tsc --noEmit",
     "prepare": "husky install",
