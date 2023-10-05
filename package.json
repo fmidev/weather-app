@@ -1,6 +1,6 @@
 {
   "name": "MobileWeather",
-  "version": "3.0.52",
+  "version": "3.0.53",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
