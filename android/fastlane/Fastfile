@@ -22,7 +22,7 @@ platform :android do
   # end
   
   # Set Slack webhook
-  slack_url = ENV["SLACK_WEB_HOOK_URL"]
+  # slack_url = ENV["SLACK_WEB_HOOK_URL"]
 	
   desc "Increment build and version number and push to repository - Build number = version code, version number = version name"
   lane :increment_android_version do |options|
@@ -85,10 +85,10 @@ platform :android do
         gradle(task: 'clean', project_dir: './')
 	# Gradle sign aab -file
 	gradle(task: 'bundle', build_type: "Release", project_dir: './',properties: {
-            "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_FILE"],
-            "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASSWORD"],
-            "android.injected.signing.key.alias" => ENV["ANDROID_KEYSTORE_ALIAS"],
-            "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"]
+            "android.injected.signing.store.file" => ENV["KEYSTORE"],
+            "android.injected.signing.store.password" => ENV["SIGNING_STORE_PASSWORD"],
+            "android.injected.signing.key.alias" => ENV["SIGNING_KEY_ALIAS"],
+            "android.injected.signing.key.password" => ENV["SIGNING_KEY_PASSWORD"]
         })
    end
 	
@@ -100,6 +100,7 @@ platform :android do
   end
 	
   # Build uploading success message to Slack, if lanes are completed successfully
+  /
 	after_all do |lane|
 		if lane != :increment_android_version
     	slack(
@@ -111,8 +112,10 @@ platform :android do
 			puts "Skip slack"
 		end
 	end
-   
+   /
+
    # Error message to Slack
+   /
 	error do |lane, exception|
 		if lane != :increment_android_version
     	slack(
@@ -124,4 +127,5 @@ platform :android do
 			puts "Skip Slack"
 		end
 	end
+	/
 end

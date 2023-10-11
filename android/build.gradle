@@ -4,8 +4,8 @@ buildscript {
     ext {
         buildToolsVersion = "30.0.3"
         minSdkVersion = 21
-        compileSdkVersion = 31
-        targetSdkVersion = 31
+        compileSdkVersion = 33
+        targetSdkVersion = 33
         ndkVersion = "21.4.7075529"
         playServicesVersion = "17.0.0"
         androidMapsUtilsVersion = "2.0.3"

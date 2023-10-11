@@ -21,7 +21,12 @@ default_platform(:ios)
 
 platform :ios do
   # Set Slack webhook
-  ios_slack_url = ENV["SLACK_WEB_HOOK_URL"]
+  # ios_slack_url = ENV["SLACK_WEB_HOOK_URL"]
+
+  # Set ASC Key settings
+  asc_key_id = ENV['ASC_KEY_ID']
+  asc_key_content = ENV['ASC_KEY']
+  asc_issuer_id = ENV['ASC_ISSUER_ID']
   
    desc "Increment build and version number and push to repository"
    lane :increment_version do |options|
@@ -60,12 +65,11 @@ platform :ios do
 	
    desc "Load ASC API Key information to use in subsequent lanes"
     lane :load_asc_api_key do
-     app_store_connect_api_key(
-      key_id: ENV["ASC_KEY_ID"],
-      issuer_id: ENV["ASC_ISSUER_ID"],
-      key_content: ENV["ASC_KEY"],
-      is_key_content_base64: true,
-      in_house: false # detecting this via ASC private key not currently supported
+      app_store_connect_api_key(
+        key_id: asc_key_id,
+        issuer_id: asc_issuer_id,
+        key_content: asc_key_content,
+	is_key_content_base64: true
       )
     end
 	
@@ -152,6 +156,7 @@ platform :ios do
    end
 	
    # Build uploading success message to Slack, if lanes are completed successfully
+   /
    after_all do |lane|
 	if lane != :increment_version
     	slack(
@@ -162,10 +167,12 @@ platform :ios do
 	else
 		puts "Skip Slack"
 	end
-    end
+   end
+   /
 	
-    # Error message to Slack
-    error do |lane, exception|
+   # Error message to Slack
+   /
+   error do |lane, exception|
 	if lane != :increment_version
     	slack(
       	      message: exception.message,
@@ -175,5 +182,6 @@ platform :ios do
 	else
 		puts "Skip Slack"
 	end
-    end
+   end
+   /
  end

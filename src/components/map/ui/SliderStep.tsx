@@ -78,7 +78,6 @@ const SliderStep: React.FC<SliderStepProps> = ({
           style={[
             styles.text,
             styles.textBlock,
-            clockType === 12 && styles.twelveHourClockTextBlock,
             {
               color: colors.hourListText,
             },
@@ -116,9 +115,6 @@ const styles = StyleSheet.create({
     marginRight: '25%',
     marginLeft: '-75%',
     textAlign: 'center',
-  },
-  twelveHourClockTextBlock: {
-    width: '350%', // make 12-hour clock time fully visible on the screen
   },
   lastQuarterContainer: {
     height: 32,
