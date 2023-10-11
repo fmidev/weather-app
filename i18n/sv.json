@@ -540,7 +540,7 @@
     "accept": "Godkänn",
     "location": "Läge",
     "locationDescription": "Applikationen använder enhetens position för att lokalisera användaren. Positionen används endast för presentationssyfte.",
-    "acceptLocation": "Tillåt position",
+    "acceptLocation": "Nästa",
     "declineLocation": "Tillåt inte"
   },
   "onboarding": {
