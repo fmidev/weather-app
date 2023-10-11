@@ -15,40 +15,173 @@
 
 PROJECT_NAME = "MobileWeather"
 XCODE_PROJECT = "./#{PROJECT_NAME}.xcodeproj"
+XCODE_WORKSPACE = "./#{PROJECT_NAME}.xcworkspace"
 
 default_platform(:ios)
 
 platform :ios do
-  desc "Increment build and version number and push to repository"
-  lane :increment_version do |options|
-    should_commit = options.fetch(:should_commit, false)
-    commit_message = options.fetch(:commit_message, "ios: bump build and version number (version code) [skip ci]")
-    should_push = options.fetch(:should_push, false)
+  # Set Slack webhook
+  # ios_slack_url = ENV["SLACK_WEB_HOOK_URL"]
 
-    package = load_json(json_path: '../package.json')
-
-    ensure_git_status_clean if should_commit
-
-    increment_build_number(xcodeproj: XCODE_PROJECT)
-
-    increment_version_number(
-      xcodeproj: XCODE_PROJECT,
-      version_number: package['version']
-    )
-
-    new_build_number = Actions.lane_context[Actions::SharedValues::BUILD_NUMBER]
-    UI.important("Incremented ios build number to #{new_build_number}")
-
-    new_version_number = Actions.lane_context[Actions::SharedValues::VERSION_NUMBER]
-    UI.important("Incremented ios version number to #{new_version_number}")
-
-    if should_commit
-      plist_path = "./#{PROJECT_NAME}/Info.plist"
-      project_path = XCODE_PROJECT
-      git_add(path: [plist_path, project_path])
-      git_commit(path: [plist_path, project_path], message: commit_message)
-      # Push the new commit and tag back to git remote
-      push_to_git_remote if should_push
+  # Set ASC Key settings
+  asc_key_id = ENV['ASC_KEY_ID']
+  asc_key_content = ENV['ASC_KEY']
+  asc_issuer_id = ENV['ASC_ISSUER_ID']
+  
+   desc "Increment build and version number and push to repository"
+   lane :increment_version do |options|
+     should_commit = options.fetch(:should_commit, false)
+     commit_message = options.fetch(:commit_message, "ios: bump build and version number (version code) [skip ci]")
+     should_push = options.fetch(:should_push, false)
+     package = load_json(json_path: '../package.json')
+     git_pull
+     # ensure_git_status_clean if should_commit
+     increment_build_number(xcodeproj: XCODE_PROJECT)	   
+     increment_version_number(
+       xcodeproj: XCODE_PROJECT,
+       version_number: package['version']
+     )
+     new_build_number = Actions.lane_context[Actions::SharedValues::BUILD_NUMBER]
+     UI.important("Incremented ios build number to #{new_build_number}")
+     new_version_number = Actions.lane_context[Actions::SharedValues::VERSION_NUMBER]
+     UI.important("Incremented ios version number to #{new_version_number}")
+     if should_commit
+       plist_path = "./#{PROJECT_NAME}/Info.plist"
+       project_path = XCODE_PROJECT
+       git_add(path: [plist_path, project_path])
+       git_commit(path: [plist_path, project_path], message: commit_message)
+       # Push the new commit and tag back to git remote
+       push_to_git_remote if should_push
+      end
+   end
+	
+   desc "Build and upload to TestFlight"
+    lane :build_upload_testflight do
+     load_asc_api_key
+     prepare_signing
+     build_release
+     upload_release
+   end
+	
+   desc "Load ASC API Key information to use in subsequent lanes"
+    lane :load_asc_api_key do
+      app_store_connect_api_key(
+        key_id: asc_key_id,
+        issuer_id: asc_issuer_id,
+        key_content: asc_key_content,
+	is_key_content_base64: true
+      )
     end
-  end
-end
+	
+   desc "Check certs and profiles"
+    lane :prepare_signing do |options|
+    app_identifier = ENV["IOS_APP_IDENTIFIER"]
+    api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
+    profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # replace with the name of your existing profile
+    ENV['KEYCHAIN_NAME'] = 'my-custom-keychain.keychain'
+    delete_keychain(
+     name: ENV['KEYCHAIN_NAME'],
+    ) if File.exist? File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
+    create_keychain(
+     name: ENV['KEYCHAIN_NAME'],
+     password: ENV['IOS_KEYCHAIN_PASSWORD'],
+     unlock: true,
+     timeout: 0,
+     default_keychain: true
+    )
+    import_certificate(
+     certificate_path: ENV["CERTIFICATE_PATH"],
+     certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"] || "default",
+     keychain_password: ENV["IOS_KEYCHAIN_PASSWORD"],
+     log_output: true
+    )
+	    
+   # main app profile
+   sigh(
+    api_key: api_key,
+    app_identifier: app_identifier,
+    provisioning_name: profile_name,
+    )
+   end
+	
+   # Update signing settings and build iOS app for release
+   desc "Build the iOS app for release"
+    lane :build_release do |options|
+    xcode_select("/Applications/Xcode_14.1.app")
+    app_identifier = ENV["IOS_APP_IDENTIFIER"]
+    profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the build
+    export_method = "app-store" # specify the export method
+    compile_bitcode = false # specify whether to enable bitcode
+ 
+   # Turn off automatic signing during build so correct code signing identity is guaranteed to be used
+   update_code_signing_settings(
+     use_automatic_signing: false,
+     path: XCODE_PROJECT,
+     team_id: ENV["IOS_DEVELOPER_TEAM_ID"],
+     code_sign_identity: ENV["IOS_CODE_SIGNING_IDENTITY"], # replace with name of code signing identity if different
+     bundle_identifier: app_identifier,
+     profile_name: profile_name,
+     build_configurations: ["Release"] # only toggle code signing settings for Release configurations
+   )
+   
+   # Build the app
+   gym(
+     clean: true,
+     xcodebuild_formatter: '',
+     scheme: PROJECT_NAME, # replace with name of your project’s scheme,
+     configuration: "Release",
+     workspace: XCODE_WORKSPACE,
+     archive_path: "./app/archive/#{PROJECT_NAME}.xcarchive",
+     output_directory: "./app/build",
+     output_name: "#{PROJECT_NAME}.ipa",
+     codesigning_identity: ENV["IOS_CODE_SIGNING_IDENTITY"],
+     skip_archive: false,
+     export_options: {
+      method: export_method,
+      provisioningProfiles: {
+       app_identifier => profile_name
+      },
+      compileBitcode: compile_bitcode
+     }
+   )
+   end
+   # Upload .ipa to Testflight
+   desc "Upload to TestFlight / ASC"
+    lane :upload_release do
+    api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
+     pilot(
+	    api_key: api_key,
+	    ipa: "./app/build/#{PROJECT_NAME}.ipa"
+     )
+   end
+	
+   # Build uploading success message to Slack, if lanes are completed successfully
+   /
+   after_all do |lane|
+	if lane != :increment_version
+    	slack(
+              message: "iOS ipa built and uploaded successfully to Testflight !",
+              success: true,
+              slack_url: ios_slack_url
+	)
+	else
+		puts "Skip Slack"
+	end
+   end
+   /
+	
+   # Error message to Slack
+   /
+   error do |lane, exception|
+	if lane != :increment_version
+    	slack(
+      	      message: exception.message,
+              success: false,
+              slack_url: ios_slack_url
+	)
+	else
+		puts "Skip Slack"
+	end
+   end
+   /
+ end

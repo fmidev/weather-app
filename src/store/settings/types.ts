@@ -1,6 +1,14 @@
+export const UPDATE_CLOCK_TYPE = 'UPDATE_CLOCK_TYPE';
 export const INIT_SETTINGS = 'INIT_SETTINGS';
 export const UPDATE_UNITS = 'UPDATE_UNITS';
 export const UPDATE_THEME = 'UPDATE_THEME';
+
+export type ClockType = 12 | 24;
+
+interface UpdateClockType {
+  type: typeof UPDATE_CLOCK_TYPE;
+  clockType: ClockType;
+}
 
 export type UnitType = {
   unitId: number;
@@ -8,7 +16,6 @@ export type UnitType = {
   unit: string;
   unitPrecision: number;
 };
-
 export interface UnitMap {
   [key: string]: UnitType;
 }
@@ -17,6 +24,7 @@ interface InitSettings {
   type: typeof INIT_SETTINGS;
   units: UnitMap | undefined;
   theme: Theme;
+  clockType: ClockType;
 }
 
 interface UpdateUnits {
@@ -31,9 +39,14 @@ interface UpdateTheme {
 
 export type Theme = 'light' | 'dark' | 'automatic';
 
-export type SettingsActionTypes = InitSettings | UpdateUnits | UpdateTheme;
+export type SettingsActionTypes =
+  | InitSettings
+  | UpdateUnits
+  | UpdateTheme
+  | UpdateClockType;
 
 export interface SettingsState {
+  clockType?: ClockType;
   units: UnitMap | undefined;
-  theme: Theme;
+  theme?: Theme;
 }

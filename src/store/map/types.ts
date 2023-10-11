@@ -72,7 +72,6 @@ export interface MapLayers {
 
 export interface Layer {
   url: string | undefined;
-  bounds: { [key: string]: [number, number] } | undefined;
   start?: string;
   end?: string;
   styles: string | { dark: string; light: string };
@@ -102,6 +101,7 @@ export interface MapOverlay {
   forecast?: Layer | TimeseriesLayer;
   data?: TimeseriesData[];
   step: number;
+  tileSize?: number;
 }
 
 export interface Error {

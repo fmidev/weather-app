@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-
 import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
@@ -28,6 +27,7 @@ import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
 import { ObservationParameters } from '@store/observation/types';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import { selectClockType } from '@store/settings/selectors';
 import Chart from './charts/Chart';
 import { ChartType } from './charts/types';
 import ParameterSelector from './common/ParameterSelector';
@@ -48,6 +48,7 @@ const mapStateToProps = (state: State) => ({
   stationList: selectStationList(state),
   chartParameter: selectChartDisplayParameter(state),
   displayFormat: selectDisplayFormat(state),
+  clockType: selectClockType(state),
 });
 
 const mapDispatchToProps = {
@@ -76,9 +77,12 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   updateChartParameter,
   displayFormat,
   updateDisplayFormat,
+  clockType,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { t } = useTranslation('observation');
+  const { t, i18n } = useTranslation('observation');
+  const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const { enabled, parameters } = Config.get('weather').observation;
 
@@ -103,9 +107,23 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'cloud',
     'snowDepth',
   ];
+
   charts = charts.filter((type) => {
     const typeParameters = observationTypeParameters[type];
+    const dataForParameter = typeParameters.map((typeParam) =>
+      data.map(
+        (dataPoint) => dataPoint[typeParam as keyof ObservationParameters]
+      )
+    );
+    const observationDataExistsForParameter = dataForParameter.some(
+      (parameterData) =>
+        parameterData.some(
+          (dataPoint) => dataPoint !== null && dataPoint !== undefined
+        )
+    );
+
     return (
+      observationDataExistsForParameter &&
       typeParameters.filter((typeParameter) =>
         parameters?.includes(typeParameter as keyof ObservationParameters)
       ).length > 0
@@ -118,7 +136,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   );
   const title = `${currentStation?.name || ''} – ${t(
     'distance'
-  )} ${toStringWithDecimal(currentStation?.distance, ',')} km`;
+  )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} km`;
   return (
     <View
       style={[
@@ -234,12 +252,22 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         <View style={styles.observationContainer}>
           <ParameterSelector
             chartTypes={charts}
-            parameter={parameter}
+            parameter={charts.includes(parameter) ? parameter : charts[0]}
             setParameter={updateChartParameter}
           />
-          {displayFormat === LIST && <List data={data} parameter={parameter} />}
+          {displayFormat === LIST && (
+            <List
+              data={data}
+              parameter={charts.includes(parameter) ? parameter : charts[0]}
+              clockType={clockType}
+            />
+          )}
           {displayFormat === CHART && (
-            <Chart chartType={parameter} data={data} observation />
+            <Chart
+              chartType={charts.includes(parameter) ? parameter : charts[0]}
+              data={data}
+              observation
+            />
           )}
         </View>
       )}

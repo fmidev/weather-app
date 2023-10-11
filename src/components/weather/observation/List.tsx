@@ -9,21 +9,29 @@ import Icon from '@components/common/Icon';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import { GRAY_1_OPACITY, CustomTheme } from '@utils/colors';
 import { capitalize } from '@utils/chart';
-import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
+import {
+  getObservationCellValue,
+  getParameterUnit,
+  getWindDirection,
+} from '@utils/helpers';
 import { Config } from '@config';
+import { ClockType } from '@store/settings/types';
+import { getForecastParameterUnitTranslationKey } from '@utils/units';
 import { ChartType } from '../charts/types';
 
 type ListProps = {
+  clockType: ClockType;
   data: TimeStepData[];
   parameter: ChartType;
 };
 
-const List: React.FC<ListProps> = ({ data, parameter }) => {
+const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
   const { t, i18n } = useTranslation('observation');
   const { colors } = useTheme() as CustomTheme;
   const { parameters } = Config.get('weather').observation;
 
   const locale = i18n.language;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
 
   const listParameters: {
     [key in ChartType]: {
@@ -58,6 +66,8 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
       parameters: [],
     },
   };
+
+  const { wind: windSpeedUnit } = Config.get('settings').units;
 
   const activeParameters = listParameters[parameter].parameters.filter(
     (param) => parameters?.includes(param)
@@ -118,7 +128,11 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                 accessibilityLabel={`${t(
                   'measurements.windSpeedMS'
                 )} ${windSpeedObservationCellValue}
-                ${t('forecast:metersPerSecond')}.`}>
+                ${t(
+                  `forecast:${getForecastParameterUnitTranslationKey(
+                    windSpeedUnit
+                  )}`
+                )}`}>
                 {windSpeedObservationCellValue}
               </Text>
             )}
@@ -140,9 +154,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                   accessibilityLabel={
                     timeStep.windCompass8
                       ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
-                      : `${t('measurements.windDirection')} ${
+                      : `${t('measurements.windDirection')} ${getWindDirection(
                           timeStep.windDirection
-                        } ${t('paramUnits.°')}.`
+                        )} ${t('paramUnits.°')}.`
                   }
                   name="wind-arrow"
                   style={[
@@ -151,7 +165,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                       color: colors.hourListText,
                       transform: [
                         {
-                          rotate: `${timeStep.windDirection + 45 - 180}deg`,
+                          rotate: `${getWindDirection(
+                            timeStep.windDirection
+                          )}deg`,
                         },
                       ],
                     },
@@ -169,7 +185,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
               accessibilityLabel={`${t(
                 'measurements.windGust'
               )} ${windGustObservationCellValue} ${t(
-                'forecast:metersPerSecond'
+                `paramUnits.${getParameterUnit('windGust')}`
               )}`}>
               {windGustObservationCellValue}
             </Text>
@@ -195,7 +211,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
             ].includes(param)
               ? 0
               : 1,
-            ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0
+            ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0,
+            undefined,
+            decimalSeparator
           );
 
           const accessibilityLabel =
@@ -247,7 +265,7 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
             ]}>
             {moment(data[0].epochtime * 1000)
               .locale(locale)
-              .format(`dddd D.M.`)}
+              .format(locale === 'en' ? `dddd D MMM` : `dddd D.M.`)}
           </Text>
         )}
       </View>
@@ -278,7 +296,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
           .map((timeStep, i, arr) => {
             const time = moment(timeStep.epochtime * 1000).locale(locale);
             const previousTime = moment(arr?.[i - 1]?.epochtime * 1000);
-            const timeToDisplay = time.format('HH:mm');
+            const timeToDisplay = time.format(
+              clockType === 12 ? 'h.mm a' : 'HH.mm'
+            );
 
             return (
               <View key={timeStep.epochtime}>
@@ -297,7 +317,9 @@ const List: React.FC<ListProps> = ({ data, parameter }) => {
                         styles.capitalize,
                         { color: colors.hourListText },
                       ]}>
-                      {time.format(`dddd D.M.`)}
+                      {time.format(
+                        locale === 'en' ? 'dddd D MMM' : `dddd D.M.`
+                      )}
                     </Text>
                   </View>
                 )}

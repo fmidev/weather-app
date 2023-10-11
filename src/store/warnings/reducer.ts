@@ -5,10 +5,13 @@ import {
   FETCH_WARNINGS,
   FETCH_WARNINGS_SUCCESS,
   FETCH_WARNINGS_ERROR,
+  FETCH_CAP_WARNINGS,
+  FETCH_CAP_WARNINGS_SUCCESS,
 } from './types';
 
 const INITIAL_STATE: WarningsState = {
   data: {},
+  capData: undefined,
   loading: false,
   error: false,
   fetchTimestamp: Date.now(),
@@ -20,7 +23,8 @@ export default (
   action: WarningsActionTypes
 ): WarningsState => {
   switch (action.type) {
-    case FETCH_WARNINGS: {
+    case FETCH_WARNINGS:
+    case FETCH_CAP_WARNINGS: {
       return {
         ...state,
         loading: true,
@@ -48,6 +52,17 @@ export default (
         loading: false,
         error: action.error,
         fetchTimestamp: action.timestamp,
+      };
+    }
+
+    case FETCH_CAP_WARNINGS_SUCCESS: {
+      return {
+        ...state,
+        error: false,
+        loading: false,
+        capData: action.data,
+        fetchTimestamp: action.timestamp,
+        fetchSuccessTime: action.timestamp,
       };
     }
 

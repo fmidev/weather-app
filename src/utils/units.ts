@@ -137,14 +137,15 @@ export const getDefaultUnits = (): UnitMap | undefined => {
 export const toPrecision = (
   unit: string,
   unitAbb: string,
-  value: number
+  value: number,
+  decimals?: number
 ): string => {
   const unitTypes = UNITS.find((u) => u.parameterName === unit)?.unitTypes;
   if (!unitTypes) return value.toString();
   const type: UnitType | undefined = unitTypes.find(
     (t) => t.unitAbb === unitAbb
   );
-  if (type) return value.toFixed(type.unitPrecision);
+  if (type) return value.toFixed(decimals ?? type.unitPrecision);
   return value.toString();
 };
 
@@ -178,5 +179,40 @@ export const converter = (unitAbb: string, value: number): number => {
       // wind: meters per second [ms]
       // pressure: hehtopascal [hPa] = millibascal [mbar]
       return value;
+  }
+};
+
+export const getForecastParameterUnitTranslationKey = (unit: string) => {
+  switch (unit) {
+    case '°C':
+    case 'C':
+      return 'celsius';
+    case '°F':
+    case 'F':
+      return 'fahrenheit';
+    case 'm/s':
+      return 'metersPerSecond';
+    case 'km/h':
+      return 'kilometersPerHour';
+    case 'mph':
+      return 'milesPerHour';
+    case 'kn':
+      return 'knots';
+    case 'bft':
+      return 'beaufort';
+    case 'mm':
+      return 'millimeters';
+    case 'in':
+      return 'inches';
+    case 'hPa':
+      return 'hectopascals';
+    case 'mbar':
+      return 'millibars';
+    case 'mmHg':
+      return 'millimetersOfMercury';
+    case 'inHg':
+      return 'inchesOfMercury';
+    default:
+      return '';
   }
 };

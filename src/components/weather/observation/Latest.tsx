@@ -10,23 +10,45 @@ import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 
 import { capitalize } from '@utils/chart';
 import { Config } from '@config';
+import { selectClockType } from '@store/settings/selectors';
+import { State } from '@store/types';
+import { connect, ConnectedProps } from 'react-redux';
+import InfoMessage from '../InfoMessage';
 
-type LatestProps = {
+const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
+});
+
+const connector = connect(mapStateToProps, {});
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type LatestProps = PropsFromRedux & {
   data: TimeStepData[];
 };
 
-const Latest: React.FC<LatestProps> = ({ data }) => {
+const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const { parameters } = Config.get('weather').observation;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
+  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+  const dateFormat =
+    clockType === 12
+      ? `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] h.mm a`
+      : `D.M. [${t('at')}] HH.mm`;
 
   const [latestObservation] = data || [];
   const latestObservationTime =
     latestObservation &&
     moment(latestObservation.epochtime * 1000)
       .locale(locale)
-      .format(`dd D.M. [${t('at')}] HH:mm`);
+      .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+
+  const hoursSinceLatestObservation =
+    latestObservation?.epochtime &&
+    moment.duration(Date.now() - latestObservation.epochtime * 1000).asHours();
 
   const latestParameters: {
     [key in keyof Partial<ObservationParameters>]: {
@@ -94,7 +116,8 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
           unit,
           decimals,
           divider || 1,
-          true
+          false,
+          decimalSeparator
         );
 
         if (parameter === 'totalCloudCover' && value !== '-') {
@@ -109,6 +132,8 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
           } (${value})`;
         }
 
+        if (value === '-') return null;
+
         return (
           <View key={parameter} style={styles.observationRow} accessible>
             <View style={styles.flex}>
@@ -121,8 +146,12 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
               </Text>
             </View>
             <View style={styles.flex}>
-              <Text style={[styles.panelValue, { color: colors.hourListText }]}>
-                {value}
+              <Text
+                style={[styles.panelValue, { color: colors.hourListText }]}
+                accessibilityLabel={`${value} ${
+                  unit ? t(`paramUnits.${unit}`) : ''
+                }`}>
+                {value} {unit}
               </Text>
             </View>
           </View>
@@ -132,7 +161,10 @@ const Latest: React.FC<LatestProps> = ({ data }) => {
 
   return (
     <>
-      {!!latestObservation && (
+      {hoursSinceLatestObservation > 2 && (
+        <InfoMessage translationKey="tooOld" />
+      )}
+      {!!latestObservation && hoursSinceLatestObservation <= 2 && (
         <View>
           <View style={[styles.row]}>
             <View style={[styles.latestObservation]} accessible>
@@ -199,4 +231,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-export default Latest;
+export default connector(Latest);

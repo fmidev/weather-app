@@ -5,6 +5,7 @@
 - Node (16.13.0)
 - Android Studio (4.2.0)
 - XCode (12.0.1)
+- Java JDK 11 (Doesn't work on newer JDKs)
 
 Follow this [guide](https://reactnative.dev/docs/environment-setup) for setting up React Native development environment.
 
@@ -47,7 +48,7 @@ Follow this [guide](https://reactnative.dev/docs/environment-setup) for setting 
 
 ## **Development**
 
-Before running iOS or Android start metro: `yarn start`
+Before running iOS or Android start metro: `yarn start`. Also make sure you have a valid DefaultConfig.ts.
 
 #### **Run in development environment (Android)**
 
@@ -86,9 +87,38 @@ R5CR207HAFP	device
 
 #### **Run in development environment (iOS)**
 
-1. `cd ios && pod install && cd ..`
+**If you have arm-based mac, do these before running:**
+1. Open Project's build settings in Xcode (Project not Targets)
+2. Add Any iOS Simulator SDK + "arm64" to Debug and Release under Architectures - Excluded Architectures
+3. Add following lines to end of your Podfile under ios -folder:
 
+`post_install do |installer|
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+  end
+end`
+
+4. Delete VALID_ARCHS from main project's and Pods project's build settings.
+5. Clean project + rebuild
+
+If you have problems you might need to do these as well:
+
+`rm -rf ~/Library/Developer/Xcode/DerivedData/ && pod deintegrate && pod update`
+
+Run project:
+1. `cd ios && pod install && cd ..`
 2. `npx react-native run-ios`
+
+### Troubleshooting
+
+#### Changing Metro server port
+By default, the Metro server and the application use port 8081 to communicate with each other. In some environments, the port can be reserved, which causes the application to fail with the following error message:
+
+*"Unable to load script. Make sure you're either running Metro (run 'npx react-native start') or that your bundle 'index.android.bundle' is packaged correctly for release."*
+
+This behaviour can be fixed by changing the port to e.g. 8080. To change the port, the following commands must be run:
+- `yarn start --port 8080`
+- `yarn android --port 8080` (or `npx react-native run-android --port 8080`)
 
 ## **Config**
 

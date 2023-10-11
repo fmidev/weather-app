@@ -28,9 +28,6 @@ import InfoSaveLocationLight from '@assets/images/icons/info-save-location-light
 import Info from '@assets/images/icons/info.svg';
 import Layers from '@assets/images/icons/layers.svg';
 import Locate from '@assets/images/icons/locate.svg';
-import LogoFmiEn from '@assets/images/icons/logo-fmi-en.svg';
-import LogoFmiFi from '@assets/images/icons/logo-fmi-fi.svg';
-import LogoFmiSv from '@assets/images/icons/logo-fmi-sv.svg';
 import MapMarker from '@assets/images/icons/map-marker.svg';
 import Map from '@assets/images/icons/map.svg';
 import Menu from '@assets/images/icons/menu.svg';
@@ -43,6 +40,9 @@ import Play from '@assets/images/icons/play.svg';
 import Plus from '@assets/images/icons/plus.svg';
 import PolarNight from '@assets/images/icons/polar-night.svg';
 import Precipitation from '@assets/images/icons/precipitation.svg';
+import ProviderLogoEn from '@assets/images/icons/provider-logo-en.svg';
+import ProviderLogoFi from '@assets/images/icons/provider-logo-fi.svg';
+import ProviderLogoSv from '@assets/images/icons/provider-logo-sv.svg';
 import RadioButtonOff from '@assets/images/icons/radio-button-off.svg';
 import RadioButtonOn from '@assets/images/icons/radio-button-on.svg';
 import RainDark from '@assets/images/icons/rain-dark.svg';
@@ -99,6 +99,12 @@ import WarningsWindOrange from '@assets/images/icons/warnings-wind-orange.svg';
 import WarningsWindRed from '@assets/images/icons/warnings-wind-red.svg';
 import WarningsWindYellow from '@assets/images/icons/warnings-wind-yellow.svg';
 import Warnings from '@assets/images/icons/warnings.svg';
+import WarningsOrangeLight from '@assets/images/icons/warnings-orange-light.svg';
+import WarningsOrangeDark from '@assets/images/icons/warnings-orange-dark.svg';
+import WarningsYellowLight from '@assets/images/icons/warnings-yellow-light.svg';
+import WarningsYellowDark from '@assets/images/icons/warnings-yellow-dark.svg';
+import WarningsRedLight from '@assets/images/icons/warnings-red-light.svg';
+import WarningsRedDark from '@assets/images/icons/warnings-red-dark.svg';
 import WeatherSymbol from '@assets/images/icons/weather-symbol.svg';
 import Weather from '@assets/images/icons/weather.svg';
 import WindArrow from '@assets/images/icons/wind-arrow.svg';
@@ -182,12 +188,6 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Layers {...(props as SvgProps)} />;
     case 'locate':
       return <Locate {...(props as SvgProps)} />;
-    case 'logo-fmi-en':
-      return <LogoFmiEn {...(props as SvgProps)} />;
-    case 'logo-fmi-fi':
-      return <LogoFmiFi {...(props as SvgProps)} />;
-    case 'logo-fmi-sv':
-      return <LogoFmiSv {...(props as SvgProps)} />;
     case 'map-marker':
       return <MapMarker {...(props as SvgProps)} />;
     case 'map':
@@ -212,6 +212,12 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <PolarNight {...(props as SvgProps)} />;
     case 'precipitation':
       return <Precipitation {...(props as SvgProps)} />;
+    case 'provider-logo-en':
+      return <ProviderLogoEn {...(props as SvgProps)} />;
+    case 'provider-logo-fi':
+      return <ProviderLogoFi {...(props as SvgProps)} />;
+    case 'provider-logo-sv':
+      return <ProviderLogoSv {...(props as SvgProps)} />;
     case 'radio-button-off':
       return <RadioButtonOff {...(props as SvgProps)} />;
     case 'radio-button-on':
@@ -327,6 +333,18 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WarningsWindYellow {...(props as SvgProps)} />;
     case 'warnings':
       return <Warnings {...(props as SvgProps)} />;
+    case 'warnings-orange-light':
+      return <WarningsOrangeLight {...(props as SvgProps)} />;
+    case 'warnings-orange-dark':
+      return <WarningsOrangeDark {...(props as SvgProps)} />;
+    case 'warnings-yellow-light':
+      return <WarningsYellowLight {...(props as SvgProps)} />;
+    case 'warnings-yellow-dark':
+      return <WarningsYellowDark {...(props as SvgProps)} />;
+    case 'warnings-red-light':
+      return <WarningsRedLight {...(props as SvgProps)} />;
+    case 'warnings-red-dark':
+      return <WarningsRedDark {...(props as SvgProps)} />;
     case 'weather-symbol':
       return <WeatherSymbol {...(props as SvgProps)} />;
     case 'weather':

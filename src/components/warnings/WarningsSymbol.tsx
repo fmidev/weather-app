@@ -5,8 +5,13 @@ import React from 'react';
 type WarningSymbolProps = {
   type: WarningType;
   severity: Severity;
+  size?: number;
 };
-const WarningSymbol: React.FC<WarningSymbolProps> = ({ type, severity }) => {
+const WarningSymbol: React.FC<WarningSymbolProps> = ({
+  type,
+  severity,
+  size,
+}) => {
   const colorMap: { [key in Severity]: string } = {
     Moderate: 'yellow',
     Severe: 'orange',
@@ -36,7 +41,7 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({ type, severity }) => {
     }
   }
 
-  return <Icon name={name} width={24} height={24} />;
+  return <Icon name={name} width={size ?? 24} height={size ?? 24} />;
 };
 
 export default WarningSymbol;

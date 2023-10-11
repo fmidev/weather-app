@@ -8,12 +8,15 @@ import { useTranslation } from 'react-i18next';
 
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
+import { converter, toPrecision } from '@utils/units';
 
 import { State } from '@store/types';
 
 import Icon from '@components/common/Icon';
 import { selectSelectedCallout } from '@store/map/selectors';
 import { updateSelectedCallout as updateSelectedCalloutAction } from '@store/map/actions';
+
+import { Config } from '@config';
 
 const mapStateToProps = (state: State) => ({
   selectedCallout: selectSelectedCallout(state),
@@ -47,6 +50,29 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   const { t } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
 
+  const temperatureUnit = Config.get('settings').units.temperature;
+  const windUnit = Config.get('settings').units.wind;
+
+  const convertValue = (
+    unit: string,
+    unitAbb: string,
+    val: number | undefined | null
+  ) => {
+    const result =
+      val || val === 0
+        ? toPrecision(unit, unitAbb, converter(unitAbb, val))
+        : null;
+    return result;
+  };
+
+  const temperatureValue = convertValue(
+    'temperature',
+    temperatureUnit,
+    temperature
+  );
+
+  const windSpeedValue = convertValue('wind', windUnit, windSpeedMS);
+
   return (
     <Marker
       coordinate={coordinate}
@@ -71,10 +97,12 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
             height: 40,
           })}
           <Text
-            style={[
-              styles.tempText,
-              { color: colors.text },
-            ]}>{`${temperature}°C`}</Text>
+            accessibilityLabel={`${temperatureValue} ${t(
+              `observation:paramUnits:°${temperatureUnit}`
+            )}`}
+            style={[styles.tempText, { color: colors.text }]}>
+            {`${temperatureValue}°${temperatureUnit}`}
+          </Text>
         </View>
         {selectedCallout && selectedCallout === name && (
           <View style={styles.calloutContainer}>
@@ -97,8 +125,12 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
                   ],
                 }}
               />
-              <Text style={[styles.calloutText, { color: colors.text }]}>
-                {`${windSpeedMS} m/s`}
+              <Text
+                style={[styles.calloutText, { color: colors.text }]}
+                accessibilityLabel={`${windSpeedValue} ${t(
+                  `observation:paramUnits:${windUnit}`
+                )}`}>
+                {`${windSpeedValue} ${windUnit}`}
               </Text>
             </View>
           </View>

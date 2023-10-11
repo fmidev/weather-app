@@ -88,6 +88,9 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       converter(temperatureUnit, minTemperature)
     );
 
+    const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+    const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
+
     return (
       <View
         key={timeStamp}
@@ -105,7 +108,10 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             borderTopColor: isActive ? colors.tabBarActive : colors.border,
           },
         ]}>
-        <AccessibleTouchableOpacity onPress={() => setActiveDayIndex(index)}>
+        <AccessibleTouchableOpacity
+          accessible
+          accessibilityState={{ selected: isActive }}
+          onPress={() => setActiveDayIndex(index)}>
           <Text
             style={[
               styles.dateText,
@@ -116,9 +122,9 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             accessibilityLabel={stepMoment
               .locale(locale)
               .format('dddd, Do MMMM')}>
-            {stepMoment.locale(locale).format('dd')}{' '}
+            {stepMoment.locale(locale).format(weekdayAbbreviationFormat)}{' '}
             <Text style={[styles.bold, { color: colors.primaryText }]}>
-              {stepMoment.locale(locale).format('D.M.')}
+              {stepMoment.locale(locale).format(dateFormat)}
             </Text>
           </Text>
           <View
@@ -135,6 +141,11 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
               accessibilityLabel={t('forecast:fromTo', {
                 min: convertedMinTemperature,
                 max: convertedMaxTemperature,
+                unit: t(
+                  temperatureUnit === 'C'
+                    ? 'forecast:celsius'
+                    : 'forecast:fahrenheit'
+                ),
               })}>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${temperatureUnit}`}</Text>
           )}
         </AccessibleTouchableOpacity>

@@ -22,29 +22,21 @@ const defaultConfig: ConfigType = {
     maxFavorite: 10,
   },
   map: {
-    latitudeDelta: 0.15,
     updateInterval: 5,
     sources: {
-      key: 'url',
-      key2: 'url',
+      sourceKey: 'url',
+      sourceKey2: 'url',
     },
     layers: [
       {
         id: 1,
         name: { fi: 'name' },
         type: 'WMS',
-        legend: 'urlString',
         sources: [
           {
             source: 'sourceKey',
             layer: 'layerName',
             type: 'observation',
-             boundingBox: {
-              minx: -10.908,
-              miny: 51.113,
-              maxx: 37.162,
-              maxy: 72.002,
-            },
           },
         ],
         times: {
@@ -55,17 +47,17 @@ const defaultConfig: ConfigType = {
     ],
   },
   weather: {
-    apiUrl:
-      'url',
+    apiUrl: 'url',
     forecast: {
       updateInterval: 5,
-      timePeriod: 'data',
-      data: [
-        { producer: 'default', parameters: ['temperature'] }
-      ],
-      defaultParameters: [
-        'temperature'
-      ],
+      timePeriod: 'data', // accepts also: 5, '+5d', '+120h'
+      forecastLengthTitle: 10, // optional, defaults to 10
+      data: [{ producer: 'default', parameters: ['temperature'] }],
+      defaultParameters: ['temperature'],
+      excludeDayLength: false,
+      infoBottomSheet: {
+        showAllSymbols: false,
+      }
     },
     observation: {
       enabled: true,
@@ -81,24 +73,59 @@ const defaultConfig: ConfigType = {
     updateInterval: 5,
     webViewUrl: 'url',
     apiUrl: {
-      FI: 'url'
+      FI: 'url', // [countryCode]: 'url' 
+    },
+    capViewSettings: {
+      mapHeight: 500,
+      numberOfDays: 10,
+      datasources: [
+        {
+          id: 1,
+          url: 'url',
+          urlIcons: '',
+        },
+      ],
+      initialRegion: {
+        latitude: 17.99702,
+        longitude: -77.25,
+        latitudeDelta: 1,
+        longitudeDelta: 2.5,
+      },
+      mapZoomEnabled: true,
+      mapScrollEnabled: false,
     },
   },
   settings: {
     languages: ['fi', 'en', 'sv'],
-     units: {
+    units: {
       temperature: 'C',
       precipitation: 'mm',
       wind: 'm/s',
       pressure: 'hPa',
     },
+    themes: {
+      light: true,
+      dark: true,
+    },
+    clockType: 24,
   },
   announcements: {
     enabled: true,
     updateInterval: 5,
     api: {
       fi: 'url',
-    }
+    },
+  },
+  socialMediaLinks: [
+    {
+      name: 'SocialMedia1',
+      icon: 'social-media',
+      appUrl: 'socialMedia://user?username=example',
+      url: 'https://www.socialmedia.example',
+    },
+  ],
+  onboardingWizard: {
+    enabled: true,
   }
 };
 

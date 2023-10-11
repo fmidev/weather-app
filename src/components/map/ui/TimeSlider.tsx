@@ -48,6 +48,7 @@ import {
   GRAY_6_TRANSPARENT,
   TRANSPARENT,
 } from '@utils/colors';
+import { selectClockType } from '@store/settings/selectors';
 import SliderStep from './SliderStep';
 
 const QUARTER_WIDTH = 12;
@@ -59,6 +60,7 @@ const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
   sliderTime: selectSliderTime(state),
   overlay: selectOverlay(state),
+  clockType: selectClockType(state),
 });
 
 const mapDispatchToProps = {
@@ -76,6 +78,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   sliderTime,
   updateSliderTime,
   overlay,
+  clockType,
 }) => {
   const { t, i18n } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
@@ -96,10 +99,17 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       Number(moment(overlay.observation.end).format('X'))) ||
     0;
 
+  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+
   const currentSliderTime = moment
     .unix(sliderTime)
     .locale(locale)
-    .format('dd HH:mm');
+    .format(
+      `${weekdayAbbreviationFormat} ${clockType === 12 ? 'h.mm a' : 'HH.mm'}`
+    );
+
+  const currentSliderTimeCapitalized =
+    currentSliderTime.charAt(0).toUpperCase() + currentSliderTime.slice(1);
 
   const { sliderStep, sliderTimes } = useMemo(() => {
     const minUnix = getSliderMinUnix(activeOverlayId, overlay);
@@ -119,7 +129,8 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   }, [activeOverlayId, overlay]);
 
   const stepWidth =
-    (sliderStep >= STEP_60 ? 4 : 1) * multiplier * QUARTER_WIDTH;
+    (sliderStep >= STEP_60 ? 4 : 1) * multiplier * QUARTER_WIDTH +
+    (clockType === 12 ? 20 : 0);
 
   const isFocused = useIsFocused();
 
@@ -294,6 +305,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                   stepWidth={stepWidth}
                   isLast={index === sliderTimes.length - 1}
                   isObservation={item <= observationEndUnix}
+                  clockType={clockType}
                 />
               ))}
             </ScrollView>
@@ -306,12 +318,11 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
               <Text
                 style={[
                   styles.currentTimeText,
-                  styles.textCapitalize,
                   {
                     color: colors.hourListText,
                   },
                 ]}>
-                {currentSliderTime}
+                {currentSliderTimeCapitalized}
               </Text>
               <Text
                 style={[
@@ -397,9 +408,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 5,
     padding: 8,
-  },
-  textCapitalize: {
-    textTransform: 'capitalize',
   },
   container: {
     flex: 1,

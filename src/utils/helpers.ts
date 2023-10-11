@@ -10,8 +10,9 @@ import {
 } from '@store/forecast/types';
 import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
-import { MomentObjectOutput } from 'moment';
+import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
+import { CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from './colors';
 import { converter, toPrecision, UNITS } from './units';
 
@@ -117,6 +118,37 @@ export const getPrecipitationLevel = (amount: number): keyof Rain => {
   return 0;
 };
 
+export const getWindDirection = (dataValue: number | undefined): number => {
+  const useCardinals = Config.get('weather').useCardinalsForWindDirection;
+  let direction = 0;
+  if (useCardinals) {
+    const tempDir = dataValue || 0;
+    if ((tempDir >= 338 && tempDir <= 360) || (tempDir >= 0 && tempDir <= 22)) {
+      direction = 0; // N
+    } else if (tempDir >= 23 && tempDir <= 67) {
+      direction = 45; // NE
+    } else if (tempDir >= 68 && tempDir <= 112) {
+      direction = 90; // E
+    } else if (tempDir >= 113 && tempDir <= 157) {
+      direction = 135; // SE
+    } else if (tempDir >= 158 && tempDir <= 202) {
+      direction = 180; // S
+    } else if (tempDir >= 203 && tempDir <= 247) {
+      direction = 225; // SW
+    } else if (tempDir >= 248 && tempDir <= 292) {
+      direction = 270; // W
+    } else if (tempDir >= 293 && tempDir <= 337) {
+      direction = 315; // NW
+    }
+    // for some reason icon is pointing NW instead of N => +45
+    // wind value needs 180 degree switch to show correctly where wind is coming from
+    direction = direction + 45 - 180;
+  } else {
+    direction = (dataValue || 0) + 45 - 180;
+  }
+  return direction;
+};
+
 type DotOrComma = ',' | '.';
 
 export const toStringWithDecimal = (
@@ -133,11 +165,12 @@ const minusParams = ['temperature', 'dewPoint'];
 export const convertValueToUnitPrecision = (
   unit: string,
   unitAbb: string,
-  val: number | undefined | null
+  val: number | undefined | null,
+  decimals?: number
 ) => {
   const result =
     val || val === 0
-      ? toPrecision(unit, unitAbb, converter(unitAbb, val))
+      ? toPrecision(unit, unitAbb, converter(unitAbb, val), decimals)
       : null;
   return result;
 };
@@ -146,9 +179,10 @@ export const getObservationCellValue = (
   item: ObsTimeStepData,
   param: keyof ObsTimeStepData,
   unit: string,
-  decimal?: number,
+  decimals?: number,
   divider?: number,
-  showUnit?: boolean
+  showUnit?: boolean,
+  decimalSeparator: ',' | '.' = ','
 ): string => {
   const unitAbb = unit.replace('°', ''); // get rid of ° in temperature units
   const unitParameterObject = UNITS.find((x) =>
@@ -165,17 +199,18 @@ export const getObservationCellValue = (
       ? convertValueToUnitPrecision(
           unitParameterObject.parameterName,
           unitAbb,
-          Number(dividedValue)
+          Number(dividedValue),
+          decimals
         )
       : dividedValue;
     if (!value) return '-';
 
     return `${(unitParameterObject
       ? value
-      : Number(value).toFixed(decimal || 0)
+      : Number(value).toFixed(decimals || 0)
     )
       .toString()
-      .replace('.', ',')} ${showUnit ? unit : ''}`.trim();
+      .replace('.', decimalSeparator)} ${showUnit ? unit : ''}`.trim();
   }
   return '-';
 };
@@ -285,12 +320,15 @@ export const getIndexForDaySmartSymbol = (
   dayIndex: number
 ): number => {
   if (dayArray.length === 24) {
-    return 16;
+    return 14; // choose 14:00 (2.00 PM) local time as the default time
+  }
+  if (dayArray.length >= 10) {
+    return 14 - (24 - dayArray.length); // choose index of 14:00 if available from a list with fewer than 24 hourly forecasts
   }
   const index = dayArray.findIndex((d) => {
     const dateObj = new Date(d.epochtime * 1000);
     const hours = dateObj.getHours();
-    return hours === 15;
+    return hours === 14;
   });
 
   if (dayIndex === 0 && index < 0) {
@@ -300,4 +338,79 @@ export const getIndexForDaySmartSymbol = (
     return dayArray.length - 1;
   }
   return index;
+};
+
+const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
+
+const getSeveritiesForTimePeriod = (
+  warnings: CapWarning[],
+  start: moment.Moment,
+  end: moment.Moment
+) => {
+  const severitiesForTimePeriod = warnings
+    ?.filter((warning) => {
+      const effective = moment(warning.info.effective);
+      const expires = moment(warning.info.expires);
+      const beginsDuringPeriod = effective.isBetween(start, end);
+      const endsDuringPeriod = expires.isBetween(start, end);
+      const periodContained = effective.isBefore(start) && expires.isAfter(end);
+      return beginsDuringPeriod || endsDuringPeriod || periodContained;
+    })
+    .map((warning) => severities.indexOf(warning.info.severity) + 1);
+
+  const maxSeverity = Math.max(...(severitiesForTimePeriod ?? [0]));
+  return maxSeverity;
+};
+export const getSeveritiesForDays = (
+  warnings: CapWarning[] | undefined,
+  dates: number[]
+) => {
+  if (!warnings) return [];
+
+  const dailySeverities: number[][] = [];
+  dates.forEach((date) => {
+    const daySeverities: number[] = [];
+
+    const startMomentObject = moment(date);
+    startMomentObject.hour(0).minute(0);
+    const endMomentObject = startMomentObject.clone().add(6, 'hours');
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+      )
+    );
+
+    dailySeverities.push(daySeverities);
+  });
+  return dailySeverities;
 };

@@ -17,6 +17,7 @@ import { WarningType } from '@store/warnings/types';
 import { knownWarningTypes } from '@store/warnings/constants';
 import SeverityBar from './SeverityBar';
 import WarningSymbol from './WarningsSymbol';
+import TypeColorRow from './TypeColorRow';
 
 type InfoSheetProps = {
   onClose: () => void;
@@ -47,26 +48,6 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
       </View>
       <Text style={[styles.text, { color: colors.hourListText }]}>
         {t(`warnings:types:${type}`).toLocaleLowerCase()}
-      </Text>
-    </View>
-  );
-
-  const TypeColorRow = ({ severity }: { severity: number }) => (
-    <View style={styles.row}>
-      <View style={styles.iconWrapper}>
-        <View
-          accessibilityElementsHidden
-          style={[
-            styles.ball,
-            {
-              borderColor: severityColors[severity],
-              backgroundColor: severityColors[severity],
-            },
-          ]}
-        />
-      </View>
-      <Text style={[styles.text, { color: colors.hourListText }]}>
-        {t(`warnings:severities:${severity}`).toLocaleLowerCase()}
       </Text>
     </View>
   );
@@ -140,7 +121,11 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
                 <TypeRow key={type} type={type} />
               ))}
               {severities.map((severity) => (
-                <TypeColorRow key={severity} severity={severity} />
+                <TypeColorRow
+                  key={severity}
+                  severity={severity}
+                  severityColors={severityColors}
+                />
               ))}
             </View>
 

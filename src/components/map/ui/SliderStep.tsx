@@ -4,8 +4,10 @@ import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 
 import { CustomTheme } from '@utils/colors';
+import { ClockType } from '@store/settings/types';
 
 type SliderStepProps = {
+  clockType: ClockType;
   index: number;
   isLast: boolean;
   isObservation: boolean;
@@ -18,6 +20,7 @@ type SliderStepProps = {
 const STEP_60 = 3600;
 
 const SliderStep: React.FC<SliderStepProps> = ({
+  clockType,
   index,
   isLast,
   isObservation,
@@ -27,7 +30,9 @@ const SliderStep: React.FC<SliderStepProps> = ({
   stepWidth,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const hour = item % STEP_60 === 0 && moment.unix(item).format('HH');
+  const hour =
+    item % STEP_60 === 0 &&
+    moment.unix(item).format(clockType === 12 ? 'h a' : 'HH');
   if (isLast)
     return (
       <View

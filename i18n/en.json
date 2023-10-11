@@ -52,9 +52,20 @@
   "forecast": {
     "nextHourForecast": "Next hour's forecast,",
     "precipitation": "precipitation",
+    "celsius": "degrees Celsius",
+    "fahrenheit": "degrees Fahrenheit",
     "metersPerSecond": "meters per second",
+    "kilometersPerHour": "kilometers per hour",
+    "milesPerHour": "miles per hour",
+    "knots": "knots",
+    "beaufort": "beaufort",
     "millimeters": "millimeters",
-    "panelHeader": "10-day forecast",
+    "inches": "inches",
+    "hectopascals": "hectopascals",
+    "millibars": "millibars",
+    "millimetersOfMercury": "millimeters of mercury",
+    "inchesOfMercury": "inches of mercury",
+    "panelHeader": "{{ forecastLength }}-day forecast",
     "updated": "Updated",
     "sunrise": "Sunrise",
     "sunset": "Sunset",
@@ -63,7 +74,7 @@
     "minutes": "minutes",
     "feelsLike": "Feels like",
     "temperature": "Temperature",
-    "fromTo": "From {{ min }} degrees to {{ max }} degrees",
+    "fromTo": "From {{ min }} {{ unit }} to {{ max }} {{ unit }}",
     "hourListOpenAccessibilityLabel": "Open hourly forecast for the day",
     "hourListCloseAccessibilityLabel": "Close hourly forecast for the day",
     "at": "at",
@@ -76,15 +87,15 @@
     "active": "selected",
     "notActive": "not selected",
     "params": {
-      "temperature": "temperature: {{ value }} degrees.",
-      "feelsLike": "feels like: {{ value }} degrees.",
-      "dewpoint": "dewpoint: {{ value }} degrees.",
+      "temperature": "temperature: {{ value }} {{ unit }}.",
+      "feelsLike": "feels like: {{ value }} {{ unit }}.",
+      "dewpoint": "dewpoint: {{ value }} {{ unit }}.",
       "pop": "precipitation probability: {{ value }}%.",
-      "hourlymaximumgust": "gust speed: {{ value }} meters per second.",
+      "hourlymaximumgust": "gust speed: {{ value }} {{ unit }}.",
       "relativeHumidity": "relative humidity: {{ value }}%.",
-      "precipitation1h": "precipitation: {{ value }}mm.",
+      "precipitation1h": "precipitation: {{ value }} {{ unit }}.",
       "uvCumulated": "UV index: {{ value }}.",
-      "pressure": "pressure: {{ value }} hectopascal."
+      "pressure": "pressure: {{ value }} {{ unit }}."
     },
     "paramsBottomSheet": {
       "closeAccessibilityLabel": "Close hourly parameter selection",
@@ -103,6 +114,7 @@
       "relativeHumidity": "Relative humidity (%)",
       "pressure": "Pressure ({{ unit }})",
       "uvCumulated": "UV index",
+      "dayLength": "Day length",
       "selectAccessibilityHint": "Double tap to select parameter",
       "unSelectAccessibilityHint": "Double tap to deselect parameter",
       "restoreDefaultHint": "Restore default selection"
@@ -177,6 +189,7 @@
     "chart": "Graph",
     "time": "Time",
     "at": "at",
+    "tooOld": "Observations found, but they are too old.",
     "measurements": {
       "temperature": "Temperature",
       "dewPoint": "Dew point",
@@ -197,10 +210,18 @@
       "mm": "millimeters",
       "%": "percent",
       "°C": "degrees celsius",
+      "°F": "degrees Fahrenheit",
       "m/s": "meters per second",
+      "km/h": "kilometers per hour",
+      "mph": "miles per hour",
+      "bft": "beaufort",
       "hPa": "hectopascal",
+      "mbar": "millibars",
+      "mmHg": "millimeters of mercury",
+      "inHg": "inches of mercury",
       "km": "kilometers",
       "cm": "centimeters",
+      "in": "inches",
       "°": "degrees",
       "na": "not available"
     },
@@ -281,7 +302,11 @@
     "en": "in English",
     "languageHint": "Change application language to:",
     "appearanceHint": "Change application appearance to:",
-    "locationSettingHint": "Navigate to device settings to change app's location permissions"
+    "locationSettingHint": "Navigate to device settings to change app's location permissions",
+    "clockSettingHint": "Change application clock to:",
+    "clock": "Clock",
+    "12-hour-clock": "12-hour clock",
+    "24-hour-clock": "24-hour clock"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search for a location",
@@ -457,6 +482,9 @@
   "warnings": {
     "panelTitle": "Warnings on land areas",
     "panelTitleSlim": "Warnings",
+    "panelTitleCap": "Warnings",
+    "warningsForNDays": "Warnings {{ days }} days",
+    "capUpdated": "Updated",
     "lastUpdated": "Last updated",
     "allWarnings": "Warnings in the whole Finland",
     "valid": "valid between",
@@ -491,6 +519,17 @@
       "dailyTitle": "Daily legends",
       "dailyBadge": "2 warnings are valid during the day",
       "mapTitle": "Map legends",
+      "timezone": "Time zone",
+      "timezoneText": "All times on the application are displayed according to the selected time zone."
+    },
+    "capInfo": {
+      "dailyTitle": "Timeline - daily legends",
+      "example": "Example",
+      "example1Text": "Potentially dangerous weather in the latter half of the day",
+      "example2Text": "The weather develops from potentially dangerous to very dangerous as the day progresses",
+      "warningExplanationsOnLand": "Explanations of warnings for land areas",
+      "warningExplanationsAtSea": "Explanations of warnings for sea areas",
+      "warningColorsExplanation": "Explanations of warning colors",
       "timezone": "Time zone",
       "timezoneText": "All times on the application are displayed according to the selected time zone."
     }

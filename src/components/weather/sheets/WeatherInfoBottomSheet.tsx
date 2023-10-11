@@ -13,6 +13,20 @@ import { SvgProps } from 'react-native-svg';
 
 import { State } from '@store/types';
 import { selectUniqueSmartSymbols } from '@store/forecast/selectors';
+import constants, {
+  TEMPERATURE,
+  FEELS_LIKE,
+  WIND_SPEED_AND_DIRECTION,
+  PRECIPITATION_1H,
+  SNOW_FALL,
+  PRECIPITATION_PROBABILITY,
+  THUNDER_PROBABILITY,
+  DEW_POINT,
+  RELATIVE_HUMIDITY,
+  PRESSURE,
+  UV_CUMULATED,
+} from '@store/forecast/constants';
+import { DisplayParameters } from '@store/forecast/types';
 
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
@@ -44,7 +58,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   uniqueSmartSymbols,
   onClose,
 }) => {
-  const [symbolsOpen, setSymbolsOpen] = useState<boolean>(false);
+  const showAllSymbols =
+    Config.get('weather').forecast.infoBottomSheet?.showAllSymbols || false;
+  const [symbolsOpen, setSymbolsOpen] = useState<boolean>(showAllSymbols);
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
@@ -67,6 +83,24 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   ).length;
 
   const { units } = Config.get('settings');
+  const {
+    data,
+    excludeDayLength,
+    excludeDayDuration,
+    excludePolarNightAndMidnightSun,
+  } = Config.get('weather').forecast;
+  const forecastParams = data.flatMap(({ parameters }) => parameters);
+  const regex = new RegExp([...forecastParams].join('|'));
+  const activeConstants = constants.filter((constant) =>
+    regex.test(constant)
+  ) as DisplayParameters[];
+
+  const windSpeedMap = {
+    'm/s': ['1-3', '4-7', '8-13', '14-20', '21-32', '> 32'],
+    'km/h': ['1-11', '12-25', '26-47', '48-72', '73-115', '> 115'],
+    mph: ['1-7', '8-16', '17-29', '30-45', '46-72', '> 72'],
+    bft: ['1-4', '5-9', '10-17', '18-25', '26-41', '> 41'],
+  } as { [key: string]: string[] };
 
   return (
     <View style={styles.wrapper}>
@@ -196,478 +230,505 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               </Text>
             </View>
 
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="temperature"
-                  color={colors.hourListText}
-                  style={styles.withMarginRight}
-                />
+            {activeConstants.includes(TEMPERATURE) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Icon
+                    width={22}
+                    height={22}
+                    name="temperature"
+                    color={colors.hourListText}
+                    style={styles.withMarginRight}
+                  />
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.hourlyForecastedTemperature', {
+                    unit: units.temperature,
+                  })}
+                </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.hourlyForecastedTemperature', {
-                  unit: units.temperature,
-                })}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="feels-like"
-                  color={colors.hourListText}
-                  style={styles.withMarginRight}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.feelsLikeTemperature', {
-                  unit: units.temperature,
-                })}
-              </Text>
-            </View>
-            {/* <View style={[styles.row, styles.withMarginLeft]}>
-            <View style={styles.iconWrapper}>
-              <Icon
-                width={27}
-                height={27}
-                name="feels-like-colder"
-                style={styles.withMarginRight}
-              />
-            </View>
-            <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t('weatherInfoBottomSheet.feelsLikeColder')}
-            </Text>
-          </View>
-          <View style={[styles.row, styles.withMarginLeft]}>
-            <View style={styles.iconWrapper}>
-              <Icon
-                width={27}
-                height={27}
-                name="feels-like-warmer"
-                style={styles.withMarginRight}
-              />
-            </View>
-            <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t('weatherInfoBottomSheet.feelsLikeWarmer')}
-            </Text>
-          </View> */}
+            )}
 
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="wind"
-                  color={colors.hourListText}
-                  style={styles.withMarginRight}
-                />
+            {activeConstants.includes(FEELS_LIKE) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Icon
+                    width={22}
+                    height={22}
+                    name="feels-like"
+                    color={colors.hourListText}
+                    style={styles.withMarginRight}
+                  />
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.feelsLikeTemperature', {
+                    unit: units.temperature,
+                  })}
+                </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.windSpeedAndDirection', {
-                  unit: units.wind,
-                })}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  name={dark ? 'wind-dark' : 'wind-light'}
-                  width={27}
-                  height={27}
-                  style={[
-                    styles.withMarginRight,
-                    {
-                      transform: [
+            )}
+
+            {activeConstants.includes(WIND_SPEED_AND_DIRECTION) && (
+              <>
+                <View style={styles.row}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      width={22}
+                      height={22}
+                      name="wind"
+                      color={colors.hourListText}
+                      style={styles.withMarginRight}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.windSpeedAndDirection', {
+                      unit: units.wind,
+                    })}
+                  </Text>
+                </View>
+
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      name={dark ? 'wind-dark' : 'wind-light'}
+                      width={27}
+                      height={27}
+                      style={[
+                        styles.withMarginRight,
                         {
-                          rotate: `135deg`,
+                          transform: [
+                            {
+                              rotate: `135deg`,
+                            },
+                          ],
                         },
-                      ],
-                    },
-                  ]}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.windDirectionArrow')}
-              </Text>
-            </View>
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.windDirectionArrow')}
+                  </Text>
+                </View>
 
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                0 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.calm')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                1–3 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.light')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                4–7 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.moderate')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                8–13 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.strongBreeze')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                14–20 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.gale')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                21–32 m/s
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.storm')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                {'> 32 m/s'}
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.hurricane')}
-              </Text>
-            </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    {`0 ${units.wind}`}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.calm')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    {`${windSpeedMap[units.wind][0]} ${units.wind}`}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.light')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    {`${windSpeedMap[units.wind][1]} ${units.wind}`}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.moderate')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    {`${windSpeedMap[units.wind][2]} ${units.wind}`}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.strongBreeze')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    {`${windSpeedMap[units.wind][3]} ${units.wind}`}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.gale')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    {`${windSpeedMap[units.wind][4]} ${units.wind}`}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.storm')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    {`${windSpeedMap[units.wind][5]} ${units.wind}`}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.hurricane')}
+                  </Text>
+                </View>
+              </>
+            )}
 
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="precipitation"
-                  style={styles.withMarginRight}
-                  color={colors.hourListText}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.precipitation', {
-                  unit: units.precipitation,
-                })}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="snow"
-                  style={styles.withMarginRight}
-                  color={colors.hourListText}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.snowfall')}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="precipitation"
-                  style={styles.withMarginRight}
-                  color={colors.hourListText}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.probabilityOfPrecipitation')}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="thunder"
-                  style={styles.withMarginRight}
-                  color={colors.hourListText}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.probabilityOfThunder')}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="dew-point"
-                  style={styles.withMarginRight}
-                  color={colors.hourListText}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.dewPoint', {
-                  unit: units.temperature,
-                })}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Text
-                  style={[
-                    styles.iconText,
-                    styles.withMarginRight,
-                    {
-                      color: colors.hourListText,
-                    },
-                  ]}>
-                  RH%
+            {activeConstants.includes(PRECIPITATION_1H) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Icon
+                    width={22}
+                    height={22}
+                    name="precipitation"
+                    style={styles.withMarginRight}
+                    color={colors.hourListText}
+                  />
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.precipitation', {
+                    unit: units.precipitation,
+                  })}
                 </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.relativeHumidity')}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Text
-                  style={[
-                    styles.iconText,
-                    styles.withMarginRight,
-                    {
-                      color: colors.hourListText,
-                    },
-                  ]}>
-                  {units.pressure}
+            )}
+
+            {activeConstants.includes(SNOW_FALL) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Icon
+                    width={22}
+                    height={22}
+                    name="snow"
+                    style={styles.withMarginRight}
+                    color={colors.hourListText}
+                  />
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.snowfall')}
                 </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.pressure', { unit: units.pressure })}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Text
-                  style={[
-                    styles.iconText,
-                    styles.withMarginRight,
-                    {
-                      color: colors.hourListText,
-                    },
-                  ]}>
-                  UV
+            )}
+
+            {activeConstants.includes(PRECIPITATION_PROBABILITY) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Icon
+                    width={22}
+                    height={22}
+                    name="precipitation"
+                    style={styles.withMarginRight}
+                    color={colors.hourListText}
+                  />
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.probabilityOfPrecipitation')}
                 </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.uvIndex')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                0–2
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.uvLight')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                3–5
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.uvModerate')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                6–7
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.strong')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                10–8
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.veryStrong')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <Text
-                style={[
-                  styles.withMarginRight,
-                  styles.unitText,
-                  { color: colors.hourListText },
-                ]}>
-                ≥11
-              </Text>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.extremelyStrong')}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  name="sun"
-                  width={22}
-                  height={22}
-                  style={[
-                    styles.withMarginRight,
-                    { color: colors.hourListText },
-                  ]}
-                />
+            )}
+
+            {activeConstants.includes(THUNDER_PROBABILITY) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Icon
+                    width={22}
+                    height={22}
+                    name="thunder"
+                    style={styles.withMarginRight}
+                    color={colors.hourListText}
+                  />
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.probabilityOfThunder')}
+                </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.sunriseAndSunset')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  name="sun-arrow-up"
-                  size={14}
-                  style={[
-                    styles.withMarginRight,
-                    { color: colors.hourListText },
-                  ]}
-                />
+            )}
+
+            {activeConstants.includes(DEW_POINT) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Icon
+                    width={22}
+                    height={22}
+                    name="dew-point"
+                    style={styles.withMarginRight}
+                    color={colors.hourListText}
+                  />
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.dewPoint', {
+                    unit: units.temperature,
+                  })}
+                </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.sunrise')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  name="sun-arrow-down"
-                  size={14}
-                  style={[
-                    styles.withMarginRight,
-                    { color: colors.hourListText },
-                  ]}
-                />
+            )}
+
+            {activeConstants.includes(RELATIVE_HUMIDITY) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Text
+                    style={[
+                      styles.iconText,
+                      styles.withMarginRight,
+                      {
+                        color: colors.hourListText,
+                      },
+                    ]}>
+                    RH%
+                  </Text>
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.relativeHumidity')}
+                </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.sunset')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="polar-night"
-                  style={styles.withMarginRight}
-                  color={colors.hourListText}
-                />
+            )}
+
+            {activeConstants.includes(PRESSURE) && (
+              <View style={styles.row}>
+                <View style={styles.iconWrapper}>
+                  <Text
+                    style={[
+                      styles.iconText,
+                      styles.withMarginRight,
+                      {
+                        color: colors.hourListText,
+                      },
+                    ]}>
+                    {units.pressure}
+                  </Text>
+                </View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('weatherInfoBottomSheet.pressure', {
+                    unit: units.pressure,
+                  })}
+                </Text>
               </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.polarNight')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  width={22}
-                  height={22}
-                  name="midnight-sun"
-                  style={styles.withMarginRight}
-                  color={colors.hourListText}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.nightlessNight')}
-              </Text>
-            </View>
-            <View style={[styles.row, styles.withMarginLeft]}>
-              <View style={styles.iconWrapper}>
-                <Icon
-                  name="time"
-                  width={22}
-                  height={22}
-                  style={[
-                    styles.withMarginRight,
-                    {
-                      color: colors.hourListText,
-                    },
-                  ]}
-                />
-              </View>
-              <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.dayDuration')}
-              </Text>
-            </View>
+            )}
+
+            {activeConstants.includes(UV_CUMULATED) && (
+              <>
+                <View style={styles.row}>
+                  <View style={styles.iconWrapper}>
+                    <Text
+                      style={[
+                        styles.iconText,
+                        styles.withMarginRight,
+                        {
+                          color: colors.hourListText,
+                        },
+                      ]}>
+                      UV
+                    </Text>
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.uvIndex')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    0–2
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.uvLight')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    3–5
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.uvModerate')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    6–7
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.strong')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    10–8
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.veryStrong')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <Text
+                    style={[
+                      styles.withMarginRight,
+                      styles.unitText,
+                      { color: colors.hourListText },
+                    ]}>
+                    ≥11
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.extremelyStrong')}
+                  </Text>
+                </View>
+              </>
+            )}
+            {!excludeDayLength && (
+              <>
+                <View style={styles.row}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      name="sun"
+                      width={22}
+                      height={22}
+                      style={[
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.sunriseAndSunset')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      name="sun-arrow-up"
+                      size={14}
+                      style={[
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.sunrise')}
+                  </Text>
+                </View>
+                <View style={[styles.row, styles.withMarginLeft]}>
+                  <View style={styles.iconWrapper}>
+                    <Icon
+                      name="sun-arrow-down"
+                      size={14}
+                      style={[
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                  </View>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('weatherInfoBottomSheet.sunset')}
+                  </Text>
+                </View>
+                {(excludePolarNightAndMidnightSun === undefined ||
+                  !excludePolarNightAndMidnightSun) && (
+                  <>
+                    <View style={[styles.row, styles.withMarginLeft]}>
+                      <View style={styles.iconWrapper}>
+                        <Icon
+                          width={22}
+                          height={22}
+                          name="polar-night"
+                          style={styles.withMarginRight}
+                          color={colors.hourListText}
+                        />
+                      </View>
+                      <Text
+                        style={[styles.text, { color: colors.hourListText }]}>
+                        {t('weatherInfoBottomSheet.polarNight')}
+                      </Text>
+                    </View>
+                    <View style={[styles.row, styles.withMarginLeft]}>
+                      <View style={styles.iconWrapper}>
+                        <Icon
+                          width={22}
+                          height={22}
+                          name="midnight-sun"
+                          style={styles.withMarginRight}
+                          color={colors.hourListText}
+                        />
+                      </View>
+                      <Text
+                        style={[styles.text, { color: colors.hourListText }]}>
+                        {t('weatherInfoBottomSheet.nightlessNight')}
+                      </Text>
+                    </View>
+                  </>
+                )}
+                {(excludeDayDuration === undefined || !excludeDayDuration) && (
+                  <>
+                    <View style={[styles.row, styles.withMarginLeft]}>
+                      <View style={styles.iconWrapper}>
+                        <Icon
+                          name="time"
+                          width={22}
+                          height={22}
+                          style={[
+                            styles.withMarginRight,
+                            {
+                              color: colors.hourListText,
+                            },
+                          ]}
+                        />
+                      </View>
+                      <Text
+                        style={[styles.text, { color: colors.hourListText }]}>
+                        {t('weatherInfoBottomSheet.dayDuration')}
+                      </Text>
+                    </View>
+                  </>
+                )}
+              </>
+            )}
 
             <View
               style={[styles.separator, { backgroundColor: colors.border }]}
@@ -751,32 +812,35 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   )
                 )}
             </View>
-            <AccessibleTouchableOpacity
-              style={[
-                styles.row,
-                styles.buttonContainer,
-                {
-                  borderColor: colors.primaryText,
-                },
-              ]}
-              onPress={() => setSymbolsOpen((prev) => !prev)}>
-              <Text style={[styles.buttonText, { color: colors.primaryText }]}>
-                {!symbolsOpen
-                  ? `${t('weatherInfoBottomSheet.showRest')} (${
-                      filteredSymbolsArr.length - currentSymbols
-                    })`
-                  : t('weatherInfoBottomSheet.showLess')}
-              </Text>
-              <Icon
-                name={symbolsOpen ? 'arrow-up' : 'arrow-down'}
-                width={24}
-                height={24}
+            {!showAllSymbols && (
+              <AccessibleTouchableOpacity
                 style={[
-                  styles.withSmallMarginLeft,
-                  { color: colors.primaryText },
+                  styles.row,
+                  styles.buttonContainer,
+                  {
+                    borderColor: colors.primaryText,
+                  },
                 ]}
-              />
-            </AccessibleTouchableOpacity>
+                onPress={() => setSymbolsOpen((prev) => !prev)}>
+                <Text
+                  style={[styles.buttonText, { color: colors.primaryText }]}>
+                  {!symbolsOpen
+                    ? `${t('weatherInfoBottomSheet.showRest')} (${
+                        filteredSymbolsArr.length - currentSymbols
+                      })`
+                    : t('weatherInfoBottomSheet.showLess')}
+                </Text>
+                <Icon
+                  name={symbolsOpen ? 'arrow-up' : 'arrow-down'}
+                  width={24}
+                  height={24}
+                  style={[
+                    styles.withSmallMarginLeft,
+                    { color: colors.primaryText },
+                  ]}
+                />
+              </AccessibleTouchableOpacity>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </View>

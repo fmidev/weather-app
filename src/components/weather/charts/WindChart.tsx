@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
+import { getWindDirection } from '@utils/helpers';
 import { VictoryLine, VictoryGroup, VictoryArea } from 'victory-native';
 import { CustomTheme } from '@utils/colors';
 import { useTheme } from '@react-navigation/native';
@@ -62,6 +63,8 @@ const WindChart: React.FC<ChartDataProps> = ({
       return null;
     }
 
+    const dir = getWindDirection(y);
+
     return (
       <View style={[styles.arrowStyle, { left: dX - labelSize / 2 }]}>
         <Icon
@@ -72,7 +75,7 @@ const WindChart: React.FC<ChartDataProps> = ({
             color: colors.primaryText,
             transform: [
               {
-                rotate: `${y + 45 - 180}deg`,
+                rotate: `${dir}deg`,
               },
             ],
           }}
