@@ -52,10 +52,10 @@ import Search from '@assets/images/icons/search.svg';
 import Settings from '@assets/images/icons/settings.svg';
 import Snow from '@assets/images/icons/snow.svg';
 import SocialInstagramDark from '@assets/images/icons/social-instagram-dark.svg';
-import SocialXDark from '@assets/images/icons/social-x-logo-white.svg';
+import SocialTwitterDark from '@assets/images/icons/social-x-logo-dark.svg';
 import SocialYoutubeDark from '@assets/images/icons/social-youtube-dark.svg';
 import SocialInstagramLight from '@assets/images/icons/social-instagram-light.svg';
-import SocialXLight from '@assets/images/icons/social-x-logo-blue.svg';
+import SocialTwitterLight from '@assets/images/icons/social-x-logo-light.svg';
 import SocialYoutubeLight from '@assets/images/icons/social-youtube-light.svg';
 import StarSelected from '@assets/images/icons/star-selected.svg';
 import StarUnselected from '@assets/images/icons/star-unselected.svg';
@@ -236,14 +236,14 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Snow {...(props as SvgProps)} />;
     case 'social-instagram-dark':
       return <SocialInstagramDark {...(props as SvgProps)} />;
-    case 'social-x-dark':
-      return <SocialXDark {...(props as SvgProps)} />;
+    case 'social-twitter-dark':
+      return <SocialTwitterDark {...(props as SvgProps)} />;
     case 'social-youtube-dark':
       return <SocialYoutubeDark {...(props as SvgProps)} />;
     case 'social-instagram-light':
       return <SocialInstagramLight {...(props as SvgProps)} />;
-    case 'social-x-light':
-      return <SocialXLight {...(props as SvgProps)} />;
+    case 'social-twitter-light':
+      return <SocialTwitterLight {...(props as SvgProps)} />;
     case 'social-youtube-light':
       return <SocialYoutubeLight {...(props as SvgProps)} />;
     case 'star-selected':
