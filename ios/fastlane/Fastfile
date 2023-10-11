@@ -21,7 +21,7 @@ default_platform(:ios)
 
 platform :ios do
   # Set Slack webhook
-  ios_slack_url = ENV["SLACK_WEB_HOOK_URL"]
+  # ios_slack_url = ENV["SLACK_WEB_HOOK_URL"]
 
   # Set ASC Key settings
   asc_key_id = ENV['ASC_KEY_ID']
@@ -156,6 +156,7 @@ platform :ios do
    end
 	
    # Build uploading success message to Slack, if lanes are completed successfully
+   /
    after_all do |lane|
 	if lane != :increment_version
     	slack(
@@ -166,10 +167,12 @@ platform :ios do
 	else
 		puts "Skip Slack"
 	end
-    end
+   end
+   /
 	
-    # Error message to Slack
-    error do |lane, exception|
+   # Error message to Slack
+   /
+   error do |lane, exception|
 	if lane != :increment_version
     	slack(
       	      message: exception.message,
@@ -179,5 +182,6 @@ platform :ios do
 	else
 		puts "Skip Slack"
 	end
-    end
+   end
+   /
  end
