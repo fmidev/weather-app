@@ -540,7 +540,7 @@
     "accept": "Hyväksy",
     "location": "Sijainti",
     "locationDescription": "Sovellus käyttää laitteen sijaintia paikantamaan käyttäjän. Sijaintia käytetään vain esitystarkoitukseen.",
-    "acceptLocation": "Salli sijainti",
+    "acceptLocation": "Seuraava",
     "declineLocation": "Älä salli"
   },
   "onboarding": {
