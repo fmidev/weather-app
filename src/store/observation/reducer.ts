@@ -20,7 +20,7 @@ const INITIAL_STATE: ObservationState = {
   loading: false,
   stations: [],
   stationId: {},
-  displayFormat: 'table',
+  displayFormat: 'chart',
   chartDisplayParam: undefined,
 };
 
