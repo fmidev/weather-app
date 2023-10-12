@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   text: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontSize: 16,
+    fontFamily: 'Roboto-Thin',
   },
   marginBottom: {
     marginBottom: 10,

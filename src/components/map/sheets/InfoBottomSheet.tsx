@@ -123,11 +123,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   rainContainer: {
     justifyContent: 'space-around',

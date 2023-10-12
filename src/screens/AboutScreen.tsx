@@ -20,7 +20,7 @@ const AboutScreen: React.FC = () => {
           {t('about:body')}
         </Text>
         <Text
-          style={[styles.text, { color: colors.text }]}
+          style={[styles.text, styles.currentVersion, { color: colors.text }]}
           testID="about_version_info">
           {`${t('about:versionInfo')}: ${packageJSON.version}`}
         </Text>
@@ -39,13 +39,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
     marginTop: 32,
     marginBottom: 16,
   },
+  currentVersion: {
+    fontFamily: 'Roboto-Regular',
+  },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     marginBottom: 16,
   },
 });

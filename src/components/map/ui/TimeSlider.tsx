@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
   },
   currentTimeText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
     position: 'absolute',
     bottom: 0,
     zIndex: 5,

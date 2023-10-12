@@ -41,7 +41,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
 const styles = StyleSheet.create({
   cardHeader: {
     paddingHorizontal: 16,
-    paddingVertical: 11,
+    paddingVertical: 16,
     borderBottomWidth: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
 });
 

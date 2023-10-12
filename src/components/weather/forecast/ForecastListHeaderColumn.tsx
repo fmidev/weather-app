@@ -194,11 +194,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   panelText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
   iconColumn: {
-    width: 52,
+    width: 60,
     borderWidth: 1,
     borderBottomWidth: 0,
     alignItems: 'center',

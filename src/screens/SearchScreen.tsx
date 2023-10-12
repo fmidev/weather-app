@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   searchIcon: {
     marginRight: 8,
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
     paddingVertical: 0,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     fontSize: 16,
   },
   locateRow: {
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginLeft: 16,
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
 });
 

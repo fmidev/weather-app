@@ -196,11 +196,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     flexShrink: 1,
   },
 });

@@ -193,7 +193,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
 const styles = StyleSheet.create({
   bold: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Thin',
   },
   justifyStart: {
     justifyContent: 'flex-start',
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   latestObservation: {
     flexDirection: 'column',
     height: 40,
-    marginBottom: 16,
+    marginBottom: 30,
   },
   observationRow: {
     flexDirection: 'row',
@@ -212,12 +212,12 @@ const styles = StyleSheet.create({
   },
   panelMeasurement: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
     marginBottom: 8,
   },
   panelValue: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     marginBottom: 8,
   },
   panelText: {

@@ -173,6 +173,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
 const styles = StyleSheet.create({
   listContentContainer: {
     paddingRight: 8,
+    paddingTop: 10,
   },
   dayBlock: {
     minWidth: 100,
@@ -203,11 +204,11 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   forecastText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    fontFamily: 'Roboto-Thin',
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   precipitationStrip: {
     marginBottom: -6,

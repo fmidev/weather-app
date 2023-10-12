@@ -143,13 +143,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
     marginTop: 32,
     marginBottom: 16,
   },
   body: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
   },
   closeButtonContainer: {
     width: '100%',
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   closeText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Thin',
   },
   withPaddingBottom: {
     paddingBottom: 24,

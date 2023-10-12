@@ -443,6 +443,7 @@ const Navigator: React.FC<Props> = ({
             tabBarInactiveTintColor: useDarkTheme
               ? darkTheme.colors.tabBarInactive
               : lightTheme.colors.tabBarInactive,
+            tabBarStyle: { height: 70 },
             tabBarLabelStyle: styles.tabText,
             tabBarButton: ({ style, accessibilityState, ...rest }) => {
               const activeColor = useDarkTheme
@@ -574,8 +575,8 @@ const Navigator: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   tabText: {
-    fontFamily: 'Roboto-Medium',
-    fontSize: 14,
+    fontFamily: 'Roboto-Thin',
+    fontSize: 16,
   },
   headerBackImage: {
     flex: 1,

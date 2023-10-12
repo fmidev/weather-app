@@ -60,12 +60,7 @@ const TermsAndConditionsScreen: React.FC = () => {
         )}
         {t('generalAbout') !== 'generalAbout' && (
           <>
-            <Text
-              style={[
-                styles.body,
-                styles.bold,
-                { color: colors.hourListText },
-              ]}>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
               {t('generalAbout')}
             </Text>
           </>
@@ -339,13 +334,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
     marginTop: 32,
     marginBottom: 16,
   },
   subTitle: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
     marginTop: 32,
     marginBottom: 16,
   },
@@ -357,16 +352,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
     fontSize: 16,
-  },
-  bold: {
-    fontFamily: 'Roboto-Bold',
-    marginBottom: 16,
   },
   body: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
   },
   withPaddingBottom: {
     paddingBottom: 24,

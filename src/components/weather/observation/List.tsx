@@ -86,9 +86,12 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
               styles.rowItem,
               styles.listText,
               styles.bold,
+              ['pressure', 'humidity', 'cloudHeight', 'snow'].includes(param)
+                ? styles.singleParameter
+                : styles.centerAlign,
               { color: colors.hourListText },
             ]}>
-            {`${t(`measurements.${param}`)} ${getParameterUnit(param)}`}
+            {`${t(`measurements.${param}`)}`}
           </Text>
         );
       })}
@@ -103,7 +106,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
         getParameterUnit('windSpeedMS'),
         undefined,
         undefined,
-        false
+        true
       );
 
       const windGustObservationCellValue = getObservationCellValue(
@@ -112,84 +115,90 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
         getParameterUnit('windGust'),
         undefined,
         undefined,
-        false
+        true
       );
 
       return (
         <View style={styles.row}>
-          <View style={[styles.windColumn]}>
-            {activeParameters.includes('windSpeedMS') && (
-              <Text
-                style={[
-                  styles.listText,
-                  styles.windText,
-                  { color: colors.hourListText },
-                ]}
-                accessibilityLabel={`${t(
-                  'measurements.windSpeedMS'
-                )} ${windSpeedObservationCellValue}
-                ${t(
-                  `forecast:${getForecastParameterUnitTranslationKey(
-                    windSpeedUnit
-                  )}`
-                )}`}>
-                {windSpeedObservationCellValue}
-              </Text>
-            )}
-            {activeParameters.includes('windDirection') &&
-              typeof timeStep.windDirection !== 'number' && (
+          <View style={[styles.rowItem]}>
+            <View style={[styles.windColumn, styles.centerAlign]}>
+              {activeParameters.includes('windDirection') &&
+                typeof timeStep.windDirection !== 'number' && (
+                  <Text
+                    style={[
+                      styles.listText,
+                      styles.wdPadding,
+                      { color: colors.hourListText },
+                    ]}>
+                    -
+                  </Text>
+                )}
+              {activeParameters.includes('windDirection') &&
+                typeof timeStep.windDirection === 'number' && (
+                  <Icon
+                    accessibilityLabel={
+                      timeStep.windCompass8
+                        ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
+                        : `${t(
+                            'measurements.windDirection'
+                          )} ${getWindDirection(timeStep.windDirection)} ${t(
+                            'paramUnits.°'
+                          )}.`
+                    }
+                    name="wind-arrow"
+                    style={[
+                      styles.wdPadding,
+                      {
+                        color: colors.hourListText,
+                        transform: [
+                          {
+                            rotate: `${getWindDirection(
+                              timeStep.windDirection
+                            )}deg`,
+                          },
+                        ],
+                      },
+                    ]}
+                  />
+                )}
+              {activeParameters.includes('windSpeedMS') && (
                 <Text
                   style={[
                     styles.listText,
-                    styles.rowItem,
-                    styles.wdPadding,
+                    styles.windText,
                     { color: colors.hourListText },
-                  ]}>
-                  -
+                  ]}
+                  accessibilityLabel={`${t(
+                    'measurements.windSpeedMS'
+                  )} ${windSpeedObservationCellValue}
+                               ${t(
+                                 `forecast:${getForecastParameterUnitTranslationKey(
+                                   windSpeedUnit
+                                 )}`
+                               )}`}>
+                  {windSpeedObservationCellValue}
                 </Text>
               )}
-            {activeParameters.includes('windDirection') &&
-              typeof timeStep.windDirection === 'number' && (
-                <Icon
-                  accessibilityLabel={
-                    timeStep.windCompass8
-                      ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
-                      : `${t('measurements.windDirection')} ${getWindDirection(
-                          timeStep.windDirection
-                        )} ${t('paramUnits.°')}.`
-                  }
-                  name="wind-arrow"
-                  style={[
-                    styles.wdPadding,
-                    {
-                      color: colors.hourListText,
-                      transform: [
-                        {
-                          rotate: `${getWindDirection(
-                            timeStep.windDirection
-                          )}deg`,
-                        },
-                      ],
-                    },
-                  ]}
-                />
-              )}
+            </View>
           </View>
-          {activeParameters.includes('windGust') && (
-            <Text
-              style={[
-                styles.listText,
-                styles.rowItem,
-                { color: colors.hourListText },
-              ]}
-              accessibilityLabel={`${t(
-                'measurements.windGust'
-              )} ${windGustObservationCellValue} ${t(
-                `paramUnits.${getParameterUnit('windGust')}`
-              )}`}>
-              {windGustObservationCellValue}
-            </Text>
-          )}
+          <View style={[styles.windColumn]}>
+            {activeParameters.includes('windGust') && (
+              <Text
+                style={[
+                  styles.listText,
+                  styles.rowItem,
+                  styles.centerAlign,
+                  { color: colors.hourListText },
+                ]}
+                accessibilityLabel={`${t(
+                  'measurements.windGust'
+                )} ${windGustObservationCellValue} ${t(
+                  `paramUnits.${getParameterUnit('windGust')}`
+                )}`}>
+                {windGustObservationCellValue}
+              </Text>
+            )}
+          </View>
         </View>
       );
     }
@@ -212,7 +221,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
               ? 0
               : 1,
             ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0,
-            undefined,
+            true,
             decimalSeparator
           );
 
@@ -238,6 +247,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
               style={[
                 styles.listText,
                 styles.rowItem,
+                ['pressure', 'humidity', 'cloudHeight', 'snow'].includes(param)
+                  ? styles.singleParameter
+                  : styles.centerAlign,
                 { color: colors.hourListText },
               ]}
               accessibilityLabel={accessibilityLabel}>
@@ -265,7 +277,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
             ]}>
             {moment(data[0].epochtime * 1000)
               .locale(locale)
-              .format(locale === 'en' ? `dddd D MMM` : `dddd D.M.`)}
+              .format(locale === 'en' ? `dddd D MMMM` : `dddd D.M.`)}
           </Text>
         )}
       </View>
@@ -280,6 +292,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
         ]}>
         <Text
           style={[
+            styles.timeCol,
             styles.rowItem,
             styles.listText,
             styles.bold,
@@ -297,7 +310,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
             const time = moment(timeStep.epochtime * 1000).locale(locale);
             const previousTime = moment(arr?.[i - 1]?.epochtime * 1000);
             const timeToDisplay = time.format(
-              clockType === 12 ? 'h.mm a' : 'HH.mm'
+              clockType === 12 ? 'h.mm a' : 'HH:mm'
             );
 
             return (
@@ -318,7 +331,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                         { color: colors.hourListText },
                       ]}>
                       {time.format(
-                        locale === 'en' ? 'dddd D MMM' : `dddd D.M.`
+                        locale === 'en' ? 'dddd D MMMM' : `dddd D.M.`
                       )}
                     </Text>
                   </View>
@@ -335,6 +348,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
                     ]}>
                     <Text
                       style={[
+                        styles.timeCol,
                         styles.rowItem,
                         styles.listText,
                         styles.bold,
@@ -356,7 +370,10 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
 };
 const styles = StyleSheet.create({
   bold: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
+  },
+  timeCol: {
+    maxWidth: 80,
   },
   currentDay: {
     paddingLeft: 8,
@@ -364,12 +381,20 @@ const styles = StyleSheet.create({
   },
   listText: {
     fontSize: 16,
+    fontFamily: 'Roboto-Thin',
   },
   marginBottom: {
     marginBottom: 20,
   },
   observationListContainer: {
     marginTop: 20,
+  },
+  singleParameter: {
+    maxWidth: 150,
+    textAlign: 'center',
+  },
+  centerAlign: {
+    textAlign: 'center',
   },
   rowItem: {
     flex: 1,
@@ -386,6 +411,7 @@ const styles = StyleSheet.create({
   windColumn: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   windText: {
     minWidth: 30,

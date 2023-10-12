@@ -68,7 +68,7 @@ const ObservationStationListBottomSheet: React.FC<
             <AccessibleTouchableOpacity
               accessible
               accessibilityState={{ selected: station.id === stationId }}
-              accessibilityLabel={`${station.name} – ${t(
+              accessibilityLabel={`${station.name} ${t(
                 'observation:distance'
               )} ${station.distance} km`}
               accessibilityHint={
@@ -83,14 +83,20 @@ const ObservationStationListBottomSheet: React.FC<
                 onClose();
               }}>
               <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
-                  {`${station.name} – ${t(
-                    'observation:distance'
-                  )} ${toStringWithDecimal(
-                    station.distance,
-                    decimalSeparator
-                  )} km`}
-                </Text>
+                <View style={styles.column}>
+                  <View>
+                    <Text style={[styles.textBold, { color: colors.text }]}>
+                      {`${station.name}`}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.text, { color: colors.text }]}>
+                      {t('observation:distance')}{' '}
+                      {toStringWithDecimal(station.distance, decimalSeparator)}{' '}
+                      km
+                    </Text>
+                  </View>
+                </View>
                 <Icon
                   name={
                     station.id === stationId
@@ -128,21 +134,28 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   row: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: 10,
-    paddingLeft: 12,
-    minHeight: 44,
+    marginLeft: 20,
+    marginRight: 10,
+  },
+  column: {
+    width: '100%',
+    flexDirection: 'column',
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
+  },
+  textBold: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     flexShrink: 1,
   },
 });

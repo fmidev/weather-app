@@ -264,22 +264,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
   },
   withMarginRight: {
     marginRight: 10,
   },
   restoreText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
   },
   iconText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
   },
   lastRow: {
     flex: 1,

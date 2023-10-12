@@ -440,11 +440,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Thin',
   },
   panelText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontSize: 16,
+    fontFamily: 'Roboto-Thin',
   },
   withMarginRight20: {
     marginRight: 20,
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
   },
   symbolBlock: {
     height: '100%',
-    width: 51,
+    width: 59,
     justifyContent: 'center',
     alignItems: 'center',
     borderRightWidth: 1,

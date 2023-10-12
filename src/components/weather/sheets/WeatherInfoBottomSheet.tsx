@@ -878,17 +878,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     flex: 2,
     flexWrap: 'wrap',
   },
   iconText: {
-    fontFamily: 'Roboto-Medium',
-    fontSize: 14,
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
   },
   flex1: {
     flex: 1,
@@ -923,7 +923,7 @@ const styles = StyleSheet.create({
   },
   unitText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
     flex: 1,
     flexWrap: 'wrap',
   },
@@ -938,7 +938,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Thin',
   },
   landscape: {
     paddingBottom: 200,

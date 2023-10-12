@@ -646,7 +646,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   rowWrapper: {
     marginHorizontal: 20,
@@ -664,14 +664,14 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
   },
   withMarginTop: {
     marginTop: 16,
   },
   editText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
     marginRight: 8,
   },
   editRow: {

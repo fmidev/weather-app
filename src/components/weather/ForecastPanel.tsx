@@ -127,9 +127,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       <PanelHeader
         title={t('panelHeader', { forecastLength: forecastLengthTitle || 10 })}
         lastUpdated={forecastLastUpdated}
+        style={styles.panelHeader}
       />
       <View style={styles.panelContainer}>
-        <View style={[styles.row]}>
+        <View style={[styles.row, styles.buttonContainer]}>
           <View style={[styles.row, styles.justifyStart]}>
             <AccessibleTouchableOpacity
               accessibilityRole="button"
@@ -330,6 +331,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
   },
+  buttonContainer: {
+    marginTop: 10,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -340,8 +344,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forecastText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    fontFamily: 'Roboto-Thin',
   },
   justifyStart: {
     justifyContent: 'flex-start',
@@ -350,7 +354,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   selectedText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   withMarginRight: {
     marginRight: 16,

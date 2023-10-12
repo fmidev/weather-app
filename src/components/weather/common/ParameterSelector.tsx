@@ -173,7 +173,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listContentContainer: {
-    paddingHorizontal: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,
@@ -185,14 +186,14 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   text: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    fontFamily: 'Roboto-Thin',
   },
   selectedText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   medium: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Thin',
   },
   gradient: {
     position: 'absolute',

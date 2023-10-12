@@ -50,7 +50,7 @@
     "loading": "Loading content"
   },
   "forecast": {
-    "nextHourForecast": "Next hour's forecast,",
+    "nextHourForecast": "Forecast",
     "precipitation": "precipitation",
     "celsius": "degrees Celsius",
     "fahrenheit": "degrees Fahrenheit",

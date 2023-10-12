@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   row: {
     flexDirection: 'row',
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   text: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     fontSize: 16,
   },
   withMarginLeft: {

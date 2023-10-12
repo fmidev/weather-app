@@ -158,7 +158,8 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             <Text style={[styles.panelText, { color: colors.primaryText }]}>
               {t('observationStation')}{' '}
             </Text>
-            <View style={[styles.observationDropdown]}>
+            <View
+              style={[styles.observationDropdown, styles.dropdownContainer]}>
               <CollapsibleHeader
                 onPress={() => stationSheetRef.current.open()}
                 open={false}
@@ -323,16 +324,19 @@ const styles = StyleSheet.create({
     marginRight: -6,
     marginTop: 2,
   },
+  dropdownContainer: {
+    marginBottom: 20,
+  },
   observationText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    fontFamily: 'Roboto-Thin',
   },
   panelContainer: {
-    paddingVertical: 12,
+    paddingVertical: 18,
     paddingHorizontal: 18,
   },
   panelText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: 'Roboto-Regular',
     paddingBottom: 2,
   },
@@ -344,6 +348,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOpacity: 1,
     elevation: 3,
+    marginTop: 40,
   },
   row: {
     flexDirection: 'row',
@@ -352,7 +357,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   selectedText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   sheetContainer: {
     borderTopLeftRadius: 10,

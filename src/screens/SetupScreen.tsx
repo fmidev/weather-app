@@ -273,17 +273,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 30,
     alignSelf: 'center',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   textNormal: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
   },
   textHighlight: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   secondaryButton: {
     borderBottomWidth: 2,
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
     textAlign: 'center',
   },
   pagination: {

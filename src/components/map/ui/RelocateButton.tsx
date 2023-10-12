@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
     textAlign: 'center',
   },
 });

@@ -118,18 +118,13 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.alignCenter} accessible accessibilityRole="header">
+      <View style={styles.timeContainer} accessible accessibilityRole="header">
         <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
-          {t('nextHourForecast')}
+          {t('nextHourForecast')}{' '}
+          {`${t('at')} ${currentTime.format(
+            clockType === 12 ? 'h.mm a' : 'HH.mm'
+          )}`}
         </Text>
-        <Text
-          style={[
-            styles.text,
-            styles.bold,
-            { color: colors.primaryText },
-          ]}>{`${t('at')} ${currentTime.format(
-          clockType === 12 ? 'h.mm a' : 'HH.mm'
-        )}`}</Text>
       </View>
       <View style={styles.row}>
         <View
@@ -293,8 +288,9 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 24,
+    paddingTop: 48,
     paddingHorizontal: 44,
+    paddingBottom: 48,
   },
   row: {
     flexDirection: 'row',
@@ -321,7 +317,8 @@ const styles = StyleSheet.create({
   alignEnd: {
     alignItems: 'flex-end',
   },
-  alignCenter: {
+  timeContainer: {
+    marginBottom: 30,
     alignItems: 'center',
   },
   separator: {
@@ -333,22 +330,22 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
   },
   unitText: {
     fontSize: 24,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     paddingTop: 12,
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   feelsLikeText: {
     fontSize: 20,
   },
   temperatureText: {
     fontSize: 72,
-    fontFamily: 'Roboto-Light',
+    fontFamily: 'Roboto-Thin',
   },
   bottomInfoRow: {
     marginBottom: 11,

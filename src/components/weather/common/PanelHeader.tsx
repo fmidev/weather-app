@@ -40,10 +40,10 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
 const styles = StyleSheet.create({
   updatedText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Thin',
   },
 });
 

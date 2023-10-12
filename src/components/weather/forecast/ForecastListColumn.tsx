@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   },
   hourText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Roboto-Regular',
   },
   hourColumn: {
     width: 52,
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   regularText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Thin',
     fontSize: 16,
   },
 });
