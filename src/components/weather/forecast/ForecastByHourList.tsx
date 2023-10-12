@@ -119,16 +119,21 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const { excludeDayDuration, excludePolarNightAndMidnightSun } =
       Config.get('weather').forecast;
 
+    // check if sunrise and sunset are on same day or not (works in all timezones)
+    const sunriseDay = moment(sunrise).format('D');
+    const sunsetDay = moment(sunset).format('D');
+    const isSunriseAndDayInSameDay = sunriseDay === sunsetDay;
+
     const isPolarNight =
       (excludePolarNightAndMidnightSun === undefined ||
         !excludePolarNightAndMidnightSun) &&
-      !step.sunriseToday &&
+      !isSunriseAndDayInSameDay &&
       sunset.isBefore(sunrise);
 
     const isMidnightSun =
       (excludePolarNightAndMidnightSun === undefined ||
         !excludePolarNightAndMidnightSun) &&
-      !step.sunsetToday &&
+      !isSunriseAndDayInSameDay &&
       sunrise.isBefore(sunset);
 
     const dateFormat =
