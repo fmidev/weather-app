@@ -94,8 +94,11 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
     // get day's first timestep
     let step = data[adjustedStepIndex];
-    // get step hour
-    const stepHour = new Date(step.epochtime * 1000).getHours();
+    // get step hour (works in selected location's timezone)
+    const stepHour = Number.parseInt(
+      moment.unix(step.epochtime).format('H'),
+      10
+    );
     // do not use 00-05 steps for the FIRST DAY due to possible errors (data is fetched in UTC + daylight savings)
     if (adjustedStepIndex === 0 && stepHour < 6) {
       // use 06 step instead!
@@ -105,7 +108,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     console.log(
       adjustedStepIndex,
       `original step ${stepHour}`,
-      `adjusted step ${new Date(step.epochtime * 1000).getHours()}`
+      `adjusted step ${moment.unix(step.epochtime).format('H')}`
     );
 
     const sunrise = moment(`${step.sunrise}Z`);
