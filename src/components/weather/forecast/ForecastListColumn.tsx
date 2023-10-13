@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   regularText: {
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
     fontSize: 16,
   },
 });

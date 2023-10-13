@@ -330,22 +330,22 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   unitText: {
     fontSize: 24,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
     paddingTop: 12,
   },
   bold: {
     fontFamily: 'Roboto-Regular',
   },
   feelsLikeText: {
-    fontSize: 20,
+    fontSize: 16,
   },
   temperatureText: {
     fontSize: 72,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   bottomInfoRow: {
     marginBottom: 11,

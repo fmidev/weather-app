@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
   },
   forecastText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   justifyStart: {
     justifyContent: 'flex-start',

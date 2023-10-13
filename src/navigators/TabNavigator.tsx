@@ -201,7 +201,7 @@ const Navigator: React.FC<Props> = ({
   const CommonHeaderOptions: StackNavigationOptions = {
     headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
     headerTitleStyle: {
-      fontFamily: 'Roboto-Bold',
+      fontFamily: 'Roboto-Regular',
     },
     headerStyle: {
       ...styles.header,
@@ -575,7 +575,7 @@ const Navigator: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   tabText: {
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
     fontSize: 16,
   },
   headerBackImage: {

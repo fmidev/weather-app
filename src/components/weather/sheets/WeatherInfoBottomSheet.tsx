@@ -882,7 +882,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
     flex: 2,
     flexWrap: 'wrap',
   },
@@ -938,7 +938,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   landscape: {
     paddingBottom: 200,

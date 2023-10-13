@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   },
   textRegular: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   row: {
     flexDirection: 'row',

@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   alignStart: {
     alignItems: 'flex-start',

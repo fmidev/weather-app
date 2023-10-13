@@ -50,7 +50,7 @@
     "loading": "Ladataan sisältöä"
   },
   "forecast": {
-    "nextHourForecast": "Seuraavan tunnin ennuste,",
+    "nextHourForecast": "Ennuste",
     "precipitation": "sadetta",
     "celsius": "Celsius-astetta",
     "fahrenheit": "Fahrenheit-astetta",

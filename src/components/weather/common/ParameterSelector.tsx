@@ -187,13 +187,13 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   selectedText: {
     fontFamily: 'Roboto-Regular',
   },
   medium: {
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   gradient: {
     position: 'absolute',

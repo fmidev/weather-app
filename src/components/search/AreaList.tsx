@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   resultText: {
     fontSize: 16,
     marginLeft: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   actionButtonContainer: {
     width: 50,

@@ -65,7 +65,7 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     minWidth: 100,
     justifyContent: 'center',
   },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   marginBottom: {
     marginBottom: 10,

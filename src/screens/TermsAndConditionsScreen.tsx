@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   },
   body: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   closeButtonContainer: {
     width: '100%',
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   closeText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   withPaddingBottom: {
     paddingBottom: 24,

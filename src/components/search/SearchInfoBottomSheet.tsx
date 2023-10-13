@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   text: {
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
     fontSize: 16,
   },
   withMarginLeft: {

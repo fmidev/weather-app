@@ -50,7 +50,7 @@
     "loading": "Laddar innehål"
   },
   "forecast": {
-    "nextHourForecast": "Prognos för nästa timme,",
+    "nextHourForecast": "Prognos",
     "precipitation": "regn",
     "celsius": "Celsius grader",
     "fahrenheit": "Fahrenheit grader",

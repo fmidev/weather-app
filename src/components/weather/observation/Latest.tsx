@@ -193,7 +193,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
 const styles = StyleSheet.create({
   bold: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   justifyStart: {
     justifyContent: 'flex-start',
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   },
   panelValue: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
     marginBottom: 8,
   },
   panelText: {

@@ -440,11 +440,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bold: {
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   panelText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   withMarginRight20: {
     marginRight: 20,

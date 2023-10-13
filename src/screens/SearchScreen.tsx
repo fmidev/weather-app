@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
     paddingVertical: 0,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
     fontSize: 16,
   },
   locateRow: {

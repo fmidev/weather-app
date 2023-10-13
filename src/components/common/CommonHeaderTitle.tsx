@@ -88,11 +88,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Roboto-Regular',
     textAlign: 'center',
   },
   timezone: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Light',
     fontSize: 12,
   },
   row: {

@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
   },
   observationText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   panelContainer: {
     paddingVertical: 18,

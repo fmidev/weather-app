@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   forecastText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   bold: {
     fontFamily: 'Roboto-Regular',

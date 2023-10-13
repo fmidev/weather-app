@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
   },
   listText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Thin',
+    fontFamily: 'Roboto-Light',
   },
   marginBottom: {
     marginBottom: 20,
