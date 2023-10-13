@@ -69,7 +69,7 @@ platform :ios do
         key_id: asc_key_id,
         issuer_id: asc_issuer_id,
         key_content: asc_key_content,
-	is_key_content_base64: true
+	is_key_content_base64: false
       )
     end
 	
