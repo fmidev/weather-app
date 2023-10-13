@@ -121,7 +121,7 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
       return (
         <View style={styles.row}>
           <View style={[styles.rowItem]}>
-            <View style={[styles.windColumn, styles.centerAlign]}>
+            <View style={[styles.windColumn]}>
               {activeParameters.includes('windDirection') &&
                 typeof timeStep.windDirection !== 'number' && (
                   <Text
