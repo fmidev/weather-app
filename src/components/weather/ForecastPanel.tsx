@@ -127,7 +127,6 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       <PanelHeader
         title={t('panelHeader', { forecastLength: forecastLengthTitle || 10 })}
         lastUpdated={forecastLastUpdated}
-        style={styles.panelHeader}
       />
       <View style={styles.panelContainer}>
         <View style={[styles.row, styles.buttonContainer]}>
