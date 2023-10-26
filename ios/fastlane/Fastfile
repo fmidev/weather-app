@@ -94,6 +94,10 @@ platform :ios do
     )
     import_certificate(
      certificate_path: ENV["CERTIFICATE_PATH"],
+     certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"] || "default",
+     keychain_name: ENV['KEYCHAIN_NAME'],
+     keychain_path: ENV['KEYCHAIN_PATH'],
+     keychain_password: ENV["IOS_KEYCHAIN_PASSWORD"],
      log_output: true
     )
 	    
