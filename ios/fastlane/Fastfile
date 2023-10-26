@@ -82,7 +82,7 @@ platform :ios do
     api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # replace with the name of your existing profile
     ENV['KEYCHAIN_NAME'] = 'my-custom-keychain.keychain'
-    ENV['KEYCHAIN_PATH'] = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
+    ENV['KEYCHAIN_PATH'] = File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
     ENV["IOS_KEYCHAIN_PASSWORD"] = 'salasana'
 
     delete_keychain(
