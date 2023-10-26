@@ -68,7 +68,7 @@ platform :ios do
       app_store_connect_api_key(
         key_id: asc_key_id,
         issuer_id: asc_issuer_id,
-        key_content: asc_key_content,
+        key_content: '-----BEGIN PRIVATE KEY-----\n'+asc_key_content+'\n-----END PRIVATE KEY-----',
 	    is_key_content_base64: false
       )
     end
