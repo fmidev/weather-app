@@ -24,12 +24,10 @@ platform :ios do
   # ios_slack_url = ENV["SLACK_WEB_HOOK_URL"]
 
   # Set ASC Key settings
-  asc_key_id = '9KVRPKVDZ2'
-  # ENV['ASC_KEY_ID']
+  asc_key_id = ENV['ASC_KEY_ID']
   asc_key_content = 'MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgMp3hQEdc50+5ydBXCR/kk7WZ14iQAYT/lYZ3YvRfS+2gCgYIKoZIzj0DAQehRANCAASHwAZ+j9uR/ERSUokgrrfNFvEIHQOsS0hrdQzTHI2FqLzUxjLc6h+CxgXGtr0hdfemr9eKprSxBs8VaML570/C'
   # ENV['ASC_KEY']
-  asc_issuer_id = '69a6de77-439d-47e3-e053-5b8c7c11a4d1'
-  # ENV['ASC_ISSUER_ID']
+  asc_issuer_id = ENV['ASC_ISSUER_ID']
   
    desc "Increment build and version number and push to repository"
    lane :increment_version do |options|
@@ -83,11 +81,10 @@ platform :ios do
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # replace with the name of your existing profile
     ENV['KEYCHAIN_NAME'] = 'my-custom-keychain.keychain'
     ENV['KEYCHAIN_PATH'] = File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
-    ENV["IOS_KEYCHAIN_PASSWORD"] = 'salasana'
 
     delete_keychain(
      name: ENV['KEYCHAIN_NAME'],
-    ) if File.exist? File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
+    ) if File.exist? ENV['KEYCHAIN_PATH']
     create_keychain(
      name: ENV['KEYCHAIN_NAME'],
      password: ENV['IOS_KEYCHAIN_PASSWORD'],
