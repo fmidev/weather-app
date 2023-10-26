@@ -82,6 +82,9 @@ platform :ios do
     api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # replace with the name of your existing profile
     ENV['KEYCHAIN_NAME'] = 'my-custom-keychain.keychain'
+    ENV['KEYCHAIN_PATH'] = File.expand_path("~/Library/Keychains/#{keychain_name}-db")
+    ENV["IOS_KEYCHAIN_PASSWORD"] = 'salasana'
+
     delete_keychain(
      name: ENV['KEYCHAIN_NAME'],
     ) if File.exist? File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
@@ -95,6 +98,8 @@ platform :ios do
     import_certificate(
      certificate_path: ENV["CERTIFICATE_PATH"],
      certificate_password: ENV["IOS_DIST_SIGNING_KEY_PASSWORD"] || "default",
+     keychain_name: ENV['KEYCHAIN_NAME'],
+     keychain_path: ENV['KEYCHAIN_PATH'],
      keychain_password: ENV["IOS_KEYCHAIN_PASSWORD"],
      log_output: true
     )
