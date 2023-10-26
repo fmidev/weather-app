@@ -92,7 +92,19 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const adjustedStepIndex =
       calculatedStepIndex > data.length ? data.length - 1 : calculatedStepIndex;
 
-    const step = data[adjustedStepIndex];
+    // get day's first timestep
+    let step = data[adjustedStepIndex];
+    // get step hour (works in selected location's timezone)
+    const stepHour = Number.parseInt(
+      moment.unix(step.epochtime).format('H'),
+      10
+    );
+    // do not use 00-05 steps for the FIRST DAY due to possible errors (data is fetched in UTC + daylight savings)
+    if (adjustedStepIndex === 0 && stepHour < 6) {
+      // use 06 step instead!
+      step = data[6 - stepHour];
+    }
+
     const sunrise = moment(`${step.sunrise}Z`);
     const sunset = moment(`${step.sunset}Z`);
     const dayHours = Math.floor(step.dayLength / 60);
@@ -101,16 +113,21 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const { excludeDayDuration, excludePolarNightAndMidnightSun } =
       Config.get('weather').forecast;
 
+    // check if sunrise and sunset are on same day or not (works in all timezones)
+    const sunriseDay = moment(sunrise).format('D');
+    const sunsetDay = moment(sunset).format('D');
+    const isSunriseAndDayInSameDay = sunriseDay === sunsetDay;
+
     const isPolarNight =
       (excludePolarNightAndMidnightSun === undefined ||
         !excludePolarNightAndMidnightSun) &&
-      !step.sunriseToday &&
+      !isSunriseAndDayInSameDay &&
       sunset.isBefore(sunrise);
 
     const isMidnightSun =
       (excludePolarNightAndMidnightSun === undefined ||
         !excludePolarNightAndMidnightSun) &&
-      !step.sunsetToday &&
+      !isSunriseAndDayInSameDay &&
       sunrise.isBefore(sunset);
 
     const dateFormat =
