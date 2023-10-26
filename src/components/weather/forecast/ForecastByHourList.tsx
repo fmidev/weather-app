@@ -105,12 +105,6 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
       step = data[6 - stepHour];
     }
 
-    console.log(
-      adjustedStepIndex,
-      `original step ${stepHour}`,
-      `adjusted step ${moment.unix(step.epochtime).format('H')}`
-    );
-
     const sunrise = moment(`${step.sunrise}Z`);
     const sunset = moment(`${step.sunset}Z`);
     const dayHours = Math.floor(step.dayLength / 60);
