@@ -242,7 +242,7 @@ jobs:
 
       - name: Build & upload iOS binary
         run: |
-          echo "${{ secrets.ASC_KEY }}" | base64 -
+          echo "${{ secrets.ASC_KEY }}"
           bundle exec fastlane ios build_upload_testflight
         env:
          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
