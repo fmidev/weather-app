@@ -149,14 +149,14 @@ platform :ios do
    )
    end
    # Upload .ipa to Testflight
-   desc "Upload to TestFlight / ASC"
-    lane :upload_release do
-    api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
-     pilot(
-	    api_key: api_key,
-	    ipa: "./app/build/#{PROJECT_NAME}.ipa"
-     )
-   end
+   # desc "Upload to TestFlight / ASC"
+   # lane :upload_release do
+   # api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
+   #  pilot(
+   #	    api_key: api_key,
+   #	    ipa: "./app/build/#{PROJECT_NAME}.ipa"
+   #  )
+   # end
 	
    # Build uploading success message to Slack, if lanes are completed successfully
    /
