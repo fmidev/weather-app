@@ -173,7 +173,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
 
         // Large widget
 
-        String url =  "https://m.fmi.fi/mobile/interfaces/androidwidget.php?"+params;
+        String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
         fetchDataAndUpdateViews(url, widget_id);
 
@@ -199,7 +199,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
 
         // Large widget
 
-        String url =  "https://m.fmi.fi/mobile/interfaces/androidwidget.php?"+params;
+        String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
         fetchDataAndUpdateViews(url, widget_id);
 
