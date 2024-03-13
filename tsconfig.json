@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "extends": "@tsconfig/react-native/tsconfig.json",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

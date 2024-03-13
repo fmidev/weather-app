@@ -53,7 +53,6 @@
     <string name="widget_favorite_info">Please define favorites in the weather app, if you want to use widget without location services. Please allow background location service (Allow always), if you use current location.</string>
     <string name="battery_saving">Power saving is enabled. We recommended disabling it for the app so that widget can update weather data.</string>
     <string name="open_settings">Open settings</string>
-    <string name="privacy_policy">Privacy Policy (in finnish)</string>
     <string name="location_service_info">The app collects location data to enable widget update weather data for current location even when the app is closed or not in use. Alternatively you can use favorite locations without location service.</string>
     <string name="location_service_info_title">Do you want to enable location service?</string>
     <string name="ask_permission">Ask permission</string>

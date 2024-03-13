@@ -32,8 +32,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 
-import com.facebook.react.modules.storage.AsyncLocalStorageUtil;
-import com.facebook.react.modules.storage.ReactDatabaseSupplier;
+import com.reactnativecommunity.asyncstorage.AsyncLocalStorageUtil;
+import com.reactnativecommunity.asyncstorage.ReactDatabaseSupplier;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,11 +57,6 @@ public class SmallWidgetConfigurationActivity extends Activity {
 
         initListViews();
         askLocationPermission();
-
-        String value = "<html><a href=\"https://www.ilmatieteenlaitos.fi/tietosuojaseloste-omat-havainnot\">"+getString(R.string.privacy_policy)+"</a></html>";
-        TextView text = (TextView) findViewById(R.id.privacyUrlTextView);
-        text.setText(Html.fromHtml(value));
-        text.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
     @Override

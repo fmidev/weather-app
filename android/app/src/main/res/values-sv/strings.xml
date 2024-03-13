@@ -53,7 +53,6 @@
     <string name="widget_favorite_info">Ange favoriter i väderapplikationen, om du vill använda widgeten utan positionering.</string>
     <string name="battery_saving">Energibesparing är aktiverat. Vi rekommenderade att du inaktiverar den för appen så att widgeten kan uppdatera väderdata.</string>
     <string name="open_settings">Öppna inställningar</string>
-    <string name="privacy_policy">Integritetspolicy (på finska)</string>
     <string name="location_service_info">Appen samlar in platsdata för att widget kan uppdaterings väderdata för aktuell plats även när appen är stängd eller inte används. Alternativt kan du använda favoritplatser utan tillstånd för platstjänster.</string>
     <string name="location_service_info_title">Vill du aktivera platstjänst?</string>
     <string name="ask_permission">Tillåta</string>

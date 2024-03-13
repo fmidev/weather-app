@@ -2,12 +2,12 @@
 
 ## **Prequisites**
 
-- Node (16.13.0)
-- Android Studio (4.2.0)
-- XCode (12.0.1)
+- Node (18)
+- Android Studio (latest)
+- XCode (latest)
 - Java JDK 11 (Doesn't work on newer JDKs)
 
-Follow this [guide](https://reactnative.dev/docs/environment-setup) for setting up React Native development environment.
+Follow this [guide](https://reactnative.dev/docs/0.71/environment-setup) for setting up React Native development environment.
 
 ## **Installation**
 
