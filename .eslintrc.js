@@ -3,8 +3,6 @@ module.exports = {
     '@react-native-community',
     'airbnb-typescript',
     'prettier',
-    'prettier/@typescript-eslint',
-    'prettier/react',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -16,7 +14,7 @@ module.exports = {
     project: './tsconfig.json',
     tsconfigRootDir: __dirname,
   },
-  plugins: ['react', 'react-native'],
+  plugins: ['react', 'react-native', 'jest', 'import', 'react-hooks'],
   env: {
     'react-native/react-native': true,
   },
@@ -28,6 +26,7 @@ module.exports = {
     'react-native/no-unused-styles': 2,
     'react-native/no-inline-styles': 2,
     'react-native/no-color-literals': 2,
+    'react/no-unstable-nested-components': 'off',
     'no-trailing-spaces': ['error'],
     'no-multiple-empty-lines': ['error'],
     'no-use-before-define': 'off',
