@@ -38,6 +38,8 @@ const VisCloudChart: React.FC<ChartDataProps> = ({
             data: { stroke: colors.chartSecondaryLine, strokeDasharray: '4' },
           }}
           interpolation="basis"
+          /*
+          // @ts-ignore */
           y={(datum) => (datum.y !== null ? datum.y / 60000 : null)}
         />
       )}

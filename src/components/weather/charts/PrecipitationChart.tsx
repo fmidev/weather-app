@@ -41,6 +41,8 @@ const PrecipitationChart: React.FC<ChartDataProps> = ({
           style={{
             data: { stroke: colors.chartPrimaryLine, strokeDasharray: '2' },
           }}
+          /*
+          // @ts-ignore */
           y={(datum) => (datum.y !== null ? datum.y / 100 : null)}
           interpolation="basis"
         />

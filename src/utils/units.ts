@@ -108,10 +108,10 @@ export const UNITS: Unit[] = [
 ];
 
 const defaultUnitMapper = {
-  temperature: parseInt(Config.UNIT_TEMPERATURE, 10),
-  precipitation: parseInt(Config.UNIT_PRECIPITATION, 10),
-  wind: parseInt(Config.UNIT_WIND, 10),
-  pressure: parseInt(Config.UNIT_PRESSURE, 10),
+  temperature: parseInt(Config.UNIT_TEMPERATURE!, 10),
+  precipitation: parseInt(Config.UNIT_PRECIPITATION!, 10),
+  wind: parseInt(Config.UNIT_WIND!, 10),
+  pressure: parseInt(Config.UNIT_PRESSURE!, 10),
 };
 
 export const getDefaultUnits = (): UnitMap | undefined => {
