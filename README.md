@@ -105,6 +105,12 @@ If you have problems you might need to do these as well:
 
 `rm -rf ~/Library/Developer/Xcode/DerivedData/ && pod deintegrate && pod update`
 
+You might need to install ios-deploy to be able to run from command line
+ `npm install -g ios-deploy`
+
+If installing Node with nvm and try to start app from Xcode you might need to do this so Xcode finds Node.
+ `ln -s $(which node) /usr/local/bin/node`
+
 Run project:
 1. `cd ios && pod install && cd ..`
 2. `npx react-native run-ios`
