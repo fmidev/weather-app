@@ -2,7 +2,7 @@
 
 ## **Prequisites**
 
-- Node (18)
+- Node (20)
 - Android Studio (latest)
 - XCode (latest)
 - Java JDK 11 (Doesn't work on newer JDKs)
@@ -119,6 +119,14 @@ By default, the Metro server and the application use port 8081 to communicate wi
 This behaviour can be fixed by changing the port to e.g. 8080. To change the port, the following commands must be run:
 - `yarn start --port 8080`
 - `yarn android --port 8080` (or `npx react-native run-android --port 8080`)
+
+#### iOS deploy fails because of missing ios-deploy
+
+Install ios-deploy with: `brew install ios-deploy`
+
+#### Xcode build can't find node
+
+If you have installed node with nvm (Node version manager) you may need to add symbolic link: `sudo ln -s $(which node) /usr/local/bin/node`
 
 ## **Config**
 
