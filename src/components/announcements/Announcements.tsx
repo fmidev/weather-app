@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, StyleProp, ViewStyle } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 
