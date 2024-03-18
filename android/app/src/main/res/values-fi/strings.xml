@@ -53,7 +53,6 @@
     <string name="widget_favorite_info">Tallenna paikkakuntia suosikeiksi sovelluksessa, jos haluat käyttää widgettiä ilman paikannusta. Jos käytät paikannusta, niin salli paikannus taustalla (valinta Sallittu aina).</string>
     <string name="battery_saving">Virransäästö on päällä. Suosittelemme virransäästön poistamista sovellukselta, jotta widget voi ladata säätiedot.</string>
     <string name="open_settings">Avaa asetukset</string>
-    <string name="privacy_policy">Tietosuojaseloste</string>
     <string name="location_service_info">Sovellus käyttää paikannusta widgetin säätietojen päivittämiseen nykyiseen sijaintiin myös kun sovellus on suljettu tai pois käytöstä. Voit käyttää suosikkipaikkakuntia, jos et halua sallia taustapaikannusta.</string>
     <string name="location_service_info_title">Haluatko sallia paikannuksen?</string>
     <string name="ask_permission">Salli paikannus</string>

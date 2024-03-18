@@ -2,12 +2,12 @@
 
 ## **Prequisites**
 
-- Node (16.13.0)
-- Android Studio (4.2.0)
-- XCode (12.0.1)
+- Node (20)
+- Android Studio (latest)
+- XCode (latest)
 - Java JDK 11 (Doesn't work on newer JDKs)
 
-Follow this [guide](https://reactnative.dev/docs/environment-setup) for setting up React Native development environment.
+Follow this [guide](https://reactnative.dev/docs/0.71/environment-setup) for setting up React Native development environment.
 
 ## **Installation**
 
@@ -104,6 +104,12 @@ end`
 If you have problems you might need to do these as well:
 
 `rm -rf ~/Library/Developer/Xcode/DerivedData/ && pod deintegrate && pod update`
+
+You might need to install ios-deploy to be able to run from command line
+ `npm install -g ios-deploy`
+
+If installing Node with nvm and try to start app from Xcode you might need to do this so Xcode finds Node.
+ `ln -s $(which node) /usr/local/bin/node`
 
 Run project:
 1. `cd ios && pod install && cd ..`

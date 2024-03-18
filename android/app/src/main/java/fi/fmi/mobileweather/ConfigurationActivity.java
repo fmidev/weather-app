@@ -33,8 +33,9 @@ import android.text.method.LinkMovementMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.facebook.react.modules.storage.AsyncLocalStorageUtil;
-import com.facebook.react.modules.storage.ReactDatabaseSupplier;
+import com.reactnativecommunity.asyncstorage.AsyncLocalStorageUtil;
+import com.reactnativecommunity.asyncstorage.ReactDatabaseSupplier;
+
 import android.database.sqlite.SQLiteDatabase;
 
 public class ConfigurationActivity extends Activity {
@@ -47,11 +48,6 @@ public class ConfigurationActivity extends Activity {
 		setResult(RESULT_CANCELED);
         initListViews();
         askLocationPermission();
-
-        String value = "<html><a href=\"https://www.ilmatieteenlaitos.fi/tietosuojaseloste-omat-havainnot\">"+getString(R.string.privacy_policy)+"</a></html>";
-        TextView text = (TextView) findViewById(R.id.privacyUrlTextView);
-        text.setText(Html.fromHtml(value));
-        text.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
     @Override

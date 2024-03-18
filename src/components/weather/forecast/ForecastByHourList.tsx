@@ -85,6 +85,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
   if (!isOpen && !data) return null;
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
     const calculatedStepIndex = !currentIndex
       ? 0
@@ -385,7 +386,6 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
         <ForecastListHeaderColumn displayParams={displayParams} />
         <View style={styles.listContainer}>
           <VirtualizedList
-            listKey="hoursList"
             ref={virtualizedList}
             data={data}
             keyExtractor={(item) => `${item.epochtime}`}
