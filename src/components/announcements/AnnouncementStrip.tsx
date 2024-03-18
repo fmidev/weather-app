@@ -107,7 +107,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 12,
     flexDirection: 'row',
-    elevation: 10,
   },
   text: {
     fontFamily: 'Roboto-Medium',
