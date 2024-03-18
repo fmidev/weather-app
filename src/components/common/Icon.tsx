@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
@@ -28,6 +27,7 @@ import InfoSaveLocationLight from '@assets/images/icons/info-save-location-light
 import Info from '@assets/images/icons/info.svg';
 import Layers from '@assets/images/icons/layers.svg';
 import Locate from '@assets/images/icons/locate.svg';
+import MaintenanceStripIcon from '@assets/images/icons/maintenance-strip-icon.svg';
 import MapMarker from '@assets/images/icons/map-marker.svg';
 import Map from '@assets/images/icons/map.svg';
 import Menu from '@assets/images/icons/menu.svg';
@@ -188,6 +188,8 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <Layers {...(props as SvgProps)} />;
     case 'locate':
       return <Locate {...(props as SvgProps)} />;
+    case 'maintenance-strip-icon':
+      return <MaintenanceStripIcon {...(props as SvgProps)} />;
     case 'map-marker':
       return <MapMarker {...(props as SvgProps)} />;
     case 'map':

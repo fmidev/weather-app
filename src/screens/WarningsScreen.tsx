@@ -11,7 +11,7 @@ import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import WarningsWebViewPanel from '@components/warnings/WarningsWebViewPanel';
 import WarningsPanel from '@components/warnings/WarningsPanel';
-import CrisisStrip from '@components/announcements/CrisisStrip';
+import Announcements from '@components/announcements/Announcements';
 import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrent } from '@store/location/selector';
@@ -86,7 +86,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
         style={[styles.container, { backgroundColor: colors.screenBackground }]}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={announcements && [0]}>
-        <CrisisStrip style={styles.crisisStrip} />
+        <Announcements style={styles.announcements} />
         {useCapView ? (
           <CapWarningsView />
         ) : (
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   container: {
     minHeight: '100%',
   },
-  crisisStrip: {
+  announcements: {
     elevation: 10,
   },
 });

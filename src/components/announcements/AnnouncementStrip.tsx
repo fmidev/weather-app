@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,26 +9,26 @@ import {
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useIsFocused } from '@react-navigation/native';
-
-import { Config } from '@config';
-import { useReloader } from '@utils/reloader';
 
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
+import { Config } from '@config';
 import { State } from '@store/types';
 import {
   selectCrisis,
+  selectMaintenance,
   selectFetchTimestamp,
 } from '@store/announcements/selectors';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 
-import { LIGHT_RED, DARK_RED } from '@utils/colors';
-import WarningsIcon from './WarningsIcon';
+import { LIGHT_RED, DARK_RED, LIGHT_BLUE, PRIMARY_BLUE } from '@utils/colors';
+import AnnouncementIcon from './AnnouncementIcon';
+import type { AnnouncementType } from './types';
 
 const mapStateToProps = (state: State) => ({
   crisis: selectCrisis(state),
+  maintenance: selectMaintenance(state),
   fetchTimestamp: selectFetchTimestamp(state),
 });
 
@@ -40,69 +40,50 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type CrisisStripProps = {
+type AnnouncementStripProps = {
   style?: StyleProp<ViewStyle>;
+  type: AnnouncementType;
 } & PropsFromRedux;
 
-const CrisisStrip: React.FC<CrisisStripProps> = ({
+const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   style,
+  type,
   crisis,
-  fetchAnnouncements,
-  fetchTimestamp,
+  maintenance,
 }) => {
   const { t } = useTranslation('announcements');
-  const { shouldReload } = useReloader();
-  const isFocused = useIsFocused();
+  const { enabled } = Config.get('announcements');
 
-  const { updateInterval, enabled } = Config.get('announcements');
+  const announcement = type === 'crisis' ? crisis : maintenance;
+  const backgroundColor = type === 'crisis' ? LIGHT_RED : LIGHT_BLUE;
+  const textColor = type === 'crisis' ? DARK_RED : PRIMARY_BLUE;
+  const prefix = type === 'crisis' ? t('crisisPrefix') : t('maintenancePrefix');
 
-  const updateAnnouncements = useCallback(() => {
-    if (enabled) {
-      fetchAnnouncements();
-    }
-  }, [fetchAnnouncements, enabled]);
-
-  useEffect(() => {
-    const now = Date.now();
-    const updateTime = fetchTimestamp + (updateInterval ?? 5) * 60 * 1000;
-    if (isFocused) {
-      if (now > updateTime || shouldReload > updateTime) {
-        updateAnnouncements();
-      }
-    }
-  }, [
-    isFocused,
-    fetchTimestamp,
-    shouldReload,
-    updateInterval,
-    updateAnnouncements,
-  ]);
-
-  if (!crisis || !enabled) {
+  if (!announcement || !enabled) {
     return null;
   }
 
   const linkRegex = new RegExp(/^http.*$/);
 
-  const isLink = linkRegex.test(crisis.link);
+  const isLink = linkRegex.test(announcement.link);
 
   return (
-    <View style={[style, styles.container]}>
-      <WarningsIcon />
+    <View style={[style, styles.container, { backgroundColor }]}>
+      <AnnouncementIcon type={type} />
       {isLink ? (
         <AccessibleTouchableOpacity
           style={styles.textContainer}
           accessibilityRole="link"
           accessibilityHint={t('openInBrowser')}
-          onPress={() => Linking.openURL(crisis.link)}>
+          onPress={() => Linking.openURL(announcement.link)}>
           <View>
             <Text
-              style={[styles.text, styles.link]}
-              accessibilityLabel={`${t('crisisPrefix')} ${crisis.content}`}>
-              {crisis.content}
+              style={[styles.text, styles.link, { color: textColor }]}
+              accessibilityLabel={`${prefix} ${announcement.content}`}>
+              {announcement.content}
               <Icon
                 name="open-in-new"
-                color={DARK_RED}
+                color={textColor}
                 height={18}
                 style={styles.textIcon}
               />
@@ -112,9 +93,9 @@ const CrisisStrip: React.FC<CrisisStripProps> = ({
       ) : (
         <View style={styles.textContainer}>
           <Text
-            style={styles.text}
-            accessibilityLabel={`${t('crisisPrefix')} ${crisis.content}`}>
-            {crisis.content}
+            style={[styles.text, { color: textColor }]}
+            accessibilityLabel={`${prefix} ${announcement.content}`}>
+            {announcement.content}
           </Text>
         </View>
       )}
@@ -126,12 +107,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 12,
     flexDirection: 'row',
-    backgroundColor: LIGHT_RED,
+    elevation: 10,
   },
   text: {
     fontFamily: 'Roboto-Medium',
     fontSize: 16,
-    color: DARK_RED,
     alignItems: 'flex-end',
   },
   textContainer: {
@@ -147,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(CrisisStrip);
+export default connector(AnnouncementStrip);
