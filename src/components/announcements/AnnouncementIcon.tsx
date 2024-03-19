@@ -11,10 +11,12 @@ type AnnouncementIconProps = {
 };
 
 const AnnouncementIcon: React.FC<AnnouncementIconProps> = ({ type }) => {
-  const backgroundColor = type === 'crisis' ? RED : PRIMARY_BLUE;
-
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View
+      style={[
+        ...(type === 'crisis' ? [styles.crisis] : [styles.maintenance]),
+        styles.container,
+      ]}>
       <Icon
         name={
           type === 'crisis' ? 'crisis-strip-icon' : 'maintenance-strip-icon'
@@ -33,7 +35,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  crisis: {
     paddingBottom: 2,
+    backgroundColor: RED,
+  },
+  maintenance: {
+    backgroundColor: PRIMARY_BLUE,
   },
 });
 
