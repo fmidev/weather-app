@@ -97,13 +97,14 @@ export const getObservation = async (
       'epochtime',
       'fmisid', // geoid??
       'stationname',
+      'stationtype',
       ...(parameters || []),
     ].join(','),
     format: 'json',
     producer: observationProducer,
     precision: 'double',
     lang: language,
-    attributes: 'fmisid,stationname,distance',
+    attributes: 'fmisid,stationname,stationtype,distance',
     who: packageJSON.name,
   };
 

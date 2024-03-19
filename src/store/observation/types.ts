@@ -80,6 +80,7 @@ export interface StationInfo {
   id: number;
   name: string;
   distance: number;
+  type: string;
 }
 
 export type ObservationDataRaw = {

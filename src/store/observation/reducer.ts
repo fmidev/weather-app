@@ -32,10 +32,21 @@ const formatData = (
 
   Object.entries(rawData).forEach(([id, nameHolder]) => {
     Object.entries(nameHolder).forEach(([name, distanceHolder]) => {
-      Object.entries(distanceHolder).forEach(([distance, dataHolder]) => {
-        stations.push({ id: Number(id), name, distance: Number(distance) });
-        data[Number(id)] = dataHolder.reverse();
-      });
+      Object.entries(distanceHolder).forEach(
+        ([stationType, stationTypeHolder]) => {
+          Object.entries(stationTypeHolder).forEach(
+            ([distance, dataHolder]) => {
+              stations.push({
+                id: Number(id),
+                name,
+                distance: Number(distance),
+                type: stationType,
+              });
+              data[Number(id)] = dataHolder.reverse();
+            }
+          );
+        }
+      );
     });
   });
 
@@ -43,6 +54,7 @@ const formatData = (
 };
 
 export default (
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = INITIAL_STATE,
   action: ObservationActionTypes
 ): ObservationState => {
