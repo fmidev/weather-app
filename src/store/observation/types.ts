@@ -86,7 +86,9 @@ export interface StationInfo {
 export type ObservationDataRaw = {
   [id: number]: {
     [name: string]: {
-      [distance: number]: TimeStepData[];
+      [type: string]: {
+        [distance: number]: TimeStepData[];
+      };
     };
   };
 };
