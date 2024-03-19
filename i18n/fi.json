@@ -621,6 +621,7 @@
   },
   "announcements": {
     "crisisPrefix": "Varoitus:",
+    "maintenancePrefix": "Huomio:",
     "openInBrowser": "Avaa selaimessa"
   }
 }

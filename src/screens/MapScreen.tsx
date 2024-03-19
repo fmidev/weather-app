@@ -13,7 +13,7 @@ import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapMarker from '@components/map/layers/MapMarker';
-import CrisisStrip from '@components/announcements/CrisisStrip';
+import Announcements from '@components/announcements/Announcements';
 
 import { State } from '@store/types';
 import { selectCurrent, selectTimeZone } from '@store/location/selector';
@@ -214,7 +214,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
           />
         )}
       </MapView>
-      <CrisisStrip style={styles.crisisStrip} />
+      <Announcements style={styles.announcements} />
       <MapControls
         onLayersPressed={() => mapLayersSheetRef.current.open()}
         onInfoPressed={() => infoSheetRef.current.open()}
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     backgroundColor: GRAY_1,
     width: 65,
   },
-  crisisStrip: {
+  announcements: {
     marginTop: 30,
     width: '100%',
   },
