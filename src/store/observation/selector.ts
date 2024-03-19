@@ -2,6 +2,8 @@ import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
 import { ObservationState } from './types';
 
+const PRIMARY_STATION_TYPES = ['AWS', 'AVI'];
+
 const selectObservationDomain: Selector<State, ObservationState> = (state) =>
   state.observation;
 
@@ -17,7 +19,14 @@ export const selectError = createSelector(
 
 export const selectStationList = createSelector(
   selectObservationDomain,
-  (observation) => observation.stations.sort((a, b) => a.distance - b.distance)
+  (observation) => [
+    ...observation.stations
+      .filter((station) => PRIMARY_STATION_TYPES.includes(station.type))
+      .sort((a, b) => a.distance - b.distance),
+    ...observation.stations
+      .filter((station) => !PRIMARY_STATION_TYPES.includes(station.type))
+      .sort((a, b) => a.distance - b.distance),
+  ]
 );
 
 const selectDataSets = createSelector(
