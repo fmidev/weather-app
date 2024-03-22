@@ -65,6 +65,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
     uv: {
       parameters: [],
     },
+    daily: {
+      parameters: [],
+    },
   };
 
   const { wind: windSpeedUnit } = Config.get('settings').units;

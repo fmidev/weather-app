@@ -72,6 +72,7 @@ export const getObservation = async (
       producer,
       timePeriod,
       parameters,
+      dailyParameters,
     },
   } = Config.get('weather');
   const { language } = i18n;
@@ -87,7 +88,7 @@ export const getObservation = async (
       : producer.default;
   }
 
-  const params = {
+  const hourlyParams = {
     ...location,
     numberofstations: numberOfStations,
     starttime: `-${timePeriod}h`,
@@ -108,9 +109,27 @@ export const getObservation = async (
     who: packageJSON.name,
   };
 
-  const { data } = await axiosClient({ url: apiUrl, params });
+  const dailyParams = {
+    ...hourlyParams,
+    starttime: '-720h', // 30 days = 30 * 24h = 720h
+    param: [
+      'distance',
+      'epochtime',
+      'fmisid',
+      'stationname',
+      'stationtype',
+      ...(dailyParameters || []),
+    ].join(','),
+  };
 
-  return data;
+  console.log(apiUrl, dailyParams);
+
+  const [hourlyObservationData, dailyObservationData] = await Promise.all([
+    axiosClient({ url: apiUrl, params: hourlyParams }),
+    axiosClient({ url: apiUrl, params: dailyParams }),
+  ]);
+
+  return [hourlyObservationData.data, dailyObservationData.data];
 };
 
 const locationQueryParams = {

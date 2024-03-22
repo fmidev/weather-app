@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
-  selectData,
+  selectHourlyData,
+  selectDailyData,
   selectDataId,
   selectDisplayFormat,
   selectLoading,
@@ -40,7 +41,8 @@ import ObservationStationListBottomSheet from './sheets/ObservationStationListBo
 import { observationTypeParameters } from './charts/settings';
 
 const mapStateToProps = (state: State) => ({
-  data: selectData(state),
+  data: selectHourlyData(state),
+  dailyData: selectDailyData(state),
   dataId: selectDataId(state),
   location: selectCurrent(state),
   loading: selectLoading(state),
@@ -69,6 +71,7 @@ const CHART = 'chart';
 const ObservationPanel: React.FC<ObservationPanelProps> = ({
   loading,
   data,
+  dailyData,
   dataId,
   stationList,
   stationId,
@@ -106,9 +109,20 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'visCloud',
     'cloud',
     'snowDepth',
+    'daily',
   ];
 
+  const dailyDataExists = dailyData.some(
+    (row) => Object.values(row).filter((value) => value !== null).length > 1
+  );
+
+  console.log('dailyDataExists', dailyDataExists, chartParameter);
+
   charts = charts.filter((type) => {
+    if (type === 'daily') {
+      return dailyDataExists;
+    }
+
     const typeParameters = observationTypeParameters[type];
     const dataForParameter = typeParameters.map((typeParam) =>
       data.map(
@@ -265,7 +279,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           {displayFormat === CHART && (
             <Chart
               chartType={charts.includes(parameter) ? parameter : charts[0]}
-              data={data}
+              data={chartParameter === 'daily' ? dailyData : data}
               observation
             />
           )}

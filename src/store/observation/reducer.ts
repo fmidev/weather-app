@@ -15,6 +15,7 @@ import {
 
 const INITIAL_STATE: ObservationState = {
   data: {},
+  dailyData: {},
   error: false,
   id: 0,
   loading: false,
@@ -53,6 +54,55 @@ const formatData = (
   return { data, stations };
 };
 
+const areEpochTimesInTheSameDay = (
+  epochtime1: number | undefined,
+  epochtime2: number | undefined
+) => {
+  if (!epochtime1 || !epochtime2) return false;
+
+  const date1 = new Date(epochtime1 * 1000);
+  const date2 = new Date(epochtime2 * 1000);
+
+  return date1.getDay() === date2.getDay();
+};
+
+// Places all daily values at a single point in time
+// (some daily values are reported for different times within a single day)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const consolidateDailyValues = (data: ObservationData): ObservationData => {
+  const consolidatedData: ObservationData = {};
+
+  Object.keys(data)
+    .map(Number)
+    .forEach((stationId: number) => {
+      const dayData: TimeStepData[] = [];
+      data[stationId].forEach((day: TimeStepData) => {
+        const currentDay = day.epochtime;
+        const previousDay =
+          dayData.length === 0
+            ? undefined
+            : dayData[dayData.length - 1].epochtime;
+        if (areEpochTimesInTheSameDay(currentDay, previousDay)) {
+          Object.keys(day).forEach((dailyParameter: string) => {
+            if (
+              !dayData[dayData.length - 1][
+                dailyParameter as keyof DailyObservationParameters
+              ]
+            ) {
+              dayData[dayData.length - 1][
+                dailyParameter as keyof DailyObservationParameters
+              ] = day[dailyParameter as keyof DailyObservationParameters];
+            }
+          });
+        } else {
+          dayData.push(day);
+        }
+      });
+      consolidatedData[stationId] = dayData;
+    });
+  return consolidatedData as ObservationData;
+};
+
 export default (
   // eslint-disable-next-line @typescript-eslint/default-param-last
   state = INITIAL_STATE,
@@ -68,14 +118,19 @@ export default (
     }
 
     case FETCH_OBSERVATION_SUCCESS: {
-      return {
+      const { data: hourlyData, stations } = formatData(action.payload.data[0]);
+      const { data: dailyData } = formatData(action.payload.data[1]);
+      const newState = {
         ...state,
-        ...formatData(action.payload.data),
+        data: hourlyData,
+        dailyData,
+        stations,
         id:
           action.payload.location.geoid || action.payload.location.latlon || 0,
         loading: false,
         error: false,
       };
+      return newState;
     }
 
     case FETCH_OBSERVATION_ERROR: {
