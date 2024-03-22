@@ -9,10 +9,9 @@ import {
 import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme, GRAY_1, RED } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@utils/colors';
 import { State } from '@store/types';
 import {
-  selectUpdated,
   selectDailyWarningData,
   selectWarningsAge,
 } from '@store/warnings/selectors';
@@ -22,16 +21,12 @@ import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { Config } from '@config';
-import { selectClockType } from '@store/settings/selectors';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
 
 const mapStateToProps = (state: State) => ({
-  clockType: selectClockType(state),
   dailyWarnings: selectDailyWarningData(state),
-  updated: selectUpdated(state),
   location: selectCurrent(state),
   warningsAge: selectWarningsAge(state),
 });
@@ -43,9 +38,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type WarningsPanelProps = PropsFromRedux & {};
 
 const WarningsPanel: React.FC<WarningsPanelProps> = ({
-  clockType,
   dailyWarnings,
-  updated,
   location,
   warningsAge,
 }) => {
@@ -55,7 +48,6 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const headerRef = useRef() as React.MutableRefObject<View>;
-  const { ageWarning } = Config.get('warnings');
 
   moment.locale(i18n.language);
 
@@ -72,17 +64,12 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
     }
   });
 
-  if (!updated) {
+  if (!warningsAge) {
     return null;
   }
 
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-  const timeFormat = clockType === 12 ? 'h.mm ' : 'HH.mm';
-  const dateFormat = locale === 'en' ? 'MMM D' : 'D.M.';
-  const lastUpdatedDateTimeFormat = `${dateFormat} [${t(
-    'forecast:at'
-  )}] ${timeFormat}`;
   return (
     <View
       style={[
@@ -230,23 +217,6 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           </View>
           <DayDetails warnings={dailyWarnings[selectedDay].warnings} />
         </View>
-        <View style={[styles.row, styles.alignCenter]}>
-          <Text
-            style={[
-              styles.updatedText,
-              {
-                color:
-                  warningsAge > (ageWarning ?? 120) * 60 * 1000
-                    ? RED
-                    : colors.hourListText,
-              },
-            ]}>
-            {t('lastUpdated')}{' '}
-            <Text style={styles.bold}>
-              {moment(updated).format(lastUpdatedDateTimeFormat)}
-            </Text>
-          </Text>
-        </View>
       </View>
       <RBSheet
         ref={infoSheetRef}
@@ -331,9 +301,6 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 16,
   },
-  alignCenter: {
-    justifyContent: 'center',
-  },
   alignItems: {
     alignItems: 'center',
   },
@@ -356,10 +323,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 65,
-  },
-  updatedText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
   },
   startBorderRadius: {
     borderTopLeftRadius: 4,
