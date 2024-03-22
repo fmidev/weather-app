@@ -3,7 +3,7 @@
  */
 
 import { AppRegistry, Text, TextInput } from 'react-native';
-// eslint-disable-next-line import/extensions, import/no-unresolved
+// eslint-disable-next-line import/extensions
 import App from './App';
 import { name as appName } from './app.json';
 
