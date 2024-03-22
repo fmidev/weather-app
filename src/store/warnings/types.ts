@@ -41,9 +41,9 @@ export type WarningsActionTypes =
   | FetchCapWarnings
   | FetchCapWarningsSuccess;
 
-export type WarningType = typeof knownWarningTypes[number];
+export type WarningType = (typeof knownWarningTypes)[number];
 
-export type Severity = Exclude<typeof severityList[number], ''>;
+export type Severity = Exclude<(typeof severityList)[number], ''>;
 
 export interface Warning {
   type: WarningType;
