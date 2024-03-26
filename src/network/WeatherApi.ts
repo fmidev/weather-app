@@ -63,7 +63,7 @@ export const getForecast = async (
 export const getObservation = async (
   location: ObservationLocation,
   country: string
-): Promise<ObservationDataRaw> => {
+): Promise<ObservationDataRaw[]> => {
   const {
     apiUrl,
     observation: {
@@ -79,7 +79,7 @@ export const getObservation = async (
   const { language } = i18n;
 
   if (!enabled) {
-    return {};
+    return [{}, {}];
   }
 
   let observationProducer = producer;

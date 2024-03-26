@@ -430,6 +430,7 @@ const List: React.FC<ListProps> = ({
                     )}
                     {isDaily && (
                       <DailyObservationRow
+                        // @ts-ignore
                         parameter={parameter}
                         epochtime={timeStep.epochtime}
                         data={data}
