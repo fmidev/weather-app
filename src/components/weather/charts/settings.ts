@@ -20,7 +20,7 @@ export const observationTypeParameters: TypeParameters = {
   temperature: ['temperature', 'dewPoint'],
   humidity: ['humidity'],
   wind: ['windSpeedMS', 'windGust', 'windDirection'],
-  snowDepth: ['snowDepth'],
+  snowDepth: ['snowDepth', 'snowDepth06'],
   visCloud: ['visibility', 'totalCloudCover'],
   cloud: ['cloudHeight'],
   uv: [],

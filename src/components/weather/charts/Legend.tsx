@@ -8,6 +8,8 @@ import { CustomTheme, TRANSPARENT } from '@utils/colors';
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
 import { ChartType } from './types';
+import { selectDailyObservationParametersWithData } from '@store/observation/selector';
+import { useSelector } from 'react-redux';
 
 type ChartLegendProps = {
   chartType: ChartType;
@@ -26,6 +28,10 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   const obsParameters = Config.get('weather').observation.parameters;
   const forParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
+  );
+
+  const dailyParametersWithData = useSelector(
+    selectDailyObservationParametersWithData
   );
 
   type LineProps = { color?: string; height?: number };
@@ -377,7 +383,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         <View style={styles.legendRow}>
           <Bar color={colors.primaryText} />
           <Text style={[styles.legendText, { color: colors.hourListText }]}>
-            {t('weather:charts:snowDepth').toLocaleLowerCase()} (m)
+            {t('weather:charts:snowDepth').toLocaleLowerCase()} (cm)
           </Text>
         </View>
       )}
@@ -391,24 +397,31 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
       )}
       {chartType === 'daily' && (
         <>
-          <View style={styles.legendRow}>
-            <Bar color="rgb(30, 110, 214)" />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:rrday')}
-            </Text>
-          </View>
-          <View style={styles.legendRow}>
-            <ScatterPoint color="rgb(176, 176, 0)" />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:minimumGroundTemperature06')}
-            </Text>
-          </View>
-          <View style={styles.legendRow}>
-            <Bar color="rgb(145, 0, 0)" />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:maxAndMinTemperatures')}
-            </Text>
-          </View>
+          {dailyParametersWithData.includes('rrday') && (
+            <View style={styles.legendRow}>
+              <Bar color="rgb(30, 110, 214)" />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:rrday')}
+              </Text>
+            </View>
+          )}
+          {dailyParametersWithData.includes('minimumGroundTemperature06') && (
+            <View style={styles.legendRow}>
+              <ScatterPoint color="rgb(176, 176, 0)" />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:minimumGroundTemperature06')}
+              </Text>
+            </View>
+          )}
+          {(dailyParametersWithData.includes('minimumTemperature') ||
+            dailyParametersWithData.includes('maximumTemperature')) && (
+            <View style={styles.legendRow}>
+              <Bar color="rgb(145, 0, 0)" />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:maxAndMinTemperatures')}
+              </Text>
+            </View>
+          )}
         </>
       )}
     </View>

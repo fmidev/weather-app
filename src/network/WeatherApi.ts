@@ -70,6 +70,7 @@ export const getObservation = async (
       enabled,
       numberOfStations,
       producer,
+      dailyProducers,
       timePeriod,
       parameters,
       dailyParameters,
@@ -87,6 +88,10 @@ export const getObservation = async (
       ? producer[country]
       : producer.default;
   }
+
+  const dailyObservationsEnabled = dailyProducers?.includes(
+    observationProducer as string
+  );
 
   const hourlyParams = {
     ...location,
@@ -122,14 +127,14 @@ export const getObservation = async (
     ].join(','),
   };
 
-  console.log(apiUrl, dailyParams);
-
-  const [hourlyObservationData, dailyObservationData] = await Promise.all([
+  const [observationData, dailyObservationData] = await Promise.all([
     axiosClient({ url: apiUrl, params: hourlyParams }),
-    axiosClient({ url: apiUrl, params: dailyParams }),
+    dailyObservationsEnabled
+      ? axiosClient({ url: apiUrl, params: dailyParams })
+      : Promise.resolve({ data: {} }),
   ]);
 
-  return [hourlyObservationData.data, dailyObservationData.data];
+  return [observationData.data, dailyObservationData.data];
 };
 
 const locationQueryParams = {

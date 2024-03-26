@@ -17,6 +17,7 @@ type ChartDataRendererProps = {
   Component: React.FC<ChartDataProps>;
   locale: string;
   clockType: ClockType;
+  isDaily: boolean;
 };
 const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartDimensions,
@@ -27,8 +28,8 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   Component,
   locale,
   clockType,
+  isDaily,
 }) => {
-  const isDaily = chartType === 'daily';
   const { colors } = useTheme() as CustomTheme;
 
   let yTickValues;

@@ -39,8 +39,6 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   const { t } = useTranslation();
   const buttonList = useRef() as React.MutableRefObject<FlatList<ChartType>>;
 
-  console.log(chartTypes);
-
   useEffect(() => {
     if (chartTypes && parameter && buttonList.current) {
       const i = chartTypes.findIndex((p) => p === parameter);

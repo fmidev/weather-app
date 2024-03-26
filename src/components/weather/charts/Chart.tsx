@@ -27,9 +27,11 @@ import ChartLegend from './Legend';
 import chartSettings from './settings';
 import ChartDataRenderer from './ChartDataRenderer';
 import ChartYAxis from './ChartYAxis';
+import { selectPreferredDailyParameters } from '@store/observation/selector';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
+  preferredDailyParameters: selectPreferredDailyParameters(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -52,8 +54,11 @@ const Chart: React.FC<ChartProps> = ({
   activeDayIndex,
   setActiveDayIndex,
   currentDayOffset,
+  preferredDailyParameters,
 }) => {
-  const isDaily = chartType === 'daily';
+  const isDaily =
+    chartType === 'daily' || preferredDailyParameters.includes(chartType);
+
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
   const [scrollIndex, setScrollIndex] = useState<number>(
     observation ? 24 * 20 : 0
@@ -153,8 +158,6 @@ const Chart: React.FC<ChartProps> = ({
     [data, tickInterval, observation, timePeriod, isDaily]
   );
 
-  console.log('tickValues', tickValues);
-
   const chartDomain = useMemo(
     () => ({
       ...chartYDomain(chartMinMax, chartType),
@@ -162,8 +165,6 @@ const Chart: React.FC<ChartProps> = ({
     }),
     [chartType, chartMinMax, tickValues]
   );
-
-  console.log('chartDomain', chartDomain);
 
   const onMomentumScrollEnd = ({ nativeEvent }: any) => {
     const { contentOffset } = nativeEvent;
@@ -229,6 +230,7 @@ const Chart: React.FC<ChartProps> = ({
             chartValues={chartValues}
             locale={i18n.language}
             clockType={clockType}
+            isDaily={isDaily}
           />
         </ScrollView>
         <ChartYAxis
