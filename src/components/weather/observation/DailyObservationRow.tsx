@@ -50,7 +50,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
       timeStep,
       param,
       !secondParam ? unit : '',
-      1,
+      param.includes('snowDepth') ? 0 : 1,
       undefined,
       true,
       decimalSeparator
@@ -89,7 +89,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
 
   return (
     <View style={styles.row}>
-      {['snowDepth', 'snowDepth06'].includes(parameter) &&
+      {parameter.includes('snowDepth') &&
         formattedObservationValue(
           'snowDepth06',
           'cm',
