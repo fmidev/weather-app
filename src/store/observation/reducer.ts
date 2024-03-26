@@ -15,6 +15,7 @@ import {
 
 const INITIAL_STATE: ObservationState = {
   data: {},
+  dailyData: {},
   error: false,
   id: 0,
   loading: false,
@@ -68,14 +69,19 @@ export default (
     }
 
     case FETCH_OBSERVATION_SUCCESS: {
-      return {
+      const { data, stations } = formatData(action.payload.data[0]);
+      const { data: dailyData } = formatData(action.payload.data[1]);
+      const newState = {
         ...state,
-        ...formatData(action.payload.data),
+        data,
+        dailyData,
+        stations,
         id:
           action.payload.location.geoid || action.payload.location.latlon || 0,
         loading: false,
         error: false,
       };
+      return newState;
     }
 
     case FETCH_OBSERVATION_ERROR: {

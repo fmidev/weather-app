@@ -44,7 +44,11 @@
       "uvIndex": "Ultraviolet index",
       "uv": "UV index",
       "uvAccessibilityLabel": "Open the UV graph",
-      "zeroLine": "Zero point"
+      "zeroLine": "Zero point",
+      "daily": "Daily values",
+      "maxAndMinTemperatures": "Min/max temperatures",
+      "minimumGroundTemperature06": "Minimum ground temperature",
+      "rrday": "Precipitation"
     },
     "parameter": "Parameter",
     "loading": "Loading content"
@@ -190,6 +194,7 @@
     "time": "Time",
     "at": "at",
     "tooOld": "Observations found, but they are too old.",
+    "onlyDailyValues": "Only daily values are available from this observation station.",
     "measurements": {
       "temperature": "Temperature",
       "dewPoint": "Dew point",
@@ -204,7 +209,13 @@
       "visibility": "Visibility",
       "totalCloudCover": "Cloud cover",
       "cloudHeight": "Cloud base",
-      "snowDepth": "Snow depth"
+      "snowDepth": "Snow depth",
+      "rrday": "Precipitation",
+      "maximumTemperature": "Maximum temperature",
+      "minimumTemperature": "Minimum temperature",
+      "maxAndMinTemperatures": "Min/max temperatures",
+      "minimumGroundTemperature06": "Minimum ground temperature",
+      "snowDepth06": "Snow depth (morning)"
     },
     "paramUnits": {
       "mm": "millimeters",

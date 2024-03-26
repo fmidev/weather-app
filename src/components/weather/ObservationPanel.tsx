@@ -8,11 +8,13 @@ import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
   selectData,
+  selectDailyData,
   selectDataId,
   selectDisplayFormat,
   selectLoading,
   selectStationId,
   selectStationList,
+  selectPreferredDailyParameters,
 } from '@store/observation/selector';
 
 import {
@@ -41,6 +43,7 @@ import { observationTypeParameters } from './charts/settings';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
+  dailyData: selectDailyData(state),
   dataId: selectDataId(state),
   location: selectCurrent(state),
   loading: selectLoading(state),
@@ -49,6 +52,7 @@ const mapStateToProps = (state: State) => ({
   chartParameter: selectChartDisplayParameter(state),
   displayFormat: selectDisplayFormat(state),
   clockType: selectClockType(state),
+  preferredDailyParameters: selectPreferredDailyParameters(state),
 });
 
 const mapDispatchToProps = {
@@ -69,6 +73,7 @@ const CHART = 'chart';
 const ObservationPanel: React.FC<ObservationPanelProps> = ({
   loading,
   data,
+  dailyData,
   dataId,
   stationList,
   stationId,
@@ -78,7 +83,11 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   displayFormat,
   updateDisplayFormat,
   clockType,
+  preferredDailyParameters,
 }) => {
+  const isDaily =
+    chartParameter === 'daily' ||
+    (chartParameter && preferredDailyParameters.includes(chartParameter));
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
@@ -106,9 +115,18 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     'visCloud',
     'cloud',
     'snowDepth',
+    'daily',
   ];
 
+  const dailyDataExists = dailyData.some(
+    (row) => Object.values(row).filter((value) => value !== null).length > 1
+  );
+
   charts = charts.filter((type) => {
+    if (type === 'daily') {
+      return dailyDataExists;
+    }
+
     const typeParameters = observationTypeParameters[type];
     const dataForParameter = typeParameters.map((typeParam) =>
       data.map(
@@ -169,7 +187,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             </View>
           </View>
         )}
-        <Latest data={data} />
+        <Latest data={data} dailyData={dailyData} />
       </View>
       {data.length > 0 && (
         <View style={styles.panelContainer}>
@@ -257,15 +275,16 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           />
           {displayFormat === LIST && (
             <List
-              data={data}
+              data={isDaily ? dailyData : data}
               parameter={charts.includes(parameter) ? parameter : charts[0]}
               clockType={clockType}
+              preferredDailyParameters={preferredDailyParameters}
             />
           )}
           {displayFormat === CHART && (
             <Chart
               chartType={charts.includes(parameter) ? parameter : charts[0]}
-              data={data}
+              data={isDaily ? dailyData : data}
               observation
             />
           )}

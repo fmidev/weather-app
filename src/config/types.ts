@@ -1,6 +1,9 @@
 import { Location } from '@store/location/types';
 import { DisplayParameters, ForecastParameters } from '@store/forecast/types';
-import { ObservationParameters } from '@store/observation/types';
+import {
+  ObservationParameters,
+  DailyObservationParameters,
+} from '@store/observation/types';
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<
   T,
@@ -49,8 +52,10 @@ interface Observation {
   updateInterval: number;
   numberOfStations: number;
   producer: string | { default: string; [name: string]: string };
+  dailyProducers?: string[];
   timePeriod: number;
   parameters: (keyof ObservationParameters)[];
+  dailyParameters?: (keyof DailyObservationParameters)[];
 }
 
 interface ObservationEnabled extends Observation {

@@ -4,7 +4,7 @@ import { VictoryAxis, VictoryChart } from 'victory-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
-import { getTickFormat } from '@utils/chart';
+import { tickFormat } from '@utils/chart';
 import { ClockType } from '@store/settings/types';
 import { ChartDataProps, ChartDomain, ChartType, ChartValues } from './types';
 
@@ -17,6 +17,7 @@ type ChartDataRendererProps = {
   Component: React.FC<ChartDataProps>;
   locale: string;
   clockType: ClockType;
+  isDaily: boolean;
 };
 const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartDimensions,
@@ -27,6 +28,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   Component,
   locale,
   clockType,
+  isDaily,
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
@@ -38,6 +40,12 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
     yTickValues = [0, 0.25, 0.5, 0.75, 1];
   }
 
+  const tickLabels = tickValues.map((value, index, arr) => {
+    // Hide first and last tick label from daily chart
+    if (isDaily && (index === 0 || index === arr.length - 1)) return '';
+    return tickFormat(value, locale, clockType, isDaily);
+  });
+
   return (
     <VictoryChart
       height={chartDimensions.y}
@@ -45,8 +53,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
       theme={chartTheme}
       scale={{ x: 'linear' }}>
       <VictoryAxis
-        scale={{ x: 'linear' }}
-        tickFormat={getTickFormat(locale, clockType)}
+        tickFormat={tickLabels}
         tickValues={tickValues}
         orientation="bottom"
         style={{
@@ -59,7 +66,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
           tickLabels: {
             fill: colors.hourListText,
             fontWeight: ({ tick }) =>
-              moment(tick).hour() === 0 ? 'bold' : 'normal',
+              isDaily || moment(tick).hour() === 0 ? 'bold' : 'normal',
           },
         }}
         offsetY={50}
@@ -76,7 +83,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
           },
           grid: {
             stroke: ({ tick }) =>
-              chartType === 'temperature' && tick === 0
+              (chartType === 'temperature' || isDaily) && tick === 0
                 ? colors.secondaryBorder
                 : colors.chartGrid,
           },
