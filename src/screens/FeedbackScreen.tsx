@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Linking, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { Config } from '@config';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Icon from '@components/common/Icon';
@@ -12,11 +13,15 @@ const FeedbackScreen: React.FC = () => {
   const { t } = useTranslation('feedback');
   const { colors } = useTheme();
 
+  const feedback = Config.get('feedback');
+
   const platformInfo = `(${
     Platform.OS === 'ios' ? Platform.constants.systemName : 'android'
   }/${Platform.Version}/${packageJSON.version})`;
 
-  const mailToUrl = `mailto:mobiili@fmi.fi?subject=Ilmatieteen laitoksen sää palaute ${platformInfo}`;
+  const mailToUrl = `mailto:${feedback?.email || ''}?subject=${
+    feedback?.subject || ''
+  } ${platformInfo}`;
 
   return (
     <View>

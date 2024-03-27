@@ -156,6 +156,12 @@ interface OnboardingWizard {
   enabled: boolean;
 }
 
+interface Feedback {
+  enabled: boolean;
+  email: string;
+  subject: string;
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -209,4 +215,5 @@ export interface ConfigType {
   socialMediaLinks: SocialMediaLink[];
   unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
   onboardingWizard: OnboardingWizard;
+  feedback?: Feedback;
 }
