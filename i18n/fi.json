@@ -44,7 +44,11 @@
       "uvIndex": "Ultraviolettisäteilyn indeksi",
       "uv": "UV-indeksi",
       "uvAccessibilityLabel": "Avaa uvgraafi",
-      "zeroLine": "Nollapiste"
+      "zeroLine": "Nollapiste",
+      "daily": "Vuorokausihavainnot",
+      "maxAndMinTemperatures": "Äärilämpötilat",
+      "minimumGroundTemperature06": "Maanpinnan alin lämpotila",
+      "rrday": "Sademäärä"
     },
     "parameter": "Suure",
     "loading": "Ladataan sisältöä"
@@ -190,6 +194,7 @@
     "time": "Aika",
     "at": "klo",
     "tooOld": "Aseman viimeisimmät säähavainnot ovat liian vanhoja.",
+    "onlyDailyValues": "Tältä havaintoasemalta on saatavilla vain vuorokausiarvoja.",
     "measurements": {
       "temperature": "Lämpötila",
       "dewPoint": "Kastepiste",
@@ -204,7 +209,13 @@
       "visibility": "Näkyvyys",
       "totalCloudCover": "Pilvisyys",
       "cloudHeight": "Pilven alarajan korkeus",
-      "snowDepth": "Lumensyvyys"
+      "snowDepth": "Lumensyvyys",
+      "rrday": "Sademäärä",
+      "maximumTemperature": "Suurin lämpötila",
+      "minimumTemperature": "Alin lämpötila",
+      "maxAndMinTemperatures": "Äärilämpötilat",
+      "minimumGroundTemperature06": "Maanpinnan alin lämpotila",
+      "snowDepth06": "Lumensyvyys aamulla"
     },
     "paramUnits": {
       "mm": "millimetriä",

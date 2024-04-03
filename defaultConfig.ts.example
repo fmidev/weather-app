@@ -64,8 +64,10 @@ const defaultConfig: ConfigType = {
       updateInterval: 5,
       numberOfStations: 10,
       producer: { default: 'observation_producer' },
+      dailyProducers: ['observation_producer'],
       timePeriod: 24,
       parameters: ['temperature'],
+      dailyParameters: ['minimumTemperature', 'maximumTemperature]
     },
   },
   warnings: {
