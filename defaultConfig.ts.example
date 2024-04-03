@@ -128,7 +128,12 @@ const defaultConfig: ConfigType = {
   ],
   onboardingWizard: {
     enabled: true,
-  }
+  },
+  feedback: {
+    enabled: true,
+    email: 'mobiili@fmi.fi',
+    subject: 'Ilmatieteen laitoksen sää palaute',
+  },
 };
 
 export default defaultConfig;
