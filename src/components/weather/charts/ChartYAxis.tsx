@@ -31,7 +31,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
 
   if (
     right &&
-    ((observation && chartType !== 'visCloud') ||
+    ((observation && chartType !== 'visCloud' && chartType !== 'weather') ||
       (!observation && chartType !== 'precipitation'))
   ) {
     return null;

@@ -98,7 +98,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   }
 
   let charts: ChartType[] = [
-    'temperature',
+    'weather',
     'precipitation',
     'wind',
     'pressure',

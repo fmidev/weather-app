@@ -65,6 +65,9 @@ const List: React.FC<ListProps> = ({ clockType, data, parameter }) => {
     uv: {
       parameters: [],
     },
+    weather: {
+      parameters: ['temperature', 'dewPoint', 'precipitation1h'],
+    },
   };
 
   const { wind: windSpeedUnit } = Config.get('settings').units;

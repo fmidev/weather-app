@@ -25,7 +25,8 @@ export type ChartType =
   | 'temperature'
   | 'wind'
   | 'snowDepth'
-  | 'uv';
+  | 'uv'
+  | 'weather';
 
 export type ChartSettings = {
   params: Parameter[];

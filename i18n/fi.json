@@ -44,7 +44,8 @@
       "uvIndex": "Ultraviolettisäteilyn indeksi",
       "uv": "UV-indeksi",
       "uvAccessibilityLabel": "Avaa uvgraafi",
-      "zeroLine": "Nollapiste"
+      "zeroLine": "Nollapiste",
+      "weather": "Sää"
     },
     "parameter": "Suure",
     "loading": "Ladataan sisältöä"

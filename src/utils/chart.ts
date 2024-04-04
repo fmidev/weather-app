@@ -135,6 +135,8 @@ export const chartYLabelText = (chartType: ChartType) => {
       return ['cm'];
     case 'cloud':
       return ['m'];
+    case 'weather':
+      return [`°${units.temperature}`, units.precipitation];
     default:
       return [''];
   }
