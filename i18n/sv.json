@@ -44,7 +44,11 @@
       "uvIndex": "Index för ultraviolett strålning",
       "uv": "UV-index",
       "uvAccessibilityLabel": "Öppna UV-graf",
-      "zeroLine": "Nollpunkt"
+      "zeroLine": "Nollpunkt",
+      "daily": "Dygnsvärden",
+      "maxAndMinTemperatures": "Extremtemperaturer",
+      "minimumGroundTemperature06": "Markens lägsta temperatur",
+      "rrday": "Nederbörd"
     },
     "parameter": "Storhet",
     "loading": "Laddar innehål"
@@ -190,6 +194,7 @@
     "time": "Tid",
     "at": "kl.",
     "tooOld": "Stationens väderobservationer är föråldrade.",
+    "onlyDailyValues": "Bara dygnsvärden är tillgängliga från denna väderstation.",
     "measurements": {
       "temperature": "Temperatur",
       "dewPoint": "Daggpunkt",
@@ -204,7 +209,13 @@
       "visibility": "Sikt",
       "totalCloudCover": "Molnighet",
       "cloudHeight": "Höjd på molnets nedre gräns",
-      "snowDepth": "Snödjup"
+      "snowDepth": "Snödjup",
+      "rrday": "Nederbörd",
+      "maximumTemperature": "Högsta temperaturen",
+      "minimumTemperature": "Lägsta temperaturen",
+      "maxAndMinTemperatures": "Extremtemperaturer",
+      "minimumGroundTemperature06": "Markens lägsta temperatur",
+      "snowDepth06": "Snödjup på morgonen"
     },
     "paramsUnits": {
       "mm": "millimeter",

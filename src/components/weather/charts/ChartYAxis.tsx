@@ -30,9 +30,11 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
   const { t } = useTranslation();
 
   if (
-    right &&
-    ((observation && chartType !== 'visCloud' && chartType !== 'weather') ||
-      (!observation && chartType !== 'precipitation'))
+    (right &&
+      observation &&
+      !['visCloud', 'daily'].includes(chartType) &&
+      chartType !== 'weather') ||
+    (!observation && chartType !== 'precipitation')
   ) {
     return null;
   }
@@ -77,6 +79,15 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
     }
     if (chartType === 'visCloud') {
       return right ? `${tick * 8}/8` : tick * 60;
+    }
+    if (chartType === 'daily') {
+      return right
+        ? tick -
+            Math.min(
+              (chartDomain.y && chartDomain?.y[0]) ?? 0,
+              (chartDomain.y && chartDomain?.y[1]) ?? 0
+            )
+        : tick;
     }
     return tick;
   };

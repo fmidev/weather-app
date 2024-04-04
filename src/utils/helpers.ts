@@ -160,7 +160,13 @@ export const toStringWithDecimal = (
   return input.toString().replace('.', separator);
 };
 
-const minusParams = ['temperature', 'dewPoint'];
+const minusParams = [
+  'temperature',
+  'dewPoint',
+  'minimumTemperature',
+  'maximumTemperature',
+  'minimumGroundTemperature06',
+];
 
 export const convertValueToUnitPrecision = (
   unit: string,

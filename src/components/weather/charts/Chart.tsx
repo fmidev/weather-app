@@ -10,7 +10,12 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
-import { chartTickValues, chartXDomain, chartYDomain } from '@utils/chart';
+import {
+  chartTickValues,
+  dailyChartTickValues,
+  chartXDomain,
+  chartYDomain,
+} from '@utils/chart';
 
 import { Config } from '@config';
 import { converter } from '@utils/units';
@@ -22,9 +27,11 @@ import ChartLegend from './Legend';
 import chartSettings from './settings';
 import ChartDataRenderer from './ChartDataRenderer';
 import ChartYAxis from './ChartYAxis';
+import { selectPreferredDailyParameters } from '@store/observation/selector';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
+  preferredDailyParameters: selectPreferredDailyParameters(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -47,7 +54,11 @@ const Chart: React.FC<ChartProps> = ({
   activeDayIndex,
   setActiveDayIndex,
   currentDayOffset,
+  preferredDailyParameters,
 }) => {
+  const isDaily =
+    chartType === 'daily' || preferredDailyParameters.includes(chartType);
+
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
   const [scrollIndex, setScrollIndex] = useState<number>(
     observation ? 24 * 20 : 0
@@ -60,16 +71,24 @@ const Chart: React.FC<ChartProps> = ({
 
   const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
   const stepLength = tickInterval === 1 ? 20 : 8;
+  const dailyObservationStepLength = 24;
 
   const chartDimensions = useMemo(
     () => ({
       y: 300,
       x:
         observation && timePeriod
-          ? timePeriod * stepLength
-          : data.length * stepLength,
+          ? timePeriod * (isDaily ? dailyObservationStepLength : stepLength)
+          : data.length * (isDaily ? dailyObservationStepLength : stepLength),
     }),
-    [observation, data, stepLength, timePeriod]
+    [
+      observation,
+      data,
+      stepLength,
+      timePeriod,
+      isDaily,
+      dailyObservationStepLength,
+    ]
   );
 
   const calculateDayIndex = useCallback(
@@ -128,13 +147,15 @@ const Chart: React.FC<ChartProps> = ({
 
   const tickValues = useMemo(
     () =>
-      chartTickValues(
-        data,
-        tickInterval,
-        observation ?? false,
-        timePeriod ?? 24
-      ),
-    [data, tickInterval, observation, timePeriod]
+      isDaily
+        ? dailyChartTickValues(30)
+        : chartTickValues(
+            data,
+            tickInterval,
+            observation ?? false,
+            timePeriod ?? 24
+          ),
+    [data, tickInterval, observation, timePeriod, isDaily]
   );
 
   const chartDomain = useMemo(
@@ -209,6 +230,7 @@ const Chart: React.FC<ChartProps> = ({
             chartValues={chartValues}
             locale={i18n.language}
             clockType={clockType}
+            isDaily={isDaily}
           />
         </ScrollView>
         <ChartYAxis

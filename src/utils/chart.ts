@@ -88,22 +88,41 @@ export const chartTickValues = (
   return tickValues;
 };
 
+export const dailyChartTickValues = (days: number) => {
+  const tickValues = [...new Array(days)].map((_, i) =>
+    moment()
+      .startOf('day')
+      .subtract(i, 'days')
+      .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+      .valueOf()
+  );
+  tickValues.push(
+    moment()
+      .startOf('day')
+      .add(1, 'days')
+      .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+      .valueOf()
+  );
+  return tickValues.sort();
+};
+
 export const capitalize = ([first, ...rest]: string) =>
   first.toUpperCase() + rest.join('');
 
 export const tickFormat = (
   tick: any,
   locale: string,
-  clockType: ClockType
+  clockType: ClockType,
+  daily?: boolean
 ): string | number => {
   const time = moment(tick);
   const hour = time.hour();
   const minutes = time.minutes();
 
-  if (hour % 3 !== 0 || minutes !== 0) {
+  if (!daily && (hour % 3 !== 0 || minutes !== 0)) {
     return '';
   }
-  if (hour === 0) {
+  if (daily || hour === 0) {
     return `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))}
 ${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
   }
@@ -111,8 +130,8 @@ ${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
 };
 
 export const getTickFormat =
-  (locale: string, clockType: ClockType) => (tick: any) =>
-    tickFormat(tick, locale, clockType);
+  (locale: string, clockType: ClockType, daily?: boolean) => (tick: any) =>
+    tickFormat(tick, locale, clockType, daily);
 
 export const chartYLabelText = (chartType: ChartType) => {
   const { units } = Config.get('settings');
@@ -136,6 +155,7 @@ export const chartYLabelText = (chartType: ChartType) => {
     case 'cloud':
       return ['m'];
     case 'weather':
+    case 'daily':
       return [`°${units.temperature}`, units.precipitation];
     default:
       return [''];

@@ -16,7 +16,7 @@ interface FetchObservation {
 interface FetchObservationSuccess {
   type: typeof FETCH_OBSERVATION_SUCCESS;
   payload: {
-    data: ObservationDataRaw;
+    data: ObservationDataRaw[];
     location: ObservationLocation;
   };
 }
@@ -67,7 +67,16 @@ export interface ObservationParameters {
   windSpeedMS: number | null;
 }
 
-export interface TimeStepData extends Partial<ObservationParameters> {
+export interface DailyObservationParameters {
+  rrday: number | null;
+  minimumTemperature: number | null;
+  maximumTemperature: number | null;
+  minimumGroundTemperature06: number | null;
+  snowDepth06: number | null;
+}
+
+export interface TimeStepData
+  extends Partial<ObservationParameters & DailyObservationParameters> {
   epochtime: number;
 }
 
@@ -110,6 +119,7 @@ export type StationId = {
 
 export interface ObservationState {
   data: ObservationData | undefined;
+  dailyData: ObservationData | undefined;
   stations: StationInfo[] | [];
   stationId: StationId | undefined;
   id: Id;
