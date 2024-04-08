@@ -621,7 +621,7 @@
     "description4": "The application is not yet fully accessible.",
     "subTitle5": "Content or functions that are not yet accessible",
     "description5": "- The application contains elements that do not have a descriptive heading or label. (WCAG 2.4.6)\n- Some weather symbols and rainfall bars in the application do not have sufficient contrast to the background or adjacent elements. (WCAG 1.4.3)\n- Some of the application symbols (e.g. rainfall bars per day) do not have a text equivalent. (WCAG 1.1.1).\n- The application has elements that are grouped together but may become in focus separately. (WCAG 2.4.3)\n- The application features an embedded section of an online service whose language does not match the selected language of the application in all cases. (WCAG 3.1.1 and 3.1.2)\n- The application contains sections that are in different languages and are in some cases read not in the language of the application. (WCAG 3.1.2)",
-    "description5.1": "The aim is to rectify the shortcomings listed here during 2024-2025 if possible without significant changes to app functionality.",
+    "description5.1": "The aim is to rectify the shortcomings listed here during 2024-2025 if possible without significant changes to app outlook or functionality.",
     "subTitle6": "Accessibility of map-based content",
     "description6": "The application provides map-based weather information. Under legislation, maps and map services do not have to meet accessibility requirements. The data visualised on maps is available elsewhere in the application in an accessible format.",
     "subTitle7": "How have we tested accessibility?",

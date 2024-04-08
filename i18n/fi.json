@@ -621,7 +621,7 @@
     "description4": "Sovellus ei ole vielä kaikilta osin saavutettava.",
     "subTitle5": "Sisällöt ja toiminnot, jotka eivät vielä ole saavutettavia",
     "description5": "- Sovelluksessa on elementtejä, joilla ei ole kuvaavaa otsikkoa tai nimilappua. (WCAG 2.4.6)\n- Osassa sovelluksen sääsymboleista ja sademäärää osoittavissa palkeissa ei ole riittävä kontrasti taustaan tai viereisiin elementteihin nähden. (WCAG 1.4.3)\n- Osassa sovelluksen symboleista (esimerkiksi päiväkohtaisten sademäärien palkit) ei ole tekstivastinetta. (WCAG 1.1.1).\n- Sovelluksessa on elementtejä, jotka ovat ryhmitelty yhteen kuuluviksi, mutta saattavat saada kohdistuksen erikseen. (WCAG 2.4.3)\n- Sovelluksessa on upotettuna verkkopalvelun osa-alue, jonka kielisyys ei kaikissa tapauksissa vastaa sovelluksen valittua kieltä. (WCAG 3.1.1 ja 3.1.2)\n- Sovelluksessa on erikielisiä osia, jotka joissain tapauksissa luetaan sovelluksen kielestä poikkevalla kielellä. (WCAG 3.1.2)",
-    "description5.1": "Tässä listatut puutteet pyritään korjaamaan vuosien 2024 - 2025 aikana.",
+    "description5.1": "Tässä listatut puutteet pyritään korjaamaan vuosien 2024 - 2025 aikana mikäli ne eivät vaadi merkittäviä muutoksia sovelluksen ulkonäköön tai toiminnallisuuteen.",
     "subTitle6": "Karttoihin perustuvan sisällön saavutettavuus",
     "description6": "Sovelluksessa tarjotaan karttoihin perustuvaa säätietoa. Lain mukaan karttojen ja karttapalvelujen ei tarvitse täyttää saavutettavuusvaatimuksia. Kartalla visualisoitu data on saatavilla muualla sovelluksessa saavutettavassa muodossa.",
     "subTitle7": "Miten olemme testanneet saavutettavuutta?",

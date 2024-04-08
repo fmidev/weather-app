@@ -621,7 +621,7 @@
     "description4": "Applikationen är inte ännu till alla delar tillgänglig.",
     "subTitle5": "Innehåll eller funktioner som inte är tillgängliga",
     "description5": "- I applikationen finns element som inte har en beskrivande rubrik eller etikett. (WCAG 2.4.6)\n- I en del av applikationens vädersymboler och balkarna som anger nederbördsmängden är kontrasten till bakgrunden eller de intilliggande elementen inte tillräcklig. (WCAG 1.4.3)\n- En del av symbolerna i applikationen (till exempel balkarna för dagvisa nederbördsmängder) har ingen textmotsvarighet. (WCAG 1.1.1).\n- I applikationen finns element som är grupperade så att de hör ihop, men som kan få ett separat fokus. (WCAG 2.4.3)\n- Applikationen har ett inbäddat delområde i webbtjänsten vars språk inte alltid motsvarar det valda språket i applikationen. (WCAG 3.1.1 och 3.1.2)\n- Applikationen innehåller delar på olika språk som i vissa fall läses på ett språk som avviker från applikationens språk. (WCAG 3.1.2)",
-    "description5.1": "Man strävar efter att korrigera de brister som listas här under 2024 - 2025.",
+    "description5.1": "Målet är att åtgärda bristerna som listas här under 2024-2025, om möjligt utan väsentliga förändringar i appens utseende eller funktionalitet.",
     "subTitle6": "Tillgängligheten i innehåll som baserar sig på kartor",
     "description6": "I applikationen erbjuds väderinformation som baserar sig på kartor. Enligt lagen behöver kartor och karttjänster inte uppfylla tillgänglighetskraven. Data som visualiserats på kartan är tillgängliga i ett annat format i applikationen.",
     "subTitle7": "Hur har vi testat tillgängligheten?",
