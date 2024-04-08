@@ -12,7 +12,7 @@ export const UPDATE_FORECAST_CHART_PARAMETER =
   'UPDATE_FORECAST_CHART_PARAMETER';
 
 type DisplayParametersKeys = keyof typeof displayParameters;
-export type DisplayParameters = typeof displayParameters[Exclude<
+export type DisplayParameters = (typeof displayParameters)[Exclude<
   DisplayParametersKeys,
   'default' | 'PARAMS_TO_ICONS'
 >];
