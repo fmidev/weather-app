@@ -45,6 +45,7 @@
       "uv": "UV index",
       "uvAccessibilityLabel": "Open the UV graph",
       "zeroLine": "Zero point",
+      "weather": "Weather",
       "daily": "Daily values",
       "maxAndMinTemperatures": "Min/max temperatures",
       "minimumGroundTemperature06": "Minimum ground temperature",
