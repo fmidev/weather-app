@@ -44,6 +44,7 @@ export const forecastTypeParameters: TypeParameters = {
   visCloud: [],
   cloud: [],
   uv: ['uvCumulated'],
+  weather: [],
   daily: [],
 };
 
