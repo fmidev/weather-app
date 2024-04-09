@@ -15,6 +15,7 @@ import {
   dailyChartTickValues,
   chartXDomain,
   chartYDomain,
+  secondaryYDomainForWeatherChart,
 } from '@utils/chart';
 
 import { Config } from '@config';
@@ -166,6 +167,20 @@ const Chart: React.FC<ChartProps> = ({
     [chartType, chartMinMax, tickValues]
   );
 
+  const secondaryChartDomain = useMemo(
+    () =>
+      chartType === 'weather'
+        ? {
+            ...secondaryYDomainForWeatherChart(
+              data?.map((step) => step.precipitation1h || 0),
+              chartDomain
+            ),
+            ...chartXDomain(tickValues),
+          }
+        : undefined,
+    [chartType, data, chartDomain, tickValues]
+  );
+
   const onMomentumScrollEnd = ({ nativeEvent }: any) => {
     const { contentOffset } = nativeEvent;
     setScrollIndex(contentOffset.x);
@@ -236,7 +251,7 @@ const Chart: React.FC<ChartProps> = ({
         <ChartYAxis
           chartDimensions={chartDimensions}
           chartType={chartType}
-          chartDomain={chartDomain}
+          chartDomain={secondaryChartDomain || chartDomain}
           chartMinMax={chartMinMax}
           observation={observation ?? false}
           right

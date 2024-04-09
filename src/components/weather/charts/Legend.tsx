@@ -128,7 +128,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
 
   return (
     <View style={styles.legendContainer}>
-      {chartType === 'temperature' && (
+      {(chartType === 'temperature' || chartType === 'weather') && (
         <View style={styles.row}>
           <View>
             {(observation
@@ -176,7 +176,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           </View>
         </View>
       )}
-      {chartType === 'precipitation' && (
+      {(chartType === 'precipitation' || chartType === 'weather') && (
         <>
           <View style={styles.legendRow}>
             <Bar color={colors.rain[1]} />

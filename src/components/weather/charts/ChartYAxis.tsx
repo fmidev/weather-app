@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
-import { chartYLabelText } from '@utils/chart';
+import { calculateTemperatureTickCount, chartYLabelText } from '@utils/chart';
 import { useTranslation } from 'react-i18next';
 import { ChartDomain, ChartMinMax, ChartType } from './types';
 
@@ -30,11 +30,9 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
   const { t } = useTranslation();
 
   if (
-    (right &&
-      observation &&
-      !['visCloud', 'daily'].includes(chartType) &&
-      chartType !== 'weather') ||
-    (!observation && chartType !== 'precipitation')
+    right &&
+    ((observation && !['visCloud', 'daily', 'weather'].includes(chartType)) ||
+      (!observation && chartType !== 'precipitation'))
   ) {
     return null;
   }
@@ -92,6 +90,11 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
     return tick;
   };
 
+  const tickCount =
+    chartType === 'weather' && !right
+      ? calculateTemperatureTickCount(chartDomain)
+      : undefined;
+
   return (
     <VictoryAxis
       width={45}
@@ -100,6 +103,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
       orientation={right ? 'right' : 'left'}
       domain={chartDomain}
       tickValues={axisTickValues}
+      tickCount={tickCount}
       tickFormat={tickFormat}
       label={labelText}
       style={{
