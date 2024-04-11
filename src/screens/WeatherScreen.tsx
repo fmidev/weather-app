@@ -56,13 +56,21 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   const updateForecast = useCallback(() => {
     const geoid = location.id;
-    fetchForecast({ geoid }, [geoid]);
+    const forecastLocation = geoid
+      ? { geoid }
+      : { latlon: `${location.lat},${location.lon}` };
+
+    fetchForecast(forecastLocation, geoid ? [geoid] : []);
     setForecastUpdated(Date.now());
   }, [fetchForecast, location, setForecastUpdated]);
 
   const updateObservation = useCallback(() => {
     if (weatherConfig.observation.enabled) {
-      fetchObservation({ geoid: location.id }, location.country);
+      const observationLocation = location.id
+        ? { geoid: location.id }
+        : { latlon: `${location.lat},${location.lon}` };
+
+      fetchObservation(observationLocation, location.country);
       setObservationUpdated(Date.now());
     }
   }, [fetchObservation, location, weatherConfig.observation.enabled]);

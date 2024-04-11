@@ -28,6 +28,7 @@ const cleanAreaFromTimeseries = (location: TimeseriesLocation) =>
     : location?.region;
 
 export default (
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = INITIAL_STATE,
   action: LocationActionTypes
 ): LocationState => {
@@ -75,6 +76,14 @@ export default (
     case SET_CURRENT_LOCATION: {
       const { location } = action;
       delete location.isGeolocation;
+
+      if (isNaN(location.id)) {
+        location.name = `${location.lat.toFixed(4)}, ${location.lon.toFixed(
+          4
+        )}`;
+        location.area = '';
+      }
+
       return {
         ...state,
         current: location,

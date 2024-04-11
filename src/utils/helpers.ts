@@ -1,6 +1,11 @@
 import { Alert, AccessibilityInfo, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions';
+import {
+  PERMISSIONS,
+  checkMultiple,
+  request,
+  RESULTS,
+} from 'react-native-permissions';
 import { TFunction } from 'react-i18next';
 
 import { Location } from '@store/location/types';
@@ -30,7 +35,9 @@ const getPosition = (
           const { name, localtz, iso2, country, region } = item;
 
           AccessibilityInfo.announceForAccessibility(
-            `${t('navigation:locatedTo')} ${name}, ${region}`
+            geoid
+              ? `${t('navigation:locatedTo')} ${name}, ${region}`
+              : `${t('navigation:locatedTo')} ${name}`
           );
 
           callback(
@@ -70,40 +77,44 @@ const alertNoPermission = (t: TFunction<string[] | string>) =>
     ]
   );
 
-export const getGeolocation = (
+export const getGeolocation = async (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>,
   failSilently?: boolean
 ) => {
-  check(
+  const permissions =
     Platform.OS === 'ios'
-      ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-      : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
-  ).then((result) => {
-    if (result === RESULTS.GRANTED) {
-      return getPosition(callback, t);
-    }
-    if (!failSilently && result === RESULTS.DENIED) {
-      const permission =
-        Platform.OS === 'ios'
-          ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
-      request(permission)
-        .then((res) => {
-          if (res === RESULTS.GRANTED) {
-            getPosition(callback, t);
-          }
-          if (res === RESULTS.BLOCKED) {
-            alertNoPermission(t);
-          }
-        })
-        .catch((e) => console.error(e));
-    }
-    if (!failSilently && result === RESULTS.BLOCKED) {
-      alertNoPermission(t);
-    }
-    return {};
-  });
+      ? [PERMISSIONS.IOS.LOCATION_WHEN_IN_USE]
+      : [
+          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+          PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+        ];
+  const results = await checkMultiple(permissions);
+  const values = Object.values(results);
+
+  if (values.some((value) => value === RESULTS.GRANTED)) {
+    return getPosition(callback, t);
+  }
+  if (!failSilently && values.every((value) => value === RESULTS.DENIED)) {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION; // User can choose also ACCESS_COARSE_LOCATION
+    request(permission)
+      .then((res) => {
+        if (res === RESULTS.GRANTED) {
+          getPosition(callback, t);
+        }
+        if (res === RESULTS.BLOCKED) {
+          alertNoPermission(t);
+        }
+      })
+      .catch((e) => console.error(e));
+  }
+  if (!failSilently && values.every((value) => value === RESULTS.BLOCKED)) {
+    alertNoPermission(t);
+  }
+  return {};
 };
 
 export const getPrecipitationLevel = (amount: number): keyof Rain => {

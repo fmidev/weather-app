@@ -41,7 +41,7 @@ export const selectForecast = createSelector(
   [selectData, selectGeoid, selectFetchTimestamp],
   (items, geoid, timestamp) => {
     if (items) {
-      const locationItems = items[geoid];
+      const locationItems = items[!isNaN(geoid) ? geoid : 0];
       // filter out outdated items
       const filtered = locationItems?.filter(
         (i) => i.epochtime * 1000 > timestamp

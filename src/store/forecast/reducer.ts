@@ -54,10 +54,15 @@ const formatData = (dataSets: WeatherData[]): WeatherData => {
 
 const filterLocations = (data: WeatherData, favorites: number[]): WeatherData =>
   Object.keys(data)
+    .map((geoid) => (geoid === 'nan' ? 0 : Number(geoid)))
     .filter((geoid) => favorites.includes(Number(geoid)))
-    .reduce((obj, key) => ({ ...obj, [key]: data[key] }), {});
+    .reduce(
+      (obj, key) => ({ ...obj, [key]: data[key === 0 ? 'nan' : key] }),
+      {}
+    );
 
 export default (
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = INITIAL_STATE,
   action: ForecastActionTypes
 ): ForecastState => {
