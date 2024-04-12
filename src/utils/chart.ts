@@ -56,6 +56,42 @@ export const chartYDomain = (
   };
 };
 
+export const secondaryYDomainForWeatherChart = (
+  minMax: ChartMinMax,
+  temperatureDomain: ChartDomain
+): ChartDomain => {
+  if (!temperatureDomain.y) {
+    return { y: [0, 10] };
+  }
+
+  const tickCount = calculateTemperatureTickCount(temperatureDomain);
+  const values: number[] = minMax.filter(
+    (v): v is number => v !== undefined && v !== null
+  );
+  let max = Math.ceil(Math.max(...values));
+
+  while (max < 5 || max % tickCount !== 0) {
+    max++;
+  }
+
+  return { y: [0, max - 1] };
+};
+
+export const calculateTemperatureTickCount = (
+  temperatureDomain: ChartDomain
+): number => {
+  if (!temperatureDomain.y) {
+    return 5;
+  }
+
+  const diff = Math.abs(temperatureDomain.y[1] - temperatureDomain.y[0]);
+  const dividers = [4, 5, 6, 7, 8].filter((value) => diff % value === 0);
+
+  // Prefer pretty number 5 in ticks/scales
+  const prettyNumber = dividers.find((divider) => diff / divider === 5);
+  return prettyNumber ? prettyNumber + 1 : Math.min(...dividers) + 1;
+};
+
 export const chartTickValues = (
   data: ChartData,
   tickInterval: number,
@@ -154,6 +190,7 @@ export const chartYLabelText = (chartType: ChartType) => {
       return ['cm'];
     case 'cloud':
       return ['m'];
+    case 'weather':
     case 'daily':
       return [`°${units.temperature}`, units.precipitation];
     default:

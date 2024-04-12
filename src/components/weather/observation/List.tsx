@@ -85,6 +85,9 @@ const List: React.FC<ListProps> = ({
     uv: {
       parameters: [],
     },
+    weather: {
+      parameters: ['temperature', 'dewPoint', 'precipitation1h'],
+    },
     daily: {
       parameters: [
         'rrday',
@@ -345,15 +348,18 @@ const List: React.FC<ListProps> = ({
           },
         ]}>
         {!isDaily && (
-          <Text
-            style={[
-              styles.rowItem,
-              styles.listText,
-              styles.bold,
-              { color: colors.hourListText },
-            ]}>
-            {t('time')}
-          </Text>
+          <View style={styles.time}>
+            <Text
+              style={[
+                styles.rowItem,
+                styles.time,
+                styles.listText,
+                styles.bold,
+                { color: colors.hourListText },
+              ]}>
+              {t('time')}
+            </Text>
+          </View>
         )}
         {getHeaderLabels()}
       </View>
@@ -391,6 +397,7 @@ const List: React.FC<ListProps> = ({
                       style={[
                         styles.listText,
                         styles.rowItem,
+                        styles.time,
                         styles.bold,
                         styles.capitalize,
                         { color: colors.hourListText },
@@ -413,18 +420,21 @@ const List: React.FC<ListProps> = ({
                     ]}>
                     {!isDaily && (
                       <>
-                        <Text
-                          style={[
-                            styles.rowItem,
-                            styles.listText,
-                            styles.bold,
-                            { color: colors.hourListText },
-                          ]}
-                          accessibilityLabel={`${t(
-                            'forecast:at'
-                          )} ${timeToDisplay}`}>
-                          {capitalize(timeToDisplay)}
-                        </Text>
+                        <View style={styles.time}>
+                          <Text
+                            style={[
+                              styles.rowItem,
+                              styles.time,
+                              styles.listText,
+                              styles.bold,
+                              { color: colors.hourListText },
+                            ]}
+                            accessibilityLabel={`${t(
+                              'forecast:at'
+                            )} ${timeToDisplay}`}>
+                            {capitalize(timeToDisplay)}
+                          </Text>
+                        </View>
                         {getRowValues(timeStep)}
                       </>
                     )}
@@ -463,6 +473,7 @@ const styles = StyleSheet.create({
   },
   rowItem: {
     flex: 1,
+    paddingRight: 2,
     flexWrap: 'wrap',
   },
   headerRow: {
@@ -491,6 +502,10 @@ const styles = StyleSheet.create({
   },
   centeredText: {
     textAlign: 'center',
+  },
+  time: {
+    flexShrink: 1,
+    minWidth: 60,
   },
 });
 

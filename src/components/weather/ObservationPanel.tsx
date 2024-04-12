@@ -107,8 +107,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   }
 
   let charts: ChartType[] = [
-    'temperature',
-    'precipitation',
+    'weather',
     'wind',
     'pressure',
     'humidity',
@@ -122,9 +121,9 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
     (row) => Object.values(row).filter((value) => value !== null).length > 1
   );
 
-  charts = charts.filter((type) => {
+  charts = charts.flatMap((type) => {
     if (type === 'daily') {
-      return dailyDataExists;
+      return dailyDataExists ? [type] : [];
     }
 
     const typeParameters = observationTypeParameters[type];
@@ -140,12 +139,25 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         )
     );
 
-    return (
-      observationDataExistsForParameter &&
+    // Temperature chart may replace weather if no precipitation data
+
+    if (type === 'weather') {
+      const precipitationDataExists = data.some(
+        (item) =>
+          item.precipitation1h !== null && item.precipitation1h !== undefined
+      );
+
+      if (!precipitationDataExists && observationDataExistsForParameter) {
+        return ['temperature'];
+      }
+    }
+
+    return observationDataExistsForParameter &&
       typeParameters.filter((typeParameter) =>
         parameters?.includes(typeParameter as keyof ObservationParameters)
       ).length > 0
-    );
+      ? [type]
+      : [];
   });
 
   const parameter = chartParameter ?? charts[0];
