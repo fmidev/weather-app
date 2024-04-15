@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
   },
   quarterContainer: {
-    height: 32,
+    minHeight: 32,
+    maxHeight: 35,
     justifyContent: 'flex-end',
   },
   textBlock: {
@@ -117,7 +118,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   lastQuarterContainer: {
-    height: 32,
+    minHeight: 32,
+    maxHeight: 35,
     justifyContent: 'flex-end',
   },
   lastBlockText: {
