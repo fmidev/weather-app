@@ -171,9 +171,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           onChangeText={(text) => setValue(text)}
           underlineColorAndroid="transparent"
         />
-        {loading && (
-          <ActivityIndicator accessibilityLabel={t('weather:loading')} />
-        )}
+        {loading && <ActivityIndicator accessibilityLabel={t('loading')} />}
         {value.length > 0 && (
           <CloseButton
             style={styles.closeButton}

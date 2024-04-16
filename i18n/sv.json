@@ -386,6 +386,7 @@
     "addToFavorites": "Lägg till {{ location }} de egna platserna",
     "removeFromFavorites": "Ta bort {{ location }} från de egna platserna",
     "selectedLocation": "Vald plats: {{ location }}",
+    "loading": "Laddar sökresultat",
     "infoSheet": {
       "closeButtonAccessibilityLabel": "Stäng förklaringarna till söksidan",
       "saveAndDeleteTitle": "Spara och radera egen plats",
