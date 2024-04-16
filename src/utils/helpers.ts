@@ -220,7 +220,7 @@ export const getObservationCellValue = (
           decimals
         )
       : dividedValue;
-    if (!value) return '-';
+    if (value === null) return '-';
 
     return `${(unitParameterObject
       ? value
