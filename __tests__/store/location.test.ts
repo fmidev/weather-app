@@ -21,6 +21,7 @@ const defaultState: types.LocationState = {
   search: [location],
   current: location,
   isGeolocation: undefined,
+  loading: false,
 };
 
 describe('location reducer', () => {
