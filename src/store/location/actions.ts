@@ -14,6 +14,7 @@ import {
   FETCH_AUTOCOMPLETE,
   RESET_AUTOCOMPLETE,
   UPDATE_LOCATIONS_LOCALES,
+  SET_LOADING,
 } from './types';
 
 export const setCurrentLocation =
@@ -72,4 +73,9 @@ export const updateLocationsLocales =
     getLocationsLocales(geoids).then((data) => {
       dispatch({ type: UPDATE_LOCATIONS_LOCALES, data });
     });
+  };
+
+export const setLoading =
+  (loading: boolean) => (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: SET_LOADING, loading });
   };

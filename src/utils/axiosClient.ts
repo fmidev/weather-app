@@ -6,7 +6,7 @@ const axiosClient = async (options: AxiosRequestConfig) => {
 
   const requestConfig = {
     ...options,
-    cancelToken: source.token,
+    cancelToken: options.cancelToken || source.token,
   };
   delete requestConfig.timeout;
 

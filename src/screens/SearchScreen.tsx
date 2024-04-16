@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Keyboard,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -24,6 +25,7 @@ import {
   selectRecent,
   selectFavorites,
   selectSearch,
+  selectLoading,
 } from '@store/location/selector';
 
 import {
@@ -35,6 +37,7 @@ import {
   setCurrentLocation as setCurrentLocationAction,
   searchLocation as searchLocationAction,
   resetSearch as resetSearchAction,
+  setLoading as setLoadingAction,
 } from '@store/location/actions';
 import { Location } from '@store/location/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '@store/map/actions';
@@ -49,6 +52,7 @@ const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
   recent: selectRecent(state),
   search: selectSearch(state),
+  loading: selectLoading(state),
 });
 
 const mapDispatchToProps = {
@@ -61,6 +65,7 @@ const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
   searchLocation: searchLocationAction,
   resetSearch: resetSearchAction,
+  setLoading: setLoadingAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -78,6 +83,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   favorites,
   recent,
   search,
+  loading,
   addFavorite,
   deleteFavorite,
   deleteAllFavorites,
@@ -87,6 +93,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   setCurrentLocation,
   searchLocation,
   resetSearch,
+  setLoading,
   navigation,
 }) => {
   const { t } = useTranslation('searchScreen');
@@ -95,11 +102,12 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
 
   useEffect(() => {
     if (value) {
+      setLoading(true);
       searchLocation(value);
     } else {
       resetSearch();
     }
-  }, [value, searchLocation, resetSearch]);
+  }, [value, searchLocation, resetSearch, setLoading]);
 
   const handleSelectLocation = (location: Location, update: boolean) => {
     const name =
@@ -163,6 +171,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           onChangeText={(text) => setValue(text)}
           underlineColorAndroid="transparent"
         />
+        {loading && (
+          <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+        )}
         {value.length > 0 && (
           <CloseButton
             style={styles.closeButton}
@@ -191,7 +202,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               }
             />
           )}
-          {!/^\s*$/.test(value) && search.length === 0 && (
+          {!loading && !/^\s*$/.test(value) && search.length === 0 && (
             <Text style={{ color: colors.text }}>{t('noResults')}</Text>
           )}
           <View

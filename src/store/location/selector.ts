@@ -11,6 +11,11 @@ export const selectIsGeolocation = createSelector(
   (location) => location.isGeolocation
 );
 
+export const selectLoading = createSelector(
+  selectLocationDomain,
+  (location) => location.loading
+);
+
 export const selectCurrent = createSelector(
   selectLocationDomain,
   (location) => location.current || Config.get('location').default
