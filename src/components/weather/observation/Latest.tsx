@@ -25,9 +25,10 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type LatestProps = PropsFromRedux & {
   data: TimeStepData[];
+  dailyData: TimeStepData[];
 };
 
-const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
+const Latest: React.FC<LatestProps> = ({ clockType, data, dailyData }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
@@ -161,8 +162,11 @@ const Latest: React.FC<LatestProps> = ({ clockType, data }) => {
 
   return (
     <>
-      {hoursSinceLatestObservation > 2 && (
+      {hoursSinceLatestObservation > 2 && dailyData.length === 0 && (
         <InfoMessage translationKey="tooOld" />
+      )}
+      {data.length <= 2 && dailyData.length > 0 && (
+        <InfoMessage translationKey="onlyDailyValues" />
       )}
       {!!latestObservation && hoursSinceLatestObservation <= 2 && (
         <View>

@@ -277,7 +277,7 @@ const getWMSLayerUrlsAndBounds = async (
         ...customParameters,
       });
 
-      const overlayUrl = `${url}/wms?${query.toString()}`;
+      const overlayUrl = decodeURIComponent(`${url}/wms?${query.toString()}`);
 
       Object.assign(toReturn, {
         [layerSrc.type]: {

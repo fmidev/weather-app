@@ -1,6 +1,11 @@
 import { Selector, createSelector } from 'reselect';
 import { State } from '../types';
-import { ObservationState } from './types';
+import { ObservationState, TimeStepData } from './types';
+
+const PRIMARY_STATION_TYPES = ['AWS', 'AVI'];
+export const RELATED_DAILY_OBSERVATION_PARAMETERS = {
+  snowDepth: 'snowDepth06',
+};
 
 const selectObservationDomain: Selector<State, ObservationState> = (state) =>
   state.observation;
@@ -17,12 +22,24 @@ export const selectError = createSelector(
 
 export const selectStationList = createSelector(
   selectObservationDomain,
-  (observation) => observation.stations.sort((a, b) => a.distance - b.distance)
+  (observation) => [
+    ...observation.stations
+      .filter((station) => PRIMARY_STATION_TYPES.includes(station.type))
+      .sort((a, b) => a.distance - b.distance),
+    ...observation.stations
+      .filter((station) => !PRIMARY_STATION_TYPES.includes(station.type))
+      .sort((a, b) => a.distance - b.distance),
+  ]
 );
 
-const selectDataSets = createSelector(
+const selectHourlyDataSets = createSelector(
   selectObservationDomain,
   (observation) => observation.data
+);
+
+const selectDailyDataSets = createSelector(
+  selectObservationDomain,
+  (observation) => observation.dailyData
 );
 
 const selectStationIdList = createSelector(
@@ -41,7 +58,12 @@ export const selectStationId = createSelector(
 );
 
 export const selectData = createSelector(
-  [selectDataSets, selectStationId],
+  [selectHourlyDataSets, selectStationId],
+  (data, id) => (data?.[id] ? data[id] : [])
+);
+
+export const selectDailyData = createSelector(
+  [selectDailyDataSets, selectStationId],
   (data, id) => (data?.[id] ? data[id] : [])
 );
 
@@ -53,4 +75,43 @@ export const selectDisplayFormat = createSelector(
 export const selectChartDisplayParameter = createSelector(
   selectObservationDomain,
   (observation) => observation.chartDisplayParam
+);
+
+export const selectDailyObservationParametersWithData = createSelector(
+  [selectDailyDataSets, selectStationId],
+  (data, id) => {
+    const dailyParameters = [
+      'rrday',
+      'maximumTemperature',
+      'minimumTemperature',
+      'minimumGroundTemperature06',
+    ];
+
+    const dailyData = data?.[id] ? data[id] : [];
+    return dailyParameters.filter((param) =>
+      dailyData.find((item) => item[param as keyof TimeStepData] !== null)
+    );
+  }
+);
+
+export const selectPreferredDailyParameters = createSelector(
+  [selectDailyDataSets, selectStationId],
+  (data, id) => {
+    const dailyData = data?.[id] ? data[id] : [];
+    const result = [];
+
+    for (const [parameter, dailyParameter] of Object.entries(
+      RELATED_DAILY_OBSERVATION_PARAMETERS
+    )) {
+      const dailyParameterCount = dailyData.filter(
+        (item) => item[dailyParameter as keyof TimeStepData] !== null
+      ).length;
+
+      if (dailyParameterCount > 10) {
+        result.push(parameter);
+      }
+    }
+
+    return result;
+  }
 );

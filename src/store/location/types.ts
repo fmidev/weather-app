@@ -14,6 +14,8 @@ export const RESET_AUTOCOMPLETE = 'RESET_AUTOCOMPLETE';
 
 export const UPDATE_LOCATIONS_LOCALES = 'UPDATE_LOCATIONS_LOCALES';
 
+export const SET_LOADING = 'SET_LOADING';
+
 export type Location = {
   name: string;
   area: string;
@@ -103,6 +105,11 @@ interface LocationsToLocale {
   data: { [geoid: string]: TimeseriesLocation[] };
 }
 
+interface SetLoading {
+  type: typeof SET_LOADING;
+  loading: boolean;
+}
+
 export type LocationActionTypes =
   | AddFavorite
   | DeleteAllFavorites
@@ -114,7 +121,8 @@ export type LocationActionTypes =
   | ResetAutocomplete
   | SetCurrentLocation
   | UpdateRecentSearches
-  | LocationsToLocale;
+  | LocationsToLocale
+  | SetLoading;
 
 export interface LocationState {
   favorites: Location[] | [];
@@ -122,4 +130,5 @@ export interface LocationState {
   search: Location[] | [];
   current: Location | undefined;
   isGeolocation?: boolean;
+  loading: boolean;
 }

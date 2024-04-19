@@ -8,6 +8,8 @@ import { CustomTheme, TRANSPARENT } from '@utils/colors';
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
 import { ChartType } from './types';
+import { selectDailyObservationParametersWithData } from '@store/observation/selector';
+import { useSelector } from 'react-redux';
 
 type ChartLegendProps = {
   chartType: ChartType;
@@ -28,8 +30,13 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     ({ parameters }) => parameters
   );
 
+  const dailyParametersWithData = useSelector(
+    selectDailyObservationParametersWithData
+  );
+
   type LineProps = { color?: string; height?: number };
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const Line = ({ color = colors.primaryText, height = 2 }: LineProps) => (
     <View
       style={[
@@ -42,6 +49,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     />
   );
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const DashLine = () => {
     const length = 3;
     return (
@@ -60,6 +68,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     );
   };
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const DotLine = () => {
     const length = 6;
     return (
@@ -78,6 +87,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     );
   };
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const Bar = ({ color }: { color: string }) => (
     <View
       style={[
@@ -89,6 +99,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     />
   );
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const Arrow = () => (
     <Icon
       name="wind-arrow"
@@ -103,9 +114,21 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     />
   );
 
+  // eslint-disable-next-line react/no-unstable-nested-components
+  const ScatterPoint = ({ color }: { color: string }) => (
+    <View
+      style={[
+        styles.legendScatterPoint,
+        {
+          backgroundColor: color,
+        },
+      ]}
+    />
+  );
+
   return (
     <View style={styles.legendContainer}>
-      {chartType === 'temperature' && (
+      {(chartType === 'temperature' || chartType === 'weather') && (
         <View style={styles.row}>
           <View>
             {(observation
@@ -153,7 +176,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           </View>
         </View>
       )}
-      {chartType === 'precipitation' && (
+      {(chartType === 'precipitation' || chartType === 'weather') && (
         <>
           <View style={styles.legendRow}>
             <Bar color={colors.rain[1]} />
@@ -237,38 +260,32 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         </>
       )}
       {chartType === 'cloud' && (
-        <>
-          <View style={styles.legendRow}>
-            <Line />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:cloud').toLocaleLowerCase()} (m)
-            </Text>
-          </View>
-        </>
+        <View style={styles.legendRow}>
+          <Line />
+          <Text style={[styles.legendText, { color: colors.hourListText }]}>
+            {t('weather:charts:cloud').toLocaleLowerCase()} (m)
+          </Text>
+        </View>
       )}
       {chartType === 'pressure' && (
-        <>
-          <View style={styles.legendRow}>
-            <Line />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:pressure').toLocaleLowerCase()} (
-              {units.pressure})
-            </Text>
-          </View>
-        </>
+        <View style={styles.legendRow}>
+          <Line />
+          <Text style={[styles.legendText, { color: colors.hourListText }]}>
+            {t('weather:charts:pressure').toLocaleLowerCase()} ({units.pressure}
+            )
+          </Text>
+        </View>
       )}
       {chartType === 'humidity' && (
-        <>
-          <View style={styles.legendRow}>
-            <Line />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {observation
-                ? t('weather:charts:humidity').toLocaleLowerCase()
-                : t('weather:charts:relativeHumidity').toLocaleLowerCase()}{' '}
-              (%)
-            </Text>
-          </View>
-        </>
+        <View style={styles.legendRow}>
+          <Line />
+          <Text style={[styles.legendText, { color: colors.hourListText }]}>
+            {observation
+              ? t('weather:charts:humidity').toLocaleLowerCase()
+              : t('weather:charts:relativeHumidity').toLocaleLowerCase()}{' '}
+            (%)
+          </Text>
+        </View>
       )}
       {chartType === 'visCloud' && (
         <>
@@ -363,23 +380,48 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         </>
       )}
       {chartType === 'snowDepth' && (
-        <>
-          <View style={styles.legendRow}>
-            <Bar color={colors.primaryText} />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:snowDepth').toLocaleLowerCase()} (m)
-            </Text>
-          </View>
-        </>
+        <View style={styles.legendRow}>
+          <Bar color={colors.primaryText} />
+          <Text style={[styles.legendText, { color: colors.hourListText }]}>
+            {t('weather:charts:snowDepth').toLocaleLowerCase()} (cm)
+          </Text>
+        </View>
       )}
       {chartType === 'uv' && (
+        <View style={styles.legendRow}>
+          <Line />
+          <Text style={[styles.legendText, { color: colors.hourListText }]}>
+            {t('weather:charts:uvIndex').toLocaleLowerCase()}
+          </Text>
+        </View>
+      )}
+      {chartType === 'daily' && (
         <>
-          <View style={styles.legendRow}>
-            <Line />
-            <Text style={[styles.legendText, { color: colors.hourListText }]}>
-              {t('weather:charts:uvIndex').toLocaleLowerCase()}
-            </Text>
-          </View>
+          {dailyParametersWithData.includes('rrday') && (
+            <View style={styles.legendRow}>
+              <Bar color="rgb(30, 110, 214)" />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:rrday')}
+              </Text>
+            </View>
+          )}
+          {dailyParametersWithData.includes('minimumGroundTemperature06') && (
+            <View style={styles.legendRow}>
+              <ScatterPoint color="rgb(176, 176, 0)" />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:minimumGroundTemperature06')}
+              </Text>
+            </View>
+          )}
+          {(dailyParametersWithData.includes('minimumTemperature') ||
+            dailyParametersWithData.includes('maximumTemperature')) && (
+            <View style={styles.legendRow}>
+              <Bar color="rgb(145, 0, 0)" />
+              <Text style={[styles.legendText, { color: colors.hourListText }]}>
+                {t('weather:charts:maxAndMinTemperatures')}
+              </Text>
+            </View>
+          )}
         </>
       )}
     </View>
@@ -434,6 +476,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 4,
     marginRight: 2,
+  },
+  legendScatterPoint: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   iconMargin: {
     marginLeft: -4,

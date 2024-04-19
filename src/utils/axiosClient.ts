@@ -1,12 +1,12 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 const axiosClient = async (options: AxiosRequestConfig) => {
-  const { timeout = 10000 } = options;
+  const { timeout = 20000 } = options;
   const source = axios.CancelToken.source();
 
   const requestConfig = {
     ...options,
-    cancelToken: source.token,
+    cancelToken: options.cancelToken || source.token,
   };
   delete requestConfig.timeout;
 

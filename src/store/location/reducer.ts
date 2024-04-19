@@ -12,6 +12,7 @@ import {
   RESET_AUTOCOMPLETE,
   UPDATE_LOCATIONS_LOCALES,
   TimeseriesLocation,
+  SET_LOADING,
 } from './types';
 
 const INITIAL_STATE: LocationState = {
@@ -20,6 +21,7 @@ const INITIAL_STATE: LocationState = {
   search: [],
   current: undefined,
   isGeolocation: undefined,
+  loading: false,
 };
 
 const cleanAreaFromTimeseries = (location: TimeseriesLocation) =>
@@ -28,6 +30,7 @@ const cleanAreaFromTimeseries = (location: TimeseriesLocation) =>
     : location?.region;
 
 export default (
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = INITIAL_STATE,
   action: LocationActionTypes
 ): LocationState => {
@@ -75,6 +78,14 @@ export default (
     case SET_CURRENT_LOCATION: {
       const { location } = action;
       delete location.isGeolocation;
+
+      if (isNaN(location.id)) {
+        location.name = `${location.lat.toFixed(4)}, ${location.lon.toFixed(
+          4
+        )}`;
+        location.area = '';
+      }
+
       return {
         ...state,
         current: location,
@@ -86,6 +97,7 @@ export default (
       return {
         ...state,
         search: action.data?.autocomplete?.result || [],
+        loading: false,
       };
     }
 
@@ -93,6 +105,7 @@ export default (
       return {
         ...state,
         search: [],
+        loading: false,
       };
     }
 
@@ -116,6 +129,13 @@ export default (
             cleanAreaFromTimeseries(action.data[state.current.id]?.[0]) ||
             state.current.area,
         },
+      };
+    }
+
+    case SET_LOADING: {
+      return {
+        ...state,
+        loading: action.loading,
       };
     }
 

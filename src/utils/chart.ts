@@ -56,6 +56,42 @@ export const chartYDomain = (
   };
 };
 
+export const secondaryYDomainForWeatherChart = (
+  minMax: ChartMinMax,
+  temperatureDomain: ChartDomain
+): ChartDomain => {
+  if (!temperatureDomain.y) {
+    return { y: [0, 10] };
+  }
+
+  const tickCount = calculateTemperatureTickCount(temperatureDomain);
+  const values: number[] = minMax.filter(
+    (v): v is number => v !== undefined && v !== null
+  );
+  let max = Math.ceil(Math.max(...values));
+
+  while (max < 5 || max % tickCount !== 0) {
+    max++;
+  }
+
+  return { y: [0, max - 1] };
+};
+
+export const calculateTemperatureTickCount = (
+  temperatureDomain: ChartDomain
+): number => {
+  if (!temperatureDomain.y) {
+    return 5;
+  }
+
+  const diff = Math.abs(temperatureDomain.y[1] - temperatureDomain.y[0]);
+  const dividers = [4, 5, 6, 7, 8].filter((value) => diff % value === 0);
+
+  // Prefer pretty number 5 in ticks/scales
+  const prettyNumber = dividers.find((divider) => diff / divider === 5);
+  return prettyNumber ? prettyNumber + 1 : Math.min(...dividers) + 1;
+};
+
 export const chartTickValues = (
   data: ChartData,
   tickInterval: number,
@@ -88,22 +124,41 @@ export const chartTickValues = (
   return tickValues;
 };
 
+export const dailyChartTickValues = (days: number) => {
+  const tickValues = [...new Array(days)].map((_, i) =>
+    moment()
+      .startOf('day')
+      .subtract(i, 'days')
+      .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+      .valueOf()
+  );
+  tickValues.push(
+    moment()
+      .startOf('day')
+      .add(1, 'days')
+      .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+      .valueOf()
+  );
+  return tickValues.sort();
+};
+
 export const capitalize = ([first, ...rest]: string) =>
   first.toUpperCase() + rest.join('');
 
 export const tickFormat = (
   tick: any,
   locale: string,
-  clockType: ClockType
+  clockType: ClockType,
+  daily?: boolean
 ): string | number => {
   const time = moment(tick);
   const hour = time.hour();
   const minutes = time.minutes();
 
-  if (hour % 3 !== 0 || minutes !== 0) {
+  if (!daily && (hour % 3 !== 0 || minutes !== 0)) {
     return '';
   }
-  if (hour === 0) {
+  if (daily || hour === 0) {
     return `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))}
 ${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
   }
@@ -111,8 +166,8 @@ ${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
 };
 
 export const getTickFormat =
-  (locale: string, clockType: ClockType) => (tick: any) =>
-    tickFormat(tick, locale, clockType);
+  (locale: string, clockType: ClockType, daily?: boolean) => (tick: any) =>
+    tickFormat(tick, locale, clockType, daily);
 
 export const chartYLabelText = (chartType: ChartType) => {
   const { units } = Config.get('settings');
@@ -135,6 +190,9 @@ export const chartYLabelText = (chartType: ChartType) => {
       return ['cm'];
     case 'cloud':
       return ['m'];
+    case 'weather':
+    case 'daily':
+      return [`°${units.temperature}`, units.precipitation];
     default:
       return [''];
   }

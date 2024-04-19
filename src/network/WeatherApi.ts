@@ -9,6 +9,12 @@ import axiosClient from '@utils/axiosClient';
 import { TimeseriesLocation } from '@store/location/types';
 import packageJSON from '../../package.json';
 
+const isLocationValid = (
+  location: ForecastLocation | ObservationLocation
+): boolean =>
+  (location.geoid && Number.isInteger(location.geoid)) ||
+  location.latlon !== undefined;
+
 export const getForecast = async (
   location: ForecastLocation
 ): Promise<WeatherData[]> => {
@@ -17,6 +23,10 @@ export const getForecast = async (
     apiUrl,
     forecast: { timePeriod, data: dataSettings },
   } = Config.get('weather');
+
+  if (!isLocationValid(location)) {
+    return [];
+  }
 
   const params = {
     ...location,
@@ -63,21 +73,23 @@ export const getForecast = async (
 export const getObservation = async (
   location: ObservationLocation,
   country: string
-): Promise<ObservationDataRaw> => {
+): Promise<ObservationDataRaw[]> => {
   const {
     apiUrl,
     observation: {
       enabled,
       numberOfStations,
       producer,
+      dailyProducers,
       timePeriod,
       parameters,
+      dailyParameters,
     },
   } = Config.get('weather');
   const { language } = i18n;
 
-  if (!enabled) {
-    return {};
+  if (!enabled || !isLocationValid(location)) {
+    return [{}, {}];
   }
 
   let observationProducer = producer;
@@ -87,7 +99,11 @@ export const getObservation = async (
       : producer.default;
   }
 
-  const params = {
+  const dailyObservationsEnabled = dailyProducers?.includes(
+    observationProducer as string
+  );
+
+  const hourlyParams = {
     ...location,
     numberofstations: numberOfStations,
     starttime: `-${timePeriod}h`,
@@ -97,19 +113,38 @@ export const getObservation = async (
       'epochtime',
       'fmisid', // geoid??
       'stationname',
+      'stationtype',
       ...(parameters || []),
     ].join(','),
     format: 'json',
     producer: observationProducer,
     precision: 'double',
     lang: language,
-    attributes: 'fmisid,stationname,distance',
+    attributes: 'fmisid,stationname,stationtype,distance',
     who: packageJSON.name,
   };
 
-  const { data } = await axiosClient({ url: apiUrl, params });
+  const dailyParams = {
+    ...hourlyParams,
+    starttime: '-720h', // 30 days = 30 * 24h = 720h
+    param: [
+      'distance',
+      'epochtime',
+      'fmisid',
+      'stationname',
+      'stationtype',
+      ...(dailyParameters || []),
+    ].join(','),
+  };
 
-  return data;
+  const [observationData, dailyObservationData] = await Promise.all([
+    axiosClient({ url: apiUrl, params: hourlyParams }),
+    dailyObservationsEnabled
+      ? axiosClient({ url: apiUrl, params: dailyParams })
+      : Promise.resolve({ data: {} }),
+  ]);
+
+  return [observationData.data, dailyObservationData.data];
 };
 
 const locationQueryParams = {

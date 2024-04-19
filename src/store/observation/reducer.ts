@@ -15,6 +15,7 @@ import {
 
 const INITIAL_STATE: ObservationState = {
   data: {},
+  dailyData: {},
   error: false,
   id: 0,
   loading: false,
@@ -32,10 +33,21 @@ const formatData = (
 
   Object.entries(rawData).forEach(([id, nameHolder]) => {
     Object.entries(nameHolder).forEach(([name, distanceHolder]) => {
-      Object.entries(distanceHolder).forEach(([distance, dataHolder]) => {
-        stations.push({ id: Number(id), name, distance: Number(distance) });
-        data[Number(id)] = dataHolder.reverse();
-      });
+      Object.entries(distanceHolder).forEach(
+        ([stationType, stationTypeHolder]) => {
+          Object.entries(stationTypeHolder).forEach(
+            ([distance, dataHolder]) => {
+              stations.push({
+                id: Number(id),
+                name,
+                distance: Number(distance),
+                type: stationType,
+              });
+              data[Number(id)] = dataHolder.reverse();
+            }
+          );
+        }
+      );
     });
   });
 
@@ -43,6 +55,7 @@ const formatData = (
 };
 
 export default (
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = INITIAL_STATE,
   action: ObservationActionTypes
 ): ObservationState => {
@@ -56,14 +69,19 @@ export default (
     }
 
     case FETCH_OBSERVATION_SUCCESS: {
-      return {
+      const { data, stations } = formatData(action.payload.data[0]);
+      const { data: dailyData } = formatData(action.payload.data[1]);
+      const newState = {
         ...state,
-        ...formatData(action.payload.data),
+        data,
+        dailyData,
+        stations,
         id:
           action.payload.location.geoid || action.payload.location.latlon || 0,
         loading: false,
         error: false,
       };
+      return newState;
     }
 
     case FETCH_OBSERVATION_ERROR: {
