@@ -41,7 +41,7 @@ const WarningsWebViewPanel: React.FC = () => {
   }
 
   const html = `<!doctype html>
-  <html lang="fi">
+  <html lang="${locale}">
     <head>
       <meta charset="UTF-8" />
       <meta
