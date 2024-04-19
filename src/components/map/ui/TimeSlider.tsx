@@ -51,7 +51,7 @@ import {
 import { selectClockType } from '@store/settings/selectors';
 import SliderStep from './SliderStep';
 
-const QUARTER_WIDTH = 12;
+const QUARTER_WIDTH = 15;
 
 const STEP_60 = 3600;
 let interval: NodeJS.Timeout;
@@ -387,7 +387,8 @@ const styles = StyleSheet.create({
     bottom: 38,
     right: 12,
     left: 12,
-    height: 75,
+    minHeight: 75,
+    maxHeight: 78,
     borderRadius: 8,
     borderWidth: 1,
   },
