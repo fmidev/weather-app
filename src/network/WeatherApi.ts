@@ -9,6 +9,12 @@ import axiosClient from '@utils/axiosClient';
 import { TimeseriesLocation } from '@store/location/types';
 import packageJSON from '../../package.json';
 
+const isLocationValid = (
+  location: ForecastLocation | ObservationLocation
+): boolean =>
+  (location.geoid && Number.isInteger(location.geoid)) ||
+  location.latlon !== undefined;
+
 export const getForecast = async (
   location: ForecastLocation
 ): Promise<WeatherData[]> => {
@@ -17,6 +23,10 @@ export const getForecast = async (
     apiUrl,
     forecast: { timePeriod, data: dataSettings },
   } = Config.get('weather');
+
+  if (!isLocationValid(location)) {
+    return [];
+  }
 
   const params = {
     ...location,
@@ -78,7 +88,7 @@ export const getObservation = async (
   } = Config.get('weather');
   const { language } = i18n;
 
-  if (!enabled) {
+  if (!enabled || !isLocationValid(location)) {
     return [{}, {}];
   }
 
