@@ -386,6 +386,7 @@
     "addToFavorites": "Add {{ location }} to My Places",
     "removeFromFavorites": "Remove {{ location }} from My Places",
     "selectedLocation": "Selected location: {{ location }}",
+    "loading": "Loading search results",
     "infoSheet": {
       "closeButtonAccessibilityLabel": "Close search screen info",
       "saveAndDeleteTitle": "Saving and deleting My Places",

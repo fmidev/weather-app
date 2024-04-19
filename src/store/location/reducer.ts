@@ -12,6 +12,7 @@ import {
   RESET_AUTOCOMPLETE,
   UPDATE_LOCATIONS_LOCALES,
   TimeseriesLocation,
+  SET_LOADING,
 } from './types';
 
 const INITIAL_STATE: LocationState = {
@@ -20,6 +21,7 @@ const INITIAL_STATE: LocationState = {
   search: [],
   current: undefined,
   isGeolocation: undefined,
+  loading: false,
 };
 
 const cleanAreaFromTimeseries = (location: TimeseriesLocation) =>
@@ -95,6 +97,7 @@ export default (
       return {
         ...state,
         search: action.data?.autocomplete?.result || [],
+        loading: false,
       };
     }
 
@@ -102,6 +105,7 @@ export default (
       return {
         ...state,
         search: [],
+        loading: false,
       };
     }
 
@@ -125,6 +129,13 @@ export default (
             cleanAreaFromTimeseries(action.data[state.current.id]?.[0]) ||
             state.current.area,
         },
+      };
+    }
+
+    case SET_LOADING: {
+      return {
+        ...state,
+        loading: action.loading,
       };
     }
 

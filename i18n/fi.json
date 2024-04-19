@@ -386,6 +386,7 @@
     "addToFavorites": "Lisää {{ location }} omiin paikkoihin",
     "removeFromFavorites": "Poista {{ location }} omista paikoista",
     "selectedLocation": "Valittu paikka: {{ location }}",
+    "loading": "Ladataan hakutuloksia",
     "infoSheet": {
       "closeButtonAccessibilityLabel": "Sulje hakusivun selitteet",
       "saveAndDeleteTitle": "Oman paikan tallennus ja poistaminen",

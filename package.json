@@ -26,7 +26,7 @@
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
     "@types/supercluster": "^5.0.3",
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "fast-xml-parser": "^3.21.1",
     "geolib": "^3.3.3",
     "i18next": "^23.10.1",
