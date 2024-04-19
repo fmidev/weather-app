@@ -12,7 +12,7 @@ const WarningsWebViewPanel: React.FC = () => {
   const { shouldReload } = useReloader();
   const [updated, setUpdated] = useState<number>(Date.now());
   const [viewHeight, setViewHeight] = useState<number>(2000);
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { dark } = useTheme() as CustomTheme;
   const webViewRef = useRef(null);
   const isFocused = useIsFocused();
   const { i18n, t } = useTranslation('warnings');
@@ -40,44 +40,22 @@ const WarningsWebViewPanel: React.FC = () => {
     return null;
   }
 
-  const html = `<!DOCTYPE html>
-  <html lang="fi">
-  <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-  <script src="${webViewUrl}/vue.js"></script>
-  <script src="${webViewUrl}/SmartMetAlertClient.umd.js"></script>
+  const html = `<!doctype html>
+  <html lang="${locale}">
+    <head>
+      <meta charset="UTF-8" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+      <title>SmartMet Alert Client</title>
+    </head>
 
-  <link rel="stylesheet" href="${webViewUrl}/SmartMetAlertClient.css">
-  <style>
-    body { overflow-x: hidden; background-color: ${
-      colors.background
-    }; margin: 0 !important }
-    .container-fluid { margin-top: 0 !important }
-    .day-region-views > h3 { display: none }
-    .header-region, .symbol-list { padding-left: 5px !important }
-    .date-selector-cell-header { text-transform: capitalize !important }
-  </style>
-  </head>
-  <body>
-  <div id="app"></div>
-
-  <script>
-  new Vue({
-    el: '#app',
-    render: function(h) {
-      return h(SmartMetAlertClient, {
-        props: {
-          language: '${locale}',
-          theme: '${dark ? 'dark' : 'light'}',
-        }
-      });
-    }
-  });
-  const resizeObserver = new ResizeObserver(entries => window.ReactNativeWebView.postMessage(entries[0].target.clientHeight));
-  resizeObserver.observe(document.body);
-  </script>
-  </body>
+    <body>
+      <smartmet-alert-client language="${locale}" theme="${
+    dark ? 'dark' : 'light'
+  }" gray-scale-selector="true"></smartmet-alert-client>
+      <script type="module" src="${webViewUrl}/index.js"></script>
+    </body>
   </html>`;
 
   return (
