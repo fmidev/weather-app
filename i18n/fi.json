@@ -358,13 +358,45 @@
       "closeAccessibilityLabel": "Sulje kartan selitteet",
       "weatherSymbolsTitle": "Säämerkit",
       "mapLayersInfoTitle": "Karttatasojen selitteet",
-      "light": "heikkoa",
-      "moderate": "kohtalaista",
-      "strong": "voimakasta",
       "showMore": "Näytä lisää",
       "showLess": "Näytä vähemmän",
-      "rainRadarInfo": "Havaitun ja ennustetun sateen voimakkuus esitetään väreinä.",
-      "mapLayersInfo": "Kartalla esitettävä sadehavainto on mitattu säätutkalla. Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkakuviin ja sääennustemalleihin. Suomen alueella aika-askel on 15 minuuttia ja Skandinavian alueella yksi tunti.",
+      "precipitation": {
+        "title": "Sademäärä",
+        "rainRadarInfo": "Havaitun ja ennustetun sateen voimakkuus esitetään väreinä.",
+        "precipitationObs": "Kartalla esitettävä sadehavainto on mitattu säätutkalla.",
+        "precipitationFcst": "Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkakuviin ja sääennustemalleihin.",
+        "precipitationFinAndScandinavia": "Suomen alueella aika-askel on 15 minuuttia ja Skandinavian alueella yksi tunti.",
+        "light": "heikkoa",
+        "moderate": "kohtalaista",
+        "strong": "voimakasta"
+      },
+      "lightnings": {
+        "title": "Salamat",
+        "description": "Salamakartta näyttää havaitut salamat alueella. Visualisointi perustuu salaman ikään.",
+        "age1": "0-5 minuuttia vanha salama",
+        "age2": "5-10 minuuttia vanha salama",
+        "age3": "10-15 minuuttia vanha salama"
+      },
+      "windArrows": {
+        "title": "Tuuli",
+        "description": "Tuulinuolet näyttävät tuulen suunnan ja voimakkuuden 10 minuutin keskiarvona. Voimakkuus visualisoidaan värillä ja nuolen koolla.",
+        "arrow0": "Tyyntä 0.1-1 m/s",
+        "arrow1": "Heikkoa tuulta 1-4 m/s",
+        "arrow2": "Kohtalaista tuulta 4-8 m/s",
+        "arrow3": "Navakkaa tuulta 8-14 m/s",
+        "arrow4": "Kovaa tuulta 14-21 m/s",
+        "arrow5": "Myrskyä 21-32 m/s",
+        "arrow6": "Hirmumyrskyä 32-> m/s"
+      },
+      "temperature": {
+        "title": "Lämpötila",
+        "description": "Lämpötilatasolla painotettaan nollan läheistä lämpötilaa, jossa värit vaihtuvat yhden asteen välein. Muuten lämpötilaväli on kaksi astetta.",
+        "temperatureMinus30": "-30°C",
+        "temperatureMinus20": "-20°C",
+        "temperature0": "0°C",
+        "temperature5": "12°C",
+        "temperature20": "20°C"
+      },
       "timeseriesLayerInfo": "Sääennuste kartalla näyttää sääsymbolin ja lämpötilan lukuisille paikkakunnille ympäri maailman. Symbolia painamalla saa esille lisää säätietoa."
     }
   },
