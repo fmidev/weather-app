@@ -139,6 +139,7 @@ jobs:
         run: |
           git config user.email "actions@users.noreply.github.com"
           git config user.name "actions"
+          bundle update fastlane
           bundle exec fastlane android increment_android_version should_commit:true should_push:true
         working-directory: android
 
