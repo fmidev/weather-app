@@ -108,7 +108,7 @@ jobs:
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.6'
+          ruby-version: '3.3.0'
 
       # Update bundler
       - name: Update bundler
@@ -200,7 +200,7 @@ jobs:
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.6'
+          ruby-version: '3.3.0'
 
       # Update bundler
       - name: Update bundler
