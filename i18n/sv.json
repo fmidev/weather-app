@@ -358,13 +358,45 @@
       "closeAccessibilityLabel": "stäng kartans förklaringar",
       "weatherSymbolsTitle": "Vädersymboler",
       "mapLayersInfoTitle": "Förklaringar till kartnivåerna",
-      "light": "lätt",
-      "moderate": "måttligt",
-      "strong": "kraftigt",
       "showMore": "Visa mer",
       "showLess": "Visa mindre",
-      "rainRadarInfo": "Styrkan på det observerade och prognostiserade regnet anges i färger.",
-      "mapLayersInfo": "Regnobservationen på kartan har mätts med väderradar. Prognosen för regnet är en regnprognos för en kort tid som bygger på radarbilder och väderprognosmodeller. I Finland är tidssteget 15 minuter och i Skandinavien en timme.",
+      "precipitation": {
+        "title": "Nederbörd",
+        "rainRadarInfo": "Intensiteten av observerad och förutsagd nederbörd uttrycks i färger.",
+        "precipitationObs": "Observerad nederbörd på kartan har mätts med en väderadar.",
+        "precipitationFcst": "Nederbördsprognos är en korttidsprognos för regn baserat på radarbilder och väderprognosmodeller.",
+        "precipitationFinAndScandinavia": "Lager med 15 minuters tidssteg täcker Finland och lager med en timmes tidssteg täcker Skandinavien.",
+        "light": "lätt",
+        "moderate": "måttlig",
+        "strong": "kraftig"
+      },
+      "lightnings": {
+        "title": "Blixtar",
+        "description": "Blixtlagret visar observerade blixtar i området. Visualiseringen är baserad på blixternas ålder.",
+        "age1": "0-5 minuter gammal blixt",
+        "age2": "5-10 minuter gammal blixt",
+        "age3": "10-15 minuter gammal blixt"
+      },
+      "windArrows": {
+        "title": "Vindpilar",
+        "description": "Vindpilar visar riktning och styrka för det 10-minuters genomsnittliga vinden. Styrka visualiseras med färg och storlek på pilen.",
+        "arrow0": "Vindstilla 0.1-1 m/s",
+        "arrow1": "Svag vind 1-4 m/s",
+        "arrow2": "Måttlig vind 4-8 m/s",
+        "arrow3": "Frisisk vind 8-14 m/s",
+        "arrow4": "Hård vind 14-21 m/s",
+        "arrow5": "Storm 21-32 m/s",
+        "arrow6": "Orkan 32-> m/s"
+      },
+      "temperature": {
+        "title": "Temperatur",
+        "description": "Temperaturlagret betonar temperaturer runt noll grader där färger ändras i ett grads intervall. Annars är temperaturintervallet två grader.",
+        "temperatureMinus30": "-30°C",
+        "temperatureMinus20": "-20°C",
+        "temperature0": "0°C",
+        "temperature5": "12°C",
+        "temperature20": "20°C"
+      },
       "timeseriesLayerInfo": "Vädersymbolen och temperaturen på kartan visar väderprognosen på många orter runt om i världen. Genom att trycka på symbolen får man fram mer väderinformation."
     }
   },

@@ -42,7 +42,12 @@ export interface MapLayer {
   id: number;
   type: 'WMS' | 'GeoJSON' | 'Timeseries';
   name: { [lang: string]: string };
-  // legend: string;
+  legend?: {
+    hasPrecipitation?: boolean;
+    hasLightning?: boolean;
+    hasWindArrows?: boolean;
+    hasTemperature?: boolean;
+  };
   sources: WMSSource[] | TimeseriesSource[];
   times: Times;
   tileSize?: number;

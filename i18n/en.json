@@ -357,14 +357,46 @@
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Close map info",
       "weatherSymbolsTitle": "Weather symbols",
-      "mapLayersInfoTitle": "Map layers info",
-      "light": "light",
-      "moderate": "moderate",
-      "strong": "heavy",
+      "mapLayersInfoTitle": "Map layer info",
       "showMore": "Show more",
       "showLess": "Show less",
-      "rainRadarInfo": "The intensity of the observed and forecasted precipitation is expressed in colors.",
-      "mapLayersInfo": "The observed rainfall on the map has been measured using a weather radar. Precipitation forecast is a short-term rain forecast based on radar images and weather forecasting models. In Finland, the timestep is 15 minutes and in Scandinavia, one hour.",
+      "precipitation": {
+        "title": "Precipitation",
+        "rainRadarInfo": "The intensity of the observed and forecasted precipitation is expressed in colors.",
+        "precipitationObs": "Observed rainfall on the map has been measured using a weather radar.",
+        "precipitationFcst": "Precipitation forecast is a short-term rain forecast based on radar images and weather forecasting models.",
+        "precipitationFinAndScandinavia": "Layer with 15 minutes timesteps cover Finland and layer with one hour timesteps cover Scandinavia.",
+        "light": "light",
+        "moderate": "moderate",
+        "strong": "heavy"
+      },
+      "lightnings": {
+        "title": "Lightnings",
+        "description": "Lightning layer shows observed lightning strikes in the area. Visualization is based on lightning age.",
+        "age1": "0-5 minutes old lightning",
+        "age2": "5-10 minutes old lightning",
+        "age3": "10-15 minutes old lightning"
+      },
+      "windArrows": {
+        "title": "Wind arrows",
+        "description": "Wind arrows show direction and strength of the 10 minute average wind. Strength is visualized with color and size of the arrow.",
+        "arrow0": "Calm 0.1-1 m/s",
+        "arrow1": "Light breeze 1-4 m/s",
+        "arrow2": "Moderate breeze 4-8 m/s",
+        "arrow3": "Fresh breeze 8-14 m/s",
+        "arrow4": "Gale 14-21 m/s",
+        "arrow5": "Storm 21-32 m/s",
+        "arrow6": "Hurricane 32-> m/s"
+      },
+      "temperature": {
+        "title": "Temperature",
+        "description": "Temperature layer puts emphasis on temperature around zero degrees where colors change in one degree intervals. Otherwise temperature interval is two degrees.",
+        "temperatureMinus30": "-30°C",
+        "temperatureMinus20": "-20°C",
+        "temperature0": "0°C",
+        "temperature5": "12°C",
+        "temperature20": "20°C"
+      },
       "timeseriesLayerInfo": "The weather forecast on the map shows the weather symbol and temperature for numerous locations around the world. Tap the symbol to display more weather information."
     }
   },

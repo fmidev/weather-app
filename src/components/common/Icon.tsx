@@ -114,6 +114,21 @@ import WindLightMap from '@assets/images/icons/wind-light-map.svg';
 import WindNextHour from '@assets/images/icons/wind-next-hour.svg';
 import Wind from '@assets/images/icons/wind.svg';
 
+// Legend
+import Flash1 from '@assets/images/legend/flash_red.svg';
+import Flash2 from '@assets/images/legend/flash_yellow1.svg';
+import Flash3 from '@assets/images/legend/flash_yellow2.svg';
+import Flash1Dark from '@assets/images/legend/flash_red.svg';
+import Flash2Dark from '@assets/images/legend/flash_yellow1.svg';
+import Flash3Dark from '@assets/images/legend/flash_yellow2.svg';
+import WindArrow0 from '@assets/images/legend/arrow0.svg';
+import WindArrow1 from '@assets/images/legend/arrow1.svg';
+import WindArrow2 from '@assets/images/legend/arrow2.svg';
+import WindArrow3 from '@assets/images/legend/arrow3.svg';
+import WindArrow4 from '@assets/images/legend/arrow4.svg';
+import WindArrow5 from '@assets/images/legend/arrow5.svg';
+import WindArrow6 from '@assets/images/legend/arrow6.svg';
+
 // FeelsLike Icons
 import FeelsLikeBasic from '@assets/images/feelslike/basic.svg';
 import FeelsLikeEaster from '@assets/images/feelslike/easter.svg';
@@ -391,6 +406,32 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <FeelsLikeWinter {...(props as SvgProps)} />;
     case 'feels-like-xmas':
       return <FeelsLikeXmas {...(props as SvgProps)} />;
+    case 'flash1':
+      return <Flash1 {...(props as SvgProps)} />;
+    case 'flash2':
+      return <Flash2 {...(props as SvgProps)} />;
+    case 'flash3':
+      return <Flash3 {...(props as SvgProps)} />;
+    case 'flash1-dark':
+      return <Flash1Dark {...(props as SvgProps)} />;
+    case 'flash2-dark':
+      return <Flash2Dark {...(props as SvgProps)} />;
+    case 'flash3-dark':
+      return <Flash3Dark {...(props as SvgProps)} />;
+    case 'wind-arrow-0':
+      return <WindArrow0 {...(props as SvgProps)} />;
+    case 'wind-arrow-1':
+      return <WindArrow1 {...(props as SvgProps)} />;
+    case 'wind-arrow-2':
+      return <WindArrow2 {...(props as SvgProps)} />;
+    case 'wind-arrow-3':
+      return <WindArrow3 {...(props as SvgProps)} />;
+    case 'wind-arrow-4':
+      return <WindArrow4 {...(props as SvgProps)} />;
+    case 'wind-arrow-5':
+      return <WindArrow5 {...(props as SvgProps)} />;
+    case 'wind-arrow-6':
+      return <WindArrow6 {...(props as SvgProps)} />;
     default:
       return <IonIcon name={name} {...props} />;
   }

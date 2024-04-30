@@ -35,6 +35,7 @@ module.exports = {
     ],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
+    '@typescript-eslint/default-param-last': 1,
   },
   ignorePatterns: [
     '.eslintrc.js',

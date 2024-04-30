@@ -1,7 +1,9 @@
 import React from 'react';
+import Icon from '@components/common/Icon';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 import { Config } from '@config';
 
@@ -9,15 +11,55 @@ import CloseButton from '@components/common/CloseButton';
 
 import { CustomTheme } from '@utils/colors';
 
+import { State } from '@store/types';
+import { selectActiveOverlay } from '@store/map/selectors';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import { getTemperatureIndexColor } from '@utils/colors';
+
 type InfoBottomSheetProps = {
   onClose: () => void;
 };
+
+const generateTemperatureLegend = () => {
+  const views = [];
+  let i = 1;
+  while (i <= 50) {
+    views.push(
+      <View
+        key={i}
+        style={[
+          i === 1 ||
+          i === 7 ||
+          i === 12 ||
+          i === 17 ||
+          i === 22 ||
+          i === 30 ||
+          i === 36 ||
+          i === 41 ||
+          i === 46
+            ? styles.rainBlockTen
+            : styles.rainBlock,
+          { backgroundColor: getTemperatureIndexColor(i) },
+        ]}
+      />
+    );
+    i++;
+  }
+  return views;
+};
+
 const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const { layers } = Config.get('map');
 
   const timeseriesEnabled = layers.some((layer) => layer.type === 'Timeseries');
+
+  // get selected layer
+  const layerId = useSelector((state: State) => selectActiveOverlay(state));
+  const layer = layers.find((l) => l.id === layerId);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
@@ -33,62 +75,291 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
             {t('infoBottomSheet.mapLayersInfoTitle')}
           </Text>
         </View>
-        <View>
-          <Text style={[styles.text, { color: colors.hourListText }]}>
-            {t('infoBottomSheet.rainRadarInfo')}
-          </Text>
-        </View>
-        <View style={styles.rowWrapper}>
-          <View style={[styles.row, styles.rainContainer]}>
-            <View
-              style={[styles.rainBlock, { backgroundColor: colors.rain[1] }]}
-            />
-            <View
-              style={[styles.rainBlock, { backgroundColor: colors.rain[2] }]}
-            />
-            <View
-              style={[styles.rainBlock, { backgroundColor: colors.rain[3] }]}
-            />
-            <View
-              style={[styles.rainBlock, { backgroundColor: colors.rain[4] }]}
-            />
-            <View
-              style={[styles.rainBlock, { backgroundColor: colors.rain[5] }]}
-            />
-            <View
-              style={[styles.rainBlock, { backgroundColor: colors.rain[6] }]}
-            />
-            <View
-              style={[styles.rainBlock, { backgroundColor: colors.rain[7] }]}
-            />
-            <View
-              style={[styles.rainBlock, { backgroundColor: colors.rain[8] }]}
-            />
-          </View>
-          <View style={styles.sheetTitle}>
-            <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t('map:infoBottomSheet:light')}
-            </Text>
-            <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t('map:infoBottomSheet:moderate')}
-            </Text>
-            <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t('map:infoBottomSheet:strong')}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.withMarginBottom}>
-          <Text style={[styles.text, { color: colors.hourListText }]}>
-            {t('infoBottomSheet.mapLayersInfo')}
-          </Text>
-        </View>
-        {timeseriesEnabled && (
-          <View>
-            <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t('infoBottomSheet.timeseriesLayerInfo')}
-            </Text>
-          </View>
-        )}
+        <ScrollView>
+          {layer?.legend?.hasPrecipitation && (
+            <View style={styles.withMarginBottom}>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t(
+                  'infoBottomSheet.precipitation.precipitationFinAndScandinavia'
+                )}
+              </Text>
+            </View>
+          )}
+          {layer?.legend?.hasPrecipitation && (
+            <View>
+              <View style={styles.sheetTitle}>
+                <Text style={[styles.title, { color: colors.text }]}>
+                  {t('infoBottomSheet.precipitation.title')}
+                </Text>
+              </View>
+              <View style={styles.withMarginBottom}>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.precipitation.precipitationObs')}
+                </Text>
+              </View>
+              <View style={styles.withMarginBottom}>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.precipitation.precipitationFcst')}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.precipitation.rainRadarInfo')}
+                </Text>
+              </View>
+              <View style={styles.rowWrapper}>
+                <View style={[styles.row, styles.rainContainer]}>
+                  <View
+                    style={[
+                      styles.rainBlock,
+                      { backgroundColor: colors.rain[1] },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.rainBlock,
+                      { backgroundColor: colors.rain[2] },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.rainBlock,
+                      { backgroundColor: colors.rain[3] },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.rainBlock,
+                      { backgroundColor: colors.rain[4] },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.rainBlock,
+                      { backgroundColor: colors.rain[5] },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.rainBlock,
+                      { backgroundColor: colors.rain[6] },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.rainBlock,
+                      { backgroundColor: colors.rain[7] },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.rainBlock,
+                      { backgroundColor: colors.rain[8] },
+                    ]}
+                  />
+                </View>
+                <View style={styles.sheetTitle}>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('map:infoBottomSheet:precipitation:light')}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('map:infoBottomSheet:precipitation:moderate')}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('map:infoBottomSheet:precipitation:strong')}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+          {layer?.legend?.hasLightning && (
+            <View>
+              <View style={styles.sheetTitle}>
+                <Text style={[styles.title, { color: colors.text }]}>
+                  {t('infoBottomSheet.lightnings.title')}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.lightnings.description')}
+                </Text>
+              </View>
+              <View style={styles.rowWrapper}>
+                <View style={styles.column}>
+                  <View style={[styles.row, styles.lightningsContainer]}>
+                    <Icon
+                      name={dark ? 'flash1-dark' : 'flash1'}
+                      style={styles.lightningIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.lightnings.age1')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.lightningsContainer]}>
+                    <Icon
+                      name={dark ? 'flash2-dark' : 'flash2'}
+                      style={styles.lightningIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.lightnings.age2')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.lightningsContainer]}>
+                    <Icon
+                      name={dark ? 'flash3-dark' : 'flash3'}
+                      style={styles.lightningIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.lightnings.age3')}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          )}
+          {layer?.legend?.hasWindArrows && (
+            <View>
+              <View style={styles.sheetTitle}>
+                <Text style={[styles.title, { color: colors.text }]}>
+                  {t('infoBottomSheet.windArrows.title')}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.windArrows.description')}
+                </Text>
+              </View>
+              <View style={styles.rowWrapper}>
+                <View style={styles.column}>
+                  <View style={[styles.row, styles.windArrowContainer]}>
+                    <Icon
+                      name={dark ? 'wind-arrow-0' : 'wind-arrow-0'}
+                      style={styles.windArrowIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.windArrows.arrow0')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.windArrowContainer]}>
+                    <Icon
+                      name={dark ? 'wind-arrow-1' : 'wind-arrow-1'}
+                      style={styles.windArrowIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.windArrows.arrow1')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.windArrowContainer]}>
+                    <Icon
+                      name={dark ? 'wind-arrow-2' : 'wind-arrow-2'}
+                      style={styles.windArrowIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.windArrows.arrow2')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.windArrowContainer]}>
+                    <Icon
+                      name={dark ? 'wind-arrow-3' : 'wind-arrow-3'}
+                      style={styles.windArrowIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.windArrows.arrow3')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.windArrowContainer]}>
+                    <Icon
+                      name={dark ? 'wind-arrow-4' : 'wind-arrow-4'}
+                      style={styles.windArrowIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.windArrows.arrow4')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.windArrowContainer]}>
+                    <Icon
+                      name={dark ? 'wind-arrow-5' : 'wind-arrow-5'}
+                      style={styles.windArrowIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.windArrows.arrow5')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.windArrowContainer]}>
+                    <Icon
+                      name={dark ? 'wind-arrow-6' : 'wind-arrow-6'}
+                      style={styles.windArrowIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.windArrows.arrow6')}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          )}
+          {layer?.legend?.hasTemperature && (
+            <View>
+              <View style={styles.sheetTitle}>
+                <Text style={[styles.title, { color: colors.text }]}>
+                  {t('infoBottomSheet.temperature.title')}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.temperature.description')}
+                </Text>
+              </View>
+              <View style={styles.rowWrapper}>
+                <View style={[styles.row, styles.temperatureContainer]}>
+                  {generateTemperatureLegend()}
+                </View>
+
+                <View style={styles.sheetTitle}>
+                  <Text
+                    style={[
+                      styles.text,
+                      styles.temperatureMinus30,
+                      { color: colors.hourListText },
+                    ]}>
+                    {t('map:infoBottomSheet:temperature:temperatureMinus30')}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      styles.temperatureMinus20,
+                      { color: colors.hourListText },
+                    ]}>
+                    {t('map:infoBottomSheet:temperature:temperatureMinus20')}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      styles.temperature0,
+                      { color: colors.hourListText },
+                    ]}>
+                    {t('map:infoBottomSheet:temperature:temperature0')}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      styles.temperature20,
+                      { color: colors.hourListText },
+                    ]}>
+                    {t('map:infoBottomSheet:temperature:temperature20')}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+          {layerId === 7 && timeseriesEnabled && (
+            <View>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t('infoBottomSheet.timeseriesLayerInfo')}
+              </Text>
+            </View>
+          )}
+        </ScrollView>
       </View>
     </View>
   );
@@ -121,6 +392,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  column: {
+    flexDirection: 'column',
+  },
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
@@ -133,9 +407,47 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: 5,
   },
+  lightningsContainer: {
+    marginBottom: 5,
+  },
+  lightningIcon: {
+    marginRight: 10,
+  },
+  windArrowContainer: {
+    marginBottom: 5,
+  },
+  windArrowIcon: {
+    alignContent: 'center',
+    marginRight: 10,
+    mindWidth: 30,
+  },
+  temperatureContainer: {
+    marginBottom: 5,
+  },
+  temperatureMinus30: {
+    position: 'absolute',
+    left: '19%',
+  },
+  temperatureMinus20: {
+    position: 'absolute',
+    left: '39%',
+  },
+  temperature0: {
+    position: 'absolute',
+    left: '58%',
+  },
+  temperature20: {
+    position: 'absolute',
+    left: '78%',
+  },
   rainBlock: {
     flexGrow: 1,
     height: 8,
+    margin: 1,
+  },
+  rainBlockTen: {
+    flexGrow: 1,
+    height: 16,
     margin: 1,
   },
   withMarginBottom: {
