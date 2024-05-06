@@ -169,7 +169,9 @@ interface OnboardingWizard {
 interface Feedback {
   enabled: boolean;
   email: string;
-  subject: string;
+  subject: {
+    [locale: string]: string;
+  };
 }
 
 export interface ConfigType {

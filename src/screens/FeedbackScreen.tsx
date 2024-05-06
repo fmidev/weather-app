@@ -10,7 +10,7 @@ import Icon from '@components/common/Icon';
 import packageJSON from '../../package.json';
 
 const FeedbackScreen: React.FC = () => {
-  const { t } = useTranslation('feedback');
+  const { t, i18n } = useTranslation('feedback');
   const { colors } = useTheme();
 
   const feedback = Config.get('feedback');
@@ -20,7 +20,7 @@ const FeedbackScreen: React.FC = () => {
   }/${Platform.Version}/${packageJSON.version})`;
 
   const mailToUrl = `mailto:${feedback?.email || ''}?subject=${
-    feedback?.subject || ''
+    feedback?.subject[i18n.language] || ''
   } ${platformInfo}`;
 
   return (

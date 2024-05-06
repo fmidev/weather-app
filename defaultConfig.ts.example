@@ -132,7 +132,11 @@ const defaultConfig: ConfigType = {
   feedback: {
     enabled: true,
     email: 'mobiili@fmi.fi',
-    subject: 'Ilmatieteen laitoksen sää palaute',
+    subject: {
+      fi: 'Ilmatieteen laitoksen sää palaute',
+      sv: 'FMI väder respons',
+      en: 'FMI Weather feedback',
+    },
   },
 };
 
