@@ -25,7 +25,6 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({
     trafficWeather: 'traffic-weather',
     pedestrianSafety: 'pedestrian-safety',
     forestFireWeather: 'forest-fire-weather',
-    grassFireWeather: 'grass-fire-weather',
     hotWeather: 'hot-weather',
     coldWeather: 'hot-weather',
     uvNote: 'uv-note',
@@ -36,7 +35,7 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({
   const typeName = typeMap[type];
   if (typeName) {
     name += `-${typeMap[type]}`;
-    if (!['uvNote', 'grassFireWeather', 'pedestrianSafety'].includes(type)) {
+    if (!['uvNote', 'pedestrianSafety'].includes(type)) {
       name += `-${colorMap[severity]}`;
     }
   }

@@ -5,7 +5,6 @@ export const knownWarningTypes = [
   'trafficWeather',
   'pedestrianSafety',
   'forestFireWeather',
-  'grassFireWeather',
   'hotWeather',
   'coldWeather',
   'uvNote',
