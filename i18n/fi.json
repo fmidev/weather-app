@@ -392,9 +392,8 @@
         "title": "Lämpötila",
         "description": "Lämpötilatasolla painotettaan nollan läheistä lämpötilaa, jossa värit vaihtuvat yhden asteen välein. Muuten lämpötilaväli on kaksi astetta.",
         "temperatureMinus30": "-30°C",
-        "temperatureMinus20": "-20°C",
+        "temperatureMinus20": "-10°C",
         "temperature0": "0°C",
-        "temperature5": "12°C",
         "temperature20": "20°C"
       },
       "timeseriesLayerInfo": "Sääennuste kartalla näyttää sääsymbolin ja lämpötilan lukuisille paikkakunnille ympäri maailman. Symbolia painamalla saa esille lisää säätietoa."
