@@ -357,25 +357,39 @@
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Sulje kartan selitteet",
       "weatherSymbolsTitle": "Säämerkit",
-      "mapLayersInfoTitle": "Karttatasojen selitteet",
+      "mapLayersInfoTitle": "Karttatason kuvaus",
       "showMore": "Näytä lisää",
       "showLess": "Näytä vähemmän",
       "precipitation": {
         "title": "Sademäärä",
         "rainRadarInfo": "Havaitun ja ennustetun sateen voimakkuus esitetään väreinä.",
-        "precipitationObs": "Kartalla esitettävä sadehavainto on mitattu säätutkalla.",
-        "precipitationFcst": "Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkakuviin ja sääennustemalleihin.",
-        "precipitationFinAndScandinavia": "Suomen alueella aika-askel on 15 minuuttia ja Skandinavian alueella yksi tunti.",
         "light": "heikkoa",
         "moderate": "kohtalaista",
-        "strong": "voimakasta"
+        "strong": "voimakasta",
+        "precipitationFin": {
+          "description": "Suomen tutkayhdistelmä sekä havaitut salamat 15 min aika-askeleella.",
+          "observation": "Kartalla esitettävä sadehavainto on mitattu Suomen alueen säätutkilla.",
+          "forecast": "Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkakuviin ja sääennustemalleihin."
+        },
+        "precipitationScan": {
+          "description": "Skandinavian tutkayhdistelmä sekä havaitut salamat 1 h aika-askeleella.",
+          "observation": "Kartalla esitettävä sadehavainto on mitattu Skandinavian alueen säätutkilla.",
+          "forecast": "Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu sääennustemalleihin."
+        }
       },
-      "lightnings": {
+      "lightnings15": {
         "title": "Salamat",
         "description": "Salamakartta näyttää havaitut salamat alueella. Visualisointi perustuu salaman ikään.",
         "age1": "0-5 minuuttia vanha salama",
         "age2": "5-10 minuuttia vanha salama",
         "age3": "10-15 minuuttia vanha salama"
+      },
+      "lightnings60": {
+        "title": "Salamat",
+        "description": "Salamakartta näyttää havaitut salamat alueella. Visualisointi perustuu salaman ikään.",
+        "age1": "0-20 minuuttia vanha salama",
+        "age2": "20-40 minuuttia vanha salama",
+        "age3": "40-60 minuuttia vanha salama"
       },
       "windArrows": {
         "title": "Tuuli",
@@ -386,7 +400,11 @@
         "arrow3": "Navakkaa tuulta 8-14 m/s",
         "arrow4": "Kovaa tuulta 14-21 m/s",
         "arrow5": "Myrskyä 21-32 m/s",
-        "arrow6": "Hirmumyrskyä 32-> m/s"
+        "arrow6": "Hirmumyrskyä 32-> m/s",
+        "layerInfo" : {
+          "short": "Tasolla esitetään tuulen suunta ja voimakkuus 1h aika-askeleella seuraavasta alkavasta tunnista 24h eteenpäin.",
+          "long": "Tasolla esitetään tuulen suunta ja voimakkuus 3h aika-askeleella seuraavasta alkavasta tunnista kolme päivää eteenpäin."
+        }
       },
       "temperature": {
         "title": "Lämpötila",
@@ -394,7 +412,11 @@
         "temperatureMinus30": "-30°C",
         "temperatureMinus20": "-10°C",
         "temperature0": "0°C",
-        "temperature20": "20°C"
+        "temperature20": "20°C",
+        "layerInfo" : {
+          "short": "Tasolla esitetään lämpötila 1h aika-askeleella seuraavasta alkavasta tunnista 24h eteenpäin.",
+          "long": "Tasolla esitetään lämpötila 3h aika-askeleella seuraavasta alkavasta tunnista kolme päivää eteenpäin."
+        }
       },
       "timeseriesLayerInfo": "Sääennuste kartalla näyttää sääsymbolin ja lämpötilan lukuisille paikkakunnille ympäri maailman. Symbolia painamalla saa esille lisää säätietoa."
     }

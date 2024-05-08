@@ -76,32 +76,71 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
           </Text>
         </View>
         <ScrollView>
-          {layer?.legend?.hasPrecipitation && (
+          {layer?.legend?.hasPrecipitationFin && (
             <View style={styles.withMarginBottom}>
               <Text style={[styles.text, { color: colors.hourListText }]}>
                 {t(
-                  'infoBottomSheet.precipitation.precipitationFinAndScandinavia'
+                  'infoBottomSheet.precipitation.precipitationFin.description'
                 )}
               </Text>
             </View>
           )}
-          {layer?.legend?.hasPrecipitation && (
+          {layer?.legend?.hasPrecipitationScan && (
+            <View style={styles.withMarginBottom}>
+              <Text style={[styles.text, { color: colors.hourListText }]}>
+                {t(
+                  'infoBottomSheet.precipitation.precipitationScan.description'
+                )}
+              </Text>
+            </View>
+          )}
+          {(layer?.legend?.hasPrecipitationFin ||
+            layer?.legend?.hasPrecipitationScan) && (
             <View>
               <View style={styles.sheetTitle}>
                 <Text style={[styles.title, { color: colors.text }]}>
                   {t('infoBottomSheet.precipitation.title')}
                 </Text>
               </View>
+            </View>
+          )}
+          {layer?.legend?.hasPrecipitationFin && (
+            <View>
               <View style={styles.withMarginBottom}>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
-                  {t('infoBottomSheet.precipitation.precipitationObs')}
+                  {t(
+                    'infoBottomSheet.precipitation.precipitationFin.observation'
+                  )}
                 </Text>
               </View>
               <View style={styles.withMarginBottom}>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
-                  {t('infoBottomSheet.precipitation.precipitationFcst')}
+                  {t('infoBottomSheet.precipitation.precipitationFin.forecast')}
                 </Text>
               </View>
+            </View>
+          )}
+          {layer?.legend?.hasPrecipitationScan && (
+            <View>
+              <View style={styles.withMarginBottom}>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t(
+                    'infoBottomSheet.precipitation.precipitationScan.observation'
+                  )}
+                </Text>
+              </View>
+              <View style={styles.withMarginBottom}>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t(
+                    'infoBottomSheet.precipitation.precipitationScan.forecast'
+                  )}
+                </Text>
+              </View>
+            </View>
+          )}
+          {(layer?.legend?.hasPrecipitationFin ||
+            layer?.legend?.hasPrecipitationScan) && (
+            <View>
               <View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {t('infoBottomSheet.precipitation.rainRadarInfo')}
@@ -172,16 +211,17 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
               </View>
             </View>
           )}
-          {layer?.legend?.hasLightning && (
+
+          {layer?.legend?.hasLightning15 && (
             <View>
               <View style={styles.sheetTitle}>
                 <Text style={[styles.title, { color: colors.text }]}>
-                  {t('infoBottomSheet.lightnings.title')}
+                  {t('infoBottomSheet.lightnings15.title')}
                 </Text>
               </View>
               <View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
-                  {t('infoBottomSheet.lightnings.description')}
+                  {t('infoBottomSheet.lightnings15.description')}
                 </Text>
               </View>
               <View style={styles.rowWrapper}>
@@ -192,7 +232,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                       style={styles.lightningIcon}
                     />
                     <Text style={[styles.text, { color: colors.hourListText }]}>
-                      {t('infoBottomSheet.lightnings.age1')}
+                      {t('infoBottomSheet.lightnings15.age1')}
                     </Text>
                   </View>
                   <View style={[styles.row, styles.lightningsContainer]}>
@@ -201,7 +241,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                       style={styles.lightningIcon}
                     />
                     <Text style={[styles.text, { color: colors.hourListText }]}>
-                      {t('infoBottomSheet.lightnings.age2')}
+                      {t('infoBottomSheet.lightnings15.age2')}
                     </Text>
                   </View>
                   <View style={[styles.row, styles.lightningsContainer]}>
@@ -210,25 +250,95 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                       style={styles.lightningIcon}
                     />
                     <Text style={[styles.text, { color: colors.hourListText }]}>
-                      {t('infoBottomSheet.lightnings.age3')}
+                      {t('infoBottomSheet.lightnings15.age3')}
                     </Text>
                   </View>
                 </View>
               </View>
             </View>
           )}
-          {layer?.legend?.hasWindArrows && (
+          {layer?.legend?.hasLightning60 && (
+            <View>
+              <View style={styles.sheetTitle}>
+                <Text style={[styles.title, { color: colors.text }]}>
+                  {t('infoBottomSheet.lightnings60.title')}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.lightnings60.description')}
+                </Text>
+              </View>
+              <View style={styles.rowWrapper}>
+                <View style={styles.column}>
+                  <View style={[styles.row, styles.lightningsContainer]}>
+                    <Icon
+                      name={dark ? 'flash1-dark' : 'flash1'}
+                      style={styles.lightningIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.lightnings60.age1')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.lightningsContainer]}>
+                    <Icon
+                      name={dark ? 'flash2-dark' : 'flash2'}
+                      style={styles.lightningIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.lightnings60.age2')}
+                    </Text>
+                  </View>
+                  <View style={[styles.row, styles.lightningsContainer]}>
+                    <Icon
+                      name={dark ? 'flash3-dark' : 'flash3'}
+                      style={styles.lightningIcon}
+                    />
+                    <Text style={[styles.text, { color: colors.hourListText }]}>
+                      {t('infoBottomSheet.lightnings60.age3')}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {layer?.legend?.hasWindArrowsShort && (
+            <View style={styles.withMarginBottom}>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.windArrows.layerInfo.short')}
+                </Text>
+              </View>
+            </View>
+          )}
+          {layer?.legend?.hasWindArrowsLong && (
+            <View style={styles.withMarginBottom}>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.windArrows.layerInfo.long')}
+                </Text>
+              </View>
+            </View>
+          )}
+          {(layer?.legend?.hasWindArrowsShort ||
+            layer?.legend?.hasWindArrowsLong) && (
             <View>
               <View style={styles.sheetTitle}>
                 <Text style={[styles.title, { color: colors.text }]}>
                   {t('infoBottomSheet.windArrows.title')}
                 </Text>
               </View>
-              <View>
-                <Text style={[styles.text, { color: colors.hourListText }]}>
+              <View style={styles.sheetTitle}>
+                <Text style={[styles.text, { color: colors.text }]}>
                   {t('infoBottomSheet.windArrows.description')}
                 </Text>
               </View>
+            </View>
+          )}
+          {(layer?.legend?.hasWindArrowsShort ||
+            layer?.legend?.hasWindArrowsLong) && (
+            <View>
               <View style={styles.rowWrapper}>
                 <View style={styles.column}>
                   <View style={[styles.row, styles.windArrowContainer]}>
@@ -298,7 +408,27 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
               </View>
             </View>
           )}
-          {layer?.legend?.hasTemperature && (
+
+          {layer?.legend?.hasTemperatureShort && (
+            <View style={styles.withMarginBottom}>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.temperature.layerInfo.short')}
+                </Text>
+              </View>
+            </View>
+          )}
+          {layer?.legend?.hasTemperatureLong && (
+            <View style={styles.withMarginBottom}>
+              <View>
+                <Text style={[styles.text, { color: colors.hourListText }]}>
+                  {t('infoBottomSheet.temperature.layerInfo.long')}
+                </Text>
+              </View>
+            </View>
+          )}
+          {(layer?.legend?.hasTemperatureShort ||
+            layer?.legend?.hasTemperatureLong) && (
             <View>
               <View style={styles.sheetTitle}>
                 <Text style={[styles.title, { color: colors.text }]}>
@@ -314,7 +444,6 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                 <View style={[styles.row, styles.temperatureContainer]}>
                   {generateTemperatureLegend()}
                 </View>
-
                 <View style={styles.sheetTitle}>
                   <Text
                     style={[
@@ -352,6 +481,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
               </View>
             </View>
           )}
+
           {layerId === 7 && timeseriesEnabled && (
             <View>
               <Text style={[styles.text, { color: colors.hourListText }]}>

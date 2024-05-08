@@ -363,19 +363,33 @@
       "precipitation": {
         "title": "Precipitation",
         "rainRadarInfo": "The intensity of the observed and forecasted precipitation is expressed in colors.",
-        "precipitationObs": "Observed rainfall on the map has been measured using a weather radar.",
-        "precipitationFcst": "Precipitation forecast is a short-term rain forecast based on radar images and weather forecasting models.",
-        "precipitationFinAndScandinavia": "Layer with 15 minutes timesteps cover Finland and layer with one hour timesteps cover Scandinavia.",
         "light": "light",
         "moderate": "moderate",
-        "strong": "heavy"
+        "strong": "heavy",
+        "precipitationFin": {
+          "description": "Finnish radar combination with a 15-minute time step.",
+          "observation": "The precipitation observation presented on the map has been measured with weather radars in Finland.",
+          "forecast": "The predicted precipitation is a short-term rainfall forecast based on radar images and weather forecast models."
+        },
+        "precipitationScan": {
+          "description": "Scandinavian radar combination with a 1-hour time step.",
+          "observation": "The precipitation observation presented on the map has been measured with weather radars in Scandinavia.",
+          "forecast": "The predicted precipitation is a short-term rainfall forecast based on weather forecast models."
+        }
       },
-      "lightnings": {
+      "lightnings15": {
         "title": "Lightnings",
         "description": "Lightning layer shows observed lightning strikes in the area. Visualization is based on lightning age.",
         "age1": "0-5 minutes old lightning",
         "age2": "5-10 minutes old lightning",
         "age3": "10-15 minutes old lightning"
+      },
+      "lightnings60": {
+        "title": "Lightnings",
+        "description": "Lightning layer shows observed lightning strikes in the area. Visualization is based on lightning age.",
+        "age1": "0-20 minutes old lightning",
+        "age2": "20-40 minutes old lightning",
+        "age3": "40-60 minutes old lightning"
       },
       "windArrows": {
         "title": "Wind arrows",
@@ -386,7 +400,11 @@
         "arrow3": "Fresh breeze 8-14 m/s",
         "arrow4": "Gale 14-21 m/s",
         "arrow5": "Storm 21-32 m/s",
-        "arrow6": "Hurricane 32-> m/s"
+        "arrow6": "Hurricane 32-> m/s",
+        "layerInfo" : {
+          "short": "The layer shows wind direction and strength on a 1-hour time step from the next hour onward for 24 hours.",
+          "long": "The layer shows wind direction and strength on a 3-hour time step from the next hour onward for three days."
+        }
       },
       "temperature": {
         "title": "Temperature",
@@ -394,7 +412,11 @@
         "temperatureMinus30": "-30°C",
         "temperatureMinus20": "-10°C",
         "temperature0": "0°C",
-        "temperature20": "20°C"
+        "temperature20": "20°C",
+        "layerInfo" : {
+          "short": "The layer displays temperature on a 1-hour time step from the next hour onward for 24 hours.",
+          "long": "The layer displays temperature on a 3-hour time step from the next hour onward for three days."
+        }
       },
       "timeseriesLayerInfo": "The weather forecast on the map shows the weather symbol and temperature for numerous locations around the world. Tap the symbol to display more weather information."
     }
