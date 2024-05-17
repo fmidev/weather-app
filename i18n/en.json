@@ -380,16 +380,14 @@
       "lightnings15": {
         "title": "Lightnings",
         "description": "Lightning layer shows observed lightning strikes in the area. Visualization is based on lightning age.",
-        "age1": "0-5 minutes old lightning",
-        "age2": "5-10 minutes old lightning",
-        "age3": "10-15 minutes old lightning"
+        "age1": "0-15 minutes old lightning",
+        "age2": "15-30 minutes old lightning"
       },
       "lightnings60": {
         "title": "Lightnings",
         "description": "Lightning layer shows observed lightning strikes in the area. Visualization is based on lightning age.",
-        "age1": "0-20 minutes old lightning",
-        "age2": "20-40 minutes old lightning",
-        "age3": "40-60 minutes old lightning"
+        "age1": "0-15 minutes old lightning",
+        "age2": "15-75 minutes old lightning"
       },
       "windArrows": {
         "title": "Wind arrows",

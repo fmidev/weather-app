@@ -380,16 +380,14 @@
       "lightnings15": {
         "title": "Salamat",
         "description": "Salamakartta näyttää havaitut salamat alueella. Visualisointi perustuu salaman ikään.",
-        "age1": "0-5 minuuttia vanha salama",
-        "age2": "5-10 minuuttia vanha salama",
-        "age3": "10-15 minuuttia vanha salama"
+        "age1": "0-15 minuuttia vanha salama",
+        "age2": "15-30 minuuttia vanha salama"
       },
       "lightnings60": {
         "title": "Salamat",
         "description": "Salamakartta näyttää havaitut salamat alueella. Visualisointi perustuu salaman ikään.",
-        "age1": "0-20 minuuttia vanha salama",
-        "age2": "20-40 minuuttia vanha salama",
-        "age3": "40-60 minuuttia vanha salama"
+        "age1": "0-15 minuuttia vanha salama",
+        "age2": "15-75 minuuttia vanha salama"
       },
       "windArrows": {
         "title": "Tuuli",

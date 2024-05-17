@@ -380,16 +380,14 @@
       "lightnings15": {
         "title": "Blixtar",
         "description": "Blixtlagret visar observerade blixtar i området. Visualiseringen är baserad på blixternas ålder.",
-        "age1": "0-5 minuter gammal blixt",
-        "age2": "5-10 minuter gammal blixt",
-        "age3": "10-15 minuter gammal blixt"
+        "age1": "0-15 minuter gammal blixt",
+        "age2": "15-30 minuter gammal blixt"
       },
       "lightnings60": {
         "title": "Blixtar",
         "description": "Blixtlagret visar observerade blixtar i området. Visualiseringen är baserad på blixternas ålder.",
-        "age1": "0-20 minuter gammal blixt",
-        "age2": "20-40 minuter gammal blixt",
-        "age3": "40-60 minuter gammal blixt"
+        "age1": "0-15 minuter gammal blixt",
+        "age2": "15-75 minuter gammal blixt"
       },
       "windArrows": {
         "title": "Vindpilar",
