@@ -40,13 +40,13 @@ jobs:
     strategy:
       # Node version matrix
       matrix:
-        node-version: [16.13.0]
+        node-version: [20.11.1]
     # Steps
     steps:
-     - uses: actions/checkout@v3
+     - uses: actions/checkout@v4
      - name: Use Node.js ${{ matrix.node-version }}
        # Setup node
-       uses: actions/setup-node@v3
+       uses: actions/setup-node@v4
        with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -81,13 +81,13 @@ jobs:
     # Node version matrix
     strategy:
         matrix:
-          node-version: [16.13.0]
+          node-version: [20.11.1]
     # Steps
     steps:
       - name: Checkout to git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # Setup Node
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -108,7 +108,7 @@ jobs:
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.6'
+          ruby-version: '3.3.0'
 
       # Update bundler
       - name: Update bundler
@@ -139,6 +139,7 @@ jobs:
         run: |
           git config user.email "actions@users.noreply.github.com"
           git config user.name "actions"
+          bundle update fastlane
           bundle exec fastlane android increment_android_version should_commit:true should_push:true
         working-directory: android
 
@@ -160,7 +161,7 @@ jobs:
 
       # Upload artifact
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifact.aab
           path: |
@@ -176,13 +177,13 @@ jobs:
    # Node version matrix
    strategy:
         matrix:
-          node-version: [16.13.0]
+          node-version: [20.11.1]
    # Steps
    steps:
       - name: Checkout to git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
        # Setup Node
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -200,7 +201,7 @@ jobs:
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.6'
+          ruby-version: '3.3.0'
 
       # Update bundler
       - name: Update bundler
@@ -257,7 +258,7 @@ jobs:
         working-directory: ios
 
       - name: Upload app-store ipa and dsyms to artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
          name: app-store ipa & dsyms
          path: |

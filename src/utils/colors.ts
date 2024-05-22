@@ -76,13 +76,13 @@ export const RAIN_8_DARK = '#760000';
 */
 
 export const RAIN_1 = '#ABF4F4';
-export const RAIN_2 = '#86DCFF';
-export const RAIN_3 = '#5BAFC7';
-export const RAIN_4 = '#4388A5';
-export const RAIN_5 = '#245388';
-export const RAIN_6 = '#3C2181';
-export const RAIN_7 = '#6940AC';
-export const RAIN_8 = '#BD41EB';
+export const RAIN_2 = '#3FA9D1';
+export const RAIN_3 = '#0765B5';
+export const RAIN_4 = '#0539AE';
+export const RAIN_5 = '#0C03B2';
+export const RAIN_6 = '#4B04ED';
+export const RAIN_7 = '#983EE5';
+export const RAIN_8 = '#E05FF7';
 
 export const CHART_BLUE = '#7594EB';
 

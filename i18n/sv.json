@@ -363,19 +363,31 @@
       "precipitation": {
         "title": "Nederbörd",
         "rainRadarInfo": "Intensiteten av observerad och förutsagd nederbörd uttrycks i färger.",
-        "precipitationObs": "Observerad nederbörd på kartan har mätts med en väderadar.",
-        "precipitationFcst": "Nederbördsprognos är en korttidsprognos för regn baserat på radarbilder och väderprognosmodeller.",
-        "precipitationFinAndScandinavia": "Lager med 15 minuters tidssteg täcker Finland och lager med en timmes tidssteg täcker Skandinavien.",
         "light": "lätt",
         "moderate": "måttlig",
-        "strong": "kraftig"
+        "strong": "kraftig",
+        "precipitationFin": {
+          "description": "Finländsk radar-kombination med 15 minuters tidssteg.",
+          "observation": "Den regnobservation som presenteras på kartan har mätts med väderadar i Finland.",
+          "forecast": "Det förutspådda regnet är en korttidsprognos för nederbörd, baserad på radarbilder och väderprognosmodeller."
+        },
+        "precipitationScan": {
+          "description": "Skandinavisk radar-kombination med 1 timmes tidssteg.",
+          "observation": "Den regnobservation som presenteras på kartan har mätts med väderadar i Skandinavien.",
+          "forecast": "Det förutspådda regnet är en korttidsprognos för nederbörd, baserad på väderprognosmodeller."
+        }
       },
-      "lightnings": {
+      "lightnings15": {
         "title": "Blixtar",
         "description": "Blixtlagret visar observerade blixtar i området. Visualiseringen är baserad på blixternas ålder.",
-        "age1": "0-5 minuter gammal blixt",
-        "age2": "5-10 minuter gammal blixt",
-        "age3": "10-15 minuter gammal blixt"
+        "age1": "0-15 minuter gammal blixt",
+        "age2": "15-30 minuter gammal blixt"
+      },
+      "lightnings60": {
+        "title": "Blixtar",
+        "description": "Blixtlagret visar observerade blixtar i området. Visualiseringen är baserad på blixternas ålder.",
+        "age1": "0-15 minuter gammal blixt",
+        "age2": "15-75 minuter gammal blixt"
       },
       "windArrows": {
         "title": "Vindpilar",
@@ -386,16 +398,23 @@
         "arrow3": "Frisisk vind 8-14 m/s",
         "arrow4": "Hård vind 14-21 m/s",
         "arrow5": "Storm 21-32 m/s",
-        "arrow6": "Orkan 32-> m/s"
+        "arrow6": "Orkan 32-> m/s",
+        "layerInfo" : {
+          "short": "Lagret visar vindriktning och styrka med 1 timmes tidssteg från nästa timme och 24 timmar framåt.",
+          "long": "Lagret visar vindriktning och styrka med 3 timmars tidssteg från nästa timme och tre dagar framåt."
+        }
       },
       "temperature": {
         "title": "Temperatur",
         "description": "Temperaturlagret betonar temperaturer runt noll grader där färger ändras i ett grads intervall. Annars är temperaturintervallet två grader.",
         "temperatureMinus30": "-30°C",
-        "temperatureMinus20": "-20°C",
+        "temperatureMinus20": "-10°C",
         "temperature0": "0°C",
-        "temperature5": "12°C",
-        "temperature20": "20°C"
+        "temperature20": "20°C",
+        "layerInfo" : {
+          "short": "Lagret visar temperatur med 1 timmes tidssteg från nästa timme och 24 timmar framåt.",
+          "long": "Lagret visar temperatur med 3 timmars tidssteg från nästa timme och tre dagar framåt."
+        }
       },
       "timeseriesLayerInfo": "Vädersymbolen och temperaturen på kartan visar väderprognosen på många orter runt om i världen. Genom att trycka på symbolen får man fram mer väderinformation."
     }
@@ -547,8 +566,7 @@
       "rain": "Nederbördsvarning",
       "trafficWeather": "Trafikvädret",
       "pedestrianSafety": "Gångväder",
-      "forestFireWeather": "Varning för skogsbrand",
-      "grassFireWeather": "Gräsbrandsfara",
+      "forestFireWeather": "Varning för terrängbrand",
       "hotWeather": "Varning för värmebölja",
       "coldWeather": "Varning för köld",
       "uvNote": "UV-meddelande",

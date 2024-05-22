@@ -79,7 +79,6 @@ import WarningsFloodingRed from '@assets/images/icons/warnings-flooding-red.svg'
 import WarningsForestFireWeatherOrange from '@assets/images/icons/warnings-forest-fire-weather-orange.svg';
 import WarningsForestFireWeatherRed from '@assets/images/icons/warnings-forest-fire-weather-red.svg';
 import WarningsForestFireWeatherYellow from '@assets/images/icons/warnings-forest-fire-weather-yellow.svg';
-import WarningsGrassFireWeather from '@assets/images/icons/warnings-grass-fire-weather.svg';
 import WarningsHotWeatherOrange from '@assets/images/icons/warnings-hot-weather-orange.svg';
 import WarningsHotWeatherRed from '@assets/images/icons/warnings-hot-weather-red.svg';
 import WarningsHotWeatherYellow from '@assets/images/icons/warnings-hot-weather-yellow.svg';
@@ -307,8 +306,6 @@ const Icon: React.FC<CustomIconProps> = ({ name, ...props }) => {
       return <WarningsForestFireWeatherRed {...(props as SvgProps)} />;
     case 'warnings-forest-fire-weather-yellow':
       return <WarningsForestFireWeatherYellow {...(props as SvgProps)} />;
-    case 'warnings-grass-fire-weather':
-      return <WarningsGrassFireWeather {...(props as SvgProps)} />;
     case 'warnings-hot-weather-orange':
     case 'warnings-cold-weather-orange':
       return <WarningsHotWeatherOrange {...(props as SvgProps)} />;
