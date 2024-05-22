@@ -55,6 +55,10 @@ const WarningsWebViewPanel: React.FC = () => {
     dark ? 'dark' : 'light'
   }" gray-scale-selector="true"></smartmet-alert-client>
       <script type="module" src="${webViewUrl}/index.js"></script>
+      <script>
+        const resizeObserver = new ResizeObserver(entries => window.ReactNativeWebView.postMessage(entries[0].target.clientHeight));
+        resizeObserver.observe(document.body);
+      </script>
     </body>
   </html>`;
 
