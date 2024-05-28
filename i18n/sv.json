@@ -603,8 +603,7 @@
     "accept": "Godkänn",
     "location": "Läge",
     "locationDescription": "Applikationen använder enhetens position för att lokalisera användaren. Positionen används endast för presentationssyfte.",
-    "acceptLocation": "Nästa",
-    "declineLocation": "Tillåt inte"
+    "showBuiltInLocationPermissionQuestion": "Nästa"
   },
   "onboarding": {
     "next": "Nästa",

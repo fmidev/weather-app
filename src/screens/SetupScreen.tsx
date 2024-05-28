@@ -49,7 +49,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
     title: string;
     description: string;
     primaryButtonText: string;
-    secondaryButtonText: string;
+    secondaryButtonText?: string;
     primaryButtonFirst?: boolean;
     onPrimaryButtonPress: () => void;
     onSecondaryButtonPress: () => void;
@@ -79,26 +79,32 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
       </Text>
       {!primaryButtonFirst ? (
         <>
-          <AccessibleTouchableOpacity
-            accessibilityRole="button"
-            onPress={onSecondaryButtonPress}
-            style={styles.marginBottom20}>
-            <View
-              style={[
-                styles.secondaryButton,
-                { borderBottomColor: colors.primary },
-              ]}>
-              <Text
-                style={[styles.textHighlight, { color: colors.primaryText }]}>
-                {secondaryButtonText}
-              </Text>
-            </View>
-          </AccessibleTouchableOpacity>
+          {secondaryButtonText && (
+            <AccessibleTouchableOpacity
+              accessibilityRole="button"
+              onPress={onSecondaryButtonPress}
+              style={styles.marginBottom20}>
+              <View
+                style={[
+                  styles.secondaryButton,
+                  { borderBottomColor: colors.primary },
+                ]}>
+                <Text
+                  style={[styles.textHighlight, { color: colors.primaryText }]}>
+                  {secondaryButtonText}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
+          )}
           <AccessibleTouchableOpacity
             onPress={onPrimaryButtonPress}
             accessibilityRole="button"
             disabled={primaryButtonDisabled}
-            style={styles.marginBottom40}>
+            style={
+              secondaryButtonText
+                ? styles.marginBottom40
+                : styles.marginBottom20
+            }>
             <View
               style={[
                 styles.button,
@@ -119,7 +125,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             onPress={onPrimaryButtonPress}
             accessibilityRole="button"
             disabled={primaryButtonDisabled}
-            style={styles.marginBottom20}>
+            style={
+              secondaryButtonText
+                ? styles.marginBottom20
+                : styles.marginBottom40
+            }>
             <View
               style={[
                 styles.button,
@@ -133,21 +143,23 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
               </View>
             </View>
           </AccessibleTouchableOpacity>
-          <AccessibleTouchableOpacity
-            accessibilityRole="button"
-            onPress={onSecondaryButtonPress}
-            style={styles.marginBottom40}>
-            <View
-              style={[
-                styles.secondaryButton,
-                { borderBottomColor: colors.primary },
-              ]}>
-              <Text
-                style={[styles.textHighlight, { color: colors.primaryText }]}>
-                {secondaryButtonText}
-              </Text>
-            </View>
-          </AccessibleTouchableOpacity>
+          {secondaryButtonText && (
+            <AccessibleTouchableOpacity
+              accessibilityRole="button"
+              onPress={onSecondaryButtonPress}
+              style={styles.marginBottom40}>
+              <View
+                style={[
+                  styles.secondaryButton,
+                  { borderBottomColor: colors.primary },
+                ]}>
+                <Text
+                  style={[styles.textHighlight, { color: colors.primaryText }]}>
+                  {secondaryButtonText}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
+          )}
         </>
       )}
     </View>
@@ -196,10 +208,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
           <PermissionComponent
             title={t('location')}
             description={t('locationDescription')}
-            primaryButtonText={t('acceptLocation')}
-            secondaryButtonText={t('declineLocation')}
+            primaryButtonText={t('showBuiltInLocationPermissionQuestion')}
             onPrimaryButtonPress={requestLocationPermissions}
-            onSecondaryButtonPress={setUpDone}
             primaryButtonDisabled={false}
             primaryButtonFirst
           />
