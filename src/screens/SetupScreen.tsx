@@ -52,7 +52,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
     secondaryButtonText?: string;
     primaryButtonFirst?: boolean;
     onPrimaryButtonPress: () => void;
-    onSecondaryButtonPress: () => void;
+    onSecondaryButtonPress?: () => void;
     primaryButtonDisabled: boolean;
   }> = ({
     title,
