@@ -603,8 +603,7 @@
     "accept": "Accept",
     "location": "Location",
     "locationDescription": "The app uses the device location to locate the user. The location is used only for visual display purposes. ",
-    "acceptLocation": "Next",
-    "declineLocation": "Do not allow"
+    "showBuiltInLocationPermissionQuestion": "Next"
   },
   "onboarding": {
     "next": "Next",
