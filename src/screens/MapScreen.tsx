@@ -135,9 +135,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const handleZoomIn = () => {
     mapRef.current.getCamera().then((cam: Camera) => {
-      if (Platform.OS === 'ios' && cam.altitude) {
+      if (Platform.OS === 'ios' && cam.altitude !== undefined) {
         mapRef.current.animateCamera({ altitude: cam.altitude - 50000 });
-      } else if (cam.zoom) {
+      } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
         mapRef.current.animateCamera({ zoom: cam.zoom + 1 });
       }
     });
@@ -145,9 +145,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const handleZoomOut = () => {
     mapRef.current.getCamera().then((cam: Camera) => {
-      if (Platform.OS === 'ios' && cam.altitude) {
+      if (Platform.OS === 'ios' && cam.altitude !== undefined) {
         mapRef.current.animateCamera({ altitude: cam.altitude + 50000 });
-      } else if (cam.zoom) {
+      } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
         mapRef.current.animateCamera({ zoom: cam.zoom - 1 });
       }
     });
