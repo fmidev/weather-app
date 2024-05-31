@@ -94,7 +94,6 @@ class DynamicConfig {
       });
       if (data) {
         this.config = DynamicConfig.mergeObject(this.config, data);
-        // console.log('isUpdating - AFTER MERGE', this.config);
       }
     } catch (error) {
       console.log(error);
