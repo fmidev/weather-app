@@ -21,8 +21,13 @@ class DynamicConfig {
 
   public setDefaultConfig(defaultConfig: ConfigType) {
     this.config = defaultConfig;
-    if (defaultConfig.dynamicConfig.enabled) {
-      this.setApiUrl(defaultConfig.dynamicConfig?.apiUrl);
+    if (defaultConfig.dynamicConfig?.enabled) {
+      let apiUrl = defaultConfig.dynamicConfig.apiUrl;
+      // add cache buster to the url
+      const cacheBuster = this.generateCachebuster();
+      apiUrl = `${apiUrl}?cacheBuster=${cacheBuster}`;
+
+      this.setApiUrl(apiUrl);
     }
   }
 
@@ -82,10 +87,6 @@ class DynamicConfig {
     }
 
     this.updating = true;
-
-    // create cachebuster to avoid caching - use interval setting and default to 5mins
-    const cacheBuster = this.generateCachebuster();
-    this.apiUrl = `${this.apiUrl}?cacheBuster=${cacheBuster}`;
 
     try {
       const { data } = await axiosClient({
