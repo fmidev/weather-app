@@ -100,7 +100,7 @@ class DynamicConfig {
     }
 
     // set updated time
-    setUpdated(Date.now());
+    this.setUpdated(Date.now());
 
     this.updating = false;
   }
