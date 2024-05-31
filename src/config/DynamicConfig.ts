@@ -21,8 +21,13 @@ class DynamicConfig {
 
   public setDefaultConfig(defaultConfig: ConfigType) {
     this.config = defaultConfig;
-    if (defaultConfig.dynamicConfig.enabled) {
-      this.setApiUrl(defaultConfig.dynamicConfig?.apiUrl);
+    if (defaultConfig.dynamicConfig?.enabled) {
+      let apiUrl = defaultConfig.dynamicConfig.apiUrl;
+      // add cache buster to the url
+      const cacheBuster = this.generateCachebuster();
+      apiUrl = `${apiUrl}?cacheBuster=${cacheBuster}`;
+
+      this.setApiUrl(apiUrl);
     }
   }
 
@@ -56,6 +61,26 @@ class DynamicConfig {
     return this.config;
   }
 
+  private generateCachebuster() {
+    let lastUpdated = this.updated;
+
+    // first load doesn't have updated time
+    if (lastUpdated === 0) {
+      lastUpdated = Date.now();
+    }
+
+    let interval = this.config?.dynamicConfig?.interval; // in minutes, mandatory value in config.
+    if (interval) {
+      // convert to milliseconds
+      interval = interval * 60000;
+    } else {
+      // should never come here, but just in case...
+      interval = 300000; // 5 mins
+    }
+
+    return lastUpdated + interval;
+  }
+
   public async update() {
     if (!this.apiUrl) {
       return;
@@ -74,6 +99,9 @@ class DynamicConfig {
     } catch (error) {
       console.log(error);
     }
+
+    // set updated time
+    this.setUpdated(Date.now());
 
     this.updating = false;
   }
