@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Platform } from 'react-native';
-import MapView, { Camera, MapEvent, Region } from 'react-native-maps';
+import MapView, { Camera, Region } from 'react-native-maps';
+import type { MapPressEvent } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
@@ -134,9 +135,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const handleZoomIn = () => {
     mapRef.current.getCamera().then((cam: Camera) => {
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === 'ios' && cam.altitude !== undefined) {
         mapRef.current.animateCamera({ altitude: cam.altitude - 50000 });
-      } else {
+      } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
         mapRef.current.animateCamera({ zoom: cam.zoom + 1 });
       }
     });
@@ -144,9 +145,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const handleZoomOut = () => {
     mapRef.current.getCamera().then((cam: Camera) => {
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === 'ios' && cam.altitude !== undefined) {
         mapRef.current.animateCamera({ altitude: cam.altitude + 50000 });
-      } else {
+      } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
         mapRef.current.animateCamera({ zoom: cam.zoom - 1 });
       }
     });
@@ -164,8 +165,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
       }
     }
   };
-
-  const onPress = (e: MapEvent<{}>) => {
+  const onPress = (e: MapPressEvent) => {
     if (e.nativeEvent.action !== 'marker-press') {
       updateSelectedCallout(undefined);
     }

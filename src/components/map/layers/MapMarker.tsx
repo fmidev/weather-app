@@ -18,6 +18,7 @@ const MapMarker: React.FC<MarkerProps> = ({ coordinates }) => {
       anchor={{ x: 0.56, y: 0.95 }}
       centerOffset={{ x: -1, y: -12 }}
       coordinate={coordinates}
+      tracksViewChanges={false}
       flat>
       <Icon
         name="map-marker"
