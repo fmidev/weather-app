@@ -56,12 +56,36 @@ class DynamicConfig {
     return this.config;
   }
 
+  private generateCachebuster() {
+    let lastUpdated = this.updated;
+
+    // first load doesn't have updated time
+    if (lastUpdated === 0) {
+      lastUpdated = Date.now();
+    }
+
+    let interval = this.config?.dynamicConfig?.interval; // in minutes, mandatory value in config.
+    if (interval) {
+      // convert to milliseconds
+      interval = interval * 60000;
+    } else {
+      // should never come here, but just in case...
+      interval = 300000; // 5 mins
+    }
+
+    return lastUpdated + interval;
+  }
+
   public async update() {
     if (!this.apiUrl) {
       return;
     }
 
     this.updating = true;
+
+    // create cachebuster to avoid caching - use interval setting and default to 5mins
+    const cacheBuster = this.generateCachebuster();
+    this.apiUrl = `${this.apiUrl}?cacheBuster=${cacheBuster}`;
 
     try {
       const { data } = await axiosClient({
@@ -70,10 +94,14 @@ class DynamicConfig {
       });
       if (data) {
         this.config = DynamicConfig.mergeObject(this.config, data);
+        // console.log('isUpdating - AFTER MERGE', this.config);
       }
     } catch (error) {
       console.log(error);
     }
+
+    // set updated time
+    setUpdated(Date.now());
 
     this.updating = false;
   }
