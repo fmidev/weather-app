@@ -84,6 +84,11 @@ export default (
           4
         )}`;
         location.area = '';
+      } else if (
+        location.id === state.current?.id &&
+        location.name === state.current?.name // App language may have changed
+      ) {
+        return state; // No change
       }
 
       return {
