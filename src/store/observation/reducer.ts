@@ -1,4 +1,5 @@
 import { PersistConfig } from '@store/types';
+import { haversineDistance } from '@utils/helpers';
 import {
   ObservationState,
   ObservationActionTypes,
@@ -8,6 +9,7 @@ import {
   SET_STATION_ID,
   ObservationDataRaw,
   ObservationData,
+  ObservationLocation,
   StationInfo,
   UPDATE_OBSERVATION_DISPLAY_FORMAT,
   UPDATE_OBSERVATION_CHART_PARAMETER,
@@ -26,26 +28,30 @@ const INITIAL_STATE: ObservationState = {
 };
 
 const formatData = (
-  rawData: ObservationDataRaw
+  rawData: ObservationDataRaw,
+  location: ObservationLocation
 ): { stations: StationInfo[]; data: ObservationData } => {
   const stations: StationInfo[] = [];
   const data: ObservationData = {};
+
+  if (!location.latlon) {
+    return { data, stations };
+  }
 
   Object.entries(rawData).forEach(([id, nameHolder]) => {
     Object.entries(nameHolder).forEach(([name, distanceHolder]) => {
       Object.entries(distanceHolder).forEach(
         ([stationType, stationTypeHolder]) => {
-          Object.entries(stationTypeHolder).forEach(
-            ([distance, dataHolder]) => {
-              stations.push({
-                id: Number(id),
-                name,
-                distance: Number(distance),
-                type: stationType,
-              });
-              data[Number(id)] = dataHolder.reverse();
-            }
-          );
+          Object.entries(stationTypeHolder).forEach(([latlon, dataHolder]) => {
+            const distance = haversineDistance(location.latlon!, latlon);
+            stations.push({
+              id: Number(id),
+              name,
+              distance: distance,
+              type: stationType,
+            });
+            data[Number(id)] = dataHolder.reverse();
+          });
         }
       );
     });
@@ -69,8 +75,14 @@ export default (
     }
 
     case FETCH_OBSERVATION_SUCCESS: {
-      const { data, stations } = formatData(action.payload.data[0]);
-      const { data: dailyData } = formatData(action.payload.data[1]);
+      const { data, stations } = formatData(
+        action.payload.data[0],
+        action.payload.location
+      );
+      const { data: dailyData } = formatData(
+        action.payload.data[1],
+        action.payload.location
+      );
       const newState = {
         ...state,
         data,

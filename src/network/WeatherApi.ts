@@ -103,16 +103,21 @@ export const getObservation = async (
     observationProducer as string
   );
 
+  const queryLocation = { ...location };
+  if (location.geoid) {
+    delete queryLocation.latlon;
+  }
+
   const hourlyParams = {
-    ...location,
+    ...queryLocation,
     numberofstations: numberOfStations,
     starttime: `-${timePeriod}h`,
     endtime: '0',
     param: [
-      'distance',
       'epochtime',
       'fmisid', // geoid??
       'stationname',
+      'latlon',
       'stationtype',
       ...(parameters || []),
     ].join(','),
@@ -120,7 +125,7 @@ export const getObservation = async (
     producer: observationProducer,
     precision: 'double',
     lang: language,
-    attributes: 'fmisid,stationname,stationtype,distance',
+    attributes: 'fmisid,stationname,stationtype,latlon',
     who: packageJSON.name,
   };
 
@@ -128,10 +133,10 @@ export const getObservation = async (
     ...hourlyParams,
     starttime: '-720h', // 30 days = 30 * 24h = 720h
     param: [
-      'distance',
       'epochtime',
       'fmisid',
       'stationname',
+      'latlon',
       'stationtype',
       ...(dailyParameters || []),
     ].join(','),
@@ -174,6 +179,23 @@ export const getCurrentPosition = async (
   const params = {
     ...locationQueryParams,
     latlon: `${latitude},${longitude}`,
+    lang: language,
+  };
+
+  const { data } = await axiosClient({ url: apiUrl, params });
+
+  return data;
+};
+
+export const getGeonameCoordinates = async (
+  geoid: number | string
+): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
+  const { apiUrl } = Config.get('weather');
+  const { language } = i18n;
+
+  const params = {
+    ...locationQueryParams,
+    geoid,
     lang: language,
   };
 

@@ -81,7 +81,7 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
 
   const tryUpdateObservation = useCallback(() => {
     const observationLocation = location.id
-      ? { geoid: location.id }
+      ? { geoid: location.id, latlon: `${location.lat},${location.lon}` }
       : { latlon: `${location.lat},${location.lon}` };
     fetchObservation(observationLocation, location.country);
     setErrorType(undefined);

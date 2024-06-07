@@ -14,7 +14,7 @@ import {
   TimeStepData,
 } from '@store/forecast/types';
 import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
-import { getCurrentPosition } from '@network/WeatherApi';
+import { getCurrentPosition, getGeonameCoordinates } from '@network/WeatherApi';
 import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
 import { CapWarning, Severity } from '@store/warnings/types';
@@ -26,34 +26,39 @@ const getPosition = (
   t: TFunction<string[] | string>
 ) =>
   Geolocation.getCurrentPosition(
-    (position) => {
+    async (position) => {
       const { latitude, longitude } = position.coords;
-      getCurrentPosition(latitude, longitude)
-        .then((json) => {
-          const geoid = Number(Object.keys(json)[0]);
-          const item = Object.values(json)[0][0];
-          const { name, localtz, iso2, country, region } = item;
 
-          AccessibilityInfo.announceForAccessibility(
-            geoid
-              ? `${t('navigation:locatedTo')} ${name}, ${region}`
-              : `${t('navigation:locatedTo')} ${name}`
-          );
+      try {
+        const json = await getCurrentPosition(latitude, longitude);
+        const geoid = Number(Object.keys(json)[0]);
+        const item = Object.values(json)[0][0];
+        const { name, localtz, iso2, country, region } = item;
 
-          callback(
-            {
-              lat: latitude,
-              lon: longitude,
-              name,
-              area: iso2 === 'FI' && country === region ? '' : region,
-              id: geoid,
-              timezone: localtz,
-              country: iso2,
-            },
-            true
-          );
-        })
-        .catch((e) => console.error(e));
+        const geonameJson = await getGeonameCoordinates(geoid);
+        const geoname = Object.values(geonameJson)[0][0];
+
+        AccessibilityInfo.announceForAccessibility(
+          geoid
+            ? `${t('navigation:locatedTo')} ${name}, ${region}`
+            : `${t('navigation:locatedTo')} ${name}`
+        );
+
+        callback(
+          {
+            lat: geoname.latitude,
+            lon: geoname.longitude,
+            name,
+            area: iso2 === 'FI' && country === region ? '' : region,
+            id: geoid,
+            timezone: localtz,
+            country: iso2,
+          },
+          true
+        );
+      } catch (error) {
+        console.log(error);
+      }
     },
     (error) => {
       console.log('GEOLOCATION NOT AVAILABLE', error);
@@ -430,4 +435,39 @@ export const getSeveritiesForDays = (
     dailySeverities.push(daySeverities);
   });
   return dailySeverities;
+};
+
+// Based on https://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript
+export const haversineDistance = (
+  latlon1: string,
+  latlon2: string,
+  decimals = 1,
+  isMiles = false
+): number => {
+  let [lat1, lon1] = latlon1.split(',').map(Number);
+  let [lat2, lon2] = latlon2.split(',').map(Number);
+
+  const toRadian = (angle: number) => (Math.PI / 180) * angle;
+  const distance = (a: number, b: number) => (Math.PI / 180) * (a - b);
+  const RADIUS_OF_EARTH_IN_KM = 6371;
+
+  const dLat = distance(lat1, lat2);
+  const dLon = distance(lon1, lon2);
+
+  lat1 = toRadian(lat1);
+  lat2 = toRadian(lat2);
+
+  // Haversine Formula
+  const a =
+    Math.pow(Math.sin(dLat / 2), 2) +
+    Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.asin(Math.sqrt(a));
+
+  let finalDistance = RADIUS_OF_EARTH_IN_KM * c;
+
+  if (isMiles) {
+    finalDistance /= 1.60934;
+  }
+  const formatted = parseFloat(finalDistance.toFixed(decimals));
+  return formatted;
 };
