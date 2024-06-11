@@ -3,9 +3,8 @@ import { Config } from '@config';
 import i18n from '@i18n';
 import axiosClient from '@utils/axiosClient';
 import packageJSON from '../../package.json';
-import axios, { type CancelTokenSource } from 'axios';
 
-let autocompleteSource: CancelTokenSource | undefined;
+let abortController: AbortController | undefined;
 
 const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
   const { keyword, apiUrl } = Config.get('location');
@@ -19,19 +18,21 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
   };
 
   // Cancel the previous request to avoid multiple queries running same time
-  if (autocompleteSource) {
-    autocompleteSource.cancel(
+  if (abortController) {
+    abortController.abort(
       `New autocomplete request is sent with pattern ${pattern}`
     );
   }
 
-  autocompleteSource = axios.CancelToken.source();
+  abortController = new AbortController();
 
-  const { data } = await axiosClient({
-    url: apiUrl,
-    params,
-    cancelToken: autocompleteSource.token,
-  });
+  const { data } = await axiosClient(
+    {
+      url: apiUrl,
+      params,
+    },
+    abortController
+  );
 
   return data;
 };

@@ -30,7 +30,6 @@ export const getForecast = async (
 
   const params = {
     ...location,
-    starttime: Math.floor(Date.now() / 60 / 1000) * 60,
     endtime: timePeriod,
     format: 'json',
     attributes: 'geoid',

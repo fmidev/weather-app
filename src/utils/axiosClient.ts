@@ -1,12 +1,19 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import Axios, { AxiosRequestConfig } from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
 
-const axiosClient = async (options: AxiosRequestConfig) => {
+const instance = Axios.create();
+const axios = setupCache(instance);
+
+const axiosClient = async (
+  options: AxiosRequestConfig,
+  abortController?: AbortController
+) => {
   const { timeout = 20000 } = options;
-  const source = axios.CancelToken.source();
+  const controller = abortController || new AbortController();
 
   const requestConfig = {
     ...options,
-    cancelToken: options.cancelToken || source.token,
+    signal: controller.signal,
   };
   delete requestConfig.timeout;
 
@@ -24,7 +31,7 @@ const axiosClient = async (options: AxiosRequestConfig) => {
     });
 
   timeoutId = setTimeout(
-    () => source.cancel(`Timeout of ${timeout}ms exceeded`),
+    () => controller.abort(`Timeout of ${timeout}ms exceeded`),
     timeout
   );
 
