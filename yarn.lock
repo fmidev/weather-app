@@ -2556,7 +2556,7 @@
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.8.tgz#30744afdb385e2945e22f3b033f897f76b1f12ca"
   integrity sha512-1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA==
 
-"@types/geojson@^7946.0.13":
+"@types/geojson@^7946.0.10":
   version "7946.0.14"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.14.tgz#319b63ad6df705ee2a65a73ef042c8271e696613"
   integrity sha512-WCfD5Ht3ZesJUsONdhvm84dmzWOiOzOAqOncN0++w0lBw1o8OuDNJF2McvvCef/yBqb/HYRahp1BYtODFQ8bRg==
@@ -7921,12 +7921,12 @@ react-native-linear-gradient@^2.5.6:
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
-react-native-maps@^1.15.4:
-  version "1.15.4"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.15.4.tgz#1691a80ffe7d96a9aff1315959de11302b155f0c"
-  integrity sha512-If6GCSvopxQ/80jjpi70d9Uvq6wcWCyPjh+8F3JPC5vq+vEMvAq7Phuine1tnZPKXmh6gEzdF2z+9857hGrsYg==
+react-native-maps@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.5.0.tgz#c2dd01fd089217839dac771da2714b69999bf4ff"
+  integrity sha512-tfU1AnyJk1Tj1pZKcplpARFc8zxaUkAMiPO8ThwiuVeXpNuRY3FZ3AHlZaKOOmqJ5Lyi3VXrBre2kRJY/jvQWw==
   dependencies:
-    "@types/geojson" "^7946.0.13"
+    "@types/geojson" "^7946.0.10"
 
 react-native-permissions@^4.1.4:
   version "4.1.4"
