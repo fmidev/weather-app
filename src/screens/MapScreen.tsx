@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Platform } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
-import type { MapPressEvent } from 'react-native-maps';
+import type { MapEvent } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
@@ -165,7 +165,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
       }
     }
   };
-  const onPress = (e: MapPressEvent) => {
+  const onPress = (e: MapEvent<{}>) => {
     if (e.nativeEvent.action !== 'marker-press') {
       updateSelectedCallout(undefined);
     }
