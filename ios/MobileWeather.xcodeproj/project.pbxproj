@@ -15,6 +15,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* MobileWeatherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MobileWeatherTests.m */; };
 		6239D0E9AC9B1F6DD858CDAD /* libPods-MobileWeather-MobileWeatherTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 901F37809B560A181896EE10 /* libPods-MobileWeather-MobileWeatherTests.a */; };
+		7E1C7131F6AD991179B8D76B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 35013B407054ED7A9F8250D5 /* PrivacyInfo.xcprivacy */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A41FA36F27FD733200B08157 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		A454032C25E66E860005997E /* SwiftEnabler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A454032B25E66E860005997E /* SwiftEnabler.swift */; };
@@ -26,6 +27,7 @@
 		A4C8322726C6896900FEC2EB /* icons in Resources */ = {isa = PBXBuildFile; fileRef = A4C8322626C6896900FEC2EB /* icons */; };
 		A4C8322926C6897A00FEC2EB /* symbols in Resources */ = {isa = PBXBuildFile; fileRef = A4C8322826C6897A00FEC2EB /* symbols */; };
 		A4CDDC8C280007F400D84935 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A4CDDC8E280007F400D84935 /* InfoPlist.strings */; };
+		AF2CB2F4800B89C89592A7FB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9629DD67B904687D291DE4B6 /* PrivacyInfo.xcprivacy */; };
 		BFD98EF8D9DDD60D677C76DE /* libPods-MobileWeather.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 974E3F089372FFCFD0AECBEB /* libPods-MobileWeather.a */; };
 /* End PBXBuildFile section */
 
@@ -60,9 +62,11 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* MobileWeather-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MobileWeather-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* MobileWeather-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MobileWeather-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		35013B407054ED7A9F8250D5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		56970789D0300BBFBA95D44A /* Pods-MobileWeather-MobileWeatherTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather-MobileWeatherTests.release.xcconfig"; path = "Target Support Files/Pods-MobileWeather-MobileWeatherTests/Pods-MobileWeather-MobileWeatherTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		901F37809B560A181896EE10 /* libPods-MobileWeather-MobileWeatherTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobileWeather-MobileWeatherTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9629DD67B904687D291DE4B6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = ../PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		974E3F089372FFCFD0AECBEB /* libPods-MobileWeather.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobileWeather.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		99DF258CBD865F8BD6216BB5 /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		A443E2B525DBFF4700B0BCF9 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
@@ -149,6 +153,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				A454032B25E66E860005997E /* SwiftEnabler.swift */,
 				A454032A25E66E860005997E /* MobileWeather-Bridging-Header.h */,
+				9629DD67B904687D291DE4B6 /* PrivacyInfo.xcprivacy */,
 			);
 			path = MobileWeather;
 			sourceTree = "<group>";
@@ -201,6 +206,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				45EDB0DE048A4368EB80D04A /* Pods */,
+				35013B407054ED7A9F8250D5 /* PrivacyInfo.xcprivacy */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -383,6 +389,7 @@
 				A45BF91E26B41657000BF75C /* Roboto-Light.ttf in Resources */,
 				A45BF91D26B41657000BF75C /* Roboto-Bold.ttf in Resources */,
 				A4CDDC8C280007F400D84935 /* InfoPlist.strings in Resources */,
+				AF2CB2F4800B89C89592A7FB /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,6 +398,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
+				7E1C7131F6AD991179B8D76B /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,6 +469,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MobileWeather-MobileWeatherTests/Pods-MobileWeather-MobileWeatherTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -477,10 +486,11 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/RCTI18nStrings.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
@@ -497,7 +507,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCTI18nStrings.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -511,6 +521,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MobileWeather/Pods-MobileWeather-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -527,10 +538,11 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/RCTI18nStrings.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
@@ -547,7 +559,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCTI18nStrings.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -932,8 +944,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CC = "";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -959,6 +972,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CXX = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
@@ -979,6 +993,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD = "";
+				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/lib/swift",
@@ -987,13 +1003,10 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 			};
 			name = Debug;
 		};
@@ -1001,8 +1014,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CC = "";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1028,6 +1042,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				CXX = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
@@ -1044,6 +1059,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				LD = "";
+				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SDKROOT)/usr/lib/swift",
@@ -1051,14 +1068,11 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
