@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
   windArrowIcon: {
     alignContent: 'center',
     marginRight: 10,
-    mindWidth: 30,
+    minWidth: 30,
   },
   temperatureContainer: {
     marginBottom: 5,
