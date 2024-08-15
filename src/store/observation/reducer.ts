@@ -43,7 +43,7 @@ const formatData = (
                 distance: Number(distance),
                 type: stationType,
               });
-              data[Number(id)] = dataHolder.reverse();
+              data[Number(id)] = [...dataHolder].reverse();
             }
           );
         }
