@@ -104,6 +104,13 @@ jobs:
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
 
+      # Set up Java 17
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # You can use 'adopt', 'zulu', or another distribution if needed
+
       # Install Ruby
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
