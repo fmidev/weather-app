@@ -43,6 +43,7 @@ const defaultConfig: ConfigType = {
           timeStep: 15,
           observation: 8,
         },
+        tileFormat: 'webp',
       },
     ],
   },

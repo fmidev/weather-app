@@ -271,7 +271,7 @@ const getWMSLayerUrlsAndBounds = async (
         bbox: '{minX},{minY},{maxX},{maxY}',
         width: '{width}',
         height: '{height}',
-        format: 'image/webp',
+        format: `image/${layer.tileFormat ?? 'png'}`,
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
         ...customParameters,
