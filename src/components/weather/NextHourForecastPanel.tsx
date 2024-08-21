@@ -15,6 +15,7 @@ import {
   selectNextHourForecast,
 } from '@store/forecast/selectors';
 import { selectTimeZone } from '@store/location/selector';
+import { selectUnits } from '@store/settings/selectors';
 import { weatherSymbolGetter } from '@assets/images';
 
 import { getFeelsLikeIconName, getWindDirection } from '@utils/helpers';
@@ -34,6 +35,7 @@ const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
   nextHourForecast: selectNextHourForecast(state),
   timezone: selectTimeZone(state),
+  units: selectUnits(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -47,6 +49,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   loading,
   nextHourForecast,
   timezone,
+  units,
 }) => {
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
@@ -67,9 +70,11 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     ({ parameters }) => parameters
   );
 
-  const temperatureUnit = Config.get('settings').units.temperature;
-  const windUnit = Config.get('settings').units.wind;
-  const precipitationUnit = Config.get('settings').units.precipitation;
+  const temperatureUnit =
+    units?.temperature.unitAbb ?? Config.get('settings').units.temperature;
+  const windUnit = units?.wind.unitAbb ?? Config.get('settings').units.wind;
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? Config.get('settings').units.precipitation;
 
   const currentTime = moment.unix(nextHourForecast.epochtime);
   const smartSymbol = weatherSymbolGetter(

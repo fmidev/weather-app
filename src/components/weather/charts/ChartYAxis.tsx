@@ -5,6 +5,7 @@ import { CustomTheme } from '@utils/colors';
 import { calculateTemperatureTickCount, chartYLabelText } from '@utils/chart';
 import { useTranslation } from 'react-i18next';
 import { ChartDomain, ChartMinMax, ChartType } from './types';
+import { UnitMap } from '@store/settings/types';
 
 type ChartYAxisProps = {
   chartType: ChartType;
@@ -16,6 +17,7 @@ type ChartYAxisProps = {
   chartMinMax?: ChartMinMax;
   observation: boolean;
   right?: boolean;
+  units?: UnitMap;
 };
 
 const ChartYAxis: React.FC<ChartYAxisProps> = ({
@@ -25,6 +27,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
   chartMinMax,
   observation,
   right,
+  units,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
@@ -37,7 +40,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
     return null;
   }
 
-  let labelText: any = chartYLabelText(chartType)[right ? 1 : 0];
+  let labelText: any = chartYLabelText(chartType, units)[right ? 1 : 0];
   labelText =
     labelText.indexOf(':') > 0
       ? t(labelText).toLocaleLowerCase().split(' ')
