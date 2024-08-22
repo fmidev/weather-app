@@ -20,6 +20,7 @@ import { Config } from '@config';
 import { CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from './colors';
 import { converter, toPrecision, UNITS } from './units';
+import { UnitMap } from '@store/settings/types';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -211,7 +212,7 @@ export const getObservationCellValue = (
   if (item[param] === null || item[param] === undefined) return '-';
   if (!minusParams.includes(param) && Number(item[param]) < 0) return '-';
   if (item[param] !== null && item[param] !== undefined) {
-    const dividedValue = Number(item[param]) / divideWith;
+    const dividedValue = converter(unit, Number(item[param]) / divideWith);
     const value = unitParameterObject
       ? convertValueToUnitPrecision(
           unitParameterObject.parameterName,
@@ -233,24 +234,25 @@ export const getObservationCellValue = (
 };
 
 export const getParameterUnit = (
-  param: keyof (ObsTimeStepData | ForTimeStepData)
+  param: keyof (ObsTimeStepData | ForTimeStepData),
+  units?: UnitMap
 ): string => {
   const { wind, temperature, precipitation, pressure } =
     Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
     case 'ri_10min':
-      return precipitation;
+      return units?.precipitation.unitAbb ?? precipitation;
     case 'humidity':
       return '%';
     case 'temperature':
     case 'dewPoint':
-      return `°${temperature}`;
+      return `°${units?.temperature.unitAbb ?? temperature}`;
     case 'windSpeedMS':
     case 'windGust':
-      return wind;
+      return units?.wind.unitAbb ?? wind;
     case 'pressure':
-      return pressure;
+      return units?.pressure.unitAbb ?? pressure;
     case 'visibility':
       return 'km';
     case 'snowDepth':

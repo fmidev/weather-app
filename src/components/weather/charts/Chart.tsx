@@ -19,7 +19,7 @@ import {
 } from '@utils/chart';
 
 import { Config } from '@config';
-import { converter } from '@utils/units';
+import { converter, resolveUnitParameterName } from '@utils/units';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
 import { selectUnits } from '@store/settings/selectors';
@@ -127,16 +127,22 @@ const Chart: React.FC<ChartProps> = ({
     () => chartSettings(chartType, observation),
     [chartType, observation]
   );
+
   const { chartValues, chartMinMax } = useMemo(() => {
     const minMax: ChartMinMax = [];
     const values: ChartValues = {};
 
     params.forEach((param) => {
-      const unit =
-        units && units[chartType]
-          ? units[chartType].unitAbb
-          : // @ts-ignore
-            defaultUnits[chartType];
+      const unitParameterName = resolveUnitParameterName(param.toString());
+      let unit: string | undefined;
+
+      if (unitParameterName) {
+        if (units && units[unitParameterName])
+          unit = units[unitParameterName].unitAbb;
+        else if (Object.keys(defaultUnits).includes(unitParameterName))
+          // @ts-ignore
+          unit = defaultUnits[unitParameterName].unitAbb;
+      }
 
       values[param] = (
         data?.map((step) => {
@@ -152,7 +158,7 @@ const Chart: React.FC<ChartProps> = ({
     });
 
     return { chartValues: values, chartMinMax: minMax };
-  }, [data, params, units, defaultUnits, chartType]);
+  }, [data, params, units, defaultUnits]);
 
   const tickValues = useMemo(
     () =>
@@ -175,18 +181,25 @@ const Chart: React.FC<ChartProps> = ({
     [chartType, chartMinMax, tickValues]
   );
 
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+
   const secondaryChartDomain = useMemo(
     () =>
       chartType === 'weather'
         ? {
             ...secondaryYDomainForWeatherChart(
-              data?.map((step) => step.precipitation1h || 0),
+              data?.map((step) =>
+                step.precipitation1h
+                  ? converter(precipitationUnit, step.precipitation1h)
+                  : 0
+              ),
               chartDomain
             ),
             ...chartXDomain(tickValues),
           }
         : undefined,
-    [chartType, data, chartDomain, tickValues]
+    [chartType, data, chartDomain, tickValues, precipitationUnit]
   );
 
   const onMomentumScrollEnd = ({ nativeEvent }: any) => {
@@ -267,7 +280,11 @@ const Chart: React.FC<ChartProps> = ({
           units={units}
         />
       </View>
-      <ChartLegend chartType={chartType} observation={observation} />
+      <ChartLegend
+        chartType={chartType}
+        observation={observation}
+        units={units}
+      />
     </View>
   );
 };

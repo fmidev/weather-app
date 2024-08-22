@@ -3,12 +3,21 @@ import { UnitType, UnitMap } from '@store/settings/types';
 
 export type Unit = {
   parameterName: string;
+  parameters: string[];
   unitTypes: UnitType[];
 };
 
 export const UNITS: Unit[] = [
   {
     parameterName: 'temperature',
+    parameters: [
+      'temperature',
+      'feelsLike',
+      'dewPoint',
+      'maximumTemperature',
+      'minimumTemperature',
+      'minimumGroundTemperature06',
+    ],
     unitTypes: [
       {
         unitId: 1,
@@ -26,6 +35,7 @@ export const UNITS: Unit[] = [
   },
   {
     parameterName: 'precipitation',
+    parameters: ['precipitation1h', 'rrday'],
     unitTypes: [
       {
         unitId: 1,
@@ -43,6 +53,7 @@ export const UNITS: Unit[] = [
   },
   {
     parameterName: 'wind',
+    parameters: ['windSpeedMS', 'hourlymaximumgust'],
     unitTypes: [
       {
         unitId: 1,
@@ -78,6 +89,7 @@ export const UNITS: Unit[] = [
   },
   {
     parameterName: 'pressure',
+    parameters: ['pressure'],
     unitTypes: [
       {
         unitId: 1,
@@ -216,4 +228,9 @@ export const getForecastParameterUnitTranslationKey = (unit: string) => {
     default:
       return '';
   }
+};
+
+export const resolveUnitParameterName = (param: string): string | undefined => {
+  const unit = UNITS.find((u) => u.parameters.includes(param));
+  return unit?.parameterName;
 };
