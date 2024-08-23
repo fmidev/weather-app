@@ -70,11 +70,12 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     ({ parameters }) => parameters
   );
 
+  const defaultUnits = Config.get('settings').units;
   const temperatureUnit =
-    units?.temperature.unitAbb ?? Config.get('settings').units.temperature;
-  const windUnit = units?.wind.unitAbb ?? Config.get('settings').units.wind;
+    units?.temperature.unitAbb ?? defaultUnits.temperature;
+  const windUnit = units?.wind.unitAbb ?? defaultUnits.wind;
   const precipitationUnit =
-    units?.precipitation.unitAbb ?? Config.get('settings').units.precipitation;
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
 
   const currentTime = moment.unix(nextHourForecast.epochtime);
   const smartSymbol = weatherSymbolGetter(

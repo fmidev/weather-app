@@ -42,7 +42,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
       units?.precipitation.unitAbb ?? defaultUnits.precipitation;
     yTickValues =
       precipitationUnit === 'in'
-        ? [0, 0.1, 0.2, 0.3, 0.4, 0.5]
+        ? [0, 0.05, 0.1, 0.15, 0.2, 0.25]
         : [0, 0.2, 0.4, 0.6, 0.8, 1];
   }
   if (chartType === 'visCloud') {
