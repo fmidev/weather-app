@@ -25,6 +25,7 @@ import { ChartType } from '../charts/types';
 import DailyObservationRow from './DailyObservationRow';
 import { selectUnits } from '@store/settings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
+import { State } from '@store/types';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),

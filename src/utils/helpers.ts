@@ -120,7 +120,7 @@ export const getGeolocation = async (
 
 export const getPrecipitationLevel = (
   amount: number,
-  unit: string
+  unit = 'mm'
 ): keyof Rain => {
   if (amount >= converter(unit, 0.1) && amount < converter(unit, 0.15))
     return 1;
