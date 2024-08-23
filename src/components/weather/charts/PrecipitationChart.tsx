@@ -5,18 +5,29 @@ import chartTheme from '@utils/chartTheme';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 import { ChartDataProps } from './types';
+import { Config } from '@config';
 
 const PrecipitationChart: React.FC<ChartDataProps> = ({
   chartValues,
   chartDomain,
   chartWidth,
+  units,
 }) => {
+  const defaultUnits = Config.get('settings').units;
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+
   const { colors } = useTheme() as CustomTheme;
   const { precipitation1h, pop } = chartValues;
+
   const tickValues = precipitation1h
     .flatMap(({ y }) => y)
     .filter((v): v is number => v !== undefined && v !== null);
-  const maxTick = Math.ceil((Math.max(...tickValues) + 1) / 5) * 5;
+  let maxTick =
+    precipitationUnit !== 'in'
+      ? Math.ceil((Math.max(...tickValues) + 1) / 5) * 5
+      : 0.25;
+  let popDivider = precipitationUnit === 'in' ? 400 : 100;
 
   return (
     <VictoryGroup theme={chartTheme} width={chartWidth}>
@@ -28,10 +39,13 @@ const PrecipitationChart: React.FC<ChartDataProps> = ({
           barWidth={6}
           style={{
             data: {
-              fill: ({ datum }) => colors.rain[getPrecipitationLevel(datum.y)],
+              fill: ({ datum }) =>
+                colors.rain[getPrecipitationLevel(datum.y, precipitationUnit)],
             },
           }}
-          y={(datum) => datum.y / maxTick}
+          y={(datum) => {
+            return precipitationUnit === 'in' ? datum.y : datum.y / maxTick;
+          }}
         />
       )}
       {pop && pop.length > 0 && (
@@ -43,7 +57,7 @@ const PrecipitationChart: React.FC<ChartDataProps> = ({
           }}
           /*
           // @ts-ignore */
-          y={(datum) => (datum.y !== null ? datum.y / 100 : null)}
+          y={(datum) => (datum.y !== null ? datum.y / popDivider : null)}
           interpolation="basis"
         />
       )}

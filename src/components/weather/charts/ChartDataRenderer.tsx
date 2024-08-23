@@ -5,8 +5,9 @@ import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@utils/colors';
 import { tickFormat } from '@utils/chart';
-import { ClockType } from '@store/settings/types';
+import { ClockType, UnitMap } from '@store/settings/types';
 import { ChartDataProps, ChartDomain, ChartType, ChartValues } from './types';
+import { Config } from '@config';
 
 type ChartDataRendererProps = {
   chartDimensions: { x: number; y: number };
@@ -18,6 +19,7 @@ type ChartDataRendererProps = {
   locale: string;
   clockType: ClockType;
   isDaily: boolean;
+  units?: UnitMap;
 };
 const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartDimensions,
@@ -29,12 +31,19 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   locale,
   clockType,
   isDaily,
+  units,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+  const defaultUnits = Config.get('settings').units;
 
   let yTickValues;
   if (chartType === 'precipitation') {
-    yTickValues = [0, 0.2, 0.4, 0.6, 0.8, 1];
+    const precipitationUnit =
+      units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+    yTickValues =
+      precipitationUnit === 'in'
+        ? [0, 0.1, 0.2, 0.3, 0.4, 0.5]
+        : [0, 0.2, 0.4, 0.6, 0.8, 1];
   }
   if (chartType === 'visCloud') {
     yTickValues = [0, 0.25, 0.5, 0.75, 1];
@@ -94,6 +103,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
           chartValues={chartValues}
           chartWidth={chartDimensions.x}
           chartDomain={chartDomain}
+          units={units}
         />
       )}
     </VictoryChart>

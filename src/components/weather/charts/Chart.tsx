@@ -175,10 +175,10 @@ const Chart: React.FC<ChartProps> = ({
 
   const chartDomain = useMemo(
     () => ({
-      ...chartYDomain(chartMinMax, chartType),
+      ...chartYDomain(chartMinMax, chartType, units),
       ...chartXDomain(tickValues),
     }),
-    [chartType, chartMinMax, tickValues]
+    [chartType, chartMinMax, tickValues, units]
   );
 
   const precipitationUnit =
@@ -268,6 +268,7 @@ const Chart: React.FC<ChartProps> = ({
             locale={i18n.language}
             clockType={clockType}
             isDaily={isDaily}
+            units={units}
           />
         </ScrollView>
         <ChartYAxis

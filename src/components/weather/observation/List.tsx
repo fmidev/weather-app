@@ -261,19 +261,24 @@ const List: React.FC<ListProps> = ({
         {activeParameters.map((param) => {
           if (param === 'minimumTemperature') return null;
           const parameterUnit = getParameterUnit(param, units);
+
+          let precision = [
+            'pressure',
+            'humidity',
+            'visibility',
+            'snow',
+            'totalCloudCover',
+          ].includes(param)
+            ? 0
+            : 1;
+
+          if (parameterUnit === 'in') precision = 2;
+
           let cellValue = getObservationCellValue(
             timeStep,
             param,
             parameterUnit,
-            [
-              'pressure',
-              'humidity',
-              'visibility',
-              'snow',
-              'totalCloudCover',
-            ].includes(param)
-              ? 0
-              : 1,
+            precision,
             ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0,
             undefined,
             decimalSeparator

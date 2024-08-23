@@ -127,8 +127,7 @@ const defaultUnitMapper = {
 };
 
 export const getDefaultUnits = (): UnitMap | undefined => {
-  //const unitNames = Config.UNITS && Config.UNITS.split(',');
-  const unitNames = ['temperature', 'precipitation', 'wind', 'pressure'];
+  const unitNames = UNITS.map((u) => u.parameterName);
   const defaultUnits =
     unitNames &&
     unitNames.reduce((res, name: string) => {
@@ -144,6 +143,7 @@ export const getDefaultUnits = (): UnitMap | undefined => {
       }
       return { ...res, [name]: unitType };
     }, {});
+
   return defaultUnits as UnitMap;
 };
 

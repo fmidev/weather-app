@@ -82,7 +82,7 @@ const SettingsScreen: React.FC<Props> = ({
     wind: useRef(),
     pressure: useRef(),
   } as { [key: string]: React.MutableRefObject<RBSheet> };
-  const { languages, themes } = Config.get('settings');
+  const { languages, themes, showUnitSettings } = Config.get('settings');
 
   useEffect(() => {
     const subscriber = AppState.addEventListener(
@@ -170,8 +170,6 @@ const SettingsScreen: React.FC<Props> = ({
   const unitTypesByKey = (key: string): UnitType[] | undefined =>
     UNITS.find((unit) => unit.parameterName === key)?.unitTypes;
 
-  console.log('units:', units);
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -227,6 +225,113 @@ const SettingsScreen: React.FC<Props> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
+
+        {showUnitSettings && units && (
+          <>
+            <View
+              style={[
+                styles.rowWrapper,
+                styles.withBorderBottom,
+                { borderBottomColor: colors.border },
+              ]}
+              testID="settings_units_header">
+              <View style={styles.row}>
+                <Text style={[styles.title, { color: colors.text }]}>
+                  {t('settings:units')}
+                </Text>
+              </View>
+            </View>
+            <View>
+              {Object.keys(units).map((key, i) => (
+                <View
+                  key={key}
+                  style={[
+                    styles.rowWrapper,
+                    i < Object.keys(units).length - 1
+                      ? {
+                          ...styles.withBorderBottom,
+                          borderBottomColor: colors.border,
+                        }
+                      : null,
+                  ]}>
+                  <AccessibleTouchableOpacity
+                    onPress={() => sheetRefs[key].current.open()}
+                    testID={`settings_set_${key}`}>
+                    <View style={styles.row}>
+                      <Text style={[styles.text, { color: colors.text }]}>
+                        {t(`settings:${key}`)}
+                      </Text>
+                      <Text
+                        style={[styles.text, { color: colors.text }]}
+                        testID={`${key}_unitAbb`}>
+                        {key === 'temperature' ? '°' : ''}
+                        {units[key].unitAbb}
+                      </Text>
+                    </View>
+                    {unitTypesByKey(key) && (
+                      <RBSheet
+                        ref={sheetRefs[key]}
+                        height={400}
+                        closeOnDragDown
+                        customStyles={{
+                          container: {
+                            ...styles.sheetContainer,
+                            backgroundColor: colors.background,
+                          },
+                          draggableIcon: styles.draggableIcon,
+                        }}>
+                        <View
+                          style={styles.sheetListContainer}
+                          testID="unit_sheet_container">
+                          <View
+                            style={styles.sheetTitle}
+                            testID={`${key}_unit_sheet_title`}>
+                            <Text
+                              style={[styles.title, { color: colors.text }]}>
+                              {t(`settings:${key}`)}
+                            </Text>
+                          </View>
+                          {unitTypesByKey(key)?.map((type) => (
+                            <View
+                              key={type.unitId}
+                              style={[
+                                styles.rowWrapper,
+                                styles.withBorderBottom,
+                                { borderBottomColor: colors.border },
+                              ]}>
+                              <AccessibleTouchableOpacity
+                                onPress={() => updateUnits(key, type)}
+                                testID={`settings_units_${key}_${type.unit}`}>
+                                <View style={styles.row}>
+                                  <Text
+                                    style={[
+                                      styles.text,
+                                      { color: colors.text },
+                                    ]}>
+                                    {key === 'temperature' ? '°' : ''}
+                                    {type.unitAbb}
+                                  </Text>
+                                  {units[key].unitId === type.unitId && (
+                                    <Icon
+                                      name="checkmark"
+                                      size={22}
+                                      style={{ color: colors.text }}
+                                    />
+                                  )}
+                                </View>
+                              </AccessibleTouchableOpacity>
+                            </View>
+                          ))}
+                        </View>
+                      </RBSheet>
+                    )}
+                  </AccessibleTouchableOpacity>
+                </View>
+              ))}
+            </View>
+          </>
+        )}
+
         {languages?.length > 1 && (
           <>
             <View
@@ -538,111 +643,6 @@ const SettingsScreen: React.FC<Props> = ({
             </AccessibleTouchableOpacity>
           </View>
         </View>
-        {units && (
-          <>
-            <View
-              style={[
-                styles.rowWrapper,
-                styles.withBorderBottom,
-                { borderBottomColor: colors.border },
-              ]}
-              testID="settings_units_header">
-              <View style={styles.row}>
-                <Text style={[styles.title, { color: colors.text }]}>
-                  {t('settings:units')}
-                </Text>
-              </View>
-            </View>
-            <View>
-              {Object.keys(units).map((key, i) => (
-                <View
-                  key={key}
-                  style={[
-                    styles.rowWrapper,
-                    i < Object.keys(units).length - 1
-                      ? {
-                          ...styles.withBorderBottom,
-                          borderBottomColor: colors.border,
-                        }
-                      : null,
-                  ]}>
-                  <AccessibleTouchableOpacity
-                    onPress={() => sheetRefs[key].current.open()}
-                    testID={`settings_set_${key}`}>
-                    <View style={styles.row}>
-                      <Text style={[styles.text, { color: colors.text }]}>
-                        {t(`settings:${key}`)}
-                      </Text>
-                      <Text
-                        style={[styles.text, { color: colors.text }]}
-                        testID={`${key}_unitAbb`}>
-                        {key === 'temperature' ? '°' : ''}
-                        {units[key].unitAbb}
-                      </Text>
-                    </View>
-                    {unitTypesByKey(key) && (
-                      <RBSheet
-                        ref={sheetRefs[key]}
-                        height={400}
-                        closeOnDragDown
-                        customStyles={{
-                          container: {
-                            ...styles.sheetContainer,
-                            backgroundColor: colors.background,
-                          },
-                          draggableIcon: styles.draggableIcon,
-                        }}>
-                        <View
-                          style={styles.sheetListContainer}
-                          testID="unit_sheet_container">
-                          <View
-                            style={styles.sheetTitle}
-                            testID={`${key}_unit_sheet_title`}>
-                            <Text
-                              style={[styles.title, { color: colors.text }]}>
-                              {t(`settings:${key}`)}
-                            </Text>
-                          </View>
-                          {unitTypesByKey(key)?.map((type) => (
-                            <View
-                              key={type.unitId}
-                              style={[
-                                styles.rowWrapper,
-                                styles.withBorderBottom,
-                                { borderBottomColor: colors.border },
-                              ]}>
-                              <AccessibleTouchableOpacity
-                                onPress={() => updateUnits(key, type)}
-                                testID={`settings_units_${key}_${type.unit}`}>
-                                <View style={styles.row}>
-                                  <Text
-                                    style={[
-                                      styles.text,
-                                      { color: colors.text },
-                                    ]}>
-                                    {key === 'temperature' ? '°' : ''}
-                                    {type.unitAbb}
-                                  </Text>
-                                  {units[key].unitId === type.unitId && (
-                                    <Icon
-                                      name="checkmark"
-                                      size={22}
-                                      style={{ color: colors.text }}
-                                    />
-                                  )}
-                                </View>
-                              </AccessibleTouchableOpacity>
-                            </View>
-                          ))}
-                        </View>
-                      </RBSheet>
-                    )}
-                  </AccessibleTouchableOpacity>
-                </View>
-              ))}
-            </View>
-          </>
-        )}
       </ScrollView>
     </View>
   );

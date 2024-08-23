@@ -118,15 +118,22 @@ export const getGeolocation = async (
   return {};
 };
 
-export const getPrecipitationLevel = (amount: number): keyof Rain => {
-  if (amount >= 0.1 && amount < 0.15) return 1;
-  if (amount >= 0.15 && amount < 0.3) return 2;
-  if (amount >= 0.3 && amount < 0.5) return 3;
-  if (amount >= 0.5 && amount < 1.0) return 4;
-  if (amount >= 1.0 && amount < 2.0) return 5;
-  if (amount >= 2.0 && amount < 5.0) return 6;
-  if (amount >= 5.0 && amount < 10.0) return 7;
-  if (amount >= 10.0) return 8;
+export const getPrecipitationLevel = (
+  amount: number,
+  unit: string
+): keyof Rain => {
+  if (amount >= converter(unit, 0.1) && amount < converter(unit, 0.15))
+    return 1;
+  if (amount >= converter(unit, 0.15) && amount < converter(unit, 0.3))
+    return 2;
+  if (amount >= converter(unit, 0.3) && amount < converter(unit, 0.5)) return 3;
+  if (amount >= converter(unit, 0.5) && amount < converter(unit, 1.0)) return 4;
+  if (amount >= converter(unit, 1.0) && amount < converter(unit, 2.0)) return 5;
+  if (amount >= converter(unit, 2.0) && amount < converter(unit, 5.0)) return 6;
+  if (amount >= converter(unit, 5.0) && amount < converter(unit, 10.0))
+    return 7;
+  if (amount >= converter(unit, 10.0)) return 8;
+
   return 0;
 };
 
@@ -212,7 +219,7 @@ export const getObservationCellValue = (
   if (item[param] === null || item[param] === undefined) return '-';
   if (!minusParams.includes(param) && Number(item[param]) < 0) return '-';
   if (item[param] !== null && item[param] !== undefined) {
-    const dividedValue = converter(unit, Number(item[param]) / divideWith);
+    const dividedValue = Number(item[param]) / divideWith;
     const value = unitParameterObject
       ? convertValueToUnitPrecision(
           unitParameterObject.parameterName,
@@ -220,7 +227,7 @@ export const getObservationCellValue = (
           Number(dividedValue),
           decimals
         )
-      : dividedValue;
+      : converter(unit, dividedValue);
     if (value === null) return '-';
 
     return `${(unitParameterObject

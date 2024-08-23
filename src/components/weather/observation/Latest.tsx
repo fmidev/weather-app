@@ -71,7 +71,7 @@ const Latest: React.FC<LatestProps> = ({
       decimals: 1,
     },
     precipitation1h: {
-      decimals: 1,
+      decimals: units?.precipitation.unitPrecision ?? 1,
       altParameter: 'ri_10min',
     },
     windSpeedMS: {
@@ -84,7 +84,7 @@ const Latest: React.FC<LatestProps> = ({
       decimals: 0,
     },
     pressure: {
-      decimals: 0,
+      decimals: units?.pressure.unitPrecision ?? 0,
     },
     humidity: {
       decimals: 0,

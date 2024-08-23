@@ -57,8 +57,6 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   const temperatureUnit =
     units?.temperature.unitAbb ?? defaultUnits.temperature;
 
-  console.log('temperatureUnit:', temperatureUnit, units);
-
   useEffect(() => {
     if (activeDayIndex >= 0 && dayData && dayData.length) {
       dayStripRef.current.scrollTo({

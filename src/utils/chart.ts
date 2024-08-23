@@ -14,10 +14,22 @@ export const chartXDomain = (tickValues: number[]): ChartDomain => ({
 
 export const chartYDomain = (
   minMax: ChartMinMax,
-  chartType: ChartType
+  chartType: ChartType,
+  units?: UnitMap
 ): ChartDomain => {
-  if (chartType === 'visCloud' || chartType === 'precipitation') {
+  const defaultUnits = Config.get('settings').units;
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+
+  if (
+    chartType === 'visCloud' ||
+    (chartType === 'precipitation' && precipitationUnit !== 'in')
+  ) {
     return { y: [0, 1] };
+  }
+
+  if (chartType === 'precipitation' && precipitationUnit === 'in') {
+    return { y: [0, 0.25] };
   }
 
   if (chartType === 'humidity') {

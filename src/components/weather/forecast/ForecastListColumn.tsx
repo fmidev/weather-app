@@ -264,8 +264,15 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             );
           }
 
+          const defaultUnits = Config.get('settings').units;
+          const precipitationUnit =
+            units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+          const precipitationPrecision =
+            units?.precipitation.unitPrecision ?? 1;
+          const windSpeedUnit = units?.wind.unitAbb ?? defaultUnits.wind;
+          const pressureUnit = units?.pressure.unitAbb ?? defaultUnits.pressure;
+
           if (param === constants.PRESSURE) {
-            const pressureUnit = Config.get('settings').units.pressure;
             const convertedPressure =
               data.pressure || data.pressure === 0
                 ? toPrecision(
@@ -305,18 +312,11 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               ? data[String(param)]
               : '-';
 
-          const precipitationUnit =
-            units?.precipitation.unitAbb ??
-            Config.get('settings').units.precipitation;
-          const windSpeedUnit =
-            units?.wind.unitAbb ?? Config.get('settings').units.wind;
-
           const precipitation1hValue =
             typeof toDisplay === 'number' &&
-            `${converter(precipitationUnit, toDisplay).toFixed(1)}`.replace(
-              '.',
-              decimalSeparator
-            );
+            `${converter(precipitationUnit, toDisplay).toFixed(
+              precipitationPrecision
+            )}`.replace('.', decimalSeparator);
 
           const windGustValue =
             typeof toDisplay === 'number' &&
