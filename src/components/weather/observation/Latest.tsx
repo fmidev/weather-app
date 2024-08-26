@@ -10,13 +10,14 @@ import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
 
 import { capitalize } from '@utils/chart';
 import { Config } from '@config';
-import { selectClockType } from '@store/settings/selectors';
+import { selectClockType, selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import InfoMessage from '../InfoMessage';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
+  units: selectUnits(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -28,7 +29,12 @@ type LatestProps = PropsFromRedux & {
   dailyData: TimeStepData[];
 };
 
-const Latest: React.FC<LatestProps> = ({ clockType, data, dailyData }) => {
+const Latest: React.FC<LatestProps> = ({
+  clockType,
+  data,
+  dailyData,
+  units,
+}) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
@@ -65,7 +71,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data, dailyData }) => {
       decimals: 1,
     },
     precipitation1h: {
-      decimals: 1,
+      decimals: units?.precipitation.unitPrecision ?? 1,
       altParameter: 'ri_10min',
     },
     windSpeedMS: {
@@ -78,7 +84,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data, dailyData }) => {
       decimals: 0,
     },
     pressure: {
-      decimals: 0,
+      decimals: units?.pressure.unitPrecision ?? 0,
     },
     humidity: {
       decimals: 0,
@@ -108,7 +114,7 @@ const Latest: React.FC<LatestProps> = ({ clockType, data, dailyData }) => {
           return null;
         }
 
-        const unit = getParameterUnit(parameter);
+        const unit = getParameterUnit(parameter, units);
         let value = getObservationCellValue(
           latestObservation,
           altParameter && parameters?.includes(altParameter)

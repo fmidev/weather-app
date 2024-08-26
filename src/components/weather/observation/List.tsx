@@ -23,8 +23,18 @@ import { ClockType } from '@store/settings/types';
 import { getForecastParameterUnitTranslationKey } from '@utils/units';
 import { ChartType } from '../charts/types';
 import DailyObservationRow from './DailyObservationRow';
+import { selectUnits } from '@store/settings/selectors';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '@store/types';
 
-type ListProps = {
+const mapStateToProps = (state: State) => ({
+  units: selectUnits(state),
+});
+
+const connector = connect(mapStateToProps, {});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type ListProps = PropsFromRedux & {
   clockType: ClockType;
   data: TimeStepData[];
   parameter: ChartType;
@@ -38,6 +48,7 @@ const List: React.FC<ListProps> = ({
   data,
   parameter,
   preferredDailyParameters,
+  units,
 }) => {
   const { t, i18n } = useTranslation('observation');
   const { colors } = useTheme() as CustomTheme;
@@ -124,7 +135,8 @@ const List: React.FC<ListProps> = ({
                 { color: colors.hourListText },
               ]}>
               {`${t(`measurements.maxAndMinTemperatures`)} ${getParameterUnit(
-                param
+                param,
+                units
               )}`}
             </Text>
           );
@@ -139,7 +151,7 @@ const List: React.FC<ListProps> = ({
               styles.bold,
               { color: colors.hourListText },
             ]}>
-            {`${t(`measurements.${param}`)} ${getParameterUnit(param)}`}
+            {`${t(`measurements.${param}`)} ${getParameterUnit(param, units)}`}
           </Text>
         );
       })}
@@ -151,7 +163,7 @@ const List: React.FC<ListProps> = ({
       const windSpeedObservationCellValue = getObservationCellValue(
         timeStep,
         'windSpeedMS',
-        getParameterUnit('windSpeedMS'),
+        getParameterUnit('windSpeedMS', units),
         undefined,
         undefined,
         false
@@ -160,7 +172,7 @@ const List: React.FC<ListProps> = ({
       const windGustObservationCellValue = getObservationCellValue(
         timeStep,
         'windGust',
-        getParameterUnit('windGust'),
+        getParameterUnit('windGust', units),
         undefined,
         undefined,
         false
@@ -236,7 +248,7 @@ const List: React.FC<ListProps> = ({
               accessibilityLabel={`${t(
                 'measurements.windGust'
               )} ${windGustObservationCellValue} ${t(
-                `paramUnits.${getParameterUnit('windGust')}`
+                `paramUnits.${getParameterUnit('windGust', units)}`
               )}`}>
               {windGustObservationCellValue}
             </Text>
@@ -249,20 +261,25 @@ const List: React.FC<ListProps> = ({
       <View style={styles.row}>
         {activeParameters.map((param) => {
           if (param === 'minimumTemperature') return null;
-          const parameterUnit = getParameterUnit(param);
+          const parameterUnit = getParameterUnit(param, units);
+
+          let precision = [
+            'pressure',
+            'humidity',
+            'visibility',
+            'snow',
+            'totalCloudCover',
+          ].includes(param)
+            ? 0
+            : 1;
+
+          if (parameterUnit === 'in') precision = 2;
+
           let cellValue = getObservationCellValue(
             timeStep,
             param,
             parameterUnit,
-            [
-              'pressure',
-              'humidity',
-              'visibility',
-              'snow',
-              'totalCloudCover',
-            ].includes(param)
-              ? 0
-              : 1,
+            precision,
             ['visibility', 'cloudHeight'].includes(param) ? 1000 : 0,
             undefined,
             decimalSeparator
@@ -509,4 +526,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default List;
+export default connector(List);

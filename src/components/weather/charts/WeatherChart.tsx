@@ -6,12 +6,18 @@ import chartTheme from '@utils/chartTheme';
 import { getPrecipitationLevel } from '@utils/helpers';
 import { ChartDataProps } from './types';
 import { secondaryYDomainForWeatherChart } from '@utils/chart';
+import { Config } from '@config';
 
 const WeatherChart: React.FC<ChartDataProps> = ({
   chartValues,
   chartDomain,
   chartWidth,
+  units,
 }) => {
+  const defaultUnits = Config.get('settings').units;
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+
   const { colors } = useTheme() as CustomTheme;
   const { temperature, feelsLike, dewPoint, precipitation1h } = chartValues;
 
@@ -35,7 +41,8 @@ const WeatherChart: React.FC<ChartDataProps> = ({
           barWidth={6}
           style={{
             data: {
-              fill: ({ datum }) => colors.rain[getPrecipitationLevel(datum.y)],
+              fill: ({ datum }) =>
+                colors.rain[getPrecipitationLevel(datum.y, precipitationUnit)],
             },
           }}
           y0={() =>

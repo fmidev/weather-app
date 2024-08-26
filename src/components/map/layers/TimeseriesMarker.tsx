@@ -17,9 +17,11 @@ import { selectSelectedCallout } from '@store/map/selectors';
 import { updateSelectedCallout as updateSelectedCalloutAction } from '@store/map/actions';
 
 import { Config } from '@config';
+import { selectUnits } from '@store/settings/selectors';
 
 const mapStateToProps = (state: State) => ({
   selectedCallout: selectSelectedCallout(state),
+  units: selectUnits(state),
 });
 
 const mapDispatchToProps = {
@@ -46,12 +48,15 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   windSpeedMS,
   selectedCallout,
   updateSelectedCallout,
+  units,
 }) => {
   const { t } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
 
-  const temperatureUnit = Config.get('settings').units.temperature;
-  const windUnit = Config.get('settings').units.wind;
+  const defaultUnits = Config.get('settings').units;
+  const temperatureUnit =
+    units?.temperature.unitAbb ?? defaultUnits.temperature;
+  const windUnit = units?.wind.unitAbb ?? defaultUnits.wind;
 
   const convertValue = (
     unit: string,

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { connect, ConnectedProps } from 'react-redux';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -11,8 +12,17 @@ import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';
 import PrecipitationStrip from './PrecipitationStrip';
+import { selectUnits } from '@store/settings/selectors';
+import { State } from '@store/types';
 
-type DaySelectorListProps = {
+const mapStateToProps = (state: State) => ({
+  units: selectUnits(state),
+});
+
+const connector = connect(mapStateToProps, {});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type DaySelectorListProps = PropsFromRedux & {
   activeDayIndex: number;
   setActiveDayIndex: (i: number) => void;
   dayData: {
@@ -32,6 +42,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   activeDayIndex,
   setActiveDayIndex,
   dayData,
+  units,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
@@ -42,7 +53,9 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     ({ parameters }) => parameters
   );
 
-  const { temperature: temperatureUnit } = Config.get('settings').units;
+  const defaultUnits = Config.get('settings').units;
+  const temperatureUnit =
+    units?.temperature.unitAbb ?? defaultUnits.temperature;
 
   useEffect(() => {
     if (activeDayIndex >= 0 && dayData && dayData.length) {
@@ -216,4 +229,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DaySelectorList;
+export default connector(DaySelectorList);

@@ -106,6 +106,7 @@ const defaultConfig: ConfigType = {
       wind: 'm/s',
       pressure: 'hPa',
     },
+    showUnitSettings: true,
     themes: {
       light: true,
       dark: true,

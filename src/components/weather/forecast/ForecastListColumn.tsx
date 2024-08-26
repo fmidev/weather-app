@@ -11,7 +11,6 @@ import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@utils/colors';
 import * as constants from '@store/forecast/constants';
-
 import { isOdd, getWindDirection } from '@utils/helpers';
 import { Config } from '@config';
 import {
@@ -19,18 +18,20 @@ import {
   getForecastParameterUnitTranslationKey,
   toPrecision,
 } from '@utils/units';
-import { ClockType } from '@store/settings/types';
+import { ClockType, UnitMap } from '@store/settings/types';
 
 type ForecastListColumnProps = {
   clockType: ClockType;
   data: TimeStepData;
   displayParams: [number, DisplayParameters][];
+  units?: UnitMap;
 };
 
 const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   clockType,
   data,
   displayParams,
+  units,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
@@ -93,7 +94,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             );
           }
           if (param === constants.WIND_SPEED_AND_DIRECTION) {
-            const windSpeedUnit = Config.get('settings').units.wind;
+            const windSpeedUnit =
+              units?.wind.unitAbb ?? Config.get('settings').units.wind;
             const convertedWindSpeed =
               data.windSpeedMS || data.windSpeedMS === 0
                 ? toPrecision(
@@ -153,7 +155,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             );
           }
           if (param === constants.TEMPERATURE) {
-            const temperatureUnit = Config.get('settings').units.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ??
+              Config.get('settings').units.temperature;
             const convertedTemperature =
               data.temperature || data.temperature === 0
                 ? toPrecision(
@@ -187,7 +191,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             );
           }
           if (param === constants.FEELS_LIKE) {
-            const temperatureUnit = Config.get('settings').units.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ??
+              Config.get('settings').units.temperature;
             const convertedFeelsLike =
               data.feelsLike || data.feelsLike === 0
                 ? toPrecision(
@@ -258,8 +264,15 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             );
           }
 
+          const defaultUnits = Config.get('settings').units;
+          const precipitationUnit =
+            units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+          const precipitationPrecision =
+            units?.precipitation.unitPrecision ?? 1;
+          const windSpeedUnit = units?.wind.unitAbb ?? defaultUnits.wind;
+          const pressureUnit = units?.pressure.unitAbb ?? defaultUnits.pressure;
+
           if (param === constants.PRESSURE) {
-            const pressureUnit = Config.get('settings').units.pressure;
             const convertedPressure =
               data.pressure || data.pressure === 0
                 ? toPrecision(
@@ -299,15 +312,11 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               ? data[String(param)]
               : '-';
 
-          const precipitationUnit = Config.get('settings').units.precipitation;
-          const windSpeedUnit = Config.get('settings').units.wind;
-
           const precipitation1hValue =
             typeof toDisplay === 'number' &&
-            `${converter(precipitationUnit, toDisplay).toFixed(1)}`.replace(
-              '.',
-              decimalSeparator
-            );
+            `${converter(precipitationUnit, toDisplay).toFixed(
+              precipitationPrecision
+            )}`.replace('.', decimalSeparator);
 
           const windGustValue =
             typeof toDisplay === 'number' &&

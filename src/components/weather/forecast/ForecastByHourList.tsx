@@ -17,6 +17,7 @@ import Icon from '@components/common/Icon';
 import { State } from '@store/types';
 import { TimeStepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
+import { selectUnits } from '@store/settings/selectors';
 import {
   BLACK_OPACITY,
   WHITE_TRANSPARENT,
@@ -34,6 +35,7 @@ import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
   displayParams: selectDisplayParams(state),
+  units: selectUnits(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -56,6 +58,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   currentDayOffset,
   displayParams,
   clockType,
+  units,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
@@ -383,7 +386,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   return (
     <View style={[!isOpen && styles.displayNone]}>
       <View style={styles.row}>
-        <ForecastListHeaderColumn displayParams={displayParams} />
+        <ForecastListHeaderColumn displayParams={displayParams} units={units} />
         <View style={styles.listContainer}>
           <VirtualizedList
             ref={virtualizedList}
@@ -399,6 +402,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 clockType={clockType}
                 data={item}
                 displayParams={displayParams}
+                units={units}
               />
             )}
             horizontal

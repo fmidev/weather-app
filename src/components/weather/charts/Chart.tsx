@@ -19,9 +19,10 @@ import {
 } from '@utils/chart';
 
 import { Config } from '@config';
-import { converter } from '@utils/units';
+import { converter, resolveUnitParameterName } from '@utils/units';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
+import { selectUnits } from '@store/settings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import { ChartData, ChartType, ChartValues, ChartMinMax } from './types';
 import ChartLegend from './Legend';
@@ -33,6 +34,7 @@ import { selectPreferredDailyParameters } from '@store/observation/selector';
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
   preferredDailyParameters: selectPreferredDailyParameters(state),
+  units: selectUnits(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -56,6 +58,7 @@ const Chart: React.FC<ChartProps> = ({
   setActiveDayIndex,
   currentDayOffset,
   preferredDailyParameters,
+  units,
 }) => {
   const isDaily =
     chartType === 'daily' || preferredDailyParameters.includes(chartType);
@@ -67,7 +70,7 @@ const Chart: React.FC<ChartProps> = ({
   const { t, i18n } = useTranslation('weather');
   moment.locale(i18n.language);
 
-  const units = useMemo(() => Config.get('settings').units, []);
+  const defaultUnits = useMemo(() => Config.get('settings').units, []);
   const { timePeriod } = Config.get('weather').observation;
 
   const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
@@ -130,11 +133,22 @@ const Chart: React.FC<ChartProps> = ({
     const values: ChartValues = {};
 
     params.forEach((param) => {
+      const unitParameterName = resolveUnitParameterName(param.toString());
+      let unit: string | undefined;
+
+      if (unitParameterName) {
+        if (units && units[unitParameterName])
+          unit = units[unitParameterName].unitAbb;
+        else if (Object.keys(defaultUnits).includes(unitParameterName))
+          // @ts-ignore
+          unit = defaultUnits[unitParameterName].unitAbb;
+      }
+
       values[param] = (
         data?.map((step) => {
           const x = step.epochtime * 1000;
           // @ts-ignore
-          const y = converter(units[chartType], step[param]);
+          const y = converter(unit, step[param]);
           if (param !== 'windDirection' && param !== 'pop') {
             minMax.push(y);
           }
@@ -144,7 +158,7 @@ const Chart: React.FC<ChartProps> = ({
     });
 
     return { chartValues: values, chartMinMax: minMax };
-  }, [data, params, units, chartType]);
+  }, [data, params, units, defaultUnits]);
 
   const tickValues = useMemo(
     () =>
@@ -161,24 +175,31 @@ const Chart: React.FC<ChartProps> = ({
 
   const chartDomain = useMemo(
     () => ({
-      ...chartYDomain(chartMinMax, chartType),
+      ...chartYDomain(chartMinMax, chartType, units),
       ...chartXDomain(tickValues),
     }),
-    [chartType, chartMinMax, tickValues]
+    [chartType, chartMinMax, tickValues, units]
   );
+
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
 
   const secondaryChartDomain = useMemo(
     () =>
       chartType === 'weather'
         ? {
             ...secondaryYDomainForWeatherChart(
-              data?.map((step) => step.precipitation1h || 0),
+              data?.map((step) =>
+                step.precipitation1h
+                  ? converter(precipitationUnit, step.precipitation1h)
+                  : 0
+              ),
               chartDomain
             ),
             ...chartXDomain(tickValues),
           }
         : undefined,
-    [chartType, data, chartDomain, tickValues]
+    [chartType, data, chartDomain, tickValues, precipitationUnit]
   );
 
   const onMomentumScrollEnd = ({ nativeEvent }: any) => {
@@ -228,6 +249,7 @@ const Chart: React.FC<ChartProps> = ({
           chartDomain={chartDomain}
           chartMinMax={chartMinMax}
           observation={observation ?? false}
+          units={units}
         />
         <ScrollView
           ref={scrollRef}
@@ -246,6 +268,7 @@ const Chart: React.FC<ChartProps> = ({
             locale={i18n.language}
             clockType={clockType}
             isDaily={isDaily}
+            units={units}
           />
         </ScrollView>
         <ChartYAxis
@@ -255,9 +278,14 @@ const Chart: React.FC<ChartProps> = ({
           chartMinMax={chartMinMax}
           observation={observation ?? false}
           right
+          units={units}
         />
       </View>
-      <ChartLegend chartType={chartType} observation={observation} />
+      <ChartLegend
+        chartType={chartType}
+        observation={observation}
+        units={units}
+      />
     </View>
   );
 };

@@ -20,6 +20,7 @@ import { Config } from '@config';
 import { CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from './colors';
 import { converter, toPrecision, UNITS } from './units';
+import { UnitMap } from '@store/settings/types';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -117,15 +118,22 @@ export const getGeolocation = async (
   return {};
 };
 
-export const getPrecipitationLevel = (amount: number): keyof Rain => {
-  if (amount >= 0.1 && amount < 0.15) return 1;
-  if (amount >= 0.15 && amount < 0.3) return 2;
-  if (amount >= 0.3 && amount < 0.5) return 3;
-  if (amount >= 0.5 && amount < 1.0) return 4;
-  if (amount >= 1.0 && amount < 2.0) return 5;
-  if (amount >= 2.0 && amount < 5.0) return 6;
-  if (amount >= 5.0 && amount < 10.0) return 7;
-  if (amount >= 10.0) return 8;
+export const getPrecipitationLevel = (
+  amount: number,
+  unit = 'mm'
+): keyof Rain => {
+  if (amount >= converter(unit, 0.1) && amount < converter(unit, 0.15))
+    return 1;
+  if (amount >= converter(unit, 0.15) && amount < converter(unit, 0.3))
+    return 2;
+  if (amount >= converter(unit, 0.3) && amount < converter(unit, 0.5)) return 3;
+  if (amount >= converter(unit, 0.5) && amount < converter(unit, 1.0)) return 4;
+  if (amount >= converter(unit, 1.0) && amount < converter(unit, 2.0)) return 5;
+  if (amount >= converter(unit, 2.0) && amount < converter(unit, 5.0)) return 6;
+  if (amount >= converter(unit, 5.0) && amount < converter(unit, 10.0))
+    return 7;
+  if (amount >= converter(unit, 10.0)) return 8;
+
   return 0;
 };
 
@@ -219,7 +227,7 @@ export const getObservationCellValue = (
           Number(dividedValue),
           decimals
         )
-      : dividedValue;
+      : converter(unit, dividedValue);
     if (value === null) return '-';
 
     return `${(unitParameterObject
@@ -233,24 +241,25 @@ export const getObservationCellValue = (
 };
 
 export const getParameterUnit = (
-  param: keyof (ObsTimeStepData | ForTimeStepData)
+  param: keyof (ObsTimeStepData | ForTimeStepData),
+  units?: UnitMap
 ): string => {
   const { wind, temperature, precipitation, pressure } =
     Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
     case 'ri_10min':
-      return precipitation;
+      return units?.precipitation.unitAbb ?? precipitation;
     case 'humidity':
       return '%';
     case 'temperature':
     case 'dewPoint':
-      return `°${temperature}`;
+      return `°${units?.temperature.unitAbb ?? temperature}`;
     case 'windSpeedMS':
     case 'windGust':
-      return wind;
+      return units?.wind.unitAbb ?? wind;
     case 'pressure':
-      return pressure;
+      return units?.pressure.unitAbb ?? pressure;
     case 'visibility':
       return 'km';
     case 'snowDepth':

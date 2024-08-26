@@ -5,7 +5,7 @@ import {
   ChartType,
 } from '@components/weather/charts/types';
 import { Config } from '@config';
-import { ClockType } from '@store/settings/types';
+import { ClockType, UnitMap } from '@store/settings/types';
 import moment from 'moment';
 
 export const chartXDomain = (tickValues: number[]): ChartDomain => ({
@@ -14,10 +14,22 @@ export const chartXDomain = (tickValues: number[]): ChartDomain => ({
 
 export const chartYDomain = (
   minMax: ChartMinMax,
-  chartType: ChartType
+  chartType: ChartType,
+  units?: UnitMap
 ): ChartDomain => {
-  if (chartType === 'visCloud' || chartType === 'precipitation') {
+  const defaultUnits = Config.get('settings').units;
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+
+  if (
+    chartType === 'visCloud' ||
+    (chartType === 'precipitation' && precipitationUnit !== 'in')
+  ) {
     return { y: [0, 1] };
+  }
+
+  if (chartType === 'precipitation' && precipitationUnit === 'in') {
+    return { y: [0, 0.25] };
   }
 
   if (chartType === 'humidity') {
@@ -169,21 +181,29 @@ export const getTickFormat =
   (locale: string, clockType: ClockType, daily?: boolean) => (tick: any) =>
     tickFormat(tick, locale, clockType, daily);
 
-export const chartYLabelText = (chartType: ChartType) => {
-  const { units } = Config.get('settings');
+export const chartYLabelText = (chartType: ChartType, units?: UnitMap) => {
+  const defaultUnits = Config.get('settings').units;
+
+  const temperatureUnit =
+    units?.temperature.unitAbb ?? defaultUnits.temperature;
+  const windUnit = units?.wind.unitAbb ?? defaultUnits.wind;
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+  const pressureUnit = units?.pressure.unitAbb ?? defaultUnits.pressure;
+
   switch (chartType) {
     case 'humidity':
       return ['%'];
     case 'temperature':
-      return [`°${units.temperature}`];
+      return [`°${temperatureUnit}`];
     case 'pressure':
-      return [units.pressure];
+      return [pressureUnit];
     case 'visCloud':
       return ['km', 'weather:charts:totalCloudCover'];
     case 'precipitation':
-      return [units.precipitation, '%'];
+      return [precipitationUnit, '%'];
     case 'wind':
-      return [units.wind];
+      return [windUnit];
     case 'uv':
       return ['UV'];
     case 'snowDepth':
@@ -192,7 +212,7 @@ export const chartYLabelText = (chartType: ChartType) => {
       return ['m'];
     case 'weather':
     case 'daily':
-      return [`°${units.temperature}`, units.precipitation];
+      return [`°${temperatureUnit}`, precipitationUnit];
     default:
       return [''];
   }
