@@ -34,6 +34,9 @@ const getCapWarnings = async () => {
   const { capViewSettings } = Config.get('warnings');
 
   const url = capViewSettings?.datasources[0]?.url;
+  console.log('==== CapWarningsApi.getCapWarnings ====');
+  console.log(url);
+  console.log('==== ================ ====');
   const { data: feedData } = await axiosClient({ url });
   const { feed } = parse(feedData, { ignoreAttributes: false });
   const entriesList = Array.isArray(feed.entry) ? feed.entry : [feed.entry];

@@ -128,6 +128,10 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   const tiles = [...urlMap.keys()];
 
+  console.log('=========== tiles ===========');
+  console.log(tiles);
+  console.log('=========== ===== ===========');
+
   const iosTiles = () => {
     const currentTileIndex = tiles.indexOf(current);
     return [

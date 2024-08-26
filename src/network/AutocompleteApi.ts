@@ -26,6 +26,10 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
 
   abortController = new AbortController();
 
+  console.log('==== AutoCompleteApi.getAutocomplete ====');
+  console.log(apiUrl, params);
+  console.log('==== ================ ====');
+
   const { data } = await axiosClient(
     {
       url: apiUrl,

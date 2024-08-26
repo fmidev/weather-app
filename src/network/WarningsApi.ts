@@ -20,7 +20,9 @@ const getWarnings = async ({
     lang: language,
     who: packageJSON.name,
   };
-
+  console.log('==== WarningsApi.getWarnings ====');
+  console.log(url, params);
+  console.log('==== ================ ====');
   const { data } = await axiosClient({ url, params });
 
   return data;

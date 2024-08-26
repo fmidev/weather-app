@@ -89,6 +89,10 @@ class DynamicConfig {
     this.updating = true;
 
     try {
+      console.log('==== DynamicConfig.update ====');
+      console.log(this.apiUrl);
+      console.log('==== ================ ====');
+
       const { data } = await axiosClient({
         url: this.apiUrl,
         timeout: this.timeout,

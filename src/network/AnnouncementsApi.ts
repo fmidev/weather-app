@@ -11,6 +11,10 @@ const getAnnouncements = async (): Promise<Announcement[]> => {
 
   const url = api[language];
 
+  console.log('==== AnnouncementsApi.getAnnouncements ====');
+  console.log(url);
+  console.log('==== ================ ====');
+
   const { data } = await axiosClient({ url });
 
   return data;

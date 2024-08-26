@@ -53,17 +53,20 @@ export const getForecast = async (
     ],
     ['geoid', 'epochtime'],
   ];
+  console.log('==== WeatherApi.getForecast ====');
+  const queries = dataSettings.map(({ parameters, producer }, index) => {
+    console.log(apiUrl, parameters);
 
-  const queries = dataSettings.map(({ parameters, producer }, index) =>
-    axiosClient({
+    return axiosClient({
       url: apiUrl,
       params: {
         ...params,
         producer: producer || 'default',
         param: [...metaParams[index === 0 ? 0 : 1], ...parameters].join(','),
       },
-    })
-  );
+    });
+  });
+  console.log('==== =========== ====');
 
   const promises = await Promise.all(queries);
   return promises.map(({ data }) => data);
@@ -135,6 +138,11 @@ export const getObservation = async (
       ...(dailyParameters || []),
     ].join(','),
   };
+  console.log('==== WeatherApi.getObservation ====');
+  console.log(apiUrl, hourlyParams);
+  if (dailyObservationsEnabled) {
+    console.log(apiUrl, dailyParams);
+  }
 
   const [observationData, dailyObservationData] = await Promise.all([
     axiosClient({ url: apiUrl, params: hourlyParams }),
@@ -142,7 +150,7 @@ export const getObservation = async (
       ? axiosClient({ url: apiUrl, params: dailyParams })
       : Promise.resolve({ data: {} }),
   ]);
-
+  console.log('==== ========== ====');
   return [observationData.data, dailyObservationData.data];
 };
 
@@ -176,6 +184,10 @@ export const getCurrentPosition = async (
     lang: language,
   };
 
+  console.log('==== WeatherApi.getCurrentPosition ====');
+  console.log(apiUrl, params);
+  console.log('==== ================ ====');
+
   const { data } = await axiosClient({ url: apiUrl, params });
 
   return data;
@@ -192,6 +204,10 @@ export const getLocationsLocales = async (
     geoid: geoids.join(','),
     lang: language,
   };
+
+  console.log('==== WeatherApi.getLocationsLocales ====');
+  console.log(apiUrl, params);
+  console.log('==== ================ ====');
 
   const { data } = await axiosClient({ url: apiUrl, params });
 

@@ -142,6 +142,9 @@ const getTimeseriesData = async (
   };
 
   const url = `${sources[layer.source]}/timeseries`;
+  console.log('==== utils/map.getTimeseriesData ====');
+  console.log(url, params);
+  console.log('==== ================ ====');
   const { data } = await axiosClient({ url, params });
 
   Object.assign(toReturn, {
@@ -191,6 +194,10 @@ const getWMSLayerUrlsAndBounds = async (
 
   await Promise.all(
     activeSources.map(async (src) => {
+      console.log('==== utils.map.getWMSLayerUrlsAndBounds ====');
+      console.log(sources[src], src);
+      console.log('==== ================ ====');
+
       const { data } = await axiosClient({
         url: `${sources[src]}/wms`,
         params: {
@@ -240,6 +247,10 @@ const getWMSLayerUrlsAndBounds = async (
     })
   );
 
+  console.log('================= wmsLayers =================');
+  console.log(wmsLayers);
+  console.log('==================');
+
   wmsLayers.forEach((layer) => {
     const toReturn = { type: 'WMS' } as MapOverlay;
 
@@ -278,6 +289,10 @@ const getWMSLayerUrlsAndBounds = async (
       });
 
       const overlayUrl = decodeURIComponent(`${url}/wms?${query.toString()}`);
+
+      console.log('================= overlayUrl =================');
+      console.log(overlayUrl);
+      console.log('==================');
 
       Object.assign(toReturn, {
         [layerSrc.type]: {
