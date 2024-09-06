@@ -9,16 +9,19 @@ import * as constants from '@store/forecast/constants';
 import { isOdd } from '@utils/helpers';
 import { DisplayParameters } from '@store/forecast/types';
 import { Config } from '@config';
+import { UnitMap } from '@store/settings/types';
 
 type ForecastListHeaderColumnProps = {
   displayParams: [number, DisplayParameters][];
+  units?: UnitMap;
 };
 
 const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   displayParams,
+  units,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { units } = Config.get('settings');
+  const defaultUnits = Config.get('settings').units;
 
   return (
     <View
@@ -49,7 +52,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 <Icon name="wind" color={colors.hourListText} />
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  {units.wind}
+                  {units?.wind.unitAbb ?? defaultUnits.wind}
                 </Text>
               </View>
             );
@@ -67,7 +70,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 <Icon name="gust" color={colors.hourListText} />
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  {units.wind}
+                  {units?.wind.unitAbb ?? defaultUnits.wind}
                 </Text>
               </View>
             );
@@ -85,7 +88,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 <Icon name="precipitation" color={colors.hourListText} />
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  {units.precipitation}
+                  {units?.precipitation.unitAbb ?? defaultUnits.precipitation}
                 </Text>
               </View>
             );
@@ -141,7 +144,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 ]}>
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  {units.pressure}
+                  {units?.pressure.unitAbb ?? defaultUnits.pressure}
                 </Text>
               </View>
             );

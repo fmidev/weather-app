@@ -1,6 +1,7 @@
 import React from 'react';
 import { TimeStepData as ForDataStep } from '@store/forecast/types';
 import { TimeStepData as ObsDataStep } from '@store/observation/types';
+import { UnitMap } from '@store/settings/types';
 
 export interface ChartValue {
   x: number;
@@ -52,4 +53,5 @@ export type ChartDataProps = {
   chartValues: ChartValues;
   chartDomain: ChartDomain;
   chartWidth: number;
+  units?: UnitMap;
 };

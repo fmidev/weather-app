@@ -10,20 +10,23 @@ import { Config } from '@config';
 import { ChartType } from './types';
 import { selectDailyObservationParametersWithData } from '@store/observation/selector';
 import { useSelector } from 'react-redux';
+import { UnitMap } from '@store/settings/types';
 
 type ChartLegendProps = {
   chartType: ChartType;
   observation: boolean | undefined;
+  units?: UnitMap;
 };
 
 const ChartLegend: React.FC<ChartLegendProps> = ({
   chartType,
   observation,
+  units,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
 
-  const { units } = Config.get('settings');
+  const defaultUnits = Config.get('settings').units;
 
   const obsParameters = Config.get('weather').observation.parameters;
   const forParameters = Config.get('weather').forecast.data.flatMap(
@@ -126,6 +129,13 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     />
   );
 
+  const temperatureUnit =
+    units?.temperature.unitAbb ?? defaultUnits.temperature;
+  const windUnit = units?.wind.unitAbb ?? defaultUnits.wind;
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+  const pressureUnit = units?.pressure.unitAbb ?? defaultUnits.pressure;
+
   return (
     <View style={styles.legendContainer}>
       {(chartType === 'temperature' || chartType === 'weather') && (
@@ -139,7 +149,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
                   {t('weather:charts:temperature').toLocaleLowerCase()} (°
-                  {units.temperature})
+                  {temperatureUnit})
                 </Text>
               </View>
             )}
@@ -149,7 +159,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
                   {t(`weather:charts:feelsLike`).toLocaleLowerCase()} (°
-                  {units.temperature})
+                  {temperatureUnit})
                 </Text>
               </View>
             )}
@@ -161,7 +171,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 <Text
                   style={[styles.legendText, { color: colors.hourListText }]}>
                   {t(`weather:charts:dewPoint`).toLocaleLowerCase()} (°
-                  {units.temperature})
+                  {temperatureUnit})
                 </Text>
               </View>
             )}
@@ -184,7 +194,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={colors.rain[3]} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationLight', {
-                unit: units.precipitation,
+                unit: precipitationUnit,
               }).toLocaleLowerCase()}
             </Text>
           </View>
@@ -194,7 +204,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={TRANSPARENT} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationModerate', {
-                unit: units.precipitation,
+                unit: precipitationUnit,
               }).toLocaleLowerCase()}
             </Text>
           </View>
@@ -204,7 +214,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <Bar color={colors.rain[8]} />
             <Text style={[styles.legendText, { color: colors.hourListText }]}>
               {t('weather:charts:precipitationHeavy', {
-                unit: units.precipitation,
+                unit: precipitationUnit,
               }).toLocaleLowerCase()}
             </Text>
           </View>
@@ -231,8 +241,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <View style={styles.legendRow}>
               <Line />
               <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t('weather:charts:windSpeed').toLocaleLowerCase()} (
-                {units.wind})
+                {t('weather:charts:windSpeed').toLocaleLowerCase()} ({windUnit})
               </Text>
             </View>
           )}
@@ -242,8 +251,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             <View style={styles.legendRow}>
               <DashLine />
               <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t('weather:charts:windGust').toLocaleLowerCase()} ({units.wind}
-                )
+                {t('weather:charts:windGust').toLocaleLowerCase()} ({windUnit})
               </Text>
             </View>
           )}
@@ -271,8 +279,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         <View style={styles.legendRow}>
           <Line />
           <Text style={[styles.legendText, { color: colors.hourListText }]}>
-            {t('weather:charts:pressure').toLocaleLowerCase()} ({units.pressure}
-            )
+            {t('weather:charts:pressure').toLocaleLowerCase()} ({pressureUnit})
           </Text>
         </View>
       )}

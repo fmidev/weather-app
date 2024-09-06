@@ -15,6 +15,7 @@ const INITIAL_STATE: SettingsState = {
 };
 
 export default (
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = INITIAL_STATE,
   action: SettingsActionTypes
 ): SettingsState => {
@@ -48,5 +49,5 @@ export default (
 
 export const settingsPersist: PersistConfig = {
   key: 'settings',
-  whitelist: ['theme', 'clockType'],
+  whitelist: ['theme', 'clockType', 'units'],
 };
