@@ -17,6 +17,7 @@ import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
+import { selectUnits } from '@store/settings/selectors';
 import {
   updateDisplayParams as updateDisplayParamsAction,
   restoreDefaultDisplayParams as restoreDefaultDisplayParamsAction,
@@ -41,6 +42,7 @@ import { DisplayParameters } from '@store/forecast/types';
 
 const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
+  units: selectUnits(state),
 });
 
 const mapDispatchToProps = {
@@ -61,6 +63,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   updateDisplayParams,
   restoreDefaultDisplayParams,
   onClose,
+  units,
 }) => {
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
@@ -82,21 +85,21 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
     regex.test(constant)
   ) as DisplayParameters[];
 
-  const { units } = Config.get('settings');
+  const defaultUnits = Config.get('settings').units;
 
   const getUnitForParameter = (parameter: DisplayParameters) => {
     switch (parameter) {
       case 'temperature':
       case 'feelsLike':
       case 'dewPoint':
-        return units.temperature;
+        return units?.temperature.unitAbb ?? defaultUnits.temperature;
       case 'windSpeedMSwindDirection':
       case 'hourlymaximumgust':
-        return units.wind;
+        return units?.wind.unitAbb ?? defaultUnits.wind;
       case 'precipitation1h':
-        return units.precipitation;
+        return units?.precipitation.unitAbb ?? defaultUnits.precipitation;
       case 'pressure':
-        return units.pressure;
+        return units?.pressure.unitAbb ?? defaultUnits.pressure;
       default:
         return null;
     }
@@ -145,7 +148,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               styles.withMarginRight,
               { color: colors.hourListText },
             ]}>
-            {units.pressure}
+            {getUnitForParameter(param)}
           </Text>
         )}
         {param === UV_CUMULATED && (
