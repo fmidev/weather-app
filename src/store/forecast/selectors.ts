@@ -84,7 +84,7 @@ export const selectHeaderLevelForecast = createSelector(
   selectForecastByDay,
   (forecastByDay) =>
     forecastByDay &&
-    Object.keys(forecastByDay).map((key: string, dayIndex: number) => {
+    Object.keys(forecastByDay).map((key: string) => {
       const dayArr = forecastByDay[key];
       const tempArray = dayArr.map((h) => h.temperature || 0);
       // get forecasted min and max temps for current day
@@ -97,7 +97,7 @@ export const selectHeaderLevelForecast = createSelector(
 
       const roundedTotalPrecipitation =
         Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
-      const index = getIndexForDaySmartSymbol(dayArr, dayIndex);
+      const index = getIndexForDaySmartSymbol(dayArr);
 
       const { smartSymbol } = dayArr[index];
       const timeStamp = dayArr[0].epochtime;
