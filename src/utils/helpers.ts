@@ -1,5 +1,5 @@
 import { Alert, AccessibilityInfo, Platform } from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 import {
   PERMISSIONS,
   checkMultiple,
@@ -83,6 +83,12 @@ export const getGeolocation = async (
   t: TFunction<string[] | string>,
   failSilently?: boolean
 ) => {
+  Geolocation.setRNConfiguration({
+    skipPermissionRequests: true, // Let react-native-permissions handle this
+    enableBackgroundLocationUpdates: false,
+    locationProvider: 'playServices',
+  });
+
   const permissions =
     Platform.OS === 'ios'
       ? [PERMISSIONS.IOS.LOCATION_WHEN_IN_USE]
