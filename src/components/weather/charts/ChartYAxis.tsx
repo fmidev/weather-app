@@ -19,6 +19,7 @@ type ChartYAxisProps = {
   observation: boolean;
   right?: boolean;
   units?: UnitMap;
+  secondaryParameterMissing?: boolean;
 };
 
 const ChartYAxis: React.FC<ChartYAxisProps> = ({
@@ -29,6 +30,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
   observation,
   right,
   units,
+  secondaryParameterMissing,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
@@ -40,7 +42,8 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
   if (
     right &&
     ((observation && !['visCloud', 'daily', 'weather'].includes(chartType)) ||
-      (!observation && chartType !== 'precipitation'))
+      (!observation && chartType !== 'precipitation') ||
+      secondaryParameterMissing)
   ) {
     return null;
   }

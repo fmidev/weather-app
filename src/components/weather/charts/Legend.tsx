@@ -16,12 +16,14 @@ type ChartLegendProps = {
   chartType: ChartType;
   observation: boolean | undefined;
   units?: UnitMap;
+  secondaryParameterMissing?: boolean;
 };
 
 const ChartLegend: React.FC<ChartLegendProps> = ({
   chartType,
   observation,
   units,
+  secondaryParameterMissing,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
@@ -218,19 +220,21 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               }).toLocaleLowerCase()}
             </Text>
           </View>
-          {!observation && forParameters.includes('pop') && (
-            <View style={styles.legendRow}>
-              <DotLine />
-              <Text
-                style={[
-                  styles.legendText,
-                  styles.paddingLeft,
-                  { color: colors.hourListText },
-                ]}>
-                {t(`weather:charts:pop`).toLocaleLowerCase()}
-              </Text>
-            </View>
-          )}
+          {!observation &&
+            forParameters.includes('pop') &&
+            !secondaryParameterMissing && (
+              <View style={styles.legendRow}>
+                <DotLine />
+                <Text
+                  style={[
+                    styles.legendText,
+                    styles.paddingLeft,
+                    { color: colors.hourListText },
+                  ]}>
+                  {t(`weather:charts:pop`).toLocaleLowerCase()}
+                </Text>
+              </View>
+            )}
         </>
       )}
       {chartType === 'wind' && (
