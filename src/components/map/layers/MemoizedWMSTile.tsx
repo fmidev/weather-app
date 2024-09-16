@@ -15,7 +15,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   <WMSTile
     key={urlTemplate}
     urlTemplate={urlTemplate}
-    tileSize={tileSize ?? 512}
+    tileSize={tileSize ?? 256}
     opacity={opacity ?? 0}
   />
 );

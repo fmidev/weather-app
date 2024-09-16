@@ -38,6 +38,15 @@ export type TimeseriesSource = {
 
 type Times = RequireAtLeastOne<BaseTimes, 'forecast' | 'observation'>;
 
+type PlatformSpecificNumber = {
+  ios: number;
+  android: number;
+  // To be able to use Platform.OS in TS, we need to add the following:
+  windows?: number;
+  macos?: number;
+  web?: number;
+};
+
 export interface MapLayer {
   id: number;
   type: 'WMS' | 'GeoJSON' | 'Timeseries';
@@ -54,7 +63,7 @@ export interface MapLayer {
   };
   sources: WMSSource[] | TimeseriesSource[];
   times: Times;
-  tileSize?: number;
+  tileSize?: number | PlatformSpecificNumber;
   tileFormat?: string;
 }
 

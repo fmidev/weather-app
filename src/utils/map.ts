@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import moment from 'moment';
 import { parse } from 'fast-xml-parser';
 
@@ -287,7 +288,10 @@ const getWMSLayerUrlsAndBounds = async (
           styles,
         },
         step: layer.times.timeStep,
-        tileSize: layer.tileSize,
+        tileSize:
+          typeof layer.tileSize === 'object'
+            ? layer.tileSize[Platform.OS]
+            : layer.tileSize,
       });
     });
 

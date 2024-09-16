@@ -44,6 +44,10 @@ const defaultConfig: ConfigType = {
           observation: 8,
         },
         tileFormat: 'webp',
+        tileSize: {
+          android: 256,
+          ios: 1024,
+        },
       },
     ],
   },
