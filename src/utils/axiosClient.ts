@@ -12,8 +12,12 @@ const axiosClient = async (
   const controller = abortController || new AbortController();
 
   const requestConfig = {
-    ...options,
     signal: controller.signal,
+    headers: { 'Cache-Control': 'public, max-age=60' },
+    cache: {
+      cacheTakeover: false,
+    },
+    ...options,
   };
   delete requestConfig.timeout;
 

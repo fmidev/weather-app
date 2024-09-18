@@ -99,15 +99,23 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
+  const [debouncedValue, setDebouncedValue] = React.useState('');
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedValue(value);
+    }, 250); // 250 ms delay
+    return () => clearTimeout(timeout);
+  }, [value]);
 
   useEffect(() => {
-    if (value) {
+    if (debouncedValue) {
       setLoading(true);
-      searchLocation(value);
+      searchLocation(debouncedValue);
     } else {
       resetSearch();
     }
-  }, [value, searchLocation, resetSearch, setLoading]);
+  }, [debouncedValue, searchLocation, resetSearch, setLoading]);
 
   const handleSelectLocation = (location: Location, update: boolean) => {
     const name =

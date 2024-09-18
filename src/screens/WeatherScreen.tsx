@@ -62,7 +62,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
     fetchForecast(forecastLocation, geoid ? [geoid] : []);
     setForecastUpdated(Date.now());
-  }, [fetchForecast, location, setForecastUpdated]);
+    // Using location.lat and location.lon instead of location saves some updates
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchForecast, location.lat, location.lon, setForecastUpdated]);
 
   const updateObservation = useCallback(() => {
     if (weatherConfig.observation.enabled) {
@@ -73,14 +75,21 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       fetchObservation(observationLocation, location.country);
       setObservationUpdated(Date.now());
     }
-  }, [fetchObservation, location, weatherConfig.observation.enabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    fetchObservation,
+    location.lat,
+    location.lon,
+    weatherConfig.observation.enabled,
+  ]);
 
   const updateWarnings = useCallback(() => {
     if (warningsConfig.enabled && warningsConfig.apiUrl[location.country]) {
       fetchWarnings(location);
       setWarningsUpdated(Date.now());
     }
-  }, [fetchWarnings, location, warningsConfig]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchWarnings, location.lat, location.lon, warningsConfig]);
 
   useEffect(() => {
     const now = Date.now();
