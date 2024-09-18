@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { GRAYISH_BLUE, CustomTheme } from '@utils/colors';
+import { BLACK, GRAYISH_BLUE, CustomTheme } from '@utils/colors';
 import { CapWarning } from '@store/warnings/types';
 import WarningBlock from './WarningBlock';
 
@@ -93,7 +93,7 @@ const TextList = ({
             styles.noActiveWarningsPanel,
             { backgroundColor: colors.background },
           ]}>
-          <Text>{t('noWarningsText')}</Text>
+          <Text style={styles.blackText}>{t('noWarningsText')}</Text>
         </View>
       )}
     </>
@@ -101,6 +101,9 @@ const TextList = ({
 };
 
 const styles = StyleSheet.create({
+  blackText: {
+    color: BLACK,
+  },
   capitalized: {
     textTransform: 'capitalize',
   },
