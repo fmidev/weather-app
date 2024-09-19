@@ -13,7 +13,6 @@ const axiosClient = async (
 
   const requestConfig = {
     signal: controller.signal,
-    headers: { 'Cache-Control': 'public, max-age=60' },
     cache: {
       cacheTakeover: false,
     },

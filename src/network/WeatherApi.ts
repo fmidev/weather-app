@@ -176,12 +176,9 @@ export const getCurrentPosition = async (
     lang: language,
   };
 
-  const oneWeek = 60 * 60 * 24 * 7;
-
   const { data } = await axiosClient({
     url: apiUrl,
     params,
-    headers: { 'Cache-Control': `public, max-age=${oneWeek}` },
   });
 
   return data;
