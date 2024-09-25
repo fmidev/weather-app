@@ -48,6 +48,7 @@ type ForecastByHourListProps = PropsFromRedux & {
   activeDayIndex: number;
   setActiveDayIndex: (i: number) => void;
   currentDayOffset: number;
+  currentHour: number;
 };
 
 const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
@@ -59,6 +60,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   displayParams,
   clockType,
   units,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  currentHour, // just for re-rendering every hour
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;

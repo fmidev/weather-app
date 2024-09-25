@@ -12,6 +12,9 @@ import constants, { DAY_LENGTH } from './constants';
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
 
+// To refresh forecast every hour
+const selectHour: Selector<State> = () => new Date().getHours();
+
 export const selectLoading = createSelector(
   selectForecastDomain,
   (forecast) => forecast.loading
@@ -27,24 +30,20 @@ const selectData = createSelector(
   (forecast) => forecast.data
 );
 
-const selectFetchTimestamp = createSelector(
-  selectForecastDomain,
-  (forecast) => forecast.fetchTimestamp
-);
-
 export const selectForecastAge = createSelector(
   selectForecastDomain,
   (forecast) => Date.now() - forecast.fetchSuccessTime
 );
 
 export const selectForecast = createSelector(
-  [selectData, selectGeoid, selectFetchTimestamp],
-  (items, geoid, timestamp) => {
+  [selectData, selectGeoid, selectHour],
+  (items, geoid) => {
+    const now = new Date();
     if (items) {
       const locationItems = items[!isNaN(geoid) ? geoid : 0];
       // filter out outdated items
       const filtered = locationItems?.filter(
-        (i) => i.epochtime * 1000 > timestamp
+        (i) => i.epochtime * 1000 > now.getTime()
       );
 
       return filtered || [];
@@ -59,7 +58,7 @@ export const selectNextHourForecast = createSelector(
 );
 
 export const selectForecastByDay = createSelector(
-  selectForecast,
+  [selectForecast],
   (forecast) =>
     forecast &&
     forecast.length > 0 &&

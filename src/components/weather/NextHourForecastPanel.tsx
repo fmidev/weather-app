@@ -42,7 +42,9 @@ const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type NextHourForecastPanelProps = PropsFromRedux;
+type NextHourForecastPanelProps = PropsFromRedux & {
+  currentHour: number;
+};
 
 const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   clockType,
@@ -50,6 +52,8 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   nextHourForecast,
   timezone,
   units,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  currentHour, // To force re-render when the hour changes
 }) => {
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;

@@ -7,7 +7,13 @@ import { Config } from '@config';
 import PanelHeader from '@components/weather/common/PanelHeader';
 import { CustomTheme } from '@utils/colors';
 
-const WarningsWebViewPanel: React.FC = () => {
+type WarningsWebViewPanelProps = {
+  updateInterval: number;
+};
+
+const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
+  updateInterval
+) => {
   const [viewHeight, setViewHeight] = useState<number>(2000);
   const { dark } = useTheme() as CustomTheme;
   const webViewRef = useRef(null);
@@ -36,7 +42,7 @@ const WarningsWebViewPanel: React.FC = () => {
       <smartmet-alert-client language="${locale}" theme="${
     dark ? 'dark' : 'light'
   }" gray-scale-selector="true"></smartmet-alert-client>
-      <script type="module" src="${webViewUrl}/index.js"></script>
+      <script type="module" src="${webViewUrl}/index.js" refresh-interval="${updateInterval}"></script>
       <script>
         const resizeObserver = new ResizeObserver(entries => window.ReactNativeWebView.postMessage(entries[0].target.clientHeight));
         resizeObserver.observe(document.body);

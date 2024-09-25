@@ -92,7 +92,9 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
         ) : (
           <>
             <WarningsPanel />
-            <WarningsWebViewPanel />
+            <WarningsWebViewPanel
+              updateInterval={(warningsConfig.updateInterval ?? 5) * 60 * 1000}
+            />
           </>
         )}
       </ScrollView>
