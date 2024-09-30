@@ -176,7 +176,10 @@ export const getCurrentPosition = async (
     lang: language,
   };
 
-  const { data } = await axiosClient({ url: apiUrl, params });
+  const { data } = await axiosClient({
+    url: apiUrl,
+    params,
+  });
 
   return data;
 };

@@ -28,7 +28,10 @@ const getPosition = (
 ) =>
   Geolocation.getCurrentPosition(
     (position) => {
-      const { latitude, longitude } = position.coords;
+      let { latitude, longitude } = position.coords;
+      latitude = roundCoordinates(latitude);
+      longitude = roundCoordinates(longitude);
+
       getCurrentPosition(latitude, longitude)
         .then((json) => {
           const geoid = Number(Object.keys(json)[0]);
@@ -432,4 +435,15 @@ export const getSeveritiesForDays = (
     dailySeverities.push(daySeverities);
   });
   return dailySeverities;
+};
+
+// Rounds coordinates to maximum 4 decimal places
+export const roundCoordinates = (value: number): number => {
+  const stringValue = value.toString();
+  const items = stringValue.split('.');
+
+  // Return original value if maximum 4 decimal places
+  if (items.length === 2 && items[1].length <= 4) return value;
+
+  return +(Math.round(parseFloat(value + 'e+4')) + 'e-4');
 };

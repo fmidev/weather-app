@@ -14,6 +14,7 @@ import {
   TimeseriesLocation,
   SET_LOADING,
 } from './types';
+import { roundCoordinates } from '@utils/helpers';
 
 const INITIAL_STATE: LocationState = {
   favorites: [],
@@ -80,8 +81,8 @@ export default (
       delete location.isGeolocation;
 
       if (isNaN(location.id)) {
-        location.name = `${location.lat.toFixed(4)}, ${location.lon.toFixed(
-          4
+        location.name = `${roundCoordinates(location.lat)}, ${roundCoordinates(
+          location.lon
         )}`;
         location.area = '';
       } else if (
@@ -93,7 +94,11 @@ export default (
 
       return {
         ...state,
-        current: location,
+        current: {
+          ...location,
+          lon: roundCoordinates(location.lon),
+          lat: roundCoordinates(location.lat),
+        },
         isGeolocation: action.isGeolocation || false,
       };
     }
