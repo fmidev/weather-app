@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AppState } from 'react-native';
 import { ReloaderContext } from '@utils/reloader';
 import { Config } from './DynamicConfig';
@@ -15,8 +15,10 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   defaultConfig,
   timeout,
 }) => {
+  const reloadInterval = 60000;
   const [updated, setUpdated] = useState<number>(0);
   const [shouldReload, setShouldReload] = useState<number>(0);
+  const reloadIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   Config.setDefaultConfig(defaultConfig);
   if (timeout) {
@@ -44,6 +46,15 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
         } else {
           setShouldReload(Date.now());
         }
+
+        reloadIntervalRef.current = setInterval(
+          () => setShouldReload(Date.now()),
+          reloadInterval
+        );
+      } else {
+        if (reloadIntervalRef.current) {
+          clearInterval(reloadIntervalRef.current);
+        }
       }
     };
     const appStateSubscriber = AppState.addEventListener(
@@ -57,6 +68,13 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   useEffect(() => {
     checkUpdates();
   }, [checkUpdates]);
+
+  useEffect(() => {
+    reloadIntervalRef.current = setInterval(
+      () => setShouldReload(Date.now()),
+      reloadInterval
+    );
+  }, []);
 
   return (
     <>

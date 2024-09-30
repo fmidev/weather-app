@@ -59,7 +59,9 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type ForecastPanelProps = PropsFromRedux;
+type ForecastPanelProps = PropsFromRedux & {
+  currentHour: number;
+};
 
 const ForecastPanel: React.FC<ForecastPanelProps> = ({
   clockType,
@@ -72,6 +74,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   timezone,
   displayFormat,
   updateDisplayFormat,
+  currentHour, // just for re-rendering every hour
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
@@ -268,6 +271,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             activeDayIndex={activeDayIndex}
             setActiveDayIndex={(i) => setActiveDayIndex(i)}
             currentDayOffset={sections[0].data.length}
+            currentHour={currentHour}
           />
         )}
         {sections &&

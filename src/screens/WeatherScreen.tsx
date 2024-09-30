@@ -132,6 +132,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     updateWarnings();
   }, [location, updateForecast, updateObservation, updateWarnings]);
 
+  const currentHour = new Date().getHours();
+
   return (
     <GradientWrapper>
       <View>
@@ -141,8 +143,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           showsVerticalScrollIndicator={false}
           stickyHeaderIndices={announcements && [0]}>
           <Announcements style={styles.announcements} />
-          <NextHourForecastPanel />
-          <ForecastPanel />
+          <NextHourForecastPanel currentHour={currentHour} />
+          <ForecastPanel currentHour={currentHour} />
           <ObservationPanel />
         </ScrollView>
       </View>
