@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import ReduxThunk from 'redux-thunk';
-
+import NetInfo from '@react-native-community/netinfo';
 import '@i18n';
 import { ConfigProvider } from '@config';
 import reducers from './src/store';
@@ -24,6 +24,10 @@ const App: React.FC = () => {
   );
 
   const persistor = persistStore(store);
+
+  NetInfo.configure({
+    reachabilityShouldRun: () => false,
+  });
 
   return (
     <Provider store={store}>
