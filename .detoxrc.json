@@ -1,6 +1,11 @@
 {
-  "testRunner": "jest",
-  "runnerConfig": "e2e/config.json",
+  "testRunner": {
+      "$0": "jest",
+      "args": {
+        "config": "e2e/jest.config.js",
+        "_": ["e2e"]
+      }
+  },
   "apps": {
     "ios": {
       "type": "ios.app",
@@ -17,7 +22,7 @@
     "simulator": {
       "type": "ios.simulator",
       "device": {
-        "type": "iPhone 11"
+        "type": "iPhone 15"
       }
     },
     "emulator": {
