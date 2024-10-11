@@ -43,7 +43,9 @@ const TermsAndConditionsScreen: React.FC = () => {
   const legalSv = 'https://www.finlex.fi/sv/laki/ajantasa/2019/20190306';
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      testID="accessibility_view"
+      style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.withPaddingBottom}

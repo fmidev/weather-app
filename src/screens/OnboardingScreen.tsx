@@ -178,6 +178,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         />
       </View>
       <AccessibleTouchableOpacity
+        testID="onboarding_skip_button"
         accessibilityRole="button"
         style={styles.skipButton}
         onPress={() => navigation.navigate('SetupScreen')}>

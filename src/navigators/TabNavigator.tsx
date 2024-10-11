@@ -23,6 +23,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { useTranslation } from 'react-i18next';
 import SplashScreen from 'react-native-splash-screen';
+import { LaunchArguments } from 'react-native-launch-arguments';
 
 import OthersScreen from '@screens/OthersScreen';
 import MapScreen from '@screens/MapScreen';
@@ -77,6 +78,7 @@ import {
   OthersStackParamList,
   MapStackParamList,
   WeatherStackParamList,
+  LaunchArgs,
 } from './types';
 import WarningsTabIcon from './WarningsTabIcon';
 
@@ -129,6 +131,8 @@ const Navigator: React.FC<Props> = ({
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
   const [warningsSeverity, setWarningsSeverity] = useState<number>(0);
+
+  const launchArgs = LaunchArguments.value<LaunchArgs>();
 
   const handleLanguageChanged = useCallback(() => {
     setDidChangeLanguage(true);
@@ -198,6 +202,7 @@ const Navigator: React.FC<Props> = ({
   );
 
   const CommonHeaderOptions: StackNavigationOptions = {
+    headerBackTestID: 'header-back',
     headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
     headerTitleStyle: {
       fontFamily: 'Roboto-Bold',
@@ -415,7 +420,7 @@ const Navigator: React.FC<Props> = ({
     return null;
   }
 
-  if (!didLaunchApp && onboardingWizardEnabled) {
+  if (!didLaunchApp && onboardingWizardEnabled && launchArgs?.e2e !== true) {
     return (
       <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
         <SetupStackScreen />
