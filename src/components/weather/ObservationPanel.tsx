@@ -206,6 +206,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           <View style={[styles.row]}>
             <View style={[styles.row, styles.justifyStart]}>
               <AccessibleTouchableOpacity
+                testID="observation_chart_button"
                 accessibilityRole="button"
                 accessibilityState={{ selected: displayFormat === CHART }}
                 activeOpacity={1}
@@ -241,6 +242,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 </View>
               </AccessibleTouchableOpacity>
               <AccessibleTouchableOpacity
+                testID="observation_list_button"
                 accessibilityRole="button"
                 accessibilityState={{ selected: displayFormat === LIST }}
                 activeOpacity={1}

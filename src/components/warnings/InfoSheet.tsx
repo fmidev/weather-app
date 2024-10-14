@@ -53,10 +53,11 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   );
 
   return (
-    <View style={styles.wrapper}>
+    <View testID="warnings_info_bottom_sheet" style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
+            testID="warnings_info_bottom_sheet_close_button"
             onPress={onClose}
             accessibilityLabel={t(
               'map:infoBottomSheet:closeAccessibilityLabel'

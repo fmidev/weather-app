@@ -132,6 +132,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         <View style={[styles.row]}>
           <View style={[styles.row, styles.justifyStart]}>
             <AccessibleTouchableOpacity
+              testID="forecast_table_button"
               accessibilityRole="button"
               accessibilityHint={`${t('tableAccessibilityHint')}. ${
                 displayFormat === TABLE ? t('active') : t('notActive')
@@ -169,6 +170,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               </View>
             </AccessibleTouchableOpacity>
             <AccessibleTouchableOpacity
+              testID="forecast_chart_button"
               accessibilityRole="button"
               accessibilityHint={`${t('chartAccessibilityHint')}. ${
                 displayFormat === CHART ? t('active') : t('notActive')
@@ -210,6 +212,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               style={[styles.separator, { backgroundColor: colors.border }]}
             />
             <AccessibleTouchableOpacity
+              testID="params_button"
               accessibilityRole="button"
               accessibilityLabel={t('paramsAccessibilityLabel')}
               accessibilityHint={t('paramsBottomSheet.subTitle')}
@@ -228,6 +231,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               />
             </AccessibleTouchableOpacity>
             <AccessibleTouchableOpacity
+              testID="info_button"
               accessibilityRole="button"
               accessibilityLabel={t('infoAccessibilityLabel')}
               accessibilityHint={t('infoAccessibilityHint')}

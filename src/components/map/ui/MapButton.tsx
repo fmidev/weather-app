@@ -13,6 +13,7 @@ type MapButtonProps = {
   icon: string;
   iconSize?: number;
   style: StyleProp<ViewStyle>;
+  testID?: string;
 };
 
 const MapButton: React.FC<MapButtonProps> = ({
@@ -21,10 +22,14 @@ const MapButton: React.FC<MapButtonProps> = ({
   icon,
   iconSize,
   style,
+  testID,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+  console.log('MapButton', testID);
+
   return (
     <View
+      testID={testID}
       style={[
         styles.border,
         styles.shadow,

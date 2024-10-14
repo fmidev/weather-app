@@ -227,6 +227,7 @@ const Chart: React.FC<ChartProps> = ({
 
   return (
     <View
+      testID={`chart_${chartType}`}
       accessible
       accessibilityLabel={
         observation

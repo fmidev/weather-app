@@ -17,6 +17,12 @@ describe('Navigation', () => {
   const languageHeader = getByID('settings_language_header');
   const themeHeader = getByID('settings_theme_header');
   const versionInfo = getByID('about_version_info');
+  const weatherView = getByID('weather_view');
+  const warningsView = getByID('warnings_view');
+  const othersView = getByID('others_view');
+  const termAndConditionsView = getByID('terms_and_conditions_view');
+  const accessibilityView = getByID('accessibility_view');
+  const feedbackButton = getByID('feedback_button');
 
   beforeAll(async () => {
     await device.launchApp({
@@ -34,17 +40,17 @@ describe('Navigation', () => {
 
   it('should navigate to weather screen', async () => {
     await navWeather.tap();
-    await expect(getByID('weather_view')).toBeVisible();
+    await expect(weatherView).toBeVisible();
   });
 
   it('should navigate to warnings screen', async () => {
     await navWarnings.tap();
-    await expect(getByID('warnings_view')).toBeVisible();
+    await expect(warningsView).toBeVisible();
   });
 
   it('should navigate to others screen', async () => {
     await navOthers.tap();
-    await expect(getByID('others_view')).toBeVisible();
+    await expect(othersView).toBeVisible();
   });
 
   it('should navigate to each screen on others screen', async () => {
@@ -63,17 +69,17 @@ describe('Navigation', () => {
     // Terms and Conditions
     await expect(navTermsAndConditions).toExist();
     await navTermsAndConditions.tap();
-    await expect(getByID('terms_and_conditions_view')).toBeVisible()
+    await expect(termAndConditionsView).toBeVisible()
     await headerBack.tap();
     // Accessibility
     await expect(navAccessibility).toExist();
     await navAccessibility.tap();
-    await expect(getByID('accessibility_view')).toBeVisible()
+    await expect(accessibilityView).toBeVisible()
     await headerBack.tap();
     // Feedback
     await expect(navFeedback).toExist();
     await navFeedback.tap();
-    await expect(getByID('feedback_button')).toBeVisible()
+    await expect(feedbackButton).toBeVisible()
     await headerBack.tap();
   });
 });

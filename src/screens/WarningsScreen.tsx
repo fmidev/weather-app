@@ -83,6 +83,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   return (
     <View testID="warnings_view" style={styles.safeArea}>
       <ScrollView
+        testID="warnings_scrollview"
         style={[styles.container, { backgroundColor: colors.screenBackground }]}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={announcements && [0]}>
