@@ -318,7 +318,8 @@
     "clockSettingHint": "Förändra applikation klocka till:",
     "clock": "Klockan",
     "12-hour-clock": "12-timmarsklocka",
-    "24-hour-clock": "24-timmarsklocka"
+    "24-hour-clock": "24-timmarsklocka",
+    "closeUnitBottomSheetAccessibilityLabel": "Stäng enhetens inställningar"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Sök plats",

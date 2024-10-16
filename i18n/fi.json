@@ -318,7 +318,8 @@
     "clockSettingHint": "Vaihda sovelluksen kelloksi:",
     "clock": "Kello",
     "12-hour-clock": "12 tunnin kello",
-    "24-hour-clock": "24 tunnin kello"
+    "24-hour-clock": "24 tunnin kello",
+    "closeUnitBottomSheetAccessibilityLabel": "Sulje yksikön valinta"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",
