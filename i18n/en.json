@@ -318,7 +318,8 @@
     "clockSettingHint": "Change application clock to:",
     "clock": "Clock",
     "12-hour-clock": "12-hour clock",
-    "24-hour-clock": "24-hour clock"
+    "24-hour-clock": "24-hour clock",
+    "closeUnitBottomSheetAccessibilityLabel": "Close unit selection"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search for a location",

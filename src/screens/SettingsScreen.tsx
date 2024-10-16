@@ -293,7 +293,7 @@ const SettingsScreen: React.FC<Props> = ({
                             <CloseButton
                               onPress={() => sheetRefs[key].current.close()}
                               accessibilityLabel={t(
-                                'weatherInfoBottomSheet.closeAccessibilityLabel'
+                                'settings.closeUnitBottomSheetAccessibilityLabel'
                               )}
                             />
                           </View>
