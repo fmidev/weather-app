@@ -3,6 +3,8 @@ import { AppState } from 'react-native';
 import { ReloaderContext } from '@utils/reloader';
 import { Config } from './DynamicConfig';
 import { ConfigType } from './types';
+import { getItem, VERSION, DYNAMICCONFIG } from '@utils/async_storage';
+import packageJSON from '../../package.json';
 
 type ConfigProviderProps = {
   defaultConfig: ConfigType;
@@ -21,10 +23,20 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   const reloadIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   Config.setDefaultConfig(defaultConfig);
+
   if (timeout) {
     Config.setApiTimeout(timeout);
   }
   const { enabled, interval } = Config.get('dynamicConfig');
+
+  const restoreStoredConfiguration = async () => {
+    const storedConfig = await getItem(DYNAMICCONFIG);
+    const storedVersion = await getItem(VERSION);
+
+    if (storedConfig && storedVersion === packageJSON.version) {
+      Config.setDefaultConfig(JSON.parse(storedConfig));
+    }
+  };
 
   const checkUpdates = useCallback(async () => {
     if (Config.getUpdatingStatus()) {
@@ -66,7 +78,10 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   }, [checkUpdates, enabled]);
 
   useEffect(() => {
-    checkUpdates();
+    restoreStoredConfiguration().then(() => {
+      setUpdated(Date.now());
+      checkUpdates();
+    });
   }, [checkUpdates]);
 
   useEffect(() => {

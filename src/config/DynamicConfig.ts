@@ -1,5 +1,13 @@
 import axiosClient from '@utils/axiosClient';
+import {
+  getItem,
+  setItem,
+  VERSION,
+  DYNAMICCONFIG,
+  DYNAMICCONFIG_ETAG,
+} from '@utils/async_storage';
 import { ConfigType } from './types';
+import packageJSON from '../../package.json';
 
 class DynamicConfig {
   private config!: ConfigType;
@@ -88,20 +96,33 @@ class DynamicConfig {
 
     this.updating = true;
 
+    const previousVersion = await getItem(VERSION);
+    const previousEtag = await getItem(DYNAMICCONFIG_ETAG);
+
     try {
-      const { data } = await axiosClient({
+      const { data, headers } = await axiosClient({
         url: this.apiUrl,
         timeout: this.timeout,
       });
-      if (data) {
+      // Don't update config if no changes to avoid re-rendering
+      if (
+        data &&
+        (previousVersion !== packageJSON.version ||
+          !headers.etag ||
+          previousEtag !== headers.etag)
+      ) {
         this.config = DynamicConfig.mergeObject(this.config, data);
+        await setItem(DYNAMICCONFIG, JSON.stringify(this.config));
+        await setItem(VERSION, packageJSON.version);
+        if (headers.etag) {
+          await setItem(DYNAMICCONFIG_ETAG, headers.etag);
+        }
+
+        this.setUpdated(Date.now());
       }
     } catch (error) {
       console.log(error);
     }
-
-    // set updated time
-    this.setUpdated(Date.now());
 
     this.updating = false;
   }
