@@ -173,6 +173,7 @@ const SettingsScreen: React.FC<Props> = ({
   return (
     <View style={styles.container}>
       <ScrollView
+        testID="settings_scrollview"
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
         <View
@@ -366,6 +367,7 @@ const SettingsScreen: React.FC<Props> = ({
                           ? {}
                           : onChangeLanguage(language)
                       }
+                      testID={`settings_set_language_${language}`}
                       delayPressIn={100}
                       accessibilityState={{
                         selected: i18n.language === language,
@@ -389,54 +391,6 @@ const SettingsScreen: React.FC<Props> = ({
                     </AccessibleTouchableOpacity>
                   </View>
                 ))}
-              {/* <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              onPress={() => onChangeLanguage('fi')}
-              delayPressIn={100}
-              disabled={i18n.language === 'fi'}
-              testID="settings_set_language_fi">
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>suomi</Text>
-                {i18n.language === 'fi' && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.rowWrapper,
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              onPress={() => onChangeLanguage('en')}
-              delayPressIn={100}
-              disabled={i18n.language === 'en'}
-              testID="settings_set_language_en">
-              <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
-                  in English
-                </Text>
-                {i18n.language === 'en' && (
-                  <Icon
-                    name="checkmark"
-                    size={22}
-                    style={{ color: colors.text }}
-                  />
-                )}
-              </View>
-            </AccessibleTouchableOpacity>
-          </View> */}
             </View>
           </>
         )}

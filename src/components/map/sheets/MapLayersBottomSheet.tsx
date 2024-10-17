@@ -55,10 +55,11 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
 
   const { colors } = useTheme() as CustomTheme;
   return (
-    <View style={styles.wrapper}>
+    <View testID="map_layers_bottom_sheet" style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
+            testID="layers_bottom_sheet_close_button"
             onPress={onClose}
             accessibilityLabel={t(
               'map:layersBottomSheet:closeAccessibilityLabel'

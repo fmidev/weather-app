@@ -20,6 +20,7 @@ type AreaListProps = ClearProps & {
   onIconPress: (element: Location) => void;
   iconNameGetter?: (element: Location) => string;
   iconName?: string;
+  testID?: string;
 };
 
 const AreaList: React.FC<AreaListProps> = ({
@@ -31,6 +32,7 @@ const AreaList: React.FC<AreaListProps> = ({
   iconName,
   clearTitle,
   onClear,
+  testID,
 }) => {
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
@@ -41,7 +43,7 @@ const AreaList: React.FC<AreaListProps> = ({
   };
 
   return (
-    <View style={styles.listWrapper}>
+    <View testID={testID || undefined} style={styles.listWrapper}>
       <View
         accessible
         accessibilityRole="header"
@@ -90,7 +92,9 @@ const AreaList: React.FC<AreaListProps> = ({
                         height={12}
                       />
                     )}
-                    <Text style={[styles.resultText, { color: colors.text }]}>
+                    <Text
+                      testID="search_result_text"
+                      style={[styles.resultText, { color: colors.text }]}>
                       {name}
                     </Text>
                   </View>

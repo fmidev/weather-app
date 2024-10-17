@@ -146,6 +146,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
     return (
       <View
+        testID="forecast_table"
         style={[
           styles.dayLengthContainer,
           styles.forecastHeader,

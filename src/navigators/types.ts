@@ -31,3 +31,7 @@ export type SetupStackParamList = {
   SetupScreen: undefined;
   TermsAndConditions: undefined;
 };
+
+export type LaunchArgs = {
+  e2e?: boolean;
+};

@@ -113,10 +113,11 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   const pressureUnit = units?.pressure.unitAbb ?? defaultUnits.pressure;
 
   return (
-    <View style={styles.wrapper}>
+    <View testID="weather_info_bottom_sheet" style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
+            testID="weather_info_bottom_sheet_close_button"
             onPress={onClose}
             accessibilityLabel={t(
               'weatherInfoBottomSheet.closeAccessibilityLabel'

@@ -65,7 +65,7 @@ const ChartList: React.FC<ChartListProps> = ({
   const parameter = chartParameter ?? charts[0];
 
   return (
-    <View style={styles.verticalPadding}>
+    <View testID="forecast_chart" style={styles.verticalPadding}>
       <View style={styles.overflowPadding}>
         <ParameterSelector
           chartTypes={charts}

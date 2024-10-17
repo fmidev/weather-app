@@ -22,9 +22,10 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
   const { colors, dark } = useTheme() as CustomTheme;
 
   return (
-    <View style={styles.sheetListContainer}>
+    <View testID="search_info_bottom_sheet" style={styles.sheetListContainer}>
       <View style={styles.closeButtonContainer}>
         <CloseButton
+          testID="search_info_bottom_sheet_close_button"
           onPress={onClose}
           accessibilityLabel={t('infoSheet.closeButtonAccessibilityLabel')}
         />

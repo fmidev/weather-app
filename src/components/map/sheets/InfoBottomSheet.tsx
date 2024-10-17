@@ -61,10 +61,11 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   const layer = layers.find((l) => l.id === layerId);
 
   return (
-    <View style={styles.wrapper}>
+    <View testID="info_bottom_sheet" style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
+            testID="info_bottom_sheet_close_button"
             onPress={onClose}
             accessibilityLabel={t('infoBottomSheet.closeAccessibilityLabel')}
           />

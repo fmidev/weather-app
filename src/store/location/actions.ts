@@ -70,9 +70,12 @@ export const deleteAllRecentSearches =
 
 export const updateLocationsLocales =
   (geoids: number[]) => (dispatch: Dispatch<LocationActionTypes>) => {
-    getLocationsLocales(geoids).then((data) => {
-      dispatch({ type: UPDATE_LOCATIONS_LOCALES, data });
-    });
+    // geoids might be empty if fallback location is in use
+    if (geoids.length > 0) {
+      getLocationsLocales(geoids).then((data) => {
+        dispatch({ type: UPDATE_LOCATIONS_LOCALES, data });
+      });
+    }
   };
 
 export const setLoading =

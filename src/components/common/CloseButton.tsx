@@ -12,6 +12,7 @@ type CloseButtonProps = {
   accessibilityLabel: string;
   style?: StyleProp<ViewStyle>;
   backgroundColor?: string;
+  testID?: string;
 };
 
 const CloseButton: React.FC<CloseButtonProps> = ({
@@ -19,11 +20,13 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   accessibilityLabel,
   backgroundColor,
   style,
+  testID,
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
   return (
     <AccessibleTouchableOpacity
+      testID={testID}
       onPress={onPress}
       accessible
       accessibilityRole="button"

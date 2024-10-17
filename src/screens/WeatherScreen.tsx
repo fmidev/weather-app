@@ -136,8 +136,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   return (
     <GradientWrapper>
-      <View>
+      <View testID="weather_view">
         <ScrollView
+          testID="weather_scrollview"
           style={[styles.container]}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
