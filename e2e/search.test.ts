@@ -8,6 +8,9 @@ describe('Search', () => {
   const searchText = 'Liperi';
   const weatherView = getByID('weather_view');
   const clearSearchButton = getByID('search_clear_button');
+  const headerInfoButton = getByID('search_header_info_button');
+  const infoBottomSheet = getByID('search_info_bottom_sheet');
+  const closeButton = getByID('search_info_bottom_sheet_close_button');
   const timeout = 5000;
 
   beforeAll(async () => {
@@ -38,6 +41,13 @@ describe('Search', () => {
     await searchInput.typeText(searchText);
     await clearSearchButton.tap();
     await expect(searchInput).toHaveText('');
+  });
+
+  it('should open info bottom sheet', async () => {
+    await headerInfoButton.tap();
+    await expect(infoBottomSheet).toBeVisible();
+    await closeButton.tap();
+    await expect(infoBottomSheet).not.toBeVisible();
   });
 
 });

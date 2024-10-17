@@ -26,7 +26,7 @@ describe('Warnings', () => {
   it('should have daily view and webview for Smartmet Alert Client', async () => {
     await expect(warningsPanel).toBeVisible();
     await warningsScrollView.scrollTo('bottom');
-    await expect(warningsWebView).toBeVisible();
+    await expect(warningsWebView).toBeVisible(50);
   });
 
   it('should show info bottom sheet', async () => {

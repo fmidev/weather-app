@@ -25,7 +25,6 @@ const MapButton: React.FC<MapButtonProps> = ({
   testID,
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  console.log('MapButton', testID);
 
   return (
     <View

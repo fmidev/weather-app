@@ -257,6 +257,7 @@ const Navigator: React.FC<Props> = ({
     headerTitle: t('navigation:search'),
     headerRight: () => (
       <HeaderButton
+        testID="search_header_info_button"
         accessibilityLabel="info"
         accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
         icon="info"

@@ -83,6 +83,7 @@ describe('Settings', () => {
     await navOthers.tap();
     await expect(navSettings).toBeVisible();
     await navSettings.tap();
+    await settingsScrollView.scrollTo('top');
     await expect(unitsHeader).toExist();
     await setTemperature.tap();
     await expect(temperatureSheetTitle).toBeVisible();
