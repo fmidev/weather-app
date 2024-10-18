@@ -18,6 +18,7 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   timeout,
 }) => {
   const reloadInterval = 60000;
+  const [restored, setRestored] = useState<boolean>(false);
   const [updated, setUpdated] = useState<number>(0);
   const [shouldReload, setShouldReload] = useState<number>(0);
   const reloadIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -35,6 +36,7 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
 
     if (storedConfig && storedVersion === packageJSON.version) {
       Config.setDefaultConfig(JSON.parse(storedConfig));
+      setRestored(true);
     }
   };
 
@@ -78,11 +80,12 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   }, [checkUpdates, enabled]);
 
   useEffect(() => {
-    restoreStoredConfiguration().then(() => {
-      setUpdated(Date.now());
-      checkUpdates();
-    });
-  }, [checkUpdates]);
+    if (!restored) {
+      restoreStoredConfiguration().then(() => {
+        checkUpdates();
+      });
+    }
+  }, [checkUpdates, restored]);
 
   useEffect(() => {
     reloadIntervalRef.current = setInterval(
@@ -93,7 +96,7 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
 
   return (
     <>
-      {(!enabled || updated > 0) && (
+      {(!enabled || restored || updated > 0) && (
         <ReloaderContext.Provider value={{ shouldReload }}>
           {children}
         </ReloaderContext.Provider>
