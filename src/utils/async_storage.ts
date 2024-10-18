@@ -4,8 +4,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const LOCALE = 'locale';
 export const UNITS = 'units';
 export const THEME = 'theme';
+export const VERSION = 'version';
+export const DYNAMICCONFIG = 'dynamicconfig';
+export const DYNAMICCONFIG_ETAG = 'dynamicconfig_etag';
 
-type StorageKey = typeof LOCALE | typeof UNITS | typeof THEME;
+type StorageKey =
+  | typeof LOCALE
+  | typeof UNITS
+  | typeof THEME
+  | typeof VERSION
+  | typeof DYNAMICCONFIG
+  | typeof DYNAMICCONFIG_ETAG;
 
 export const getItem = async (key: StorageKey): Promise<string | null> => {
   try {
