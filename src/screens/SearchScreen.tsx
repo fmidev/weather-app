@@ -142,7 +142,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     favorites.length > 0 && favorites.some(({ id }) => id === location.id);
 
   return (
-    <View style={styles.container}>
+    <View testID="search_view" style={styles.container}>
       <Text
         style={[
           styles.placeholderText,
@@ -164,6 +164,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           style={[styles.searchIcon, { color: colors.text }]}
         />
         <TextInput
+          testID="search_input"
           accessibilityRole="search"
           style={[
             styles.input,
@@ -182,6 +183,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         {loading && <ActivityIndicator accessibilityLabel={t('loading')} />}
         {value.length > 0 && (
           <CloseButton
+            testID="search_clear_button"
             style={styles.closeButton}
             backgroundColor={colors.inputButtonBackground}
             accessibilityLabel={t('clear')}
@@ -195,6 +197,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         <View style={styles.results}>
           {search.length > 0 && (
             <AreaList
+              testID="search_results"
               elements={search}
               title={t('searchResults')}
               onSelect={(location) => handleSelectLocation(location, true)}

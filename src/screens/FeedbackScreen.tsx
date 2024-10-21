@@ -24,7 +24,7 @@ const FeedbackScreen: React.FC = () => {
   } ${platformInfo}`;
 
   return (
-    <View>
+    <View testID="feedback_view">
       <View style={styles.container}>
         <Text
           style={[
@@ -52,6 +52,7 @@ const FeedbackScreen: React.FC = () => {
         </Text>
 
         <AccessibleTouchableOpacity
+          testID="feedback_button"
           accessibilityRole="button"
           onPress={() => Linking.openURL(mailToUrl)}
           accessibilityHint={t('moveToHint')}>

@@ -356,6 +356,7 @@ const List: React.FC<ListProps> = ({
         )}
       </View>
       <View
+        testID={`observation_list_header_${parameter}`}
         style={[
           styles.row,
           styles.observationRow,

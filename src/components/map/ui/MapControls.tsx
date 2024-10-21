@@ -59,6 +59,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         iconSize={26}
       />
       <MapButton
+        testID="map_info_button"
         style={[
           styles.mapButton,
           styles.right,
@@ -70,6 +71,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         iconSize={26}
       />
       <MapButton
+        testID="map_layers_button"
         style={[
           styles.mapButton,
           styles.right,

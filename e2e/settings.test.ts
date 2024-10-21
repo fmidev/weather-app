@@ -1,10 +1,10 @@
-import { device } from 'detox';
 import { getByID } from './utils';
 
 describe('Settings', () => {
   // elements
   const navOthers = getByID('navigation_others');
   const navSettings = getByID('navigation_settings');
+  const settingsScrollView = getByID('settings_scrollview');
   const languageHeader = getByID('settings_language_header');
   const themeHeader = getByID('settings_theme_header');
   const unitsHeader = getByID('settings_units_header');
@@ -29,54 +29,66 @@ describe('Settings', () => {
   const settingsLanguageTitleFi = 'Kieli';
   const fahrenheitAbb = '°F';
 
+  beforeAll(async () => {
+    await device.launchApp({
+      launchArgs: {
+        e2e: true,
+      },
+    });
+  });
+
   // test
   it('should navigate to settings screen', async () => {
-    navOthers.tap();
+    await navOthers.tap();
     await expect(navSettings).toBeVisible();
-    navSettings.tap();
+    await navSettings.tap();
     await expect(languageHeader).toExist();
     await expect(themeHeader).toExist();
   });
 
   it('should change language', async () => {
-    navOthers.tap();
+    await navOthers.tap();
     await expect(navSettings).toBeVisible();
-    navSettings.tap();
+    await navSettings.tap();
     await expect(languageHeader).toExist();
-    setLanguageEn.tap();
+    await setLanguageEn.tap();
     await expect(languageHeader).toHaveText(settingsLanguageTitleEn);
-    setLanguageFi.tap();
+    await setLanguageFi.tap();
     await expect(languageHeader).toHaveText(settingsLanguageTitleFi);
   });
 
   it('should change theme', async () => {
-    navOthers.tap();
+    await navOthers.tap();
     await expect(navSettings).toBeVisible();
-    navSettings.tap();
+    await navSettings.tap();
     await expect(themeHeader).toExist();
-    setThemeDark.tap();
+    await settingsScrollView.scrollTo('bottom'); // Otherwise theme options might be not visible
+    await setThemeDark.tap();
     await expect(darkThemeCheck).toExist();
     await expect(lightThemeCheck).not.toExist();
     await expect(automaticThemeCheck).not.toExist();
-    setThemeAutomatic.tap();
+    await settingsScrollView.scrollTo('bottom');
+    await setThemeAutomatic.tap();
     await expect(darkThemeCheck).not.toExist();
     await expect(lightThemeCheck).not.toExist();
     await expect(automaticThemeCheck).toExist();
-    setThemeLight.tap();
+    await settingsScrollView.scrollTo('bottom');
+    await setThemeLight.tap();
     await expect(darkThemeCheck).not.toExist();
     await expect(lightThemeCheck).toExist();
     await expect(automaticThemeCheck).not.toExist();
   });
 
   it('should change temperature to Fahrenheit', async () => {
-    navOthers.tap();
+    await navOthers.tap();
     await expect(navSettings).toBeVisible();
-    navSettings.tap();
+    await navSettings.tap();
+    await settingsScrollView.scrollTo('top');
     await expect(unitsHeader).toExist();
-    setTemperature.tap();
+    await setTemperature.tap();
     await expect(temperatureSheetTitle).toBeVisible();
-    setTemperatureFahrenheit.tap();
-    unitSheetContainer.swipe('down');
+    await setTemperatureFahrenheit.tap();
+    await unitSheetContainer.swipe('down');
     await expect(temperatureUnitAbb).toHaveText(fahrenheitAbb);
   });
 });

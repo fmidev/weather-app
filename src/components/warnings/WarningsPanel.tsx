@@ -72,6 +72,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   return (
     <View
+      testID="warnings_panel"
       style={[
         styles.cardWrapper,
         {
@@ -109,6 +110,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               </Text>
             </View>
             <AccessibleTouchableOpacity
+              testID="warnings_info_button"
               accessibilityLabel={t('infoAccessibilityLabel')}
               onPress={() => infoSheetRef.current.open()}>
               <View style={[styles.iconPadding]}>

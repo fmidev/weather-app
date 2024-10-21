@@ -54,6 +54,7 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
     <View>
       <PanelHeader title={`${t('allWarnings')}`} justifyCenter />
       <WebView
+        testID="warnings_webview"
         ref={webViewRef}
         style={{ height: viewHeight, backgroundColor: `transparent` }}
         source={{ html }}

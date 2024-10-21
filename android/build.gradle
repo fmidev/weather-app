@@ -14,10 +14,12 @@ buildscript {
         ndkVersion = "23.1.7779620"
 
     }
+
     repositories {
         google()
         mavenCentral()
     }
+
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
@@ -25,4 +27,15 @@ buildscript {
     }
 }
 
+allprojects {
+    repositories {
+        google()
+        maven {
+            // All of Detox' artifacts are provided via the npm module
+            url "$rootDir/../node_modules/detox/Detox-android"
+        }
+    }
+}
+
+println  "rootDir: ${rootDir}"
 apply plugin: "com.facebook.react.rootproject"

@@ -161,3 +161,21 @@ Table of abbreviations and their corresponding units.
 | 'inHg'       | inch of mercury       |
 | 'mmHg'       | millimeter of mercury |
 | 'mbar'       | millibar              |
+
+## Detox e2e tests ###
+
+Test are located in `e2e-directory`. To run tests use commands
+
+```
+yarn e2e:build:ios
+yarn e2e:test:ios
+```
+
+or
+
+```
+yarn e2e:build:android
+yarn e2e:test:android
+```
+
+Most likely you have to change simulator names in ``.detoxrc.json`` to match your environment. Android emulator is quite sluggish and it is faster and more reliable to run tests with iOS simulator.

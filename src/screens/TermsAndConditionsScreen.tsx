@@ -37,7 +37,9 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
   });
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      testID="terms_and_conditions_view"
+      style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.scrollContainer}
         contentContainerStyle={styles.withPaddingBottom}
@@ -118,6 +120,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
             },
           ]}>
           <AccessibleTouchableOpacity
+            testID="terms_close_button"
             onPress={onClose}
             accessibilityRole="button"
             accessibilityHint={t('closeButtonAccessibilityHint')}>

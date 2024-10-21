@@ -181,10 +181,11 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   );
 
   return (
-    <View style={styles.wrapper}>
+    <View testID="weather_params_bottom_sheet" style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
+            testID="weather_params_bottom_sheet_close_button"
             onPress={onClose}
             accessibilityLabel={t('paramsBottomSheet.closeAccessibilityLabel')}
           />
