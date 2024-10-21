@@ -15,6 +15,7 @@ import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import CloseButton from '@components/common/CloseButton';
 
 import { setItem, LOCALE } from '@utils/async_storage';
 import { UNITS } from '@utils/units';
@@ -137,6 +138,11 @@ const SettingsScreen: React.FC<Props> = ({
     } catch (error) {
       console.error('error:', error);
     }
+  };
+
+  const onChangeUnits = (key: string, unit: UnitType): void => {
+    updateUnits(key, unit);
+    sheetRefs[key].current.close();
   };
 
   const goToSettings = () => {
@@ -284,6 +290,14 @@ const SettingsScreen: React.FC<Props> = ({
                         <View
                           style={styles.sheetListContainer}
                           testID="unit_sheet_container">
+                          <View style={styles.sheetCloseButtonContainer}>
+                            <CloseButton
+                              onPress={() => sheetRefs[key].current.close()}
+                              accessibilityLabel={t(
+                                'settings.closeUnitBottomSheetAccessibilityLabel'
+                              )}
+                            />
+                          </View>
                           <View
                             style={styles.sheetTitle}
                             testID={`${key}_unit_sheet_title`}>
@@ -301,7 +315,7 @@ const SettingsScreen: React.FC<Props> = ({
                                 { borderBottomColor: colors.border },
                               ]}>
                               <AccessibleTouchableOpacity
-                                onPress={() => updateUnits(key, type)}
+                                onPress={() => onChangeUnits(key, type)}
                                 testID={`settings_units_${key}_${type.unit}`}>
                                 <View style={styles.row}>
                                   <Text
@@ -649,7 +663,12 @@ const styles = StyleSheet.create({
   },
   sheetListContainer: {
     flex: 1,
-    paddingTop: 20,
+    marginTop: -10,
+  },
+  sheetCloseButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginRight: 20,
   },
   sheetTitle: {
     flexDirection: 'row',
