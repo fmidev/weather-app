@@ -146,7 +146,7 @@ jobs:
         with:
           name: latest.apk
           path: |
-            ${{ github.workspace }}/android/app/build/outputs/bundle/release/*
+            ${{ github.workspace }}/android/app/build/outputs/apk/release/
           retention-days: 7
           overwrite: true
 
