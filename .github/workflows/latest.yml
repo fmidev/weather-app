@@ -113,13 +113,7 @@ jobs:
         run: gem install bundler && bundle install
         working-directory: android
 
-      # Decode upload keystore and Play Store json -key
-      - name: Decode Service Account Key JSON File
-        uses: timheuer/base64-to-file@v1
-        id: service_account_json_file
-        with:
-          fileName: "serviceAccount.json"
-          encodedString: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
+      # Decode upload keystore
       - name: Decode Keystore File
         uses: timheuer/base64-to-file@v1
         id: android_keystore
@@ -134,8 +128,6 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
-          GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
           # SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
         run: |
           echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
