@@ -1,6 +1,6 @@
 # This is workflow to run tests, build Android app and supply it to Google Play Store. Version 1.
 
-name: The latest build from main-branch
+name: The latest Android build from main-branch
 
 # Controls when the workflow will run
 on:
@@ -138,6 +138,7 @@ jobs:
       - name: Rename APK 
         run:
           mv "./app/build/outputs/apk/release/app-release.apk" "./app/build/outputs/apk/release/latest.apk"
+        working-directory: android
 
       # Upload artifact
       - name: Upload build artifacts
