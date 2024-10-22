@@ -1,0 +1,158 @@
+# This is workflow to run tests, build Android app and supply it to Google Play Store. Version 1.
+
+name: The latest build from main-branch
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # push:
+    # branches: [ "main" ]
+  # pull_request:
+    # branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# Build job needs test !
+jobs:
+
+  # Run React Native Eslint and Jest tests
+  test:
+    if: ${{ false }}
+    name: Test
+    # Setup Ubuntu version
+    runs-on: ubuntu-latest
+    strategy:
+      # Node version matrix
+      matrix:
+        node-version: [20.11.1]
+    # Steps
+    steps:
+     - uses: actions/checkout@v4
+     - name: Use Node.js ${{ matrix.node-version }}
+       # Setup node
+       uses: actions/setup-node@v4
+       with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+     # Install dependencies
+     - name: Install dependencies
+       run: yarn install
+     # Get defaultConfig
+     - name: Get defaultConfig
+       env:
+         defaultConfig: ${{ secrets.DEFAULTCONFIG }}
+       shell: bash
+       run: |
+         touch defaultConfig.ts
+         echo "$defaultConfig" >> defaultConfig.ts
+
+     # Run lint -tests
+     - name: Run Eslint tests
+       if: ${{ false }}
+       run: yarn lint --fix
+     # Run Jest -tests
+     - name: Run Jest tests
+       if: ${{ false }}
+       run: yarn test
+
+# Decode, Build and sign Android application
+  build:
+    # needs: test
+    name: Android-build
+    # Set Ubuntu version
+    runs-on: ubuntu-latest
+    # Node version matrix
+    strategy:
+        matrix:
+          node-version: [20.11.1]
+    # Steps
+    steps:
+      - name: Checkout to git repository
+        uses: actions/checkout@v4
+      # Setup Node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: |
+          yarn install
+
+      # Get defaultConfig
+      - name: Get defaultConfig
+        env:
+         defaultConfig: ${{ secrets.DEFAULTCONFIG }}
+        shell: bash
+        run: |
+         touch defaultConfig.ts
+         echo "$defaultConfig" >> defaultConfig.ts
+
+      # Set up Java 17
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # You can use 'adopt', 'zulu', or another distribution if needed
+
+      # Install Ruby
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.0'
+
+      # Update bundler
+      - name: Update bundler
+        run: bundle update --bundler
+        working-directory: android
+
+      # Bundle install
+      - name: Bundle install
+        run: gem install bundler && bundle install
+        working-directory: android
+
+      # Decode upload keystore and Play Store json -key
+      - name: Decode Service Account Key JSON File
+        uses: timheuer/base64-to-file@v1
+        id: service_account_json_file
+        with:
+          fileName: "serviceAccount.json"
+          encodedString: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
+      - name: Decode Keystore File
+        uses: timheuer/base64-to-file@v1
+        id: android_keystore
+        with:
+          fileName: "android_keystore.keystore"
+          encodedString: ${{ secrets.KEYSTORE }}
+
+      # Build and sign
+      - name: Build
+        env:
+          KEYSTORE: ${{ steps.android_keystore.outputs.filePath }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME }}
+          GPLAY_JSON_KEY_FILE: ${{ steps.service_account_json_file.outputs.filePath }}
+          # SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_WEB_HOOK_URL }}
+        run: |
+          echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
+          chmod +x ./gradlew
+          bundle exec fastlane android build_apk
+        working-directory: android
+
+      - name: Rename APK 
+        run:
+          mv "./app/build/outputs/apk/release/app-release.apk" "./app/build/outputs/apk/release/latest.apk"
+
+      # Upload artifact
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: latest.apk
+          path: |
+            ${{ github.workspace }}/android/app/build/outputs/bundle/release/*
+          retention-days: 7
+          overwrite: true
+

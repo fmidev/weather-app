@@ -56,6 +56,20 @@ platform :android do
       push_to_git_remote if should_push
     end
   end
+
+  # Build APK only
+  desc "Android build APK"
+  lane :build_apk do
+  # Gradle clean
+        gradle(task: 'clean', project_dir: './')
+  # Gradle sign aab -file
+  gradle(task: 'assemble', build_type: "Release", project_dir: './',properties: {
+            "android.injected.signing.store.file" => ENV["KEYSTORE"],
+            "android.injected.signing.store.password" => ENV["SIGNING_STORE_PASSWORD"],
+            "android.injected.signing.key.alias" => ENV["SIGNING_KEY_ALIAS"],
+            "android.injected.signing.key.password" => ENV["SIGNING_KEY_PASSWORD"]
+        })
+  end
   
   # Sign, build and deploy to Google Play Store
   desc "Sign, build, and deploy to Google Play Store"
@@ -91,7 +105,7 @@ platform :android do
             "android.injected.signing.key.password" => ENV["SIGNING_KEY_PASSWORD"]
         })
    end
-	
+
   # Deploy to Google Play Store
   desc "Deploy a new version to the Google Play"
     lane :deploy do
