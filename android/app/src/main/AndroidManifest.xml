@@ -78,6 +78,21 @@
             <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
           </intent-filter>
         </activity>
+
+        <receiver android:label="@string/experimental_widget" android:name=".MobileWeatherExperimentalWidget" android:exported="false">
+          <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+            <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+          </intent-filter>
+          <meta-data android:name="android.appwidget.provider" android:resource="@xml/experimental_widget_description" />
+        </receiver>
+        <activity android:name=".ExperimentalWidgetConfigurationActivity" android:exported="false">
+          <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+          </intent-filter>
+        </activity>
+
         <service android:exported="false" android:name=".UpdateWidgetJobIntentService" android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
