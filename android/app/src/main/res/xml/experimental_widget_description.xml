@@ -6,10 +6,13 @@
     android:minResizeWidth="40dp"
     android:minResizeHeight="40dp"
     android:initialLayout="@layout/experimentalwidget"
-    android:previewImage="@drawable/experimentalwidget"
+    android:previewImage="@drawable/widget"
     android:updatePeriodMillis="1800000"
     android:resizeMode="horizontal|vertical"
     android:configure="fi.fmi.mobileweather.ExperimentalWidgetConfigurationActivity"
 
 />
+
+ <!-- android:maxResizeWidth="250dp"
+    android:maxResizeHeight="120dp" -->
     
