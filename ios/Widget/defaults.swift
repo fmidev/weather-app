@@ -1,3 +1,5 @@
+import Foundation
+
 let defaultLocation = Location(
   id: 658225,
   name: "Helsinki",
@@ -8,4 +10,6 @@ let defaultLocation = Location(
   iso2: "FI",
   country: "Suomi"
 )
+
+let defaultEntry = TimestepEntry(date: Date(), location: defaultLocation, temperature: 11, weatherSymbol: 1)
 

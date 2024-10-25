@@ -1,9 +1,7 @@
 import WidgetKit
 import CoreLocation
 import SwiftUI
-// import AsyncLocationKit
-
-let defaultEntry = TimestepEntry(date: Date(), temperature: 11, weatherSymbol: 1)
+import AsyncLocationKit
 
 struct Provider: TimelineProvider {
   func placeholder(in context: Context) -> TimestepEntry {
@@ -17,41 +15,33 @@ struct Provider: TimelineProvider {
   func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
     Task {
       var entries: [TimestepEntry] = []
-      var location = defaultLocation
-      var geoLocation:CLLocation?
+      var location:Location?
+     
+      print("Request location")      
       
-      /*
-      let asyncLocationManager = AsyncLocationManager(
-        desiredAccuracy: .hundredMetersAccuracy
-      )
+      let currentLocation = try await getCurrentLocation()
       
-      let locationUpdateEvent = try await asyncLocationManager.requestLocation()
-      var geoLocation : CLLocation?
+      print(currentLocation as Any)
       
-      switch locationUpdateEvent {
-        case .didUpdateLocations(let locations):
-          geoLocation = locations.first
-        default:
-          geoLocation = nil
-      }
-      
-      if (geoLocation != nil) {
+      if (currentLocation != nil) {
         location = try await fetchLocation(
-          lat: geoLocation!.coordinate.latitude, lon: geoLocation!.coordinate.longitude
+          lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
         )
       }
-
-      */
-       
+      
+      if (location == nil ) {
+        location = defaultLocation
+      }
+           
       // Generate a timeline consisting of five entries an hour apart, starting from the current date.
       let currentDate = Date()
       for hourOffset in 0 ..< 5 {
         let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-        let entry = TimestepEntry(date: entryDate, temperature: -1, weatherSymbol: 4)
+        let entry = TimestepEntry(date: entryDate, location: location!, temperature: -1, weatherSymbol: 4)
         entries.append(entry)
       }
       
-      let timeline = Timeline(entries: entries, policy: .atEnd)
+      let timeline = Timeline(entries: entries, policy: .after(currentDate))
       completion(timeline)
     }
   }
@@ -63,8 +53,10 @@ struct widgetEntryView : View {
 
   var body: some View {
     VStack {
+      Text(entry.location.name)
       Text(entry.date, style: .time)
       Text(String(entry.temperature))
+      Text(String(entry.weatherSymbol))
     }
   }
 }

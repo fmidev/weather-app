@@ -47,20 +47,14 @@ target 'MobileWeather' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
-    )
-  
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-      end
-    end
-  
+    )  
   end
 end
 
-#target 'WidgetExtension' do
-#  platform :ios, '17.0'
-#  pod 'Alamofire', '~> 5.10'
-  # pod 'AsyncLocationKit', :git => 'https://github.com/AsyncSwift/AsyncLocationKit.git', :tag => '1.6.4'
-#end
+target 'WidgetExtension' do
+  platform :ios, '17.0'
+  pod 'Alamofire', '~> 5.10'
+  pod 'AsyncLocationKit', :git => 'https://github.com/AsyncSwift/AsyncLocationKit.git', :tag => '1.6.4'
+  pod 'SwiftyJSON', '~> 5.0'
+end
 

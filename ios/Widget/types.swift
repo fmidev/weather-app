@@ -13,6 +13,7 @@ struct Location {
 
 struct TimestepEntry: TimelineEntry {
   let date: Date
+  let location: Location
   let temperature: Double
   let weatherSymbol: Int
 }
