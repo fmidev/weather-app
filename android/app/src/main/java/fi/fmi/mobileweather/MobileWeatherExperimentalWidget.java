@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
- * MobileWeather widget, default size 1x1.
+ * MobileWeather experimental widgetProvider, default size 1x1.
  */
 public class MobileWeatherExperimentalWidget extends MobileWeatherBaseWidget {
 

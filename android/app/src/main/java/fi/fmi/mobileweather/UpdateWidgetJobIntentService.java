@@ -173,7 +173,9 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
 
         // Large widget
 
-        String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
+        String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?param=geoid,name,region,latitude,longitude,region,country,iso2,localtz&latlon=62.5,26.2&format=json";
+
+        // String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
         fetchDataAndUpdateViews(url, widget_id);
 
@@ -199,7 +201,9 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
 
         // Large widget
 
-        String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
+        String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?geoid=658994&endtime=data&format=json&attributes=geoid&lang=fi&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,name,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
+
+        // String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
         fetchDataAndUpdateViews(url, widget_id);
 
