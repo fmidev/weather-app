@@ -24,6 +24,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +37,7 @@ import com.fewlaps.quitnowcache.QNCacheBuilder;
  * Created by Pekka Keränen on 16.2.2017.
  */
 
-public class DownloadData extends AsyncTask<String, Void, JSONArray> {
+public class DownloadData extends AsyncTask<String, Void, JSONObject> {
 
   QNCache cache = new QNCacheBuilder().setAutoReleaseInSeconds(60 * 60).createQNCache();
 
@@ -53,7 +54,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONArray> {
   }
 
   @Override
-  protected JSONArray doInBackground(String... params) {
+  protected JSONObject doInBackground(String... params) {
 
     // Check can we find result from cache
 
@@ -63,9 +64,8 @@ public class DownloadData extends AsyncTask<String, Void, JSONArray> {
       Log.d("cache", src + " found from cache");
 
       try {
-        JSONArray jsonArray = new JSONArray(cachejson);
-//        JSONObject jsonObject = new JSONObject(cachejson);
-        return jsonArray;
+        JSONObject jsonObject = new JSONObject(cachejson);
+        return jsonObject;
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -97,14 +97,10 @@ public class DownloadData extends AsyncTask<String, Void, JSONArray> {
         // Store to cache
 
         cache.set(src, jsonstr, 2 * 60 * 1000);
-        // Parse the JSON string as a JSONArray
-        JSONArray jsonArray = new JSONArray(jsonstr);
-//        JSONObject jsonObject = new JSONObject(jsonstr);
+        JSONObject jsonObject = new JSONObject(jsonstr);
 
-        // return the json Array
-        return jsonArray;
         // returns the json object
-//        return jsonObject;
+        return jsonObject;
 
       } catch (IOException e) {
         e.printStackTrace();
@@ -123,7 +119,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONArray> {
   }
 
   @Override
-  protected void onPostExecute(JSONArray json) {
+  protected void onPostExecute(JSONObject json) {
     if (isCancelled()) {
       return;
     }
@@ -167,7 +163,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONArray> {
         String jsonstr = pref.getString("latest_json", null);
 
         try {
-          json = new JSONArray(jsonstr);
+          json = new JSONObject(jsonstr);
         } catch (JSONException e) {
           RemoteViews errorview = buildErrorView(context, pref,
               context.getResources().getString(R.string.update_failed));
@@ -217,6 +213,35 @@ public class DownloadData extends AsyncTask<String, Void, JSONArray> {
     String iso2 = "";
 
     Log.d("DownloadData json", json.toString());
+
+    try {
+
+      // Get the keys of the JSONObject
+      Iterator<String> keys = json.keys();
+
+      // Retrieve the first key
+      if (keys.hasNext()) {
+        String firstKey = keys.next();
+        Log.d("DownloadData json", "First key: " + firstKey);
+
+        // Extract the JSONArray associated with the first key
+        JSONArray jsonArray = json.getJSONArray(firstKey);
+
+        // Get the first JSONObject from the JSONArray
+        JSONObject firstObject = jsonArray.getJSONObject(0);
+
+        // Retrieve the temperature and feelsLike values
+        int temperature = firstObject.getInt("temperature");
+        int feelsLike = firstObject.getInt("feelsLike");
+
+        // Print the values
+        Log.d("DownloadData json", "Temperature: " + temperature);
+        Log.d("DownloadData json", "Feels Like: " + feelsLike);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     /*try {
       
