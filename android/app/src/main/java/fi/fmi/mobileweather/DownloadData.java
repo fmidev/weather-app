@@ -36,7 +36,7 @@ import com.fewlaps.quitnowcache.QNCacheBuilder;
  * Created by Pekka Keränen on 16.2.2017.
  */
 
-public class DownloadData extends AsyncTask<String, Void, JSONObject> {
+public class DownloadData extends AsyncTask<String, Void, JSONArray> {
 
   QNCache cache = new QNCacheBuilder().setAutoReleaseInSeconds(60 * 60).createQNCache();
 
@@ -53,7 +53,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
   }
 
   @Override
-  protected JSONObject doInBackground(String... params) {
+  protected JSONArray doInBackground(String... params) {
 
     // Check can we find result from cache
 
@@ -63,8 +63,9 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
       Log.d("cache", src + " found from cache");
 
       try {
-        JSONObject jsonObject = new JSONObject(cachejson);
-        return jsonObject;
+        JSONArray jsonArray = new JSONArray(cachejson);
+//        JSONObject jsonObject = new JSONObject(cachejson);
+        return jsonArray;
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -96,10 +97,14 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
         // Store to cache
 
         cache.set(src, jsonstr, 2 * 60 * 1000);
-        JSONObject jsonObject = new JSONObject(jsonstr);
+        // Parse the JSON string as a JSONArray
+        JSONArray jsonArray = new JSONArray(jsonstr);
+//        JSONObject jsonObject = new JSONObject(jsonstr);
 
+        // return the json Array
+        return jsonArray;
         // returns the json object
-        return jsonObject;
+//        return jsonObject;
 
       } catch (IOException e) {
         e.printStackTrace();
@@ -118,7 +123,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
   }
 
   @Override
-  protected void onPostExecute(JSONObject json) {
+  protected void onPostExecute(JSONArray json) {
     if (isCancelled()) {
       return;
     }
@@ -162,7 +167,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
         String jsonstr = pref.getString("latest_json", null);
 
         try {
-          json = new JSONObject(jsonstr);
+          json = new JSONArray(jsonstr);
         } catch (JSONException e) {
           RemoteViews errorview = buildErrorView(context, pref,
               context.getResources().getString(R.string.update_failed));
@@ -211,7 +216,10 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
     DateFormat shortdayformat = new SimpleDateFormat("EE");
     String iso2 = "";
 
-    try {
+    Log.d("DownloadData json", json.toString());
+
+    /*try {
+      
       JSONArray forecasts = json.getJSONArray("forecasts");
       JSONObject forecast = forecasts.getJSONObject(0);
       JSONArray data = forecast.getJSONArray("forecast");
@@ -252,7 +260,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
             continue;
           }
 
-          String temperature = current.getString("Temperature");
+          String temperature = current.getString("temperature");
           main.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
           String weathersymbol = current.getString("SmartSymbol");
@@ -263,6 +271,9 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
           main.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
           // Resolve feelsike icon
+
+          *//*int feelslike = json.getInt("feelsLike");
+          main.setViewVisibility(R.id.feelsLikeRelativeLayout, View.GONE);*//*
 
           String feelslike = "basic";
 
@@ -305,7 +316,6 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
             main.setViewVisibility(R.id.feelsLikeRelativeLayout, View.GONE);
           else
             main.setViewVisibility(R.id.feelsLikeRelativeLayout, View.VISIBLE);
-
           // If very small then also hide location name and show time
 
           if (minWidth < 70 || minHeight < 70) {
@@ -572,7 +582,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
       main.setTextViewText(R.id.observationTitleTextView, "Virhe havaintojen käsittelyssä.");
     }
 
-    WidgetManager.updateAppWidget(WidgetID, main);
+    WidgetManager.updateAppWidget(WidgetID, main);*/
     return;
 
   }
