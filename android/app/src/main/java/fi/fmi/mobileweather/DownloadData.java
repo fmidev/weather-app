@@ -214,7 +214,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
 
     Log.d("DownloadData json", json.toString());
 
-    try {
+    /*try {
 
       // Get the keys of the JSONObject
       Iterator<String> keys = json.keys();
@@ -242,18 +242,38 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
     } catch (Exception e) {
       e.printStackTrace();
     }
+*/
+    try {
 
-    /*try {
+
+      // Get the keys of the JSONObject
+      Iterator<String> keys = json.keys();
+
+      // Retrieve the first key
+      if (!keys.hasNext()) {
+        return;
+      }
+      String firstKey = keys.next();
+      Log.d("DownloadData json", "First key: " + firstKey);
+
+      // Extract the JSONArray associated with the first key
+      JSONArray data = json.getJSONArray(firstKey);
+
+      // Get the first JSONObject from the JSONArray
+      JSONObject first = data.getJSONObject(0);
       
-      JSONArray forecasts = json.getJSONArray("forecasts");
+      /*JSONArray forecasts = json.getJSONArray("forecasts");
       JSONObject forecast = forecasts.getJSONObject(0);
       JSONArray data = forecast.getJSONArray("forecast");
 
-      JSONObject first = data.getJSONObject(0);
+      JSONObject first = data.getJSONObject(0);*/
+
+
+
       String name = first.getString("name");
       String region = first.getString("region");
       iso2 = first.getString("iso2");
-      geoid = first.getString("geoid");
+      geoid = firstKey;
 
       main.setTextViewText(R.id.locationTextView, name + ", " + region);
 
@@ -288,7 +308,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
           String temperature = current.getString("temperature");
           main.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
-          String weathersymbol = current.getString("SmartSymbol");
+          String weathersymbol = current.getString("smartSymbol");
 
           Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
               context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
@@ -296,9 +316,6 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
           main.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
           // Resolve feelsike icon
-
-          *//*int feelslike = json.getInt("feelsLike");
-          main.setViewVisibility(R.id.feelsLikeRelativeLayout, View.GONE);*//*
 
           String feelslike = "basic";
 
@@ -382,13 +399,13 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
         }
 
         iso2 = current.getString("iso2");
-        String temperature = current.getString("Temperature");
+        String temperature = current.getString("temperature");
         cell.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
         if (background.equals("light"))
           cell.setInt(R.id.temperatureTextView, "setTextColor", Color.rgb(48, 49, 147));
 
-        String weathersymbol = current.getString("SmartSymbol");
+        String weathersymbol = current.getString("smartSymbol");
 
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
             context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
@@ -401,10 +418,11 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
       }
 
     } catch (final JSONException e) {
-      Log.e("Exception", "Json parsing error: " + e.getMessage());
+      Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
       main.setTextViewText(R.id.locationTextView, "Virhe ennusteen käsittelyssä");
     }
 
+    // ***TODO: Observations to be handled separately
     // Make observation text
 
     try {
@@ -418,7 +436,7 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
         String localtime = data.getString("localtime");
         String name = data.getString("name");
         String region = data.getString("region");
-        String temperature = data.getString("Temperature");
+        String temperature = data.getString("temperature");
         String dewpoint = data.getString("DewPoint");
         String wc = data.getString("WindCompass8");
         String ws = data.getString("WindSpeedMS");
@@ -603,11 +621,11 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
       }
 
     } catch (final Exception e) {
-      Log.e("Exception", "Json parsing error: " + e.getMessage());
+      Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
       main.setTextViewText(R.id.observationTitleTextView, "Virhe havaintojen käsittelyssä.");
     }
 
-    WidgetManager.updateAppWidget(WidgetID, main);*/
+    WidgetManager.updateAppWidget(WidgetID, main);
     return;
 
   }
@@ -739,9 +757,9 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
     int weathersymbol;
 
     try {
-      ws = timestep.getInt("WindSpeedMS");
-      temperature = timestep.getInt("Temperature");
-      weathersymbol = timestep.getInt("SmartSymbol");
+      ws = timestep.getInt("windSpeedMS");
+      temperature = timestep.getInt("temperature");
+      weathersymbol = timestep.getInt("smartSymbol");
     } catch (final JSONException e) {
       return "basic";
     }
