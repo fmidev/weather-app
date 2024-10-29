@@ -54,6 +54,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
     onPrimaryButtonPress: () => void;
     onSecondaryButtonPress?: () => void;
     primaryButtonDisabled: boolean;
+    primaryButtonTestID?: string;
+    secondaryButtonTestID?: string;
   }> = ({
     title,
     description,
@@ -63,6 +65,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
     onPrimaryButtonPress,
     onSecondaryButtonPress,
     primaryButtonDisabled,
+    primaryButtonTestID,
+    secondaryButtonTestID,
   }) => (
     <View
       style={[
@@ -70,17 +74,21 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
         { backgroundColor: colors.background, shadowColor: colors.shadow },
       ]}>
       <Text
+        testID="setup_title_text"
         style={[styles.title, { color: colors.primaryText }]}
         accessibilityRole="header">
         {title}
       </Text>
-      <Text style={[styles.textNormal, { color: colors.hourListText }]}>
+      <Text
+        testID="setup_description_text"
+        style={[styles.textNormal, { color: colors.hourListText }]}>
         {description}
       </Text>
       {!primaryButtonFirst ? (
         <>
           {secondaryButtonText && (
             <AccessibleTouchableOpacity
+              testID={secondaryButtonTestID}
               accessibilityRole="button"
               onPress={onSecondaryButtonPress}
               style={styles.marginBottom20}>
@@ -97,6 +105,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             </AccessibleTouchableOpacity>
           )}
           <AccessibleTouchableOpacity
+            testID={primaryButtonTestID}
             onPress={onPrimaryButtonPress}
             accessibilityRole="button"
             disabled={primaryButtonDisabled}
@@ -122,6 +131,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
       ) : (
         <>
           <AccessibleTouchableOpacity
+            testID={primaryButtonTestID}
             onPress={onPrimaryButtonPress}
             accessibilityRole="button"
             disabled={primaryButtonDisabled}
@@ -145,6 +155,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
           </AccessibleTouchableOpacity>
           {secondaryButtonText && (
             <AccessibleTouchableOpacity
+              testID={secondaryButtonTestID}
               accessibilityRole="button"
               onPress={onSecondaryButtonPress}
               style={styles.marginBottom40}>
@@ -202,6 +213,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
               navigation.navigate('TermsAndConditions');
             }}
             primaryButtonDisabled={!didViewTerms}
+            primaryButtonTestID="setup_primary_button"
+            secondaryButtonTestID="setup_secondary_button"
           />
         )}
         {pageIndex === 1 && (
@@ -212,11 +225,16 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             onPrimaryButtonPress={requestLocationPermissions}
             primaryButtonDisabled={false}
             primaryButtonFirst
+            primaryButtonTestID="setup_primary_button"
+            secondaryButtonTestID="setup_secondary_button"
           />
         )}
       </View>
-      <View style={[styles.row, styles.center, styles.height10]}>
+      <View
+        testID="setup_pagination"
+        style={[styles.row, styles.center, styles.height10]}>
         <View
+          testID="setup_pagination_0"
           style={[
             styles.pagination,
             styles.marginRight,
@@ -224,6 +242,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
           ]}
         />
         <View
+          testID="setup_pagination_1"
           style={[
             styles.pagination,
             { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
