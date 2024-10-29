@@ -64,7 +64,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
                             new SingleShotLocationProvider.LocationCallback() {
                                 @Override
                                 public void onNewLocationAvailable(Location location) {
-                                    updateCoordinates(location.getLatitude(), location.getLongitude(), incomingAppWidgetId);
+                                    updateUsingCoordinates(location.getLatitude(), location.getLongitude(), incomingAppWidgetId);
                                 }
                             });
 
@@ -142,7 +142,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
     }
 
 
-    protected void updateCoordinates(double latitude, double longitude, int widget_id) {
+    protected void updateUsingCoordinates(double latitude, double longitude, int widget_id) {
 
         AppWidgetManager manager = AppWidgetManager.getInstance(this);
 
@@ -173,8 +173,8 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
 
         // Large widget
 
-        String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?geoid=658994&endtime=data&format=json&attributes=geoid&lang=fi&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
-        Log.d("DownloadData json", "url 1: " + url);
+        String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon=62.5,26.2&endtime=data&format=json&attributes=geoid&lang=fi&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
+        Log.d("DownloadData json", "url with coordinates: " + url);
 
 //        String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?param=geoid,name,region,latitude,longitude,region,country,iso2,localtz&latlon=62.5,26.2&format=json";
 
@@ -205,7 +205,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
         // Large widget
 
         String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?geoid=658994&endtime=data&format=json&attributes=geoid&lang=fi&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
-        Log.d("DownloadData json", "url 2: " + url);
+        Log.d("DownloadData json", "url with geoid: " + url);
 
         // String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
