@@ -185,7 +185,13 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
 
         // String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
-        fetchDataAndUpdateViews(url, widget_id);
+        String url2 = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon="+
+                latlon +
+                "&numberofstations=10&starttime=-72h&endtime=0&param=distance,epochtime,fmisid,stationname,stationtype,dewPoint,humidity,precipitation1h,pressure,ri_10min,snowDepth,temperature,totalCloudCover,visibility,windCompass8,windDirection,windGust,windSpeedMS&format=json&producer=observations_fmi&precision=double&lang=" +
+                language +
+                "fi&attributes=fmisid,stationname,stationtype,distance&who=MobileWeather";
+
+        fetchDataAndUpdateViews(url, url2, widget_id);
 
     }
 
@@ -216,18 +222,28 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
                 "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
         Log.d("DownloadData json", "url with geoid: " + url);
 
+        String url2 = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?geoid="+
+                geoid +
+                "&numberofstations=10&starttime=-72h&endtime=0&param=distance,epochtime,fmisid,stationname,stationtype,dewPoint,humidity,precipitation1h,pressure,ri_10min,snowDepth,temperature,totalCloudCover,visibility,windCompass8,windDirection,windGust,windSpeedMS&format=json&producer=observations_fmi&precision=double&lang=" +
+                language +
+                "fi&attributes=fmisid,stationname,stationtype,distance&who=MobileWeather";
+
         // String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
-        fetchDataAndUpdateViews(url, widget_id);
+        fetchDataAndUpdateViews(url, url2, widget_id);
 
     }
 
-    protected void fetchDataAndUpdateViews(String url, int widget_id)
+    protected void fetchDataAndUpdateViews(String url1, String url2, int widget_id)
     {
 
-        // AsyncTask for downloading data
+        //  downloading data
 
-        new DownloadData(url, this, widget_id, AppWidgetManager.getInstance(this)).execute("fi.fmi.mobileweather");
+        String[] urls = { url1, url2 };
+        DownloadData downloadData = new DownloadData(urls, this, widget_id, AppWidgetManager.getInstance(this));
+        downloadData.execute();
+
+//        new DownloadData(url, this, widget_id, AppWidgetManager.getInstance(this)).execute("fi.fmi.mobileweather");
     }
 
     protected void updateWidgetWithPositioningError(int widget_id)

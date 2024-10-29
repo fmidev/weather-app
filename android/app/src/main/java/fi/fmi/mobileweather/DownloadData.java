@@ -30,6 +30,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import com.fewlaps.quitnowcache.QNCache;
 import com.fewlaps.quitnowcache.QNCacheBuilder;
 
@@ -37,24 +41,38 @@ import com.fewlaps.quitnowcache.QNCacheBuilder;
  * Created by Pekka Keränen on 16.2.2017.
  */
 
-public class DownloadData extends AsyncTask<String, Void, JSONObject> {
+public class DownloadData {
 
-  QNCache cache = new QNCacheBuilder().setAutoReleaseInSeconds(60 * 60).createQNCache();
-
-  private String src;
+  private ExecutorService executorService = Executors.newFixedThreadPool(2);
+  private QNCache cache = new QNCacheBuilder().setAutoReleaseInSeconds(60 * 60).createQNCache();
+  private String[] urls;
   private Context context;
   private int WidgetID;
   private AppWidgetManager WidgetManager;
 
-  public DownloadData(String src, Context context, int appWidgetID, AppWidgetManager appWidgetManager) {
-    this.src = src;
+  public DownloadData(String[] urls, Context context, int appWidgetID, AppWidgetManager appWidgetManager) {
+    this.urls = urls;
     this.context = context;
     this.WidgetID = appWidgetID;
     this.WidgetManager = appWidgetManager;
   }
 
-  @Override
-  protected JSONObject doInBackground(String... params) {
+  public void execute() {
+    Future<JSONObject> future1 = executorService.submit(() -> fetchData(urls[0]));
+    Future<JSONObject> future2 = executorService.submit(() -> fetchData(urls[1]));
+
+    executorService.submit(() -> {
+      try {
+        JSONObject result1 = future1.get();
+        JSONObject result2 = future2.get();
+        onPostExecute(result1, result2);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  private JSONObject fetchData(String src) {
 
     // Check can we find result from cache
 
@@ -118,11 +136,78 @@ public class DownloadData extends AsyncTask<String, Void, JSONObject> {
     }
   }
 
-  @Override
-  protected void onPostExecute(JSONObject json) {
-    if (isCancelled()) {
-      return;
+
+
+  /*@Override
+  protected JSONObject doInBackground(String... params) {
+
+    // Check can we find result from cache
+
+    String cachejson = (String) cache.get(src);
+
+    if (cachejson != null) {
+      Log.d("cache", src + " found from cache");
+
+      try {
+        JSONObject jsonObject = new JSONObject(cachejson);
+        return jsonObject;
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+
+      return null;
     }
+
+    // Log.d("url", src);
+
+    try {
+      // Log.d("src",src);
+      URL url = new URL(src);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setDoInput(true);
+      connection.setConnectTimeout(10000);
+      connection.connect();
+      InputStream input = connection.getInputStream();
+
+      try {
+        BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+        StringBuilder responseStrBuilder = new StringBuilder();
+
+        String inputStr;
+        while ((inputStr = streamReader.readLine()) != null)
+          responseStrBuilder.append(inputStr);
+
+        String jsonstr = responseStrBuilder.toString();
+
+        // Store to cache
+
+        cache.set(src, jsonstr, 2 * 60 * 1000);
+        JSONObject jsonObject = new JSONObject(jsonstr);
+
+        // returns the json object
+        return jsonObject;
+
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+
+      // if something went wrong, return null
+      return null;
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      // Log.e("Exception",e.getMessage());
+      return null;
+    }
+  }
+*/
+  protected void onPostExecute(JSONObject json, JSONObject json2) {
+    // TODO: check canceling
+    /*if (isCancelled()) {
+      return;
+    }*/
 
     Intent intent = new Intent(context, MainActivity.class);
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
