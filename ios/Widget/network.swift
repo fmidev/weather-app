@@ -2,13 +2,13 @@ import Alamofire
 import SwiftyJSON
 
 let TIMESERIES_URL = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries"
-let WHO="iosWidget"
+let WHO="mobileweather_ios_widget"
 
 func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
   print("fetchLocation")
   let param = "geoid,name,region,latitude,longitude,region,country,iso2,localtz"
-  let latlon = "\(lat),\(lon)"
-  let dataTask = AF.request(TIMESERIES_URL+"?param=\(param)&latlon=\(latlon)&format=json&who=\(WHO)").serializingData()
+  let url = TIMESERIES_URL+"?param=\(param)&latlon=\(lat),\(lon)&format=json&who=\(WHO)"
+  let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
   
   guard let json = try? JSON(data: value) else { return nil }
@@ -27,4 +27,28 @@ func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
   )
   
   return location
+}
+
+func fetchForecast(location: Location) async throws -> [TimeStep]? {
+  print("fetchForecast")
+  let param = "epochtime,temperature,smartsymbol,dark"
+  let url = TIMESERIES_URL+"?param=\(param)&geoid=\(location.id)&format=json&who=\(WHO)"
+  let dataTask = AF.request(url).serializingData()
+  let value = try await dataTask.value
+  
+  guard let json = try? JSON(data: value) else { return nil }
+  guard let arrayJSON = json.array else { return nil }
+  
+  var items = [TimeStep]()
+  items = arrayJSON.map({
+    return TimeStep(
+      observation: false,
+      epochtime: $0["epochtime"].intValue,
+      temperature: $0["temperature"].doubleValue,
+      smartSymbol: $0["smartsymbol"].intValue,
+      dark: $0["dark"].intValue
+    )
+  })
+  
+  return items  
 }

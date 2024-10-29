@@ -11,5 +11,17 @@ let defaultLocation = Location(
   country: "Suomi"
 )
 
-let defaultEntry = TimestepEntry(date: Date(), location: defaultLocation, temperature: 11, weatherSymbol: 1)
+let defaultTimeStep = TimeStep(
+  observation: false,
+  epochtime: Int(Date().timeIntervalSince1970),
+  temperature: 11,
+  smartSymbol: 4,
+  dark: 0
+)
 
+let defaultEntry = TimeStepEntry(
+  date: Date(),
+  updated: Date(),
+  location: defaultLocation,
+  timeStep: defaultTimeStep
+)
