@@ -3,11 +3,18 @@ import SwiftyJSON
 
 let TIMESERIES_URL = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries"
 let WHO="mobileweather_ios_widget"
+let SUPPORTED_LANGUAGES = ["fi", "sv", "en"]
+
+func getLanguageCode() -> String {
+  let lang = Locale.current.language.languageCode?.identifier ?? "fi"
+  return SUPPORTED_LANGUAGES.contains(lang) ? lang : "fi"
+}
 
 func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
   print("fetchLocation")
+  let lang = getLanguageCode()
   let param = "geoid,name,region,latitude,longitude,region,country,iso2,localtz"
-  let url = TIMESERIES_URL+"?param=\(param)&latlon=\(lat),\(lon)&format=json&who=\(WHO)"
+  let url = TIMESERIES_URL+"?param=\(param)&latlon=\(lat),\(lon)&lang=\(lang)&format=json&who=\(WHO)"
   let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
   

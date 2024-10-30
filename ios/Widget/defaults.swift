@@ -23,5 +23,6 @@ let defaultEntry = TimeStepEntry(
   date: Date(),
   updated: Date(),
   location: defaultLocation,
-  timeStep: defaultTimeStep
+  timeStep: defaultTimeStep,
+  error: nil
 )

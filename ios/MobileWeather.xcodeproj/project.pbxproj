@@ -19,6 +19,7 @@
 		7E1C7131F6AD991179B8D76B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 35013B407054ED7A9F8250D5 /* PrivacyInfo.xcprivacy */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A20CB3152CCFCE0B005C4D66 /* typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20CB3142CCFCE01005C4D66 /* typography.swift */; };
+		A2239EB12CD22056007FE840 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB02CD22056007FE840 /* Localizable.xcstrings */; };
 		A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24709F02CCA83B0008CC8EA /* geolocation.swift */; };
 		A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08C62CCBBAAD00848BEB /* extensions.swift */; };
 		A24E08C82CCBBB3900848BEB /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91826B41657000BF75C /* Roboto-Bold.ttf */; };
@@ -113,6 +114,7 @@
 		974E3F089372FFCFD0AECBEB /* libPods-MobileWeather.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobileWeather.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		99DF258CBD865F8BD6216BB5 /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		A20CB3142CCFCE01005C4D66 /* typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = typography.swift; sourceTree = "<group>"; };
+		A2239EB02CD22056007FE840 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A24709F02CCA83B0008CC8EA /* geolocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geolocation.swift; sourceTree = "<group>"; };
 		A24E08C62CCBBAAD00848BEB /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		A24E08CD2CCBC22700848BEB /* modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = modifiers.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				A2B3FFAF2CC8E6AE00EC1293 /* types.swift */,
 				A2B3FFB02CC8E6AE00EC1293 /* widget.swift */,
 				A2B3FFB12CC8E6AE00EC1293 /* widgetBundle.swift */,
+				A2239EB02CD22056007FE840 /* Localizable.xcstrings */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -538,6 +541,7 @@
 				A24E08CC2CCBBB6D00848BEB /* Roboto-Thin.ttf in Resources */,
 				A24E08CB2CCBBB6400848BEB /* Roboto-Regular.ttf in Resources */,
 				A2B3FFB32CC8E6AE00EC1293 /* Assets.xcassets in Resources */,
+				A2239EB12CD22056007FE840 /* Localizable.xcstrings in Resources */,
 				A24E08C92CCBBB4200848BEB /* Roboto-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1220,6 +1224,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				USE_HERMES = true;
 			};
 			name = Debug;
@@ -1286,6 +1291,7 @@
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};

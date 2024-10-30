@@ -16,10 +16,11 @@ struct Provider: TimelineProvider {
 
   func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
     Task {
+      var error = nil as WidgetError?
       var entries: [TimeStepEntry] = []
       var location:Location?
-     
-      print("Request location")      
+          
+      print("Request location")
       
       let currentLocation = try await getCurrentLocation()
       
@@ -29,19 +30,45 @@ struct Provider: TimelineProvider {
         location = try await fetchLocation(
           lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
         )
+      } else {
+        error = WidgetError.userLocationError
       }
       
       if (location == nil ) {
         location = defaultLocation
       }
       
-      guard let forecast = try await fetchForecast(location: location!) else { return }
+      let forecast = try await fetchForecast(location: location!)
+      if (forecast == nil) {
+        error = WidgetError.dataError
+      }
       
       let updated = Date()
-           
-      for item in forecast {
-        let date = Date(timeIntervalSince1970: TimeInterval(item.epochtime))
-        entries.append(TimeStepEntry(date: date, updated: updated, location: location!, timeStep: item))
+       
+      if (error != nil) {
+        entries.append(
+          TimeStepEntry(
+            date: Date(),
+            updated: updated,
+            location: defaultLocation,
+            timeStep: defaultTimeStep,
+            error: error
+          )
+        )
+      } else {
+        for item in forecast! {
+          let date = Date(timeIntervalSince1970: TimeInterval(item.epochtime))
+          entries
+            .append(
+              TimeStepEntry(
+                date: date,
+                updated: updated,
+                location: location!,
+                timeStep: item,
+                error: nil
+              )
+            )
+        }
       }
             
       let timeline = Timeline(
@@ -57,41 +84,73 @@ struct Provider: TimelineProvider {
 
 }
 
-struct smallWidget : View {
+struct ErrorView : View {
   var entry: Provider.Entry
-
+     
   var body: some View {
     VStack {
-      Text(entry.location.formatName())
-      Text(entry.timeStep.formatDateAndTime()).style(name: "dateAndTime")
       Spacer()
-      HStack {
-        Spacer()
-        Text(entry.timeStep.formatTemperature()).style(name: "largeTemperature")
-        Image(String(entry.timeStep.smartSymbol)).resizable().frame(width: 40, height: 40)
-        Spacer()
+      switch entry.error {
+        case .userLocationError:
+          Text("Could not get location information").style(name: "error").multilineTextAlignment(.center)
+        case .dataError:
+          Text("Error loading forecast data").style(name: "error").multilineTextAlignment(.center)
+        default:
+          Text("Unknown error").style(name: "error").multilineTextAlignment(.center)
       }
       Spacer()
-      Text("Updated"+" "+entry.formatUpdated())
     }.modifier(TextModifier())
   }
 }
 
-struct widget: Widget {
+struct SmallWidgetView : View {
+  var entry: Provider.Entry
+
+  var body: some View {
+    if (entry.error != nil) {
+      ErrorView(entry: entry)
+    } else {
+      VStack {
+        Text(entry.location.formatName()).style(name: "location")
+        Spacer().frame(height: 3)
+        Text(
+          entry.timeStep
+            .formatDateAndTime(timezone:entry.location.timezone, longFormat: true)
+        ).style(name: "dateAndTime")
+        Spacer()
+        HStack {
+          Spacer()
+          Text(entry.timeStep.formatTemperature()).style(name: "largeTemperature")
+          Spacer()
+          Image(String(entry.timeStep.smartSymbol)).resizable().frame(width: 40, height: 40)
+          Spacer()
+        }
+        Spacer()
+        Text("Updated \(entry.formatUpdated())").style(name: "dateAndTime")
+          .style(name: "dateAndTime")
+      }.modifier(TextModifier())
+    }
+  }
+}
+
+struct ForecastWidget: Widget {
     let kind: String = "widget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            smallWidget(entry: entry)
+            SmallWidgetView(entry: entry)
               .containerBackground(Color("WidgetBackground"), for: .widget)
+              .padding(10)
         }
+        .contentMarginsDisabled()
         .configurationDisplayName("FMI weather")
         .description("Next hour forecast")
+        .supportedFamilies([.systemSmall])
     }
 }
 
 #Preview(as: .systemSmall) {
-    widget()
+    ForecastWidget()
 } timeline: {
     defaultEntry
 }

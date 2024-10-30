@@ -37,12 +37,23 @@ struct TimeStep {
     return prefix+String(Int(temperature.rounded()))+"°"
   }
   
-  func formatDateAndTime() -> String {
+  func formatDateAndTime(timezone: String? = nil, longFormat: Bool = false) -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd.MM. HH.mm"
+    if (longFormat) {
+      dateFormatter.dateFormat = "EEE dd.MM. '"+"at".localized()+"' HH.mm"
+    } else {
+      dateFormatter.dateFormat = "dd.MM. HH.mm"
+    }
+    
+    if (timezone != nil) {
+      dateFormatter.timeZone = TimeZone(identifier: timezone!)
+    }
+    
     let date = Date(timeIntervalSince1970: TimeInterval(epochtime))
     
-    return dateFormatter.string(from: date)
+    return longFormat ?
+      dateFormatter.string(from: date).firstUppercased :
+      dateFormatter.string(from: date)
   }
   
   
@@ -53,6 +64,7 @@ struct TimeStepEntry: TimelineEntry {
   let updated: Date
   let location: Location
   let timeStep: TimeStep
+  let error: WidgetError?
   
   func formatUpdated() -> String {
     let dateFormatter = DateFormatter()
@@ -63,3 +75,7 @@ struct TimeStepEntry: TimelineEntry {
   
 }
 
+enum WidgetError {
+  case userLocationError
+  case dataError
+}
