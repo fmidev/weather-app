@@ -73,6 +73,8 @@ public class DownloadData {
   }
 
   private JSONObject fetchData(String src) {
+    if (src == null || src.equals(""))
+      return null;
 
     // Check can we find result from cache
 
@@ -443,6 +445,12 @@ public class DownloadData {
     }
 
     // *** Make observation text
+
+    // if json2 is null or empty, update widgset now and return
+    if (json2 == null || json2.length() == 0) {
+      WidgetManager.updateAppWidget(WidgetID, main);
+      return;
+    }
 
     try {
       Log.d("DownloadData json", "Observations json: " + json2.toString());

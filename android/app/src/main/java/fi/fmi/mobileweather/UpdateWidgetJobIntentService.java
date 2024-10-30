@@ -101,8 +101,10 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
         RemoteViews main = null;
 
         if (version.equals("classic"))
+            // small widget
             main = new RemoteViews(context.getPackageName(), R.layout.smallwidget);
         else
+            // large widget
             main = new RemoteViews(context.getPackageName(), R.layout.widgetng);
 
         Intent intent = new Intent(context, MainActivity.class);
@@ -186,12 +188,15 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
 
         // String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
-        // observations url (with 1 station)
-        String url2 = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon="+
-                latlon +
-                "&numberofstations=1&starttime=-72h&endtime=0&param=distance,epochtime,fmisid,stationname,stationtype,dewPoint,humidity,precipitation1h,pressure,ri_10min,snowDepth,temperature,totalCloudCover,visibility,windCompass8,windDirection,windGust,windSpeedMS&format=json&producer=observations_fmi&precision=double&lang=" +
-                language +
-                "fi&attributes=fmisid,stationname,stationtype,distance&who=MobileWeather";
+        String url2 = "";
+        if (!version.equals("classic")) {
+            // observations url (with 1 station)
+            url2 = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon=" +
+                    latlon +
+                    "&numberofstations=1&starttime=-72h&endtime=0&param=distance,epochtime,fmisid,stationname,stationtype,dewPoint,humidity,precipitation1h,pressure,ri_10min,snowDepth,temperature,totalCloudCover,visibility,windCompass8,windDirection,windGust,windSpeedMS&format=json&producer=observations_fmi&precision=double&lang=" +
+                    language +
+                    "fi&attributes=fmisid,stationname,stationtype,distance&who=MobileWeather";
+        }
 
         fetchDataAndUpdateViews(url, url2, widget_id);
 
@@ -225,12 +230,15 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
                 "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
         Log.d("DownloadData json", "url with geoid: " + url);
 
-        // observations url (with 1 station)
-        String url2 = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?geoid="+
-                geoid +
-                "&numberofstations=1&starttime=-72h&endtime=0&param=distance,epochtime,fmisid,stationname,stationtype,dewPoint,humidity,precipitation1h,pressure,ri_10min,snowDepth,temperature,totalCloudCover,visibility,windCompass8,windDirection,windGust,windSpeedMS&format=json&producer=observations_fmi&precision=double&lang=" +
-                language +
-                "fi&attributes=fmisid,stationname,stationtype,distance&who=MobileWeather";
+        String url2 = "";
+        if (!version.equals("classic")) {
+            // observations url (with 1 station)
+            url2 = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?geoid=" +
+                    geoid +
+                    "&numberofstations=1&starttime=-72h&endtime=0&param=distance,epochtime,fmisid,stationname,stationtype,dewPoint,humidity,precipitation1h,pressure,ri_10min,snowDepth,temperature,totalCloudCover,visibility,windCompass8,windDirection,windGust,windSpeedMS&format=json&producer=observations_fmi&precision=double&lang=" +
+                    language +
+                    "fi&attributes=fmisid,stationname,stationtype,distance&who=MobileWeather";
+        }
 
         // String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
