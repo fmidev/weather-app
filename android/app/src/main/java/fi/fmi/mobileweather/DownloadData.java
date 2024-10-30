@@ -136,73 +136,6 @@ public class DownloadData {
     }
   }
 
-
-
-  /*@Override
-  protected JSONObject doInBackground(String... params) {
-
-    // Check can we find result from cache
-
-    String cachejson = (String) cache.get(src);
-
-    if (cachejson != null) {
-      Log.d("cache", src + " found from cache");
-
-      try {
-        JSONObject jsonObject = new JSONObject(cachejson);
-        return jsonObject;
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-
-      return null;
-    }
-
-    // Log.d("url", src);
-
-    try {
-      // Log.d("src",src);
-      URL url = new URL(src);
-      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      connection.setDoInput(true);
-      connection.setConnectTimeout(10000);
-      connection.connect();
-      InputStream input = connection.getInputStream();
-
-      try {
-        BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-        StringBuilder responseStrBuilder = new StringBuilder();
-
-        String inputStr;
-        while ((inputStr = streamReader.readLine()) != null)
-          responseStrBuilder.append(inputStr);
-
-        String jsonstr = responseStrBuilder.toString();
-
-        // Store to cache
-
-        cache.set(src, jsonstr, 2 * 60 * 1000);
-        JSONObject jsonObject = new JSONObject(jsonstr);
-
-        // returns the json object
-        return jsonObject;
-
-      } catch (IOException e) {
-        e.printStackTrace();
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-
-      // if something went wrong, return null
-      return null;
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      // Log.e("Exception",e.getMessage());
-      return null;
-    }
-  }
-*/
   protected void onPostExecute(JSONObject json, JSONObject json2) {
     // TODO: check canceling
     /*if (isCancelled()) {
@@ -231,8 +164,10 @@ public class DownloadData {
     RemoteViews main = null;
 
     if (version.equals("classic"))
+      // small widget
       main = new RemoteViews(context.getPackageName(), R.layout.smallwidget);
     else
+      // large widget (including observations)
       main = new RemoteViews(context.getPackageName(), R.layout.widgetng);
 
     main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
@@ -297,7 +232,7 @@ public class DownloadData {
     DateFormat shortdayformat = new SimpleDateFormat("EE");
     String iso2 = "";
 
-    Log.d("DownloadData json", json.toString());
+    Log.d("DownloadData json", "Forecast json: " + json.toString());
 
     /*try {
 
@@ -507,11 +442,80 @@ public class DownloadData {
       main.setTextViewText(R.id.locationTextView, "Virhe ennusteen käsittelyssä");
     }
 
-    // ***TODO: Observations to be handled separately
-    // Make observation text
+    // *** Make observation text
 
     try {
-      JSONObject observations = json.getJSONObject("observations");
+      Log.d("DownloadData json", "Observations json: " + json2.toString());
+
+      Iterator<String> keys = json2.keys();
+      while (keys.hasNext()) {
+        String key = keys.next();
+        JSONObject innerObject = json2.getJSONObject(key);
+
+        // Iterate through stationObject keys
+        Iterator<String> stationKeys = innerObject.keys();
+        while (stationKeys.hasNext()) {
+          String stationKey = stationKeys.next();
+          JSONObject stationObject = innerObject.getJSONObject(stationKey);
+          // log station
+          Log.d("DownloadData json", "Station: " + stationKey);
+
+          // Iterate through aviObject keys
+          Iterator<String> aviKeys = stationObject.keys();
+          while (aviKeys.hasNext()) {
+            String aviKey = aviKeys.next();
+            JSONObject aviObject = stationObject.getJSONObject(aviKey);
+
+            // Iterate through dateObject keys
+            Iterator<String> dateKeys = aviObject.keys();
+            while (dateKeys.hasNext()) {
+              String dateKey = dateKeys.next();
+              JSONArray dataArray = aviObject.getJSONArray(dateKey);
+
+              for (int i = 0; i < dataArray.length(); i++) {
+                JSONObject dataPoint = dataArray.getJSONObject(i);
+                long epochTime = dataPoint.getLong("epochtime");
+                double dewPoint = dataPoint.getDouble("dewPoint");
+                double humidity = dataPoint.getDouble("humidity");
+                double pressure = dataPoint.getDouble("pressure");
+                double temperature = dataPoint.getDouble("temperature");
+                double totalCloudCover = dataPoint.getDouble("totalCloudCover");
+                double visibility = dataPoint.getDouble("visibility");
+                String windCompass8 = dataPoint.getString("windCompass8");
+                double windDirection = dataPoint.getDouble("windDirection");
+                double windGust = dataPoint.getDouble("windGust");
+                double windSpeedMS = dataPoint.getDouble("windSpeedMS");
+
+                // Handle null values for optional fields
+                Double precipitation1h = dataPoint.isNull("precipitation1h") ? null : dataPoint.getDouble("precipitation1h");
+                Double ri_10min = dataPoint.isNull("ri_10min") ? null : dataPoint.getDouble("ri_10min");
+                Double snowDepth = dataPoint.isNull("snowDepth") ? null : dataPoint.getDouble("snowDepth");
+
+                // Process the extracted data
+                Log.d("DownloadData json", "Station Epoch Time: " + epochTime);
+                Log.d("DownloadData json", "Station Dew Point: " + dewPoint);
+                /*Log.d("DownloadData json", "Station Humidity: " + humidity);
+                Log.d("DownloadData json", "Station Pressure: " + pressure);
+                Log.d("DownloadData json", "Station Temperature: " + temperature);
+                Log.d("DownloadData json", "Station Total Cloud Cover: " + totalCloudCover);
+                Log.d("DownloadData json", "Station Visibility: " + visibility);
+                Log.d("DownloadData json", "Station Wind Compass: " + windCompass8);
+                Log.d("DownloadData json", "Station Wind Direction: " + windDirection);
+                Log.d("DownloadData json", "Station Wind Gust: " + windGust);
+                Log.d("DownloadData json", "Station Wind Speed: " + windSpeedMS);
+                Log.d("DownloadData json", "Station Precipitation 1h: " + precipitation1h);
+                Log.d("DownloadData json", "Station RI 10min: " + ri_10min);
+                Log.d("DownloadData json", "Station Snow Depth: " + snowDepth);*/
+              }
+            }
+          }
+        }
+      }
+
+// ------------------------
+      // OLD OBSERVATION CODE:
+
+      /*JSONObject observations = json.getJSONObject("observations");
       JSONArray stations = observations.getJSONArray(geoid);
 
       for (int n = 0; n < stations.length(); n++) {
@@ -703,7 +707,7 @@ public class DownloadData {
 
         break;
 
-      }
+      }*/
 
     } catch (final Exception e) {
       Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
