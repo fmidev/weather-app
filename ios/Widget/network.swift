@@ -1,7 +1,6 @@
 import Alamofire
 import SwiftyJSON
 
-let TIMESERIES_URL = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries"
 let WHO="mobileweather_ios_widget"
 let SUPPORTED_LANGUAGES = ["fi", "sv", "en"]
 
@@ -11,17 +10,15 @@ func getLanguageCode() -> String {
 }
 
 func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
-  print("fetchLocation")
+  let timeseriesUrl = getSetting("location.apiUrl") as! String
   let lang = getLanguageCode()
   let param = "geoid,name,region,latitude,longitude,region,country,iso2,localtz"
-  let url = TIMESERIES_URL+"?param=\(param)&latlon=\(lat),\(lon)&lang=\(lang)&format=json&who=\(WHO)"
+  let url = timeseriesUrl+"?param=\(param)&latlon=\(lat),\(lon)&lang=\(lang)&format=json&who=\(WHO)"
   let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
   
   guard let json = try? JSON(data: value) else { return nil }
-  
-  print(json as Any)
-  
+    
   let location = Location(
     id: json[0]["geoid"].int!,
     name: json[0]["name"].string!,
@@ -37,9 +34,9 @@ func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
 }
 
 func fetchForecast(location: Location) async throws -> [TimeStep]? {
-  print("fetchForecast")
+  let timeseriesUrl = getSetting("weather.apiUrl") as! String
   let param = "epochtime,temperature,smartsymbol,dark"
-  let url = TIMESERIES_URL+"?param=\(param)&geoid=\(location.id)&format=json&who=\(WHO)"
+  let url = timeseriesUrl+"?param=\(param)&geoid=\(location.id)&format=json&who=\(WHO)"
   let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
   

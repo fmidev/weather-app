@@ -20,6 +20,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A20CB3152CCFCE0B005C4D66 /* typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20CB3142CCFCE01005C4D66 /* typography.swift */; };
 		A2239EB12CD22056007FE840 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB02CD22056007FE840 /* Localizable.xcstrings */; };
+		A2239EB42CD39885007FE840 /* widgetConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB32CD39885007FE840 /* widgetConfig.json */; };
+		A2239EB62CD399DC007FE840 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2239EB52CD399D9007FE840 /* config.swift */; };
 		A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24709F02CCA83B0008CC8EA /* geolocation.swift */; };
 		A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08C62CCBBAAD00848BEB /* extensions.swift */; };
 		A24E08C82CCBBB3900848BEB /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91826B41657000BF75C /* Roboto-Bold.ttf */; };
@@ -115,6 +117,8 @@
 		99DF258CBD865F8BD6216BB5 /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		A20CB3142CCFCE01005C4D66 /* typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = typography.swift; sourceTree = "<group>"; };
 		A2239EB02CD22056007FE840 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		A2239EB32CD39885007FE840 /* widgetConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = widgetConfig.json; path = ../widgetConfig.json; sourceTree = SOURCE_ROOT; };
+		A2239EB52CD399D9007FE840 /* config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
 		A24709F02CCA83B0008CC8EA /* geolocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geolocation.swift; sourceTree = "<group>"; };
 		A24E08C62CCBBAAD00848BEB /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		A24E08CD2CCBC22700848BEB /* modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = modifiers.swift; sourceTree = "<group>"; };
@@ -303,6 +307,7 @@
 		A2B3FFB22CC8E6AE00EC1293 /* Widget */ = {
 			isa = PBXGroup;
 			children = (
+				A2239EB52CD399D9007FE840 /* config.swift */,
 				A20CB3142CCFCE01005C4D66 /* typography.swift */,
 				A24E08CD2CCBC22700848BEB /* modifiers.swift */,
 				A24E08C62CCBBAAD00848BEB /* extensions.swift */,
@@ -315,6 +320,7 @@
 				A2B3FFB02CC8E6AE00EC1293 /* widget.swift */,
 				A2B3FFB12CC8E6AE00EC1293 /* widgetBundle.swift */,
 				A2239EB02CD22056007FE840 /* Localizable.xcstrings */,
+				A2239EB32CD39885007FE840 /* widgetConfig.json */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -539,6 +545,7 @@
 				A24E08CA2CCBBB4A00848BEB /* Roboto-Medium.ttf in Resources */,
 				A24E08C82CCBBB3900848BEB /* Roboto-Bold.ttf in Resources */,
 				A24E08CC2CCBBB6D00848BEB /* Roboto-Thin.ttf in Resources */,
+				A2239EB42CD39885007FE840 /* widgetConfig.json in Resources */,
 				A24E08CB2CCBBB6400848BEB /* Roboto-Regular.ttf in Resources */,
 				A2B3FFB32CC8E6AE00EC1293 /* Assets.xcassets in Resources */,
 				A2239EB12CD22056007FE840 /* Localizable.xcstrings in Resources */,
@@ -902,6 +909,7 @@
 				A2B3FFB52CC8E6AE00EC1293 /* types.swift in Sources */,
 				A2B3FFB92CC9138E00EC1293 /* defaults.swift in Sources */,
 				A20CB3152CCFCE0B005C4D66 /* typography.swift in Sources */,
+				A2239EB62CD399DC007FE840 /* config.swift in Sources */,
 				A2B3FFBB2CC9175000EC1293 /* network.swift in Sources */,
 				A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */,
 				A24E08CE2CCBC22A00848BEB /* modifiers.swift in Sources */,

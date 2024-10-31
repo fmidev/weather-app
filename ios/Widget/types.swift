@@ -8,7 +8,7 @@ struct Location {
   let lon: Double
   let timezone: String
   let iso2: String
-  let country: String
+  let country: String?
   
   func formatName() -> String {
     if (iso2 == "FI") {
@@ -16,9 +16,12 @@ struct Location {
       return name+", "+area
     }
     
-    return name+", "+country;
-  }
-  
+    if (country != nil) {
+      return name+", "+country!
+    }
+    
+    return name
+  }  
 }
 
 struct TimeStep {

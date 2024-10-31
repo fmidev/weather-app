@@ -19,7 +19,7 @@ struct Provider: TimelineProvider {
       var error = nil as WidgetError?
       var entries: [TimeStepEntry] = []
       var location:Location?
-          
+            
       print("Request location")
       
       let currentLocation = try await getCurrentLocation()

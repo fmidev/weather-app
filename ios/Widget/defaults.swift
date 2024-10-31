@@ -33,7 +33,7 @@ let defaultTimeStep = TimeStep(
 let defaultEntry = TimeStepEntry(
   date: Date(),
   updated: getDefaultUpdatedDate(),
-  location: defaultLocation,
+  location: getDefaultLocation(),
   timeStep: defaultTimeStep,
   error: nil
 )
