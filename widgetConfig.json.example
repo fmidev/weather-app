@@ -1,0 +1,20 @@
+{
+  "location": {
+    "default": {
+      "name": "Helsinki",
+      "area": "",
+      "lat": 60.16952,
+      "lon": 24.93545,
+      "id": 658225,
+      "country": "FI",
+      "timezone": "Europe/Helsinki"
+    },
+    "apiUrl": "url"
+  },
+  "weather": {
+    "apiUrl": "url"
+  },
+  "warnings": {
+    "apiUrl": "url"
+  }
+}
