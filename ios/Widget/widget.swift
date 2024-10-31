@@ -57,7 +57,7 @@ struct Provider: TimelineProvider {
         )
       } else {
         for item in forecast! {
-          let date = Date(timeIntervalSince1970: TimeInterval(item.epochtime))
+          let date = Date(timeIntervalSince1970: TimeInterval(item.epochtime)).addingTimeInterval(TimeInterval(-60*60))
           entries
             .append(
               TimeStepEntry(
@@ -68,6 +68,8 @@ struct Provider: TimelineProvider {
                 error: nil
               )
             )
+          
+          if (entries.count >= 24) { break }
         }
       }
             
@@ -92,11 +94,11 @@ struct ErrorView : View {
       Spacer()
       switch entry.error {
         case .userLocationError:
-          Text("Could not get location information").style(name: "error").multilineTextAlignment(.center)
+          Text("Could not get location information").style(.error).multilineTextAlignment(.center)
         case .dataError:
-          Text("Error loading forecast data").style(name: "error").multilineTextAlignment(.center)
+          Text("Error loading forecast data").style(.error).multilineTextAlignment(.center)
         default:
-          Text("Unknown error").style(name: "error").multilineTextAlignment(.center)
+          Text("Unknown error").style(.error).multilineTextAlignment(.center)
       }
       Spacer()
     }.modifier(TextModifier())
@@ -111,23 +113,23 @@ struct SmallWidgetView : View {
       ErrorView(entry: entry)
     } else {
       VStack {
-        Text(entry.location.formatName()).style(name: "location")
+        Text(entry.location.formatName()).style(.location)
         Spacer().frame(height: 3)
         Text(
           entry.timeStep
             .formatDateAndTime(timezone:entry.location.timezone, longFormat: true)
-        ).style(name: "dateAndTime")
+        ).style(.dateAndTime)
         Spacer()
         HStack {
           Spacer()
-          Text(entry.timeStep.formatTemperature()).style(name: "largeTemperature")
+          Text(entry.timeStep.formatTemperature()).style(.largeTemperature)
           Spacer()
           Image(String(entry.timeStep.smartSymbol)).resizable().frame(width: 40, height: 40)
           Spacer()
         }
         Spacer()
-        Text("Updated \(entry.formatUpdated())").style(name: "dateAndTime")
-          .style(name: "dateAndTime")
+        Text("Updated \(entry.formatUpdated())").style(.dateAndTime)
+          .style(.dateAndTime)
       }.modifier(TextModifier())
     }
   }

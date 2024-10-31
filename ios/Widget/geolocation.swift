@@ -3,7 +3,9 @@ import CoreLocation
 
 @MainActor // <- Perform this task on main thread
 func getCurrentLocation() async throws -> CLLocation? {
-  let locationManager = AsyncLocationManager(desiredAccuracy: .bestAccuracy)
+  let locationManager = AsyncLocationManager(
+    desiredAccuracy: .hundredMetersAccuracy
+  )
   let locationUpdateEvent = try await locationManager.requestLocation()
   
   print(locationUpdateEvent as Any)

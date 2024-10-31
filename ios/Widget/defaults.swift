@@ -1,5 +1,16 @@
 import Foundation
 
+func getDefaultForecastDate() -> Date {
+  let date = Calendar.current.date(bySettingHour: 12, minute: 00, second: 0, of: Date())!
+  return date
+}
+
+func getDefaultUpdatedDate() -> Date {
+  let date = Calendar.current.date(bySettingHour: 11, minute: 55, second: 0, of: Date())!
+  return date
+}
+  
+
 let defaultLocation = Location(
   id: 658225,
   name: "Helsinki",
@@ -13,7 +24,7 @@ let defaultLocation = Location(
 
 let defaultTimeStep = TimeStep(
   observation: false,
-  epochtime: Int(Date().timeIntervalSince1970),
+  epochtime: Int(getDefaultForecastDate().timeIntervalSince1970),
   temperature: 11,
   smartSymbol: 4,
   dark: 0
@@ -21,7 +32,7 @@ let defaultTimeStep = TimeStep(
 
 let defaultEntry = TimeStepEntry(
   date: Date(),
-  updated: Date(),
+  updated: getDefaultUpdatedDate(),
   location: defaultLocation,
   timeStep: defaultTimeStep,
   error: nil

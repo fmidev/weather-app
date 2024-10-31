@@ -43,8 +43,7 @@ struct TimeStep {
       dateFormatter.dateFormat = "EEE dd.MM. '"+"at".localized()+"' HH.mm"
     } else {
       dateFormatter.dateFormat = "dd.MM. HH.mm"
-    }
-    
+    }    
     if (timezone != nil) {
       dateFormatter.timeZone = TimeZone(identifier: timezone!)
     }
@@ -69,6 +68,7 @@ struct TimeStepEntry: TimelineEntry {
   func formatUpdated() -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "dd.MM. HH.mm"
+    dateFormatter.timeZone = TimeZone(identifier: location.timezone)
     
     return dateFormatter.string(from: updated)
   }
