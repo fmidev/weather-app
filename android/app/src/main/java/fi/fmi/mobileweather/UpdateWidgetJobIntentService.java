@@ -49,11 +49,13 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
 
             Log.d("starting", "widget: "+incomingAppWidgetId);
 
+            // try to get stored geoid
             SharedPreferences pref = getSharedPreferences("fi.fmi.mobileweather.widget_"+incomingAppWidgetId, Context.MODE_PRIVATE);
             int geoid = pref.getInt("location", 0);
 
-            Log.d("location", "geoid: "+geoid);
+            Log.d("location geoid", "geoid: "+geoid);
 
+            // if geoid was not stored, try to get latlon-location and forecast (and observations) data based on that
             if (geoid==0) {
 
                 if ((ContextCompat.checkSelfPermission(this,
@@ -75,6 +77,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
                 }
 
             } else {
+                // get forecast (and observations) data with geoid
                 this.updateWidgetUsingGeoId(geoid, incomingAppWidgetId);
             }
 

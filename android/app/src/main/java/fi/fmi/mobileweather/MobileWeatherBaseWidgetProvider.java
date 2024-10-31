@@ -12,7 +12,7 @@ import android.net.Uri;
 
 // MobileWeather widget
 
-public class MobileWeatherBaseWidget extends AppWidgetProvider {
+public class MobileWeatherBaseWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);

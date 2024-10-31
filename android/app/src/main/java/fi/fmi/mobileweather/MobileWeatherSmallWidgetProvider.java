@@ -10,11 +10,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.os.Bundle;
-import android.util.Log;
 
 // MobileWeather widget, default size 1x1
 
-public class MobileWeatherSmallWidget extends MobileWeatherBaseWidget {
+public class MobileWeatherSmallWidgetProvider extends MobileWeatherBaseWidgetProvider {
 
 
     @Override

@@ -224,7 +224,7 @@ public class ExperimentalWidgetConfigurationActivity extends Activity {
      * Show the app widget and save settings.
      */
     private void showAppWidget() {
-        widgetId = AppWidgetManager.INVALID_APPWIDGET_ID; // Set the widget ID to invalid
+        widgetId = AppWidgetManager.INVALID_APPWIDGET_ID; // Set the widget ID to invalid by default
         Intent intent = getIntent(); // Get the intent
         Bundle extras = intent.getExtras(); // Get the extras from the intent
         if (extras != null) { // Check if the extras are not null

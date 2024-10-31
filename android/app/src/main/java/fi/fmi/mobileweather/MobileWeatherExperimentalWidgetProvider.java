@@ -4,7 +4,6 @@ import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -15,7 +14,7 @@ import android.util.Log;
 /**
  * MobileWeather experimental widgetProvider, default size 1x1.
  */
-public class MobileWeatherExperimentalWidget extends MobileWeatherBaseWidget {
+public class MobileWeatherExperimentalWidgetProvider extends MobileWeatherBaseWidgetProvider {
 
     /**
      * Called when the widget's options have changed (e.g., size).
@@ -25,7 +24,7 @@ public class MobileWeatherExperimentalWidget extends MobileWeatherBaseWidget {
      * @param appWidgetId The ID of the widget being updated.
      * @param newOptions The new options for the widget.
      */
-    @Override
+    /*@Override
     public void onAppWidgetOptionsChanged(Context ctxt,
                                           AppWidgetManager mgr,
                                           int appWidgetId,
@@ -62,5 +61,5 @@ public class MobileWeatherExperimentalWidget extends MobileWeatherBaseWidget {
 
         // Update the widget with the new layout
         mgr.updateAppWidget(appWidgetId, updateViews);
-    }
+    }*/
 }

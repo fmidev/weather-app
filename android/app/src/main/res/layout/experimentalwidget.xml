@@ -11,7 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/locationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/shortTimeTextView"
@@ -73,7 +85,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <!--<TextView
             android:id="@+id/locationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,7 +95,7 @@
 			android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="@android:color/white"
-            android:textSize="12dp" />
+            android:textSize="12dp" />-->
 
         <RelativeLayout
             android:id="@+id/feelsLikeRelativeLayout"
