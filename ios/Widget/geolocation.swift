@@ -6,10 +6,8 @@ func getCurrentLocation() async throws -> CLLocation? {
   let locationManager = AsyncLocationManager(
     desiredAccuracy: .hundredMetersAccuracy
   )
-  let locationUpdateEvent = try await locationManager.requestLocation()
-  
-  print(locationUpdateEvent as Any)
-   
+  let locationUpdateEvent = try? await locationManager.requestLocation()
+    
   switch locationUpdateEvent {
     case .didUpdateLocations(let locations):
         return locations[0]
