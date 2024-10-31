@@ -168,6 +168,9 @@ public class DownloadData {
     if (version.equals("classic"))
       // small widget
       main = new RemoteViews(context.getPackageName(), R.layout.smallwidget);
+    else if (version.equals("experimental"))
+      // small widget
+      main = new RemoteViews(context.getPackageName(), R.layout.experimentalwidget);
     else
       // large widget (including observations)
       main = new RemoteViews(context.getPackageName(), R.layout.widgetng);
@@ -222,7 +225,7 @@ public class DownloadData {
 
     int cellwidth = 40;
 
-    if (dpiwidth > 400 && !version.equals("classic")) {
+    if (dpiwidth > 400 && !version.equals("classic") && !version.equals("experimental")) {
       cellwidth = 66;
     }
 
@@ -299,7 +302,7 @@ public class DownloadData {
 
       main.setTextViewText(R.id.locationTextView, name + ", " + region);
 
-      if (!version.equals("classic"))
+      if (!version.equals("classic") && !version.equals("experimental"))
         main.removeAllViews(R.id.weatherRowLinearLayout);
 
       int count = 0;
@@ -316,7 +319,7 @@ public class DownloadData {
         if (!isTimeDisplayable(utcttime, localtime, forecast_mode))
           continue;
 
-        if (version.equals("classic")) {
+        if (version.equals("classic") || version.equals("classic")) {
           // Update classic widget here!
 
           try {
@@ -734,6 +737,8 @@ public class DownloadData {
 
     if (version.equals("classic"))
       main = new RemoteViews(context.getPackageName(), R.layout.smallwidget);
+    else if (version.equals("experimental"))
+      main = new RemoteViews(context.getPackageName(), R.layout.experimentalwidget);
     else
       main = new RemoteViews(context.getPackageName(), R.layout.widgetng);
 
@@ -748,7 +753,7 @@ public class DownloadData {
     } else
       main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
 
-    if (version.equals("classic")) {
+    if (version.equals("classic") || version.equals("experimental")) {
       main.setTextViewText(R.id.timeTextView, "");
       main.setTextViewText(R.id.temperatureTextView, "");
       main.setViewVisibility(R.id.feelsLikeImageView, View.GONE);

@@ -51,7 +51,7 @@ public class ExperimentalWidgetConfigurationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState); // Call the superclass onCreate method
-        setContentView(R.layout.widgetconf); // Set the content view to the widget configuration layout
+        setContentView(R.layout.widgetconf_experimental); // Set the content view to the widget configuration layout
         setResult(RESULT_CANCELED); // Set the result to canceled
 
         // Hide elements that are not used in this widget
@@ -245,7 +245,7 @@ public class ExperimentalWidgetConfigurationActivity extends Activity {
             else
                 editor.putString("background", "dark"); // Put the background as dark in the editor
 
-            editor.putString("version", "classic"); // Put the version as classic in the editor
+            editor.putString("version", "experimental"); // Put the version as classic in the editor
             editor.putString("forecast", "hours"); // Put the forecast as hours in the editor
 
             RadioGroup location = (RadioGroup) findViewById(R.id.locationRadioGroup); // Find the location radio group
