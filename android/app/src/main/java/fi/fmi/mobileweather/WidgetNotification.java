@@ -30,7 +30,7 @@ public class WidgetNotification {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
 
-            am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), (/*60**/60*1000), pi);
+            am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), (1*60*1000), pi);
         }
     }
 
