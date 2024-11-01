@@ -1,4 +1,9 @@
 {
+  "dynamicConfig": {
+    "enabled": false,
+    "apiUrl": "url",
+    "interval": 1
+  },
   "location": {
     "default": {
       "name": "Helsinki",
@@ -12,9 +17,11 @@
     "apiUrl": "url"
   },
   "weather": {
-    "apiUrl": "url"
+    "apiUrl": "url",
+    "interval": 30
   },
   "warnings": {
-    "apiUrl": "url"
+    "apiUrl": "url",
+    "interval": 5
   }
 }
