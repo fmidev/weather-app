@@ -10,7 +10,6 @@ func getDefaultUpdatedDate() -> Date {
   return date
 }
   
-
 let defaultLocation = Location(
   id: 658225,
   name: "Helsinki",
@@ -37,3 +36,13 @@ let defaultEntry = TimeStepEntry(
   timeStep: defaultTimeStep,
   error: nil
 )
+
+let defaultWarningEntry = WarningEntry(
+  date: Date(),
+  updated: getDefaultUpdatedDate(),
+  location: getDefaultLocation(),
+  warningLevel: .none,
+  warningCount: 0
+)
+
+let UPDATE_INTERVAL = 30

@@ -56,3 +56,36 @@ func fetchForecast(location: Location) async throws -> [TimeStep]? {
   
   return items  
 }
+
+func resolveWarningLevel(level: String) -> WarningLevel {
+  switch level {
+    case "Moderate": return .moderate
+    case "Severe": return .severe
+    case "Extreme": return .extreme
+    default: return .none
+  }
+}
+
+func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
+  let apiUrl = getSetting("warnings.apiUrl") as! String
+  let url = apiUrl+"?latlon=\(location.lat),\(location.lon)&country=fi&who=\(WHO)"
+  
+  print(url)
+  
+  let dataTask = AF.request(url).serializingData()
+  let value = try await dataTask.value
+  
+  guard let json = try? JSON(data: value) else { return nil }
+  guard let warningsArray = json["warnings"].array else { return nil }
+  
+  var items = [WarningTimeStep]()
+  items = warningsArray.map({
+    return WarningTimeStep(
+      type: $0["type"].stringValue,
+      level: resolveWarningLevel(level: $0["level"].stringValue),
+      duration: WarningDuration(startTime: Date(), endTime: Date())
+    )
+  })
+  
+  return items
+}

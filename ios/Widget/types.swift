@@ -75,10 +75,36 @@ struct TimeStepEntry: TimelineEntry {
     
     return dateFormatter.string(from: updated)
   }
-  
+}
+
+enum WarningLevel {
+  case none
+  case moderate
+  case severe
+  case extreme
+}
+
+struct WarningEntry: TimelineEntry {
+  let date: Date
+  let updated: Date
+  let location: Location
+  let warningLevel: WarningLevel
+  let warningCount: Int
 }
 
 enum WidgetError {
   case userLocationError
   case dataError
+  case locationOutsideDataArea
+}
+
+struct WarningDuration {
+  let startTime: Date
+  let endTime: Date
+}
+
+struct WarningTimeStep {
+  let type: String
+  let level: WarningLevel
+  let duration: WarningDuration
 }

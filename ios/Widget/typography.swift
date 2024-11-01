@@ -9,17 +9,17 @@ enum CustomTextStyle {
 
 extension Font {
   static let customFont: (CustomTextStyle) -> Font = { style in
-      switch style {
-        case .location:
-          Font.custom("Roboto-Bold", size: 15)
-        case .dateAndTime:
-          Font.custom("Roboto-Reqular", size: 13)
-        case .largeTemperature:
-          Font.custom("Roboto-Regular", size: 32)
-        case .error:
-          Font.custom("Roboto-Medium", size: 16)
-      }
+    switch style {
+      case .location:
+        Font.custom("Roboto-Bold", size: 15)
+      case .dateAndTime:
+        Font.custom("Roboto-Reqular", size: 13)
+      case .largeTemperature:
+        Font.custom("Roboto-Regular", size: 32)
+      case .error:
+        Font.custom("Roboto-Medium", size: 16)
     }
+  }
 }
 
 extension Text {

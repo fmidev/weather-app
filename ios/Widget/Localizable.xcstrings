@@ -51,6 +51,7 @@
       }
     },
     "FMI weather" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -65,6 +66,9 @@
           }
         }
       }
+    },
+    "Forecast" : {
+
     },
     "Next hour forecast" : {
       "extractionState" : "manual",
@@ -115,6 +119,19 @@
           }
         }
       }
+    },
+    "Weather warnings" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitukset"
+          }
+        }
+      }
+    },
+    "Weather warnings in your area" : {
+
     }
   },
   "version" : "1.0"

@@ -3,9 +3,7 @@ import CoreLocation
 import SwiftUI
 import AsyncLocationKit
 
-let UPDATE_INTERVAL = 30
-
-struct Provider: TimelineProvider {
+struct ForecastProvider: TimelineProvider {
   func placeholder(in context: Context) -> TimeStepEntry {
     return defaultEntry
   }
@@ -17,11 +15,10 @@ struct Provider: TimelineProvider {
   func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
     Task {
       var error = nil as WidgetError?
+      var forecast = [] as [TimeStep]?
       var entries: [TimeStepEntry] = []
       var location:Location?
-            
-      print("Request location")
-      
+                 
       let currentLocation = try await getCurrentLocation()
       
       print(currentLocation as Any)
@@ -31,16 +28,14 @@ struct Provider: TimelineProvider {
           lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
         )
       } else {
-        error = WidgetError.userLocationError
+        error = .userLocationError
       }
       
-      if (location == nil ) {
-        location = defaultLocation
-      }
-      
-      let forecast = try await fetchForecast(location: location!)
-      if (forecast == nil) {
-        error = WidgetError.dataError
+      if (error == nil) {
+        forecast = try await fetchForecast(location: location!)
+        if (forecast == nil) {
+          error = .dataError
+        }
       }
       
       let updated = Date()
@@ -87,7 +82,7 @@ struct Provider: TimelineProvider {
 }
 
 struct ErrorView : View {
-  var entry: Provider.Entry
+  var entry: ForecastProvider.Entry
      
   var body: some View {
     VStack {
@@ -106,7 +101,7 @@ struct ErrorView : View {
 }
 
 struct SmallWidgetView : View {
-  var entry: Provider.Entry
+  var entry: ForecastProvider.Entry
 
   var body: some View {
     if (entry.error != nil) {
@@ -136,16 +131,16 @@ struct SmallWidgetView : View {
 }
 
 struct ForecastWidget: Widget {
-    let kind: String = "widget"
+    let kind: String = "ForecastWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+        StaticConfiguration(kind: kind, provider: ForecastProvider()) { entry in
             SmallWidgetView(entry: entry)
               .containerBackground(Color("WidgetBackground"), for: .widget)
               .padding(10)
         }
         .contentMarginsDisabled()
-        .configurationDisplayName("FMI weather")
+        .configurationDisplayName("Forecast")
         .description("Next hour forecast")
         .supportedFamilies([.systemSmall])
     }

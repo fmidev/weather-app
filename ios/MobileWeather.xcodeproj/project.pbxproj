@@ -22,6 +22,7 @@
 		A2239EB12CD22056007FE840 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB02CD22056007FE840 /* Localizable.xcstrings */; };
 		A2239EB42CD39885007FE840 /* widgetConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB32CD39885007FE840 /* widgetConfig.json */; };
 		A2239EB62CD399DC007FE840 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2239EB52CD399D9007FE840 /* config.swift */; };
+		A2239EB82CD3AE8F007FE840 /* WarningWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2239EB72CD3AE89007FE840 /* WarningWidget.swift */; };
 		A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24709F02CCA83B0008CC8EA /* geolocation.swift */; };
 		A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08C62CCBBAAD00848BEB /* extensions.swift */; };
 		A24E08C82CCBBB3900848BEB /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91826B41657000BF75C /* Roboto-Bold.ttf */; };
@@ -35,8 +36,8 @@
 		A2B3FFA52CC7D1DC00EC1293 /* WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2B3FF962CC7D1DA00EC1293 /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A2B3FFB32CC8E6AE00EC1293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2B3FFAD2CC8E6AE00EC1293 /* Assets.xcassets */; };
 		A2B3FFB52CC8E6AE00EC1293 /* types.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFAF2CC8E6AE00EC1293 /* types.swift */; };
-		A2B3FFB62CC8E6AE00EC1293 /* widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB02CC8E6AE00EC1293 /* widget.swift */; };
-		A2B3FFB72CC8E6AE00EC1293 /* widgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB12CC8E6AE00EC1293 /* widgetBundle.swift */; };
+		A2B3FFB62CC8E6AE00EC1293 /* ForecastWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB02CC8E6AE00EC1293 /* ForecastWidget.swift */; };
+		A2B3FFB72CC8E6AE00EC1293 /* WeatherWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB12CC8E6AE00EC1293 /* WeatherWidgetBundle.swift */; };
 		A2B3FFB92CC9138E00EC1293 /* defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB82CC9138800EC1293 /* defaults.swift */; };
 		A2B3FFBB2CC9175000EC1293 /* network.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFBA2CC9174D00EC1293 /* network.swift */; };
 		A41FA36F27FD733200B08157 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -119,6 +120,7 @@
 		A2239EB02CD22056007FE840 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A2239EB32CD39885007FE840 /* widgetConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = widgetConfig.json; path = ../widgetConfig.json; sourceTree = SOURCE_ROOT; };
 		A2239EB52CD399D9007FE840 /* config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
+		A2239EB72CD3AE89007FE840 /* WarningWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningWidget.swift; sourceTree = "<group>"; };
 		A24709F02CCA83B0008CC8EA /* geolocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geolocation.swift; sourceTree = "<group>"; };
 		A24E08C62CCBBAAD00848BEB /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		A24E08CD2CCBC22700848BEB /* modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = modifiers.swift; sourceTree = "<group>"; };
@@ -128,8 +130,8 @@
 		A2B3FFAD2CC8E6AE00EC1293 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2B3FFAE2CC8E6AE00EC1293 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2B3FFAF2CC8E6AE00EC1293 /* types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = types.swift; sourceTree = "<group>"; };
-		A2B3FFB02CC8E6AE00EC1293 /* widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widget.swift; sourceTree = "<group>"; };
-		A2B3FFB12CC8E6AE00EC1293 /* widgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = widgetBundle.swift; sourceTree = "<group>"; };
+		A2B3FFB02CC8E6AE00EC1293 /* ForecastWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastWidget.swift; sourceTree = "<group>"; };
+		A2B3FFB12CC8E6AE00EC1293 /* WeatherWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWidgetBundle.swift; sourceTree = "<group>"; };
 		A2B3FFB82CC9138800EC1293 /* defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = defaults.swift; sourceTree = "<group>"; };
 		A2B3FFBA2CC9174D00EC1293 /* network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = network.swift; sourceTree = "<group>"; };
 		A443E2B525DBFF4700B0BCF9 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
@@ -317,8 +319,9 @@
 				A2B3FFAD2CC8E6AE00EC1293 /* Assets.xcassets */,
 				A2B3FFAE2CC8E6AE00EC1293 /* Info.plist */,
 				A2B3FFAF2CC8E6AE00EC1293 /* types.swift */,
-				A2B3FFB02CC8E6AE00EC1293 /* widget.swift */,
-				A2B3FFB12CC8E6AE00EC1293 /* widgetBundle.swift */,
+				A2B3FFB02CC8E6AE00EC1293 /* ForecastWidget.swift */,
+				A2239EB72CD3AE89007FE840 /* WarningWidget.swift */,
+				A2B3FFB12CC8E6AE00EC1293 /* WeatherWidgetBundle.swift */,
 				A2239EB02CD22056007FE840 /* Localizable.xcstrings */,
 				A2239EB32CD39885007FE840 /* widgetConfig.json */,
 			);
@@ -910,12 +913,13 @@
 				A2B3FFB92CC9138E00EC1293 /* defaults.swift in Sources */,
 				A20CB3152CCFCE0B005C4D66 /* typography.swift in Sources */,
 				A2239EB62CD399DC007FE840 /* config.swift in Sources */,
+				A2239EB82CD3AE8F007FE840 /* WarningWidget.swift in Sources */,
 				A2B3FFBB2CC9175000EC1293 /* network.swift in Sources */,
 				A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */,
 				A24E08CE2CCBC22A00848BEB /* modifiers.swift in Sources */,
-				A2B3FFB62CC8E6AE00EC1293 /* widget.swift in Sources */,
+				A2B3FFB62CC8E6AE00EC1293 /* ForecastWidget.swift in Sources */,
 				A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */,
-				A2B3FFB72CC8E6AE00EC1293 /* widgetBundle.swift in Sources */,
+				A2B3FFB72CC8E6AE00EC1293 /* WeatherWidgetBundle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
