@@ -31,6 +31,8 @@ public class WidgetNotification {
             calendar.setTimeInMillis(System.currentTimeMillis());
 
             am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), (1*60*1000), pi);
+        } else {
+            Log.d("WidgetNotification","Widget update could not be scheduled, because no active widgets");
         }
     }
 

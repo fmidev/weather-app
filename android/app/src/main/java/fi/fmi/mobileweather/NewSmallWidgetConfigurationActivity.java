@@ -28,6 +28,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.TextView;
+import android.widget.RemoteViews;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
@@ -40,13 +41,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class NewSmallWidgetConfigurationActivity extends Activity {
+    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.widgetconf);
+		setContentView(R.layout.new_small_widget_configure);
         setResult(RESULT_CANCELED);
+
+        // Get the widget ID from the intent
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        }
+
+        // If this activity was started with an invalid appWidgetId, finish with an error
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finish();
+            return;
+        }
 
         // Hide elements that are not used in small widget
 
@@ -269,7 +284,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 
             editor.commit();
 
-			AppWidgetProviderInfo providerInfo = AppWidgetManager.getInstance(context).getAppWidgetInfo(widgetId);
+			/*AppWidgetProviderInfo providerInfo = AppWidgetManager.getInstance(context).getAppWidgetInfo(widgetId);
 			String appWidgetLabel = providerInfo.label;
 
 			Intent startService = new Intent(NewSmallWidgetConfigurationActivity.this, UpdateWidgetJobIntentService.class);
@@ -282,7 +297,17 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 			setResult(RESULT_OK, startService);
 
             JobIntentService.enqueueWork(context, UpdateWidgetJobIntentService.class, 1, startService);
+*/
 
+            // Update the widget
+            /*AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(NewSmallWidgetConfigurationActivity.this);
+            RemoteViews views = new RemoteViews(NewSmallWidgetConfigurationActivity.this.getPackageName(), R.layout.new_small_widget_layout);
+            appWidgetManager.updateAppWidget(appWidgetId, views);*/
+
+            // Make sure we pass back the original appWidgetId
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            setResult(RESULT_OK, resultValue);
 			finish();
 		}
 		if (widgetId == INVALID_APPWIDGET_ID) {

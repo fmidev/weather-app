@@ -8,23 +8,62 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.util.Log;
 import android.content.ComponentName;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.View;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import com.fewlaps.quitnowcache.QNCache;
+import com.fewlaps.quitnowcache.QNCacheBuilder;
+
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.location.Location;
+
 
 public class NewSmallWidgetProvider extends AppWidgetProvider {
 
     public static final String ACTION_AUTO_UPDATE =
             "fi.fmi.mobileweather.AUTO_UPDATE";
+    private QNCache cache = new QNCacheBuilder().setAutoReleaseInSeconds(60 * 60).createQNCache();
+    private Context context;
+    private int appWidgetId;
+    private AppWidgetManager appWidgetManager;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("NewSmallWidget Update","onReceive");
         super.onReceive(context, intent);
         if(intent!=null && intent.getAction()!=null &&
                 intent.getAction().equals(ACTION_AUTO_UPDATE)){
-            onUpdate(context);
+            updateAfterReceive(context);
         }
     }
 
-    private void onUpdate(Context context) {
-        Log.d("MyWidget Update","Udpate triggered");
+    private void updateAfterReceive(Context context) {
+        Log.d("NewSmallWidget Update","updateAfterReceive triggered");
         AppWidgetManager appWidgetManager =
                 AppWidgetManager.getInstance(context);
         ComponentName thisAppWidgetComponentName = new ComponentName(context.getPackageName(),getClass().getName());
@@ -52,46 +91,63 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
+        Log.d("NewSmallWidget Update","onEnabled");
         super.onEnabled(context);
-        WidgetNotification.scheduleWidgetUpdate(context);
+        NewSmallWidgetNotification.scheduleWidgetUpdate(context);
     }
 
     private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        // Construct the RemoteViews object
+        this.context = context;
+        this.appWidgetManager = appWidgetManager;
+        this.appWidgetId = appWidgetId;
+        execute();
+
+        /*// Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
         // Update the text
         views.setTextViewText(R.id.widget_text, "Updated Text at " + java.text.DateFormat.getTimeInstance().format(new java.util.Date()));
 
-        // Update the image
-//        views.setImageViewResource(R.id.widget_image, R.drawable.updated_image);
-
         // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        appWidgetManager.updateAppWidget(appWidgetId, views);*/
     }
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        WidgetNotification.clearWidgetUpdate(context);
+        NewSmallWidgetNotification.clearWidgetUpdate(context);
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        WidgetNotification.clearWidgetUpdate(context);
+        NewSmallWidgetNotification.clearWidgetUpdate(context);
     }
 
 
     public void execute() {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        // TODO: change these to real values:
+        String latlon = "60.16952,24.93545";
+        String language = "fi";
+
+        String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon=" +
+                latlon +
+                "&endtime=data&format=json&attributes=geoid&lang=" +
+                language +
+                "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
+
+        String[] urls = {url};
+
         Future<JSONObject> future1 = executorService.submit(() -> fetchData(urls[0]));
-        Future<JSONObject> future2 = executorService.submit(() -> fetchData(urls[1]));
+//        Future<JSONObject> future2 = executorService.submit(() -> fetchData(urls[1]));
 
         executorService.submit(() -> {
             try {
                 JSONObject result1 = future1.get();
-                JSONObject result2 = future2.get();
-                onPostExecute(result1, result2);
+//                JSONObject result2 = future2.get();
+                onPostExecute(result1/*, result2*/);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -104,7 +160,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
         // Check can we find result from cache
 
-        String cachejson = (String) cache.get(src);
+        /*String cachejson = (String) cache.get(src);
 
         if (cachejson != null) {
             Log.d("cache", src + " found from cache");
@@ -117,7 +173,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             }
 
             return null;
-        }
+        }*/
 
         // Log.d("url", src);
 
@@ -139,6 +195,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                     responseStrBuilder.append(inputStr);
 
                 String jsonstr = responseStrBuilder.toString();
+
+                Log.d("DownloadData json", "fetchData Forecast json: " + jsonstr);
 
                 // Store to cache
 
@@ -164,7 +222,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void onPostExecute(JSONObject json, JSONObject json2) {
+    protected void onPostExecute(JSONObject json/*, JSONObject json2*/) {
         // TODO: check canceling
         /*if (isCancelled()) {
           return;
@@ -175,7 +233,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
         // Get settings
 
-        SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + WidgetID,
+        SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
                 Context.MODE_PRIVATE);
         String background = pref.getString("background", "dark");
         String forecast_mode = pref.getString("forecast", "hours");
@@ -183,9 +241,9 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
         // Widget manager gives widget width and height
 
-        Bundle options = WidgetManager.getAppWidgetOptions(WidgetID);
-        int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-        int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+        /*Bundle options = WidgetManager.getAppWidgetOptions(WidgetID);
+        int minWidth = options.getInt(appWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        int minHeight = options.getInt(appWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);*/
 
         // Get the layout for the App Widget
         RemoteViews main = new RemoteViews(context.getPackageName(), R.layout.new_small_widget_layout);
@@ -207,12 +265,12 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 } catch (JSONException e) {
                     RemoteViews errorview = buildErrorView(context, pref,
                             context.getResources().getString(R.string.update_failed));
-                    WidgetManager.updateAppWidget(WidgetID, errorview);
+                    appWidgetManager.updateAppWidget(appWidgetId, errorview);
                     return;
                 }
             } else {
                 RemoteViews errorview = buildErrorView(context, pref, context.getResources().getString(R.string.update_failed));
-                WidgetManager.updateAppWidget(WidgetID, errorview);
+                appWidgetManager.updateAppWidget(appWidgetId, errorview);
                 return;
             }
 
@@ -283,6 +341,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
             int count = 0;
 
+            // TODO: this loop should be unnecessary
             for (int i = 0; i < data.length(); i++) {
 
                 if (count >= Math.floor((dpiwidth - 14) / cellwidth))
@@ -295,46 +354,48 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 /*if (!isTimeDisplayable(utcttime, localtime, forecast_mode))
                     continue;*/
 
-                if (version.equals("classic") || version.equals("classic")) {
-                    // Update classic widget here!
+                // Update classic widget here!
 
-                    try {
+                   /* try {
                         Date date = format.parse(localtime);
                         main.setTextViewText(R.id.shortTimeTextView, shorthourformat.format(date));
                         main.setTextViewText(R.id.timeTextView, hourformat.format(date));
                     } catch (Exception e) {
                         continue;
-                    }
+                    }*/
 
-                    String temperature = current.getString("temperature");
-                    main.setTextViewText(R.id.temperatureTextView, temperature + "°");
+                String temperature = current.getString("temperature");
+                main.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
-                    String weathersymbol = current.getString("smartSymbol");
+                String weathersymbol = current.getString("smartSymbol");
 
-                    Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                            context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+                Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+                        context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
 
-                    main.setImageViewBitmap(R.id.weatherIconImageView, icon);
+                main.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
-                    // If very small then also hide location name and show time
+                // Update the text
+                main.setTextViewText(R.id.updateTimeTextView, "Päivitetty " + java.text.DateFormat.getTimeInstance().format(new java.util.Date()));
 
-                    if (minWidth < 70 || minHeight < 70) {
-                        main.setViewVisibility(R.id.locationTextView, View.GONE);
-                    } else {
-                        main.setViewVisibility(R.id.locationTextView, View.VISIBLE);
-                    }
 
-                    if (minWidth < 70) {
-                        main.setViewVisibility(R.id.timeTextView, View.GONE);
-                        main.setViewVisibility(R.id.shortTimeTextView, View.VISIBLE);
-                    } else {
-                        main.setViewVisibility(R.id.shortTimeTextView, View.GONE);
-                        main.setViewVisibility(R.id.timeTextView, View.VISIBLE);
-                    }
+                // If very small then also hide location name and show time
 
-                    WidgetManager.updateAppWidget(WidgetID, main);
-                    return;
-                }
+                /*if (minWidth < 70 || minHeight < 70) {
+                    main.setViewVisibility(R.id.locationTextView, View.GONE);
+                } else {
+                    main.setViewVisibility(R.id.locationTextView, View.VISIBLE);
+                }*/
+
+                /*if (minWidth < 70) {
+                    main.setViewVisibility(R.id.timeTextView, View.GONE);
+                    main.setViewVisibility(R.id.shortTimeTextView, View.VISIBLE);
+                } else {
+                    main.setViewVisibility(R.id.shortTimeTextView, View.GONE);
+                    main.setViewVisibility(R.id.timeTextView, View.VISIBLE);
+                }*/
+
+                appWidgetManager.updateAppWidget(appWidgetId, main);
+                return;
             }
 
         } catch (final JSONException e) {
@@ -342,7 +403,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             main.setTextViewText(R.id.locationTextView, "Virhe ennusteen käsittelyssä");
         }
 
-        WidgetManager.updateAppWidget(WidgetID, main);
+        appWidgetManager.updateAppWidget(appWidgetId, main);
         return;
     }
 
@@ -369,10 +430,10 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         } else
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
 
-        if (version.equals("classic") || version.equals("experimental")) {
-            main.setTextViewText(R.id.timeTextView, "");
+//        if (version.equals("classic") || version.equals("experimental")) {
+//            main.setTextViewText(R.id.timeTextView, "");
             main.setTextViewText(R.id.temperatureTextView, "");
-            main.setViewVisibility(R.id.feelsLikeImageView, View.GONE);
+//            main.setViewVisibility(R.id.feelsLikeImageView, View.GONE);
 
             Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
                     context.getResources().getIdentifier("error", "drawable", context.getPackageName()));
@@ -380,7 +441,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             main.setImageViewBitmap(R.id.weatherIconImageView, icon);
             main.setTextViewText(R.id.locationTextView, errorstr);
 
-        } else {
+        /*} else {
             main.setTextViewText(R.id.locationTextView, "");
             main.setTextViewText(R.id.observationTitleTextView, "");
             main.removeAllViews(R.id.weatherRowLinearLayout);
@@ -388,7 +449,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             RemoteViews error = new RemoteViews(context.getPackageName(), R.layout.error);
             error.setTextViewText(R.id.errorTextView, errorstr);
             main.addView(R.id.weatherRowLinearLayout, error);
-        }
+        }*/
 
         return main;
     }
