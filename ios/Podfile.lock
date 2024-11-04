@@ -1299,6 +1299,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.0)
+  - SwiftDate (7.0.0)
   - SwiftyJSON (5.0.2)
   - Yoga (0.0.0)
 
@@ -1377,6 +1378,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - SwiftDate (~> 7.0)
   - SwiftyJSON (~> 5.0)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1384,6 +1386,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - SocketRocket
+    - SwiftDate
     - SwiftyJSON
 
 EXTERNAL SOURCES:
@@ -1613,9 +1616,10 @@ SPEC CHECKSUMS:
   RNSVG: cb24fb322de8c1ebf59904e7aca0447bb8dbed5a
   RNVectorIcons: 845eda5c7819bd29699cafd0fc98c9d4afe28c96
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
+  SwiftDate: bbc26e26fc8c0c33fbee8c140c5e8a68293a148a
   SwiftyJSON: f5b1bf1cd8dd53cd25887ac0eabcfd92301c6a5a
   Yoga: 88480008ccacea6301ff7bf58726e27a72931c8d
 
-PODFILE CHECKSUM: bee2c7e3af2a35dfe31bc2772749990456f22ee8
+PODFILE CHECKSUM: 9e65633c1153e05f6adf11198ddbcf63920cecfa
 
 COCOAPODS: 1.15.2

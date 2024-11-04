@@ -57,8 +57,8 @@ func fetchForecast(location: Location) async throws -> [TimeStep]? {
   return items  
 }
 
-func resolveWarningLevel(level: String) -> WarningLevel {
-  switch level {
+func resolveWarningSeverity(severity: String) -> WarningSeverity {
+  switch severity {
     case "Moderate": return .moderate
     case "Severe": return .severe
     case "Extreme": return .extreme
@@ -67,25 +67,28 @@ func resolveWarningLevel(level: String) -> WarningLevel {
 }
 
 func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
+  let formatter = DateFormatter()
+  formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  
   let apiUrl = getSetting("warnings.apiUrl") as! String
   let url = apiUrl+"?latlon=\(location.lat),\(location.lon)&country=fi&who=\(WHO)"
-  
-  print(url)
-  
   let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
   
   guard let json = try? JSON(data: value) else { return nil }
-  guard let warningsArray = json["warnings"].array else { return nil }
-  
+  guard let warningsArray = json["data"]["warnings"].array else { return nil }
+   
   var items = [WarningTimeStep]()
   items = warningsArray.map({
     return WarningTimeStep(
       type: $0["type"].stringValue,
-      level: resolveWarningLevel(level: $0["level"].stringValue),
-      duration: WarningDuration(startTime: Date(), endTime: Date())
+      severity: resolveWarningSeverity(severity: $0["severity"].stringValue),
+      duration: WarningDuration(
+        startTime: formatter.date(from: $0["duration"]["startTime"].stringValue),
+        endTime: formatter.date(from: $0["duration"]["endTime"].stringValue)
+      )
     )
   })
-  
+   
   return items
 }

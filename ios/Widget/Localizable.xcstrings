@@ -120,6 +120,22 @@
         }
       }
     },
+    "Warnings (%lld)" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoituksia (%lld)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varningar (%lld)"
+          }
+        }
+      }
+    },
     "Weather warnings" : {
       "localizations" : {
         "fi" : {

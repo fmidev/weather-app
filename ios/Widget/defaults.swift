@@ -42,7 +42,8 @@ let defaultWarningEntry = WarningEntry(
   updated: getDefaultUpdatedDate(),
   location: getDefaultLocation(),
   warningLevel: .none,
-  warningCount: 0
+  warningCount: 0,
+  error: nil
 )
 
 let UPDATE_INTERVAL = 30

@@ -1,4 +1,5 @@
 import WidgetKit
+import SwiftDate
 
 struct Location {
   let id: Int
@@ -57,8 +58,6 @@ struct TimeStep {
       dateFormatter.string(from: date).firstUppercased :
       dateFormatter.string(from: date)
   }
-  
-  
 }
 
 struct TimeStepEntry: TimelineEntry {
@@ -77,34 +76,66 @@ struct TimeStepEntry: TimelineEntry {
   }
 }
 
-enum WarningLevel {
-  case none
-  case moderate
-  case severe
-  case extreme
-}
-
 struct WarningEntry: TimelineEntry {
   let date: Date
   let updated: Date
   let location: Location
-  let warningLevel: WarningLevel
+  let warningLevel: WarningSeverity
   let warningCount: Int
+  let error: WidgetError?
+  
+  func formatUpdated() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "dd.MM. HH.mm"
+    dateFormatter.timeZone = TimeZone(identifier: location.timezone)
+    
+    return dateFormatter.string(from: updated)
+  }
+  
+  func formatDate() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEEE dd.MM."
+    dateFormatter.timeZone = TimeZone(identifier: "Europe/Helsinki")
+    
+    return dateFormatter.string(from: date).firstUppercased
+  }
 }
 
 enum WidgetError {
+  case none
   case userLocationError
   case dataError
   case locationOutsideDataArea
 }
 
+enum WarningSeverity:Int {
+  case none = 0
+  case moderate = 1
+  case severe = 2
+  case extreme = 3
+}
+
 struct WarningDuration {
-  let startTime: Date
-  let endTime: Date
+  let startTime: Date?
+  let endTime: Date?
 }
 
 struct WarningTimeStep {
   let type: String
-  let level: WarningLevel
+  let severity: WarningSeverity
   let duration: WarningDuration
+  
+  func isValidOnDay(date: Date) -> Bool {
+    if (duration.startTime == nil || duration.endTime == nil) {
+      return false
+    }
+    
+    return date
+      .isInRange(
+        date: duration.startTime!,
+        and: duration.endTime!,
+        orEqual: true,
+        granularity: .day
+      )
+  }
 }

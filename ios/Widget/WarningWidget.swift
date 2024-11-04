@@ -38,14 +38,34 @@ struct WarningProvider: TimelineProvider {
           error = WidgetError.dataError
         }
       }
-      
-      print("Warnings")
-      print(error as Any)
-      print(warnings as Any)
-      
+            
       let updated = Date()
-      
-      entries.append(defaultWarningEntry)
+      let dates = [Date(), Date().addingTimeInterval(60*60)]
+        
+      for date in dates {
+        var severity = WarningSeverity.none
+        var count = 0
+        
+        for warning in warnings! {
+          if (!warning.isValidOnDay(date: date)) { continue }
+          
+          if (warning.severity.rawValue > severity.rawValue) {
+            severity = warning.severity
+          }
+          count += 1
+        }
+        
+        let entry = WarningEntry(
+          date: date,
+          updated: updated,
+          location: location!,
+          warningLevel: severity,
+          warningCount: count,
+          error: nil
+        )
+
+        entries.append(entry)
+      }
       
       let timeline = Timeline(
         entries: entries,
@@ -60,13 +80,20 @@ struct WarningProvider: TimelineProvider {
 }
 
 struct SmallWarningView : View {
-  var entry: WarningProvider.Entry
+  var entry: WarningProvider.Entry;
 
   var body: some View {
     VStack {
+      Text(entry.location.formatName()).style(.location)
+      Spacer().frame(height: 3)
+      Text(entry.formatDate()).style(.dateAndTime)
       Spacer()
-      Text("Weather warnings")
+      Text("Warnings (\(entry.warningCount))")
+        .frame(maxWidth: .infinity, minHeight: 40)
+        .border(Color(String(describing: entry.warningLevel)), width: 2)
       Spacer()
+      Text("Updated \(entry.formatUpdated())").style(.dateAndTime)
+        .style(.dateAndTime)
     }.modifier(TextModifier())
   }
 }
