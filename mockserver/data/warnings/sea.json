@@ -1,0 +1,39 @@
+{
+  "data": {
+    "updated": "2024-11-01T03:07:43.000Z",
+    "warnings": [
+      {
+        "type": "seaWaveHeight",
+        "language": "fi",
+        "severity": "Severe",
+        "description": "Aallokkovaroitus: Aluksi esiintyy kovaa aallokkoa, jossa merkitsevä aallonkorkeus ylittää 4 metriä.",
+        "duration": {
+          "startTime": "2024-11-01T05:00:00.000Z",
+          "endTime": "2024-11-02T13:00:00.000Z"
+        }
+      },
+      {
+        "type": "seaWind",
+        "language": "fi",
+        "severity": "Severe",
+        "description": "Myrskyvaroitus: Luoteismyrskyä aluksi 21 m/s.",
+        "duration": {
+          "startTime": "2024-11-01T03:07:42.000Z",
+          "endTime": "2024-11-02T09:00:00.000Z"
+        }
+      },
+      {
+        "type": "seaWind",
+        "language": "fi",
+        "severity": "Moderate",
+        "description": "Kovan tuulen varoitus: Kovan luoteistuulen todennäköisyys on 40 % sunnuntaipäivästä maanantaiaamuun.",
+        "duration": {
+          "startTime": "2024-11-03T11:00:00.000Z",
+          "endTime": "2024-11-04T04:00:00.000Z"
+        }
+      }
+    ],
+    "startTime": "2024-11-01T06:18:29.207Z",
+    "endTime": "2025-11-01T06:18:29.207Z"
+  }
+}
