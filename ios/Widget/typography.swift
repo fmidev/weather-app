@@ -5,6 +5,9 @@ enum CustomTextStyle {
   case dateAndTime
   case largeTemperature
   case error
+  case temperatureUnit
+  case areaOrCountry
+  case crisis
 }
 
 extension Font {
@@ -12,12 +15,18 @@ extension Font {
     switch style {
       case .location:
         Font.custom("Roboto-Bold", size: 15)
+      case  .areaOrCountry:
+        Font.custom("Roboto-Regular", size: 15)
       case .dateAndTime:
         Font.custom("Roboto-Reqular", size: 13)
       case .largeTemperature:
-        Font.custom("Roboto-Regular", size: 32)
+        Font.custom("Roboto-Regular", size: 36)
       case .error:
         Font.custom("Roboto-Medium", size: 16)
+      case .temperatureUnit:
+        Font.custom("Roboto-Regular", size: 15)
+      case .crisis:
+        Font.custom("Roboto-Medium", size: 13)
     }
   }
 }

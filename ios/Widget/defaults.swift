@@ -34,6 +34,7 @@ let defaultEntry = TimeStepEntry(
   updated: getDefaultUpdatedDate(),
   location: getDefaultLocation(),
   timeStep: defaultTimeStep,
+  crisisMessage: nil,
   error: nil
 )
 
@@ -46,4 +47,7 @@ let defaultWarningEntry = WarningEntry(
   error: nil
 )
 
+let WHO="mobileweather_ios_widget"
 let UPDATE_INTERVAL = 30
+let SUPPORTED_LANGUAGES = ["fi", "sv", "en"]
+let FALLBACK_LANGUAGE = "en"

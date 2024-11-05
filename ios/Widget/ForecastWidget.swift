@@ -18,6 +18,7 @@ struct ForecastProvider: TimelineProvider {
       var forecast = [] as [TimeStep]?
       var entries: [TimeStepEntry] = []
       var location:Location?
+      var crisisMessage = nil as String?
                  
       let currentLocation = try await getCurrentLocation()
       
@@ -29,6 +30,11 @@ struct ForecastProvider: TimelineProvider {
         )
       } else {
         error = .userLocationError
+      }
+      
+      if (getSetting("announcements.enabled") as? Bool == true) {
+        crisisMessage = try? await fetchCrisisMessage()
+        print(crisisMessage as Any)
       }
       
       if (error == nil) {
@@ -47,6 +53,7 @@ struct ForecastProvider: TimelineProvider {
             updated: updated,
             location: defaultLocation,
             timeStep: defaultTimeStep,
+            crisisMessage: crisisMessage,
             error: error
           )
         )
@@ -60,6 +67,7 @@ struct ForecastProvider: TimelineProvider {
                 updated: updated,
                 location: location!,
                 timeStep: item,
+                crisisMessage: crisisMessage,
                 error: nil
               )
             )
@@ -108,23 +116,24 @@ struct SmallWidgetView : View {
       ErrorView(entry: entry)
     } else {
       VStack {
-        Text(entry.location.formatName()).style(.location)
-        Spacer().frame(height: 3)
-        Text(
-          entry.timeStep
-            .formatDateAndTime(timezone:entry.location.timezone, longFormat: true)
-        ).style(.dateAndTime)
+        Text(entry.formatLocation()).style(.location).padding(.top, 17)
+        Text(entry.formatAreaOrCountry()).style(.areaOrCountry)
         Spacer()
-        HStack {
-          Spacer()
+        HStack(spacing: 2) {
+          Image(String(entry.timeStep.smartSymbol)).resizable().frame(width: 54, height: 54)
           Text(entry.timeStep.formatTemperature()).style(.largeTemperature)
-          Spacer()
-          Image(String(entry.timeStep.smartSymbol)).resizable().frame(width: 40, height: 40)
-          Spacer()
+          Text("°C").style(.temperatureUnit).baselineOffset(15)
         }
-        Spacer()
-        Text("Updated \(entry.formatUpdated())").style(.dateAndTime)
-          .style(.dateAndTime)
+        if (entry.crisisMessage != nil) {
+          Text(entry.crisisMessage!)
+            .style(.crisis)
+            .foregroundStyle(Color("CrisisTextColor"))
+            .lineLimit(2)
+            .fixedSize(horizontal: false, vertical: true)
+        } else {
+          Spacer()
+          Image("FMI").resizable().frame(width: 50, height: 24)
+        }
       }.modifier(TextModifier())
     }
   }
@@ -137,7 +146,7 @@ struct ForecastWidget: Widget {
         StaticConfiguration(kind: kind, provider: ForecastProvider()) { entry in
             SmallWidgetView(entry: entry)
               .containerBackground(Color("WidgetBackground"), for: .widget)
-              .padding(10)
+              .padding(8)
         }
         .contentMarginsDisabled()
         .configurationDisplayName("Forecast")

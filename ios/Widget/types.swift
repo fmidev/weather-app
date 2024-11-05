@@ -35,10 +35,10 @@ struct TimeStep {
   func formatTemperature() -> String {
     let prefix = temperature >= 0 ? "+" : ""
     if (observation) {
-      return prefix+String(temperature)+"°"
+      return prefix+String(temperature)
     }
     
-    return prefix+String(Int(temperature.rounded()))+"°"
+    return prefix+String(Int(temperature.rounded()))
   }
   
   func formatDateAndTime(timezone: String? = nil, longFormat: Bool = false) -> String {
@@ -65,7 +65,28 @@ struct TimeStepEntry: TimelineEntry {
   let updated: Date
   let location: Location
   let timeStep: TimeStep
+  let crisisMessage: String?
   let error: WidgetError?
+  
+  func formatLocation() -> String {
+    if (location.name == location.area) {
+      return location.name
+    }
+    
+    return location.name + ", "
+  }
+  
+  func formatAreaOrCountry() -> String {
+    if (location.name == location.area) {
+      return ""
+    }
+    
+    if (location.iso2 == "FI") {
+      return location.area
+    }
+        
+    return location.country != nil ? location.country! : ""
+  }
   
   func formatUpdated() -> String {
     let dateFormatter = DateFormatter()

@@ -1,9 +1,6 @@
 import Alamofire
 import SwiftyJSON
 
-let WHO="mobileweather_ios_widget"
-let SUPPORTED_LANGUAGES = ["fi", "sv", "en"]
-
 func getLanguageCode() -> String {
   let lang = Locale.current.language.languageCode?.identifier ?? "fi"
   return SUPPORTED_LANGUAGES.contains(lang) ? lang : "fi"
@@ -91,4 +88,30 @@ func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
   })
    
   return items
+}
+
+func fetchCrisisMessage() async throws -> String? {
+  var language = FALLBACK_LANGUAGE
+  
+  if (Locale.current.language.languageCode?.identifier != nil &&
+      SUPPORTED_LANGUAGES.contains(Locale.current.language.languageCode!.identifier)
+  ) {
+    language = Locale.current.language.languageCode!.identifier
+  }
+   
+  guard let apiUrl = getSetting("announcements.api."+language) as? String else { return nil }
+  
+  let dataTask = AF.request(apiUrl).serializingData()
+  let value = try await dataTask.value
+  
+  guard let json = try? JSON(data: value) else { return nil }
+  guard let announcementsArray = json.array else { return nil }
+   
+  for announcement in announcementsArray {
+    if (announcement["type"].stringValue == "Crisis") {
+      return announcement["content"].stringValue
+    }
+  }
+  
+  return nil
 }
