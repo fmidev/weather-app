@@ -232,6 +232,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
                 Context.MODE_PRIVATE);
         String background = pref.getString("background", "dark");
+        // TODO: temporarily only light mode:
+        background = "light";
         String forecast_mode = pref.getString("forecast", "hours");
         String version = pref.getString("version", "advanced");
 
@@ -330,7 +332,10 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             iso2 = first.getString("iso2");
             geoid = firstKey;
 
-            main.setTextViewText(R.id.locationTextView, name + ", " + region);
+            // set location name and region
+
+            main.setTextViewText(R.id.locationNameTextView, name+ ",");
+            main.setTextViewText(R.id.locationRegionTextView, region);
 
            /* if (!version.equals("classic") && !version.equals("experimental"))
                 main.removeAllViews(R.id.weatherRowLinearLayout);*/
@@ -360,17 +365,28 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                     }*/
 
                 String temperature = first.getString("temperature");
+                // temperature string to float
+                float tempFloat = Float.parseFloat(temperature);
+                // if temperature is positive, add plus sign to temperature string
+                if (tempFloat > 0) {
+                    temperature = "+" + temperature;
+                }
                 main.setTextViewText(R.id.temperatureTextView, temperature + "°");
+
+                // ** set the weather icon
 
                 String weathersymbol = first.getString("smartSymbol");
 
+                /*main.setImageViewResource(R.id.weatherIconImageView,
+                        context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+*/
                 Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
                         context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
 
                 main.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
                 // Update the text
-                main.setTextViewText(R.id.updateTimeTextView, "Päivitetty " + java.text.DateFormat.getTimeInstance().format(new java.util.Date()));
+                main.setTextViewText(R.id.updateTimeTextView, /*"Päivitetty " +*/ DateFormat.getTimeInstance().format(new java.util.Date()));
 
 
                 // If very small then also hide location name and show time
