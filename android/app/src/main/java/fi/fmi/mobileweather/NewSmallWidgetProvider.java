@@ -93,7 +93,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Log.d("NewSmallWidget Update","onEnabled");
         super.onEnabled(context);
-        NewSmallWidgetNotification.scheduleWidgetUpdate(context);
+        NewWidgetNotification.scheduleWidgetUpdate(context, NewSmallWidgetProvider.class);
     }
 
     private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -115,13 +115,13 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        NewSmallWidgetNotification.clearWidgetUpdate(context);
+        NewWidgetNotification.clearWidgetUpdate(context, NewSmallWidgetProvider.class);
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        NewSmallWidgetNotification.clearWidgetUpdate(context);
+        NewWidgetNotification.clearWidgetUpdate(context, NewSmallWidgetProvider.class);
     }
 
 
