@@ -223,10 +223,6 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     }
 
     protected void onPostExecute(JSONObject json/*, JSONObject json2*/) {
-        // TODO: check canceling
-        /*if (isCancelled()) {
-          return;
-        }*/
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -339,17 +335,16 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
            /* if (!version.equals("classic") && !version.equals("experimental"))
                 main.removeAllViews(R.id.weatherRowLinearLayout);*/
 
-            int count = 0;
+//            int count = 0;
 
-            // TODO: this loop should be unnecessary
-            for (int i = 0; i < data.length(); i++) {
+//            for (int i = 0; i < data.length(); i++) {
 
-                if (count >= Math.floor((dpiwidth - 14) / cellwidth))
-                    break;
+                /*if (count >= Math.floor((dpiwidth - 14) / cellwidth))
+                    break;*/
 
-                JSONObject current = data.getJSONObject(i);
-                String localtime = current.getString("localtime");
-                String utcttime = current.getString("utctime");
+//                JSONObject current = data.getJSONObject(i);
+                String localtime = first.getString("localtime");
+                String utcttime = first.getString("utctime");
 
                 /*if (!isTimeDisplayable(utcttime, localtime, forecast_mode))
                     continue;*/
@@ -364,10 +359,10 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                         continue;
                     }*/
 
-                String temperature = current.getString("temperature");
+                String temperature = first.getString("temperature");
                 main.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
-                String weathersymbol = current.getString("smartSymbol");
+                String weathersymbol = first.getString("smartSymbol");
 
                 Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
                         context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
@@ -396,7 +391,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
                 appWidgetManager.updateAppWidget(appWidgetId, main);
                 return;
-            }
+//            }
 
         } catch (final JSONException e) {
             Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
