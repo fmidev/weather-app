@@ -1,0 +1,27 @@
+{
+  "dynamicConfig": {
+    "enabled": false,
+    "apiUrl": "url",
+    "interval": 1
+  },
+  "location": {
+    "default": {
+      "name": "Helsinki",
+      "area": "",
+      "lat": 60.16952,
+      "lon": 24.93545,
+      "id": 658225,
+      "country": "FI",
+      "timezone": "Europe/Helsinki"
+    },
+    "apiUrl": "url"
+  },
+  "weather": {
+    "apiUrl": "url",
+    "interval": 30
+  },
+  "warnings": {
+    "apiUrl": "url",
+    "interval": 5
+  }
+}

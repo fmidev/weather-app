@@ -80,6 +80,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         { backgroundColor: colors.background, shadowColor: colors.shadow },
       ]}>
       <View
+        testID="onboarding_info_icon_container"
         style={[
           styles.iconContainer,
           { backgroundColor: colors.background, shadowColor: colors.shadow },
@@ -87,6 +88,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         <Icon name={icon} width={32} height={32} color={colors.primaryText} />
       </View>
       <Text
+        testID="onboarding_title_text"
         ref={titleRef}
         style={[styles.title, { color: colors.primaryText }]}
         accessibilityRole="header"
@@ -96,10 +98,13 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         })}: ${title}`}>
         {title}
       </Text>
-      <Text style={[styles.textNormal, { color: colors.hourListText }]}>
+      <Text
+        testID="onboarding_description_text"
+        style={[styles.textNormal, { color: colors.hourListText }]}>
         {description}
       </Text>
       <AccessibleTouchableOpacity
+        testID="onboarding_next_button"
         accessibilityRole="button"
         style={styles.buttonContainer}
         onPress={handlePress}>
@@ -125,6 +130,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
             : require('../assets/images/weather-background-light.png')
         }>
         <Image
+          testID="onboarding_logo_image"
           source={
             dark
               ? require('../assets/images/provider-logo-dark.png')
@@ -145,8 +151,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           description={onboardingInfo[pageIndex].description}
         />
       </View>
-      <View style={[styles.row, styles.center, styles.height10]}>
+      <View
+        testID="onboarding_pagination"
+        style={[styles.row, styles.center, styles.height10]}>
         <View
+          testID="onboarding_pagination_0"
           style={[
             styles.pagination,
             styles.marginRight,
@@ -155,6 +164,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           ]}
         />
         <View
+          testID="onboarding_pagination_1"
           style={[
             styles.pagination,
             styles.marginRight,
@@ -163,6 +173,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           ]}
         />
         <View
+          testID="onboarding_pagination_2"
           style={[
             styles.pagination,
             styles.marginRight,
@@ -171,6 +182,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           ]}
         />
         <View
+          testID="onboarding_pagination_3"
           style={[
             styles.pagination,
             { backgroundColor: pageIndex === 3 ? colors.primary : GRAY_1 },
