@@ -1,5 +1,6 @@
 package fi.fmi.mobileweather;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -27,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -41,6 +43,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 
 public class NewSmallWidgetProvider extends AppWidgetProvider {
 
@@ -50,6 +55,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     private Context context;
     private int appWidgetId;
     private AppWidgetManager appWidgetManager;
+    private Location location;
 
 
     @Override
@@ -100,7 +106,29 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
-        execute();
+
+        if ((ContextCompat.checkSelfPermission(context,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                || (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
+
+            Boolean ok = SingleShotLocationProvider.requestSingleUpdate(context,
+                    new SingleShotLocationProvider.LocationCallback() {
+                        @Override
+                        public void onNewLocationAvailable(Location location) {
+                            execute(location);
+//                            updateUsingCoordinates(location.getLatitude(), location.getLongitude(), incomingAppWidgetId);
+                        }
+                    });
+
+            if (!ok) {
+//                this.updateWidgetWithPositioningError(incomingAppWidgetId);
+            }
+        } else {
+//            this.updateWidgetWithPositioningError(incomingAppWidgetId);
+        }
+
+
+//        execute();
 
         /*// Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
@@ -124,13 +152,18 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         NewWidgetNotification.clearWidgetUpdate(context, NewSmallWidgetProvider.class);
     }
 
-
-    public void execute() {
+    public void execute(Location location) {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-        // TODO: change these to real values:
-        String latlon = "60.16952,24.93545";
-        String language = "fi";
+        // Get the location coordinates string
+        String latlon = getLatLonString(location);
+
+        // Get language string
+        String language = getLanguageString();
+
+        // Temporary test values
+//        String latlon = "60.16952,24.93545";
+//        String language = "fi";
 
         String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon=" +
                 latlon +
@@ -152,6 +185,24 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 e.printStackTrace();
             }
         });
+    }
+
+    private static @NonNull String getLanguageString() {
+        String language = Locale.getDefault().getLanguage();
+        Log.d("language", language);
+        if (!language.equals("fi") && !language.equals("sv") && !language.equals("en"))
+            language = "en";
+        return language;
+    }
+
+    private static @NonNull String getLatLonString(Location location) {
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        // Round to 4 decimals
+        latitude = (double)Math.round(latitude * 10000d) / 10000d;
+        longitude = (double)Math.round(longitude * 10000d) / 10000d;
+        String latlon = latitude + "," + longitude;
+        return latlon;
     }
 
     private JSONObject fetchData(String src) {
@@ -443,14 +494,14 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
 //        if (version.equals("classic") || version.equals("experimental")) {
 //            main.setTextViewText(R.id.timeTextView, "");
-            main.setTextViewText(R.id.temperatureTextView, "");
+        main.setTextViewText(R.id.temperatureTextView, "");
 //            main.setViewVisibility(R.id.feelsLikeImageView, View.GONE);
 
-            Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    context.getResources().getIdentifier("error", "drawable", context.getPackageName()));
+        Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+                context.getResources().getIdentifier("error", "drawable", context.getPackageName()));
 
-            main.setImageViewBitmap(R.id.weatherIconImageView, icon);
-            main.setTextViewText(R.id.locationTextView, errorstr);
+        main.setImageViewBitmap(R.id.weatherIconImageView, icon);
+        main.setTextViewText(R.id.locationTextView, errorstr);
 
         /*} else {
             main.setTextViewText(R.id.locationTextView, "");
