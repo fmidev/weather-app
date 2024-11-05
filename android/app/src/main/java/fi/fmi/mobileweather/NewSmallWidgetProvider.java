@@ -371,7 +371,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 if (tempFloat > 0) {
                     temperature = "+" + temperature;
                 }
-                main.setTextViewText(R.id.temperatureTextView, temperature + "°");
+                main.setTextViewText(R.id.temperatureTextView, temperature);
 
                 // ** set the weather icon
 
