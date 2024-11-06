@@ -55,7 +55,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     private Context context;
     private int appWidgetId;
     private AppWidgetManager appWidgetManager;
-    private Location location;
+    private static Location location;
 
 
     @Override
@@ -107,23 +107,33 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
 
+        Log.d("Widget Location", "Trying to request location");
         if ((ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 || (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
 
+            Log.d("Widget Location", "Location requested");
             Boolean ok = SingleShotLocationProvider.requestSingleUpdate(context,
-                    new SingleShotLocationProvider.LocationCallback() {
-                        @Override
-                        public void onNewLocationAvailable(Location location) {
-                            execute(location);
+                    location -> {
+                        Log.d("Widget Location", "New location: " + location.toString());
+                        NewSmallWidgetProvider.location = location;
+                        Log.d("Widget Location", "Update with new location");
+                        execute(location);
 //                            updateUsingCoordinates(location.getLatitude(), location.getLongitude(), incomingAppWidgetId);
-                        }
                     });
-
-            if (!ok) {
+            if (ok) {
+                if (location != null) {
+                    Log.d("Widget Location", "Update with old or new location");
+                    execute(location);
+                } else {
+                    Log.d("Widget Location", "Stored Location is null");
+                }
+            } else {
+                Log.d("Widget Location", "Location not available from Location Manager");
 //                this.updateWidgetWithPositioningError(incomingAppWidgetId);
             }
         } else {
+            Log.d("Widget Location", "Location permission not granted");
 //            this.updateWidgetWithPositioningError(incomingAppWidgetId);
         }
 

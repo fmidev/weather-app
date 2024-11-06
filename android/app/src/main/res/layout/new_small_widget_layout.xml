@@ -53,9 +53,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:text="°C"
             android:textColor="@android:color/black"
             android:textSize="15sp"
-            android:text="°C"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
@@ -66,15 +66,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/fmi_logo_short" />
+        android:src="@drawable/fmi_logo_short"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/updateTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        tools:text="11.34.24"
         android:textColor="@android:color/black"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:visibility="visible"
+        tools:text="11.34.24" />
 
 </LinearLayout>

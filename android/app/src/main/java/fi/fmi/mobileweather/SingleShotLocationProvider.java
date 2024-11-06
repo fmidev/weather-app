@@ -2,6 +2,7 @@ package fi.fmi.mobileweather;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.location.Criteria;
 import android.location.LocationListener;
@@ -13,13 +14,15 @@ import android.os.HandlerThread;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
+
 public class SingleShotLocationProvider {
 
     public static interface LocationCallback {
         public void onNewLocationAvailable(Location location);
     }
 
-    @SuppressLint("MissingPermission")
+//    @SuppressLint("MissingPermission")
     public static Boolean requestSingleUpdate(final Context context, final LocationCallback callback) {
         //Looper.prepare();
 
@@ -34,6 +37,7 @@ public class SingleShotLocationProvider {
         boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
         if (!isGPSEnabled && !isNetworkEnabled) {
+            Log.d("Widget Location", "GPS and Network not enabled");
             return false;
         }
 
@@ -42,6 +46,20 @@ public class SingleShotLocationProvider {
         criteria.setPowerRequirement(Criteria.POWER_LOW);
 
         String provider = locationManager.getBestProvider(criteria, true);
+        // If the app does NOT have the necessary permissions to access fine and coarse location data
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            Log.d("Widget Location", "Permissions missing");
+            // location cannot be retrieved
+            return false;
+        }
         Location location = locationManager.getLastKnownLocation(provider);
 
         if (location != null) {
@@ -60,6 +78,7 @@ public class SingleShotLocationProvider {
             @Override
             public void onLocationChanged(Location location) {
                 callback.onNewLocationAvailable(location);
+                handlerThread.quitSafely();
             }
 
             @Override public void onStatusChanged(String provider, int status, Bundle extras) { }
