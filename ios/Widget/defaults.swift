@@ -33,9 +33,19 @@ let defaultEntry = TimeStepEntry(
   date: Date(),
   updated: getDefaultUpdatedDate(),
   location: getDefaultLocation(),
-  timeStep: defaultTimeStep,
+  timeSteps: [1,2,3,4,5].map{
+    return TimeStep(
+      observation: false,
+      epochtime: Int(Date()
+        .addingTimeInterval($0 * 60 * 60).timeIntervalSince1970),
+      temperature: defaultTimeStep.temperature,
+      smartSymbol: defaultTimeStep.smartSymbol,
+      dark: defaultTimeStep.dark
+    )
+  },
   crisisMessage: nil,
-  error: nil
+  error: nil,
+  settings: defaultWidgetSettings
 )
 
 let defaultWarningEntry = WarningEntry(
@@ -45,6 +55,10 @@ let defaultWarningEntry = WarningEntry(
   warningLevel: .none,
   warningCount: 0,
   error: nil
+)
+
+let defaultWidgetSettings = WidgetSettings(
+  showLogo: true
 )
 
 let WHO="mobileweather_ios_widget"

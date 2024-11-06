@@ -19,6 +19,7 @@ struct WarningProvider: TimelineProvider {
       var location:Location?
       var entries: [WarningEntry] = []
       let currentLocation = try await getCurrentLocation()
+      let settings = defaultWidgetSettings
       
       if (currentLocation != nil) {
         location = try await fetchLocation(
@@ -35,7 +36,7 @@ struct WarningProvider: TimelineProvider {
       if (error == nil) {
         warnings = try await fetchWarnings(location: location!)
         if (warnings == nil) {
-          error = WidgetError.dataError
+          error = .dataLoadingError
         }
       }
             

@@ -33,7 +33,7 @@ func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
 func fetchForecast(location: Location) async throws -> [TimeStep]? {
   let timeseriesUrl = getSetting("weather.apiUrl") as! String
   let param = "epochtime,temperature,smartsymbol,dark"
-  let url = timeseriesUrl+"?param=\(param)&geoid=\(location.id)&format=json&who=\(WHO)"
+  let url = timeseriesUrl+"?param=\(param)&geoid=\(location.id)&timesteps=30&format=json&who=\(WHO)"
   let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
   

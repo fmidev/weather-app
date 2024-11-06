@@ -25,20 +25,22 @@ struct Location {
   }  
 }
 
-struct TimeStep {
+struct TimeStep: Hashable, Identifiable {
+  var id = UUID()
   let observation: Bool
   let epochtime: Int
   let temperature: Double
   let smartSymbol: Int
   let dark: Int
   
-  func formatTemperature() -> String {
+  func formatTemperature(includeDegree: Bool = false) -> String {
     let prefix = temperature >= 0 ? "+" : ""
-    if (observation) {
-      return prefix+String(temperature)
-    }
+    let suffix = includeDegree ? "°" : ""
     
-    return prefix+String(Int(temperature.rounded()))
+    if (observation) {
+      return prefix+String(temperature)+suffix
+    }
+    return prefix+String(Int(temperature.rounded()))+suffix
   }
   
   func formatDateAndTime(timezone: String? = nil, longFormat: Bool = false) -> String {
@@ -58,15 +60,29 @@ struct TimeStep {
       dateFormatter.string(from: date).firstUppercased :
       dateFormatter.string(from: date)
   }
+  
+  func formatTime(timezone: String? = nil) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "HH.mm"
+    
+    if (timezone != nil) {
+      dateFormatter.timeZone = TimeZone(identifier: timezone!)
+    }
+    
+    let date = Date(timeIntervalSince1970: TimeInterval(epochtime))
+    
+    return dateFormatter.string(from: date)
+  }
 }
 
 struct TimeStepEntry: TimelineEntry {
   let date: Date
   let updated: Date
   let location: Location
-  let timeStep: TimeStep
+  let timeSteps: [TimeStep]
   let crisisMessage: String?
   let error: WidgetError?
+  let settings: WidgetSettings
   
   func formatLocation() -> String {
     if (location.name == location.area) {
@@ -125,7 +141,8 @@ struct WarningEntry: TimelineEntry {
 enum WidgetError {
   case none
   case userLocationError
-  case dataError
+  case dataLoadingError
+  case oldDataError
   case locationOutsideDataArea
 }
 
@@ -159,4 +176,8 @@ struct WarningTimeStep {
         granularity: .day
       )
   }
+}
+
+struct WidgetSettings {
+  var showLogo: Bool
 }

@@ -19,6 +19,13 @@ struct ForecastProvider: TimelineProvider {
       var entries: [TimeStepEntry] = []
       var location:Location?
       var crisisMessage = nil as String?
+      var settings = defaultWidgetSettings
+      
+      let showLogo = getSetting("layout.logo.enabled") as? Bool;
+      
+      if (showLogo != nil) {
+        settings.showLogo = showLogo!
+      }
                  
       let currentLocation = try await getCurrentLocation()
       
@@ -40,7 +47,7 @@ struct ForecastProvider: TimelineProvider {
       if (error == nil) {
         forecast = try await fetchForecast(location: location!)
         if (forecast == nil) {
-          error = .dataError
+          error = .dataLoadingError
         }
       }
       
@@ -52,13 +59,18 @@ struct ForecastProvider: TimelineProvider {
             date: Date(),
             updated: updated,
             location: defaultLocation,
-            timeStep: defaultTimeStep,
+            timeSteps: [defaultTimeStep],
             crisisMessage: crisisMessage,
-            error: error
+            error: error,
+            settings: settings
           )
         )
       } else {
-        for item in forecast! {
+        for (index, item) in forecast!.enumerated() {
+          let timeSteps = Array(0...4).map{
+            return forecast![index + $0]
+          }
+          
           let date = Date(timeIntervalSince1970: TimeInterval(item.epochtime)).addingTimeInterval(TimeInterval(-60*60))
           entries
             .append(
@@ -66,13 +78,26 @@ struct ForecastProvider: TimelineProvider {
                 date: date,
                 updated: updated,
                 location: location!,
-                timeStep: item,
+                timeSteps: timeSteps,
                 crisisMessage: crisisMessage,
-                error: nil
+                error: WidgetError.none,
+                settings: settings
               )
             )
           
-          if (entries.count >= 24) { break }
+          if (entries.count >= 24) {
+            let oldDataEntry = TimeStepEntry(
+              date: date.addingTimeInterval(TimeInterval(60*60)),
+              updated: updated,
+              location: location!,
+              timeSteps: timeSteps,
+              crisisMessage: crisisMessage,
+              error: WidgetError.oldDataError,
+              settings: settings
+            )
+            entries.append(oldDataEntry)
+            break
+          }
         }
       }
             
@@ -98,8 +123,10 @@ struct ErrorView : View {
       switch entry.error {
         case .userLocationError:
           Text("Could not get location information").style(.error).multilineTextAlignment(.center)
-        case .dataError:
+        case .dataLoadingError:
           Text("Error loading forecast data").style(.error).multilineTextAlignment(.center)
+        case .oldDataError:
+          Text("Weather data is too old").style(.error).multilineTextAlignment(.center)
         default:
           Text("Unknown error").style(.error).multilineTextAlignment(.center)
       }
@@ -112,18 +139,14 @@ struct SmallWidgetView : View {
   var entry: ForecastProvider.Entry
 
   var body: some View {
-    if (entry.error != nil) {
+    if (entry.error != WidgetError.none) {
       ErrorView(entry: entry)
     } else {
       VStack {
         Text(entry.formatLocation()).style(.location).padding(.top, 17)
         Text(entry.formatAreaOrCountry()).style(.areaOrCountry)
         Spacer()
-        HStack(spacing: 2) {
-          Image(String(entry.timeStep.smartSymbol)).resizable().frame(width: 54, height: 54)
-          Text(entry.timeStep.formatTemperature()).style(.largeTemperature)
-          Text("°C").style(.temperatureUnit).baselineOffset(15)
-        }
+        NextHourForecast(timeStep: entry.timeSteps[0])
         if (entry.crisisMessage != nil) {
           Text(entry.crisisMessage!)
             .style(.crisis)
@@ -132,26 +155,71 @@ struct SmallWidgetView : View {
             .fixedSize(horizontal: false, vertical: true)
         } else {
           Spacer()
-          Image("FMI").resizable().frame(width: 50, height: 24)
+          if (entry.settings.showLogo) {
+            Image("FMI").resizable().frame(width: 50, height: 24)
+          }
         }
       }.modifier(TextModifier())
     }
   }
 }
 
+struct MediumWidgetView : View {
+  var entry: ForecastProvider.Entry
+
+  var body: some View {
+    if (entry.error != WidgetError.none) {
+      ErrorView(entry: entry)
+    } else {
+      VStack {
+        if (entry.crisisMessage == nil) {
+          HStack {
+            Text(entry.location.formatName()).style(.location)
+            Spacer()
+            if (entry.settings.showLogo) {
+              Image("FMI").resizable().frame(width: 56, height: 27)
+            }
+          }
+          Spacer()
+        }
+        ForecastRow(location: entry.location, timeSteps: entry.timeSteps)
+        Spacer()
+        if (entry.crisisMessage != nil) {
+          CrisisMessage(message: entry.crisisMessage!)
+          Spacer()
+        }
+      }.modifier(TextModifier())
+      
+    }
+  }
+}
+
+struct ForecastWidgetEntryView : View {
+  @Environment(\.widgetFamily) var family
+  var entry: ForecastProvider.Entry
+  
+  var body: some View {
+    if (family == .systemMedium) {
+      MediumWidgetView(entry: entry)
+    } else {
+      SmallWidgetView(entry: entry)
+    }
+  }
+}
+
 struct ForecastWidget: Widget {
     let kind: String = "ForecastWidget"
-
+  
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: ForecastProvider()) { entry in
-            SmallWidgetView(entry: entry)
-              .containerBackground(Color("WidgetBackground"), for: .widget)
-              .padding(8)
+          ForecastWidgetEntryView(entry: entry)
+                .containerBackground(Color("WidgetBackground"), for: .widget)
+                .padding(8)
         }
         .contentMarginsDisabled()
         .configurationDisplayName("Forecast")
         .description("Next hour forecast")
-        .supportedFamilies([.systemSmall])
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 

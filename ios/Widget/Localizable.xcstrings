@@ -139,6 +139,9 @@
         }
       }
     },
+    "Weather data is too old" : {
+
+    },
     "Weather warnings" : {
       "localizations" : {
         "fi" : {

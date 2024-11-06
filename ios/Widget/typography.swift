@@ -3,6 +3,8 @@ import SwiftUI
 enum CustomTextStyle {
   case location
   case dateAndTime
+  case time
+  case temperature
   case largeTemperature
   case error
   case temperatureUnit
@@ -19,6 +21,10 @@ extension Font {
         Font.custom("Roboto-Regular", size: 15)
       case .dateAndTime:
         Font.custom("Roboto-Reqular", size: 13)
+      case .time:
+        Font.custom("Roboto-Bold", size: 13)
+      case .temperature:
+        Font.custom("Roboto-Medium", size: 13)
       case .largeTemperature:
         Font.custom("Roboto-Regular", size: 36)
       case .error:
