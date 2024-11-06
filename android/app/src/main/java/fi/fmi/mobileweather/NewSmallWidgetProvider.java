@@ -6,6 +6,8 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.RemoteViews;
 import android.util.Log;
 import android.content.ComponentName;
@@ -56,6 +58,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     private int appWidgetId;
     private AppWidgetManager appWidgetManager;
     private static Location location;
+    private Handler timeoutHandler;
+    private Runnable timeoutRunnable;
 
 
     @Override
@@ -110,7 +114,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         Log.d("Widget Location", "Trying to request location");
         if ((ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                || (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)){
+                || (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
 
             Log.d("Widget Location", "Location requested");
             Boolean ok = SingleShotLocationProvider.requestSingleUpdate(context,
@@ -118,24 +122,37 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                         Log.d("Widget Location", "New location: " + location.toString());
                         NewSmallWidgetProvider.location = location;
                         Log.d("Widget Location", "Update with new location");
+                        // Cancel timeout
+                        if (timeoutHandler != null && timeoutRunnable != null) {
+                            Log.d("Widget Location", "Timer canceled");
+                            timeoutHandler.removeCallbacks(timeoutRunnable);
+                        }
                         execute(location);
-//                            updateUsingCoordinates(location.getLatitude(), location.getLongitude(), incomingAppWidgetId);
                     });
             if (ok) {
-                if (location != null) {
-                    Log.d("Widget Location", "Update with old or new location");
-                    execute(location);
-                } else {
-                    Log.d("Widget Location", "Stored Location is null");
-                }
+                // Set timeout for location request
+                timeoutHandler = new Handler(Looper.getMainLooper());
+                // Timeout runnable
+                timeoutRunnable = () -> {
+                    // if we have old location, use it
+                    if (NewSmallWidgetProvider.location != null) {
+                        Log.d("Widget Location", "Timeout reached, update with stored location");
+                        execute(NewSmallWidgetProvider.location);
+                    } else {
+                        Log.d("Widget Location", "Timeout reached, no location available");
+                    }
+                };
+                Log.d("Widget Location", "Timer started");
+                // 1 minute timeout
+                timeoutHandler.postDelayed(timeoutRunnable, 60 * 1000); // 1 minute timeout
             } else {
                 Log.d("Widget Location", "Location not available from Location Manager");
-//                this.updateWidgetWithPositioningError(incomingAppWidgetId);
             }
         } else {
             Log.d("Widget Location", "Location permission not granted");
 //            this.updateWidgetWithPositioningError(incomingAppWidgetId);
         }
+
 
 
 //        execute();
@@ -148,7 +165,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);*/
-    }
+}
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
