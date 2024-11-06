@@ -143,8 +143,8 @@ struct SmallWidgetView : View {
       ErrorView(entry: entry)
     } else {
       VStack {
-        Text(entry.formatLocation()).style(.location).padding(.top, 17)
-        Text(entry.formatAreaOrCountry()).style(.areaOrCountry)
+        Text(entry.formatLocation()).style(.boldLocation).padding(.top, 17)
+        Text(entry.formatAreaOrCountry()).style(.location)
         Spacer()
         NextHourForecast(timeStep: entry.timeSteps[0])
         if (entry.crisisMessage != nil) {
@@ -174,12 +174,14 @@ struct MediumWidgetView : View {
       VStack {
         if (entry.crisisMessage == nil) {
           HStack {
-            Text(entry.location.formatName()).style(.location)
+            Text(
+              "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
+            ).style(.location)
             Spacer()
             if (entry.settings.showLogo) {
               Image("FMI").resizable().frame(width: 56, height: 27)
             }
-          }
+          }.padding(.horizontal, 8)
           Spacer()
         }
         ForecastRow(location: entry.location, timeSteps: entry.timeSteps)

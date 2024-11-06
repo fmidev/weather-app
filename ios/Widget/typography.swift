@@ -2,22 +2,22 @@ import SwiftUI
 
 enum CustomTextStyle {
   case location
+  case boldLocation
   case dateAndTime
   case time
   case temperature
   case largeTemperature
   case error
   case temperatureUnit
-  case areaOrCountry
   case crisis
 }
 
 extension Font {
   static let customFont: (CustomTextStyle) -> Font = { style in
     switch style {
-      case .location:
+      case .boldLocation:
         Font.custom("Roboto-Bold", size: 15)
-      case  .areaOrCountry:
+      case .location:
         Font.custom("Roboto-Regular", size: 15)
       case .dateAndTime:
         Font.custom("Roboto-Reqular", size: 13)
