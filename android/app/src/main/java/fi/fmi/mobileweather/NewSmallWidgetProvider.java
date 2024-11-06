@@ -11,9 +11,7 @@ import android.os.Looper;
 import android.widget.RemoteViews;
 import android.util.Log;
 import android.content.ComponentName;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.View;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -147,9 +145,14 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 timeoutHandler.postDelayed(timeoutRunnable, 60 * 1000); // 1 minute timeout
             } else {
                 Log.d("Widget Location", "Location not available from Location Manager");
+                showErrorView(context, context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
+                        Context.MODE_PRIVATE), context.getResources().getString(R.string.positioning_failed));
             }
         } else {
             Log.d("Widget Location", "Location permission not granted");
+            showErrorView(context, context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
+                    Context.MODE_PRIVATE), context.getResources().getString(R.string.positioning_failed));
+
 //            this.updateWidgetWithPositioningError(incomingAppWidgetId);
         }
 
@@ -339,14 +342,16 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 try {
                     json = new JSONObject(jsonstr);
                 } catch (JSONException e) {
-                    RemoteViews errorview = buildErrorView(context, pref,
+                    showErrorView(context, pref, context.getResources().getString(R.string.update_failed));
+                    /*RemoteViews errorview = showErrorView(context, pref,
                             context.getResources().getString(R.string.update_failed));
-                    appWidgetManager.updateAppWidget(appWidgetId, errorview);
+                    appWidgetManager.updateAppWidget(appWidgetId, errorview);*/
                     return;
                 }
             } else {
-                RemoteViews errorview = buildErrorView(context, pref, context.getResources().getString(R.string.update_failed));
-                appWidgetManager.updateAppWidget(appWidgetId, errorview);
+                showErrorView(context, pref, context.getResources().getString(R.string.update_failed));
+                /*RemoteViews errorview = showErrorView(context, pref, context.getResources().getString(R.string.update_failed));
+                appWidgetManager.updateAppWidget(appWidgetId, errorview);*/
                 return;
             }
 
@@ -378,13 +383,13 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             cellwidth = 66;
         }*/
 
-        String geoid = "";
+        /*String geoid = "";
         DateFormat format = new SimpleDateFormat("yyyyMMdd'T'HHmm");
         DateFormat obstimeformat = new SimpleDateFormat("yyyyMMddHHmm");
         DateFormat hourformat = new SimpleDateFormat("HH:mm");
         DateFormat shorthourformat = new SimpleDateFormat("HH");
         DateFormat shortdayformat = new SimpleDateFormat("EE");
-        String iso2 = "";
+        String iso2 = "";*/
 
         Log.d("DownloadData json", "Forecast json: " + json.toString());
 
@@ -407,8 +412,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
             String name = first.getString("name");
             String region = first.getString("region");
-            iso2 = first.getString("iso2");
-            geoid = firstKey;
+            /*iso2 = first.getString("iso2");
+            geoid = firstKey;*/
 
             // set location name and region
 
@@ -426,8 +431,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                     break;*/
 
 //                JSONObject current = data.getJSONObject(i);
-                String localtime = first.getString("localtime");
-                String utcttime = first.getString("utctime");
+                /*String localtime = first.getString("localtime");
+                String utcttime = first.getString("utctime");*/
 
                 /*if (!isTimeDisplayable(utcttime, localtime, forecast_mode))
                     continue;*/
@@ -493,20 +498,12 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, main);
-        return;
     }
 
-    public RemoteViews buildErrorView(Context context, SharedPreferences pref, String errorstr) {
+    public void showErrorView(Context context, SharedPreferences pref, String errorstr) {
         String background = pref.getString("background", "dark");
-        String version = pref.getString("version", "normal");
-        RemoteViews main = null;
-
-        if (version.equals("classic"))
-            main = new RemoteViews(context.getPackageName(), R.layout.smallwidget);
-        else if (version.equals("experimental"))
-            main = new RemoteViews(context.getPackageName(), R.layout.experimentalwidget);
-        else
-            main = new RemoteViews(context.getPackageName(), R.layout.widgetng);
+//        String version = pref.getString("version", "normal");
+        RemoteViews main = new RemoteViews(context.getPackageName(), R.layout.new_small_widget_layout);;
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -528,7 +525,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 context.getResources().getIdentifier("error", "drawable", context.getPackageName()));
 
         main.setImageViewBitmap(R.id.weatherIconImageView, icon);
-        main.setTextViewText(R.id.locationTextView, errorstr);
+        main.setTextViewText(R.id.locationNameTextView, errorstr);
 
         /*} else {
             main.setTextViewText(R.id.locationTextView, "");
@@ -540,6 +537,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             main.addView(R.id.weatherRowLinearLayout, error);
         }*/
 
-        return main;
+        appWidgetManager.updateAppWidget(appWidgetId, main);
+//        return main;
     }
 }
