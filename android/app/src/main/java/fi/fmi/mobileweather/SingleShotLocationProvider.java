@@ -14,12 +14,13 @@ import android.os.HandlerThread;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 public class SingleShotLocationProvider {
 
-    public static interface LocationCallback {
-        public void onNewLocationAvailable(Location location);
+    public interface LocationCallback {
+        void onNewLocationAvailable(Location location);
     }
 
 //    @SuppressLint("MissingPermission")
@@ -76,7 +77,7 @@ public class SingleShotLocationProvider {
 
         locationManager.requestSingleUpdate(criteria, new LocationListener() {
             @Override
-            public void onLocationChanged(Location location) {
+            public void onLocationChanged(@NonNull Location location) {
                 callback.onNewLocationAvailable(location);
                 handlerThread.quitSafely();
             }

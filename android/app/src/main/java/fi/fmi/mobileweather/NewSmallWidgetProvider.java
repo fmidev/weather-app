@@ -55,9 +55,10 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     private Context context;
     private int appWidgetId;
     private AppWidgetManager appWidgetManager;
-    private static Location location;
+//    private static Location location;
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
+    private SharedPreferences pref;
 
 
     @Override
@@ -108,6 +109,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
+        this.pref= context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
+                Context.MODE_PRIVATE);
 
         Log.d("Widget Location", "Trying to request location");
         if ((ContextCompat.checkSelfPermission(context,
@@ -118,24 +121,30 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             Boolean ok = SingleShotLocationProvider.requestSingleUpdate(context,
                     location -> {
                         Log.d("Widget Location", "New location: " + location.toString());
-                        NewSmallWidgetProvider.location = location;
+                        // Get the location coordinates string from location
+                        String latlon = getLatLonString(location);
+                        // Store latlon to shared preferences (cannot be null here)
+                        pref.edit().putString("latlon", latlon).apply();
+//                        NewSmallWidgetProvider.location = location;
                         Log.d("Widget Location", "Update with new location");
                         // Cancel timeout
                         if (timeoutHandler != null && timeoutRunnable != null) {
                             Log.d("Widget Location", "Timer canceled");
                             timeoutHandler.removeCallbacks(timeoutRunnable);
                         }
-                        execute(location);
+                        execute(latlon);
                     });
             if (ok) {
                 // Set timeout for location request
                 timeoutHandler = new Handler(Looper.getMainLooper());
                 // Timeout runnable
                 timeoutRunnable = () -> {
-                    // if we have old location, use it
-                    if (NewSmallWidgetProvider.location != null) {
+                    // if we have old location, update widget with it
+                    // TODD: temporarily Utsjoki latlon as default
+                    String latlon = pref.getString("latlon", "69.90,27.02");
+                    if (latlon != null) {
                         Log.d("Widget Location", "Timeout reached, update with stored location");
-                        execute(NewSmallWidgetProvider.location);
+                        execute(latlon);
                     } else {
                         Log.d("Widget Location", "Timeout reached, no location available");
                     }
@@ -182,11 +191,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         NewWidgetNotification.clearWidgetUpdate(context, NewSmallWidgetProvider.class);
     }
 
-    public void execute(Location location) {
+    public void execute(String latlon) {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-
-        // Get the location coordinates string
-        String latlon = getLatLonString(location);
 
         // Get language string
         String language = getLanguageString();
@@ -310,13 +316,12 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
         // Get settings
 
-        SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
-                Context.MODE_PRIVATE);
+
         String background = pref.getString("background", "dark");
         // TODO: temporarily only light mode:
         background = "light";
-        String forecast_mode = pref.getString("forecast", "hours");
-        String version = pref.getString("version", "advanced");
+        /*String forecast_mode = pref.getString("forecast", "hours");
+        String version = pref.getString("version", "advanced");*/
 
         // Widget manager gives widget width and height
 
