@@ -251,10 +251,10 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 
             Context context = getBaseContext();
 
-            SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_"+widgetId, Context.MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + widgetId, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
 
-            RadioGroup background = (RadioGroup)findViewById(R.id.backgroundRadioGroup);
+            RadioGroup background = findViewById(R.id.backgroundRadioGroup);
             int selectedBackground = background.getCheckedRadioButtonId();
 
             if (selectedBackground==R.id.optionLightRadioButton)
@@ -267,7 +267,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
             editor.putString("version", "classic");
             editor.putString("forecast", "hours");
 
-            RadioGroup location = (RadioGroup)findViewById(R.id.locationRadioGroup);
+            RadioGroup location = findViewById(R.id.locationRadioGroup);
             int selectedLocation = location.getCheckedRadioButtonId();
 
             if (selectedLocation==-1) {
@@ -282,7 +282,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
             else
                 editor.putInt("location", selectedLocation);
 
-            editor.commit();
+            editor.apply();
 
 			/*AppWidgetProviderInfo providerInfo = AppWidgetManager.getInstance(context).getAppWidgetInfo(widgetId);
 			String appWidgetLabel = providerInfo.label;
@@ -299,10 +299,23 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
             JobIntentService.enqueueWork(context, UpdateWidgetJobIntentService.class, 1, startService);
 */
 
-            // Update the widget
+            // Update the widget with the preferences above
             /*AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(NewSmallWidgetConfigurationActivity.this);
             RemoteViews views = new RemoteViews(NewSmallWidgetConfigurationActivity.this.getPackageName(), R.layout.new_small_widget_layout);
             appWidgetManager.updateAppWidget(appWidgetId, views);*/
+
+            // Trigger a new widget update now
+//            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            /*Intent updateIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{appWidgetId});
+            context.sendBroadcast(updateIntent);
+*/
+
+            // Send a broadcast to trigger onUpdate()
+            int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+            Intent updateIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+            sendBroadcast(updateIntent);
 
             // Make sure we pass back the original appWidgetId
             Intent resultValue = new Intent();
@@ -348,5 +361,4 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
                     1);
         }
     }
-
 }

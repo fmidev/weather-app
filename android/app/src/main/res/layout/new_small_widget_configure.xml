@@ -2,19 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dip">
+    android:layout_margin="10dip"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent">
 
         <LinearLayout
+            android:id="@+id/configurationLinearLayout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:id="@+id/configurationLinearLayout">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/batteryOptimizationWarning"
@@ -57,108 +58,108 @@
             </LinearLayout>
 
             <TextView
-        android:text="@string/define_widget_settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView3"
-        android:layout_marginTop="10dip" />
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/define_widget_settings" />
 
             <TextView
-        android:text="@string/background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/title_padding"
-        android:id="@+id/textView" />
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/title_padding"
+                android:text="@string/background" />
 
             <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/backgroundRadioGroup"
-        android:checkedButton="@+id/optionDarkRadioButton">
+                android:id="@+id/backgroundRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/optionDarkRadioButton">
 
-        <RadioButton
-            android:text="@string/dark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/optionDarkRadioButton"
-            android:paddingTop="@dimen/radiobutton_padding"
-            android:paddingBottom="@dimen/radiobutton_padding"
-            android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/optionDarkRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/radiobutton_padding"
+                    android:paddingBottom="@dimen/radiobutton_padding"
+                    android:text="@string/dark" />
 
-        <RadioButton
-            android:text="@string/light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/optionLightRadioButton"
-            android:paddingTop="@dimen/radiobutton_padding"
-            android:paddingBottom="@dimen/radiobutton_padding"
-            android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/optionLightRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/radiobutton_padding"
+                    android:paddingBottom="@dimen/radiobutton_padding"
+                    android:text="@string/light" />
 
-        <RadioButton
-            android:text="@string/transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/optionTransparentRadioButton"
-            android:paddingTop="@dimen/radiobutton_padding"
-            android:paddingBottom="@dimen/radiobutton_padding"
-            android:layout_weight="1" />
-    </RadioGroup>
+                <RadioButton
+                    android:id="@+id/optionTransparentRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/radiobutton_padding"
+                    android:paddingBottom="@dimen/radiobutton_padding"
+                    android:text="@string/transparent" />
+            </RadioGroup>
 
-    <TextView
-        android:text="@string/Forecast"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/title_padding"
-        android:id="@+id/forecastTitleTextView" />
+            <TextView
+                android:id="@+id/forecastTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/title_padding"
+                android:text="@string/Forecast" />
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/forecastRadioGroup"
-        android:checkedButton="@+id/optionHoursRadioButton">
+            <RadioGroup
+                android:id="@+id/forecastRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/optionHoursRadioButton">
 
-        <RadioButton
-            android:text="@string/next_hours_widget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/optionHoursRadioButton"
-            android:paddingTop="@dimen/radiobutton_padding"
-            android:paddingBottom="@dimen/radiobutton_padding"
-            android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/optionHoursRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/radiobutton_padding"
+                    android:paddingBottom="@dimen/radiobutton_padding"
+                    android:text="@string/next_hours_widget" />
 
-        <RadioButton
-            android:text="@string/next_days_widget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/optionDaysRadioButton"
-            android:paddingTop="@dimen/radiobutton_padding"
-            android:paddingBottom="@dimen/radiobutton_padding"
-            android:layout_weight="1" />
-    </RadioGroup>
+                <RadioButton
+                    android:id="@+id/optionDaysRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/radiobutton_padding"
+                    android:paddingBottom="@dimen/radiobutton_padding"
+                    android:text="@string/next_days_widget" />
+            </RadioGroup>
 
-    <TextView
-        android:text="@string/location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/title_padding"
-        android:id="@+id/locationTextView" />
+            <TextView
+                android:id="@+id/locationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/title_padding"
+                android:text="@string/location" />
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/locationRadioGroup"
-        android:checkedButton="@+id/optionPositionedRadioButton">
+            <RadioGroup
+                android:id="@+id/locationRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/optionPositionedRadioButton">
 
-        <RadioButton
-            android:text="@string/positioned_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/optionPositionedRadioButton"
-            android:paddingTop="@dimen/radiobutton_padding"
-            android:paddingBottom="@dimen/radiobutton_padding"
-            android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/optionPositionedRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/radiobutton_padding"
+                    android:paddingBottom="@dimen/radiobutton_padding"
+                    android:text="@string/positioned_location" />
 
-    </RadioGroup>
+            </RadioGroup>
 
             <Button
                 android:id="@+id/okButton"
@@ -174,11 +175,11 @@
                 android:text="@string/widget_favorite_info" />
 
             <TextView
-        android:text="@string/widget_resize_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/noticeResizeTextview"
-        android:layout_marginTop="10dip" />
+                android:id="@+id/noticeResizeTextview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:text="@string/widget_resize_info" />
 
         </LinearLayout>
 

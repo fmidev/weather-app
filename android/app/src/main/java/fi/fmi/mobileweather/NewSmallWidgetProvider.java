@@ -65,8 +65,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         Log.d("NewSmallWidget Update","onReceive");
         super.onReceive(context, intent);
-        if(intent!=null && intent.getAction()!=null &&
-                intent.getAction().equals(ACTION_AUTO_UPDATE)){
+        if(intent!=null && intent.getAction()!=null /*&&
+                intent.getAction().equals(ACTION_AUTO_UPDATE)*/){
             updateAfterReceive(context);
         }
     }
@@ -82,6 +82,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.d("NewSmallWidget Update","onUpdate");
         // There may be multiple widgets active, so update all
         final int N = appWidgetIds.length;
         for (int i = 0; i < N; i++) {
@@ -106,6 +107,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     }
 
     private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        Log.d("NewSmallWidget Update","updateAppWidget");
+
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
@@ -317,9 +320,9 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         // Get settings
 
 
-        String background = pref.getString("background", "dark");
-        // TODO: temporarily only light mode:
-        background = "light";
+        String background = pref.getString("background", "transparent");
+        Log.d("DownloadData json", "Background: " + background);
+
         /*String forecast_mode = pref.getString("forecast", "hours");
         String version = pref.getString("version", "advanced");*/
 
@@ -366,16 +369,28 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("latest_json", json.toString());
             editor.putLong("latest_json_updated", now.getTime());
-            editor.commit();
+            editor.apply();
 
         }
 
-        if (background.equals("dark"))
+        if (background.equals("dark")) {
+//            main.setTextColor(R.id.locationNameTextView, Color.rgb(255, 0, 0));
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
+            main.setInt(R.id.locationNameTextView, "setTextColor", Color.rgb(255, 255, 255));
+            main.setInt(R.id.locationRegionTextView, "setTextColor", Color.rgb(255, 255, 255));
+            main.setInt(R.id.temperatureTextView, "setTextColor", Color.rgb(255, 255, 255));
+            main.setInt(R.id.temperatureUnitTextView, "setTextColor", Color.rgb(255, 255, 255));
+            main.setInt(R.id.updateTimeTextView, "setTextColor", Color.rgb(255, 255, 255));
+//            main.setInt(R.id.observationTitleTextView, "setTextColor", Color.rgb(48, 49, 147));
+        }
         else if (background.equals("light")) {
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.rgb(255, 255, 255));
-            main.setInt(R.id.locationTextView, "setTextColor", Color.rgb(48, 49, 147));
-            main.setInt(R.id.observationTitleTextView, "setTextColor", Color.rgb(48, 49, 147));
+            main.setInt(R.id.locationNameTextView, "setTextColor", Color.rgb(48, 49, 147));
+            main.setInt(R.id.locationRegionTextView, "setTextColor", Color.rgb(48, 49, 147));
+            main.setInt(R.id.temperatureTextView, "setTextColor", Color.rgb(48, 49, 147));
+            main.setInt(R.id.temperatureUnitTextView, "setTextColor", Color.rgb(48, 49, 147));
+            main.setInt(R.id.updateTimeTextView, "setTextColor", Color.rgb(48, 49, 147));
+            //            main.setInt(R.id.observationTitleTextView, "setTextColor", Color.rgb(48, 49, 147));
         } else
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
 
@@ -460,6 +475,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                     temperature = "+" + temperature;
                 }
                 main.setTextViewText(R.id.temperatureTextView, temperature);
+                main.setTextViewText(R.id.temperatureUnitTextView, "°C");
 
                 // ** set the weather icon
 
@@ -499,7 +515,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
         } catch (final JSONException e) {
             Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
-            main.setTextViewText(R.id.locationTextView, "Virhe ennusteen käsittelyssä");
+            main.setTextViewText(R.id.locationNameTextView, "Virhe ennusteen käsittelyssä");
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, main);
