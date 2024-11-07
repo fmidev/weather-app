@@ -25,7 +25,10 @@ let defaultTimeStep = TimeStep(
   observation: false,
   epochtime: Int(getDefaultForecastDate().timeIntervalSince1970),
   temperature: 11,
-  smartSymbol: 4,
+  feelsLike: 12,
+  smartSymbol: 1,
+  windCompass8: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"].randomElement()!,
+  windSpeed: 5,
   dark: 0
 )
 
@@ -37,14 +40,20 @@ let defaultEntry = TimeStepEntry(
     return TimeStep(
       observation: false,
       epochtime: Int(Date()
-        .addingTimeInterval($0 * 60 * 60).timeIntervalSince1970),
-      temperature: defaultTimeStep.temperature,
-      smartSymbol: defaultTimeStep.smartSymbol,
+        .addingTimeInterval($0 * 60 * 60)
+        .startOfHour()!
+        .timeIntervalSince1970),
+      temperature: defaultTimeStep.temperature + Double(Int.random(in: -2...2)),
+      feelsLike: defaultTimeStep.feelsLike + Double(Int.random(in: -2...2)),
+      smartSymbol: defaultTimeStep.smartSymbol + Int.random(in: 0...1),
+      windCompass8: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+        .randomElement()!,
+      windSpeed: defaultTimeStep.windSpeed + Double(Int.random(in: -2...2)),
       dark: defaultTimeStep.dark
     )
   },
   crisisMessage: nil,
-  error: nil,
+  error: WidgetError.none,
   settings: defaultWidgetSettings
 )
 

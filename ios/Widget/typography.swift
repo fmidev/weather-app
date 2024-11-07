@@ -5,11 +5,16 @@ enum CustomTextStyle {
   case boldLocation
   case dateAndTime
   case time
+  case largeTime
+  case updatedTime
   case temperature
   case largeTemperature
+  case veryLargeTemperature
   case error
   case temperatureUnit
+  case largeTemperatureUnit
   case crisis
+  case largeCrisis
 }
 
 extension Font {
@@ -23,16 +28,26 @@ extension Font {
         Font.custom("Roboto-Reqular", size: 13)
       case .time:
         Font.custom("Roboto-Bold", size: 13)
+      case .largeTime:
+        Font.custom("Roboto-Regular", size: 15)
+      case .updatedTime:
+        Font.custom("Roboto-Regular", size: 12)
       case .temperature:
         Font.custom("Roboto-Medium", size: 13)
       case .largeTemperature:
         Font.custom("Roboto-Regular", size: 36)
+      case .veryLargeTemperature:
+        Font.custom("Roboto-Light", size: 58)
       case .error:
-        Font.custom("Roboto-Medium", size: 16)
+          Font.custom("Roboto-Medium", size: 16)
       case .temperatureUnit:
         Font.custom("Roboto-Regular", size: 15)
+      case .largeTemperatureUnit:
+        Font.custom("Roboto-Regular", size: 20)
       case .crisis:
         Font.custom("Roboto-Medium", size: 13)
+      case .largeCrisis:
+        Font.custom("Roboto-Medium", size: 15)
     }
   }
 }

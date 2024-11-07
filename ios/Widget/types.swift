@@ -30,17 +30,30 @@ struct TimeStep: Hashable, Identifiable {
   let observation: Bool
   let epochtime: Int
   let temperature: Double
+  let feelsLike: Double
   let smartSymbol: Int
+  let windCompass8: String
+  let windSpeed: Double
   let dark: Int
   
-  func formatTemperature(includeDegree: Bool = false) -> String {
-    let prefix = temperature >= 0 ? "+" : ""
+  func formatTemperature(includeDegree: Bool = false, useFeelsLike: Bool = false) -> String {
+    let value = useFeelsLike ? feelsLike : temperature
+    
+    let prefix = value >= 0 ? "+" : ""
     let suffix = includeDegree ? "°" : ""
     
     if (observation) {
-      return prefix+String(temperature)+suffix
+      return prefix+String(value)+suffix
     }
-    return prefix+String(Int(temperature.rounded()))+suffix
+    return prefix+String(Int(value.rounded()))+suffix
+  }
+  
+  func formatWindSpeed() -> String {
+    if (observation) {
+      return String(windSpeed)
+    }
+    
+    return String(Int(windSpeed.rounded()))
   }
   
   func formatDateAndTime(timezone: String? = nil, longFormat: Bool = false) -> String {
@@ -106,7 +119,7 @@ struct TimeStepEntry: TimelineEntry {
   
   func formatUpdated() -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd.MM. HH.mm"
+    dateFormatter.dateFormat = "HH.mm"
     dateFormatter.timeZone = TimeZone(identifier: location.timezone)
     
     return dateFormatter.string(from: updated)

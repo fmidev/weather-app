@@ -188,10 +188,47 @@ struct MediumWidgetView : View {
         Spacer()
         if (entry.crisisMessage != nil) {
           CrisisMessage(message: entry.crisisMessage!)
+            .padding(.horizontal, 8)
           Spacer()
         }
       }.modifier(TextModifier())
-      
+    }
+  }
+}
+
+struct LargeWidgetView : View {
+  var entry: ForecastProvider.Entry
+
+  var body: some View {
+    if (entry.error != WidgetError.none) {
+      ErrorView(entry: entry)
+    } else {
+      VStack {
+        Text(
+          "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
+        ).style(.location)
+        Text("at \(entry.timeSteps[0].formatTime(timezone: entry.location.timezone))")
+          .style(.largeTime)
+        NextHourForecast(timeStep: entry.timeSteps[0], large: true)
+        LargeNextHoursForecast(
+          timeSteps: entry.timeSteps,
+          timezone: entry.location.timezone
+        )
+        if (entry.crisisMessage != nil) {
+          Spacer()
+          CrisisMessage(message: entry.crisisMessage!, large: true)
+            .padding(.horizontal, 8)
+          Spacer()
+        } else {
+          HStack {
+            Image("FMI").resizable().frame(width: 56, height: 27)
+            Spacer()
+            Text("Updated at **\(entry.formatUpdated())**").style(.updatedTime)
+            Spacer()
+            Spacer().frame(width: 56, height: 27)
+          }
+        }
+      }.modifier(TextModifier())
     }
   }
 }
@@ -201,7 +238,9 @@ struct ForecastWidgetEntryView : View {
   var entry: ForecastProvider.Entry
   
   var body: some View {
-    if (family == .systemMedium) {
+    if (family == .systemLarge) {
+      LargeWidgetView(entry: entry)
+    } else if (family == .systemMedium) {
       MediumWidgetView(entry: entry)
     } else {
       SmallWidgetView(entry: entry)
@@ -220,8 +259,8 @@ struct ForecastWidget: Widget {
         }
         .contentMarginsDisabled()
         .configurationDisplayName("Forecast")
-        .description("Next hour forecast")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .description("Displays the forecast for the next hour or the coming hours.")
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 

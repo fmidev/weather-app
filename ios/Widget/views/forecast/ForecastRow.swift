@@ -3,16 +3,21 @@ import SwiftUI
 struct ForecastRow: View {
   let location: Location
   let timeSteps: [TimeStep]
+  let COLUMN_WIDTH: CGFloat = 45
+  let COLUMN_HEIGHT: CGFloat = 74
   
   var body: some View {
     HStack {
       ForEach(0..<timeSteps.count, id: \.self) { i in
         Spacer()
         ForecastColumn(location: location, timeStep: timeSteps[i])
-          .frame(width: 45, height: 80)
+          .frame(width: COLUMN_WIDTH, height: COLUMN_HEIGHT)
         Spacer()
         if (i < timeSteps.count - 1) {
-          Divider().frame(width: 1, height: 74).padding(.top, 3).overlay(Color("ForecastBorderColor"))
+          Divider()
+            .frame(width: 1, height: COLUMN_HEIGHT)
+            .padding(.top, 3)
+            .overlay(Color("ForecastBorderColor"))
         }
       }
     }

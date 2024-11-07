@@ -11,6 +11,9 @@
         }
       }
     },
+    "**%@** m/s" : {
+
+    },
     "°C" : {
 
     },
@@ -31,6 +34,9 @@
         }
       }
     },
+    "at %@" : {
+
+    },
     "Could not get location information" : {
       "localizations" : {
         "fi" : {
@@ -43,6 +49,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Positionering misslyckades"
+          }
+        }
+      }
+    },
+    "Displays the forecast for the next hour or the coming hours." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Näyttää ennusteen seuraavalle tai seuraaville tunneille."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visar prognosen för den kommande timmen eller de följande timmarna."
           }
         }
       }
@@ -63,6 +85,9 @@
         }
       }
     },
+    "feels like **%@**" : {
+
+    },
     "FMI weather" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -81,7 +106,14 @@
       }
     },
     "Forecast" : {
-
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ennuste"
+          }
+        }
+      }
     },
     "Next hour forecast" : {
       "extractionState" : "manual",
@@ -132,6 +164,12 @@
           }
         }
       }
+    },
+    "Updated at **%@**" : {
+
+    },
+    "UV **0**" : {
+
     },
     "Warnings (%lld)" : {
       "localizations" : {

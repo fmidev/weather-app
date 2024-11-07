@@ -2,6 +2,8 @@ import SwiftUI
 
 struct CrisisMessage: View {
   var message: String
+  var large: Bool = false
+  
   let ICON_SIZE: CGFloat = 20
   
   var body: some View {
@@ -19,7 +21,7 @@ struct CrisisMessage: View {
             )
         )
       Text(message)
-        .style(.crisis)
+        .style(large ? .largeCrisis : .crisis)
         .foregroundStyle(Color("CrisisTextColor"))
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
