@@ -36,4 +36,10 @@
         <item name="android:textColor">#303193</item>
     </style>
 
+    <style name="warning">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#D0021B</item>
+    </style>
+
 </resources>
