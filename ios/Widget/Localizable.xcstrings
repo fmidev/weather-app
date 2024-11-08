@@ -35,7 +35,20 @@
       }
     },
     "at %@" : {
-
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "klo %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kl. %@"
+          }
+        }
+      }
     },
     "Could not get location information" : {
       "localizations" : {
@@ -86,7 +99,20 @@
       }
     },
     "feels like **%@**" : {
-
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tuntuu kuin **%@**"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "känns som **%@**"
+          }
+        }
+      }
     },
     "FMI weather" : {
       "extractionState" : "stale",
@@ -166,9 +192,16 @@
       }
     },
     "Updated at **%@**" : {
-
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Päivitetty klo **%@**"
+          }
+        }
+      }
     },
-    "UV **0**" : {
+    "UV **%lld**" : {
 
     },
     "Warnings (%lld)" : {

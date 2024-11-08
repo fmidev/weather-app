@@ -17,14 +17,14 @@ func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
   guard let json = try? JSON(data: value) else { return nil }
     
   let location = Location(
-    id: json[0]["geoid"].int!,
-    name: json[0]["name"].string!,
-    area: json[0]["region"].string!,
-    lat: json[0]["latitude"].double!,
-    lon: json[0]["longitude"].double!,
-    timezone: json[0]["localtz"].string!,
-    iso2: json[0]["iso2"].string!,
-    country: json[0]["country"].string!
+    id: json[0]["geoid"].int ?? 0,
+    name: json[0]["name"].stringValue,
+    area: json[0]["region"].stringValue,
+    lat: json[0]["latitude"].doubleValue,
+    lon: json[0]["longitude"].doubleValue,
+    timezone: json[0]["localtz"].stringValue,
+    iso2: json[0]["iso2"].stringValue,
+    country: json[0]["country"].stringValue
   )
   
   return location
@@ -33,7 +33,9 @@ func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
 func fetchForecast(location: Location) async throws -> [TimeStep]? {
   let timeseriesUrl = getSetting("weather.apiUrl") as! String
   let param = "epochtime,temperature,feelslike,smartsymbol,windcompass8,windspeedms,dark"
-  let url = timeseriesUrl+"?param=\(param)&geoid=\(location.id)&timesteps=30&format=json&who=\(WHO)"
+  var url = timeseriesUrl+"?param=\(param)&timesteps=30&format=json&who=\(WHO)"
+  url += location.id != 0 ? "&geoid=\(location.id)" : "&latlon=\(location.lat),\(location.lon)"
+  
   let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
   
@@ -55,6 +57,29 @@ func fetchForecast(location: Location) async throws -> [TimeStep]? {
   })
   
   return items  
+}
+
+func fetchUVForecast(location: Location) async throws -> [UVTimeStep]? {
+  let timeseriesUrl = getSetting("weather.apiUrl") as! String
+  let param = "epochtime,uvcumulated"
+  var url = timeseriesUrl+"?param=\(param)&producer=uv&timesteps=30&format=json&who=\(WHO)"
+  url += location.id != 0 ? "&geoid=\(location.id)" : "&latlon=\(location.lat),\(location.lon)"
+  
+  let dataTask = AF.request(url).serializingData()
+  let value = try await dataTask.value
+  
+  guard let json = try? JSON(data: value) else { return nil }
+  guard let arrayJSON = json.array else { return nil }
+  
+  var items = [UVTimeStep]()
+  items = arrayJSON.map({
+    return UVTimeStep(
+      epochtime: $0["epochtime"].intValue,
+      uvCumulated: $0["uvcumulated"].intValue
+    )
+  })
+  
+  return items
 }
 
 func resolveWarningSeverity(severity: String) -> WarningSeverity {

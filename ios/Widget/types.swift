@@ -35,6 +35,7 @@ struct TimeStep: Hashable, Identifiable {
   let windCompass8: String
   let windSpeed: Double
   let dark: Int
+  var uvCumulated: Int? = nil
   
   func formatTemperature(includeDegree: Bool = false, useFeelsLike: Bool = false) -> String {
     let value = useFeelsLike ? feelsLike : temperature
@@ -86,6 +87,66 @@ struct TimeStep: Hashable, Identifiable {
     
     return dateFormatter.string(from: date)
   }
+  
+  func getFeelsLikeIcon() -> String {
+    let shouldUseFinnishHolidays = getSetting("location.default.country") as? String == "FI"
+
+    if (shouldUseFinnishHolidays) {
+      let currentDate = Date()
+      let calendar = Calendar.current
+      //let year = calendar.component(.year, from: currentDate)
+      let month = calendar.component(.month, from: currentDate)
+      let day = calendar.component(.day, from: currentDate)
+      
+      // holidays
+      if (isMidSummer()) {
+        return "midsummer"
+      }
+      if (isEaster()) {
+        return "easter"
+      }
+      if (month == 12 && day == 6) {
+          return "independence"
+      }
+      if (month == 3 && day == 8) {
+          return "womensday"
+      }
+      if (month == 12 && day == 31) {
+          return "newyear"
+      }
+      if (month == 12 && (day >= 24 && day <= 26)) {
+        return "xmas"
+      }
+      if (month == 5 && day == 1) {
+        return "vappu"
+      }
+      if (month == 2 && day == 14) {
+        return "valentine"
+      }
+    }
+    
+    // Weather related
+    
+    if (windSpeed) >= 10 {
+      return "windy"
+    }
+    if (temperature >= 30) {
+      return "hot"
+    }
+    if (temperature <= -10) {
+      return "winter"
+    }
+    if (smartSymbol >= 37 && smartSymbol <= 39) {
+      return "raining"
+    }
+    
+    return "basic"
+  }
+}
+
+struct UVTimeStep {
+  let epochtime: Int
+  let uvCumulated: Int
 }
 
 struct TimeStepEntry: TimelineEntry {

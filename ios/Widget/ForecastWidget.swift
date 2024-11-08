@@ -16,6 +16,7 @@ struct ForecastProvider: TimelineProvider {
     Task {
       var error = nil as WidgetError?
       var forecast = [] as [TimeStep]?
+      var uvForecast = [] as [UVTimeStep]?
       var entries: [TimeStepEntry] = []
       var location:Location?
       var crisisMessage = nil as String?
@@ -41,13 +42,19 @@ struct ForecastProvider: TimelineProvider {
       
       if (getSetting("announcements.enabled") as? Bool == true) {
         crisisMessage = try? await fetchCrisisMessage()
-        print(crisisMessage as Any)
       }
       
       if (error == nil) {
-        forecast = try await fetchForecast(location: location!)
+        forecast = try? await fetchForecast(location: location!)
+        
         if (forecast == nil) {
           error = .dataLoadingError
+        } else {
+          uvForecast = try? await fetchUVForecast(location: location!)
+          
+          if (uvForecast != nil) {
+            forecast = mergeUvToForecast(forecast: forecast!, uvForecast: uvForecast!)
+          }
         }
       }
       

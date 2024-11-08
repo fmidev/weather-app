@@ -23,6 +23,7 @@
 		A2239EB42CD39885007FE840 /* widgetConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB32CD39885007FE840 /* widgetConfig.json */; };
 		A2239EB62CD399DC007FE840 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2239EB52CD399D9007FE840 /* config.swift */; };
 		A2239EB82CD3AE8F007FE840 /* WarningWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2239EB72CD3AE89007FE840 /* WarningWidget.swift */; };
+		A22C0A3A2CDCFD0300F64B66 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22C0A392CDCFCFD00F64B66 /* utils.swift */; };
 		A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24709F02CCA83B0008CC8EA /* geolocation.swift */; };
 		A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08C62CCBBAAD00848BEB /* extensions.swift */; };
 		A24E08C82CCBBB3900848BEB /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91826B41657000BF75C /* Roboto-Bold.ttf */; };
@@ -121,6 +122,7 @@
 		A2239EB32CD39885007FE840 /* widgetConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = widgetConfig.json; path = ../widgetConfig.json; sourceTree = SOURCE_ROOT; };
 		A2239EB52CD399D9007FE840 /* config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
 		A2239EB72CD3AE89007FE840 /* WarningWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningWidget.swift; sourceTree = "<group>"; };
+		A22C0A392CDCFCFD00F64B66 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		A24709F02CCA83B0008CC8EA /* geolocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geolocation.swift; sourceTree = "<group>"; };
 		A24E08C62CCBBAAD00848BEB /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		A24E08CD2CCBC22700848BEB /* modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = modifiers.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 				A24709F02CCA83B0008CC8EA /* geolocation.swift */,
 				A2B3FFBA2CC9174D00EC1293 /* network.swift */,
 				A2B3FFB82CC9138800EC1293 /* defaults.swift */,
+				A22C0A392CDCFCFD00F64B66 /* utils.swift */,
 				A2B3FFAD2CC8E6AE00EC1293 /* Assets.xcassets */,
 				A2B3FFAE2CC8E6AE00EC1293 /* Info.plist */,
 				A2B3FFAF2CC8E6AE00EC1293 /* types.swift */,
@@ -925,6 +928,7 @@
 				A2B3FFBB2CC9175000EC1293 /* network.swift in Sources */,
 				A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */,
 				A24E08CE2CCBC22A00848BEB /* modifiers.swift in Sources */,
+				A22C0A3A2CDCFD0300F64B66 /* utils.swift in Sources */,
 				A2B3FFB62CC8E6AE00EC1293 /* ForecastWidget.swift in Sources */,
 				A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */,
 				A2B3FFB72CC8E6AE00EC1293 /* WeatherWidgetBundle.swift in Sources */,
