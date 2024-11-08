@@ -11,4 +11,29 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
+    <style name="locationName">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#303193</item>
+    </style>
+
+    <style name="locationRegion">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#303193</item>
+    </style>
+
+    <style name="temperature">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">#303193</item>
+    </style>
+
+    <style name="temperatureUnit">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">-0.04</item>
+        <item name="android:textColor">#303193</item>
+    </style>
+
 </resources>
