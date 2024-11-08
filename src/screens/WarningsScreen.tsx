@@ -45,7 +45,9 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
 
   const warningsConfig = Config.get('warnings');
-  const { useCapView } = warningsConfig;
+  const { useCapView, apiUrl } = warningsConfig;
+  const showWarningsPanel =
+    apiUrl && Object.keys(apiUrl).includes(location.country);
 
   const updateWarnings = useCallback(() => {
     if (warningsConfig.enabled) {
@@ -92,7 +94,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
           <CapWarningsView />
         ) : (
           <>
-            <WarningsPanel />
+            {showWarningsPanel && <WarningsPanel />}
             <WarningsWebViewPanel
               updateInterval={(warningsConfig.updateInterval ?? 5) * 60 * 1000}
             />
