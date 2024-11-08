@@ -30,8 +30,6 @@ struct ForecastProvider: TimelineProvider {
                  
       let currentLocation = try await getCurrentLocation()
       
-      print(currentLocation as Any)
-      
       if (currentLocation != nil) {
         location = try await fetchLocation(
           lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
@@ -154,6 +152,7 @@ struct SmallWidgetView : View {
         Text(entry.formatAreaOrCountry()).style(.location)
         Spacer()
         NextHourForecast(timeStep: entry.timeSteps[0])
+        Spacer()
         if (entry.crisisMessage != nil) {
           Text(entry.crisisMessage!)
             .style(.crisis)
@@ -161,7 +160,6 @@ struct SmallWidgetView : View {
             .lineLimit(2)
             .fixedSize(horizontal: false, vertical: true)
         } else {
-          Spacer()
           if (entry.settings.showLogo) {
             Image("FMI").resizable().frame(width: 50, height: 24)
           }
@@ -189,8 +187,8 @@ struct MediumWidgetView : View {
               Image("FMI").resizable().frame(width: 56, height: 27)
             }
           }.padding(.horizontal, 8)
-          Spacer()
         }
+        Spacer()
         ForecastRow(location: entry.location, timeSteps: entry.timeSteps)
         Spacer()
         if (entry.crisisMessage != nil) {

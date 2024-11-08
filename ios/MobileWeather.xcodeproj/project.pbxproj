@@ -34,7 +34,6 @@
 		A24E08CE2CCBC22A00848BEB /* modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08CD2CCBC22700848BEB /* modifiers.swift */; };
 		A2B3FF982CC7D1DA00EC1293 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2B3FF972CC7D1DA00EC1293 /* WidgetKit.framework */; };
 		A2B3FF9A2CC7D1DA00EC1293 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2B3FF992CC7D1DA00EC1293 /* SwiftUI.framework */; };
-		A2B3FFA52CC7D1DC00EC1293 /* WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2B3FF962CC7D1DA00EC1293 /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A2B3FFB32CC8E6AE00EC1293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2B3FFAD2CC8E6AE00EC1293 /* Assets.xcassets */; };
 		A2B3FFB52CC8E6AE00EC1293 /* types.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFAF2CC8E6AE00EC1293 /* types.swift */; };
 		A2B3FFB62CC8E6AE00EC1293 /* ForecastWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB02CC8E6AE00EC1293 /* ForecastWidget.swift */; };
@@ -70,28 +69,7 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "MobileWeather-tvOS";
 		};
-		A2B3FFA32CC7D1DC00EC1293 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A2B3FF952CC7D1DA00EC1293;
-			remoteInfo = widgetExtension;
-		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		A2B3FFAA2CC7D1DC00EC1293 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				A2B3FFA52CC7D1DC00EC1293 /* WidgetExtension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* MobileWeatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MobileWeatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -380,12 +358,10 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				A6C7C138DD46CCE0D5C077BD /* [CP] Embed Pods Frameworks */,
 				92C4390534123651C377CBF9 /* [CP] Copy Pods Resources */,
-				A2B3FFAA2CC7D1DC00EC1293 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				A2B3FFA42CC7D1DC00EC1293 /* PBXTargetDependency */,
 			);
 			name = MobileWeather;
 			productName = MobileWeather;
@@ -947,11 +923,6 @@
 			isa = PBXTargetDependency;
 			target = 2D02E47A1E0B4A5D006451C7 /* MobileWeather-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
-		};
-		A2B3FFA42CC7D1DC00EC1293 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A2B3FF952CC7D1DA00EC1293 /* WidgetExtension */;
-			targetProxy = A2B3FFA32CC7D1DC00EC1293 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
