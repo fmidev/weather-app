@@ -1,12 +1,14 @@
 package fi.fmi.mobileweather;
 
+import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
+import static fi.fmi.mobileweather.NewWidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,9 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
-import androidx.core.app.JobIntentService;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +27,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.TextView;
-import android.widget.RemoteViews;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
@@ -313,7 +311,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 
             // Send a broadcast to trigger onUpdate()
             int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-            Intent updateIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            Intent updateIntent = new Intent(ACTION_APPWIDGET_UPDATE);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
             sendBroadcast(updateIntent);
 

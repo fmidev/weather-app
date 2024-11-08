@@ -1,5 +1,8 @@
 package fi.fmi.mobileweather;
 
+
+import static fi.fmi.mobileweather.NewWidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -38,7 +41,7 @@ public class NewSmallWidgetNotification {
 
     private static PendingIntent getWidgetAlarmIntent(Context context) {
         Intent intent = new Intent(context, NewSmallWidgetProvider.class)
-                .setAction(NewSmallWidgetProvider.ACTION_AUTO_UPDATE)
+                .setAction(ACTION_APPWIDGET_AUTO_UPDATE)
                 .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,getActiveWidgetIds(context));
         PendingIntent pi = PendingIntent.getBroadcast(context, WIDGET_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         return pi;

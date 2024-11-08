@@ -13,6 +13,7 @@ import java.util.Calendar;
 
 public class NewWidgetNotification {
 
+    public static final String ACTION_APPWIDGET_AUTO_UPDATE = "fi.fmi.mobileweather.AUTO_UPDATE";
     public static final int WIDGET_REQUEST_CODE = 191001;
 
     private static int[] getActiveWidgetIds(Context context, Class<? extends AppWidgetProvider> providerClass) {
@@ -38,7 +39,7 @@ public class NewWidgetNotification {
 
     private static PendingIntent getWidgetAlarmIntent(Context context, Class<? extends AppWidgetProvider> providerClass) {
         Intent intent = new Intent(context, providerClass)
-                .setAction(NewSmallWidgetProvider.ACTION_AUTO_UPDATE)
+                .setAction(ACTION_APPWIDGET_AUTO_UPDATE)
                 .putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, getActiveWidgetIds(context, providerClass));
         return PendingIntent.getBroadcast(context, WIDGET_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }

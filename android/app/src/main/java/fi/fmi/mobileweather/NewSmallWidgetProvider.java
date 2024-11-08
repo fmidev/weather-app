@@ -1,5 +1,9 @@
 package fi.fmi.mobileweather;
 
+
+import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
+import static fi.fmi.mobileweather.NewWidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
+
 import android.Manifest;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -20,7 +24,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -49,8 +52,6 @@ import androidx.core.content.ContextCompat;
 
 public class NewSmallWidgetProvider extends AppWidgetProvider {
 
-    public static final String ACTION_AUTO_UPDATE =
-            "fi.fmi.mobileweather.AUTO_UPDATE";
     private QNCache cache = new QNCacheBuilder().setAutoReleaseInSeconds(60 * 60).createQNCache();
     private Context context;
     private int appWidgetId;
@@ -65,8 +66,9 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         Log.d("NewSmallWidget Update","onReceive");
         super.onReceive(context, intent);
-        if(intent!=null && intent.getAction()!=null /*&&
-                intent.getAction().equals(ACTION_AUTO_UPDATE)*/){
+        String action = intent.getAction();
+        if( action != null &&
+                (action.equals(ACTION_APPWIDGET_AUTO_UPDATE) || action.equals(ACTION_APPWIDGET_UPDATE))) {
             updateAfterReceive(context);
         }
     }
