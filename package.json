@@ -17,8 +17,8 @@
     "e2e:build:ios": "detox build -c ios",
     "e2e:build:android": "detox build -c android",
     "buildAndroidRelease": "cd android && ./gradlew clean bundleRelease",
-    "server": "cd mockserver && node server.js",
-    "server:watch": "cd mockserver && nodemon server.js"
+    "server": "cd mockserver && node server.mjs",
+    "server:watch": "cd mockserver && nodemon server.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.22.3",
