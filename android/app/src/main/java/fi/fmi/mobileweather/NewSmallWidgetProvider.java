@@ -32,19 +32,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.fewlaps.quitnowcache.QNCache;
 import com.fewlaps.quitnowcache.QNCacheBuilder;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -54,7 +47,6 @@ import android.graphics.Color;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 
@@ -68,9 +60,6 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
     private SharedPreferences pref;
-    private FusedLocationProviderClient fusedLocationClient;
-    private LocationCallback locationCallback;
-
 
 
     @Override
@@ -114,54 +103,9 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        this.context = context;
         Log.d("NewSmallWidget Update","onEnabled");
         super.onEnabled(context);
-
-        this.pref= context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
-                Context.MODE_PRIVATE);
-
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                if (locationResult == null) {
-                    Log.d("Widget Location", "Location not available from Location Manager");
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    // Update UI with location data
-                    // ...
-                    Log.d("Widget Location", "New location: " + location.toString());
-                    // Get the location coordinates string from location
-                    String latlon = getLatLonString(location);
-                    // Store latlon to shared preferences (cannot be null here)
-                    pref.edit().putString("latlon", latlon).apply();
-                }
-            }
-        };
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        startLocationUpdates();
-
         NewWidgetNotification.scheduleWidgetUpdate(context, NewSmallWidgetProvider.class);
-    }
-
-    private void startLocationUpdates() {
-        LocationRequest locationRequest = new LocationRequest.Builder(10000)
-//                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .build();
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        fusedLocationClient.requestLocationUpdates(locationRequest,
-                locationCallback,
-                Looper.getMainLooper());
     }
 
     private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -170,29 +114,16 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
-
         this.pref= context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
                 Context.MODE_PRIVATE);
 
-        // if we have old location, update widget with it
-        // TODD: temporarily Utsjoki latlon as default
-        String latlon = pref.getString("latlon", "69.90,27.02");
-        if (latlon != null) {
-            Log.d("Widget Location", "Update with stored location");
-            execute(latlon);
-        } else {
-            Log.d("Widget Location", "No update, no location available");
-        }
-
-       /* Log.d("Widget Location", "Trying to request location");
+        Log.d("Widget Location", "Trying to request location");
         if ((ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 || (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
 
-            Log.d("Widget Location", "Location requested");*/
-
-
-            /*Boolean ok = SingleShotLocationProvider.requestSingleUpdate(context,
+            Log.d("Widget Location", "Location requested");
+            Boolean ok = SingleShotLocationProvider.requestSingleUpdate(context,
                     location -> {
                         Log.d("Widget Location", "New location: " + location.toString());
                         // Get the location coordinates string from location
@@ -207,8 +138,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                             timeoutHandler.removeCallbacks(timeoutRunnable);
                         }
                         execute(latlon);
-                    });*/
-            /*if (ok) {
+                    });
+            if (ok) {
                 // Set timeout for location request
                 timeoutHandler = new Handler(Looper.getMainLooper());
                 // Timeout runnable
@@ -230,14 +161,14 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 Log.d("Widget Location", "Location not available from Location Manager");
                 showErrorView(context, context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
                         Context.MODE_PRIVATE), context.getResources().getString(R.string.positioning_failed));
-            }*/
-        /*} else {
+            }
+        } else {
             Log.d("Widget Location", "Location permission not granted");
             showErrorView(context, context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
                     Context.MODE_PRIVATE), context.getResources().getString(R.string.positioning_failed));
 
 //            this.updateWidgetWithPositioningError(incomingAppWidgetId);
-        }*/
+        }
 
 
 

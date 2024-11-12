@@ -33,7 +33,7 @@ public class SingleShotLocationProvider {
         // NOTE: This call will block until the HandlerThread gets control and initializes its Looper
         Looper looper = handlerThread.getLooper();
 
-        final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
@@ -61,7 +61,7 @@ public class SingleShotLocationProvider {
             // location cannot be retrieved
             return false;
         }
-        Location location = locationManager.getLastKnownLocation(provider);
+        /*Location location = locationManager.getLastKnownLocation(provider);
 
         if (location != null) {
             // Do not use location more than 2 hours old
@@ -69,11 +69,11 @@ public class SingleShotLocationProvider {
             Long currentTime = new java.util.Date().getTime();
             Long locationTime = location.getTime();
             if (Math.abs(currentTime-locationTime) < (2*60*60*1000)) {
-                Log.d("SingleShotLocation", "Using last known location");
+                Log.d("Widget Location", "SingleShotLocationProvider: using last known location");
                 callback.onNewLocationAvailable(location);
                 return true;
             }
-        }
+        }*/
 
         locationManager.requestSingleUpdate(criteria, new LocationListener() {
             @Override
