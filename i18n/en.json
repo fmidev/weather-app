@@ -446,7 +446,7 @@
       "unsavedLocation": "unsaved place",
       "saveHint": "Save the place in the app memory.",
       "deleteHint": "Delete the saved place.",
-      "deleteElaboration": "The lated deleted places are displayed in Previous places.",
+      "deleteElaboration": "The latest deleted places are displayed in Previous places.",
       "locateTitle": "Finding my location",
       "locateHint": "Find my location.",
       "locateElaboration": "The application attempts to locate the user's device and fetch weather data based on the found location. Location accuracy depends on the user's device, not on the application."
