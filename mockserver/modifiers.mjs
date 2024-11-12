@@ -1,3 +1,9 @@
+export const DataMode = {
+  default: 'default',
+  constant: 'constant',
+  dynamic: 'dynamic',
+};
+
 export const updateWarningTimes = (json) => {
   const updated = new Date(json.data.updated);
   const interval = new Date().getTime() - updated.getTime();
@@ -23,7 +29,23 @@ export const updateWarningTimes = (json) => {
   return json;
 };
 
-export const updateForecast = (json, geoid) => {
+const nextFullHour = () => {
+  const now = new Date();
+  now.setMinutes(0, 0, 0);
+  now.setHours(now.getHours() + 1);
+  return now;
+};
+
+const getSuntime = (epochtime, suntime) => {
+  return (
+    new Date(epochtime * 1000)
+      .toISOString()
+      .replaceAll('-', '')
+      .substring(0, 8) + suntime.substring(8)
+  );
+};
+
+export const updateForecast = (json, geoid, mode) => {
   const modified = { ...json };
   const geoids = Object.keys(json);
 
@@ -46,39 +68,45 @@ export const updateForecast = (json, geoid) => {
   const itemsInFuture = [];
   const interval =
     startOfTheDay.getTime() / 1000 - modified[geoid][0].epochtime;
+  const forecastStart = nextFullHour().getTime() / 1000;
+  const modtime = now
+    .toISOString()
+    .replaceAll('-', '')
+    .replaceAll(':', '')
+    .substring(0, 15);
 
-  modified[geoid].forEach((item) => {
-    const epochtime = item.epochtime + interval;
-
-    if (epochtime > now.getTime() / 1000) {
+  modified[geoid].forEach((item, index) => {
+    if (mode === DataMode.constant) {
+      const epochtime = forecastStart + index * 3600;
       item.epochtime = epochtime;
 
       if (item.sunrise && item.sunset && item.modtime) {
-        const sunrise =
-          new Date(epochtime * 1000)
-            .toISOString()
-            .replaceAll('-', '')
-            .substring(0, 8) + item.sunrise.substring(8);
-        const sunset =
-          new Date(epochtime * 1000)
-            .toISOString()
-            .replaceAll('-', '')
-            .substring(0, 8) + item.sunset.substring(8);
-        const modtime = now
-          .toISOString()
-          .replaceAll('-', '')
-          .replaceAll(':', '')
-          .substring(0, 15);
-        item.sunrise = sunrise;
-        item.sunset = sunset;
+        if (item.sunrise && item.sunset && item.modtime) {
+          item.sunrise = getSuntime(epochtime, item.sunrise);
+          item.sunset = getSuntime(epochtime, item.sunset);
+          item.modtime = modtime;
+        }
         item.modtime = modtime;
       }
-
       itemsInFuture.push(item);
+    } else {
+      const epochtime = item.epochtime + interval;
+
+      if (epochtime > now.getTime() / 1000) {
+        item.epochtime = epochtime;
+
+        if (item.sunrise && item.sunset && item.modtime) {
+          item.sunrise = getSuntime(epochtime, item.sunrise);
+          item.sunset = getSuntime(epochtime, item.sunset);
+          item.modtime = modtime;
+        }
+
+        itemsInFuture.push(item);
+      }
     }
   });
-  modified[geoid] = itemsInFuture;
 
+  modified[geoid] = itemsInFuture;
   return modified;
 };
 

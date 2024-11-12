@@ -1,1 +1,13 @@
-{"5128581":[{"name":"New York","latitude":40.71400,"longitude":-74.00600,"region":"USA","country":"USA","iso2":"US","localtz":"America/New_York"}]}
+{
+  "5128581": [
+    {
+      "name": "New York",
+      "latitude": 40.714,
+      "longitude": -74.006,
+      "region": "USA",
+      "country": "USA",
+      "iso2": "US",
+      "localtz": "America/New_York"
+    }
+  ]
+}

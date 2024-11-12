@@ -3,6 +3,7 @@ import {
   updateForecast,
   updateUVForecast,
   updateObservations,
+  DataMode,
   // eslint-disable-next-line import/extensions
 } from './modifiers.mjs';
 import express from 'express';
@@ -18,10 +19,23 @@ const dirName = dirname(fileURLToPath(import.meta.url));
 
 let geolocationSetting = 'tikkurila';
 let forecastSetting = 'summer';
-let observationSetting = 'finland';
+let dataModeSetting = DataMode.default;
+let debugMode = true;
 let requestCount = 0;
 
+// Middleware for every request
 app.use((req, res, next) => {
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    Pragma: 'no-cache',
+    Expires: '0',
+    'Surrogate-Control': 'no-store',
+  });
+
+  if (debugMode) {
+    console.log(`${req.method} ${req.originalUrl}`);
+  }
+
   if (!req.path.includes('count')) {
     requestCount += 1;
   }
@@ -43,6 +57,25 @@ app.get('/quit', (_, res) => {
 
 app.get('/count', (_, res) => {
   res.json({ count: requestCount });
+});
+
+app.get('/config', (req, res) => {
+  const filePath = path.join(dirName, 'data', 'config', 'config.json');
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading the file:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    try {
+      let jsonData = JSON.parse(data);
+      res.json(jsonData);
+    } catch (parseErr) {
+      console.error('Error parsing JSON:', parseErr);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
 });
 
 app.get('/warnings/:name', (req, res) => {
@@ -105,6 +138,10 @@ app.put('/setup/:type/:setting', (req, res) => {
     geolocationSetting = setting;
   } else if (type === 'forecast' && ['summer', 'winter'].includes(setting)) {
     forecastSetting = setting;
+  } else if (type === 'datamode' && Object.values(DataMode).includes(setting)) {
+    dataModeSetting = DataMode[setting];
+  } else if (type === 'debug' && ['true', 'false'].includes(setting)) {
+    debugMode = setting === 'true';
   } else {
     return res.status(500).json({ error: 'Invalid type or setting' });
   }
@@ -112,13 +149,18 @@ app.put('/setup/:type/:setting', (req, res) => {
   res.json({ message: 'Setting updated' });
 });
 
+app.get('/setup', (_, res) => {
+  return res.json({
+    geolocation: geolocationSetting,
+    forecast: forecastSetting,
+    datamode: dataModeSetting,
+  });
+});
+
 app.get('/timeseries', (req, res) => {
   let file;
 
   const producer = req.query.producer;
-
-  // The query without producer is geolocation query that we can pass to real API
-
   let geoidIsRequired = false;
 
   switch (producer) {
@@ -126,7 +168,11 @@ app.get('/timeseries', (req, res) => {
       file = `geolocation-${geolocationSetting}.json`;
       break;
     case 'observations_fmi':
-      file = `observations-finland.json`;
+      if (req.query.param?.includes('snowDepth06')) {
+        file = `observations-daily.json`;
+      } else {
+        file = `observations-finland.json`;
+      }
       break;
     case 'foreign':
       file = 'observations-foreign.json';
@@ -155,12 +201,12 @@ app.get('/timeseries', (req, res) => {
 
     try {
       let jsonData = JSON.parse(data);
-      if (producer === 'observations_fmi') {
+      if (producer === 'observations_fmi' || producer === 'foreign') {
         jsonData = updateObservations(jsonData);
       } else if (producer === 'uv') {
         jsonData = updateUVForecast(jsonData);
       } else if (producer === 'default') {
-        jsonData = updateForecast(jsonData, geoid);
+        jsonData = updateForecast(jsonData, geoid, dataModeSetting);
       }
       res.json(jsonData);
     } catch (parseErr) {
@@ -177,4 +223,5 @@ app.listen(PORT, () => {
   console.log(
     'Check https://github.com/fmidev/weather-app/wiki/Development-guide#mockserver for more help!'
   );
+  console.log('');
 });
