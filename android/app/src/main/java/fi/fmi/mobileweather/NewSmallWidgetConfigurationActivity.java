@@ -29,6 +29,8 @@ import android.widget.Toast;
 import android.widget.TextView;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.reactnativecommunity.asyncstorage.AsyncLocalStorageUtil;
@@ -329,6 +331,58 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 	}
 
     public void askLocationPermission() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.location_service_info_title)
+                    .setMessage(R.string.location_service_info)
+                    .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.Q)
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                            Manifest.permission.ACCESS_FINE_LOCATION},
+                                    1);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null).show();
+        } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.location_service_info_title)
+                    .setMessage(R.string.location_service_info)
+                    .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.Q)
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                                    2);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null).show();
+        }
+    } else {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.location_service_info_title)
+                    .setMessage(R.string.location_service_info)
+                    .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                            Manifest.permission.ACCESS_FINE_LOCATION},
+                                    1);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null).show();
+        }
+    }
+}
+
+    /*public void askLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (ActivityCompat.checkSelfPermission(
                     NewSmallWidgetConfigurationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
@@ -358,5 +412,5 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
                             Manifest.permission.ACCESS_BACKGROUND_LOCATION},
                     1);
         }
-    }
+    }*/
 }
