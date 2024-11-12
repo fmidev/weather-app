@@ -139,7 +139,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 }
             });*/
 
-            PeriodicWorkRequest locationWorkRequest = new PeriodicWorkRequest.Builder(LocationWorker.class, 1, TimeUnit.MINUTES).build();
+            /*PeriodicWorkRequest locationWorkRequest = new PeriodicWorkRequest.Builder(LocationWorker.class, 1, TimeUnit.MINUTES).build();
             WorkManager.getInstance(context).enqueue(locationWorkRequest);
 
             LocationWorker.setLocationUpdateCallback(new LocationUpdateCallback() {
@@ -161,8 +161,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                     }
                     execute(latlon);
                 }
-            });
-            /*Log.d("Widget Location", "Location requested");
+            });*/
+            Log.d("Widget Location", "Location requested");
             Boolean ok = SingleShotLocationProvider.requestSingleUpdate(context,
                     location -> {
                         Log.d("Widget Location", "New location: " + location.toString());
@@ -201,7 +201,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 Log.d("Widget Location", "Location not available from Location Manager");
                 showErrorView(context, context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
                         Context.MODE_PRIVATE), context.getResources().getString(R.string.positioning_failed));
-            }*/
+            }
         } else {
             Log.d("Widget Location", "Location permission not granted");
             showErrorView(context, context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
