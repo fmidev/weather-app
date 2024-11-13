@@ -34,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -262,18 +263,24 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 language +
                 "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
 
-        String[] urls = {url};
+        // TODO: temporary for testing. Needs to be configurable:
+//        String url2 = "https://ilmatieteenlaitos.fi/api/general/mobileannouncement";
+//        String url2 = "http://localhost:3000/mobileannouncements/crisis";
+        String url2 = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
 
-        Future<JSONObject> future1 = executorService.submit(() -> fetchData(urls[0]));
-//        Future<JSONObject> future2 = executorService.submit(() -> fetchData(urls[1]));
+        String[] urls = {url, url2};
+
+        Future<JSONObject> future1 = executorService.submit(() -> fetchJsonObject(urls[0]));
+        Future<JSONArray> future2 = executorService.submit(() -> fetchJsonArray(urls[1]));
 
         executorService.submit(() -> {
             try {
                 JSONObject result1 = future1.get();
-//                JSONObject result2 = future2.get();
-                onPostExecute(result1/*, result2*/);
+                JSONArray result2 = future2.get();
+                onPostExecute(result1, result2);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("DownloadData json", "Exception: " + e.getMessage());
+//                e.printStackTrace();
             }
         });
     }
@@ -296,7 +303,27 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         return latlon;
     }
 
-    private JSONObject fetchData(String src) {
+    private JSONObject fetchJsonObject(String src) {
+        try {
+            String jsonString = fetchJsonString(src);
+            return new JSONObject(jsonString);
+        } catch (JSONException e) {
+            Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private JSONArray fetchJsonArray(String src) {
+        try {
+            String jsonString = fetchJsonString(src);
+            return new JSONArray(jsonString);
+        } catch (JSONException e) {
+            Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private String fetchJsonString(String src) {
         if (src == null || src.equals(""))
             return null;
 
@@ -342,15 +369,14 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
                 // Store to cache
 
-                cache.set(src, jsonstr, 2 * 60 * 1000);
-                JSONObject jsonObject = new JSONObject(jsonstr);
+//                cache.set(src, jsonstr, 2 * 60 * 1000);
+//                JSONObject jsonObject = new JSONObject(jsonstr);
+                return jsonstr;
 
                 // returns the json object
-                return jsonObject;
+//                return jsonObject;
 
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
                 e.printStackTrace();
             }
 
@@ -358,13 +384,13 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
             return null;
 
         } catch (IOException e) {
-            e.printStackTrace();
-            // Log.e("Exception",e.getMessage());
+//            e.printStackTrace();
+            Log.e("Exception", Objects.requireNonNull(e.getMessage()));
             return null;
         }
     }
 
-    protected void onPostExecute(JSONObject json/*, JSONObject json2*/) {
+    protected void onPostExecute(JSONObject json, JSONArray json2) {
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -469,7 +495,9 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         DateFormat shortdayformat = new SimpleDateFormat("EE");
         String iso2 = "";*/
 
-        Log.d("DownloadData json", "Forecast json: " + json.toString());
+        Log.d("DownloadData json", "Forecast json: " + json);
+        Log.d("DownloadData json", "Crisis json: " + json2);
+
 
         try {
             // TODO: temporary for testing. Remove this later.
@@ -551,9 +579,35 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
                 main.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
-                // Update the text
+                // Update time
                 main.setTextViewText(R.id.updateTimeTextView, /*"Päivitetty " +*/ DateFormat.getTimeInstance().format(new java.util.Date()));
 
+                // crisis view
+                // example json: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
+                if (json2 != null) {
+                    boolean crisisFound = false;
+                    try {
+                        for (int i = 0; i < json2.length(); i++) {
+                            JSONObject jsonObject = json2.getJSONObject(i);
+                            String type = jsonObject.getString("type");
+                            if (type.equals("Crisis")) {
+                                String content = jsonObject.getString("content");
+                                main.setViewVisibility(R.id.crisisTextView, VISIBLE);
+                                main.setTextViewText(R.id.crisisTextView, content);
+                                crisisFound = true;
+                                // if a crisis found, exit the loop
+                                break;
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("DownloadData json", "Crisis Json parsing error: " + e.getMessage());
+                    }
+                    if (!crisisFound) {
+                        main.setViewVisibility(R.id.crisisTextView, GONE);
+                    }
+                } else {
+                    main.setViewVisibility(R.id.crisisTextView, GONE);
+                }
 
                 // If very small then also hide location name and show time
 

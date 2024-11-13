@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
         android:maxWidth="141dp"
         tools:text="Helsinki," />
 
@@ -22,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
         android:maxWidth="141dp"
         android:textColor="@android:color/black"
         android:textSize="15sp"
@@ -70,11 +72,13 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/warningTextView"
-        style="@style/warning"
+        android:id="@+id/crisisTextView"
+        style="@style/crisis"
         android:layout_width="135dp"
         android:layout_height="32dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="13dp"
+        android:gravity="center_horizontal"
         android:visibility="gone"
         tools:text="°2.11. klo 23: Itämeren rannikko: Sää kehitty..."
         tools:visibility="visible" />
