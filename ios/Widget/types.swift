@@ -26,13 +26,14 @@ struct Location {
 }
 
 struct TimeStep: Hashable, Identifiable {
-  var id = UUID()
+  let id = UUID()
   let observation: Bool
   let epochtime: Int
   let temperature: Double
   let feelsLike: Double
   let smartSymbol: Int
   let windCompass8: String
+  let windDirection: Int
   let windSpeed: Double
   let dark: Int
   var uvCumulated: Int? = nil

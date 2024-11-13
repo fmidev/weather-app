@@ -11,7 +11,7 @@ struct LargeNextHoursForecast: View {
         HStack{
           Image("clock")
           Spacer()
-          ForEach(0..<timeSteps.count, id: \.self) { i in
+          ForEach(1..<timeSteps.count, id: \.self) { i in
             Text(timeSteps[i].formatTime(timezone: timezone))
               .style(.time)
               .frame(width: COLUMN_WIDTH)
@@ -26,7 +26,7 @@ struct LargeNextHoursForecast: View {
         HStack{
           Image("symbol")
           Spacer()
-          ForEach(0..<timeSteps.count, id: \.self) { i in
+          ForEach(1..<timeSteps.count, id: \.self) { i in
             Image(String(timeSteps[i].smartSymbol))
               .resizable()
               .frame(width: COLUMN_WIDTH, height: COLUMN_WIDTH)
@@ -41,7 +41,7 @@ struct LargeNextHoursForecast: View {
         HStack{
           Image("temperature")
           Spacer()
-          ForEach(0..<timeSteps.count, id: \.self) { i in
+          ForEach(1..<timeSteps.count, id: \.self) { i in
             Text(timeSteps[i].formatTemperature(includeDegree: true))
               .style(.temperature)
               .frame(width: COLUMN_WIDTH)

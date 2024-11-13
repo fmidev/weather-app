@@ -51,6 +51,7 @@ target 'MobileWeather' do
   end
 end
 
+=begin
 target 'WidgetExtension' do
   platform :ios, '17.0'
   pod 'Alamofire', '~> 5.10'
@@ -58,4 +59,4 @@ target 'WidgetExtension' do
   pod 'SwiftyJSON', '~> 5.0'
   pod 'SwiftDate', '~> 7.0'
 end
-
+=end

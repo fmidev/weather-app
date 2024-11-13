@@ -18,10 +18,24 @@
   },
   "weather": {
     "apiUrl": "url",
-    "interval": 30
+    "interval": 30,
+    "useCardinalsForWindDirection": false
   },
   "warnings": {
     "apiUrl": "url",
     "interval": 5
+  },
+  "announcements": {
+    "enabled": true,
+    "api": {
+      "fi": "url",
+      "en": "url",
+      "sv": "url"
+    }
+  },
+  "layout": {
+    "logo": {
+      "enabled": true
+    }
   }
 }

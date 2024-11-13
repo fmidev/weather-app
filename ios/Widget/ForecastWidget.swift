@@ -72,7 +72,7 @@ struct ForecastProvider: TimelineProvider {
         )
       } else {
         for (index, item) in forecast!.enumerated() {
-          let timeSteps = Array(0...4).map{
+          let timeSteps = Array(0...5).map{
             return forecast![index + $0]
           }
           

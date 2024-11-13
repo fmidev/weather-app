@@ -28,6 +28,7 @@ let defaultTimeStep = TimeStep(
   feelsLike: 12,
   smartSymbol: 1,
   windCompass8: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"].randomElement()!,
+  windDirection: 270,
   windSpeed: 5,
   dark: 0
 )
@@ -48,6 +49,7 @@ let defaultEntry = TimeStepEntry(
       smartSymbol: defaultTimeStep.smartSymbol + Int.random(in: 0...1),
       windCompass8: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
         .randomElement()!,
+      windDirection: Int.random(in: 0...360),
       windSpeed: defaultTimeStep.windSpeed + Double(Int.random(in: -2...2)),
       dark: defaultTimeStep.dark
     )

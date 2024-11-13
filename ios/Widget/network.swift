@@ -32,7 +32,7 @@ func fetchLocation(lat: Double, lon: Double) async throws -> Location? {
 
 func fetchForecast(location: Location) async throws -> [TimeStep]? {
   let timeseriesUrl = getSetting("weather.apiUrl") as! String
-  let param = "epochtime,temperature,feelslike,smartsymbol,windcompass8,windspeedms,dark"
+  let param = "epochtime,temperature,feelslike,smartsymbol,windcompass8,winddirection,windspeedms,dark"
   var url = timeseriesUrl+"?param=\(param)&timesteps=30&format=json&who=\(WHO)"
   url += location.id != 0 ? "&geoid=\(location.id)" : "&latlon=\(location.lat),\(location.lon)"
   
@@ -51,11 +51,12 @@ func fetchForecast(location: Location) async throws -> [TimeStep]? {
       feelsLike: $0["feelslike"].doubleValue,
       smartSymbol: $0["smartsymbol"].intValue,
       windCompass8: $0["windcompass8"].stringValue,
+      windDirection: $0["winddirection"].intValue,
       windSpeed: $0["windspeedms"].doubleValue,
       dark: $0["dark"].intValue
     )
   })
-  
+
   return items  
 }
 
