@@ -2,6 +2,8 @@ package fi.fmi.mobileweather;
 
 
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.NewWidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
 import android.Manifest;
@@ -199,13 +201,21 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 timeoutHandler.postDelayed(timeoutRunnable, 60 * 1000); // 1 minute timeout
             } else {
                 Log.d("Widget Location", "Location not available from Location Manager");
-                showErrorView(context, context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
-                        Context.MODE_PRIVATE), context.getResources().getString(R.string.positioning_failed));
+                showErrorView(context, context.getSharedPreferences(
+                        "fi.fmi.mobileweather.widget_" + appWidgetId,
+                        Context.MODE_PRIVATE),
+                        context.getResources().getString(R.string.positioning_failed),
+                        ""
+                );
             }
         } else {
             Log.d("Widget Location", "Location permission not granted");
-            showErrorView(context, context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
-                    Context.MODE_PRIVATE), context.getResources().getString(R.string.positioning_failed));
+            showErrorView(context, context.getSharedPreferences(
+                    "fi.fmi.mobileweather.widget_" + appWidgetId,
+                    Context.MODE_PRIVATE),
+                    context.getResources().getString(R.string.positioning_failed),
+                    ""
+            );
 
 //            this.updateWidgetWithPositioningError(incomingAppWidgetId);
         }
@@ -392,14 +402,24 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 try {
                     json = new JSONObject(jsonstr);
                 } catch (JSONException e) {
-                    showErrorView(context, pref, context.getResources().getString(R.string.update_failed));
+                    showErrorView(
+                            context,
+                            pref,
+                            context.getResources().getString(R.string.update_failed),
+                            context.getResources().getString(R.string.check_internet_connection)
+                    );
                     /*RemoteViews errorview = showErrorView(context, pref,
                             context.getResources().getString(R.string.update_failed));
                     appWidgetManager.updateAppWidget(appWidgetId, errorview);*/
                     return;
                 }
             } else {
-                showErrorView(context, pref, context.getResources().getString(R.string.update_failed));
+                showErrorView(
+                        context,
+                        pref,
+                        context.getResources().getString(R.string.update_failed),
+                        context.getResources().getString(R.string.check_internet_connection)
+                );
                 /*RemoteViews errorview = showErrorView(context, pref, context.getResources().getString(R.string.update_failed));
                 appWidgetManager.updateAppWidget(appWidgetId, errorview);*/
                 return;
@@ -415,26 +435,22 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
         }
 
+        main.setInt(R.id.weatherLayout, "setVisibility", VISIBLE);
+
         if (background.equals("dark")) {
-//            main.setTextColor(R.id.locationNameTextView, Color.rgb(255, 0, 0));
-            main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
-            main.setInt(R.id.locationNameTextView, "setTextColor", Color.rgb(255, 255, 255));
-            main.setInt(R.id.locationRegionTextView, "setTextColor", Color.rgb(255, 255, 255));
-            main.setInt(R.id.temperatureTextView, "setTextColor", Color.rgb(255, 255, 255));
-            main.setInt(R.id.temperatureUnitTextView, "setTextColor", Color.rgb(255, 255, 255));
-            main.setInt(R.id.updateTimeTextView, "setTextColor", Color.rgb(255, 255, 255));
-//            main.setInt(R.id.observationTitleTextView, "setTextColor", Color.rgb(48, 49, 147));
+            setColors(main,
+                    Color.parseColor("#191B22"),
+                    Color.rgb(255, 255, 255));
         }
         else if (background.equals("light")) {
-            main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.rgb(255, 255, 255));
-            main.setInt(R.id.locationNameTextView, "setTextColor", Color.rgb(48, 49, 147));
-            main.setInt(R.id.locationRegionTextView, "setTextColor", Color.rgb(48, 49, 147));
-            main.setInt(R.id.temperatureTextView, "setTextColor", Color.rgb(48, 49, 147));
-            main.setInt(R.id.temperatureUnitTextView, "setTextColor", Color.rgb(48, 49, 147));
-            main.setInt(R.id.updateTimeTextView, "setTextColor", Color.rgb(48, 49, 147));
-            //            main.setInt(R.id.observationTitleTextView, "setTextColor", Color.rgb(48, 49, 147));
-        } else
-            main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
+            setColors(main,
+                    Color.rgb(255, 255, 255),
+                    Color.rgb(48, 49, 147));
+        } else {
+            setColors(main,
+                    Color.TRANSPARENT,
+                    Color.rgb(48, 49, 147));
+        }
 
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         float dpiwidth = metrics.widthPixels / metrics.density;
@@ -456,6 +472,10 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         Log.d("DownloadData json", "Forecast json: " + json.toString());
 
         try {
+            // TODO: temporary for testing. Remove this later.
+//            throw new JSONException("No json data");
+
+
             // Get the keys of the JSONObject
             Iterator<String> keys = json.keys();
 
@@ -557,13 +577,28 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
         } catch (final JSONException e) {
             Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
-            main.setTextViewText(R.id.locationNameTextView, "Virhe ennusteen käsittelyssä");
+            showErrorView(
+                    context,
+                    pref,
+                    context.getResources().getString(R.string.update_failed),
+                    context.getResources().getString(R.string.check_internet_connection)
+            );
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, main);
     }
 
-    public void showErrorView(Context context, SharedPreferences pref, String errorstr) {
+    private static void setColors(RemoteViews main, int backgroundColor, int textColor) {
+        main.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
+        main.setInt(R.id.locationNameTextView, "setTextColor", textColor);
+        main.setInt(R.id.locationRegionTextView, "setTextColor", textColor);
+        main.setInt(R.id.temperatureTextView, "setTextColor", textColor);
+        main.setInt(R.id.temperatureUnitTextView, "setTextColor", textColor);
+        main.setInt(R.id.updateTimeTextView, "setTextColor", textColor);
+//            main.setInt(R.id.observationTitleTextView, "setTextColor", textColor);
+    }
+
+    public void showErrorView(Context context, SharedPreferences pref, String errorText1, String errorText2) {
         String background = pref.getString("background", "dark");
 //        String version = pref.getString("version", "normal");
         RemoteViews main = new RemoteViews(context.getPackageName(), R.layout.new_small_widget_layout);;
@@ -571,6 +606,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
+
+        main.setInt(R.id.weatherLayout, "setVisibility", GONE);
 
         if (background.equals("dark"))
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
@@ -581,14 +618,15 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
 //        if (version.equals("classic") || version.equals("experimental")) {
 //            main.setTextViewText(R.id.timeTextView, "");
-        main.setTextViewText(R.id.temperatureTextView, "");
+//        main.setTextViewText(R.id.temperatureTextView, "");
 //            main.setViewVisibility(R.id.feelsLikeImageView, View.GONE);
 
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+        /*Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
                 context.getResources().getIdentifier("error", "drawable", context.getPackageName()));
+        main.setImageViewBitmap(R.id.weatherIconImageView, icon);*/
 
-        main.setImageViewBitmap(R.id.weatherIconImageView, icon);
-        main.setTextViewText(R.id.locationNameTextView, errorstr);
+        main.setTextViewText(R.id.locationNameTextView, errorText1);
+        main.setTextViewText(R.id.locationRegionTextView, errorText2);
 
         /*} else {
             main.setTextViewText(R.id.locationTextView, "");

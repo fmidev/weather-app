@@ -53,7 +53,7 @@ public class LocationWorker extends Worker {
         }
 
         assert provider != null;
-        locationManager.requestLocationUpdates(provider, 10000, 10, new LocationListener() {
+        locationManager.requestLocationUpdates(provider, 30*60*1000, 100, new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 if (locationUpdateCallback != null) {
