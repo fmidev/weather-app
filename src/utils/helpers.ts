@@ -283,7 +283,7 @@ export const getParameterUnit = (
 };
 
 // https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
-const getEaster = (year: number): [number, number] => {
+const getEaster = (year: number): Date => {
   const f = Math.floor;
   // Golden Number - 1
   const G = year % 19;
@@ -299,7 +299,7 @@ const getEaster = (year: number): [number, number] => {
   const month = 3 + f((L + 40) / 44);
   const day = L + 28 - 31 * f(month / 4);
 
-  return [month, day];
+  return new Date(year, month - 1, day);
 };
 
 // midsummer is next Saturday following 19th of June
@@ -318,7 +318,14 @@ export const getFeelsLikeIconName = (
 
   if (shouldUseFinnishHolidays) {
     const { years, months, date } = momentObj; // months are zero index: Jan = 0, Feb = 1 etc.
-    const [easterM, easterD] = getEaster(years);
+    const now = new Date();
+    const easterSunday = getEaster(years);
+    const goodFriday = new Date(
+      easterSunday.getTime() - 2 * 24 * 60 * 60 * 1000
+    );
+    const tuesdayAfterEaster = new Date(
+      easterSunday.getTime() + 2 * 24 * 60 * 60 * 1000
+    );
     const midsummerDay = getMidSummerDay(years);
     // holidays
     if (
@@ -326,14 +333,14 @@ export const getFeelsLikeIconName = (
       (date === midsummerDay || date - 1 === midsummerDay)
     )
       return 'feels-like-juhannus';
-    if (months + 1 === easterM && date === easterD) return 'feels-like-easter';
+    if (now >= goodFriday && now < tuesdayAfterEaster)
+      return 'feels-like-easter';
     if (months + 1 === 12 && date === 6) return 'feels-like-itsenaisyyspaiva';
     if (months + 1 === 3 && date === 8) {
       return 'feels-like-naistenpaiva';
     }
     if (months + 1 === 12 && date === 31) return 'feels-like-newyear';
-    if (months + 1 === 12 && (date === 24 || date === 25))
-      return 'feels-like-xmas';
+    if (months + 1 === 12 && date >= 24 && date <= 26) return 'feels-like-xmas';
     if (months + 1 === 5 && date === 1) return 'feels-like-vappu';
     if (months + 1 === 2 && date === 14) return 'feels-like-valentine';
   }
