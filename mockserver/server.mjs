@@ -127,28 +127,6 @@ app.get('/mobileannouncements/:name', (req, res) => {
   });
 });
 
-app.put('/setup/:type/:setting', (req, res) => {
-  const type = req.params.type;
-  const setting = req.params.setting;
-
-  if (
-    type === 'geolocation' &&
-    ['tikkurila', 'newyork', 'singapore'].includes(setting)
-  ) {
-    geolocationSetting = setting;
-  } else if (type === 'forecast' && ['summer', 'winter'].includes(setting)) {
-    forecastSetting = setting;
-  } else if (type === 'datamode' && Object.values(DataMode).includes(setting)) {
-    dataModeSetting = DataMode[setting];
-  } else if (type === 'debug' && ['true', 'false'].includes(setting)) {
-    debugMode = setting === 'true';
-  } else {
-    return res.status(500).json({ error: 'Invalid type or setting' });
-  }
-
-  res.json({ message: 'Setting updated' });
-});
-
 app.get('/setup', (_, res) => {
   return res.json({
     geolocation: geolocationSetting,
@@ -214,6 +192,28 @@ app.get('/timeseries', (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+});
+
+app.put('/setup/:type/:setting', (req, res) => {
+  const type = req.params.type;
+  const setting = req.params.setting;
+
+  if (
+    type === 'geolocation' &&
+    ['tikkurila', 'newyork', 'singapore'].includes(setting)
+  ) {
+    geolocationSetting = setting;
+  } else if (type === 'forecast' && ['summer', 'winter'].includes(setting)) {
+    forecastSetting = setting;
+  } else if (type === 'datamode' && Object.values(DataMode).includes(setting)) {
+    dataModeSetting = DataMode[setting];
+  } else if (type === 'debug' && ['true', 'false'].includes(setting)) {
+    debugMode = setting === 'true';
+  } else {
+    return res.status(500).json({ error: 'Invalid type or setting' });
+  }
+
+  res.json({ message: 'Setting updated' });
 });
 
 app.listen(PORT, () => {
