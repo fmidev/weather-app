@@ -33,5 +33,6 @@ export type SetupStackParamList = {
 };
 
 export type LaunchArgs = {
+  config?: string;
   e2e?: boolean;
 };
