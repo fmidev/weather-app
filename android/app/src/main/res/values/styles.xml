@@ -38,10 +38,10 @@
     </style>
 
     <style name="crisis">
-        <item name="android:fontFamily">@font/roboto_bold</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:background">#D0021B</item>
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">#D0021B</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
 </resources>

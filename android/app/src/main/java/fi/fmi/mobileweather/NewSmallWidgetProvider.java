@@ -80,10 +80,25 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 
     private void updateAfterReceive(Context context) {
         Log.d("NewSmallWidget Update","updateAfterReceive triggered");
+
+        // Initialize the widget setup
+        WidgetSetupManager.initializeSetup(context);
+        // Use the setup data
+        WidgetSetup setup = WidgetSetupManager.getWidgetSetup();
+        if (setup != null) {
+            // Update the widget with the setup data
+            weatherUrl = setup.getWeather().getApiUrl();
+            Log.d("NewSmallWidget Update", "Weather URL: " + weatherUrl);
+            // TODO: needs to be language specific
+            announcementsUrl = setup.getAnnouncements().getApi().getFi();
+            Log.d("NewSmallWidget Update", "Announcements URL: " + announcementsUrl);
+        }
+
         AppWidgetManager appWidgetManager =
                 AppWidgetManager.getInstance(context);
         ComponentName thisAppWidgetComponentName = new ComponentName(context.getPackageName(),getClass().getName());
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidgetComponentName);
+
         onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
@@ -112,19 +127,6 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Log.d("NewSmallWidget Update","onEnabled");
         super.onEnabled(context);
-
-        // Initialize the widget setup
-        WidgetSetupManager.initializeSetup(context);
-        // Use the setup data
-        WidgetSetup setup = WidgetSetupManager.getWidgetSetup();
-        if (setup != null) {
-            // Update the widget with the setup data
-            weatherUrl = setup.getWeather().getApiUrl();
-            Log.d("NewSmallWidget Update", "Weather URL: " + weatherUrl);
-            // TODO: needs to be language specific
-            announcementsUrl = setup.getAnnouncements().getApi().getFi();
-            Log.d("NewSmallWidget Update", "Announcements URL: " + announcementsUrl);
-        }
 
         NewWidgetNotification.scheduleWidgetUpdate(context, NewSmallWidgetProvider.class);
     }

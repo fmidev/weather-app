@@ -75,12 +75,14 @@
         android:id="@+id/crisisTextView"
         style="@style/crisis"
         android:layout_width="135dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="13dp"
-        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:layout_marginTop="0dp"
         android:visibility="gone"
-        tools:text="°2.11. klo 23: Itämeren rannikko: Sää kehitty..."
+        tools:text="Viranomaistiedote: 13.11.2024 klo:..."
         tools:visibility="visible" />
 
     <TextView
@@ -89,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@android:color/black"
-        android:textSize="13sp"
+        android:textSize="10sp"
         android:visibility="visible"
         tools:text="11.34.24" />
 
