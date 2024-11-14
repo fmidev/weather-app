@@ -38,7 +38,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import com.fewlaps.quitnowcache.QNCache;
 import com.fewlaps.quitnowcache.QNCacheBuilder;
@@ -52,8 +51,6 @@ import android.location.Location;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 
 public class NewSmallWidgetProvider extends AppWidgetProvider {
@@ -66,6 +63,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
     private SharedPreferences pref;
+    private static String weatherUrl;
+    private static String announcementsUrl;
 
 
     @Override
@@ -91,6 +90,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Log.d("NewSmallWidget Update","onUpdate");
+
+
         // There may be multiple widgets active, so update all
         final int N = appWidgetIds.length;
         for (int i = 0; i < N; i++) {
@@ -111,6 +112,20 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Log.d("NewSmallWidget Update","onEnabled");
         super.onEnabled(context);
+
+        // Initialize the widget setup
+        WidgetSetupManager.initializeSetup(context);
+        // Use the setup data
+        WidgetSetup setup = WidgetSetupManager.getWidgetSetup();
+        if (setup != null) {
+            // Update the widget with the setup data
+            weatherUrl = setup.getWeather().getApiUrl();
+            Log.d("NewSmallWidget Update", "Weather URL: " + weatherUrl);
+            // TODO: needs to be language specific
+            announcementsUrl = setup.getAnnouncements().getApi().getFi();
+            Log.d("NewSmallWidget Update", "Announcements URL: " + announcementsUrl);
+        }
+
         NewWidgetNotification.scheduleWidgetUpdate(context, NewSmallWidgetProvider.class);
     }
 
@@ -257,18 +272,25 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 //        String latlon = "60.16952,24.93545";
 //        String language = "fi";
 
-        String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon=" +
+        String weatherUrlStr = weatherUrl + "?latlon=" +
                 latlon +
                 "&endtime=data&format=json&attributes=geoid&lang=" +
                 language +
                 "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
 
-        // TODO: temporary for testing. Needs to be configurable:
-//        String url2 = "https://ilmatieteenlaitos.fi/api/general/mobileannouncement";
-//        String url2 = "http://localhost:3000/mobileannouncements/crisis";
-        String url2 = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
+        /*String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon=" +
+                latlon +
+                "&endtime=data&format=json&attributes=geoid&lang=" +
+                language +
+                "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
+*/
 
-        String[] urls = {url, url2};
+//        String url2 = "http://localhost:3000/mobileannouncements/crisis";
+        // TODO: temporary for testing.
+        String announcementsUrlStr = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
+//        String announcementsUrlStr = announcementsUrl;
+
+        String[] urls = {weatherUrlStr, announcementsUrlStr};
 
         Future<JSONObject> future1 = executorService.submit(() -> fetchJsonObject(urls[0]));
         Future<JSONArray> future2 = executorService.submit(() -> fetchJsonArray(urls[1]));
