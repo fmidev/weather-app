@@ -82,7 +82,9 @@
         android:paddingBottom="0dp"
         android:layout_marginTop="0dp"
         android:visibility="gone"
-        tools:text="Viranomaistiedote: 13.11.2024 klo:..."
+        android:ellipsize="end"
+        android:maxLines="2"
+        tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
         tools:visibility="visible" />
 
     <TextView
