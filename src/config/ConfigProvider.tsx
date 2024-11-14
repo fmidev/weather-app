@@ -80,12 +80,12 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   }, [checkUpdates, enabled]);
 
   useEffect(() => {
-    if (!restored) {
+    if (enabled && !restored) {
       restoreStoredConfiguration().then(() => {
         checkUpdates();
       });
     }
-  }, [checkUpdates, restored]);
+  }, [enabled, checkUpdates, restored]);
 
   useEffect(() => {
     reloadIntervalRef.current = setInterval(

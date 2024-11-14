@@ -1,3 +1,4 @@
+import { LaunchArguments } from 'react-native-launch-arguments';
 import axiosClient from '@utils/axiosClient';
 import {
   getItem,
@@ -8,6 +9,7 @@ import {
 } from '@utils/async_storage';
 import { ConfigType } from './types';
 import packageJSON from '../../package.json';
+import type { LaunchArgs } from '@navigators/types';
 
 class DynamicConfig {
   private config!: ConfigType;
@@ -31,6 +33,13 @@ class DynamicConfig {
     this.config = defaultConfig;
     if (defaultConfig.dynamicConfig?.enabled) {
       let apiUrl = defaultConfig.dynamicConfig.apiUrl;
+
+      // For testing we can override dynamic config url
+      const launchArgs = LaunchArguments.value<LaunchArgs>();
+      if (launchArgs?.config) {
+        apiUrl = launchArgs.config;
+      }
+
       // add cache buster to the url
       const cacheBuster = this.generateCachebuster();
       apiUrl = `${apiUrl}?cacheBuster=${cacheBuster}`;
@@ -39,9 +48,9 @@ class DynamicConfig {
     }
   }
 
-  private setApiUrl(ulr: string | undefined) {
-    if (ulr) {
-      this.apiUrl = ulr;
+  private setApiUrl(url: string | undefined) {
+    if (url) {
+      this.apiUrl = url;
     }
   }
 
