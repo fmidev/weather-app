@@ -275,12 +275,12 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 //        String language = "fi";
 
         // Get geoid etc.
-        String geoidDataUrl = weatherUrl + "?latlon=" +
+        /*String geoidDataUrl = weatherUrl + "?latlon=" +
                 latlon +
                 "&endtime=data&format=json&attributes=geoid&lang=" +
                 language +
                 "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
-
+*/
         /*String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon=" +
                 latlon +
                 "&endtime=data&format=json&attributes=geoid&lang=" +
@@ -324,7 +324,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         });
     }
 
-    private static @NonNull String getLanguageString() {
+    private String getLanguageString() {
         String language = Locale.getDefault().getLanguage();
         Log.d("language", language);
         if (!language.equals("fi") && !language.equals("sv") && !language.equals("en"))
@@ -332,7 +332,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         return language;
     }
 
-    private static @NonNull String getLatLonString(Location location) {
+    private String getLatLonString(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         // Round to 4 decimals
