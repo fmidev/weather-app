@@ -205,8 +205,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 // Timeout runnable
                 timeoutRunnable = () -> {
                     // if we have old location, update widget with it
-                    // TODD: temporarily Utsjoki latlon as default
-                    String latlon = pref.getString("latlon", "69.90,27.02");
+                    // Possible alternative: temporarily Utsjoki latlon as default "69.90,27.02"
+                    String latlon = pref.getString("latlon", null);
                     if (latlon != null) {
                         Log.d("Widget Location", "Timeout reached, update with stored location");
                         execute(latlon);
@@ -265,7 +265,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
     }
 
     public void execute(String latlon) {
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
 
         // Get language string
         String language = getLanguageString();
@@ -274,7 +274,8 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
 //        String latlon = "60.16952,24.93545";
 //        String language = "fi";
 
-        String weatherUrlStr = weatherUrl + "?latlon=" +
+        // Get geoid etc.
+        String geoidDataUrl = weatherUrl + "?latlon=" +
                 latlon +
                 "&endtime=data&format=json&attributes=geoid&lang=" +
                 language +
@@ -287,16 +288,30 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
 */
 
+        /*String forecastWithGeoidUrl = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?geoid=" +
+                geoid +
+                "&endtime=data&format=json&attributes=geoid&lang=" +
+                language +
+                "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
+        Log.d("DownloadData json", "url with geoid: " + forecastWithGeoidUrl);
+*/
 //        String url2 = "http://localhost:3000/mobileannouncements/crisis";
         // TODO: temporary for testing.
-        String announcementsUrlStr = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
-//        String announcementsUrlStr = announcementsUrl;
+        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
+//        String announceUrl = announcementsUrl;
 
-        String[] urls = {weatherUrlStr, announcementsUrlStr};
+//        String[] urls = {forecastWithGeoidUrl, announceUrl};
 
-        Future<JSONObject> future1 = executorService.submit(() -> fetchJsonObject(urls[0]));
+        // get geoid
+        Future<String> future0 = executorService.submit(() -> fetchGeoid(latlon));
+        // get forecast based on geoid
+        Future<JSONObject> future1 = executorService.submit(() -> fetchForecast(future0.get(), latlon, language));
+        // get announcements
+        Future<JSONArray> future2 = executorService.submit(() -> fetchJsonArray(announceUrl));
+
+        /*Future<JSONObject> future1 = executorService.submit(() -> fetchJsonObject(urls[0]));
         Future<JSONArray> future2 = executorService.submit(() -> fetchJsonArray(urls[1]));
-
+*/
         executorService.submit(() -> {
             try {
                 JSONObject result1 = future1.get();
@@ -327,9 +342,83 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
         return latlon;
     }
 
-    private JSONObject fetchJsonObject(String src) {
+    private String fetchGeoid(String latlon) {
         try {
-            String jsonString = fetchJsonString(src);
+            String url = weatherUrl +
+                    "?param=geoid,name,region,latitude,longitude,region,country,iso2,localtz&latlon=" +
+                    latlon +
+                    "&format=json";
+
+           /* String url = weatherUrl + "?latlon=" +
+                    latlon +
+                    "&endtime=data&format=json&attributes=geoid&lang=" +
+                    language +
+                    "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";*/
+
+            Log.d("DownloadData json", "url with coordinates: " + url);
+
+
+//                String url = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wfs?request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Helsinki&parameters=geoid&format=json";
+
+            String jsonString = fetchJsonString(url);
+            // Response example: [{"geoid":658994,"name":"Hänniskylä","region":"Konnevesi","latitude":62.50000,"longitude":26.20000,"region":"Konnevesi","country":"Suomi","iso2":"FI","localtz":"Europe/Helsinki"}]
+
+            JSONArray jsonArray = new JSONArray(jsonString);
+
+            // get geoid from the first element in array
+            if (jsonArray.length() > 0) {
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                if (jsonObject.has("geoid")) {
+                    String geoid = jsonObject.getString("geoid");
+                    Log.d("DownloadData json", "Geoid: " + geoid);
+                    return geoid;
+                }
+            }
+            return null; // Return null if no "geoid" is found
+
+        } catch (JSONException e) {
+            Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
+            return null;
+        }
+    }
+
+
+    /*private String fetchGeoid(String src) {
+        try {
+
+
+            String jsonString = fetchJsonString("https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wfs?request=getFeature&storedquery_id=fmi::observations::weather::simple&place=Helsinki&parameters=geoid&format=json");
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray features = jsonObject.getJSONArray("features");
+            JSONObject feature = features.getJSONObject(0);
+            JSONObject properties = feature.getJSONObject("properties");
+            return properties.getString("geoid");
+        } catch (JSONException e) {
+            Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
+            return null;
+        }
+    }
+*/
+    private JSONObject fetchForecast(String geoid, String latlon, String language) {
+        String url;
+        // if we have geoid use it to get forecast data
+        if (geoid != null && !geoid.isEmpty()) {
+            url = weatherUrl + "?geoid=" +
+                    geoid +
+                    "&endtime=data&format=json&attributes=geoid&lang=" +
+                    language +
+                    "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
+            Log.d("DownloadData json", "url with geoid: " + url);
+        } else { // otherwise use lat&lon to get forecast data
+            url = weatherUrl + "?latlon=" +
+                    latlon +
+                    "&endtime=data&format=json&attributes=geoid&lang=" +
+                    language +
+                    "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
+        }
+
+        try {
+            String jsonString = fetchJsonString(url);
             return new JSONObject(jsonString);
         } catch (JSONException e) {
             Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
@@ -536,7 +625,7 @@ public class NewSmallWidgetProvider extends AppWidgetProvider {
                 return;
             }
             String firstKey = keys.next();
-            Log.d("DownloadData json", "First key: " + firstKey);
+            Log.d("DownloadData json", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
             JSONArray data = json.getJSONArray(firstKey);
