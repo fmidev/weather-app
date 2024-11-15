@@ -249,6 +249,29 @@ export const getObservationCellValue = (
   return '-';
 };
 
+export const getLatestObservationAvoidingMissingValues = (
+  data: ObsTimeStepData[]
+) => {
+  const TEN_MINUTES = 10 * 60;
+  let latest = data[0] || {};
+
+  for (const parameter of Object.keys(latest) as (keyof ObsTimeStepData)[]) {
+    if (latest[parameter] === null) {
+      const timeStepWithValue = data.find(
+        (item) =>
+          item[parameter] !== null &&
+          latest.epochtime - item.epochtime < TEN_MINUTES
+      );
+      if (timeStepWithValue) {
+        // @ts-ignore
+        latest[parameter] = timeStepWithValue[parameter];
+      }
+    }
+  }
+
+  return latest;
+};
+
 export const getParameterUnit = (
   param: keyof (ObsTimeStepData | ForTimeStepData),
   units?: UnitMap

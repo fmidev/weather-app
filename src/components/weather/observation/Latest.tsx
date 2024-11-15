@@ -6,7 +6,11 @@ import moment from 'moment';
 
 import { CustomTheme } from '@utils/colors';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
-import { getObservationCellValue, getParameterUnit } from '@utils/helpers';
+import {
+  getObservationCellValue,
+  getParameterUnit,
+  getLatestObservationAvoidingMissingValues,
+} from '@utils/helpers';
 
 import { capitalize } from '@utils/chart';
 import { Config } from '@config';
@@ -46,7 +50,8 @@ const Latest: React.FC<LatestProps> = ({
       ? `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] h.mm a`
       : `D.M. [${t('at')}] HH.mm`;
 
-  const [latestObservation] = data || [];
+  const latestObservation = getLatestObservationAvoidingMissingValues(data);
+
   const latestObservationTime =
     latestObservation &&
     moment(latestObservation.epochtime * 1000)
