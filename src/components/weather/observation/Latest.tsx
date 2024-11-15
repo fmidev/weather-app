@@ -52,6 +52,8 @@ const Latest: React.FC<LatestProps> = ({
 
   const latestObservation = getLatestObservationAvoidingMissingValues(data);
 
+  if (!latestObservation) return null;
+
   const latestObservationTime =
     latestObservation &&
     moment(latestObservation.epochtime * 1000)
