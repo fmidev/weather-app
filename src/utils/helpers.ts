@@ -251,9 +251,11 @@ export const getObservationCellValue = (
 
 export const getLatestObservationAvoidingMissingValues = (
   data: ObsTimeStepData[]
-) => {
+): ObsTimeStepData | undefined => {
   const TEN_MINUTES = 10 * 60;
-  let latest = data[0] || {};
+  if (data.length === 0) return undefined;
+
+  let latest = data[0];
 
   for (const parameter of Object.keys(latest) as (keyof ObsTimeStepData)[]) {
     if (latest[parameter] === null) {
