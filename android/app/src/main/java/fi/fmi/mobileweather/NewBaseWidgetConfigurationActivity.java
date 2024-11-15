@@ -3,7 +3,6 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
-import static fi.fmi.mobileweather.NewWidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
 import android.Manifest;
 import android.app.Activity;
@@ -40,14 +39,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NewSmallWidgetConfigurationActivity extends Activity {
+public class NewBaseWidgetConfigurationActivity extends Activity {
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+
+    protected int getLayoutResourceId() {
+        return R.layout.new_base_widget_configure;
+    }
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.new_small_widget_configure);
+		setContentView(getLayoutResourceId());
         setResult(RESULT_CANCELED);
 
         // Get the widget ID from the intent
@@ -65,10 +68,10 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 
         // Hide elements that are not used in small widget
 
-        TextView tv = (TextView) findViewById(R.id.forecastTitleTextView);
+        /*TextView tv = (TextView) findViewById(R.id.forecastTitleTextView);
         tv.setVisibility(View.GONE);
         RadioGroup rg = (RadioGroup) findViewById(R.id.forecastRadioGroup);
-        rg.setVisibility(View.GONE);
+        rg.setVisibility(View.GONE);*/
 
         initListViews();
         askLocationPermission();
@@ -162,7 +165,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
             }
         }
 
-        ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+        ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                 1);
 
@@ -196,7 +199,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 
                     // Permission denied
 
-                    Toast.makeText(NewSmallWidgetConfigurationActivity.this, getString(R.string.denied_positioning),
+                    Toast.makeText(NewBaseWidgetConfigurationActivity.this, getString(R.string.denied_positioning),
                             Toast.LENGTH_SHORT).show();
 
                     // Uncheck positioned radiobutton and disable it
@@ -216,7 +219,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
                         grantButton.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+                                ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
                                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                                 Manifest.permission.ACCESS_FINE_LOCATION,
                                                 Manifest.permission.ACCESS_BACKGROUND_LOCATION},
@@ -232,13 +235,13 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
         }
     }
 
-	private void handleOkButton() {
+	protected void handleOkButton() {
 		showAppWidget();
 	}
 
 	int widgetId;
 
-	private void showAppWidget() {
+	protected void showAppWidget() {
 
 		widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 		Intent intent = getIntent();
@@ -272,7 +275,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 
             if (selectedLocation==-1) {
                 editor.clear();
-                Toast.makeText(NewSmallWidgetConfigurationActivity.this, getString(R.string.forecast_location_not_defined),
+                Toast.makeText(NewBaseWidgetConfigurationActivity.this, getString(R.string.forecast_location_not_defined),
                         Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -287,7 +290,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 			/*AppWidgetProviderInfo providerInfo = AppWidgetManager.getInstance(context).getAppWidgetInfo(widgetId);
 			String appWidgetLabel = providerInfo.label;
 
-			Intent startService = new Intent(NewSmallWidgetConfigurationActivity.this, UpdateWidgetJobIntentService.class);
+			Intent startService = new Intent(NewBaseWidgetConfigurationActivity.this, UpdateWidgetJobIntentService.class);
 			startService.putExtra(EXTRA_APPWIDGET_ID, widgetId);
 			startService.setAction("FROM CONFIGURATION ACTIVITY");
             Uri data = Uri.withAppendedPath(
@@ -300,8 +303,8 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
 */
 
             // Update the widget with the preferences above
-            /*AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(NewSmallWidgetConfigurationActivity.this);
-            RemoteViews views = new RemoteViews(NewSmallWidgetConfigurationActivity.this.getPackageName(), R.layout.new_small_widget_layout);
+            /*AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(NewBaseWidgetConfigurationActivity.this);
+            RemoteViews views = new RemoteViews(NewBaseWidgetConfigurationActivity.this.getPackageName(), R.layout.new_small_widget_layout);
             appWidgetManager.updateAppWidget(appWidgetId, views);*/
 
             // Trigger a new widget update now
@@ -341,7 +344,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
                     .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.Q)
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+                            ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
                                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                             Manifest.permission.ACCESS_FINE_LOCATION},
                                     1);
@@ -355,7 +358,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
                     .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.Q)
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+                            ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
                                     new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
                                     2);
                         }
@@ -371,7 +374,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
                     .setMessage(R.string.location_service_info)
                     .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+                            ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
                                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                             Manifest.permission.ACCESS_FINE_LOCATION},
                                     1);
@@ -385,10 +388,10 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
     /*public void askLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (ActivityCompat.checkSelfPermission(
-                    NewSmallWidgetConfigurationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                    NewBaseWidgetConfigurationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
                     PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(
-                    NewSmallWidgetConfigurationActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) !=
+                    NewBaseWidgetConfigurationActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) !=
                     PackageManager.PERMISSION_GRANTED) {
 
                 new AlertDialog.Builder(this)
@@ -396,7 +399,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
                         .setMessage(R.string.location_service_info)
                         .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+                                ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
                                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                                 Manifest.permission.ACCESS_FINE_LOCATION,
                                                 Manifest.permission.ACCESS_BACKGROUND_LOCATION},
@@ -406,7 +409,7 @@ public class NewSmallWidgetConfigurationActivity extends Activity {
                         .setNegativeButton(android.R.string.cancel, null).show();
             }
         } else {
-            ActivityCompat.requestPermissions(NewSmallWidgetConfigurationActivity.this,
+            ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_BACKGROUND_LOCATION},

@@ -30,7 +30,7 @@ public class NewWidgetNotification {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
 
-            // Update the widget every 30 minutes (TODO: change this later)
+            // Update the widget every 30 minutes (TODO: change this if needed)
             am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), (30 * 60 * 1000), pi);
         } else {
             Log.d("WidgetNotification", "Widget update could not be scheduled, because no active widgets");
