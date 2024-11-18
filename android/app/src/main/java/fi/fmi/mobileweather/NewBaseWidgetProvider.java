@@ -254,13 +254,13 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        NewWidgetNotification.clearWidgetUpdate(context, NewBaseWidgetProvider.class);
+        NewWidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        NewWidgetNotification.clearWidgetUpdate(context, NewBaseWidgetProvider.class);
+        NewWidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
     public void execute(String latlon) {

@@ -30,6 +30,8 @@ public class NewWidgetNotification {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
 
+            Log.d("NewWidget Update", "Widget update scheduled");
+
             // Update the widget every 30 minutes (TODO: change this if needed)
             am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), (/*30 **/ 60 * 1000), pi);
         } else {
@@ -45,6 +47,7 @@ public class NewWidgetNotification {
     }
 
     public static void clearWidgetUpdate(Context context, Class<? extends AppWidgetProvider> providerClass) {
+        Log.d("NewWidget Update", "Widget update cleared");
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.cancel(getWidgetAlarmIntent(context, providerClass));
     }
