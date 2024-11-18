@@ -126,7 +126,8 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
         Log.d("NewSmallWidget Update","onEnabled");
         super.onEnabled(context);
 
-        NewWidgetNotification.scheduleWidgetUpdate(context, NewBaseWidgetProvider.class);
+        // Schedule an update for the widget (e.g. every 30 minutes)
+        NewWidgetNotification.scheduleWidgetUpdate(context, this.getClass());
     }
 
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
