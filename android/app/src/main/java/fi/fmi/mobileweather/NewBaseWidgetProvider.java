@@ -67,7 +67,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("NewSmallWidget Update","onReceive");
+        Log.d("NewWidget Update","onReceive");
         super.onReceive(context, intent);
         String action = intent.getAction();
         if( action != null &&
@@ -77,7 +77,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
     }
 
     private void updateAfterReceive(Context context) {
-        Log.d("NewSmallWidget Update","updateAfterReceive triggered");
+        Log.d("NewWidget Update","updateAfterReceive triggered");
 
         // Initialize the widget setup
         WidgetSetupManager.initializeSetup(context);
@@ -86,10 +86,10 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
         if (setup != null) {
             // Update the widget with the setup data
             weatherUrl = setup.getWeather().getApiUrl();
-            Log.d("NewSmallWidget Update", "Weather URL: " + weatherUrl);
+            Log.d("NewWidget Update", "Weather URL: " + weatherUrl);
             // TODO: needs to be language specific
             announcementsUrl = setup.getAnnouncements().getApi().getFi();
-            Log.d("NewSmallWidget Update", "Announcements URL: " + announcementsUrl);
+            Log.d("NewWidget Update", "Announcements URL: " + announcementsUrl);
         }
 
         AppWidgetManager appWidgetManager =
@@ -102,7 +102,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.d("NewSmallWidget Update","onUpdate");
+        Log.d("NewWidget Update","onUpdate");
 
 
         // There may be multiple widgets active, so update all
@@ -123,7 +123,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        Log.d("NewSmallWidget Update","onEnabled");
+        Log.d("NewWidget Update","onEnabled");
         super.onEnabled(context);
 
         // Schedule an update for the widget (e.g. every 30 minutes)
@@ -131,7 +131,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        Log.d("NewSmallWidget Update","updateAppWidget");
+        Log.d("NewWidget Update","updateAppWidget");
 
         this.context = context;
         this.appWidgetManager = appWidgetManager;

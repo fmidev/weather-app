@@ -52,7 +52,7 @@ public class WidgetSetupManager {
                 // ...
 
             } catch (IOException e) {
-                Log.e("NewSmallWidget Update", "Error reading setup file", e);
+                Log.e("NewWidget Update", "Error reading setup file", e);
             }
         }
     }
