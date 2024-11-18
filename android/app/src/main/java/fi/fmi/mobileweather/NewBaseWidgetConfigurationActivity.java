@@ -49,10 +49,10 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
     }
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState);
-		setContentView(getLayoutResourceId());
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutResourceId());
         setResult(RESULT_CANCELED);
 
         // Get the widget ID from the intent
@@ -77,7 +77,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
 
         initListViews();
         askLocationPermission();
-	}
+    }
 
     @Override
     public void onResume(){
@@ -99,17 +99,17 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
         }
     }
 
-	public void initListViews() {
+    public void initListViews() {
 
-		Button okButton = (Button) findViewById(R.id.okButton);
-		okButton.setOnClickListener(new OnClickListener() {
+        Button okButton = (Button) findViewById(R.id.okButton);
+        okButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				handleOkButton();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                handleOkButton();
+            }
+        });
 
         Button appSettingsButton = (Button) findViewById(R.id.appSettingsButton);
         appSettingsButton.setOnClickListener(new OnClickListener() {
@@ -124,7 +124,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
             }
         });
 
-		// Add favorites to location options
+        // Add favorites to location options
 
         SQLiteDatabase readableDatabase = null;
         readableDatabase = ReactDatabaseSupplier.getInstance(this.getApplicationContext()).getReadableDatabase();
@@ -171,7 +171,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                 1);
 
-	}
+    }
 
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -237,20 +237,20 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
         }
     }
 
-	protected void handleOkButton() {
-		showAppWidget();
-	}
+    protected void handleOkButton() {
+        showAppWidget();
+    }
 
-	int widgetId;
+    int widgetId;
 
-	protected void showAppWidget() {
+    protected void showAppWidget() {
 
-		widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-		Intent intent = getIntent();
-		Bundle extras = intent.getExtras();
-		if (extras != null) {
-			widgetId = extras.getInt(EXTRA_APPWIDGET_ID,
-					INVALID_APPWIDGET_ID);
+        widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            widgetId = extras.getInt(EXTRA_APPWIDGET_ID,
+                    INVALID_APPWIDGET_ID);
 
             // Save settings
 
@@ -289,32 +289,6 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
 
             editor.apply();
 
-			/*AppWidgetProviderInfo providerInfo = AppWidgetManager.getInstance(context).getAppWidgetInfo(widgetId);
-			String appWidgetLabel = providerInfo.label;
-
-			Intent startService = new Intent(NewBaseWidgetConfigurationActivity.this, UpdateWidgetJobIntentService.class);
-			startService.putExtra(EXTRA_APPWIDGET_ID, widgetId);
-			startService.setAction("FROM CONFIGURATION ACTIVITY");
-            Uri data = Uri.withAppendedPath(
-                    Uri.parse("fi.fmi.mobileweather.MobileWeatherWidget://widget/id/")
-                    ,String.valueOf(widgetId));
-            startService.setData(data);
-			setResult(RESULT_OK, startService);
-
-            JobIntentService.enqueueWork(context, UpdateWidgetJobIntentService.class, 1, startService);
-*/
-
-            // Update the widget with the preferences above
-            /*AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(NewBaseWidgetConfigurationActivity.this);
-            RemoteViews views = new RemoteViews(NewBaseWidgetConfigurationActivity.this.getPackageName(), R.layout.new_small_widget_layout);
-            appWidgetManager.updateAppWidget(appWidgetId, views);*/
-
-            // Trigger a new widget update now
-//            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            /*Intent updateIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{appWidgetId});
-            context.sendBroadcast(updateIntent);
-*/
 
             // Send a broadcast to trigger onUpdate()
             int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
@@ -327,75 +301,50 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
             Intent resultValue = new Intent();
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             setResult(RESULT_OK, resultValue);
-			finish();
-		}
-		if (widgetId == INVALID_APPWIDGET_ID) {
-			Log.i("widgetId", "Invalid appwidget id");
-			finish();
-		}
+            finish();
+        }
+        if (widgetId == INVALID_APPWIDGET_ID) {
+            Log.i("widgetId", "Invalid appwidget id");
+            finish();
+        }
 
-	}
+    }
 
     public void askLocationPermission() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.location_service_info_title)
-                    .setMessage(R.string.location_service_info)
-                    .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.Q)
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                            Manifest.permission.ACCESS_FINE_LOCATION},
-                                    1);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null).show();
-        } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.location_service_info_title)
-                    .setMessage(R.string.location_service_info)
-                    .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.Q)
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                                    2);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null).show();
-        }
-    } else {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.location_service_info_title)
-                    .setMessage(R.string.location_service_info)
-                    .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                            Manifest.permission.ACCESS_FINE_LOCATION},
-                                    1);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null).show();
-        }
-    }
-}
-
-    /*public void askLocationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            if (ActivityCompat.checkSelfPermission(
-                    NewBaseWidgetConfigurationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(
-                    NewBaseWidgetConfigurationActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED) {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.location_service_info_title)
+                        .setMessage(R.string.location_service_info)
+                        .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.Q)
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                                Manifest.permission.ACCESS_FINE_LOCATION},
+                                        1);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null).show();
+            } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.location_service_info_title)
+                        .setMessage(R.string.location_service_info)
+                        .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.Q)
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                                        2);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null).show();
+            }
+        } else {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.location_service_info_title)
@@ -404,19 +353,13 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
                                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                                Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                                                Manifest.permission.ACCESS_FINE_LOCATION},
                                         1);
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, null).show();
             }
-        } else {
-            ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                    1);
         }
-    }*/
+    }
+
 }
