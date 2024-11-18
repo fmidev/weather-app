@@ -23,9 +23,7 @@ public class SingleShotLocationProvider {
         void onNewLocationAvailable(Location location);
     }
 
-//    @SuppressLint("MissingPermission")
     public static Boolean requestSingleUpdate(final Context context, final LocationCallback callback) {
-        //Looper.prepare();
 
         HandlerThread handlerThread = new HandlerThread("WidgetThread");
         handlerThread.start();
@@ -61,19 +59,6 @@ public class SingleShotLocationProvider {
             // location cannot be retrieved
             return false;
         }
-        /*Location location = locationManager.getLastKnownLocation(provider);
-
-        if (location != null) {
-            // Do not use location more than 2 hours old
-
-            Long currentTime = new java.util.Date().getTime();
-            Long locationTime = location.getTime();
-            if (Math.abs(currentTime-locationTime) < (2*60*60*1000)) {
-                Log.d("Widget Location", "SingleShotLocationProvider: using last known location");
-                callback.onNewLocationAvailable(location);
-                return true;
-            }
-        }*/
 
         locationManager.requestSingleUpdate(criteria, new LocationListener() {
             @Override
