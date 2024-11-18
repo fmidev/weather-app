@@ -84,20 +84,6 @@
           </intent-filter>
         </activity>
 
-        <receiver android:label="@string/experimental_widget" android:name=".MobileWeatherExperimentalWidgetProvider" android:exported="false">
-          <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-            <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-          </intent-filter>
-          <meta-data android:name="android.appwidget.provider" android:resource="@xml/experimental_widget_description" />
-        </receiver>
-        <activity android:name=".ExperimentalWidgetConfigurationActivity" android:exported="false">
-          <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-          </intent-filter>
-        </activity>
-
         <receiver android:name=".NewSmallWidgetProvider" android:label="@string/new_small_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />

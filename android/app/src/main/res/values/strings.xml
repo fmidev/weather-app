@@ -52,7 +52,6 @@
     <string name="widget_resize_info">Please notice that you can resize widget to hide information or show more information.</string>
     <string name="small_widget">Weather compact</string>
     <string name="new_small_widget">Weather compact</string>
-    <string name="experimental_widget">Weather experimental</string>
     <string name="widget_favorite_info">Please define favorites in the weather app, if you want to use widget without location services. Please allow background location service (Allow always), if you use current location.</string>
     <string name="battery_saving">Power saving is enabled. We recommended disabling it for the app so that widget can update weather data.</string>
     <string name="open_settings">Open settings</string>

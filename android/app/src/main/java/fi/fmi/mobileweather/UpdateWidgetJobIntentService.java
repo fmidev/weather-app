@@ -106,9 +106,6 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
         if (version.equals("classic"))
             // small widget
             main = new RemoteViews(context.getPackageName(), R.layout.smallwidget);
-        else if (version.equals("experimental"))
-            // experimental widget
-            main = new RemoteViews(context.getPackageName(), R.layout.experimentalwidget);
         else
             // large widget
             main = new RemoteViews(context.getPackageName(), R.layout.widgetng);
@@ -136,19 +133,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
             main.setImageViewBitmap(R.id.weatherIconImageView, icon);
             main.setTextViewText(R.id.locationTextView, errorstr);
 
-        } else if (version.equals("experimental")) {
-            main.setTextViewText(R.id.timeTextView, "");
-            main.setTextViewText(R.id.temperatureTextView, "");
-            main.setViewVisibility(R.id.feelsLikeImageView, View.GONE);
-
-            Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    context.getResources().getIdentifier("error", "drawable", context.getPackageName()));
-
-            main.setImageViewBitmap(R.id.weatherIconImageView, icon);
-            main.setTextViewText(R.id.locationTextView, errorstr);
-
-        }
-        else {
+        } else {
             main.setTextViewText(R.id.locationTextView, "");
             main.setTextViewText(R.id.observationTitleTextView, "");
             main.removeAllViews(R.id.weatherRowLinearLayout);
@@ -207,7 +192,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
         // String url =  "https://widget.weatherproof.fi/android/androidwidget.php?"+params;
 
         String url2 = "";
-        if (!version.equals("classic") && !version.equals("experimental")) {
+        if (!version.equals("classic")) {
             // observations url (with 1 station)
             url2 = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?latlon=" +
                     latlon +
@@ -249,7 +234,7 @@ public class UpdateWidgetJobIntentService extends JobIntentService {
         Log.d("DownloadData json", "url with geoid: " + url);
 
         String url2 = "";
-        if (!version.equals("classic") && !version.equals("experimental")) {
+        if (!version.equals("classic")) {
             // observations url (with 1 station)
             url2 = "https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/timeseries?geoid=" +
                     geoid +
