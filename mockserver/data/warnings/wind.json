@@ -1,0 +1,19 @@
+{
+  "data": {
+    "updated": "2024-11-01T03:07:43.000Z",
+    "warnings": [
+      {
+        "type": "wind",
+        "language": "fi",
+        "severity": "Moderate",
+        "description": "Tuulivaroitus maa-alueille: Luoteistuuli on voimakasta illalla, tuulen nopeus puuskissa 20 m/s.",
+        "duration": {
+          "startTime": "2024-11-01T15:00:00.000Z",
+          "endTime": "2024-11-01T22:00:00.000Z"
+        }
+      }
+    ],
+    "startTime": "2024-11-01T06:17:46.355Z",
+    "endTime": "2025-11-01T06:17:46.355Z"
+  }
+}

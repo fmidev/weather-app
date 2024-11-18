@@ -136,7 +136,7 @@ const Latest: React.FC<LatestProps> = ({
             latestObservation.windCompass8
               ? t(`windDirection.${latestObservation.windCompass8}`)
               : '-'
-          } (${value})`;
+          } (${value}${unit})`;
         }
 
         if (value === '-') return null;
@@ -156,9 +156,11 @@ const Latest: React.FC<LatestProps> = ({
               <Text
                 style={[styles.panelValue, { color: colors.hourListText }]}
                 accessibilityLabel={`${value} ${
-                  unit ? t(`paramUnits.${unit}`) : ''
+                  unit && parameter !== 'windDirection'
+                    ? t(`paramUnits.${unit}`)
+                    : ''
                 }`}>
-                {value} {unit}
+                {value} {parameter !== 'windDirection' ? unit : ''}
               </Text>
             </View>
           </View>

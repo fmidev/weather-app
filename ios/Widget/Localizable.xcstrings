@@ -1,0 +1,241 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "**%@** %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "**%1$@** %2$@"
+          }
+        }
+      }
+    },
+    "**%@** m/s" : {
+
+    },
+    "°C" : {
+
+    },
+    "at" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "klo"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kl."
+          }
+        }
+      }
+    },
+    "at %@" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "klo %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kl. %@"
+          }
+        }
+      }
+    },
+    "Could not get location information" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paikannus epäonnistui"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Positionering misslyckades"
+          }
+        }
+      }
+    },
+    "Displays the forecast for the next hour or the coming hours." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Näyttää ennusteen seuraavalle tai seuraaville tunneille."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visar prognosen för den kommande timmen eller de följande timmarna."
+          }
+        }
+      }
+    },
+    "Error loading forecast data" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapahtui virhe ladattaessa säätietoja"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapahtui virhe ladattaessa säätietoja"
+          }
+        }
+      }
+    },
+    "feels like **%@**" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "tuntuu kuin **%@**"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "känns som **%@**"
+          }
+        }
+      }
+    },
+    "FMI weather" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paikallissää"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FMI Väder"
+          }
+        }
+      }
+    },
+    "Forecast" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ennuste"
+          }
+        }
+      }
+    },
+    "Next hour forecast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seuraavan tunnin ennuste"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nästa timmes prognos"
+          }
+        }
+      }
+    },
+    "Unknown error" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuntematon virhe"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Okänt fel"
+          }
+        }
+      }
+    },
+    "Updated %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Päivitetty %@"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uppdaterad %@"
+          }
+        }
+      }
+    },
+    "Updated at **%@**" : {
+      "localizations" : {
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Päivitetty klo **%@**"
+          }
+        }
+      }
+    },
+    "UV **%lld**" : {
+
+    },
+    "Warnings (%lld)" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoituksia (%lld)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varningar (%lld)"
+          }
+        }
+      }
+    },
+    "Weather data is too old" : {
+
+    },
+    "Weather warnings" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitukset"
+          }
+        }
+      }
+    },
+    "Weather warnings in your area" : {
+
+    }
+  },
+  "version" : "1.0"
+}

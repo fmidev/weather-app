@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.2 (29753) - http://www.bohemiancoding.com/sketch -->
+    <title>raining</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="raining" fill="currentColor">
+            <path d="M66.8758907,37.1393379 C68.2428538,39.0834493 69.0468161,41.462638 69.0468161,44.0319922 C69.0468161,50.6057262 63.7957534,55.9184242 57.3158411,55.9184242 C50.8359288,55.9184242 45.5805442,50.6057262 45.5805442,44.0290732 C45.5805442,42.1585008 46.0073991,40.3890489 46.7678025,38.8150119 L66.8758907,37.1393379 L66.8758907,37.1393379 Z" id="Combined-Shape"></path>
+            <path d="M57.2603185,58.9473684 C69.0687865,58.9473684 78.7678067,68.1633307 80,80 L34.5263158,80 C35.7558747,68.1661648 45.4575962,58.9473684 57.2603185,58.9473684 Z" id="body" transform="translate(57.263158, 69.473684) scale(-1, 1) translate(-57.263158, -69.473684) "></path>
+            <path d="M71.9999924,33.7534135 C64.756618,23.1315469 51.3461356,16 35.9999962,16 C20.6538567,16 7.24337438,23.1315469 0,33.7534135 L72,33.7534247 L71.9999924,33.7534135 Z" id="Combined-Shape"></path>
+            <polygon id="Combined-Shape" points="37.6688655 39.5732566 39.5582076 79.9999989 32.5582076 79.9999989 34.4349549 39.8427492"></polygon>
+        </g>
+    </g>
+</svg>
