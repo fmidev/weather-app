@@ -110,12 +110,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/title_padding"
+                android:visibility="gone"
                 android:text="@string/Forecast" />
 
             <RadioGroup
                 android:id="@+id/forecastRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:checkedButton="@+id/optionHoursRadioButton">
 
                 <RadioButton

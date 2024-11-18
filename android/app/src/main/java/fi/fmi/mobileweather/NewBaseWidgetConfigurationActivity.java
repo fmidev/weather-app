@@ -39,8 +39,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NewBaseWidgetConfigurationActivity extends Activity {
+public abstract class NewBaseWidgetConfigurationActivity extends Activity {
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+
+    protected abstract Class<?> getWidgetProviderClass();
 
     protected int getLayoutResourceId() {
         return R.layout.new_base_widget_configure;
@@ -316,7 +318,8 @@ public class NewBaseWidgetConfigurationActivity extends Activity {
 
             // Send a broadcast to trigger onUpdate()
             int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-            Intent updateIntent = new Intent(ACTION_APPWIDGET_UPDATE);
+            // we need the actual widget provider class here
+            Intent updateIntent = new Intent(ACTION_APPWIDGET_UPDATE).setClass(context, getWidgetProviderClass());
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
             sendBroadcast(updateIntent);
 
