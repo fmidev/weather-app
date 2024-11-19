@@ -4,7 +4,7 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static fi.fmi.mobileweather.NewWidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
+import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -21,14 +21,10 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.core.content.ContextCompat;
-
-import com.fewlaps.quitnowcache.QNCache;
-import com.fewlaps.quitnowcache.QNCacheBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +46,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
+public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     private Context context;
     private int appWidgetId;
@@ -65,7 +61,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("NewWidget Update","onReceive");
+        Log.d("Widget Update","onReceive");
         super.onReceive(context, intent);
         String action = intent.getAction();
         if( action != null &&
@@ -75,7 +71,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
     }
 
     private void updateAfterReceive(Context context) {
-        Log.d("NewWidget Update","updateAfterReceive triggered");
+        Log.d("Widget Update","updateAfterReceive triggered");
 
         // Initialize the widget setup
         WidgetSetupManager.initializeSetup(context);
@@ -84,10 +80,10 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
         if (setup != null) {
             // Update the widget with the setup data
             weatherUrl = setup.getWeather().getApiUrl();
-            Log.d("NewWidget Update", "Weather URL: " + weatherUrl);
+            Log.d("Widget Update", "Weather URL: " + weatherUrl);
             // TODO: needs to be language specific
             announcementsUrl = setup.getAnnouncements().getApi().getFi();
-            Log.d("NewWidget Update", "Announcements URL: " + announcementsUrl);
+            Log.d("Widget Update", "Announcements URL: " + announcementsUrl);
         }
 
         AppWidgetManager appWidgetManager =
@@ -100,7 +96,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.d("NewWidget Update","onUpdate");
+        Log.d("Widget Update","onUpdate");
 
 
         // There may be multiple widgets active, so update all
@@ -112,15 +108,15 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        Log.d("NewWidget Update","onEnabled");
+        Log.d("Widget Update","onEnabled");
         super.onEnabled(context);
 
         // Schedule an update for the widget (e.g. every 30 minutes)
-        NewWidgetNotification.scheduleWidgetUpdate(context, this.getClass());
+        WidgetNotification.scheduleWidgetUpdate(context, this.getClass());
     }
 
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        Log.d("NewWidget Update","updateAppWidget");
+        Log.d("Widget Update","updateAppWidget");
 
         this.context = context;
         this.appWidgetManager = appWidgetManager;
@@ -190,13 +186,13 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        NewWidgetNotification.clearWidgetUpdate(context, this.getClass());
+        WidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        NewWidgetNotification.clearWidgetUpdate(context, this.getClass());
+        WidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
     public void execute(String latlon) {
@@ -226,7 +222,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
                 JSONArray result2 = future2.get();
                 onPostExecute(result1, result2);
             } catch (Exception e) {
-                Log.e("DownloadData json", "Exception: " + e.getMessage());
+                Log.e("Download json", "Exception: " + e.getMessage());
                 showErrorView(
                         context,
                         pref,
@@ -262,7 +258,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
                     latlon +
                     "&format=json";
 
-            Log.d("DownloadData json", "url with coordinates: " + url);
+            Log.d("Download json", "url with coordinates: " + url);
 
             String jsonString = fetchJsonString(url);
             // Response example: [{"geoid":658994,"name":"Hänniskylä","region":"Konnevesi","latitude":62.50000,"longitude":26.20000,"region":"Konnevesi","country":"Suomi","iso2":"FI","localtz":"Europe/Helsinki"}]
@@ -274,14 +270,14 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 if (jsonObject.has("geoid")) {
                     String geoid = jsonObject.getString("geoid");
-                    Log.d("DownloadData json", "Geoid: " + geoid);
+                    Log.d("Download json", "Geoid: " + geoid);
                     return geoid;
                 }
             }
             return null; // Return null if no "geoid" is found
 
         } catch (JSONException e) {
-            Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
             return null;
         }
     }
@@ -295,7 +291,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
                     "&endtime=data&format=json&attributes=geoid&lang=" +
                     language +
                     "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
-            Log.d("DownloadData json", "url with geoid: " + url);
+            Log.d("Download json", "url with geoid: " + url);
         } else { // otherwise use lat&lon to get forecast data
             url = weatherUrl + "?latlon=" +
                     latlon +
@@ -308,7 +304,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
             String jsonString = fetchJsonString(url);
             return new JSONObject(jsonString);
         } catch (JSONException e) {
-            Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
             return null;
         }
     }
@@ -318,7 +314,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
             String jsonString = fetchJsonString(src);
             return new JSONArray(jsonString);
         } catch (JSONException e) {
-            Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
             return null;
         }
     }
@@ -345,7 +341,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
 
                 String jsonstr = responseStrBuilder.toString();
 
-                Log.d("DownloadData json", "fetchData Forecast json: " + jsonstr);
+                Log.d("Download json", "fetchData Forecast json: " + jsonstr);
 
                 return jsonstr;
 
@@ -369,7 +365,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
 
         // Get settings
         String background = pref.getString("background", "transparent");
-        Log.d("DownloadData json", "Background: " + background);
+        Log.d("Download json", "Background: " + background);
 
         // Get the layout for the App Widget
         RemoteViews main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
@@ -433,8 +429,8 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
                     Color.TRANSPARENT,
                     Color.rgb(48, 49, 147));
         }
-        Log.d("DownloadData json", "Forecast json: " + json);
-        Log.d("DownloadData json", "Crisis json: " + json2);
+        Log.d("Download json", "Forecast json: " + json);
+        Log.d("Download json", "Crisis json: " + json2);
 
 
         try {
@@ -446,7 +442,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
                 return;
             }
             String firstKey = keys.next();
-            Log.d("DownloadData json", "First key (geoid): " + firstKey);
+            Log.d("Download json", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
             JSONArray data = json.getJSONArray(firstKey);
@@ -501,7 +497,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
                         }
                     }
                 } catch (JSONException e) {
-                    Log.e("DownloadData json", "Crisis Json parsing error: " + e.getMessage());
+                    Log.e("Download json", "Crisis Json parsing error: " + e.getMessage());
                 }
                 if (!crisisFound) {
                     main.setViewVisibility(R.id.crisisTextView, GONE);
@@ -514,7 +510,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
             return;
 
         } catch (final JSONException e) {
-            Log.e("DownloadData json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
             showErrorView(
                     context,
                     pref,

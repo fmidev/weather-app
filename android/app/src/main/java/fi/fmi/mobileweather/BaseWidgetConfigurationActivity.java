@@ -39,13 +39,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class NewBaseWidgetConfigurationActivity extends Activity {
+public abstract class BaseWidgetConfigurationActivity extends Activity {
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     protected abstract Class<?> getWidgetProviderClass();
 
     protected int getLayoutResourceId() {
-        return R.layout.new_base_widget_configure;
+        return R.layout.base_widget_configure;
     }
 
     @Override
@@ -167,7 +167,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
             }
         }
 
-        ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
+        ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                 1);
 
@@ -201,7 +201,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
 
                     // Permission denied
 
-                    Toast.makeText(NewBaseWidgetConfigurationActivity.this, getString(R.string.denied_positioning),
+                    Toast.makeText(BaseWidgetConfigurationActivity.this, getString(R.string.denied_positioning),
                             Toast.LENGTH_SHORT).show();
 
                     // Uncheck positioned radiobutton and disable it
@@ -221,7 +221,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
                         grantButton.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
+                                ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
                                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                                 Manifest.permission.ACCESS_FINE_LOCATION,
                                                 Manifest.permission.ACCESS_BACKGROUND_LOCATION},
@@ -277,7 +277,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
 
             if (selectedLocation==-1) {
                 editor.clear();
-                Toast.makeText(NewBaseWidgetConfigurationActivity.this, getString(R.string.forecast_location_not_defined),
+                Toast.makeText(BaseWidgetConfigurationActivity.this, getString(R.string.forecast_location_not_defined),
                         Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -321,7 +321,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
                         .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                             @RequiresApi(api = Build.VERSION_CODES.Q)
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
+                                ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
                                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                                 Manifest.permission.ACCESS_FINE_LOCATION},
                                         1);
@@ -335,7 +335,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
                         .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                             @RequiresApi(api = Build.VERSION_CODES.Q)
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
+                                ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
                                         new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
                                         2);
                             }
@@ -351,7 +351,7 @@ public abstract class NewBaseWidgetConfigurationActivity extends Activity {
                         .setMessage(R.string.location_service_info)
                         .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(NewBaseWidgetConfigurationActivity.this,
+                                ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
                                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                                                 Manifest.permission.ACCESS_FINE_LOCATION},
                                         1);

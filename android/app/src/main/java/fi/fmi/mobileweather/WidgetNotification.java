@@ -5,13 +5,12 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.RemoteViews;
 import android.util.Log;
 import android.content.ComponentName;
 import android.app.AlarmManager;
 import java.util.Calendar;
 
-public class NewWidgetNotification {
+public class WidgetNotification {
 
     public static final String ACTION_APPWIDGET_AUTO_UPDATE = "fi.fmi.mobileweather.AUTO_UPDATE";
     public static final int WIDGET_REQUEST_CODE = 191001;
@@ -30,12 +29,12 @@ public class NewWidgetNotification {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
 
-            Log.d("NewWidget Update", "Widget update scheduled");
+            Log.d("Widget Update", "Widget update scheduled");
 
             // Update the widget every 30 minutes (TODO: change this if needed)
             am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), (/*30 **/ 60 * 1000), pi);
         } else {
-            Log.d("NewWidget Update", "Widget update could not be scheduled, because no active widgets");
+            Log.d("Widget Update", "Widget update could not be scheduled, because no active widgets");
         }
     }
 
@@ -47,7 +46,7 @@ public class NewWidgetNotification {
     }
 
     public static void clearWidgetUpdate(Context context, Class<? extends AppWidgetProvider> providerClass) {
-        Log.d("NewWidget Update", "Widget update cleared");
+        Log.d("Widget Update", "Widget update cleared");
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.cancel(getWidgetAlarmIntent(context, providerClass));
     }

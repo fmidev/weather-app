@@ -15,16 +15,6 @@ import java.io.InputStreamReader;
 public class WidgetSetupManager {
     private static WidgetSetup widgetSetup;
 
-    /*public static void initializeSetup(Context context) {
-        if (widgetSetup == null) {
-            try {
-                widgetSetup = JsonFileReader.readSetup("widgetConfig.json");
-            } catch (IOException e) {
-                Log.e("WidgetSetupManager", "Error reading setup file", e);
-            }
-        }
-    }*/
-
     public static WidgetSetup getWidgetSetup() {
         return widgetSetup;
     }
@@ -48,11 +38,8 @@ public class WidgetSetupManager {
                 Gson gson = new Gson();
                 widgetSetup = gson.fromJson(jsonString, WidgetSetup.class);
 
-                // Use the parsed data
-                // ...
-
             } catch (IOException e) {
-                Log.e("NewWidget Update", "Error reading setup file", e);
+                Log.e("Widget Update", "Error reading setup file", e);
             }
         }
     }
