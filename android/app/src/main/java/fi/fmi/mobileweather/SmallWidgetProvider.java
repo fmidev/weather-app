@@ -34,10 +34,10 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
         if (minWidth <= 78 /*&& minHeight <= 72*/) {
             Log.d("Widget Update", "XS widget " + minWidth + "x" + minHeight);
             return R.layout.xs_widget_layout;
-        } else if (minWidth <= 144 && minHeight <= 144) {
+        } else if (minWidth <= 172 /*&& minHeight <= 144*/) {
             Log.d("Widget Update", "Small widget " + minWidth + "x" + minHeight);
             return R.layout.small_widget_layout;
-        } else if (minWidth <= 180 && minHeight <= 110) {
+        } else if (minWidth <= 266 /*&& minHeight <= 110*/) {
             Log.d("Widget Update", "Medium widget " + minWidth + "x" + minHeight);
             return R.layout.medium_widget_layout;
         } else {
