@@ -40,7 +40,6 @@ class DynamicConfig {
 
       // For testing we can override dynamic config url
       const launchArgs = LaunchArguments.value<LaunchArgs>();
-      console.log('launchArgs', launchArgs);
       if (launchArgs?.config) {
         apiUrl = launchArgs.config;
       }
