@@ -22,6 +22,8 @@ class DynamicConfig {
 
   private updated: number;
 
+  public hasBeenSet = false;
+
   constructor() {
     this.apiUrl = undefined;
     this.updating = false;
@@ -31,11 +33,14 @@ class DynamicConfig {
 
   public setDefaultConfig(defaultConfig: ConfigType) {
     this.config = defaultConfig;
+    this.hasBeenSet = true;
+
     if (defaultConfig.dynamicConfig?.enabled) {
       let apiUrl = defaultConfig.dynamicConfig.apiUrl;
 
       // For testing we can override dynamic config url
       const launchArgs = LaunchArguments.value<LaunchArgs>();
+      console.log('launchArgs', launchArgs);
       if (launchArgs?.config) {
         apiUrl = launchArgs.config;
       }
