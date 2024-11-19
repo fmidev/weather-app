@@ -52,34 +52,6 @@
         android:windowSoftInputMode="adjustResize"
         android:exported="true" />
 
-      <receiver android:label="@string/app_name" android:name=".MobileWeatherWidgetProvider" android:exported="false">
-        <intent-filter>
-          <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-          <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-          <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-        </intent-filter>
-        <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_description" />
-        </receiver>
-        <activity android:name=".ConfigurationActivity" android:exported="false">
-          <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-          </intent-filter>
-        </activity>
-
-        <receiver android:label="@string/small_widget" android:name=".MobileWeatherSmallWidgetProvider" android:exported="false">
-          <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-            <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-          </intent-filter>
-          <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_widget_description" />
-        </receiver>
-        <activity android:name=".SmallWidgetConfigurationActivity" android:exported="false">
-          <intent-filter>
-            <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-          </intent-filter>
-        </activity>
-
         <receiver android:name=".NewSmallWidgetProvider" android:label="@string/new_small_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
@@ -95,7 +67,6 @@
             </intent-filter>
         </activity>
 
-        <service android:exported="false" android:name=".UpdateWidgetJobIntentService" android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

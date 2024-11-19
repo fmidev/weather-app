@@ -39,7 +39,7 @@ public class WidgetSetupManager {
                 widgetSetup = gson.fromJson(jsonString, WidgetSetup.class);
 
             } catch (IOException e) {
-                Log.e("NewWidget Update", "Error reading setup file", e);
+                Log.e("Widget Update", "Error reading setup file", e);
             }
         }
     }
