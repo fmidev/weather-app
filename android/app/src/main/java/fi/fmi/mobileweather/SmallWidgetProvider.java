@@ -3,6 +3,7 @@ package fi.fmi.mobileweather;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -24,11 +25,32 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
         int minWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int minHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
 
+        // Determine the layout resource ID based on the new size
+        int layoutId = getLayoutResourceId(minWidth, minHeight);
+
+        // Store the layout resource ID in shared preferences
+        saveLayoutResourceId(context, appWidgetId, layoutId);
+
+        // Update the widget layout
+        RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
+        updateAppWidget(context, appWidgetManager, appWidgetId, views);
+    }
+
+    /*@Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+
+        Log.d("Widget Update", "Options changed");
+
+        // Get the new widget size
+        int minWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        int minHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+
         // Update the widget layout based on the new size
         RemoteViews views = new RemoteViews(context.getPackageName(), getLayoutResourceId(minWidth, minHeight));
         updateAppWidget(context, appWidgetManager, appWidgetId, views);
 //        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
+    }*/
 
     private int getLayoutResourceId(int minWidth, int minHeight) {
         if (minWidth <= 78 /*&& minHeight <= 72*/) {
@@ -45,6 +67,5 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
             return R.layout.horizontal_widget_layout;
         }
     }
-
 
 }

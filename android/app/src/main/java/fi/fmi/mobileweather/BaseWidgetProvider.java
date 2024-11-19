@@ -57,6 +57,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private static String weatherUrl;
     private static String announcementsUrl;
 
+    private static final String PREFS_NAME = "fi.fmi.mobileweather.SmallWidgetProvider";
+    private static final String PREF_PREFIX_KEY = "appwidget_";
 
     protected abstract int getLayoutResourceId();
 
@@ -369,8 +371,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Log.d("Download json", "Background: " + background);
 
         // Get the layout for the App Widget now if needed
-        if (main == null)
-            main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
+        if (main == null) {
+            // Get the stored layout for the App Widget
+            int currentLayoutId = loadLayoutResourceId(context, appWidgetId);
+            // If the layout is not stored, use the default layout
+            if (currentLayoutId != -1) {
+                main = new RemoteViews(context.getPackageName(), currentLayoutId);
+            } else
+                main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
+        }
 
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
@@ -555,5 +564,17 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         main.setTextViewText(R.id.locationRegionTextView, errorText2);
 
         appWidgetManager.updateAppWidget(appWidgetId, main);
+    }
+
+    protected void saveLayoutResourceId(Context context, int appWidgetId, int layoutId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(PREF_PREFIX_KEY + appWidgetId, layoutId);
+        editor.apply();
+    }
+
+    protected int loadLayoutResourceId(Context context, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getInt(PREF_PREFIX_KEY + appWidgetId, -1);
     }
 }
