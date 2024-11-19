@@ -57,6 +57,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private static String weatherUrl;
     private static String announcementsUrl;
 
+
     protected abstract int getLayoutResourceId();
 
     @Override
@@ -102,7 +103,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // There may be multiple widgets active, so update all
         final int N = appWidgetIds.length;
         for (int i = 0; i < N; i++) {
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
+            updateAppWidget(context, appWidgetManager, appWidgetIds[i], null);
         }
     }
 
@@ -115,7 +116,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         WidgetNotification.scheduleWidgetUpdate(context, this.getClass());
     }
 
-    protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+    protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews main) {
         Log.d("Widget Update","updateAppWidget");
 
         this.context = context;
@@ -143,7 +144,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                             Log.d("Widget Location", "Timer canceled");
                             timeoutHandler.removeCallbacks(timeoutRunnable);
                         }
-                        execute(latlon);
+                        execute(latlon, main);
                     });
             if (ok) {
                 // Set timeout for location request
@@ -155,7 +156,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     String latlon = pref.getString("latlon", null);
                     if (latlon != null) {
                         Log.d("Widget Location", "Timeout reached, update with stored location");
-                        execute(latlon);
+                        execute(latlon, main);
                     } else {
                         Log.d("Widget Location", "Timeout reached, no location available");
                     }
@@ -195,7 +196,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         WidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
-    public void execute(String latlon) {
+    public void execute(String latlon, RemoteViews main) {
         ExecutorService executorService = Executors.newFixedThreadPool(3);
 
         // Get language string
@@ -220,7 +221,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             try {
                 JSONObject result1 = future1.get();
                 JSONArray result2 = future2.get();
-                onPostExecute(result1, result2);
+                onPostExecute(result1, result2, main);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
                 showErrorView(
@@ -358,7 +359,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void onPostExecute(JSONObject json, JSONArray json2) {
+    protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main) {
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -367,8 +368,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         String background = pref.getString("background", "transparent");
         Log.d("Download json", "Background: " + background);
 
-        // Get the layout for the App Widget
-        RemoteViews main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
+        // Get the layout for the App Widget now if needed
+        if (main == null)
+            main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
 
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
