@@ -4,7 +4,7 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static fi.fmi.mobileweather.NewWidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
+import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -21,14 +21,10 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.core.content.ContextCompat;
-
-import com.fewlaps.quitnowcache.QNCache;
-import com.fewlaps.quitnowcache.QNCacheBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +46,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
+public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     private Context context;
     private int appWidgetId;
@@ -116,7 +112,7 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
         super.onEnabled(context);
 
         // Schedule an update for the widget (e.g. every 30 minutes)
-        NewWidgetNotification.scheduleWidgetUpdate(context, this.getClass());
+        WidgetNotification.scheduleWidgetUpdate(context, this.getClass());
     }
 
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -190,13 +186,13 @@ public abstract class NewBaseWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        NewWidgetNotification.clearWidgetUpdate(context, this.getClass());
+        WidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        NewWidgetNotification.clearWidgetUpdate(context, this.getClass());
+        WidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
     public void execute(String latlon) {

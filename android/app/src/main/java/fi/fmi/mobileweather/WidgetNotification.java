@@ -5,13 +5,12 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.RemoteViews;
 import android.util.Log;
 import android.content.ComponentName;
 import android.app.AlarmManager;
 import java.util.Calendar;
 
-public class NewWidgetNotification {
+public class WidgetNotification {
 
     public static final String ACTION_APPWIDGET_AUTO_UPDATE = "fi.fmi.mobileweather.AUTO_UPDATE";
     public static final int WIDGET_REQUEST_CODE = 191001;

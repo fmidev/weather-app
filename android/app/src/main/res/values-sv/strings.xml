@@ -50,7 +50,6 @@
     <string name="forecast_location_not_defined">Prognos plats inte definierat.</string>
     <string name="widget_resize_info">Observera att du kan ändra storleken på widget för att dölja information eller visa mer information.</string>
     <string name="small_widget">Väder kompakt</string>
-    <string name="new_small_widget">Väder kompakt</string>
     <string name="widget_favorite_info">Ange favoriter i väderapplikationen, om du vill använda widgeten utan positionering.</string>
     <string name="battery_saving">Energibesparing är aktiverat. Vi rekommenderade att du inaktiverar den för appen så att widgeten kan uppdatera väderdata.</string>
     <string name="open_settings">Öppna inställningar</string>
