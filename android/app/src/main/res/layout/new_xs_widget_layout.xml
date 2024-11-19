@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="6dp">
 
     <TextView
         android:id="@+id/locationNameTextView"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:maxWidth="141dp"
+        android:maxWidth="69dp"
         android:visibility="gone"
         tools:text="Helsinki," />
 
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:maxWidth="141dp"
+        android:maxWidth="69dp"
         android:textColor="@android:color/black"
         android:textSize="15sp"
         android:visibility="gone"
@@ -41,15 +41,16 @@
 
         <ImageView
             android:id="@+id/weatherIconImageView"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:layout_marginEnd="7dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="0dp"
             android:contentDescription="TODO"
             tools:src="@drawable/s32_light" />
 
         <TextView
             android:id="@+id/temperatureTextView"
             style="@style/temperature"
+            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -58,6 +59,7 @@
         <TextView
             android:id="@+id/temperatureUnitTextView"
             style="@style/temperatureUnit"
+            android:textSize="13sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
@@ -70,13 +72,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:contentDescription="TODO"
         android:src="@drawable/fmi_logo_short"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/crisisTextView"
         style="@style/crisis"
-        android:layout_width="135dp"
+        android:textSize="13sp"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:ellipsize="end"
@@ -97,6 +101,7 @@
         android:textColor="@android:color/black"
         android:textSize="10sp"
         android:visibility="visible"
-        tools:text="11.34.24" />
+        tools:text="11.34.24"
+        tools:ignore="SmallSp" />
 
 </LinearLayout>
