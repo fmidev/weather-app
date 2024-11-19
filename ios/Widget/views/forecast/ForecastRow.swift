@@ -14,7 +14,7 @@ struct ForecastRow: View {
         ForecastColumn(location: location, timeStep: timeSteps[i])
           .frame(width: COLUMN_WIDTH, height: COLUMN_HEIGHT)
         Spacer()
-        if (i == COLUMN_COUNT) {
+        if (i < COLUMN_COUNT - 1) {
           Divider()
             .frame(width: 1, height: COLUMN_HEIGHT)
             .padding(.top, 3)

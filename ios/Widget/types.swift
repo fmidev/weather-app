@@ -61,10 +61,10 @@ struct TimeStep: Hashable, Identifiable {
   func formatDateAndTime(timezone: String? = nil, longFormat: Bool = false) -> String {
     let dateFormatter = DateFormatter()
     if (longFormat) {
-      dateFormatter.dateFormat = "EEE dd.MM. '"+"at".localized()+"' HH.mm"
+      dateFormatter.dateFormat = "EEE dd.MM. '"+"at".localized()+"' HH:mm"
     } else {
-      dateFormatter.dateFormat = "dd.MM. HH.mm"
-    }    
+      dateFormatter.dateFormat = "dd.MM. HH:mm"
+    }
     if (timezone != nil) {
       dateFormatter.timeZone = TimeZone(identifier: timezone!)
     }
@@ -78,7 +78,7 @@ struct TimeStep: Hashable, Identifiable {
   
   func formatTime(timezone: String? = nil) -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "HH.mm"
+    dateFormatter.dateFormat = "HH:mm"
     
     if (timezone != nil) {
       dateFormatter.timeZone = TimeZone(identifier: timezone!)

@@ -147,24 +147,26 @@ struct SmallWidgetView : View {
     if (entry.error != WidgetError.none) {
       ErrorView(entry: entry)
     } else {
-      VStack {
-        Text(entry.formatLocation()).style(.boldLocation).padding(.top, 17)
+      VStack(spacing: 0) {
+        Text(entry.formatLocation()).style(.boldLocation).padding(.top, 8)
         Text(entry.formatAreaOrCountry()).style(.location)
         Spacer()
         NextHourForecast(timeStep: entry.timeSteps[0])
         Spacer()
         if (entry.crisisMessage != nil) {
-          Text(entry.crisisMessage!)
-            .style(.crisis)
-            .foregroundStyle(Color("CrisisTextColor"))
-            .lineLimit(2)
-            .fixedSize(horizontal: false, vertical: true)
+          HStack{
+            Text(entry.crisisMessage!)
+              .style(.crisis)
+              .foregroundStyle(Color("CrisisTextColor"))
+              .lineLimit(2)
+              .fixedSize(horizontal: false, vertical: true)
+          }.padding(.horizontal, 9).background(Color("CrisisBackgroundColor"))
         } else {
           if (entry.settings.showLogo) {
             Image("FMI").resizable().frame(width: 50, height: 24)
           }
         }
-      }.modifier(TextModifier())
+      }.padding(.horizontal, 5).modifier(TextModifier())
     }
   }
 }
@@ -186,17 +188,16 @@ struct MediumWidgetView : View {
             if (entry.settings.showLogo) {
               Image("FMI").resizable().frame(width: 56, height: 27)
             }
-          }.padding(.horizontal, 8)
+          }.padding(.horizontal, 5)
         }
         Spacer()
         ForecastRow(location: entry.location, timeSteps: entry.timeSteps)
         Spacer()
         if (entry.crisisMessage != nil) {
           CrisisMessage(message: entry.crisisMessage!)
-            .padding(.horizontal, 8)
           Spacer()
         }
-      }.modifier(TextModifier())
+      }.padding(.horizontal, 8).modifier(TextModifier())
     }
   }
 }
@@ -222,7 +223,6 @@ struct LargeWidgetView : View {
         if (entry.crisisMessage != nil) {
           Spacer()
           CrisisMessage(message: entry.crisisMessage!, large: true)
-            .padding(.horizontal, 8)
           Spacer()
         } else {
           HStack {
@@ -233,7 +233,7 @@ struct LargeWidgetView : View {
             Spacer().frame(width: 56, height: 27)
           }
         }
-      }.modifier(TextModifier())
+      }.padding(.horizontal, 8).modifier(TextModifier())
     }
   }
 }
