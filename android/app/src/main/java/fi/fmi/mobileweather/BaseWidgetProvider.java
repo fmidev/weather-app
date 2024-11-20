@@ -556,7 +556,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         if (background.equals("dark"))
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
         else if (background.equals("light")) {
-            main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.argb(100, 238, 238, 238));
+            main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.rgb(255, 255, 255));
         } else
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
 

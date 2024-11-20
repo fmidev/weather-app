@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="fi.fmi.mobileweather.SmallWidgetConfigurationActivity"
-    android:initialLayout="@layout/small_widget_layout"
-    android:minWidth="72dp"
-    android:minHeight="72dp"
-    android:previewImage="@drawable/small_widget_preview"
+    android:initialLayout="@layout/xs_widget_layout"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/xs_widget_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen">
 </appwidget-provider>
+
+    <!-- Only from Android 12 onwards:
+    android:targetCellWidth="2"
+        android:targetCellHeight="2"-->
