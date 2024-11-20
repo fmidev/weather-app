@@ -132,7 +132,7 @@ app.get('/setup', (_, res) => {
   return res.json({
     geolocation: geolocationSetting,
     forecast: forecastSetting,
-    announcements: announcementSetting,
+    announcement: announcementSetting,
     datamode: dataModeSetting,
   });
 });
