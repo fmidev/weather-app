@@ -37,14 +37,15 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
         updateAppWidget(context, appWidgetManager, appWidgetId, views);
     }
 
+    // TODO: needs to be improved. Does not work well with all devices.
     private int getLayoutResourceId(int minWidth, int minHeight) {
-        if (minWidth <= 78 /*&& minHeight <= 72*/) {
+        if (minWidth <= 100 /*&& minHeight <= 72*/) {
             Log.d("Widget Update", "XS widget " + minWidth + "x" + minHeight);
             return R.layout.xs_widget_layout;
-        } else if (minWidth <= 172 /*&& minHeight <= 144*/) {
+        } else if (minWidth <= 200 /*&& minHeight <= 144*/) {
             Log.d("Widget Update", "Small widget " + minWidth + "x" + minHeight);
             return R.layout.small_widget_layout;
-        } else if (minWidth <= 266 /*&& minHeight <= 110*/) {
+        } else if (minWidth <= 300 /*&& minHeight <= 110*/) {
             Log.d("Widget Update", "Medium widget " + minWidth + "x" + minHeight);
             return R.layout.medium_widget_layout;
         } else {
