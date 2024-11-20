@@ -229,7 +229,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 showErrorView(
                         context,
                         pref,
-                        context.getResources().getString(R.string.update_failed),
+                        "(execute error) " + context.getResources().getString(R.string.update_failed),
                         context.getResources().getString(R.string.check_internet_connection)
                 );
             }
@@ -399,7 +399,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     showErrorView(
                             context,
                             pref,
-                            context.getResources().getString(R.string.update_failed),
+                            "(old restore error) " + context.getResources().getString(R.string.update_failed),
                             context.getResources().getString(R.string.check_internet_connection)
                     );
                     return;
@@ -408,7 +408,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 showErrorView(
                         context,
                         pref,
-                        context.getResources().getString(R.string.update_failed),
+                        " (too old error) " + context.getResources().getString(R.string.update_failed),
                         context.getResources().getString(R.string.check_internet_connection)
                 );
                 return;
@@ -525,7 +525,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             showErrorView(
                     context,
                     pref,
-                    context.getResources().getString(R.string.update_failed),
+                    "(parsing error) " + context.getResources().getString(R.string.update_failed),
                     context.getResources().getString(R.string.check_internet_connection)
             );
         }
