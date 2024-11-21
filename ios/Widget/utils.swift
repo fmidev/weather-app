@@ -64,3 +64,62 @@ func isEaster() -> Bool {
    
   return currentDate >= goodFriday && currentDate < nextTuesday
 }
+
+func filterUniqueWarnings(_ warnings : [WarningTimeStep]) -> [WarningTimeStep] {
+  var processed = [WarningTimeStep]()
+  var filtered = [WarningTimeStep]()
+  
+  for warning in warnings {
+    if (!processed.contains(where: {$0.type == warning.type && $0.severity == warning.severity})) {
+      processed.append(warning)
+      filtered.append(warning)
+    }
+  }
+  
+  return filtered;
+}
+
+func sortWarnings(_ warnings: [WarningTimeStep]) -> [WarningTimeStep] {
+  var extremeWarnings = warnings.filter{$0.severity == .extreme}
+  extremeWarnings.sort(by: {$0.type.rawValue > $1.type.rawValue})
+  var severeWarnings = warnings.filter{$0.severity == .severe}
+  severeWarnings.sort(by: {$0.type.rawValue > $1.type.rawValue})
+  var moderateWarnings = warnings.filter{$0.severity == .moderate}
+  moderateWarnings.sort(by: {$0.type.rawValue > $1.type.rawValue})
+  
+  return extremeWarnings + severeWarnings + moderateWarnings
+}
+
+func resolveWarningSeverity(_ severity: String) -> WarningSeverity {
+  switch severity {
+    case "Moderate": return .moderate
+    case "Severe": return .severe
+    case "Extreme": return .extreme
+    default: return .none
+  }
+}
+
+func resolveWarningType(_ type: String) -> WarningType {
+  switch type {
+    case "thunderstorm": return .thunderstorm
+    case "forestFireWeather": return .forestFireWeather
+    case "grassFireWeather": return .grassFireWeather
+    case "wind": return .wind
+    case "trafficWeather": return .trafficWeather
+    case "rain": return .rain
+    case "pedestrianSafety": return .pedestrianSafety
+    case "hotWeather": return .hotWeather
+    case "coldWeather": return .coldWeather
+    case "uvNote": return .uvNote
+    case "flooding": return .flooding
+    case "seaWind": return .seaWind
+    case "seaThunderStorm": return .seaThunderStorm
+    case "seaWaveHeight": return .seaWaveHeight
+    case "seaWaterHeightHighWater": return .seaWaterHeightHighWater
+    case "seaWaterHeightShallowWater": return .seaWaterHeightShallowWater
+    case "seaIcing": return .seaIcing
+    default: return .none
+  }
+  
+}
+  

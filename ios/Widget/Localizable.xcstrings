@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "**%@,**" : {
+
+    },
     "**%@** %@" : {
       "localizations" : {
         "en" : {
@@ -158,6 +161,9 @@
         }
       }
     },
+    "No warnings" : {
+
+    },
     "Unknown error" : {
       "localizations" : {
         "fi" : {
@@ -224,6 +230,7 @@
 
     },
     "Weather warnings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -233,7 +240,10 @@
         }
       }
     },
-    "Weather warnings in your area" : {
+    "Weather warnings for today" : {
+
+    },
+    "Weather warnings in your location" : {
 
     }
   },

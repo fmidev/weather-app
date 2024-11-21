@@ -83,15 +83,6 @@ func fetchUVForecast(location: Location) async throws -> [UVTimeStep]? {
   return items
 }
 
-func resolveWarningSeverity(severity: String) -> WarningSeverity {
-  switch severity {
-    case "Moderate": return .moderate
-    case "Severe": return .severe
-    case "Extreme": return .extreme
-    default: return .none
-  }
-}
-
 func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
   let formatter = DateFormatter()
   formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
@@ -107,12 +98,13 @@ func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
   var items = [WarningTimeStep]()
   items = warningsArray.map({
     return WarningTimeStep(
-      type: $0["type"].stringValue,
-      severity: resolveWarningSeverity(severity: $0["severity"].stringValue),
+      type: resolveWarningType($0["type"].stringValue),
+      severity: resolveWarningSeverity($0["severity"].stringValue),
       duration: WarningDuration(
         startTime: formatter.date(from: $0["duration"]["startTime"].stringValue),
         endTime: formatter.date(from: $0["duration"]["endTime"].stringValue)
-      )
+      ),
+      language: $0["language"].stringValue
     )
   })
    

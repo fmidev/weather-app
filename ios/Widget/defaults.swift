@@ -63,9 +63,16 @@ let defaultWarningEntry = WarningEntry(
   date: Date(),
   updated: getDefaultUpdatedDate(),
   location: getDefaultLocation(),
-  warningLevel: .none,
-  warningCount: 0,
+  warnings: [],
+  crisisMessage: nil,
   error: nil
+)
+
+let defaultWarningTimeStep = WarningTimeStep(
+  type: .rain,
+  severity: .moderate,
+  duration: WarningDuration(startTime: Date(), endTime: Date().addingTimeInterval(12*60*60)),
+  language: "fi"
 )
 
 let defaultWidgetSettings = WidgetSettings(
@@ -73,6 +80,6 @@ let defaultWidgetSettings = WidgetSettings(
 )
 
 let WHO="mobileweather_ios_widget"
-let UPDATE_INTERVAL = 30
+let UPDATE_INTERVAL = 15
 let SUPPORTED_LANGUAGES = ["fi", "sv", "en"]
 let FALLBACK_LANGUAGE = "en"
