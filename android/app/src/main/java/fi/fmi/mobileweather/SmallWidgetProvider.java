@@ -39,9 +39,9 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
         // Store the layout resource ID in shared preferences
         saveLayoutResourceId(context, appWidgetId, layoutId);
 
-        // Update the widget layout
+        // Update the widget layout without downloading new data
         RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
-        updateAppWidget(context, appWidgetManager, appWidgetId, views);
+        updateAppWidgetWithoutDataDownload(context, appWidgetManager, appWidgetId, views);
     }
 
     // TODO: needs to be improved. Does not work well with all devices.

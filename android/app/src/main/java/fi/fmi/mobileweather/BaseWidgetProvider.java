@@ -24,6 +24,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import org.json.JSONArray;
@@ -118,6 +119,18 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         WidgetNotification.scheduleWidgetUpdate(context, this.getClass());
     }
 
+    protected void updateAppWidgetWithoutDataDownload(Context context, AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews main) {
+        Log.d("Widget Update", "updateAppWidgetWithoutDataDownload");
+
+        this.context = context;
+        this.appWidgetManager = appWidgetManager;
+        this.appWidgetId = appWidgetId;
+        this.pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
+                Context.MODE_PRIVATE);
+
+        onPostExecute(null, null, main);
+    }
+
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews main) {
         Log.d("Widget Update","updateAppWidget");
 
@@ -199,6 +212,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     public void execute(String latlon, RemoteViews main) {
+
+        // if we have no location, do not update the widget
+        if (latlon == null || latlon.isEmpty()) {
+            Log.d("Widget Update", "No location data available, widget not updated");
+            return;
+        }
+
         ExecutorService executorService = Executors.newFixedThreadPool(3);
 
         // Get language string
@@ -388,46 +408,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
-        Date now = new Date();
-
-        if (json == null) {
-            // Restore latest json
-
-            long updated = pref.getLong("latest_json_updated", 0);
-
-            if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
-                String jsonstr = pref.getString("latest_json", null);
-
-                try {
-                    json = new JSONObject(jsonstr);
-                } catch (JSONException e) {
-                    showErrorView(
-                            context,
-                            pref,
-                            "(old restore error) " + context.getResources().getString(R.string.update_failed),
-                            context.getResources().getString(R.string.check_internet_connection)
-                    );
-                    return;
-                }
-            } else {
-                showErrorView(
-                        context,
-                        pref,
-                        " (too old error) " + context.getResources().getString(R.string.update_failed),
-                        context.getResources().getString(R.string.check_internet_connection)
-                );
-                return;
-            }
-
-        } else {
-            // Store latest json
-
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString("latest_json", json.toString());
-            editor.putLong("latest_json_updated", now.getTime());
-            editor.apply();
-
-        }
+        json = useNewOrStoredJsonObject(json);
+        if (json == null) return;
 
         main.setInt(R.id.weatherLayout, "setVisibility", VISIBLE);
 
@@ -495,6 +477,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             // Update time
             main.setTextViewText(R.id.updateTimeTextView, /*"Päivitetty " +*/ DateFormat.getTimeInstance().format(new Date()));
 
+            json2 = useNewOrStoredCrisisJsonObject(json2);
+
             // crisis view
             // example json: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
             if (json2 != null) {
@@ -536,6 +520,84 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, main);
+    }
+
+    @Nullable
+    private JSONObject useNewOrStoredJsonObject(JSONObject json) {
+        Date now = new Date();
+
+        if (json == null) {
+            // Restore latest json
+
+            long updated = pref.getLong("latest_json_updated", 0);
+
+            if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
+                String jsonstr = pref.getString("latest_json", null);
+
+                try {
+                    json = new JSONObject(jsonstr);
+                } catch (JSONException e) {
+                    showErrorView(
+                            context,
+                            pref,
+                            "(old restore error) " + context.getResources().getString(R.string.update_failed),
+                            context.getResources().getString(R.string.check_internet_connection)
+                    );
+                    return null;
+                }
+            } else {
+                showErrorView(
+                        context,
+                        pref,
+                        " (too old error) " + context.getResources().getString(R.string.update_failed),
+                        context.getResources().getString(R.string.check_internet_connection)
+                );
+                return null;
+            }
+
+        } else {
+            // Store latest json
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("latest_json", json.toString());
+            editor.putLong("latest_json_updated", now.getTime());
+            editor.apply();
+
+        }
+        return json;
+    }
+
+    @Nullable
+    private JSONArray useNewOrStoredCrisisJsonObject(JSONArray json) {
+        Date now = new Date();
+
+        if (json == null) {
+            // Restore latest crisis json
+
+            long updated = pref.getLong("latest_crisis_json_updated", 0);
+
+            if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
+                String jsonstr = pref.getString("latest_crisis_json", null);
+
+                try {
+                    json = new JSONArray(jsonstr);
+                } catch (JSONException e) {
+                    Log.d("Download json", "Crisis Json parsing error: " + e.getMessage());
+                }
+            } else {
+                Log.d("Download json", "Crisis Json too old");
+            }
+
+        } else {
+            // Store latest crisis json
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("latest_crisis_json", json.toString());
+            editor.putLong("latest_crisis_json_updated", now.getTime());
+            editor.apply();
+
+        }
+        return json;
     }
 
     protected void setColors(RemoteViews main, int backgroundColor, int textColor) {
