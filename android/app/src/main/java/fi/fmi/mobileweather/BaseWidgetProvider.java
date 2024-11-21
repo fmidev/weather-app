@@ -54,7 +54,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private AppWidgetManager appWidgetManager;
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
-    private SharedPreferences pref;
     private static String weatherUrl;
     private static String announcementsUrl;
 
@@ -125,10 +124,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
-        this.pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
+        SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
                 Context.MODE_PRIVATE);
 
-        onPostExecute(null, null, main);
+        onPostExecute(null, null, main, pref);
     }
 
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews main) {
@@ -137,7 +136,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
-        this.pref= context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
+        SharedPreferences pref= context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
                 Context.MODE_PRIVATE);
 
         Log.d("Widget Location", "Trying to request location");
@@ -159,7 +158,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                             Log.d("Widget Location", "Timer canceled");
                             timeoutHandler.removeCallbacks(timeoutRunnable);
                         }
-                        execute(latlon, main);
+                        execute(latlon, main, pref);
                     });
             if (ok) {
                 // Set timeout for location request
@@ -171,7 +170,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     String latlon = pref.getString("latlon", null);
                     if (latlon != null) {
                         Log.d("Widget Location", "Timeout reached, update with stored location");
-                        execute(latlon, main);
+                        execute(latlon, main, pref);
                     } else {
                         Log.d("Widget Location", "Timeout reached, no location available");
                     }
@@ -211,7 +210,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         WidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
-    public void execute(String latlon, RemoteViews main) {
+    public void execute(String latlon, RemoteViews main, SharedPreferences pref) {
 
         // if we have no location, do not update the widget
         if (latlon == null || latlon.isEmpty()) {
@@ -243,7 +242,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             try {
                 JSONObject result1 = future1.get();
                 JSONArray result2 = future2.get();
-                onPostExecute(result1, result2, main);
+                onPostExecute(result1, result2, main, pref);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
                 showErrorView(
@@ -381,7 +380,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main) {
+    protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferences pref) {
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -408,7 +407,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
-        json = useNewOrStoredJsonObject(json);
+        json = useNewOrStoredJsonObject(json, pref);
         if (json == null) return;
 
         main.setInt(R.id.weatherLayout, "setVisibility", VISIBLE);
@@ -475,9 +474,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             main.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
             // Update time
-            main.setTextViewText(R.id.updateTimeTextView, /*"Päivitetty " +*/ DateFormat.getTimeInstance().format(new Date()));
+            main.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
-            json2 = useNewOrStoredCrisisJsonObject(json2);
+            json2 = useNewOrStoredCrisisJsonObject(json2, pref);
 
             // crisis view
             // example json: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
@@ -523,7 +522,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @Nullable
-    private JSONObject useNewOrStoredJsonObject(JSONObject json) {
+    private JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferences pref) {
         Date now = new Date();
 
         if (json == null) {
@@ -568,7 +567,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @Nullable
-    private JSONArray useNewOrStoredCrisisJsonObject(JSONArray json) {
+    private JSONArray useNewOrStoredCrisisJsonObject(JSONArray json, SharedPreferences pref) {
         Date now = new Date();
 
         if (json == null) {

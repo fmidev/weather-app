@@ -269,7 +269,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             else
                 editor.putString("background", "dark");
 
-            editor.putString("version", "classic");
             editor.putString("forecast", "hours");
 
             RadioGroup location = findViewById(R.id.locationRadioGroup);
