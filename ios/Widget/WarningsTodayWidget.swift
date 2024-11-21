@@ -115,7 +115,15 @@ struct SmallWarningTodayView : View {
           }
         }
         Spacer()
-        Text("Warnings (\(entry.warnings.count))")
+        if (entry.crisisMessage != nil) {
+          Text(entry.crisisMessage!)
+            .style(.crisis)
+            .foregroundStyle(Color("CrisisTextColor"))
+            .lineLimit(2)
+            .fixedSize(horizontal: false, vertical: true)
+        } else {
+          Text("Warnings (\(entry.warnings.count))")
+        }
         Spacer()
       }
     }.modifier(TextModifier())
