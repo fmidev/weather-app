@@ -375,7 +375,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             // Get the stored layout for the App Widget
             int currentLayoutId = loadLayoutResourceId(context, appWidgetId);
             // If the layout is not stored, use the default layout
-            if (currentLayoutId != -1) {
+            if (currentLayoutId != 0) {
                 main = new RemoteViews(context.getPackageName(), currentLayoutId);
             } else
                 main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
@@ -575,6 +575,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected int loadLayoutResourceId(Context context, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        return prefs.getInt(PREF_PREFIX_KEY + appWidgetId, -1);
+        return prefs.getInt(PREF_PREFIX_KEY + appWidgetId, 0);
     }
 }

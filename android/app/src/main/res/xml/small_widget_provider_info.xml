@@ -2,7 +2,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="fi.fmi.mobileweather.SmallWidgetConfigurationActivity"
     android:initialLayout="@layout/xs_widget_layout"
-    android:maxResizeWidth="300dp"
+    android:maxResizeWidth="700dp"
     android:maxResizeHeight="200dp"
     android:minWidth="40dp"
     android:minHeight="40dp"
