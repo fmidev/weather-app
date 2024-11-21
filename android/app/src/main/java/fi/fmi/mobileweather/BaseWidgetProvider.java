@@ -13,7 +13,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -56,9 +55,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private Runnable timeoutRunnable;
     private static String weatherUrl;
     private static String announcementsUrl;
-
-    private static final String PREFS_NAME = "fi.fmi.mobileweather.SmallWidgetProvider";
-    private static final String PREF_PREFIX_KEY = "appwidget_";
 
     protected abstract int getLayoutResourceId();
 
@@ -124,8 +120,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
-        SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
-                Context.MODE_PRIVATE);
+        SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
 
         onPostExecute(null, null, main, pref);
     }
@@ -136,8 +131,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
-        SharedPreferences pref= context.getSharedPreferences("fi.fmi.mobileweather.widget_" + appWidgetId,
-                Context.MODE_PRIVATE);
+        SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
 
         Log.d("Widget Location", "Trying to request location");
         if ((ContextCompat.checkSelfPermission(context,
@@ -151,7 +145,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                         // Get the location coordinates string from location
                         String latlon = getLatLonString(location);
                         // Store latlon to shared preferences (cannot be null here)
-                        pref.edit().putString("latlon", latlon).apply();
+                        pref.saveString("latlon", latlon);
                         Log.d("Widget Location", "Update with new location");
                         // Cancel timeout
                         if (timeoutHandler != null && timeoutRunnable != null) {
@@ -180,18 +174,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 timeoutHandler.postDelayed(timeoutRunnable, 60 * 1000); // 1 minute timeout
             } else {
                 Log.d("Widget Location", "Location not available from Location Manager");
-                showErrorView(context, context.getSharedPreferences(
-                                "fi.fmi.mobileweather.widget_" + appWidgetId,
-                                Context.MODE_PRIVATE),
+                showErrorView(context, pref,
                         context.getResources().getString(R.string.positioning_failed),
                         ""
                 );
             }
         } else {
             Log.d("Widget Location", "Location permission not granted");
-            showErrorView(context, context.getSharedPreferences(
-                            "fi.fmi.mobileweather.widget_" + appWidgetId,
-                            Context.MODE_PRIVATE),
+            showErrorView(context, pref,
                     context.getResources().getString(R.string.positioning_failed),
                     ""
             );
@@ -210,7 +200,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         WidgetNotification.clearWidgetUpdate(context, this.getClass());
     }
 
-    public void execute(String latlon, RemoteViews main, SharedPreferences pref) {
+    public void execute(String latlon, RemoteViews main, SharedPreferencesHelper pref) {
 
         // if we have no location, do not update the widget
         if (latlon == null || latlon.isEmpty()) {
@@ -380,7 +370,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferences pref) {
+    protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -522,13 +512,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @Nullable
-    private JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferences pref) {
+    private JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferencesHelper pref) {
         Date now = new Date();
 
         if (json == null) {
             // Restore latest json
 
-            long updated = pref.getLong("latest_json_updated", 0);
+            long updated = pref.getLong("latest_json_updated", 0L);
 
             if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
                 String jsonstr = pref.getString("latest_json", null);
@@ -556,24 +546,20 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         } else {
             // Store latest json
-
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString("latest_json", json.toString());
-            editor.putLong("latest_json_updated", now.getTime());
-            editor.apply();
-
+            pref.saveString("latest_json", json.toString());
+            pref.saveLong("latest_json_updated", now.getTime());
         }
         return json;
     }
 
     @Nullable
-    private JSONArray useNewOrStoredCrisisJsonObject(JSONArray json, SharedPreferences pref) {
+    private JSONArray useNewOrStoredCrisisJsonObject(JSONArray json, SharedPreferencesHelper pref) {
         Date now = new Date();
 
         if (json == null) {
             // Restore latest crisis json
 
-            long updated = pref.getLong("latest_crisis_json_updated", 0);
+            long updated = pref.getLong("latest_crisis_json_updated", 0L);
 
             if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
                 String jsonstr = pref.getString("latest_crisis_json", null);
@@ -589,12 +575,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         } else {
             // Store latest crisis json
-
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString("latest_crisis_json", json.toString());
-            editor.putLong("latest_crisis_json_updated", now.getTime());
-            editor.apply();
-
+            pref.saveString("latest_crisis_json", json.toString());
+            pref.saveLong("latest_crisis_json_updated", now.getTime());
         }
         return json;
     }
@@ -608,7 +590,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         main.setInt(R.id.updateTimeTextView, "setTextColor", textColor);
     }
 
-    protected void showErrorView(Context context, SharedPreferences pref, String errorText1, String errorText2) {
+    protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2) {
         String background = pref.getString("background", "dark");
 
         RemoteViews main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
@@ -636,14 +618,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void saveLayoutResourceId(Context context, int appWidgetId, int layoutId) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(PREF_PREFIX_KEY + appWidgetId, layoutId);
-        editor.apply();
+        SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
+        pref.saveInt("layout_res_id", layoutId);
     }
 
     protected int loadLayoutResourceId(Context context, int appWidgetId) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        return prefs.getInt(PREF_PREFIX_KEY + appWidgetId, 0);
+        SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
+        return pref.getInt("layout_res_id", 0);
     }
 }

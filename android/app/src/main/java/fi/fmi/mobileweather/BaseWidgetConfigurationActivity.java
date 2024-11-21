@@ -26,7 +26,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.TextView;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.RequiresApi;
@@ -256,37 +255,27 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             Context context = getBaseContext();
 
-            SharedPreferences pref = context.getSharedPreferences("fi.fmi.mobileweather.widget_" + widgetId, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = pref.edit();
+            SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
 
             RadioGroup background = findViewById(R.id.backgroundRadioGroup);
             int selectedBackground = background.getCheckedRadioButtonId();
 
             if (selectedBackground==R.id.optionLightRadioButton)
-                editor.putString("background", "light");
+                pref.saveString("background", "light");
             else if (selectedBackground==R.id.optionTransparentRadioButton)
-                editor.putString("background", "transparent");
+                pref.saveString("background", "transparent");
             else
-                editor.putString("background", "dark");
+                pref.saveString("background", "dark");
 
-            editor.putString("forecast", "hours");
+            pref.saveString("forecast", "hours");
 
             RadioGroup location = findViewById(R.id.locationRadioGroup);
             int selectedLocation = location.getCheckedRadioButtonId();
 
-            if (selectedLocation==-1) {
-                editor.clear();
-                Toast.makeText(BaseWidgetConfigurationActivity.this, getString(R.string.forecast_location_not_defined),
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             if (selectedLocation==R.id.optionPositionedRadioButton)
-                editor.putInt("location", 0);
+                pref.saveInt("location", 0);
             else
-                editor.putInt("location", selectedLocation);
-
-            editor.apply();
+                pref.saveInt("location", selectedLocation);
 
 
             // Send a broadcast to trigger onUpdate()

@@ -3,7 +3,6 @@ package fi.fmi.mobileweather;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;

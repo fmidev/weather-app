@@ -4,19 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedPreferencesHelper {
-    private static final String PREFS_NAME = "fi.fmi.mobileweather.widget_";
-    private static SharedPreferences sharedPreferences;
-    private static SharedPreferencesHelper instance;
+    private static final String PREFS_NAME_PREFIX = "fi.fmi.mobileweather.widget_";
+    private SharedPreferences sharedPreferences;
 
     private SharedPreferencesHelper(Context context, int appWidgetId) {
-        sharedPreferences = context.getSharedPreferences(PREFS_NAME + appWidgetId, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(PREFS_NAME_PREFIX + appWidgetId, Context.MODE_PRIVATE);
     }
 
-    public static synchronized SharedPreferencesHelper getInstance(Context context, int appWidgetId) {
-        if (instance == null) {
-            instance = new SharedPreferencesHelper(context, appWidgetId);
-        }
-        return instance;
+    public static SharedPreferencesHelper getInstance(Context context, int appWidgetId) {
+        return new SharedPreferencesHelper(context, appWidgetId);
     }
 
     public SharedPreferences getSharedPreferences() {
@@ -31,6 +27,19 @@ public class SharedPreferencesHelper {
         return sharedPreferences.getString(key, defaultValue);
     }
 
-    // Add other methods to save and retrieve different data types as needed
-}
+    public void saveLong(String key, long value) {
+        sharedPreferences.edit().putLong(key, value).apply();
+    }
 
+    public long getLong(String key, long defaultValue) {
+        return sharedPreferences.getLong(key, defaultValue);
+    }
+
+    public void saveInt(String key, int value) {
+        sharedPreferences.edit().putInt(key, value).apply();
+    }
+
+    public int getInt(String key, int defaultValue) {
+        return sharedPreferences.getInt(key, defaultValue);
+    }
+}
