@@ -13,7 +13,14 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
     // default layout resource ID
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.xs_widget_layout;
+        // if Android 12 version or higher, the default layout is small
+        // (because the widget size is determined by the ...provider_info.xml)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            return R.layout.small_widget_layout;
+        } else {
+            // for Android 11 and below, the default layout is xs
+            return R.layout.xs_widget_layout;
+        }
     }
 
     @Override

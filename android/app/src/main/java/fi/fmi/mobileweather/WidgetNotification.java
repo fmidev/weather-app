@@ -32,7 +32,7 @@ public class WidgetNotification {
             Log.d("Widget Update", "Widget update scheduled");
 
             // Update the widget every 30 minutes (TODO: change this if needed)
-            am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), (30 * 60 * 1000), pi);
+            am.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), (/*30 * */60 * 1000), pi);
         } else {
             Log.d("Widget Update", "Widget update could not be scheduled, because no active widgets");
         }
