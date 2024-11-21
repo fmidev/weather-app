@@ -381,6 +381,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
         }
 
+        // Show normal view
+        main.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
+        // Hide error view
+        main.setInt(R.id.errorLayout, "setVisibility", GONE);
+
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
         Date now = new Date();
@@ -551,7 +556,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
-        main.setInt(R.id.weatherLayout, "setVisibility", GONE);
+        // Show error view
+        main.setInt(R.id.errorLayout, "setVisibility", VISIBLE);
+        // Hide normal view
+        main.setInt(R.id.normalLayout, "setVisibility", GONE);
 
         if (background.equals("dark"))
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
@@ -560,8 +568,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         } else
             main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
 
-        main.setTextViewText(R.id.locationNameTextView, errorText1);
-        main.setTextViewText(R.id.locationRegionTextView, errorText2);
+        main.setTextViewText(R.id.errorHeaderTextView, errorText1);
+        main.setTextViewText(R.id.errorBodyTextView, errorText2);
 
         appWidgetManager.updateAppWidget(appWidgetId, main);
     }
