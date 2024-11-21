@@ -68,13 +68,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             return;
         }
 
-        // Hide elements that are not used in small widget
-
-        /*TextView tv = (TextView) findViewById(R.id.forecastTitleTextView);
-        tv.setVisibility(View.GONE);
-        RadioGroup rg = (RadioGroup) findViewById(R.id.forecastRadioGroup);
-        rg.setVisibility(View.GONE);*/
-
         initListViews();
         askLocationPermission();
     }
