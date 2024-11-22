@@ -4,6 +4,9 @@
     "**%@,**" : {
 
     },
+    "**%@**" : {
+
+    },
     "**%@** %@" : {
       "localizations" : {
         "en" : {
@@ -143,6 +146,9 @@
           }
         }
       }
+    },
+    "Hello, World!" : {
+
     },
     "Next hour forecast" : {
       "extractionState" : "manual",

@@ -16,6 +16,7 @@ struct WarningProvider: TimelineProvider {
     Task {
       var error = nil as WidgetError?
       var warnings = [] as [WarningTimeStep]?
+      var wfsWarnings = [] as [WarningTimeStep]?
       var crisisMessage = nil as String?
       var location:Location?
       var entries: [WarningEntry] = []
@@ -40,12 +41,20 @@ struct WarningProvider: TimelineProvider {
       }
       
       if (error == nil) {
-        warnings = try await fetchWarnings(location: location!)
+        warnings = try await fetchWarnings(location!)
         if (warnings == nil) {
           error = .dataLoadingError
+        } else if (warnings!.contains(
+          where: { $0.type == .wind || $0.type == .seaWind }
+        )){
+          wfsWarnings = try await fetchWFSWarnings(location!)
+          
+          if (wfsWarnings != nil) {
+            warnings = mergeWarnings(warnings: warnings!, wfsWarnings: wfsWarnings!)
+          }
         }
       }
-            
+                  
       let updated = Date()
       let dates = [Date(), Date().addingTimeInterval(24*60*60)]
        
@@ -121,6 +130,11 @@ struct SmallWarningTodayView : View {
             .foregroundStyle(Color("CrisisTextColor"))
             .lineLimit(2)
             .fixedSize(horizontal: false, vertical: true)
+        } else if (entry.warnings.count == 1) {
+          VStack {
+            Text("**\(entry.warnings[0].type.accessibilityLabel)**")
+            Text(entry.warnings[0].duration.formatDuration())
+          }
         } else {
           Text("Warnings (\(entry.warnings.count))")
         }

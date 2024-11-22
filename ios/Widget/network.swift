@@ -83,11 +83,11 @@ func fetchUVForecast(location: Location) async throws -> [UVTimeStep]? {
   return items
 }
 
-func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
+func fetchWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
   let formatter = DateFormatter()
   formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
   
-  let apiUrl = getSetting("warnings.apiUrl") as! String
+  guard let apiUrl = getSetting("warnings.apiUrl") as? String else { return nil }
   let url = apiUrl+"?latlon=\(location.lat),\(location.lon)&country=fi&who=\(WHO)"
   let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
@@ -105,6 +105,38 @@ func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
         endTime: formatter.date(from: $0["duration"]["endTime"].stringValue)
       ),
       language: $0["language"].stringValue
+    )
+  })
+   
+  return items
+}
+
+func fetchWFSWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
+  let formatter = DateFormatter()
+  formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  
+  guard let apiUrl = getSetting("warnings.wfs.apiUrl") as? String else { return nil }
+  let url = "\(apiUrl)&who=\(WHO)"
+  let dataTask = AF.request(url).serializingData()
+  let value = try await dataTask.value
+  
+  guard let json = try? JSON(data: value) else { return nil }
+  guard let features = json["features"].array else { return nil }
+   
+  var items = [WarningTimeStep]()
+  items = features.map({
+    return WarningTimeStep(
+      type: resolveWarningType($0["properties"]["warning_context"].stringValue, wfs: true),
+      severity: resolveWarningSeverity($0["properties"]["severity"].stringValue, wfs: true),
+      duration: WarningDuration(
+        startTime: formatter.date(from: $0["duration"]["startTime"].stringValue),
+        endTime: formatter.date(from: $0["duration"]["endTime"].stringValue)
+      ),
+      language: "en",
+      wind: WindWarningDetails(
+        direction: $0["properties"]["physical_direction"].intValue,
+        speed: $0["properties"]["physical_value"].doubleValue
+      )
     )
   })
    

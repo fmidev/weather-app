@@ -281,24 +281,24 @@ enum WarningType: Int, CustomStringConvertible {
   
   var accessibilityLabel: String {
     switch self {
-      case .thunderstorm: return "Severe thunderstorm warning"
-      case .forestFireWeather: return "Severe thunderstorm warning"
-      case .grassFireWeather: return "Grass fire warning"
-      case .wind: return "Wind warning for land areas"
-      case .trafficWeather: return "Traffic weather warning"
-      case .rain: return "Heavy rain warning"
-      case .pedestrianSafety: return "Pedestrian weather warning"
-      case .hotWeather: return "Heat wave warning"
-      case .coldWeather: return "Cold warning"
-      case .uvNote: return "UV advisory"
-      case .flooding: return "Flood warning"
-      case .seaWind: return "Wind warning for sea areas"
-      case .seaThunderStorm: return "Thunderstorm wind gusts for sea areas"
-      case .seaWaveHeight: return "Wave height warning"
-      case .seaWaterHeightHighWater: return "Warning for high sea level"
-      case .seaWaterHeightShallowWater: return "Warning for low sea level"
-      case .seaIcing: return "Ice accretion warning"
-      case .none: return "No warnings"
+      case .thunderstorm: return "Severe thunderstorm warning".localized()
+      case .forestFireWeather: return "Severe thunderstorm warning".localized()
+      case .grassFireWeather: return "Grass fire warning".localized()
+      case .wind: return "Wind warning for land areas".localized()
+      case .trafficWeather: return "Traffic weather warning".localized()
+      case .rain: return "Heavy rain warning".localized()
+      case .pedestrianSafety: return "Pedestrian weather warning".localized()
+      case .hotWeather: return "Heat wave warning".localized()
+      case .coldWeather: return "Cold warning".localized()
+      case .uvNote: return "UV advisory".localized()
+      case .flooding: return "Flood warning".localized()
+      case .seaWind: return "Wind warning for sea areas".localized()
+      case .seaThunderStorm: return "Thunderstorm wind gusts for sea areas".localized()
+      case .seaWaveHeight: return "Wave height warning".localized()
+      case .seaWaterHeightHighWater: return "Warning for high sea level".localized()
+      case .seaWaterHeightShallowWater: return "Warning for low sea level".localized()
+      case .seaIcing: return "Ice accretion warning".localized()
+      case .none: return "No warnings".localized()
     }
   }
 }
@@ -306,6 +306,29 @@ enum WarningType: Int, CustomStringConvertible {
 struct WarningDuration {
   let startTime: Date?
   let endTime: Date?
+  
+  func formatDuration() -> String {
+    let shortDateFormatter = DateFormatter()
+    shortDateFormatter.dateFormat = "HH:mm"
+    shortDateFormatter.timeZone = TimeZone(identifier: "Europe/Helsinki")
+    let longDateFormatter = DateFormatter()
+    longDateFormatter.dateFormat = "dd.MM. HH:mm"
+    shortDateFormatter.timeZone = TimeZone(identifier: "Europe/Helsinki")
+    
+    guard let start = startTime else { return "" }
+    guard let end = endTime else { return "" }
+       
+    if Calendar.current.isDate(start, inSameDayAs: end) {
+      return shortDateFormatter.string(from: start)+" - "+shortDateFormatter.string(from: end)
+    } else {
+      return longDateFormatter.string(from: start)+" - "+longDateFormatter.string(from: end)
+    }
+  }
+}
+
+struct WindWarningDetails {
+  let direction: Int
+  let speed: Double
 }
 
 struct WarningTimeStep {
@@ -313,6 +336,7 @@ struct WarningTimeStep {
   let severity: WarningSeverity
   let duration: WarningDuration
   let language: String
+  var wind: WindWarningDetails? = nil
   
   func isValidOnDay(_ date: Date) -> Bool {
     guard let startTime = duration.startTime else { return false }
