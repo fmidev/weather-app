@@ -79,10 +79,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         if (setup != null) {
             // Update the widget with the setup data
             weatherUrl = setup.getWeather().getApiUrl();
-            Log.d("Widget Update", "Weather URL: " + weatherUrl);
             // TODO: needs to be language specific
             announcementsUrl = setup.getAnnouncements().getApi().getFi();
-            Log.d("Widget Update", "Announcements URL: " + announcementsUrl);
         }
 
         AppWidgetManager appWidgetManager =
@@ -191,13 +189,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        WidgetNotification.clearWidgetUpdate(context, this.getClass());
+        WidgetNotification.clearWidgetUpdate(context);
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        WidgetNotification.clearWidgetUpdate(context, this.getClass());
+        WidgetNotification.clearWidgetUpdate(context);
     }
 
     public void execute(String latlon, RemoteViews main, SharedPreferencesHelper pref) {
@@ -213,13 +211,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // Get language string
         String language = getLanguageString();
 
-
-
-
-//        String url2 = "http://localhost:3000/mobileannouncements/crisis";
-        // TODO: temporary for testing.
-        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
-//        String announceUrl = announcementsUrl;
+        // temporary for testing.
+//        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
+        String announceUrl = announcementsUrl;
 
         // get geoid
         Future<String> future0 = executorService.submit(() -> fetchGeoid(latlon));
@@ -270,8 +264,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     latlon +
                     "&format=json";
 
-            Log.d("Download json", "url with coordinates: " + url);
-
             String jsonString = fetchJsonString(url);
             // Response example: [{"geoid":658994,"name":"Hänniskylä","region":"Konnevesi","latitude":62.50000,"longitude":26.20000,"region":"Konnevesi","country":"Suomi","iso2":"FI","localtz":"Europe/Helsinki"}]
 
@@ -302,14 +294,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     geoid +
                     "&endtime=data&format=json&attributes=geoid&lang=" +
                     language +
-                    "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
-            Log.d("Download json", "url with geoid: " + url);
+                    "&tz=utc&who=mobileweather-widget-android&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
         } else { // otherwise use lat&lon to get forecast data
             url = weatherUrl + "?latlon=" +
                     latlon +
                     "&endtime=data&format=json&attributes=geoid&lang=" +
                     language +
-                    "&tz=utc&who=MobileWeather&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,dewPoint,smartSymbol,windDirection,windSpeedMS,pop,hourlymaximumgust,relativeHumidity,pressure,precipitation1h,windCompass8";
+                    "&tz=utc&who=mobileweather-widget-android&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
         }
 
         try {

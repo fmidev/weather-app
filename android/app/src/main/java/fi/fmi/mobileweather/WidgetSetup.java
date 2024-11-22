@@ -49,15 +49,15 @@ public class WidgetSetup {
     }
 
     public static class Location {
-        private Default defaultLocation;
+        private DefaultLocation defaultLocation;
         private String apiUrl;
 
         // Getters and setters
-        public Default getDefaultLocation() {
+        public DefaultLocation getDefaultLocation() {
             return defaultLocation;
         }
 
-        public void setDefaultLocation(Default defaultLocation) {
+        public void setDefaultLocation(DefaultLocation defaultLocation) {
             this.defaultLocation = defaultLocation;
         }
 
@@ -70,7 +70,7 @@ public class WidgetSetup {
         }
     }
 
-    public static class Default {
+    public static class DefaultLocation {
         private String name;
         private String area;
         private int lat;
