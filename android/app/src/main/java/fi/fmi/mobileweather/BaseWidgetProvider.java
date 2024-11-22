@@ -184,13 +184,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
-        WidgetNotification.clearWidgetUpdate(context, this.getClass());
+        WidgetNotification.clearWidgetUpdate(context);
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        WidgetNotification.clearWidgetUpdate(context, this.getClass());
+        WidgetNotification.clearWidgetUpdate(context);
     }
 
     public void execute(String latlon) {
@@ -199,13 +199,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // Get language string
         String language = getLanguageString();
 
-
-
-
-//        String url2 = "http://localhost:3000/mobileannouncements/crisis";
-        // TODO: temporary for testing.
-        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
-//        String announceUrl = announcementsUrl;
+        // temporary for testing.
+//        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
+        String announceUrl = announcementsUrl;
 
         // get geoid
         Future<String> future0 = executorService.submit(() -> fetchGeoid(latlon));
