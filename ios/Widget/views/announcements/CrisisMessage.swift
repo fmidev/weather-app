@@ -11,22 +11,16 @@ struct CrisisMessage: View {
       Image("CrisisIcon")
         .resizable()
         .scaledToFit()
-        .frame(width: ICON_SIZE-5, height: ICON_SIZE-5)
-        .background(
-          Circle()
-            .fill(Color("CrisisBackgroundColor"))
-            .frame(
-              width: ICON_SIZE,
-              height: ICON_SIZE
-            )
-        )
+        .frame(width: ICON_SIZE, height: ICON_SIZE)
       Text(message)
         .style(large ? .largeCrisis : .crisis)
         .foregroundStyle(Color("CrisisTextColor"))
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
-      Spacer()
     }
+    .padding(.horizontal, 8)
+    .padding(.vertical, 3)
+    .background(Color("CrisisBackgroundColor"))
   }
 }
 
