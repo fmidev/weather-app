@@ -31,6 +31,14 @@ Increment build and version number and push to repository - Build number = versi
 
 Android build APK
 
+### android build_test_apk
+
+```sh
+[bundle exec] fastlane android build_test_apk
+```
+
+Android build APK for testing
+
 ### android build_sign_and_deploy
 
 ```sh

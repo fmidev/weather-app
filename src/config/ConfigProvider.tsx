@@ -23,7 +23,9 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   const [shouldReload, setShouldReload] = useState<number>(0);
   const reloadIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  Config.setDefaultConfig(defaultConfig);
+  if (!Config.hasBeenSet) {
+    Config.setDefaultConfig(defaultConfig);
+  }
 
   if (timeout) {
     Config.setApiTimeout(timeout);
