@@ -34,6 +34,7 @@
     <string name="observation">Observation</string>
     <string name="loading">Loading weather data...</string>
     <string name="update_failed">Could not update weather data</string>
+    <string name="check_internet_connection">Please check your internet connection.</string>
     <string name="positioning_failed">Could not get current location</string>
     <string name="ready">Ready</string>
     <string name="dark">Dark</string>
