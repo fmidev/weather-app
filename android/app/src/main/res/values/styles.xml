@@ -28,6 +28,13 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="time">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#303193</item>
+    </style>
+
     <style name="temperature">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">32sp</item>
@@ -61,6 +68,11 @@
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">#303193</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="verticalLine">
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:background">#D8E7F2</item>
     </style>
 
 </resources>

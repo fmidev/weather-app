@@ -48,9 +48,9 @@ import java.util.concurrent.Future;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
-    private Context context;
-    private int appWidgetId;
-    private AppWidgetManager appWidgetManager;
+    Context context;
+    int appWidgetId;
+    AppWidgetManager appWidgetManager;
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
     private static String weatherUrl;
@@ -432,12 +432,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             main.setTextViewText(R.id.locationRegionTextView, region);
 
             String temperature = first.getString("temperature");
-            // temperature string to float
-            float tempFloat = Float.parseFloat(temperature);
-            // if temperature is positive, add plus sign to temperature string
-            if (tempFloat > 0) {
-                temperature = "+" + temperature;
-            }
+            temperature = addPlusIfNeeded(temperature);
             main.setTextViewText(R.id.temperatureTextView, temperature);
             main.setTextViewText(R.id.temperatureUnitTextView, "°C");
 
@@ -498,8 +493,18 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, main);
     }
 
+    protected String addPlusIfNeeded(String temperature) {
+        // temperature string to float
+        float tempFloat = Float.parseFloat(temperature);
+        // if temperature is positive, add plus sign to temperature string
+        if (tempFloat > 0) {
+            temperature = "+" + temperature;
+        }
+        return temperature;
+    }
+
     @Nullable
-    private JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferencesHelper pref) {
+    JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferencesHelper pref) {
         Date now = new Date();
 
         if (json == null) {
@@ -540,7 +545,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @Nullable
-    private JSONArray useNewOrStoredCrisisJsonObject(JSONArray json, SharedPreferencesHelper pref) {
+    JSONArray useNewOrStoredCrisisJsonObject(JSONArray json, SharedPreferencesHelper pref) {
         Date now = new Date();
 
         if (json == null) {

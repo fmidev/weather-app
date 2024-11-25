@@ -47,45 +47,196 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <include
-                android:id="@+id/hourForecastLayout1"
-                layout="@layout/hour_forecast_layout" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:orientation="vertical">
 
-            <View
+                <TextView
+                    android:id="@+id/timeTextView0"
+                    style="@style/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|top"
+                    tools:text="13:00" />
+
+                <ImageView
+                    android:id="@+id/weatherIconImageView0"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="TODO"
+                    tools:src="@drawable/s32_light" />
+
+                <TextView
+                    android:id="@+id/temperatureTextView0"
+                    style="@style/temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="13sp"
+                    tools:text="+12°" />
+
+            </LinearLayout>
+
+            <!-- Note: 'View' cannot be used with widgets -->
+            <ImageView
+                style="@style/verticalLine"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray" />
+                android:layout_height="match_parent"/>
 
-            <include
-                android:id="@+id/hourForecastLayout2"
-                layout="@layout/hour_forecast_layout" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:orientation="vertical">
 
-            <View
+                <TextView
+                    android:id="@+id/timeTextView1"
+                    style="@style/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|top"
+                    tools:text="13:00" />
+
+                <ImageView
+                    android:id="@+id/weatherIconImageView1"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="TODO"
+                    tools:src="@drawable/s32_light" />
+
+                <TextView
+                    android:id="@+id/temperatureTextView1"
+                    style="@style/temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="13sp"
+                    tools:text="+12°" />
+
+            </LinearLayout>
+
+            <ImageView
+                style="@style/verticalLine"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray" />
+                android:layout_height="match_parent"/>
 
-            <include
-                android:id="@+id/hourForecastLayout3"
-                layout="@layout/hour_forecast_layout" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:orientation="vertical">
 
-            <View
+                <TextView
+                    android:id="@+id/timeTextView2"
+                    style="@style/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|top"
+                    tools:text="13:00" />
+
+                <ImageView
+                    android:id="@+id/weatherIconImageView2"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="TODO"
+                    tools:src="@drawable/s32_light" />
+
+                <TextView
+                    android:id="@+id/temperatureTextView2"
+                    style="@style/temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="13sp"
+                    tools:text="+12°" />
+
+            </LinearLayout>
+
+            <ImageView
+                style="@style/verticalLine"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray" />
+                android:layout_height="match_parent"/>
 
-            <include
-                android:id="@+id/hourForecastLayout4"
-                layout="@layout/hour_forecast_layout" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:orientation="vertical">
 
-            <View
+                <TextView
+                    android:id="@+id/timeTextView3"
+                    style="@style/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|top"
+                    tools:text="13:00" />
+
+                <ImageView
+                    android:id="@+id/weatherIconImageView3"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="TODO"
+                    tools:src="@drawable/s32_light" />
+
+                <TextView
+                    android:id="@+id/temperatureTextView3"
+                    style="@style/temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="13sp"
+                    tools:text="+12°" />
+
+            </LinearLayout>
+
+            <ImageView
+                style="@style/verticalLine"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/darker_gray" />
+                android:layout_height="match_parent"/>
 
-            <include
-                android:id="@+id/hourForecastLayout5"
-                layout="@layout/hour_forecast_layout" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/timeTextView4"
+                    style="@style/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|top"
+                    tools:text="13:00" />
+
+                <ImageView
+                    android:id="@+id/weatherIconImageView4"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="TODO"
+                    tools:src="@drawable/s32_light" />
+
+                <TextView
+                    android:id="@+id/temperatureTextView4"
+                    style="@style/temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="13sp"
+                    tools:text="+12°" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

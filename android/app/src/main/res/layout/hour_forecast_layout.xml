@@ -7,12 +7,11 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/hourTextView"
-        style="@style/temperature"
+        android:id="@+id/timeTextView"
+        style="@style/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
-        android:textSize="13sp"
         tools:text="13:00" />
 
     <ImageView
