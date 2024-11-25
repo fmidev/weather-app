@@ -4,7 +4,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,16 +39,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
         String background = pref.getString("background", "transparent");
         Log.d("Download json", "Background: " + background);
 
-        // Get the layout for the App Widget now if needed
-        /*if (main == null) {
-            // Get the stored layout for the App Widget
-            int currentLayoutId = loadLayoutResourceId(context, appWidgetId);
-            // If the layout is not stored, use the default layout
-            if (currentLayoutId != 0) {
-                main = new RemoteViews(context.getPackageName(), currentLayoutId);
-            } else*/
-                main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
-//        }
+        main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
 
         // Show normal view
         main.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
@@ -101,7 +91,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
                     // set the location name and region
                     String name = forecast.getString("name");
                     String region = forecast.getString("region");
-                    main.setTextViewText(R.id.locationNameTextView, name + ",");
+                    main.setTextViewText(R.id.locationNameTextView, name + ", ");
                     main.setTextViewText(R.id.locationRegionTextView, region);
                 }
 
@@ -129,38 +119,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
                         context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
                 main.setImageViewBitmap(weatherIconImageViewId, icon);
             }
-/*
 
-            // Get the first JSONObject from the JSONArray
-            JSONObject first = data.getJSONObject(0);
-
-            String name = first.getString("name");
-            String region = first.getString("region");
-
-            // set location name and region
-            main.setTextViewText(R.id.locationNameTextView, name+ ",");
-            main.setTextViewText(R.id.locationRegionTextView, region);
-
-            String temperature = first.getString("temperature");
-            // temperature string to float
-            float tempFloat = Float.parseFloat(temperature);
-            // if temperature is positive, add plus sign to temperature string
-            if (tempFloat > 0) {
-                temperature = "+" + temperature;
-            }
-            main.setTextViewText(R.id.temperatureTextView, temperature);
-            main.setTextViewText(R.id.temperatureUnitTextView, "°C");
-
-            // ** set the weather icon
-
-            String weathersymbol = first.getString("smartSymbol");
-
-            Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
-
-            main.setImageViewBitmap(R.id.weatherIconImageView, icon);
-
- */
             // Update time TODO: should be hidden for release
             main.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
