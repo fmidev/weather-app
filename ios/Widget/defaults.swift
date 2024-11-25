@@ -69,17 +69,18 @@ let defaultWarningEntry = WarningEntry(
 )
 
 let defaultWarningTimeStep = WarningTimeStep(
-  type: .rain,
+  type: .trafficWeather,
   severity: .moderate,
   duration: WarningDuration(startTime: Date(), endTime: Date().addingTimeInterval(12*60*60)),
-  language: "fi"
+  language: "fi",
+  description: "Liikennesää: Ajokeli muuttuu huonoksi keskiyöstä alkaen lumisateen vuoksi."
 )
 
 let defaultWidgetSettings = WidgetSettings(
   showLogo: true
 )
 
-let WHO="mobileweather_ios_widget"
+let WHO="mobileweather-widget-ios"
 let UPDATE_INTERVAL = 15
 let SUPPORTED_LANGUAGES = ["fi", "sv", "en"]
 let FALLBACK_LANGUAGE = "en"

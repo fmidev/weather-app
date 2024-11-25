@@ -12,14 +12,26 @@ struct WarningIcon: View {
   let IMAGE_SIZE: CGFloat = 30;
   
   var body: some View {
-    Image(
-      warning.type.description,
-      label: Text(warning.type.accessibilityLabel)
-    )
+    if (warning.wind != nil) {
+      Image(
+        warning.type.description+"Rotatable",
+        label: Text(warning.type.accessibilityLabel)
+      )
+      .resizable()
+      .rotationEffect(.degrees(Double(warning.wind!.direction+180)))
+      .frame(width: IMAGE_SIZE, height: IMAGE_SIZE)
+      .background(Color(warning.severity.description))
+      .clipShape(Circle())
+    } else {
+      Image(
+        warning.type.description,
+        label: Text(warning.type.accessibilityLabel)
+      )
       .resizable()
       .frame(width: IMAGE_SIZE, height: IMAGE_SIZE)
       .background(Color(warning.severity.description))
       .clipShape(Circle())
+    }
   }
 }
 

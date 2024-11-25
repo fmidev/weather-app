@@ -60,7 +60,8 @@ struct WarningProvider: TimelineProvider {
        
       for date in dates {
         var currentDayWarnings: [WarningTimeStep] = warnings!.filter { warning in
-          return warning.language == "fi" && warning.isValidOnDay(date)
+          return warning.language == "fi" && warning
+            .isValidOnDay(date) && warning.type == .seaWind
         }
         currentDayWarnings = filterUniqueWarnings(currentDayWarnings)
         currentDayWarnings = sortWarnings(currentDayWarnings)
@@ -68,6 +69,7 @@ struct WarningProvider: TimelineProvider {
         print("Count: \(currentDayWarnings.count)")
         currentDayWarnings.forEach { warning in
           print(warning.type.description)
+          print(warning.wind as Any)
         }
 
         let entry = WarningEntry(

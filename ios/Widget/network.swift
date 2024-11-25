@@ -104,7 +104,8 @@ func fetchWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
         startTime: formatter.date(from: $0["duration"]["startTime"].stringValue),
         endTime: formatter.date(from: $0["duration"]["endTime"].stringValue)
       ),
-      language: $0["language"].stringValue
+      language: $0["language"].stringValue,
+      description: $0["description"].stringValue
     )
   })
    
@@ -113,7 +114,7 @@ func fetchWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
 
 func fetchWFSWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
   let formatter = DateFormatter()
-  formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
   
   guard let apiUrl = getSetting("warnings.wfs.apiUrl") as? String else { return nil }
   let url = "\(apiUrl)&who=\(WHO)"
@@ -125,21 +126,28 @@ func fetchWFSWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
    
   var items = [WarningTimeStep]()
   items = features.map({
-    return WarningTimeStep(
+    var timeStep = WarningTimeStep(
       type: resolveWarningType($0["properties"]["warning_context"].stringValue, wfs: true),
       severity: resolveWarningSeverity($0["properties"]["severity"].stringValue, wfs: true),
       duration: WarningDuration(
-        startTime: formatter.date(from: $0["duration"]["startTime"].stringValue),
-        endTime: formatter.date(from: $0["duration"]["endTime"].stringValue)
+        startTime: formatter.date(from: $0["properties"]["effective_from"].stringValue),
+        endTime: formatter.date(from: $0["properties"]["effective_until"].stringValue)
       ),
       language: "en",
-      wind: WindWarningDetails(
+      description: $0["properties"]["info_en"].stringValue
+    )
+    
+    if (timeStep.type == .wind || timeStep.type == .seaWind) {
+      timeStep.wind = WindWarningDetails(
         direction: $0["properties"]["physical_direction"].intValue,
         speed: $0["properties"]["physical_value"].doubleValue
       )
-    )
+    }
+    
+    return timeStep
   })
-   
+
+  
   return items
 }
 

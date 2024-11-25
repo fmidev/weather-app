@@ -336,6 +336,7 @@ struct WarningTimeStep {
   let severity: WarningSeverity
   let duration: WarningDuration
   let language: String
+  let description: String
   var wind: WindWarningDetails? = nil
   
   func isValidOnDay(_ date: Date) -> Bool {

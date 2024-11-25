@@ -10,16 +10,19 @@ func mergeUvToForecast(forecast: [TimeStep], uvForecast: [UVTimeStep]) -> [TimeS
 }
 
 func mergeWarnings(warnings: [WarningTimeStep], wfsWarnings: [WarningTimeStep]) -> [WarningTimeStep] {
+  //print(warnings.filter({$0.type == .seaWind}))
+  //print(wfsWarnings.filter({$0.wind != nil}))
+  
   return warnings.map{item in
     let wfsItem = wfsWarnings.first(where: {
       $0.wind != nil &&
       $0.type == item.type &&
       $0.severity == item.severity &&
-      $0.duration.startTime == item.duration.startTime &&
+      //$0.duration.startTime == item.duration.startTime &&
       $0.duration.endTime == item.duration.endTime
     })
     var mutable = item
-    mutable.wind = wfsItem?.wind
+    mutable.wind = wfsItem?.wind   
     return mutable
   }
 }
@@ -108,9 +111,9 @@ func sortWarnings(_ warnings: [WarningTimeStep]) -> [WarningTimeStep] {
 func resolveWarningSeverity(_ severity: String, wfs: Bool = false) -> WarningSeverity {
   if (wfs) {
     switch severity {
-      case "level-1": return .moderate
-      case "level-2": return .severe
-      case "level-3": return .extreme
+      case "level-2": return .moderate
+      case "level-3": return .severe
+      case "level-4": return .extreme
       default: return .none
     }
   } else {
