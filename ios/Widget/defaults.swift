@@ -55,7 +55,7 @@ let defaultEntry = TimeStepEntry(
     )
   },
   crisisMessage: nil,
-  error: WidgetError.none,
+  error: nil,
   settings: defaultWidgetSettings
 )
 

@@ -1,6 +1,6 @@
 import WidgetKit
 
-struct Location {
+struct Location: Codable {
   let id: Int
   let name: String
   let area: String
@@ -187,7 +187,7 @@ struct TimeStepEntry: TimelineEntry {
   }
 }
 
-struct WarningEntry: TimelineEntry {
+struct WarningEntry: TimelineEntry, Codable {
   let date: Date
   let updated: Date
   let location: Location
@@ -212,15 +212,14 @@ struct WarningEntry: TimelineEntry {
   }
 }
 
-enum WidgetError {
-  case none
+enum WidgetError: Codable {
   case userLocationError
   case dataLoadingError
   case oldDataError
   case locationOutsideDataArea
 }
 
-enum WarningSeverity:Int, CustomStringConvertible {
+enum WarningSeverity:Int, CustomStringConvertible, Codable {
   case none = 0
   case moderate = 1
   case severe = 2
@@ -236,7 +235,7 @@ enum WarningSeverity:Int, CustomStringConvertible {
   }
 }
 
-enum WarningType: Int, CustomStringConvertible {
+enum WarningType: Int, CustomStringConvertible, Codable {
   case thunderstorm = 17
   case forestFireWeather = 16
   case grassFireWeather = 15
@@ -303,7 +302,7 @@ enum WarningType: Int, CustomStringConvertible {
   }
 }
 
-struct WarningDuration {
+struct WarningDuration: Codable {
   let startTime: Date?
   let endTime: Date?
   
@@ -326,12 +325,12 @@ struct WarningDuration {
   }
 }
 
-struct WindWarningDetails {
+struct WindWarningDetails: Codable {
   let direction: Int
   let speed: Double
 }
 
-struct WarningTimeStep {
+struct WarningTimeStep: Codable {
   let type: WarningType
   let severity: WarningSeverity
   let duration: WarningDuration
@@ -342,10 +341,6 @@ struct WarningTimeStep {
   func isValidOnDay(_ date: Date) -> Bool {
     guard let startTime = duration.startTime else { return false }
     guard let endTime = duration.endTime else { return false }
-    
-    if (self.type == .flooding) {
-      print(severity.description, startTime, endTime, date >= startTime.startOfDay()! && date <= endTime.endOfDay()!)
-    }
       
     return date >= startTime.startOfDay()! && date <= endTime.endOfDay()!
   }

@@ -99,7 +99,23 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tapahtui virhe ladattaessa säätietoja"
+            "value" : "Misslyckades med att ladda väderdata"
+          }
+        }
+      }
+    },
+    "Failed to load alerts" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitusten lataus epäonnistui"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misslyckades med att ladda varningar"
           }
         }
       }
@@ -147,8 +163,40 @@
         }
       }
     },
-    "Hello, World!" : {
+    "Location failed" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paikannus epäonnistui "
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platsbestämning misslyckades"
+          }
+        }
+      }
+    },
+    "Location outside data area" : {
 
+    },
+    "Location services are not allowed. Please enable them in the settings." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paikannusta ei ole sallittu. Salli paikannus asetuksista."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platstjänster är inte tillåtna. Aktivera dem i inställningarna."
+          }
+        }
+      }
     },
     "Next hour forecast" : {
       "extractionState" : "manual",
@@ -168,7 +216,68 @@
       }
     },
     "No warnings" : {
-
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ei varoituksia"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inga varningar"
+          }
+        }
+      }
+    },
+    "Retrying location services automatically." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paikannusta yritetään uudestaan automaattisesti."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platstjänster försöks automatiskt på nytt"
+          }
+        }
+      }
+    },
+    "The alerts are outdated" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitukset ovat vanhentuneet"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The alerts are outdated"
+          }
+        }
+      }
+    },
+    "The device is in airplane mode. Warnings will be updated once the internet connection is back." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laite on lentokonetilassa. Varoitukset päivitetään, kun internet-yhteys palautuu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enheten är i flygplansläge. Varningarna uppdateras när internet är tillbaka."
+          }
+        }
+      }
     },
     "Unknown error" : {
       "localizations" : {
@@ -228,6 +337,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Varningar (%lld)"
+          }
+        }
+      }
+    },
+    "Warnings are only available for the Finland region." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitukset ovat saatavilla vain Suomen alueella."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varningar är endast tillgängliga i Finland."
+          }
+        }
+      }
+    },
+    "Warnings will refresh when the internet connection is back." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitukset päivitetään, kun internet-yhteys palautuu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varningarna uppdateras när internet är tillbaka."
           }
         }
       }
