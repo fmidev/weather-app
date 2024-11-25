@@ -229,12 +229,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 onPostExecute(result1, result2, main, pref);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
-                showErrorView(
-                        context,
-                        pref,
-                        "(execute error) " + context.getResources().getString(R.string.update_failed),
-                        context.getResources().getString(R.string.check_internet_connection)
-                );
+                // NOTE: let's not show error view here, because connection problems with server
+                //       seem to be quite frequent and we don't want to show error view every time
             }
         });
     }
@@ -454,7 +450,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
             main.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
-            // Update time
+            // Update time TODO: should be hidden for release
             main.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
             json2 = useNewOrStoredCrisisJsonObject(json2, pref);
