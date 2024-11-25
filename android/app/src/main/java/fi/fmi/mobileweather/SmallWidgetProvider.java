@@ -45,10 +45,10 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
 
     // TODO: needs to be tested well with all kind of devices:
     private int getLayoutResourceId(int minWidth, int minHeight) {
-        if (minWidth > 100 && minWidth < 200 && minHeight > 100) {
+        if (minWidth > 100 && minWidth < 200 && minHeight > 120) {
             Log.d("Widget Update", "Small widget " + minWidth + "x" + minHeight);
             return R.layout.small_widget_layout;
-        } else if (minWidth >= 200 && minWidth < 300 && minHeight > 100) {
+        } else if (minWidth >= 200 && minWidth < 300 && minHeight > 120) {
             Log.d("Widget Update", "Medium widget " + minWidth + "x" + minHeight);
             return R.layout.medium_widget_layout;
         } else if (minWidth >= 300) {
