@@ -94,8 +94,6 @@ struct WarningProvider: TimelineProvider {
         }
         currentDayWarnings = filterUniqueWarnings(currentDayWarnings)
         currentDayWarnings = sortWarnings(currentDayWarnings)
-        
-        print("Count: \(currentDayWarnings.count)")
 
         let entry = WarningEntry(
           date: date.startOfDay()!,

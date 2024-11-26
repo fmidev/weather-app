@@ -9,24 +9,6 @@ func mergeUvToForecast(forecast: [TimeStep], uvForecast: [UVTimeStep]) -> [TimeS
   }
 }
 
-func mergeWarnings(warnings: [WarningTimeStep], wfsWarnings: [WarningTimeStep]) -> [WarningTimeStep] {
-  //print(warnings.filter({$0.type == .seaWind}))
-  //print(wfsWarnings.filter({$0.wind != nil}))
-  
-  return warnings.map{item in
-    let wfsItem = wfsWarnings.first(where: {
-      $0.wind != nil &&
-      $0.type == item.type &&
-      $0.severity == item.severity &&
-      //$0.duration.startTime == item.duration.startTime &&
-      $0.duration.endTime == item.duration.endTime
-    })
-    var mutable = item
-    mutable.wind = wfsItem?.wind   
-    return mutable
-  }
-}
-
 func getMidSummerDay(_ year: Int) -> Int {
   let calendar = Calendar.current
   let dateComponents = DateComponents(year: year, month: 6, day: 19)
