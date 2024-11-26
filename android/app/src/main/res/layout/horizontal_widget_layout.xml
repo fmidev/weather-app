@@ -1,0 +1,147 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLinearLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="13dp">
+
+    <LinearLayout
+        android:id="@+id/normalLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/weatherLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/locationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="14dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/locationNameTextView"
+                style="@style/locationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                tools:text="Helsinki," />
+
+            <TextView
+                android:id="@+id/locationRegionTextView"
+                style="@style/locationRegion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                tools:text="Suomi" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/weatherIconImageView"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginEnd="14dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="TODO"
+            tools:src="@drawable/s32_light" />
+
+        <TextView
+            android:id="@+id/temperatureTextView"
+            style="@style/temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            tools:text="+12" />
+
+        <TextView
+            android:id="@+id/temperatureUnitTextView"
+            style="@style/temperatureUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginTop="8dp"
+            tools:text="°C" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/fmiLogoImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/fmi_logo_short"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/crisisTextView"
+        style="@style/crisis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingStart="6dp"
+        android:paddingTop="0dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="0dp"
+        android:visibility="gone"
+        tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/updateTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:visibility="visible"
+        tools:text="11.34.24"
+        tools:ignore="SmallSp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/errorLayout"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/errorHeaderTextView"
+            style="@style/errorHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            tools:text="Could not update weather data" />
+
+        <TextView
+            android:id="@+id/errorBodyTextView"
+            style="@style/errorBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            tools:text="Please check your internet connection." />
+
+    </LinearLayout>
+</LinearLayout>

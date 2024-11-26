@@ -43,7 +43,6 @@ public class WidgetNotification {
                     ExistingPeriodicWorkPolicy.REPLACE,
                     updateRequest
             );
-
         } else {
             Log.d("Widget Update", "Widget update could not be scheduled, because no active widgets");
         }
