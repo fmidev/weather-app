@@ -33,7 +33,7 @@ public class WidgetNotification {
 
             PeriodicWorkRequest updateRequest =
                     new PeriodicWorkRequest.Builder(WidgetUpdateWorker.class,
-                            15, TimeUnit.MINUTES)
+                            30, TimeUnit.MINUTES)
                     .setConstraints(constraints)
                     .addTag("WidgetUpdate")
                     .build();
