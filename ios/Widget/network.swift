@@ -97,57 +97,23 @@ func fetchWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
    
   var items = [WarningTimeStep]()
   items = warningsArray.map({
-    return WarningTimeStep(
+    var timeStep = WarningTimeStep(
       type: resolveWarningType($0["type"].stringValue),
       severity: resolveWarningSeverity($0["severity"].stringValue),
       duration: WarningDuration(
         startTime: formatter.date(from: $0["duration"]["startTime"].stringValue),
         endTime: formatter.date(from: $0["duration"]["endTime"].stringValue)
       ),
-      language: $0["language"].stringValue,
-      description: $0["description"].stringValue
+      language: $0["language"].stringValue
     )
-  })
-   
-  return items
-}
-
-func fetchWFSWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
-  let formatter = DateFormatter()
-  formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-  
-  guard let apiUrl = getSetting("warnings.wfs.apiUrl") as? String else { return nil }
-  let url = "\(apiUrl)&who=\(WHO)"
-  let dataTask = AF.request(url).serializingData()
-  let value = try await dataTask.value
-  
-  guard let json = try? JSON(data: value) else { return nil }
-  guard let features = json["features"].array else { return nil }
-   
-  var items = [WarningTimeStep]()
-  items = features.map({
-    var timeStep = WarningTimeStep(
-      type: resolveWarningType($0["properties"]["warning_context"].stringValue, wfs: true),
-      severity: resolveWarningSeverity($0["properties"]["severity"].stringValue, wfs: true),
-      duration: WarningDuration(
-        startTime: formatter.date(from: $0["properties"]["effective_from"].stringValue),
-        endTime: formatter.date(from: $0["properties"]["effective_until"].stringValue)
-      ),
-      language: "en",
-      description: $0["properties"]["info_en"].stringValue
-    )
-    
-    if (timeStep.type == .wind || timeStep.type == .seaWind) {
-      timeStep.wind = WindWarningDetails(
-        direction: $0["properties"]["physical_direction"].intValue,
-        speed: $0["properties"]["physical_value"].doubleValue
-      )
-    }
-    
+    if (timeStep.type == .seaWind || timeStep.type == .wind) {
+      guard let speed = $0["windIntensity"].int else { return timeStep }
+      guard let direction = $0["windDirection"].int else { return timeStep }
+      timeStep.wind = WindWarningDetails(direction: direction, speed: speed)
+    }    
     return timeStep
   })
-
-  
+   
   return items
 }
 

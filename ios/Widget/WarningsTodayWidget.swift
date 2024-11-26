@@ -18,7 +18,6 @@ struct WarningProvider: TimelineProvider {
     Task {
       var error = nil as WidgetError?
       var warnings = [] as [WarningTimeStep]?
-      var wfsWarnings = [] as [WarningTimeStep]?
       var crisisMessage = nil as String?
       var location:Location?
       var entries: [WarningEntry] = []
@@ -46,23 +45,16 @@ struct WarningProvider: TimelineProvider {
         warnings = try await fetchWarnings(location!)
         if (warnings == nil) {
           error = .dataLoadingError
-        } else if (warnings!.contains(
-          where: { $0.type == .wind || $0.type == .seaWind }
-        )){
-          /*
-          wfsWarnings = try await fetchWFSWarnings(location!)
-          
-          if (wfsWarnings != nil) {
-            warnings = mergeWarnings(warnings: warnings!, wfsWarnings: wfsWarnings!)
-          }
-          */
         }
       }
       
       if (error != nil) {
         let lastUpdated = getUpdated()
         
-        if (lastUpdated != nil && lastUpdated!.addingTimeInterval(12*60*60) > Date()) {
+        if (
+          lastUpdated != nil &&
+          lastUpdated!.addingTimeInterval(TimeInterval(WARNING_VALIDITY_PERIOD)) > Date()
+        ) {
           // Try to restore old timeline
           let oldEntries = getEntries()
           if (oldEntries != nil) {

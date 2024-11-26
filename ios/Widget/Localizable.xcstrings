@@ -56,6 +56,23 @@
         }
       }
     },
+    "Cold warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pakkasvaroitus"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varning för köld"
+          }
+        }
+      }
+    },
     "Could not get location information" : {
       "localizations" : {
         "fi" : {
@@ -136,19 +153,19 @@
         }
       }
     },
-    "FMI weather" : {
-      "extractionState" : "stale",
+    "Flood warning" : {
+      "extractionState" : "manual",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Paikallissää"
+            "value" : "Tulvavaroitus"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "FMI Väder"
+            "value" : "Varning för översvämning"
           }
         }
       }
@@ -159,6 +176,97 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ennuste"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prognos"
+          }
+        }
+      }
+    },
+    "Forest fire warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maastopalovaroitus"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varning för terrängbrand"
+          }
+        }
+      }
+    },
+    "Grass fire warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruohikkopalovaara"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Risk för gräsbrand"
+          }
+        }
+      }
+    },
+    "Heat wave warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hellevaroitus"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varning för värmebölja"
+          }
+        }
+      }
+    },
+    "Heavy rain warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sadevaroitus"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nederbördsvarning"
+          }
+        }
+      }
+    },
+    "Ice accretion warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jäätämisvaroitus"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varning för nedisning av fartyg"
           }
         }
       }
@@ -231,6 +339,23 @@
         }
       }
     },
+    "Pedestrian weather warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jalankulkusää"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotgängarvädret"
+          }
+        }
+      }
+    },
     "Retrying location services automatically." : {
       "localizations" : {
         "fi" : {
@@ -247,6 +372,23 @@
         }
       }
     },
+    "Severe thunderstorm warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raju ukonilma"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varning för våldsamt åskväder"
+          }
+        }
+      }
+    },
     "The alerts are outdated" : {
       "localizations" : {
         "fi" : {
@@ -258,7 +400,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The alerts are outdated"
+            "value" : "Varningarna är inaktuella"
           }
         }
       }
@@ -275,6 +417,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enheten är i flygplansläge. Varningarna uppdateras när internet är tillbaka."
+          }
+        }
+      }
+    },
+    "Thunderstorm wind gusts for sea areas" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukkospuuskia merialueilla"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Åskbyar på sjöområden"
+          }
+        }
+      }
+    },
+    "Traffic weather warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liikennesää"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trafikvädret"
           }
         }
       }
@@ -314,6 +490,12 @@
     },
     "Updated at **%@**" : {
       "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Päivitetty klo **%@**"
+          }
+        },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
@@ -324,6 +506,57 @@
     },
     "UV **%lld**" : {
 
+    },
+    "UV advisory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV-tiedote"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV-meddelande"
+          }
+        }
+      }
+    },
+    "Warning for high sea level" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitus korkeasta merivedest"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varning för högt vattenstånd"
+          }
+        }
+      }
+    },
+    "Warning for low sea level" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitus matalasta merivedestä"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varning för lågt vattenstånd"
+          }
+        }
+      }
     },
     "Warnings (%lld)" : {
       "localizations" : {
@@ -373,25 +606,91 @@
         }
       }
     },
-    "Weather data is too old" : {
-
-    },
-    "Weather warnings" : {
-      "extractionState" : "stale",
+    "Wave height warning" : {
+      "extractionState" : "manual",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Varoitukset"
+            "value" : "Aallokkovaroitus"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varning för hård sjögång"
           }
         }
       }
     },
-    "Weather warnings for today" : {
+    "Weather data is too old" : {
 
     },
+    "Weather warnings for today" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säävaroitukset tänään"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vädervarningar för idag"
+          }
+        }
+      }
+    },
     "Weather warnings in your location" : {
-
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säävaroitukset omaan sijaintiisi"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vädervarningar på din plats"
+          }
+        }
+      }
+    },
+    "Wind warning for land areas" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuulivaroitus maa-alueille"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vindvarning för landområden"
+          }
+        }
+      }
+    },
+    "Wind warning for sea areas" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuulivaroitus merelle"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vindvarning för havsområden"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

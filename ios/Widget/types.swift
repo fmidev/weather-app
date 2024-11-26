@@ -281,7 +281,7 @@ enum WarningType: Int, CustomStringConvertible, Codable {
   var accessibilityLabel: String {
     switch self {
       case .thunderstorm: return "Severe thunderstorm warning".localized()
-      case .forestFireWeather: return "Severe thunderstorm warning".localized()
+      case .forestFireWeather: return "Forest fire warning".localized()
       case .grassFireWeather: return "Grass fire warning".localized()
       case .wind: return "Wind warning for land areas".localized()
       case .trafficWeather: return "Traffic weather warning".localized()
@@ -327,7 +327,7 @@ struct WarningDuration: Codable {
 
 struct WindWarningDetails: Codable {
   let direction: Int
-  let speed: Double
+  let speed: Int
 }
 
 struct WarningTimeStep: Codable {
@@ -335,7 +335,6 @@ struct WarningTimeStep: Codable {
   let severity: WarningSeverity
   let duration: WarningDuration
   let language: String
-  let description: String
   var wind: WindWarningDetails? = nil
   
   func isValidOnDay(_ date: Date) -> Bool {
