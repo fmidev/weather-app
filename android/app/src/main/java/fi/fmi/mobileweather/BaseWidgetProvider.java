@@ -48,6 +48,11 @@ import java.util.concurrent.Future;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
+    // forecast data valid for 24 hours
+    private static final long FORECAST_DATA_VALIDITY = 24 * 60 * 60 * 1000;
+    // crisis data valid for 12 hours
+    private static final long CRISIS_DATA_VALIDITY = 12 * 60 * 60 * 1000;
+
     private Context context;
     private int appWidgetId;
     private AppWidgetManager appWidgetManager;
@@ -516,7 +521,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
             long updated = pref.getLong("latest_json_updated", 0L);
 
-            if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
+            if (updated > (now.getTime() - FORECAST_DATA_VALIDITY)) {
                 String jsonstr = pref.getString("latest_json", null);
 
                 try {
@@ -557,7 +562,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
             long updated = pref.getLong("latest_crisis_json_updated", 0L);
 
-            if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
+            if (updated > (now.getTime() - CRISIS_DATA_VALIDITY)) {
                 String jsonstr = pref.getString("latest_crisis_json", null);
 
                 try {
