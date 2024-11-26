@@ -385,7 +385,16 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
         json = useNewOrStoredJsonObject(json, pref);
-        if (json == null) return;
+        if (json == null) {
+            Log.d("Download json", "No json data available");
+            showErrorView(
+                    context,
+                    pref,
+                    context.getResources().getString(R.string.update_failed),
+                    context.getResources().getString(R.string.check_internet_connection)
+            );
+        }
+
 
         main.setInt(R.id.weatherLayout, "setVisibility", VISIBLE);
 
@@ -490,7 +499,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             showErrorView(
                     context,
                     pref,
-                    "(parsing error) " + context.getResources().getString(R.string.update_failed),
+                    context.getResources().getString(R.string.update_failed),
                     context.getResources().getString(R.string.check_internet_connection)
             );
         }
@@ -516,7 +525,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     showErrorView(
                             context,
                             pref,
-                            "(old restore error) " + context.getResources().getString(R.string.update_failed),
+                            context.getResources().getString(R.string.update_failed),
                             context.getResources().getString(R.string.check_internet_connection)
                     );
                     return null;
@@ -525,7 +534,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 showErrorView(
                         context,
                         pref,
-                        " (too old error) " + context.getResources().getString(R.string.update_failed),
+                        context.getResources().getString(R.string.update_failed),
                         context.getResources().getString(R.string.check_internet_connection)
                 );
                 return null;
