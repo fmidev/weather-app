@@ -48,9 +48,15 @@ import java.util.concurrent.Future;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
+    // forecast data valid for 24 hours
+    private static final long FORECAST_DATA_VALIDITY = 24 * 60 * 60 * 1000;
+    // crisis data valid for 12 hours
+    private static final long CRISIS_DATA_VALIDITY = 12 * 60 * 60 * 1000;
+
     Context context;
     int appWidgetId;
     AppWidgetManager appWidgetManager;
+
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
     private static String weatherUrl;
@@ -401,7 +407,16 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
         json = useNewOrStoredJsonObject(json, pref);
-        if (json == null) return;
+        if (json == null) {
+            Log.d("Download json", "No json data available");
+            showErrorView(
+                    context,
+                    pref,
+                    context.getResources().getString(R.string.update_failed),
+                    context.getResources().getString(R.string.check_internet_connection)
+            );
+        }
+
 
         main.setInt(R.id.weatherLayout, "setVisibility", VISIBLE);
 
@@ -501,7 +516,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             showErrorView(
                     context,
                     pref,
-                    "(parsing error) " + context.getResources().getString(R.string.update_failed),
+                    context.getResources().getString(R.string.update_failed),
                     context.getResources().getString(R.string.check_internet_connection)
             );
         }
@@ -528,7 +543,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
             long updated = pref.getLong("latest_json_updated", 0L);
 
-            if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
+            if (updated > (now.getTime() - FORECAST_DATA_VALIDITY)) {
                 String jsonstr = pref.getString("latest_json", null);
 
                 try {
@@ -537,7 +552,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     showErrorView(
                             context,
                             pref,
-                            "(old restore error) " + context.getResources().getString(R.string.update_failed),
+                            context.getResources().getString(R.string.update_failed),
                             context.getResources().getString(R.string.check_internet_connection)
                     );
                     return null;
@@ -546,7 +561,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 showErrorView(
                         context,
                         pref,
-                        " (too old error) " + context.getResources().getString(R.string.update_failed),
+                        context.getResources().getString(R.string.update_failed),
                         context.getResources().getString(R.string.check_internet_connection)
                 );
                 return null;
@@ -569,7 +584,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
             long updated = pref.getLong("latest_crisis_json_updated", 0L);
 
-            if (updated > (now.getTime() - 24 * 60 * 60 * 1000)) {
+            if (updated > (now.getTime() - CRISIS_DATA_VALIDITY)) {
                 String jsonstr = pref.getString("latest_crisis_json", null);
 
                 try {
