@@ -72,11 +72,10 @@
 
                 <TextView
                     android:id="@+id/temperatureTextView0"
-                    style="@style/temperature"
+                    style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
                     tools:text="+12°" />
 
             </LinearLayout>
@@ -112,11 +111,10 @@
 
                 <TextView
                     android:id="@+id/temperatureTextView1"
-                    style="@style/temperature"
+                    style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
                     tools:text="+12°" />
 
             </LinearLayout>
@@ -151,11 +149,10 @@
 
                 <TextView
                     android:id="@+id/temperatureTextView2"
-                    style="@style/temperature"
+                    style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
                     tools:text="+12°" />
 
             </LinearLayout>
@@ -190,11 +187,10 @@
 
                 <TextView
                     android:id="@+id/temperatureTextView3"
-                    style="@style/temperature"
+                    style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
                     tools:text="+12°" />
 
             </LinearLayout>
@@ -229,11 +225,10 @@
 
                 <TextView
                     android:id="@+id/temperatureTextView4"
-                    style="@style/temperature"
+                    style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
                     tools:text="+12°" />
 
             </LinearLayout>

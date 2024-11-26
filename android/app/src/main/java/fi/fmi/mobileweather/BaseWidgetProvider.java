@@ -56,6 +56,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private static String weatherUrl;
     private static String announcementsUrl;
 
+    protected static String immediateBackgroundSetting;
+
     protected abstract int getLayoutResourceId();
 
     @Override
@@ -83,10 +85,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             announcementsUrl = setup.getAnnouncements().getApi().getFi();
         }
 
+        // Get the list of appWidgetIds that have been bound to the given AppWidget provider.
         AppWidgetManager appWidgetManager =
                 AppWidgetManager.getInstance(context);
-        ComponentName thisAppWidgetComponentName = new ComponentName(context.getPackageName(),getClass().getName());
+        ComponentName thisAppWidgetComponentName = new ComponentName(context.getPackageName(), getClass().getName());
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidgetComponentName);
+
+        Log.d("Widget Update","thisAppWidgetComponentName: " + thisAppWidgetComponentName);
 
         onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -95,11 +100,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Log.d("Widget Update","onUpdate");
 
+        // if no widgets, log and return
+        if (appWidgetIds.length == 0) {
+            Log.w("Widget Update","No widgets to update");
+            return;
+        }
 
         // There may be multiple widgets active, so update all
-        final int N = appWidgetIds.length;
-        for (int i = 0; i < N; i++) {
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i], null);
+        for (int widgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, widgetId, null);
         }
     }
 
@@ -362,8 +371,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        // Get settings
-        String background = pref.getString("background", "transparent");
+        // Get background setting
+        String background;
+        if (immediateBackgroundSetting == null) {
+            background = pref.getString("background", "transparent");
+        } else {
+            background = immediateBackgroundSetting;
+            immediateBackgroundSetting = null;
+        }
+
         Log.d("Download json", "Background: " + background);
 
         // Get the layout for the App Widget now if needed

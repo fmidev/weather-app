@@ -30,9 +30,19 @@ public class WidgetUpdateWorker extends Worker {
 
     private void broadcastUpdate() {
         Log.d("Widget Update", "Broadcasting widget update");
-        Intent intent = new Intent(getApplicationContext(), SmallWidgetProvider.class)
+
+        // ** broadcast to all widget providers which can receive ACTION_APPWIDGET_AUTO_UPDATE
+        //    (SmallWidgetProvider and LargeWidgetProvider)
+
+        // Create intents for each widget provider class
+        Intent smallWidgetIntent = new Intent(getApplicationContext(), SmallWidgetProvider.class)
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
-        getApplicationContext().sendBroadcast(intent);
+        Intent largeWidgetIntent = new Intent(getApplicationContext(), LargeWidgetProvider.class)
+                .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
+
+        // Send broadcasts
+        getApplicationContext().sendBroadcast(smallWidgetIntent);
+        getApplicationContext().sendBroadcast(largeWidgetIntent);
     }
 
 }
