@@ -20,16 +20,12 @@ export const updateWarningTimes = (json) => {
     let warningStartTime = new Date(Date.parse(item.duration.startTime));
     let warningEndTime = new Date(Date.parse(item.duration.endTime));
 
-    console.log(warningEndTime, now.getDate());
-
     warningStartTime.setYear(now.getFullYear());
     warningStartTime.setMonth(now.getMonth());
     warningStartTime.setDate(now.getDate());
     warningEndTime.setYear(now.getFullYear());
     warningEndTime.setMonth(now.getMonth());
     warningEndTime.setDate(now.getDate() + 1);
-
-    console.log(warningEndTime);
 
     item.duration.startTime = warningStartTime.toISOString();
     item.duration.endTime = warningEndTime.toISOString();

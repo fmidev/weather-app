@@ -1,10 +1,3 @@
-//
-//  WarningIcon.swift
-//  WidgetExtension
-//
-//  Created by Pekka Keränen on 20.11.2024.
-//
-
 import SwiftUI
 
 struct WarningIcon: View {

@@ -1,10 +1,3 @@
-//
-//  WarningsErrorView.swift
-//  WidgetExtension
-//
-//  Created by Pekka Keränen on 21.11.2024.
-//
-
 import SwiftUI
 import CoreLocation
 
