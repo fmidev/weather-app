@@ -80,7 +80,7 @@
 
             </LinearLayout>
 
-            <!-- Note: 'View' cannot be used with widgets -->
+            <!-- Note: 'View' cannot be used with widgets, therefore ImageView here -->
             <ImageView
                 style="@style/verticalLine"
                 android:layout_width="1dp"
