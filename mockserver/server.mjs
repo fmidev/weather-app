@@ -19,6 +19,7 @@ const dirName = dirname(fileURLToPath(import.meta.url));
 
 let geolocationSetting = 'tikkurila';
 let forecastSetting = 'summer';
+let announcementSetting = 'none';
 let dataModeSetting = DataMode.default;
 let debugMode = true;
 let requestCount = 0;
@@ -103,12 +104,12 @@ app.get('/warnings/:name', (req, res) => {
   });
 });
 
-app.get('/mobileannouncements/:name', (req, res) => {
+app.get('/mobileannouncements', (req, res) => {
   const filePath = path.join(
     dirName,
     'data',
     'mobileannouncements',
-    req.params.name + '.json'
+    announcementSetting + '.json'
   );
 
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -131,6 +132,7 @@ app.get('/setup', (_, res) => {
   return res.json({
     geolocation: geolocationSetting,
     forecast: forecastSetting,
+    announcement: announcementSetting,
     datamode: dataModeSetting,
   });
 });
@@ -207,6 +209,11 @@ app.put('/setup/:type/:setting', (req, res) => {
     forecastSetting = setting;
   } else if (type === 'datamode' && Object.values(DataMode).includes(setting)) {
     dataModeSetting = DataMode[setting];
+  } else if (
+    type === 'announcement' &&
+    ['none', 'maintenance', 'crisis'].includes(setting)
+  ) {
+    announcementSetting = setting;
   } else if (type === 'debug' && ['true', 'false'].includes(setting)) {
     debugMode = setting === 'true';
   } else {
