@@ -51,6 +51,7 @@
     <string name="widget_resize_info">Huomaa, että voit pienentää ja suurentaa widgettiä. Tietosisältö mukautuu widgetin kokoon.</string>
     <string name="small_widget">Sää pieni</string>
     <string name="large_widget">Sää iso</string>
+    <string name="max_widget">Sää max</string>
     <string name="widget_favorite_info">Tallenna paikkakuntia suosikeiksi sovelluksessa, jos haluat käyttää widgettiä ilman paikannusta. Jos käytät paikannusta, niin salli paikannus taustalla (valinta Sallittu aina).</string>
     <string name="battery_saving">Virransäästö on päällä. Suosittelemme virransäästön poistamista sovellukselta, jotta widget voi ladata säätiedot.</string>
     <string name="open_settings">Avaa asetukset</string>
