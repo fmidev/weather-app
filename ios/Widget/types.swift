@@ -143,6 +143,15 @@ struct TimeStep: Hashable, Identifiable {
     
     return "basic"
   }
+  
+  func getSmartSymbolTranslationKey() -> String {
+    if (smartSymbol >= 100) {
+      return "symbol-" + (smartSymbol-100).description
+    }
+    
+    return "symbol-" + smartSymbol.description
+  }
+  
 }
 
 struct UVTimeStep {
