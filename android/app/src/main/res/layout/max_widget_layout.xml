@@ -125,12 +125,6 @@
 
             </LinearLayout>
 
-            <!-- Note: 'View' cannot be used with widgets, therefore ImageView here -->
-            <ImageView
-                style="@style/verticalLine"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"/>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,11 +157,6 @@
                     tools:text="+12°" />
 
             </LinearLayout>
-
-            <ImageView
-                style="@style/verticalLine"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -202,11 +191,6 @@
 
             </LinearLayout>
 
-            <ImageView
-                style="@style/verticalLine"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"/>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -239,11 +223,6 @@
                     tools:text="+12°" />
 
             </LinearLayout>
-
-            <ImageView
-                style="@style/verticalLine"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -330,30 +309,6 @@
                 tools:text="Päivitetty klo 11:00" />
 
         </RelativeLayout>
-
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:src="@drawable/fmi_logo_short"/>
-
-            <TextView
-                android:id="@+id/updateTimeTextView"
-                style="@style/updateTime"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:gravity="center"
-                tools:ignore="SmallSp"
-                tools:text="Päivitetty klo 11:00" />
-
-        </LinearLayout>-->
 
     </LinearLayout>
 
