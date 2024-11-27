@@ -23,6 +23,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -37,6 +38,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
@@ -648,5 +650,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     protected int loadLayoutResourceId(Context context, int appWidgetId) {
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
         return pref.getInt("layout_res_id", 0);
+    }
+
+    @NonNull
+    protected String getFormattedWeatherTime(long epochTime) {
+        Date date = new Date(epochTime * 1000);
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return formatter.format(date);
     }
 }

@@ -11,16 +11,14 @@ import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
@@ -98,9 +96,7 @@ public class MaxWidgetProvider extends BaseWidgetProvider {
                     main.setTextViewText(R.id.locationRegionTextView, region);
 
                     long epochTime = forecast.getLong("epochtime");
-                    Date date = new Date(epochTime * 1000);
-                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                    String formattedTime = formatter.format(date);
+                    String formattedTime = getFormattedWeatherTime(epochTime);
                     main.setTextViewText(R.id.timeTextView, formattedTime);
 
                     String temperature = forecast.getString("temperature");
@@ -129,9 +125,7 @@ public class MaxWidgetProvider extends BaseWidgetProvider {
 
                 // ** set the time, temperature and weather icon
 
-                Date date = new Date(epochTime * 1000);
-                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                String formattedTime = formatter.format(date);
+                String formattedTime = getFormattedWeatherTime(epochTime);
                 main.setTextViewText(timeTextViewId, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);

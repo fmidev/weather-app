@@ -109,9 +109,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
 
                 // ** set the time, temperature and weather icon
 
-                Date date = new Date(epochTime * 1000);
-                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                String formattedTime = formatter.format(date);
+                String formattedTime = getFormattedWeatherTime(epochTime);
                 main.setTextViewText(timeTextViewId, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
