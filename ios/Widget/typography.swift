@@ -10,7 +10,10 @@ enum CustomTextStyle {
   case temperature
   case largeTemperature
   case veryLargeTemperature
-  case error
+  case errorTitle
+  case largeErrorTitle
+  case errorDescription
+  case largeErrorDescription
   case temperatureUnit
   case largeTemperatureUnit
   case crisis
@@ -38,8 +41,14 @@ extension Font {
         Font.custom("Roboto-Regular", size: 36)
       case .veryLargeTemperature:
         Font.custom("Roboto-Light", size: 58)
-      case .error:
+      case .errorTitle:
           Font.custom("Roboto-Medium", size: 16)
+      case .largeErrorTitle:
+        Font.custom("Roboto-Medium", size: 20)
+      case .errorDescription:
+        Font.custom("Roboto-Regular", size: 13)
+      case .largeErrorDescription:
+        Font.custom("Roboto-Regular", size: 15)
       case .temperatureUnit:
         Font.custom("Roboto-Regular", size: 15)
       case .largeTemperatureUnit:

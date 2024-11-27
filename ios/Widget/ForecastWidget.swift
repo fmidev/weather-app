@@ -85,7 +85,7 @@ struct ForecastProvider: TimelineProvider {
                 location: location!,
                 timeSteps: timeSteps,
                 crisisMessage: crisisMessage,
-                error: WidgetError.none,
+                error: .dataLoadingError,
                 settings: settings
               )
             )
@@ -119,33 +119,12 @@ struct ForecastProvider: TimelineProvider {
 
 }
 
-struct ErrorView : View {
-  var entry: ForecastProvider.Entry
-     
-  var body: some View {
-    VStack {
-      Spacer()
-      switch entry.error {
-        case .userLocationError:
-          Text("Could not get location information").style(.error).multilineTextAlignment(.center)
-        case .dataLoadingError:
-          Text("Error loading forecast data").style(.error).multilineTextAlignment(.center)
-        case .oldDataError:
-          Text("Weather data is too old").style(.error).multilineTextAlignment(.center)
-        default:
-          Text("Unknown error").style(.error).multilineTextAlignment(.center)
-      }
-      Spacer()
-    }.modifier(TextModifier())
-  }
-}
-
 struct SmallWidgetView : View {
   var entry: ForecastProvider.Entry
 
   var body: some View {
-    if (entry.error != WidgetError.none) {
-      ErrorView(entry: entry)
+    if (entry.error != nil) {
+      ForecastErrorView(error: entry.error!, size: .small)
     } else {
       VStack(spacing: 0) {
         Text(entry.formatLocation()).style(.boldLocation).padding(.top, 8)
@@ -163,7 +142,7 @@ struct SmallWidgetView : View {
           }.padding(.horizontal, 9).background(Color("CrisisBackgroundColor"))
         } else {
           if (entry.settings.showLogo) {
-            Image("FMI").resizable().frame(width: 50, height: 24)
+            Image(decorative: "FMI").resizable().frame(width: 50, height: 24)
           }
         }
       }.padding(.horizontal, 5).modifier(TextModifier())
@@ -175,8 +154,8 @@ struct MediumWidgetView : View {
   var entry: ForecastProvider.Entry
 
   var body: some View {
-    if (entry.error != WidgetError.none) {
-      ErrorView(entry: entry)
+    if (entry.error != nil) {
+      ForecastErrorView(error: entry.error!, size: .medium)
     } else {
       VStack {
         if (entry.crisisMessage == nil) {
@@ -186,7 +165,7 @@ struct MediumWidgetView : View {
             ).style(.location)
             Spacer()
             if (entry.settings.showLogo) {
-              Image("FMI").resizable().frame(width: 56, height: 27)
+              Image(decorative: "FMI").resizable().frame(width: 56, height: 27)
             }
           }.padding(.horizontal, 5)
         }
@@ -206,8 +185,8 @@ struct LargeWidgetView : View {
   var entry: ForecastProvider.Entry
 
   var body: some View {
-    if (entry.error != WidgetError.none) {
-      ErrorView(entry: entry)
+    if (entry.error != nil) {
+      ForecastErrorView(error: entry.error!, size: .large)
     } else {
       VStack {
         Text(
@@ -226,7 +205,7 @@ struct LargeWidgetView : View {
           Spacer()
         } else {
           HStack {
-            Image("FMI").resizable().frame(width: 56, height: 27)
+            Image(decorative: "FMI").resizable().frame(width: 56, height: 27)
             Spacer()
             Text("Updated at **\(entry.formatUpdated())**").style(.updatedTime)
             Spacer()

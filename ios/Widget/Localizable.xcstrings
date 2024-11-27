@@ -51,6 +51,7 @@
       }
     },
     "Could not get location information" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -106,6 +107,7 @@
       }
     },
     "Error loading forecast data" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -117,6 +119,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tapahtui virhe ladattaessa säätietoja"
+          }
+        }
+      }
+    },
+    "Failed to load weather data" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säätietojen lataus epäonnistui"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misslyckades med att ladda väderdata"
           }
         }
       }
@@ -160,6 +178,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ennuste"
+          }
+        }
+      }
+    },
+    "Location failed" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paikannus epäonnistui"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platsbestämning misslyckades"
+          }
+        }
+      }
+    },
+    "Location services are not allowed. Please enable them in the settings." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paikannusta ei ole sallittu. Salli paikannus asetuksista."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platstjänster är inte tillåtna. Aktivera dem i inställningarna."
           }
         }
       }
@@ -246,6 +296,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nordvästlig vind"
+          }
+        }
+      }
+    },
+    "Retrying location services automatically." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paikannusta yritetään uudestaan automaattisesti."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Platstjänster försöks automatiskt på nytt."
           }
         }
       }
@@ -1354,7 +1420,40 @@
         }
       }
     },
+    "The device is in airplane mode. Weather updates will refresh when the internet connection is back." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laite on lentokonetilassa. Säätiedot päivitetään, kun internet-yhteys palautuu."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enheten är i flygplansläge. Väderdata uppdateras när internet är tillbaka."
+          }
+        }
+      }
+    },
+    "The weather information is outdated" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säätiedot ovat vanhentuneet"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Väderinformationen är inaktuell"
+          }
+        }
+      }
+    },
     "Unknown error" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -1440,8 +1539,21 @@
         }
       }
     },
-    "Weather data is too old" : {
-
+    "Weather updates will refresh when the internet connection is back." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säätiedot päivitetään, kun internet yhteys palautuu. "
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vädredata uppdateras när internet är tillbaka"
+          }
+        }
+      }
     },
     "Weather warnings" : {
       "extractionState" : "stale",
