@@ -32,7 +32,6 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:maxWidth="69dp"
-        android:textColor="@android:color/black"
         android:textSize="15sp"
         android:visibility="gone"
         tools:text="Suomi" />
