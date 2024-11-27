@@ -39,10 +39,13 @@ public class WidgetUpdateWorker extends Worker {
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
         Intent largeWidgetIntent = new Intent(getApplicationContext(), LargeWidgetProvider.class)
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
+        Intent maxWidgetIntent = new Intent(getApplicationContext(), MaxWidgetProvider.class)
+                .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
 
         // Send broadcasts
         getApplicationContext().sendBroadcast(smallWidgetIntent);
         getApplicationContext().sendBroadcast(largeWidgetIntent);
+        getApplicationContext().sendBroadcast(maxWidgetIntent);
     }
 
 }

@@ -60,4 +60,5 @@
     <string name="location_service_info">The app collects location data to enable widget update weather data for current location even when the app is closed or not in use. Alternatively you can use favorite locations without location service.</string>
     <string name="location_service_info_title">Do you want to enable location service?</string>
     <string name="ask_permission">Ask permission</string>
+    <string name="updated">"Updated"</string>
 </resources>

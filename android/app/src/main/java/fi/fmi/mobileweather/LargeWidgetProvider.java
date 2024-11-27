@@ -16,12 +16,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 public class LargeWidgetProvider extends BaseWidgetProvider {
     @Override
@@ -107,9 +109,9 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
 
                 // ** set the time, temperature and weather icon
 
-                LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epochTime), ZoneId.systemDefault());
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-                String formattedTime = localDateTime.format(formatter);
+                Date date = new Date(epochTime * 1000);
+                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                String formattedTime = formatter.format(date);
                 main.setTextViewText(timeTextViewId, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);

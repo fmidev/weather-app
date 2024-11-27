@@ -58,4 +58,5 @@
     <string name="location_service_info">Sovellus käyttää paikannusta widgetin säätietojen päivittämiseen nykyiseen sijaintiin myös kun sovellus on suljettu tai pois käytöstä. Voit käyttää suosikkipaikkakuntia, jos et halua sallia taustapaikannusta.</string>
     <string name="location_service_info_title">Haluatko sallia paikannuksen?</string>
     <string name="ask_permission">Salli paikannus</string>
+    <string name="updated">"Päivitetty klo "</string>
 </resources>
