@@ -382,7 +382,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // Get background setting
         String background;
         if (immediateBackgroundSetting == null) {
-            background = pref.getString("background", "transparent");
+            background = pref.getString("background", "light");
         } else {
             background = immediateBackgroundSetting;
             immediateBackgroundSetting = null;

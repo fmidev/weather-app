@@ -38,7 +38,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         // Get settings
-        String background = pref.getString("background", "transparent");
+        String background = pref.getString("background", "light");
         Log.d("Download json", "Background: " + background);
 
         main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
