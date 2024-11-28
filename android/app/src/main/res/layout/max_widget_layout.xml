@@ -312,6 +312,7 @@
                 <TextView
                     android:id="@+id/timeTextView4"
                     style="@style/time"
+                    android:background="#F6F6F7"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_alignStart="@id/weatherIconImageView4"
@@ -338,6 +339,7 @@
                     android:layout_alignEnd="@id/weatherIconImageView4"
                     android:layout_alignParentBottom="true"
                     android:gravity="center"
+                    android:background="#F6F6F7"
                     tools:text="+12°" />
 
             </RelativeLayout>
