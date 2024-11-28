@@ -126,7 +126,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Log.d("Widget Update","onEnabled");
         super.onEnabled(context);
 
-        // Schedule an update for the widget (e.g. every 30 minutes)
+        // Schedule an update for the widget (e.g. every 15 minutes)
         WidgetNotification.scheduleWidgetUpdate(context, this.getClass());
     }
 
@@ -379,7 +379,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         // init widget
         Result result = initWidget(json, json2, main, pref);
-        
+
         try {
             // Get the keys of the JSONObject
             Iterator<String> keys = result.json().keys();
