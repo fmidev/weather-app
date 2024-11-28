@@ -8,7 +8,7 @@ export const VERSION = 'version';
 export const DYNAMICCONFIG = 'dynamicconfig';
 export const DYNAMICCONFIG_ETAG = 'dynamicconfig_etag';
 
-type StorageKey =
+export type StorageKey =
   | typeof LOCALE
   | typeof UNITS
   | typeof THEME
