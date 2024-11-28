@@ -93,13 +93,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="20dp"
                 android:background="#F6F6F7"
                 android:importantForAccessibility="no" />
 
             <ImageView
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="20dp"
                 android:layout_alignParentBottom="true"
                 android:background="#F6F6F7"
@@ -141,7 +141,7 @@
                 android:id="@+id/weatherLayout0"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
-                android:paddingEnd="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_toEndOf="@id/weatherIconsLayout"
                 android:orientation="vertical">
 
@@ -152,8 +152,8 @@
                     android:layout_height="20dp"
                     android:layout_alignStart="@id/weatherIconImageView0"
                     android:layout_alignEnd="@id/weatherIconImageView0"
-                    android:gravity="center"
                     android:background="#F6F6F7"
+                    android:gravity="center"
                     tools:text="13:00" />
 
                 <ImageView
@@ -276,6 +276,7 @@
                     android:layout_height="20dp"
                     android:layout_alignStart="@id/weatherIconImageView3"
                     android:layout_alignEnd="@id/weatherIconImageView3"
+                    android:background="#F6F6F7"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -297,6 +298,7 @@
                     android:layout_alignStart="@id/weatherIconImageView3"
                     android:layout_alignEnd="@id/weatherIconImageView3"
                     android:layout_alignParentBottom="true"
+                    android:background="#F6F6F7"
                     android:gravity="center"
                     tools:text="+12°" />
 
@@ -313,11 +315,11 @@
                 <TextView
                     android:id="@+id/timeTextView4"
                     style="@style/time"
-                    android:background="#F6F6F7"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_alignStart="@id/weatherIconImageView4"
                     android:layout_alignEnd="@id/weatherIconImageView4"
+                    android:background="#F6F6F7"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -339,8 +341,8 @@
                     android:layout_alignStart="@id/weatherIconImageView4"
                     android:layout_alignEnd="@id/weatherIconImageView4"
                     android:layout_alignParentBottom="true"
-                    android:gravity="center"
                     android:background="#F6F6F7"
+                    android:gravity="center"
                     tools:text="+12°" />
 
             </RelativeLayout>
