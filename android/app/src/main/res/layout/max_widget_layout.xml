@@ -56,7 +56,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="7dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -116,23 +117,23 @@
                     android:id="@+id/clockIconImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_clock"/>
+                    android:background="@drawable/ic_clock" />
 
                 <ImageView
                     android:id="@id/weatherIconImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_below="@id/clockIconImageView"
-                    android:layout_marginTop="10dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/ic_weather"/>
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/ic_weather" />
 
                 <ImageView
                     android:id="@+id/temperatureIconImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@drawable/ic_temperature"/>
+                    android:background="@drawable/ic_temperature" />
 
             </RelativeLayout>
 
@@ -149,7 +150,8 @@
                     style="@style/time"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_gravity="center"
+                    android:layout_alignStart="@id/weatherIconImageView0"
+                    android:layout_alignEnd="@id/weatherIconImageView0"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -189,7 +191,8 @@
                     style="@style/time"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_gravity="center"
+                    android:layout_alignStart="@id/weatherIconImageView1"
+                    android:layout_alignEnd="@id/weatherIconImageView1"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -229,7 +232,8 @@
                     style="@style/time"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_gravity="center"
+                    android:layout_alignStart="@id/weatherIconImageView2"
+                    android:layout_alignEnd="@id/weatherIconImageView2"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -269,7 +273,8 @@
                     style="@style/time"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_gravity="center"
+                    android:layout_alignStart="@id/weatherIconImageView3"
+                    android:layout_alignEnd="@id/weatherIconImageView3"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -309,7 +314,8 @@
                     style="@style/time"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:layout_gravity="center"
+                    android:layout_alignStart="@id/weatherIconImageView4"
+                    android:layout_alignEnd="@id/weatherIconImageView4"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -343,7 +349,7 @@
             style="@style/crisis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingStart="6dp"
@@ -375,6 +381,7 @@
                 android:layout_alignBottom="@id/logoImageView"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 tools:ignore="SmallSp"
                 tools:text="Päivitetty klo 11:00" />
