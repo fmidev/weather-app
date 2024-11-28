@@ -79,11 +79,20 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
             // Extract the JSONArray associated with the first key
             JSONArray data = json.getJSONArray(firstKey);
 
-            // get the first 5 JsonObject from the JSONArray
-            for (int i = 0; i < 5; i++) {
+            // find first epoch time which is in future
+            int firstFutureTimeIndex = getFirstFutureTimeIndex(data);
+            // if no future time found or less than 5 future times available, do not continue
+            if (firstFutureTimeIndex == -1 || data.length() < (firstFutureTimeIndex + 5)) {
+                // throw new Exception("No future time found or less than 5 future times available");
+                throw new Exception("No future time found or less than 5 future times available");
+            }
+
+            // handle the first 5 JsonObjects with future time
+            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + 5); i++) {
                 JSONObject forecast = data.getJSONObject(i);
 
-                if (i == 0) {
+                // if first future index
+                if (i == firstFutureTimeIndex) {
                     // set the location name and region
                     String name = forecast.getString("name");
                     String region = forecast.getString("region");

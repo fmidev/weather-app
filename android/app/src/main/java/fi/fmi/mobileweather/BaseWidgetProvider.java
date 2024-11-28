@@ -455,8 +455,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             // Extract the JSONArray associated with the first key
             JSONArray data = json.getJSONArray(firstKey);
 
-            // Get the first JSONObject from the JSONArray
-            JSONObject first = data.getJSONObject(0);
+            // Get the first JSONObject with future epochtime from the JSONArray
+            // find first epoch time which is in future
+            int firstFutureTimeIndex = getFirstFutureTimeIndex(data);
+            JSONObject first = data.getJSONObject(firstFutureTimeIndex);
 
             String name = first.getString("name");
             String region = first.getString("region");
@@ -663,5 +665,25 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         SimpleDateFormat outputFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
         // Format the Date to the desired format and return the result
         return outputFormatter.format(date);
+    }
+
+    protected int getFirstFutureTimeIndex(JSONArray data) throws JSONException {
+
+        // Find the first epoch time long in the future
+
+        // Get the current time in milliseconds
+        long currentTime = System.currentTimeMillis();
+
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject forecast = data.getJSONObject(i);
+            // Get the epoch time and convert to milliseconds
+            long epochTime = forecast.getLong("epochtime") * 1000 ;
+            if (epochTime > currentTime) {
+                // return the index of the first future time
+                return i;
+            }
+        }
+        // if no future time found
+        return -1;
     }
 }
