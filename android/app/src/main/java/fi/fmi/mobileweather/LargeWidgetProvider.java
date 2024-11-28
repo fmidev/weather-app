@@ -30,7 +30,12 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
     @Override
     protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
 
+        // init widget
         Result result = initWidget(json, json2, main, pref);
+
+        // set colors for views which are specific for large widget
+        // (not set in the initWidget)
+        setLargeWidgetSpecificColors(result.main(), result.background());
 
         try {
             // Get the keys of the JSONObject
@@ -112,27 +117,6 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, result.main());
-    }
-
-    // TODO
-    private void setLargeWidgetColors(RemoteViews main, String background) {
-        if (background.equals("dark")) {
-            setColors(main,
-                    Color.parseColor("#191B22"),
-                    Color.rgb(255, 255, 255));
-            // TODO: set the colors for the weather row
-        }
-        else if (background.equals("light")) {
-            setColors(main,
-                    Color.rgb(255, 255, 255),
-                    Color.rgb(48, 49, 147));
-            // TODO: set the colors for the weather row
-        } else {
-            setColors(main,
-                    Color.TRANSPARENT,
-                    Color.rgb(48, 49, 147));
-            // TODO: set the colors for the weather row
-        }
     }
 
 }

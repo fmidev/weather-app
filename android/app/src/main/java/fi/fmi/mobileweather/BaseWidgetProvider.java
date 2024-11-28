@@ -377,9 +377,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
 
+        // init widget
         Result result = initWidget(json, json2, main, pref);
-
-
+        
         try {
             // Get the keys of the JSONObject
             Iterator<String> keys = result.json().keys();
@@ -553,6 +553,42 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    protected void setLargeWidgetSpecificColors(RemoteViews main, String background) {
+        if (background.equals("dark")) {
+            setWeatherRowColors(main,
+                    Color.rgb(255, 255, 255));
+        }
+        else if (background.equals("light")) {
+            setWeatherRowColors(main,
+                    Color.rgb(48, 49, 147));
+        } else {
+            setWeatherRowColors(main,
+                    Color.rgb(48, 49, 147));
+        }
+    }
+
+    protected void setColors(RemoteViews main, int backgroundColor, int textColor) {
+        main.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
+        main.setInt(R.id.locationNameTextView, "setTextColor", textColor);
+        main.setInt(R.id.locationRegionTextView, "setTextColor", textColor);
+        main.setInt(R.id.temperatureTextView, "setTextColor", textColor);
+        main.setInt(R.id.temperatureUnitTextView, "setTextColor", textColor);
+        main.setInt(R.id.updateTimeTextView, "setTextColor", textColor);
+    }
+
+    protected void setWeatherRowColors(RemoteViews main, int textColor) {
+        main.setInt(R.id.timeTextView0, "setTextColor", textColor);
+        main.setInt(R.id.temperatureTextView0, "setTextColor", textColor);
+        main.setInt(R.id.timeTextView1, "setTextColor", textColor);
+        main.setInt(R.id.temperatureTextView1, "setTextColor", textColor);
+        main.setInt(R.id.timeTextView2, "setTextColor", textColor);
+        main.setInt(R.id.temperatureTextView2, "setTextColor", textColor);
+        main.setInt(R.id.timeTextView3, "setTextColor", textColor);
+        main.setInt(R.id.temperatureTextView3, "setTextColor", textColor);
+        main.setInt(R.id.timeTextView4, "setTextColor", textColor);
+        main.setInt(R.id.temperatureTextView4, "setTextColor", textColor);
+    }
+
     protected String addPlusIfNeeded(String temperature) {
         // temperature string to float
         float tempFloat = Float.parseFloat(temperature);
@@ -631,15 +667,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             pref.saveLong("latest_crisis_json_updated", now.getTime());
         }
         return json;
-    }
-
-    protected void setColors(RemoteViews main, int backgroundColor, int textColor) {
-        main.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
-        main.setInt(R.id.locationNameTextView, "setTextColor", textColor);
-        main.setInt(R.id.locationRegionTextView, "setTextColor", textColor);
-        main.setInt(R.id.temperatureTextView, "setTextColor", textColor);
-        main.setInt(R.id.temperatureUnitTextView, "setTextColor", textColor);
-        main.setInt(R.id.updateTimeTextView, "setTextColor", textColor);
     }
 
     protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2) {
