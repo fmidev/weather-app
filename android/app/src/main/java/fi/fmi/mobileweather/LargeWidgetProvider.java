@@ -16,10 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -96,7 +92,8 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
                 }
 
 
-                long epochTime = forecast.getLong("epochtime");
+                // time at the selected location
+                String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
                 String weathersymbol = forecast.getString("smartSymbol");
 
@@ -107,9 +104,8 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
 
                 // ** set the time, temperature and weather icon
 
-                LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(epochTime), ZoneId.systemDefault());
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-                String formattedTime = localDateTime.format(formatter);
+                String formattedTime = getFormattedWeatherTime(localTime);
+
                 main.setTextViewText(timeTextViewId, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
@@ -157,7 +153,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
             appWidgetManager.updateAppWidget(appWidgetId, main);
             return;
 
-        } catch (final JSONException e) {
+        } catch (final Exception e) {
             Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
             showErrorView(
                     context,
