@@ -22,11 +22,13 @@ import java.util.Date;
 import java.util.Iterator;
 
 public class LargeWidgetProvider extends BaseWidgetProvider {
+    // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
         return R.layout.large_widget_layout;
     }
 
+    // set the widget UI date like colors, texts, icons etc.
     @Override
     protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
 

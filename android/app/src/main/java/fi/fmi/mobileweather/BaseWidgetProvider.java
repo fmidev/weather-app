@@ -69,6 +69,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected abstract int getLayoutResourceId();
 
+    // ********** WidgetProvider main methods: **********
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Widget Update","onReceive");
@@ -253,24 +255,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         });
     }
 
-    private String getLanguageString() {
-        String language = Locale.getDefault().getLanguage();
-        Log.d("language", language);
-        if (!language.equals("fi") && !language.equals("sv") && !language.equals("en"))
-            language = "en";
-        return language;
-    }
-
-    private String getLatLonString(Location location) {
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        // Round to 4 decimals
-        latitude = (double)Math.round(latitude * 10000d) / 10000d;
-        longitude = (double)Math.round(longitude * 10000d) / 10000d;
-        String latlon = latitude + "," + longitude;
-        return latlon;
-    }
-
     private String fetchGeoid(String latlon) {
         try {
             String url = weatherUrl +
@@ -322,55 +306,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             return new JSONObject(jsonString);
         } catch (JSONException e) {
             Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
-            return null;
-        }
-    }
-
-    private JSONArray fetchJsonArray(String src) {
-        try {
-            String jsonString = fetchJsonString(src);
-            return new JSONArray(jsonString);
-        } catch (JSONException e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
-            return null;
-        }
-    }
-
-    private String fetchJsonString(String src) {
-        if (src == null || src.isEmpty())
-            return null;
-
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.setConnectTimeout(10000);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-
-            try {
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-                StringBuilder responseStrBuilder = new StringBuilder();
-
-                String inputStr;
-                while ((inputStr = streamReader.readLine()) != null)
-                    responseStrBuilder.append(inputStr);
-
-                String jsonstr = responseStrBuilder.toString();
-
-                Log.d("Download json", "fetchData Forecast json: " + jsonstr);
-
-                return jsonstr;
-
-            } catch (IOException e) {
-                Log.e("Exception", Objects.requireNonNull(e.getMessage()));
-            }
-
-            // if something went wrong, return null
-            return null;
-
-        } catch (IOException e) {
-            Log.e("Exception", Objects.requireNonNull(e.getMessage()));
             return null;
         }
     }
@@ -440,6 +375,77 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, result.main());
+    }
+
+
+    // ********** Helper methods: **********
+
+
+    private JSONArray fetchJsonArray(String src) {
+        try {
+            String jsonString = fetchJsonString(src);
+            return new JSONArray(jsonString);
+        } catch (JSONException e) {
+            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private String fetchJsonString(String src) {
+        if (src == null || src.isEmpty())
+            return null;
+
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.setConnectTimeout(10000);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+
+            try {
+                BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+                StringBuilder responseStrBuilder = new StringBuilder();
+
+                String inputStr;
+                while ((inputStr = streamReader.readLine()) != null)
+                    responseStrBuilder.append(inputStr);
+
+                String jsonstr = responseStrBuilder.toString();
+
+                Log.d("Download json", "fetchData Forecast json: " + jsonstr);
+
+                return jsonstr;
+
+            } catch (IOException e) {
+                Log.e("Exception", Objects.requireNonNull(e.getMessage()));
+            }
+
+            // if something went wrong, return null
+            return null;
+
+        } catch (IOException e) {
+            Log.e("Exception", Objects.requireNonNull(e.getMessage()));
+            return null;
+        }
+    }
+
+    private String getLanguageString() {
+        String language = Locale.getDefault().getLanguage();
+        Log.d("language", language);
+        if (!language.equals("fi") && !language.equals("sv") && !language.equals("en"))
+            language = "en";
+        return language;
+    }
+
+    private String getLatLonString(Location location) {
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        // Round to 4 decimals
+        latitude = (double)Math.round(latitude * 10000d) / 10000d;
+        longitude = (double)Math.round(longitude * 10000d) / 10000d;
+        String latlon = latitude + "," + longitude;
+        return latlon;
     }
 
     @NonNull

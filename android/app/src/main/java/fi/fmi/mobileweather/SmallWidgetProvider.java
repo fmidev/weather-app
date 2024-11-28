@@ -22,6 +22,7 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
         }
     }
 
+    // define here what happens when the user changes the widget size
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
@@ -33,7 +34,7 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
         int minHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
 
         // Determine the layout resource ID based on the new size
-        int layoutId = getLayoutResourceId(minWidth, minHeight);
+        int layoutId = getLayoutResourceIdForResize(minWidth, minHeight);
 
         // Store the layout resource ID in shared preferences
         saveLayoutResourceId(context, appWidgetId, layoutId);
@@ -44,7 +45,7 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
     }
 
     // TODO: needs to be tested well with all kind of devices:
-    private int getLayoutResourceId(int minWidth, int minHeight) {
+    private int getLayoutResourceIdForResize(int minWidth, int minHeight) {
         if (minWidth > 100 && minWidth < 200 && minHeight > 120) {
             Log.d("Widget Update", "Small widget " + minWidth + "x" + minHeight);
             return R.layout.small_widget_layout;
