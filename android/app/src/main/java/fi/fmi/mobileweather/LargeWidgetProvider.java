@@ -11,6 +11,8 @@ import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,46 +30,11 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
     @Override
     protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
 
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        // Get settings
-        String background = pref.getString("background", "transparent");
-        Log.d("Download json", "Background: " + background);
-
-        main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
-
-        // Show normal view
-        main.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
-        // Hide error view
-        main.setInt(R.id.errorLayout, "setVisibility", GONE);
-
-        main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
-
-        json = useNewOrStoredJsonObject(json, pref);
-        if (json == null) return;
-
-        if (background.equals("dark")) {
-            setColors(main,
-                    Color.parseColor("#191B22"),
-                    Color.rgb(255, 255, 255));
-        }
-        else if (background.equals("light")) {
-            setColors(main,
-                    Color.rgb(255, 255, 255),
-                    Color.rgb(48, 49, 147));
-        } else {
-            setColors(main,
-                    Color.TRANSPARENT,
-                    Color.rgb(48, 49, 147));
-        }
-        Log.d("Download json", "Forecast json: " + json);
-        Log.d("Download json", "Crisis json: " + json2);
-
+        Result result = initWidget(json, json2, main, pref);
 
         try {
             // Get the keys of the JSONObject
-            Iterator<String> keys = json.keys();
+            Iterator<String> keys = result.json().keys();
 
             // Retrieve the first key
             if (!keys.hasNext()) {
@@ -77,7 +44,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
             Log.d("Download json", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
-            JSONArray data = json.getJSONArray(firstKey);
+            JSONArray data = result.json().getJSONArray(firstKey);
 
             // find first epoch time which is in future
             int firstFutureTimeIndex = getFirstFutureTimeIndex(data);
@@ -96,8 +63,8 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
                     // set the location name and region
                     String name = forecast.getString("name");
                     String region = forecast.getString("region");
-                    main.setTextViewText(R.id.locationNameTextView, name + ", ");
-                    main.setTextViewText(R.id.locationRegionTextView, region);
+                    result.main().setTextViewText(R.id.locationNameTextView, name + ", ");
+                    result.main().setTextViewText(R.id.locationRegionTextView, region);
                 }
 
 
@@ -115,51 +82,23 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
 
                 String formattedTime = getFormattedWeatherTime(localTime);
 
-                main.setTextViewText(timeTextViewId, formattedTime);
+                result.main().setTextViewText(timeTextViewId, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
-                main.setTextViewText(temperatureTextViewId, temperature + "°");
+                result.main().setTextViewText(temperatureTextViewId, temperature + "°");
 
                 Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                        context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
-                main.setImageViewBitmap(weatherIconImageViewId, icon);
+                        context.getResources().getIdentifier("s" + weathersymbol + (result.background().equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+                result.main().setImageViewBitmap(weatherIconImageViewId, icon);
             }
 
             // Update time TODO: should be hidden for release
-            main.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
+            result.main().setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
+            // Crisis view
+            showCrisisViewIfNeeded(json2, result.main(), pref);
 
-            // *** Crisis view
-            // example json: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
-
-            json2 = useNewOrStoredCrisisJsonObject(json2, pref);
-
-            if (json2 != null) {
-                boolean crisisFound = false;
-                try {
-                    for (int i = 0; i < json2.length(); i++) {
-                        JSONObject jsonObject = json2.getJSONObject(i);
-                        String type = jsonObject.getString("type");
-                        if (type.equals("Crisis")) {
-                            String content = jsonObject.getString("content");
-                            main.setViewVisibility(R.id.crisisTextView, VISIBLE);
-                            main.setTextViewText(R.id.crisisTextView, content);
-                            crisisFound = true;
-                            // if a crisis found, exit the loop
-                            break;
-                        }
-                    }
-                } catch (JSONException e) {
-                    Log.e("Download json", "Crisis Json parsing error: " + e.getMessage());
-                }
-                if (!crisisFound) {
-                    main.setViewVisibility(R.id.crisisTextView, GONE);
-                }
-            } else {
-                main.setViewVisibility(R.id.crisisTextView, GONE);
-            }
-
-            appWidgetManager.updateAppWidget(appWidgetId, main);
+            appWidgetManager.updateAppWidget(appWidgetId, result.main());
             return;
 
         } catch (final Exception e) {
@@ -172,7 +111,28 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
             );
         }
 
-        appWidgetManager.updateAppWidget(appWidgetId, main);
+        appWidgetManager.updateAppWidget(appWidgetId, result.main());
+    }
+
+    // TODO
+    private void setLargeWidgetColors(RemoteViews main, String background) {
+        if (background.equals("dark")) {
+            setColors(main,
+                    Color.parseColor("#191B22"),
+                    Color.rgb(255, 255, 255));
+            // TODO: set the colors for the weather row
+        }
+        else if (background.equals("light")) {
+            setColors(main,
+                    Color.rgb(255, 255, 255),
+                    Color.rgb(48, 49, 147));
+            // TODO: set the colors for the weather row
+        } else {
+            setColors(main,
+                    Color.TRANSPARENT,
+                    Color.rgb(48, 49, 147));
+            // TODO: set the colors for the weather row
+        }
     }
 
 }
