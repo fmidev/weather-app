@@ -1,163 +1,114 @@
 package fi.fmi.mobileweather;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 
 public class LargeWidgetProvider extends BaseWidgetProvider {
+    // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
         return R.layout.large_widget_layout;
     }
 
+    // set the widget UI date like colors, texts, icons etc.
     @Override
-    protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
+    protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref) {
 
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        // init widget
+        WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref);
 
-        // Get settings
-        String background = pref.getString("background", "light");
-        Log.d("Download json", "Background: " + background);
+        // populate widget with data
+        setWidgetData(announcementsJson, pref, widgetInitResult);
+    }
 
-        main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
-
-        // Show normal view
-        main.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
-        // Hide error view
-        main.setInt(R.id.errorLayout, "setVisibility", GONE);
-
-        main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
-
-        json = useNewOrStoredJsonObject(json, pref);
-        if (json == null) return;
-
-        if (background.equals("dark")) {
-            setColors(main,
-                    Color.parseColor("#191B22"),
-                    Color.rgb(255, 255, 255));
-        }
-        else if (background.equals("light")) {
-            setColors(main,
-                    Color.rgb(255, 255, 255),
-                    Color.rgb(48, 49, 147));
-        } else {
-            setColors(main,
-                    Color.TRANSPARENT,
-                    Color.rgb(48, 49, 147));
-        }
-        Log.d("Download json", "Forecast json: " + json);
-        Log.d("Download json", "Crisis json: " + json2);
-
+    @Override
+    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
+        JSONObject forecastJson = widgetInitResult.forecastJson();
+        RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
+        String background = widgetInitResult.background();
+        
+        // set colors for views which are specific for large widget
+        // (not set in the initWidget)
+        setLargeWidgetSpecificColors(widgetRemoteViews, background);
 
         try {
             // Get the keys of the JSONObject
-            Iterator<String> keys = json.keys();
+            Iterator<String> keys = forecastJson.keys();
 
             // Retrieve the first key
             if (!keys.hasNext()) {
                 return;
             }
             String firstKey = keys.next();
-            Log.d("Download json", "First key (geoid): " + firstKey);
+            Log.d("Download forecastJson", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
-            JSONArray data = json.getJSONArray(firstKey);
+            JSONArray data = forecastJson.getJSONArray(firstKey);
 
-            // get the first 5 JsonObject from the JSONArray
-            for (int i = 0; i < 5; i++) {
+            // find first epoch time which is in future
+            int firstFutureTimeIndex = getFirstFutureTimeIndex(data);
+            // if no future time found or less than 5 future times available, do not continue
+            if (firstFutureTimeIndex == -1 || data.length() < (firstFutureTimeIndex + 5)) {
+                // throw new Exception("No future time found or less than 5 future times available");
+                throw new Exception("No future time found or less than 5 future times available");
+            }
+
+            // handle the first 5 JsonObjects with future time
+            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + 5); i++) {
                 JSONObject forecast = data.getJSONObject(i);
 
-                if (i == 0) {
+                // if first future index
+                if (i == firstFutureTimeIndex) {
                     // set the location name and region
                     String name = forecast.getString("name");
                     String region = forecast.getString("region");
-                    main.setTextViewText(R.id.locationNameTextView, name + ", ");
-                    main.setTextViewText(R.id.locationRegionTextView, region);
+                    widgetRemoteViews.setTextViewText(R.id.locationNameTextView, name + ", ");
+                    widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, region);
                 }
 
 
-                long epochTime = forecast.getLong("epochtime");
+                // time at the selected location
+                String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
                 String weathersymbol = forecast.getString("smartSymbol");
 
-                // get timeTextView0 or timeTextView1 etc. based on i from main
+                // get timeTextView0 or timeTextView1 etc. based on i from widgetRemoteViews
                 int timeTextViewId = context.getResources().getIdentifier("timeTextView" + i, "id", context.getPackageName());
                 int temperatureTextViewId = context.getResources().getIdentifier("temperatureTextView" + i, "id", context.getPackageName());
                 int weatherIconImageViewId = context.getResources().getIdentifier("weatherIconImageView" + i, "id", context.getPackageName());
 
                 // ** set the time, temperature and weather icon
 
-                String formattedTime = getFormattedWeatherTime(epochTime);
-                main.setTextViewText(timeTextViewId, formattedTime);
+                String formattedTime = getFormattedWeatherTime(localTime);
+                widgetRemoteViews.setTextViewText(timeTextViewId, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
-                main.setTextViewText(temperatureTextViewId, temperature + "°");
+                widgetRemoteViews.setTextViewText(temperatureTextViewId, temperature + "°");
 
                 Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
                         context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
-                main.setImageViewBitmap(weatherIconImageViewId, icon);
+                widgetRemoteViews.setImageViewBitmap(weatherIconImageViewId, icon);
             }
 
             // Update time TODO: should be hidden for release
-            main.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
+            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
+            // Crisis view
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
 
-            // *** Crisis view
-            // example json: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
-
-            json2 = useNewOrStoredCrisisJsonObject(json2, pref);
-
-            if (json2 != null) {
-                boolean crisisFound = false;
-                try {
-                    for (int i = 0; i < json2.length(); i++) {
-                        JSONObject jsonObject = json2.getJSONObject(i);
-                        String type = jsonObject.getString("type");
-                        if (type.equals("Crisis")) {
-                            String content = jsonObject.getString("content");
-                            main.setViewVisibility(R.id.crisisTextView, VISIBLE);
-                            main.setTextViewText(R.id.crisisTextView, content);
-                            crisisFound = true;
-                            // if a crisis found, exit the loop
-                            break;
-                        }
-                    }
-                } catch (JSONException e) {
-                    Log.e("Download json", "Crisis Json parsing error: " + e.getMessage());
-                }
-                if (!crisisFound) {
-                    main.setViewVisibility(R.id.crisisTextView, GONE);
-                }
-            } else {
-                main.setViewVisibility(R.id.crisisTextView, GONE);
-            }
-
-            appWidgetManager.updateAppWidget(appWidgetId, main);
+            appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
 
-        } catch (final JSONException e) {
+        } catch (final Exception e) {
             Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
             showErrorView(
                     context,
@@ -167,7 +118,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
             );
         }
 
-        appWidgetManager.updateAppWidget(appWidgetId, main);
+        appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
     }
 
 }
