@@ -17,6 +17,7 @@ enum CustomTextStyle {
   case crisis
   case largeCrisis
   case windIcon
+  case warningTitle
 }
 
 extension Font {
@@ -54,6 +55,8 @@ extension Font {
         Font.custom("Roboto-Medium", size: 15)
       case .windIcon:
         Font.custom("Roboto-Bold", size: 13)
+      case .warningTitle:
+        Font.custom("Roboto-Medium", size: 15)
     }
   }
 }

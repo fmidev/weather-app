@@ -21,7 +21,7 @@ struct Location: Codable {
     }
     
     return name
-  }  
+  }
 }
 
 struct TimeStep: Hashable, Identifiable {
@@ -197,7 +197,7 @@ struct WarningEntry: TimelineEntry, Codable {
   
   func formatUpdated() -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd.MM. HH.mm"
+    dateFormatter.dateFormat = "HH:mm"
     dateFormatter.timeZone = TimeZone(identifier: location.timezone)
     
     return dateFormatter.string(from: updated)
@@ -209,6 +209,26 @@ struct WarningEntry: TimelineEntry, Codable {
     dateFormatter.timeZone = TimeZone(identifier: "Europe/Helsinki")
     
     return dateFormatter.string(from: date).firstUppercased
+  }
+  
+  func formatLocation() -> String {
+    if (location.name == location.area) {
+      return location.name
+    }
+    
+    return location.name + ", "
+  }
+  
+  func formatAreaOrCountry() -> String {
+    if (location.name == location.area) {
+      return ""
+    }
+    
+    if (location.iso2 == "FI") {
+      return location.area
+    }
+        
+    return location.country != nil ? location.country! : ""
   }
 }
 

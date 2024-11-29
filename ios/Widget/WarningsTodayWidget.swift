@@ -147,7 +147,7 @@ struct WarningProvider: TimelineProvider {
   }
 }
 
-struct SmallWarningTodayView : View {
+struct SmallWarningsTodayView : View {
   var entry: WarningProvider.Entry;
 
   var body: some View {
@@ -192,24 +192,81 @@ struct SmallWarningTodayView : View {
   }
 }
 
-struct WarningsTodayWidget: Widget {
-    let kind: String = "WarningsTodayWidget"
+struct MediumWarningsTodayView : View {
+  var entry: WarningProvider.Entry;
 
-    var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: WarningProvider()) { entry in
-            SmallWarningTodayView(entry: entry)
-              .containerBackground(Color("WidgetBackground"), for: .widget)
-              .padding(10)
+  var body: some View {
+    if (entry.error != nil) {
+      WarningsErrorView(error: entry.error!)
+        .modifier(TextModifier())
+    } else {
+      VStack(alignment: .leading) {
+        Text(
+          "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
+        ).style(.location).padding(.top, 3)
+        if (entry.warnings.isEmpty) {
+          Spacer()
+          Text("No warnings")
+          Spacer()
+        } else {
+          Spacer()
+          WarningRow(warning: entry.warnings[0])
+          if (entry.warnings.count >= 2) {
+            WarningRow(warning: entry.warnings[1])
+          }
+          Spacer()
+          if (entry.crisisMessage != nil) {
+            CrisisMessage(message: entry.crisisMessage!)
+          } else if (entry.warnings.count == 1) {
+            HStack {
+              Spacer()
+              Text("Updated at \(entry.formatUpdated())").style(.updatedTime)
+              Spacer()
+            }
+          } else {
+            HStack {
+              Spacer()
+              Text("Warnings (\(entry.warnings.count))")
+              Spacer()
+            }
+          }
         }
-        .contentMarginsDisabled()
-        .configurationDisplayName("Weather warnings for today")
-        .description("Weather warnings in your location")
-        .supportedFamilies([.systemSmall])
+      }.modifier(TextModifier())
     }
+  }
+}
+
+struct WarningsTodayEntryView : View {
+  @Environment(\.widgetFamily) var family
+  var entry: WarningProvider.Entry
+  
+  var body: some View {
+    if (family == .systemMedium) {
+      MediumWarningsTodayView(entry: entry).padding(.horizontal, 13)
+    } else {
+      SmallWarningsTodayView(entry: entry)
+    }
+  }
+}
+
+struct WarningsTodayWidget: Widget {
+  let kind: String = "WarningsTodayWidget"
+
+  var body: some WidgetConfiguration {
+    StaticConfiguration(kind: kind, provider: WarningProvider()) { entry in
+        WarningsTodayEntryView(entry: entry)
+          .containerBackground(Color("WidgetBackground"), for: .widget)
+          .padding(10)
+    }
+    .contentMarginsDisabled()
+    .configurationDisplayName("Weather warnings for today")
+    .description("Weather warnings in your location")
+    .supportedFamilies([.systemSmall, .systemMedium])
+  }
 }
 
 #Preview(as: .systemSmall) {
-    WarningsTodayWidget()
+  WarningsTodayWidget()
 } timeline: {
   defaultWarningEntry
 }

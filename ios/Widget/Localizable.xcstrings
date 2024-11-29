@@ -499,7 +499,17 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Päivitetty klo **%@**"
+            "value" : "Uppdaterad den **%@**"
+          }
+        }
+      }
+    },
+    "Updated at %@" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Päivitetty klo %@"
           }
         }
       }
