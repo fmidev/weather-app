@@ -14,10 +14,16 @@ import AnnouncementsReducer, {
 } from './announcements/reducer';
 
 import { PersistConfig } from './types';
+import { SharedReduxStorage } from '@store/SharedReduxStorage';
 
 const persistReducerConfig = (config: PersistConfig) => ({
   ...config,
   storage: AsyncStorage,
+});
+
+const sharedReducerConfig = (config: PersistConfig) => ({
+  ...config,
+  storage: SharedReduxStorage,
 });
 
 export default combineReducers({
@@ -34,7 +40,7 @@ export default combineReducers({
     ObservationReducer
   ),
   location: persistReducer(
-    persistReducerConfig(locationPersist),
+    sharedReducerConfig(locationPersist),
     LocationReducer
   ),
   map: persistReducer(persistReducerConfig(mapPersist), MapReducer),
