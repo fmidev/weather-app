@@ -139,21 +139,27 @@ public class WidgetSetup {
 
     public static class Weather {
         private String apiUrl;
+        private int interval;
         private boolean useCardinalsForWindDirection;
 
         // Getters and setters
         public String getApiUrl() {
             return apiUrl;
         }
-
         public void setApiUrl(String apiUrl) {
             this.apiUrl = apiUrl;
+        }
+
+        public int getInterval() {
+            return interval;
+        }
+        public void setInterval(int interval) {
+            this.interval = interval;
         }
 
         public boolean isUseCardinalsForWindDirection() {
             return useCardinalsForWindDirection;
         }
-
         public void setUseCardinalsForWindDirection(boolean useCardinalsForWindDirection) {
             this.useCardinalsForWindDirection = useCardinalsForWindDirection;
         }

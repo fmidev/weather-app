@@ -31,9 +31,12 @@ public class WidgetNotification {
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .build();
 
+            // get the update interval time from the widget setup
+            int repeatInterval = WidgetSetupManager.getWidgetSetup().getWeather().getInterval();
+
             PeriodicWorkRequest updateRequest =
                     new PeriodicWorkRequest.Builder(WidgetUpdateWorker.class,
-                            30, TimeUnit.MINUTES)
+                            repeatInterval, TimeUnit.MINUTES)
                     .setConstraints(constraints)
                     .addTag("WidgetUpdate")
                     .build();
