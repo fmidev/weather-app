@@ -553,15 +553,18 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private void setWidgetColors(RemoteViews main, String background) {
         if (background.equals("dark")) {
             setColors(main,
-                    Color.parseColor("#191B22"),
+                    R.drawable.gradient_background_dark,
+                    0,
                     Color.rgb(255, 255, 255));
         }
         else if (background.equals("light")) {
             setColors(main,
+                    0,
                     Color.rgb(255, 255, 255),
                     Color.rgb(48, 49, 147));
         } else {
             setColors(main,
+                    0,
                     Color.TRANSPARENT,
                     Color.rgb(48, 49, 147));
         }
@@ -581,8 +584,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void setColors(RemoteViews remoteViews, int backgroundColor, int textColor) {
-        remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
+    protected void setColors(RemoteViews remoteViews, int backgroundResource, int backgroundColor, int textColor) {
+        // Set background
+        if (backgroundResource != 0)
+            // Set background resource, i.e. drawable resource ID
+            remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", backgroundResource);
+        else
+            // Set background color
+            remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
+
         remoteViews.setInt(R.id.locationNameTextView, "setTextColor", textColor);
         remoteViews.setInt(R.id.locationRegionTextView, "setTextColor", textColor);
         remoteViews.setInt(R.id.temperatureTextView, "setTextColor", textColor);
