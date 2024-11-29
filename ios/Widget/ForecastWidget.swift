@@ -85,7 +85,7 @@ struct ForecastProvider: TimelineProvider {
                 location: location!,
                 timeSteps: timeSteps,
                 crisisMessage: crisisMessage,
-                error: WidgetError.none,
+                error: nil,
                 settings: settings
               )
             )
@@ -127,13 +127,13 @@ struct ErrorView : View {
       Spacer()
       switch entry.error {
         case .userLocationError:
-          Text("Could not get location information").style(.error).multilineTextAlignment(.center)
+          Text("Could not get location information").style(.errorTitle).multilineTextAlignment(.center)
         case .dataLoadingError:
-          Text("Error loading forecast data").style(.error).multilineTextAlignment(.center)
+          Text("Error loading forecast data").style(.errorTitle).multilineTextAlignment(.center)
         case .oldDataError:
-          Text("Weather data is too old").style(.error).multilineTextAlignment(.center)
+          Text("Weather data is too old").style(.errorTitle).multilineTextAlignment(.center)
         default:
-          Text("Unknown error").style(.error).multilineTextAlignment(.center)
+          Text("Unknown error").style(.errorTitle).multilineTextAlignment(.center)
       }
       Spacer()
     }.modifier(TextModifier())
@@ -144,7 +144,7 @@ struct SmallWidgetView : View {
   var entry: ForecastProvider.Entry
 
   var body: some View {
-    if (entry.error != WidgetError.none) {
+    if (entry.error != nil) {
       ErrorView(entry: entry)
     } else {
       VStack(spacing: 0) {
@@ -175,7 +175,7 @@ struct MediumWidgetView : View {
   var entry: ForecastProvider.Entry
 
   var body: some View {
-    if (entry.error != WidgetError.none) {
+    if (entry.error != nil) {
       ErrorView(entry: entry)
     } else {
       VStack {
@@ -206,7 +206,7 @@ struct LargeWidgetView : View {
   var entry: ForecastProvider.Entry
 
   var body: some View {
-    if (entry.error != WidgetError.none) {
+    if (entry.error != nil) {
       ErrorView(entry: entry)
     } else {
       VStack {

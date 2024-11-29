@@ -5,6 +5,6 @@ import SwiftUI
 struct WeatherWidgetBundle: WidgetBundle {
   var body: some Widget {
     ForecastWidget()
-    //WarningWidget()
+    WarningsTodayWidget()
   }
 }

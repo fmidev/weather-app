@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "warnings_traffic_weather.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
