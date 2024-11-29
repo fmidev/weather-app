@@ -310,14 +310,23 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
+    protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref) {
 
-        // init widget
-        Result result = initWidget(json, json2, main, pref);
+        // init widget, returns (new) forecast forecastJson, widget layout views and background type
+        WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref);
+
+        // populate widget with data
+        setWidgetData(announcementsJson, pref, widgetInitResult);
+    }
+
+    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
+        RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
+        JSONObject forecastJson = widgetInitResult.forecastJson();
+        String background = widgetInitResult.background();
 
         try {
             // Get the keys of the JSONObject
-            Iterator<String> keys = result.json().keys();
+            Iterator<String> keys = forecastJson.keys();
 
             // Retrieve the first key
             if (!keys.hasNext()) {
@@ -327,7 +336,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             Log.d("Download json", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
-            JSONArray data = result.json().getJSONArray(firstKey);
+            JSONArray data = forecastJson.getJSONArray(firstKey);
 
             // Get the first JSONObject with future epochtime from the JSONArray
             // find first epoch time which is in future
@@ -338,30 +347,30 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             String region = first.getString("region");
 
             // set location name and region
-            result.main().setTextViewText(R.id.locationNameTextView, name+ ",");
-            result.main().setTextViewText(R.id.locationRegionTextView, region);
+            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, name+ ",");
+            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, region);
 
             String temperature = first.getString("temperature");
             temperature = addPlusIfNeeded(temperature);
-            result.main().setTextViewText(R.id.temperatureTextView, temperature);
-            result.main().setTextViewText(R.id.temperatureUnitTextView, "°C");
+            widgetRemoteViews.setTextViewText(R.id.temperatureTextView, temperature);
+            widgetRemoteViews.setTextViewText(R.id.temperatureUnitTextView, "°C");
 
             // ** set the weather icon
 
             String weathersymbol = first.getString("smartSymbol");
 
             Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    context.getResources().getIdentifier("s" + weathersymbol + (result.background().equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+                    context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
 
-            result.main().setImageViewBitmap(R.id.weatherIconImageView, icon);
+            widgetRemoteViews.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
             // Update time TODO: should be hidden for release
-            result.main().setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
+            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
             // Crisis view
-            showCrisisViewIfNeeded(json2, result.main(), pref);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
 
-            appWidgetManager.updateAppWidget(appWidgetId, result.main());
+            appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
 
         } catch (final JSONException e) {
@@ -374,7 +383,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             );
         }
 
-        appWidgetManager.updateAppWidget(appWidgetId, result.main());
+        appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
     }
 
 
@@ -449,7 +458,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @NonNull
-    protected Result initWidget(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
+    protected WidgetInitResult initWidget(JSONObject forecastJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref) {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -465,18 +474,18 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Log.d("Download json", "Background: " + background);
 
         // get remote views of widget
-        main = getRemoteViews(main);
+        widgetRemoteViews = getRemoteViews(widgetRemoteViews);
 
         // Show normal view
-        main.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
+        widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
         // Hide error view
-        main.setInt(R.id.errorLayout, "setVisibility", GONE);
+        widgetRemoteViews.setInt(R.id.errorLayout, "setVisibility", GONE);
 
-        main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
+        widgetRemoteViews.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
-        json = useNewOrStoredJsonObject(json, pref);
-        if (json == null) {
-            Log.d("Download json", "No json data available");
+        forecastJson = useNewOrStoredJsonObject(forecastJson, pref);
+        if (forecastJson == null) {
+            Log.d("Download json", "No forecastJson data available");
             showErrorView(
                     context,
                     pref,
@@ -485,47 +494,46 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             );
         }
 
-        setWidgetColors(main, background);
+        setWidgetColors(widgetRemoteViews, background);
 
-        Log.d("Download json", "Forecast json: " + json);
-        Log.d("Download json", "Crisis json: " + json2);
-        Result result = new Result(json, main, background);
-        return result;
+        Log.d("Download json", "Forecast json: " + forecastJson);
+        
+        WidgetInitResult widgetInitResult = new WidgetInitResult(forecastJson, widgetRemoteViews, background);
+        return widgetInitResult;
     }
 
-    protected record Result(JSONObject json, RemoteViews main, String background) {
+    protected record WidgetInitResult(JSONObject forecastJson, RemoteViews widgetRemoteViews, String background) {
     }
 
     @NonNull
-    private RemoteViews getRemoteViews(RemoteViews main) {
+    private RemoteViews getRemoteViews(RemoteViews widgetRemoteViews) {
         // Get the layout for the App Widget now if needed
-        if (main == null) {
+        if (widgetRemoteViews == null) {
             // Get the stored layout for the App Widget
             int currentLayoutId = loadLayoutResourceId(context, appWidgetId);
             // If the layout is not stored, use the default layout
             if (currentLayoutId != 0) {
-                main = new RemoteViews(context.getPackageName(), currentLayoutId);
+                widgetRemoteViews = new RemoteViews(context.getPackageName(), currentLayoutId);
             } else
-                main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
+                widgetRemoteViews = new RemoteViews(context.getPackageName(), getLayoutResourceId());
         }
-        return main;
+        return widgetRemoteViews;
     }
 
-    protected void showCrisisViewIfNeeded(JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
-        json2 = useNewOrStoredCrisisJsonObject(json2, pref);
-
-
-        // example json: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
-        if (json2 != null) {
+    protected void showCrisisViewIfNeeded(JSONArray announcementsJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref) {
+        announcementsJson = useNewOrStoredCrisisJsonObject(announcementsJson, pref);
+        
+        // example forecastJson: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
+        if (announcementsJson != null) {
             boolean crisisFound = false;
             try {
-                for (int i = 0; i < json2.length(); i++) {
-                    JSONObject jsonObject = json2.getJSONObject(i);
+                for (int i = 0; i < announcementsJson.length(); i++) {
+                    JSONObject jsonObject = announcementsJson.getJSONObject(i);
                     String type = jsonObject.getString("type");
                     if (type.equals("Crisis")) {
                         String content = jsonObject.getString("content");
-                        main.setViewVisibility(R.id.crisisTextView, VISIBLE);
-                        main.setTextViewText(R.id.crisisTextView, content);
+                        widgetRemoteViews.setViewVisibility(R.id.crisisTextView, VISIBLE);
+                        widgetRemoteViews.setTextViewText(R.id.crisisTextView, content);
                         crisisFound = true;
                         // if a crisis found, exit the loop
                         break;
@@ -535,10 +543,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 Log.e("Download json", "Crisis Json parsing error: " + e.getMessage());
             }
             if (!crisisFound) {
-                main.setViewVisibility(R.id.crisisTextView, GONE);
+                widgetRemoteViews.setViewVisibility(R.id.crisisTextView, GONE);
             }
         } else {
-            main.setViewVisibility(R.id.crisisTextView, GONE);
+            widgetRemoteViews.setViewVisibility(R.id.crisisTextView, GONE);
         }
     }
 
@@ -573,26 +581,26 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void setColors(RemoteViews main, int backgroundColor, int textColor) {
-        main.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
-        main.setInt(R.id.locationNameTextView, "setTextColor", textColor);
-        main.setInt(R.id.locationRegionTextView, "setTextColor", textColor);
-        main.setInt(R.id.temperatureTextView, "setTextColor", textColor);
-        main.setInt(R.id.temperatureUnitTextView, "setTextColor", textColor);
-        main.setInt(R.id.updateTimeTextView, "setTextColor", textColor);
+    protected void setColors(RemoteViews remoteViews, int backgroundColor, int textColor) {
+        remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
+        remoteViews.setInt(R.id.locationNameTextView, "setTextColor", textColor);
+        remoteViews.setInt(R.id.locationRegionTextView, "setTextColor", textColor);
+        remoteViews.setInt(R.id.temperatureTextView, "setTextColor", textColor);
+        remoteViews.setInt(R.id.temperatureUnitTextView, "setTextColor", textColor);
+        remoteViews.setInt(R.id.updateTimeTextView, "setTextColor", textColor);
     }
 
-    protected void setWeatherRowColors(RemoteViews main, int textColor) {
-        main.setInt(R.id.timeTextView0, "setTextColor", textColor);
-        main.setInt(R.id.temperatureTextView0, "setTextColor", textColor);
-        main.setInt(R.id.timeTextView1, "setTextColor", textColor);
-        main.setInt(R.id.temperatureTextView1, "setTextColor", textColor);
-        main.setInt(R.id.timeTextView2, "setTextColor", textColor);
-        main.setInt(R.id.temperatureTextView2, "setTextColor", textColor);
-        main.setInt(R.id.timeTextView3, "setTextColor", textColor);
-        main.setInt(R.id.temperatureTextView3, "setTextColor", textColor);
-        main.setInt(R.id.timeTextView4, "setTextColor", textColor);
-        main.setInt(R.id.temperatureTextView4, "setTextColor", textColor);
+    protected void setWeatherRowColors(RemoteViews remoteViews, int textColor) {
+        remoteViews.setInt(R.id.timeTextView0, "setTextColor", textColor);
+        remoteViews.setInt(R.id.temperatureTextView0, "setTextColor", textColor);
+        remoteViews.setInt(R.id.timeTextView1, "setTextColor", textColor);
+        remoteViews.setInt(R.id.temperatureTextView1, "setTextColor", textColor);
+        remoteViews.setInt(R.id.timeTextView2, "setTextColor", textColor);
+        remoteViews.setInt(R.id.temperatureTextView2, "setTextColor", textColor);
+        remoteViews.setInt(R.id.timeTextView3, "setTextColor", textColor);
+        remoteViews.setInt(R.id.temperatureTextView3, "setTextColor", textColor);
+        remoteViews.setInt(R.id.timeTextView4, "setTextColor", textColor);
+        remoteViews.setInt(R.id.temperatureTextView4, "setTextColor", textColor);
     }
 
     protected String addPlusIfNeeded(String temperature) {
@@ -610,7 +618,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Date now = new Date();
 
         if (json == null) {
-            // Restore latest json
+            // Restore latest forecastJson
 
             long updated = pref.getLong("latest_json_updated", 0L);
 
@@ -639,7 +647,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             }
 
         } else {
-            // Store latest json
+            // Store latest forecastJson
             pref.saveString("latest_json", json.toString());
             pref.saveLong("latest_json_updated", now.getTime());
         }
@@ -678,28 +686,28 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2) {
         String background = pref.getString("background", "dark");
 
-        RemoteViews main = new RemoteViews(context.getPackageName(), getLayoutResourceId());
+        RemoteViews widgetRemoteViews = new RemoteViews(context.getPackageName(), getLayoutResourceId());
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        main.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
+        widgetRemoteViews.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
         // Show error view
-        main.setInt(R.id.errorLayout, "setVisibility", VISIBLE);
+        widgetRemoteViews.setInt(R.id.errorLayout, "setVisibility", VISIBLE);
         // Hide normal view
-        main.setInt(R.id.normalLayout, "setVisibility", GONE);
+        widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", GONE);
 
         if (background.equals("dark"))
-            main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
+            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
         else if (background.equals("light")) {
-            main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.rgb(255, 255, 255));
+            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.rgb(255, 255, 255));
         } else
-            main.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
+            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
 
-        main.setTextViewText(R.id.errorHeaderTextView, errorText1);
-        main.setTextViewText(R.id.errorBodyTextView, errorText2);
+        widgetRemoteViews.setTextViewText(R.id.errorHeaderTextView, errorText1);
+        widgetRemoteViews.setTextViewText(R.id.errorBodyTextView, errorText2);
 
-        appWidgetManager.updateAppWidget(appWidgetId, main);
+        appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
     }
 
     protected void saveLayoutResourceId(Context context, int appWidgetId, int layoutId) {

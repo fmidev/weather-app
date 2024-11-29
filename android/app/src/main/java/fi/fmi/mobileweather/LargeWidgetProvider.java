@@ -1,20 +1,11 @@
 package fi.fmi.mobileweather;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -30,28 +21,38 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
 
     // set the widget UI date like colors, texts, icons etc.
     @Override
-    protected void onPostExecute(JSONObject json, JSONArray json2, RemoteViews main, SharedPreferencesHelper pref) {
+    protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref) {
 
         // init widget
-        Result result = initWidget(json, json2, main, pref);
+        WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref);
 
+        // populate widget with data
+        setWidgetData(announcementsJson, pref, widgetInitResult);
+    }
+
+    @Override
+    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
+        JSONObject forecastJson = widgetInitResult.forecastJson();
+        RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
+        String background = widgetInitResult.background();
+        
         // set colors for views which are specific for large widget
         // (not set in the initWidget)
-        setLargeWidgetSpecificColors(result.main(), result.background());
+        setLargeWidgetSpecificColors(widgetRemoteViews, background);
 
         try {
             // Get the keys of the JSONObject
-            Iterator<String> keys = result.json().keys();
+            Iterator<String> keys = forecastJson.keys();
 
             // Retrieve the first key
             if (!keys.hasNext()) {
                 return;
             }
             String firstKey = keys.next();
-            Log.d("Download json", "First key (geoid): " + firstKey);
+            Log.d("Download forecastJson", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
-            JSONArray data = result.json().getJSONArray(firstKey);
+            JSONArray data = forecastJson.getJSONArray(firstKey);
 
             // find first epoch time which is in future
             int firstFutureTimeIndex = getFirstFutureTimeIndex(data);
@@ -70,8 +71,8 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
                     // set the location name and region
                     String name = forecast.getString("name");
                     String region = forecast.getString("region");
-                    result.main().setTextViewText(R.id.locationNameTextView, name + ", ");
-                    result.main().setTextViewText(R.id.locationRegionTextView, region);
+                    widgetRemoteViews.setTextViewText(R.id.locationNameTextView, name + ", ");
+                    widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, region);
                 }
 
 
@@ -80,7 +81,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
                 String temperature = forecast.getString("temperature");
                 String weathersymbol = forecast.getString("smartSymbol");
 
-                // get timeTextView0 or timeTextView1 etc. based on i from main
+                // get timeTextView0 or timeTextView1 etc. based on i from widgetRemoteViews
                 int timeTextViewId = context.getResources().getIdentifier("timeTextView" + i, "id", context.getPackageName());
                 int temperatureTextViewId = context.getResources().getIdentifier("temperatureTextView" + i, "id", context.getPackageName());
                 int weatherIconImageViewId = context.getResources().getIdentifier("weatherIconImageView" + i, "id", context.getPackageName());
@@ -89,23 +90,23 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
 
                 String formattedTime = getFormattedWeatherTime(localTime);
 
-                result.main().setTextViewText(timeTextViewId, formattedTime);
+                widgetRemoteViews.setTextViewText(timeTextViewId, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
-                result.main().setTextViewText(temperatureTextViewId, temperature + "°");
+                widgetRemoteViews.setTextViewText(temperatureTextViewId, temperature + "°");
 
                 Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                        context.getResources().getIdentifier("s" + weathersymbol + (result.background().equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
-                result.main().setImageViewBitmap(weatherIconImageViewId, icon);
+                        context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+                widgetRemoteViews.setImageViewBitmap(weatherIconImageViewId, icon);
             }
 
             // Update time TODO: should be hidden for release
-            result.main().setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
+            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
             // Crisis view
-            showCrisisViewIfNeeded(json2, result.main(), pref);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
 
-            appWidgetManager.updateAppWidget(appWidgetId, result.main());
+            appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
 
         } catch (final Exception e) {
@@ -118,7 +119,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
             );
         }
 
-        appWidgetManager.updateAppWidget(appWidgetId, result.main());
+        appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
     }
 
 }
