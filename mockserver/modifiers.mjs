@@ -5,8 +5,9 @@ export const DataMode = {
 };
 
 export const updateWarningTimes = (json) => {
+  const now = new Date();
   const updated = new Date(json.data.updated);
-  const interval = new Date().getTime() - updated.getTime();
+  const interval = now.getTime() - updated.getTime();
 
   json.data.updated = new Date(updated.getTime() + interval).toISOString();
 
@@ -16,11 +17,15 @@ export const updateWarningTimes = (json) => {
   json.data.endTime = new Date(endTime.getTime() + interval).toISOString();
 
   json.data.warnings.forEach((item) => {
-    let warningStartTime = Date.parse(item.duration.startTime);
-    let warningEndTime = Date.parse(item.duration.endTime);
+    let warningStartTime = new Date(Date.parse(item.duration.startTime));
+    let warningEndTime = new Date(Date.parse(item.duration.endTime));
 
-    warningStartTime = new Date(warningStartTime + interval);
-    warningEndTime = new Date(warningEndTime + interval);
+    warningStartTime.setYear(now.getFullYear());
+    warningStartTime.setMonth(now.getMonth());
+    warningStartTime.setDate(now.getDate());
+    warningEndTime.setYear(now.getFullYear());
+    warningEndTime.setMonth(now.getMonth());
+    warningEndTime.setDate(now.getDate() + 1);
 
     item.duration.startTime = warningStartTime.toISOString();
     item.duration.endTime = warningEndTime.toISOString();

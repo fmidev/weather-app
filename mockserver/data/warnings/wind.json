@@ -10,7 +10,11 @@
         "duration": {
           "startTime": "2024-11-01T15:00:00.000Z",
           "endTime": "2024-11-01T22:00:00.000Z"
-        }
+        },
+        "windIntensity": 20,
+        "windIntensityUom": "m/s",
+        "windDirection": 315,
+        "windDirectionUom": "°"
       }
     ],
     "startTime": "2024-11-01T06:17:46.355Z",

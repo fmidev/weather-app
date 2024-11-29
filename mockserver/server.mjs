@@ -19,6 +19,7 @@ const dirName = dirname(fileURLToPath(import.meta.url));
 
 let geolocationSetting = 'tikkurila';
 let forecastSetting = 'summer';
+let warningSetting = 'land';
 let announcementSetting = 'none';
 let dataModeSetting = DataMode.default;
 let debugMode = true;
@@ -79,12 +80,12 @@ app.get('/config', (req, res) => {
   });
 });
 
-app.get('/warnings/:name', (req, res) => {
+app.get('/warnings', (req, res) => {
   const filePath = path.join(
     dirName,
     'data',
     'warnings',
-    req.params.name + '.json'
+    warningSetting + '.json'
   );
 
   fs.readFile(filePath, 'utf8', (err, data) => {
@@ -207,6 +208,11 @@ app.put('/setup/:type/:setting', (req, res) => {
     geolocationSetting = setting;
   } else if (type === 'forecast' && ['summer', 'winter'].includes(setting)) {
     forecastSetting = setting;
+  } else if (
+    type === 'warning' &&
+    ['none', 'land', 'sea', 'wind'].includes(setting)
+  ) {
+    warningSetting = setting;
   } else if (type === 'datamode' && Object.values(DataMode).includes(setting)) {
     dataModeSetting = DataMode[setting];
   } else if (

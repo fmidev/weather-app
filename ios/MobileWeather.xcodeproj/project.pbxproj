@@ -22,7 +22,6 @@
 		A2239EB12CD22056007FE840 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB02CD22056007FE840 /* Localizable.xcstrings */; };
 		A2239EB42CD39885007FE840 /* widgetConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB32CD39885007FE840 /* widgetConfig.json */; };
 		A2239EB62CD399DC007FE840 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2239EB52CD399D9007FE840 /* config.swift */; };
-		A2239EB82CD3AE8F007FE840 /* WarningWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2239EB72CD3AE89007FE840 /* WarningWidget.swift */; };
 		A22C0A3A2CDCFD0300F64B66 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22C0A392CDCFCFD00F64B66 /* utils.swift */; };
 		A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24709F02CCA83B0008CC8EA /* geolocation.swift */; };
 		A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08C62CCBBAAD00848BEB /* extensions.swift */; };
@@ -32,6 +31,7 @@
 		A24E08CB2CCBBB6400848BEB /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91B26B41657000BF75C /* Roboto-Regular.ttf */; };
 		A24E08CC2CCBBB6D00848BEB /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91C26B41657000BF75C /* Roboto-Thin.ttf */; };
 		A24E08CE2CCBC22A00848BEB /* modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08CD2CCBC22700848BEB /* modifiers.swift */; };
+		A273C5CD2CF74136002C95C2 /* WarningsTodayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A273C5CC2CF74136002C95C2 /* WarningsTodayWidget.swift */; };
 		A2B3FF982CC7D1DA00EC1293 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2B3FF972CC7D1DA00EC1293 /* WidgetKit.framework */; };
 		A2B3FF9A2CC7D1DA00EC1293 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2B3FF992CC7D1DA00EC1293 /* SwiftUI.framework */; };
 		A2B3FFB32CC8E6AE00EC1293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2B3FFAD2CC8E6AE00EC1293 /* Assets.xcassets */; };
@@ -99,11 +99,11 @@
 		A2239EB02CD22056007FE840 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A2239EB32CD39885007FE840 /* widgetConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = widgetConfig.json; path = ../widgetConfig.json; sourceTree = SOURCE_ROOT; };
 		A2239EB52CD399D9007FE840 /* config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = config.swift; sourceTree = "<group>"; };
-		A2239EB72CD3AE89007FE840 /* WarningWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningWidget.swift; sourceTree = "<group>"; };
 		A22C0A392CDCFCFD00F64B66 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		A24709F02CCA83B0008CC8EA /* geolocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = geolocation.swift; sourceTree = "<group>"; };
 		A24E08C62CCBBAAD00848BEB /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		A24E08CD2CCBC22700848BEB /* modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = modifiers.swift; sourceTree = "<group>"; };
+		A273C5CC2CF74136002C95C2 /* WarningsTodayWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningsTodayWidget.swift; sourceTree = "<group>"; };
 		A2B3FF962CC7D1DA00EC1293 /* WidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2B3FF972CC7D1DA00EC1293 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		A2B3FF992CC7D1DA00EC1293 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -135,6 +135,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		A286CB982CF49C2900812898 /* managers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = managers; sourceTree = "<group>"; };
 		A299E3022CDB746F003502F5 /* views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = views; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -293,6 +294,7 @@
 		A2B3FFB22CC8E6AE00EC1293 /* Widget */ = {
 			isa = PBXGroup;
 			children = (
+				A286CB982CF49C2900812898 /* managers */,
 				A299E3022CDB746F003502F5 /* views */,
 				A2239EB52CD399D9007FE840 /* config.swift */,
 				A20CB3142CCFCE01005C4D66 /* typography.swift */,
@@ -306,7 +308,7 @@
 				A2B3FFAE2CC8E6AE00EC1293 /* Info.plist */,
 				A2B3FFAF2CC8E6AE00EC1293 /* types.swift */,
 				A2B3FFB02CC8E6AE00EC1293 /* ForecastWidget.swift */,
-				A2239EB72CD3AE89007FE840 /* WarningWidget.swift */,
+				A273C5CC2CF74136002C95C2 /* WarningsTodayWidget.swift */,
 				A2B3FFB12CC8E6AE00EC1293 /* WeatherWidgetBundle.swift */,
 				A2239EB02CD22056007FE840 /* Localizable.xcstrings */,
 				A2239EB32CD39885007FE840 /* widgetConfig.json */,
@@ -420,6 +422,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				A286CB982CF49C2900812898 /* managers */,
 				A299E3022CDB746F003502F5 /* views */,
 			);
 			name = WidgetExtension;
@@ -900,12 +903,12 @@
 				A2B3FFB92CC9138E00EC1293 /* defaults.swift in Sources */,
 				A20CB3152CCFCE0B005C4D66 /* typography.swift in Sources */,
 				A2239EB62CD399DC007FE840 /* config.swift in Sources */,
-				A2239EB82CD3AE8F007FE840 /* WarningWidget.swift in Sources */,
 				A2B3FFBB2CC9175000EC1293 /* network.swift in Sources */,
 				A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */,
 				A24E08CE2CCBC22A00848BEB /* modifiers.swift in Sources */,
 				A22C0A3A2CDCFD0300F64B66 /* utils.swift in Sources */,
 				A2B3FFB62CC8E6AE00EC1293 /* ForecastWidget.swift in Sources */,
+				A273C5CD2CF74136002C95C2 /* WarningsTodayWidget.swift in Sources */,
 				A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */,
 				A2B3FFB72CC8E6AE00EC1293 /* WeatherWidgetBundle.swift in Sources */,
 			);

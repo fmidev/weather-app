@@ -55,7 +55,7 @@ let defaultEntry = TimeStepEntry(
     )
   },
   crisisMessage: nil,
-  error: WidgetError.none,
+  error: nil,
   settings: defaultWidgetSettings
 )
 
@@ -63,16 +63,24 @@ let defaultWarningEntry = WarningEntry(
   date: Date(),
   updated: getDefaultUpdatedDate(),
   location: getDefaultLocation(),
-  warningLevel: .none,
-  warningCount: 0,
+  warnings: [],
+  crisisMessage: nil,
   error: nil
+)
+
+let defaultWarningTimeStep = WarningTimeStep(
+  type: .trafficWeather,
+  severity: .moderate,
+  duration: WarningDuration(startTime: Date(), endTime: Date().addingTimeInterval(12*60*60)),
+  language: "fi"
 )
 
 let defaultWidgetSettings = WidgetSettings(
   showLogo: true
 )
 
-let WHO="mobileweather_ios_widget"
-let UPDATE_INTERVAL = 30
+let WHO="mobileweather-widget-ios"
+let UPDATE_INTERVAL = 15
 let SUPPORTED_LANGUAGES = ["fi", "sv", "en"]
 let FALLBACK_LANGUAGE = "en"
+let WARNING_VALIDITY_PERIOD = 12 * 60 * 60

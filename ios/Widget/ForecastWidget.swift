@@ -85,7 +85,7 @@ struct ForecastProvider: TimelineProvider {
                 location: location!,
                 timeSteps: timeSteps,
                 crisisMessage: crisisMessage,
-                error: .dataLoadingError,
+                error: nil,
                 settings: settings
               )
             )
@@ -119,12 +119,33 @@ struct ForecastProvider: TimelineProvider {
 
 }
 
+struct ErrorView : View {
+  var entry: ForecastProvider.Entry
+     
+  var body: some View {
+    VStack {
+      Spacer()
+      switch entry.error {
+        case .userLocationError:
+          Text("Could not get location information").style(.errorTitle).multilineTextAlignment(.center)
+        case .dataLoadingError:
+          Text("Error loading forecast data").style(.errorTitle).multilineTextAlignment(.center)
+        case .oldDataError:
+          Text("Weather data is too old").style(.errorTitle).multilineTextAlignment(.center)
+        default:
+          Text("Unknown error").style(.errorTitle).multilineTextAlignment(.center)
+      }
+      Spacer()
+    }.modifier(TextModifier())
+  }
+}
+
 struct SmallWidgetView : View {
   var entry: ForecastProvider.Entry
 
   var body: some View {
     if (entry.error != nil) {
-      ForecastErrorView(error: entry.error!, size: .small)
+      ErrorView(entry: entry)
     } else {
       VStack(spacing: 0) {
         Text(entry.formatLocation()).style(.boldLocation).padding(.top, 8)
@@ -155,7 +176,7 @@ struct MediumWidgetView : View {
 
   var body: some View {
     if (entry.error != nil) {
-      ForecastErrorView(error: entry.error!, size: .medium)
+      ErrorView(entry: entry)
     } else {
       VStack {
         if (entry.crisisMessage == nil) {
@@ -186,7 +207,7 @@ struct LargeWidgetView : View {
 
   var body: some View {
     if (entry.error != nil) {
-      ForecastErrorView(error: entry.error!, size: .large)
+      ErrorView(entry: entry)
     } else {
       VStack {
         Text(

@@ -23,6 +23,9 @@
   },
   "warnings": {
     "apiUrl": "url",
+    "wfs": {
+      "apiUrl": "url"
+    },
     "interval": 5
   },
   "announcements": {
