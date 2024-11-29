@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "warnings_icing.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

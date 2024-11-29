@@ -83,20 +83,11 @@ func fetchUVForecast(location: Location) async throws -> [UVTimeStep]? {
   return items
 }
 
-func resolveWarningSeverity(severity: String) -> WarningSeverity {
-  switch severity {
-    case "Moderate": return .moderate
-    case "Severe": return .severe
-    case "Extreme": return .extreme
-    default: return .none
-  }
-}
-
-func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
+func fetchWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
   let formatter = DateFormatter()
   formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
   
-  let apiUrl = getSetting("warnings.apiUrl") as! String
+  guard let apiUrl = getSetting("warnings.apiUrl") as? String else { return nil }
   let url = apiUrl+"?latlon=\(location.lat),\(location.lon)&country=fi&who=\(WHO)"
   let dataTask = AF.request(url).serializingData()
   let value = try await dataTask.value
@@ -106,14 +97,21 @@ func fetchWarnings(location: Location) async throws -> [WarningTimeStep]? {
    
   var items = [WarningTimeStep]()
   items = warningsArray.map({
-    return WarningTimeStep(
-      type: $0["type"].stringValue,
-      severity: resolveWarningSeverity(severity: $0["severity"].stringValue),
+    var timeStep = WarningTimeStep(
+      type: resolveWarningType($0["type"].stringValue),
+      severity: resolveWarningSeverity($0["severity"].stringValue),
       duration: WarningDuration(
         startTime: formatter.date(from: $0["duration"]["startTime"].stringValue),
         endTime: formatter.date(from: $0["duration"]["endTime"].stringValue)
-      )
+      ),
+      language: $0["language"].stringValue
     )
+    if (timeStep.type == .seaWind || timeStep.type == .wind) {
+      guard let speed = $0["windIntensity"].int else { return timeStep }
+      guard let direction = $0["windDirection"].int else { return timeStep }
+      timeStep.wind = WindWarningDetails(direction: direction, speed: speed)
+    }    
+    return timeStep
   })
    
   return items

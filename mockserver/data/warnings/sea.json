@@ -1,39 +1,323 @@
 {
   "data": {
-    "updated": "2024-11-01T03:07:43.000Z",
+    "updated": "2024-11-20T10:49:09.000Z",
     "warnings": [
+      {
+        "type": "pedestrianSafety",
+        "language": "en",
+        "severity": "Moderate",
+        "description": "Pedestrian weather warning: Very slippery pavements are expected at first because of wet and packed snow on top of icy pavement surfaces.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-22T23:00:00.000Z"
+        }
+      },
+      {
+        "type": "seaWaveHeight",
+        "language": "en",
+        "severity": "Severe",
+        "description": "Wave height warning: Very rough waves occur at first. Significant wave height exceeds 4 meters.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "seaWind",
+        "language": "en",
+        "severity": "Severe",
+        "description": "Wind warning for sea areas: Northeast severe gale 21 m/s at first.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "seaWind",
+        "language": "en",
+        "severity": "Moderate",
+        "description": "Wind warning for sea areas: Northwest near gale 16 m/s from the midnight on.",
+        "duration": {
+          "startTime": "2024-11-20T22:00:00.000Z",
+          "endTime": "2024-11-21T14:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "seaWind",
+        "language": "en",
+        "severity": "Moderate",
+        "description": "Wind warning for sea areas: In the night between Thursday and Friday and in Friday morning, probability for west to northwest gale-force winds is 30%.",
+        "duration": {
+          "startTime": "2024-11-21T22:00:00.000Z",
+          "endTime": "2024-11-22T07:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "trafficWeather",
+        "language": "en",
+        "severity": "Severe",
+        "description": "Traffic weather warning: Very bad road conditions are expected at first because of snowstorm.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "trafficWeather",
+        "language": "en",
+        "severity": "Severe",
+        "description": "Traffic weather warning: Very bad road conditions are expected from the midnight on because of snowstorm and blowing snow.",
+        "duration": {
+          "startTime": "2024-11-20T22:00:00.000Z",
+          "endTime": "2024-11-21T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "trafficWeather",
+        "language": "en",
+        "severity": "Severe",
+        "description": "Traffic weather warning: From the night between Thursday and Friday to the night between Friday and Saturday, probability for very bad road conditions is 40% because of snow.",
+        "duration": {
+          "startTime": "2024-11-21T22:00:00.000Z",
+          "endTime": "2024-11-22T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "wind",
+        "language": "en",
+        "severity": "Moderate",
+        "description": "Wind warning for land areas: Strong winds from northeast may bring strong gusts of 20 m/s at first.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T23:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "pedestrianSafety",
+        "language": "fi",
+        "severity": "Moderate",
+        "description": "Jalankulkusää: Jalkakäytävät ovat aluksi erittäin liukkaita, koska niillä oleva lumi tamppautuu liukkaaksi.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-22T23:00:00.000Z"
+        }
+      },
       {
         "type": "seaWaveHeight",
         "language": "fi",
         "severity": "Severe",
         "description": "Aallokkovaroitus: Aluksi esiintyy kovaa aallokkoa, jossa merkitsevä aallonkorkeus ylittää 4 metriä.",
         "duration": {
-          "startTime": "2024-11-01T05:00:00.000Z",
-          "endTime": "2024-11-02T13:00:00.000Z"
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
         }
       },
       {
         "type": "seaWind",
         "language": "fi",
         "severity": "Severe",
-        "description": "Myrskyvaroitus: Luoteismyrskyä aluksi 21 m/s.",
+        "description": "Myrskyvaroitus: Koillismyrskyä aluksi 21 m/s.",
         "duration": {
-          "startTime": "2024-11-01T03:07:42.000Z",
-          "endTime": "2024-11-02T09:00:00.000Z"
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "seaWind",
+        "language": "fi",
+        "severity": "Moderate",
+        "description": "Kovan tuulen varoitus: Luoteistuulta keskiyöstä alkaen 16 m/s.",
+        "duration": {
+          "startTime": "2024-11-20T22:00:00.000Z",
+          "endTime": "2024-11-21T14:00:00.000Z"
         }
       },
       {
         "type": "seaWind",
         "language": "fi",
         "severity": "Moderate",
-        "description": "Kovan tuulen varoitus: Kovan luoteistuulen todennäköisyys on 40 % sunnuntaipäivästä maanantaiaamuun.",
+        "description": "Kovan tuulen varoitus: Kovan lännen ja luoteen välisen tuulen todennäköisyys on 30 % torstain ja perjantain välisenä yönä ja perjantaina aamulla.",
         "duration": {
-          "startTime": "2024-11-03T11:00:00.000Z",
-          "endTime": "2024-11-04T04:00:00.000Z"
+          "startTime": "2024-11-21T22:00:00.000Z",
+          "endTime": "2024-11-22T07:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "trafficWeather",
+        "language": "fi",
+        "severity": "Severe",
+        "description": "Liikennesää: Ajokeli on erittäin huono aluksi lumipyryn vuoksi.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
         }
+      },
+      {
+        "type": "trafficWeather",
+        "language": "fi",
+        "severity": "Severe",
+        "description": "Liikennesää: Ajokeli muuttuu erittäin huonoksi keskiyöstä alkaen lumipyryn ja pöllyävän lumen vuoksi.",
+        "duration": {
+          "startTime": "2024-11-20T22:00:00.000Z",
+          "endTime": "2024-11-21T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "trafficWeather",
+        "language": "fi",
+        "severity": "Severe",
+        "description": "Liikennesää: Erittäin huonon ajokelin todennäköisyys on 40 % torstain ja perjantain välisestä yöstä perjantain ja lauantain väliseen yöhön lumisateen vuoksi.",
+        "duration": {
+          "startTime": "2024-11-21T22:00:00.000Z",
+          "endTime": "2024-11-22T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "wind",
+        "language": "fi",
+        "severity": "Moderate",
+        "description": "Tuulivaroitus maa-alueille: Koillistuuli on voimakasta aluksi, tuulen nopeus puuskissa 20 m/s.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T23:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "pedestrianSafety",
+        "language": "sv",
+        "severity": "Moderate",
+        "description": "Fotgängarvädret: Trottoarerna är till en början mycket hala på grund av tilltrampad snö.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-22T23:00:00.000Z"
+        }
+      },
+      {
+        "type": "seaWaveHeight",
+        "language": "sv",
+        "severity": "Severe",
+        "description": "Varning för sjögång: Till en början förekommer svår sjögång, där den signifikanta våghöjden överstiger 4 meter.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "seaWind",
+        "language": "sv",
+        "severity": "Severe",
+        "description": "Stormvarning: Till en början nordostlig storm 21 m/s.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "seaWind",
+        "language": "sv",
+        "severity": "Moderate",
+        "description": "Varning för hård vind: Från och med midnatten nordvästlig vind 16 m/s.",
+        "duration": {
+          "startTime": "2024-11-20T22:00:00.000Z",
+          "endTime": "2024-11-21T14:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "seaWind",
+        "language": "sv",
+        "severity": "Moderate",
+        "description": "Varning för hård vind: På natten mellan torsdag och fredag och på fredag morgon är sannolikheten 30 % för hård västlig till nordvästlig vind.",
+        "duration": {
+          "startTime": "2024-11-21T22:00:00.000Z",
+          "endTime": "2024-11-22T07:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
+      },
+      {
+        "type": "trafficWeather",
+        "language": "sv",
+        "severity": "Severe",
+        "description": "Trafikvädret: Väglaget är mycket dåligt till en början p.g.a. Snöyra.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "trafficWeather",
+        "language": "sv",
+        "severity": "Severe",
+        "description": "Trafikvädret: Väglaget blir mycket dåligt från och med midnatten p.g.a. Snöyra och uppvirvlande snö.",
+        "duration": {
+          "startTime": "2024-11-20T22:00:00.000Z",
+          "endTime": "2024-11-21T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "trafficWeather",
+        "language": "sv",
+        "severity": "Severe",
+        "description": "Trafikvädret: Från och med natten mellan torsdag och fredag fram till natten mellan fredag och lördag är sannolikheten 40 % för mycket dåligt väglag p.g.a. Snöfall.",
+        "duration": {
+          "startTime": "2024-11-21T22:00:00.000Z",
+          "endTime": "2024-11-22T22:00:00.000Z"
+        }
+      },
+      {
+        "type": "wind",
+        "language": "sv",
+        "severity": "Moderate",
+        "description": "Vindvarning för landområden: Den nordostliga vinden är kraftigt till en början, i vindbyarna 20 m/s.",
+        "duration": {
+          "startTime": "2024-11-20T09:57:58.000Z",
+          "endTime": "2024-11-20T23:00:00.000Z"
+        },
+        "windIntensity": 19,
+        "windIntensityUom": "m/s",
+        "windDirection": 202,
+        "windDirectionUom": "°"
       }
     ],
-    "startTime": "2024-11-01T06:18:29.207Z",
-    "endTime": "2025-11-01T06:18:29.207Z"
+    "startTime": "2024-11-20T11:11:11.545Z",
+    "endTime": "2025-11-20T11:11:11.545Z"
   }
 }

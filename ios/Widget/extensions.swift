@@ -35,4 +35,29 @@ extension Date {
 
     return calendar.date(from: components)
   }
+
+  func startOfDay() -> Date? {
+    let calendar = Calendar.current
+
+    var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: self)
+
+    components.hour = 0
+    components.minute = 0
+    components.second = 0
+
+    return calendar.date(from: components)
+  }
+  
+  func endOfDay() -> Date? {
+    let calendar = Calendar.current
+
+    var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: self)
+
+    components.hour = 23
+    components.minute = 59
+    components.second = 59
+
+    return calendar.date(from: components)
+  }
+  
 }
