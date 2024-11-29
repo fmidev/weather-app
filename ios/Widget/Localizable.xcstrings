@@ -74,7 +74,6 @@
       }
     },
     "Could not get location information" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -130,7 +129,6 @@
       }
     },
     "Error loading forecast data" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -347,38 +345,6 @@
         }
       }
     },
-    "Location failed" : {
-      "localizations" : {
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paikannus epäonnistui"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Platsbestämning misslyckades"
-          }
-        }
-      }
-    },
-    "Location services are not allowed. Please enable them in the settings." : {
-      "localizations" : {
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paikannusta ei ole sallittu. Salli paikannus asetuksista."
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Platstjänster är inte tillåtna. Aktivera dem i inställningarna."
-          }
-        }
-      }
-    },
     "N" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -442,6 +408,22 @@
         }
       }
     },
+    "No warnings" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ei varoituksia"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inga varningar"
+          }
+        }
+      }
+    },
     "NW" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -461,22 +443,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nordvästlig vind"
-          }
-        }
-      }
-    },
-    "No warnings" : {
-      "localizations" : {
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ei varoituksia"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Inga varningar"
           }
         }
       }
@@ -1618,6 +1584,38 @@
         }
       }
     },
+    "The alerts are outdated" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoitukset ovat vanhentuneet"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varningarna är inaktuella"
+          }
+        }
+      }
+    },
+    "The device is in airplane mode. Warnings will be updated once the internet connection is back." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laite on lentokonetilassa. Varoitukset päivitetään, kun internet-yhteys palautuu. "
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enheten är i flygplansläge. Varningarna uppdateras när internet är tillbaka."
+          }
+        }
+      }
+    },
     "The device is in airplane mode. Weather updates will refresh when the internet connection is back." : {
       "localizations" : {
         "fi" : {
@@ -1651,7 +1649,6 @@
       }
     },
     "Unknown error" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -1761,7 +1758,6 @@
       }
     },
     "Warnings (%lld)" : {
-      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -1777,29 +1773,12 @@
         }
       }
     },
-    "Weather updates will refresh when the internet connection is back." : {
+    "Warnings are only available for the Finland region." : {
       "localizations" : {
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Säätiedot päivitetään, kun internet yhteys palautuu. "
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vädredata uppdateras när internet är tillbaka"
-          }
-        }
-      }
-    },
-    "Weather warnings" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "fi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Varoitukset ovat saatavilla vain Suomen alueella."
+            "value" : "Varoitukset ovat saatavilla vain Suomen alueella"
           }
         },
         "sv" : {
@@ -1844,7 +1823,53 @@
       }
     },
     "Weather data is too old" : {
-
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säätiedot ovat vanhentuneet"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Väderinformationen är inaktuell"
+          }
+        }
+      }
+    },
+    "Weather updates will refresh when the internet connection is back." : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säätiedot päivitetään, kun internet yhteys palautuu. "
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vädredata uppdateras när internet är tillbaka"
+          }
+        }
+      }
+    },
+    "Weather warnings" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Säävaroitukset"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vädervarningar"
+          }
+        }
+      }
     },
     "Weather warnings for today" : {
       "localizations" : {

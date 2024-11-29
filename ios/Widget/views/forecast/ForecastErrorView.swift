@@ -11,7 +11,7 @@ struct ForecastErrorView: View {
   var error: WidgetError
   var size: ForecastErrorViewSize
   
-  let isAirPlaneMode = false
+  @StateObject private var networkManager = NetworkStatusManager()
   let locationManager = CLLocationManager()
  
   var body: some View {
@@ -36,7 +36,7 @@ struct ForecastErrorView: View {
         }
         switch error {
           // .locationOutsideDataArea should not happen for forecast data, just to make compiler happy
-          case .none, .dataLoadingError, .locationOutsideDataArea:
+          case .dataLoadingError, .locationOutsideDataArea:
             Text("Failed to load weather data")
               .style(size == .large ? .largeErrorTitle : .errorTitle)
               .multilineTextAlignment(.center)
@@ -57,9 +57,9 @@ struct ForecastErrorView: View {
         Spacer()
       }
       switch error {
-        case .none, .dataLoadingError, .oldDataError, .locationOutsideDataArea:
+        case .dataLoadingError, .oldDataError, .locationOutsideDataArea:
           Text(
-            isAirPlaneMode ?
+            networkManager.isAirplaneMode ?
               "The device is in airplane mode. Weather updates will refresh when the internet connection is back." :
               "Weather updates will refresh when the internet connection is back."
           ).style(size == .large ? .largeErrorDescription : .errorDescription)
