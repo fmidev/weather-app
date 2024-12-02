@@ -77,18 +77,17 @@ struct ForecastProvider: TimelineProvider {
           }
           
           let date = Date(timeIntervalSince1970: TimeInterval(item.epochtime)).addingTimeInterval(TimeInterval(-60*60))
-          entries
-            .append(
-              TimeStepEntry(
-                date: date,
-                updated: updated,
-                location: location!,
-                timeSteps: timeSteps,
-                crisisMessage: crisisMessage,
-                error: nil,
-                settings: settings
-              )
+          entries.append(
+            TimeStepEntry(
+              date: date,
+              updated: updated,
+              location: location!,
+              timeSteps: timeSteps,
+              crisisMessage: crisisMessage,
+              error: nil,
+              settings: settings
             )
+          )
           
           if (entries.count >= 24) {
             let oldDataEntry = TimeStepEntry(
@@ -145,7 +144,7 @@ struct SmallWidgetView : View {
 
   var body: some View {
     if (entry.error != nil) {
-      ErrorView(entry: entry)
+      ForecastErrorView(error: entry.error!, size: .small)
     } else {
       VStack(spacing: 0) {
         Text(entry.formatLocation()).style(.boldLocation).padding(.top, 8)
@@ -163,7 +162,7 @@ struct SmallWidgetView : View {
           }.padding(.horizontal, 9).background(Color("CrisisBackgroundColor"))
         } else {
           if (entry.settings.showLogo) {
-            Image("FMI").resizable().frame(width: 50, height: 24)
+            Image(decorative: "FMI").resizable().frame(width: 50, height: 24)
           }
         }
       }.padding(.horizontal, 5).modifier(TextModifier())
@@ -176,7 +175,7 @@ struct MediumWidgetView : View {
 
   var body: some View {
     if (entry.error != nil) {
-      ErrorView(entry: entry)
+      ForecastErrorView(error: entry.error!, size: .medium)
     } else {
       VStack {
         if (entry.crisisMessage == nil) {
@@ -186,7 +185,7 @@ struct MediumWidgetView : View {
             ).style(.location)
             Spacer()
             if (entry.settings.showLogo) {
-              Image("FMI").resizable().frame(width: 56, height: 27)
+              Image(decorative: "FMI").resizable().frame(width: 56, height: 27)
             }
           }.padding(.horizontal, 5)
         }
@@ -207,7 +206,7 @@ struct LargeWidgetView : View {
 
   var body: some View {
     if (entry.error != nil) {
-      ErrorView(entry: entry)
+      ForecastErrorView(error: entry.error!, size: .large)
     } else {
       VStack {
         Text(
@@ -226,7 +225,7 @@ struct LargeWidgetView : View {
           Spacer()
         } else {
           HStack {
-            Image("FMI").resizable().frame(width: 56, height: 27)
+            Image(decorative: "FMI").resizable().frame(width: 56, height: 27)
             Spacer()
             Text("Updated at **\(entry.formatUpdated())**").style(.updatedTime)
             Spacer()

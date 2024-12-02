@@ -12,7 +12,10 @@ struct NextHourForecast: View {
   var body: some View {
     VStack {
       HStack(spacing: 2) {
-        Image(String(timeStep.smartSymbol))
+        Image(
+          String(timeStep.smartSymbol),
+          label: Text(timeStep.getSmartSymbolTranslationKey().localized())
+        )
           .resizable()
           .frame(
             width: large ? LARGE_SYMBOL_SIZE : SYMBOL_SIZE,
