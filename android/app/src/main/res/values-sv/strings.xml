@@ -58,5 +58,5 @@
     <string name="location_service_info">Appen samlar in platsdata för att widget kan uppdaterings väderdata för aktuell plats även när appen är stängd eller inte används. Alternativt kan du använda favoritplatser utan tillstånd för platstjänster.</string>
     <string name="location_service_info_title">Vill du aktivera platstjänst?</string>
     <string name="ask_permission">Tillåta</string>
-    <string name="updated">"Uppdaterad"</string>
+    <string name="updated">"Uppdaterad kl."</string>
 </resources>
