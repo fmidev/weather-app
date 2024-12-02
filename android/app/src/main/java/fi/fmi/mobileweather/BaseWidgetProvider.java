@@ -561,7 +561,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
         else if (theme.equals(GRADIENT)) {
             setColors(main,
-                    R.drawable.gradient_background,
+                    R.drawable.gradient_2,
                     0,
                     Color.WHITE);
         }
