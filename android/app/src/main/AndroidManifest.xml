@@ -52,7 +52,7 @@
         android:windowSoftInputMode="adjustResize"
         android:exported="true" />
 
-        <receiver android:name=".SmallWidgetProvider" android:label="@string/small_widget" android:exported="false">
+        <receiver android:name=".SmallForecastWidgetProvider" android:label="@string/small_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
             </intent-filter>
@@ -61,13 +61,13 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_widget_provider_info" />
         </receiver>
-        <activity android:name=".SmallWidgetConfigurationActivity" android:exported="false">
+        <activity android:name=".SmallForecastWidgetConfigurationActivity" android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".LargeWidgetProvider" android:label="@string/large_widget" android:exported="false">
+        <receiver android:name=".LargeForecastWidgetProvider" android:label="@string/large_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
             </intent-filter>
@@ -76,13 +76,13 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/large_widget_provider_info" />
         </receiver>
-        <activity android:name=".LargeWidgetConfigurationActivity" android:exported="false">
+        <activity android:name=".LargeForecastWidgetConfigurationActivity" android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".MaxWidgetProvider" android:label="@string/max_widget" android:exported="false">
+        <receiver android:name=".MaxForecastWidgetProvider" android:label="@string/max_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
             </intent-filter>
@@ -91,7 +91,7 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/max_widget_provider_info" />
         </receiver>
-        <activity android:name=".MaxWidgetConfigurationActivity" android:exported="false">
+        <activity android:name=".MaxForecastWidgetConfigurationActivity" android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>

@@ -1,7 +1,6 @@
 package fi.fmi.mobileweather;
 
 import static fi.fmi.mobileweather.Theme.LIGHT;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -14,11 +13,11 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-public class MaxWidgetProvider extends BaseWidgetProvider {
+public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.max_widget_layout;
+        return R.layout.max_forecast_widget_layout;
     }
 
     // populate widget with data
