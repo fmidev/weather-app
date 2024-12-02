@@ -13,12 +13,12 @@ struct NextHourForecastExtraRow: View {
       }
       Spacer()
       if (useCardinalsForWindDirection == true) {
-        Image(timeStep.windCompass8)
+        Image(timeStep.windCompass8, label: Text(timeStep.windCompass8.localized()))
           .resizable()
           .aspectRatio(contentMode: .fit)
           .frame(width: IMAGE_SIZE, height: IMAGE_SIZE)
       } else {
-        Image("N")
+        Image("N", label: Text(timeStep.windCompass8.localized()))
           .resizable()
           .aspectRatio(contentMode: .fit)
           .frame(width: IMAGE_SIZE, height: IMAGE_SIZE)
@@ -27,7 +27,7 @@ struct NextHourForecastExtraRow: View {
       Text("**\(timeStep.formatWindSpeed())** m/s")
       Spacer()
       Text("feels like **\(timeStep.formatTemperature(includeDegree: true, useFeelsLike: true))**")
-      Image(timeStep.getFeelsLikeIcon())
+      Image(decorative: timeStep.getFeelsLikeIcon())
         .resizable()
         .aspectRatio(contentMode: .fit)
         .foregroundColor(Color("TextColor"))

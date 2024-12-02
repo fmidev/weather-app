@@ -1,7 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "FMI_logo.svg",
+      "filename" : "FMI_logo_blue.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "FMI_logo_white.svg",
       "idiom" : "universal"
     }
   ],

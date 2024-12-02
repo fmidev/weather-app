@@ -9,9 +9,10 @@ struct ForecastColumn: View {
     VStack {
       Text(timeStep.formatTime()).style(.time)
       Spacer()
-      Image(String(timeStep.smartSymbol))
-        .resizable()
-        .frame(width: SYMBOL_SIZE , height: SYMBOL_SIZE)
+      Image(
+        String(timeStep.smartSymbol),
+        label: Text(timeStep.getSmartSymbolTranslationKey().localized())
+      ).resizable().frame(width: SYMBOL_SIZE , height: SYMBOL_SIZE)
       Spacer()
       Text(timeStep.formatTemperature(includeDegree: true)).style(.temperature)
     }

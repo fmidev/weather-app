@@ -172,9 +172,12 @@ struct SmallWarningTodayView : View {
           }
           Spacer()
           if (entry.crisisMessage != nil) {
+            Spacer()
             Text(entry.crisisMessage!)
               .style(.crisis)
+              .padding(.horizontal, 9)
               .foregroundStyle(Color("CrisisTextColor"))
+              .background(Color("CrisisBackgroundColor"))
               .lineLimit(2)
               .fixedSize(horizontal: false, vertical: true)
           } else if (entry.warnings.count == 1) {
