@@ -1664,6 +1664,23 @@
         }
       }
     },
+    "Traffic weather warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liikennesää"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trafikvädret"
+          }
+        }
+      }
+    },
     "Unknown error" : {
       "localizations" : {
         "fi" : {

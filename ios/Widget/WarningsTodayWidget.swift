@@ -152,7 +152,7 @@ struct SmallWarningsTodayView : View {
 
   var body: some View {
     if (entry.error != nil) {
-      WarningsErrorView(error: entry.error!)
+      WarningsErrorView(error: entry.error!, size: .small)
         .modifier(TextModifier())
     } else {
       VStack {
@@ -197,11 +197,12 @@ struct SmallWarningsTodayView : View {
 
 struct WarningsTodayView : View {
   var entry: WarningProvider.Entry;
-  var maxWarningRows: Int;
-
+  var size : ErrorViewSize
+  var maxWarningRows: Int
+  
   var body: some View {
     if (entry.error != nil) {
-      WarningsErrorView(error: entry.error!)
+      WarningsErrorView(error: entry.error!, size: size)
         .modifier(TextModifier())
     } else {
       VStack(alignment: .leading) {
@@ -241,7 +242,7 @@ struct WarningsTodayView : View {
         if (entry.crisisMessage == nil) {
           WarningsUpdated(
             updated: entry.formatUpdated(),
-            logoPosition: maxWarningRows <= 2 ? .right : .left
+            logoPosition: size == .medium ? .right : .left
           )
         }
       }.modifier(TextModifier())
@@ -259,6 +260,7 @@ struct WarningsTodayEntryView : View {
     } else {
       WarningsTodayView(
         entry: entry,
+        size: family == .systemMedium ? .medium : .large,
         maxWarningRows: family == .systemMedium ? 2 : 4
       ).padding(.horizontal, 13)
     }
