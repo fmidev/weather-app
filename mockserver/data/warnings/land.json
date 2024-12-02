@@ -50,6 +50,12 @@
         "duration": {
           "startTime": "2024-11-20T15:00:00.000Z",
           "endTime": "2024-11-21T06:00:00.000Z"
+        },
+        "physical": {
+          "windIntensity": 25,
+          "windIntensityUom": "m/s",
+          "windDirection": 45,
+          "windDirectionUom": "°"
         }
       },
       {
@@ -100,6 +106,12 @@
         "duration": {
           "startTime": "2024-11-20T15:00:00.000Z",
           "endTime": "2024-11-21T06:00:00.000Z"
+        },
+        "physical": {
+          "windIntensity": 25,
+          "windIntensityUom": "m/s",
+          "windDirection": 45,
+          "windDirectionUom": "°"
         }
       },
       {
@@ -150,6 +162,12 @@
         "duration": {
           "startTime": "2024-11-20T15:00:00.000Z",
           "endTime": "2024-11-21T06:00:00.000Z"
+        },
+        "physical": {
+          "windIntensity": 15,
+          "windIntensityUom": "m/s",
+          "windDirection": 45,
+          "windDirectionUom": "°"
         }
       }
     ],

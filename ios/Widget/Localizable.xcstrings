@@ -345,6 +345,22 @@
         }
       }
     },
+    "More warnings (%lld)" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisää varoituksia (%lld)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fler varningar (%lld)"
+          }
+        }
+      }
+    },
     "N" : {
       "extractionState" : "manual",
       "localizations" : {
