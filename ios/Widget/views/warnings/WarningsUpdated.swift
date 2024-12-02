@@ -1,10 +1,3 @@
-//
-//  WarningsUpdated.swift
-//  WidgetExtension
-//
-//  Created by Pekka Keränen on 2.12.2024.
-//
-
 import SwiftUI
 
 enum LogoPosition {
