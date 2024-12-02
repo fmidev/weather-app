@@ -90,18 +90,18 @@
         <RelativeLayout
             android:id="@+id/hourForecastRowLayout"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="108dp"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="300dp"
-                android:layout_height="20dp"
+                android:layout_width="280dp"
+                android:layout_height="34dp"
                 android:background="#F6F6F7"
                 android:importantForAccessibility="no" />
 
             <ImageView
-                android:layout_width="300dp"
-                android:layout_height="20dp"
+                android:layout_width="280dp"
+                android:layout_height="34dp"
                 android:layout_alignParentBottom="true"
                 android:background="#F6F6F7"
                 android:importantForAccessibility="no" />
@@ -109,7 +109,7 @@
             <RelativeLayout
                 android:id="@+id/weatherIconsLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
+                android:layout_height="108dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="13dp"
                 android:orientation="vertical">
@@ -118,21 +118,21 @@
                     android:id="@+id/clockIconImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_marginTop="7dp"
                     android:background="@drawable/ic_clock" />
 
                 <ImageView
                     android:id="@id/weatherIconImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_below="@id/clockIconImageView"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
+                    android:layout_centerInParent="true"
                     android:background="@drawable/ic_weather" />
 
                 <ImageView
                     android:id="@+id/temperatureIconImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_marginBottom="7dp"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/ic_temperature" />
 
@@ -141,8 +141,8 @@
             <RelativeLayout
                 android:id="@+id/weatherLayout0"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="108dp"
+                android:layout_marginEnd="9dp"
                 android:layout_toEndOf="@id/weatherIconsLayout"
                 android:orientation="vertical">
 
@@ -150,7 +150,7 @@
                     android:id="@+id/timeTextView0"
                     style="@style/time"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView0"
                     android:layout_alignEnd="@id/weatherIconImageView0"
                     android:background="#F6F6F7"
@@ -159,8 +159,8 @@
 
                 <ImageView
                     android:id="@+id/weatherIconImageView0"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_above="@id/temperatureTextView0"
                     android:layout_below="@id/timeTextView0"
                     android:layout_gravity="center"
@@ -171,7 +171,7 @@
                     android:id="@+id/temperatureTextView0"
                     style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView0"
                     android:layout_alignEnd="@id/weatherIconImageView0"
                     android:layout_alignParentBottom="true"
@@ -183,8 +183,8 @@
             <RelativeLayout
                 android:id="@+id/weatherLayout1"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="108dp"
+                android:layout_marginEnd="9dp"
                 android:layout_toEndOf="@id/weatherLayout0"
                 android:orientation="vertical">
 
@@ -192,7 +192,7 @@
                     android:id="@+id/timeTextView1"
                     style="@style/time"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView1"
                     android:layout_alignEnd="@id/weatherIconImageView1"
                     android:gravity="center"
@@ -200,8 +200,8 @@
 
                 <ImageView
                     android:id="@+id/weatherIconImageView1"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_above="@id/temperatureTextView1"
                     android:layout_below="@id/timeTextView1"
                     android:layout_gravity="center"
@@ -212,7 +212,7 @@
                     android:id="@+id/temperatureTextView1"
                     style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView1"
                     android:layout_alignEnd="@id/weatherIconImageView1"
                     android:layout_alignParentBottom="true"
@@ -224,8 +224,8 @@
             <RelativeLayout
                 android:id="@+id/weatherLayout2"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="108dp"
+                android:layout_marginEnd="9dp"
                 android:layout_toEndOf="@id/weatherLayout1"
                 android:orientation="vertical">
 
@@ -233,7 +233,7 @@
                     android:id="@+id/timeTextView2"
                     style="@style/time"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView2"
                     android:layout_alignEnd="@id/weatherIconImageView2"
                     android:gravity="center"
@@ -241,8 +241,8 @@
 
                 <ImageView
                     android:id="@+id/weatherIconImageView2"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_above="@id/temperatureTextView2"
                     android:layout_below="@id/timeTextView2"
                     android:layout_gravity="center"
@@ -253,7 +253,7 @@
                     android:id="@+id/temperatureTextView2"
                     style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView2"
                     android:layout_alignEnd="@id/weatherIconImageView2"
                     android:layout_alignParentBottom="true"
@@ -265,8 +265,8 @@
             <RelativeLayout
                 android:id="@+id/weatherLayout3"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="108dp"
+                android:layout_marginEnd="9dp"
                 android:layout_toEndOf="@id/weatherLayout2"
                 android:orientation="vertical">
 
@@ -274,7 +274,7 @@
                     android:id="@+id/timeTextView3"
                     style="@style/time"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView3"
                     android:layout_alignEnd="@id/weatherIconImageView3"
                     android:background="#F6F6F7"
@@ -283,8 +283,8 @@
 
                 <ImageView
                     android:id="@+id/weatherIconImageView3"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_above="@id/temperatureTextView3"
                     android:layout_below="@id/timeTextView3"
                     android:layout_gravity="center"
@@ -295,7 +295,7 @@
                     android:id="@+id/temperatureTextView3"
                     style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView3"
                     android:layout_alignEnd="@id/weatherIconImageView3"
                     android:layout_alignParentBottom="true"
@@ -308,7 +308,7 @@
             <RelativeLayout
                 android:id="@+id/weatherLayout4"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
+                android:layout_height="108dp"
                 android:layout_marginEnd="8dp"
                 android:layout_toEndOf="@id/weatherLayout3"
                 android:orientation="vertical">
@@ -317,7 +317,7 @@
                     android:id="@+id/timeTextView4"
                     style="@style/time"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView4"
                     android:layout_alignEnd="@id/weatherIconImageView4"
                     android:background="#F6F6F7"
@@ -326,8 +326,8 @@
 
                 <ImageView
                     android:id="@+id/weatherIconImageView4"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_above="@id/temperatureTextView4"
                     android:layout_below="@id/timeTextView4"
                     android:layout_gravity="center"
@@ -338,7 +338,7 @@
                     android:id="@+id/temperatureTextView4"
                     style="@style/temperatureSmall"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView4"
                     android:layout_alignEnd="@id/weatherIconImageView4"
                     android:layout_alignParentBottom="true"
@@ -353,7 +353,7 @@
         <TextView
             android:id="@+id/crisisTextView"
             style="@style/crisis"
-            android:layout_width="match_parent"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
@@ -367,7 +367,7 @@
             tools:visibility="visible" />
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="280dp"
             android:layout_height="wrap_content">
 
             <ImageView
