@@ -306,6 +306,22 @@
         }
       }
     },
+    "More warnings (%lld)" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisää varoituksia (%lld)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fler varningar (%lld)"
+          }
+        }
+      }
+    },
     "Next hour forecast" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -499,12 +515,13 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uppdaterad den **%@**"
+            "value" : "Uppdaterad kl. **%@**"
           }
         }
       }
     },
     "Updated at %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {

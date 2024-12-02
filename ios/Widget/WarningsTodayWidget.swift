@@ -192,8 +192,9 @@ struct SmallWarningsTodayView : View {
   }
 }
 
-struct MediumWarningsTodayView : View {
+struct WarningsTodayView : View {
   var entry: WarningProvider.Entry;
+  var maxWarningRows: Int;
 
   var body: some View {
     if (entry.error != nil) {
@@ -203,33 +204,42 @@ struct MediumWarningsTodayView : View {
       VStack(alignment: .leading) {
         Text(
           "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
-        ).style(.location).padding(.top, 3)
+        ).style(.location)
+          .padding(.top, 3)
+          .frame(maxWidth: .infinity, alignment: .center)
         if (entry.warnings.isEmpty) {
           Spacer()
-          Text("No warnings")
+          Text("No warnings").frame(maxWidth: .infinity, alignment: .center)
           Spacer()
         } else {
           Spacer()
-          WarningRow(warning: entry.warnings[0])
-          if (entry.warnings.count >= 2) {
-            WarningRow(warning: entry.warnings[1])
+          if (maxWarningRows <= 2 && entry.warnings.count > 2) {
+            WarningRow(warning: entry.warnings[0])
+          } else {
+            let range = 0..<min(maxWarningRows, entry.warnings.count)
+            ForEach(range, id: \.self) { i in
+              WarningRow(warning: entry.warnings[i])
+              if (maxWarningRows > 2) {
+                Spacer().frame(minHeight: 7, maxHeight: 24)
+              }
+            }
           }
           Spacer()
           if (entry.crisisMessage != nil) {
             CrisisMessage(message: entry.crisisMessage!)
-          } else if (entry.warnings.count == 1) {
+          } else if entry.warnings.count > maxWarningRows {
             HStack {
               Spacer()
-              Text("Updated at \(entry.formatUpdated())").style(.updatedTime)
-              Spacer()
-            }
-          } else {
-            HStack {
-              Spacer()
-              Text("Warnings (\(entry.warnings.count))")
+              Text("More warnings (\(entry.warnings.count - maxWarningRows))")
               Spacer()
             }
           }
+        }
+        if (entry.crisisMessage == nil) {
+          WarningsUpdated(
+            updated: entry.formatUpdated(),
+            logoPosition: maxWarningRows <= 2 ? .right : .left
+          )
         }
       }.modifier(TextModifier())
     }
@@ -241,10 +251,13 @@ struct WarningsTodayEntryView : View {
   var entry: WarningProvider.Entry
   
   var body: some View {
-    if (family == .systemMedium) {
-      MediumWarningsTodayView(entry: entry).padding(.horizontal, 13)
-    } else {
+    if (family == .systemSmall) {
       SmallWarningsTodayView(entry: entry)
+    } else {
+      WarningsTodayView(
+        entry: entry,
+        maxWarningRows: family == .systemMedium ? 2 : 4
+      ).padding(.horizontal, 13)
     }
   }
 }
@@ -261,7 +274,7 @@ struct WarningsTodayWidget: Widget {
     .contentMarginsDisabled()
     .configurationDisplayName("Weather warnings for today")
     .description("Weather warnings in your location")
-    .supportedFamilies([.systemSmall, .systemMedium])
+    .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
   }
 }
 
