@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-public class SmallWidgetProvider extends BaseWidgetProvider {
+public class SmallForecastWidgetProvider extends BaseWidgetProvider {
 
     // default layout resource ID
     @Override
@@ -15,10 +15,10 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
         // if Android 12 version or higher, the default layout is small
         // (because the widget size is determined by the ...provider_info.xml)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            return R.layout.small_widget_layout;
+            return R.layout.small_forecast_widget_layout;
         } else {
             // for Android 11 and below, the default layout is xs
-            return R.layout.xs_widget_layout;
+            return R.layout.xs_forecast_widget_layout;
         }
     }
 
@@ -48,16 +48,16 @@ public class SmallWidgetProvider extends BaseWidgetProvider {
     private int getLayoutResourceIdForResize(int minWidth, int minHeight) {
         if (minWidth > 100 && minWidth < 200 && minHeight > 120) {
             Log.d("Widget Update", "Small widget " + minWidth + "x" + minHeight);
-            return R.layout.small_widget_layout;
+            return R.layout.small_forecast_widget_layout;
         } else if (minWidth >= 200 && minWidth < 300 && minHeight > 120) {
             Log.d("Widget Update", "Medium widget " + minWidth + "x" + minHeight);
-            return R.layout.medium_widget_layout;
+            return R.layout.medium_forecast_widget_layout;
         } else if (minWidth >= 300) {
             Log.d("Widget Update", "Horizontal widget " + minWidth + "x" + minHeight);
-            return R.layout.horizontal_widget_layout;
+            return R.layout.horizontal_forecast_widget_layout;
         } else {
             Log.d("Widget Update", "XS widget " + minWidth + "x" + minHeight);
-            return R.layout.xs_widget_layout;
+            return R.layout.xs_forecast_widget_layout;
         }
     }
 

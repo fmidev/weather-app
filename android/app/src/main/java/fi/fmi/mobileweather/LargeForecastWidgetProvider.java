@@ -12,24 +12,14 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-public class LargeWidgetProvider extends BaseWidgetProvider {
+public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.large_widget_layout;
+        return R.layout.large_forecast_widget_layout;
     }
 
-    // set the widget UI date like colors, texts, icons etc.
-    @Override
-    protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref) {
-
-        // init widget
-        WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref);
-
-        // populate widget with data
-        setWidgetData(announcementsJson, pref, widgetInitResult);
-    }
-
+    // populate widget with data
     @Override
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
@@ -89,7 +79,6 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
                 // ** set the time, temperature and weather icon
 
                 String formattedTime = getFormattedWeatherTime(localTime);
-
                 widgetRemoteViews.setTextViewText(timeTextViewId, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
