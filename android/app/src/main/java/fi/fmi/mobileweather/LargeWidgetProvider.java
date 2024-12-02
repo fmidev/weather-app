@@ -1,5 +1,7 @@
 package fi.fmi.mobileweather;
 
+import static fi.fmi.mobileweather.Theme.LIGHT;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -24,11 +26,11 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        String background = widgetInitResult.background();
+        String theme = widgetInitResult.theme();
         
         // set colors for views which are specific for large widget
         // (not set in the initWidget)
-        setLargeWidgetSpecificColors(widgetRemoteViews, background);
+        setLargeWidgetSpecificColors(widgetRemoteViews, theme);
 
         try {
             // Get the keys of the JSONObject
@@ -85,7 +87,7 @@ public class LargeWidgetProvider extends BaseWidgetProvider {
                 widgetRemoteViews.setTextViewText(temperatureTextViewId, temperature + "°");
 
                 Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                        context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+                        context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
                 widgetRemoteViews.setImageViewBitmap(weatherIconImageViewId, icon);
             }
 

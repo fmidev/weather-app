@@ -4,6 +4,11 @@ import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
 
+import static fi.fmi.mobileweather.PrefKey.THEME;
+import static fi.fmi.mobileweather.Theme.DARK;
+import static fi.fmi.mobileweather.Theme.GRADIENT;
+import static fi.fmi.mobileweather.Theme.LIGHT;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -250,15 +255,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
 
-            RadioGroup background = findViewById(R.id.backgroundRadioGroup);
-            int selectedBackground = background.getCheckedRadioButtonId();
+            RadioGroup theme = findViewById(R.id.backgroundRadioGroup);
+            int selectedTheme = theme.getCheckedRadioButtonId();
 
-            if (selectedBackground==R.id.optionLightRadioButton)
-                pref.saveString("background", "light");
-            else if (selectedBackground==R.id.optionTransparentRadioButton)
-                pref.saveString("background", "transparent");
+            if (selectedTheme==R.id.optionLightRadioButton)
+                pref.saveString(THEME, LIGHT);
+            else if (selectedTheme==R.id.optionTransparentRadioButton)
+                pref.saveString(THEME, GRADIENT);
             else
-                pref.saveString("background", "dark");
+                pref.saveString(THEME, DARK);
 
             pref.saveString("forecast", "hours");
 

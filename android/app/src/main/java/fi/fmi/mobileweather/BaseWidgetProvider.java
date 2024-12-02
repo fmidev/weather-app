@@ -4,6 +4,8 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static fi.fmi.mobileweather.PrefKey.*;
+import static fi.fmi.mobileweather.Theme.*;
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
 import android.Manifest;
@@ -65,7 +67,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private static String weatherUrl;
     private static String announcementsUrl;
 
-    protected static String immediateBackgroundSetting;
+    protected static String immediateThemeSetting;
 
     protected abstract int getLayoutResourceId();
 
@@ -312,7 +314,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref) {
 
-        // init widget, returns (new) forecast forecastJson, widget layout views and background type
+        // init widget, returns (new) forecast forecastJson, widget layout views and theme
         WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref);
 
         // populate widget with data
@@ -322,7 +324,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject forecastJson = widgetInitResult.forecastJson();
-        String background = widgetInitResult.background();
+        String theme = widgetInitResult.theme();
 
         try {
             // Get the keys of the JSONObject
@@ -360,7 +362,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             String weathersymbol = first.getString("smartSymbol");
 
             Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+                    context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
 
             widgetRemoteViews.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
@@ -462,16 +464,16 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        // Get background setting
-        String background;
-        if (immediateBackgroundSetting == null) {
-            background = pref.getString("background", "light");
+        // Get theme setting
+        String theme;
+        if (immediateThemeSetting == null) {
+            theme = pref.getString(THEME, LIGHT);
         } else {
-            background = immediateBackgroundSetting;
-            immediateBackgroundSetting = null;
+            theme = immediateThemeSetting;
+            immediateThemeSetting = null;
         }
 
-        Log.d("Download json", "Background: " + background);
+        Log.d("Download json", "Theme: " + theme);
 
         // get remote views of widget
         widgetRemoteViews = getRemoteViews(widgetRemoteViews);
@@ -494,15 +496,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             );
         }
 
-        setWidgetColors(widgetRemoteViews, background);
+        setWidgetColors(widgetRemoteViews, theme);
 
         Log.d("Download json", "Forecast json: " + forecastJson);
         
-        WidgetInitResult widgetInitResult = new WidgetInitResult(forecastJson, widgetRemoteViews, background);
+        WidgetInitResult widgetInitResult = new WidgetInitResult(forecastJson, widgetRemoteViews, theme);
         return widgetInitResult;
     }
 
-    protected record WidgetInitResult(JSONObject forecastJson, RemoteViews widgetRemoteViews, String background) {
+    protected record WidgetInitResult(JSONObject forecastJson, RemoteViews widgetRemoteViews, String theme) {
     }
 
     @NonNull
@@ -550,32 +552,33 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private void setWidgetColors(RemoteViews main, String background) {
-        if (background.equals("dark")) {
+    private void setWidgetColors(RemoteViews main, String theme) {
+        if (theme.equals(DARK)) {
             setColors(main,
-                    R.drawable.gradient_background_dark,
                     0,
-                    Color.rgb(255, 255, 255));
+                    Color.BLACK,
+                    Color.WHITE);
         }
-        else if (background.equals("light")) {
+        else if (theme.equals(GRADIENT)) {
+            setColors(main,
+                    R.drawable.gradient_background,
+                    0,
+                    Color.WHITE);
+        }
+        else { // light theme
             setColors(main,
                     0,
-                    Color.rgb(255, 255, 255),
-                    Color.rgb(48, 49, 147));
-        } else {
-            setColors(main,
-                    0,
-                    Color.TRANSPARENT,
-                    Color.rgb(48, 49, 147));
+                    Color.WHITE,
+                    Color.BLACK);
         }
     }
 
-    protected void setLargeWidgetSpecificColors(RemoteViews main, String background) {
-        if (background.equals("dark")) {
+    protected void setLargeWidgetSpecificColors(RemoteViews main, String theme) {
+        if (theme.equals(DARK)) {
             setWeatherRowColors(main,
                     Color.rgb(255, 255, 255));
         }
-        else if (background.equals("light")) {
+        else if (theme.equals(LIGHT)) {
             setWeatherRowColors(main,
                     Color.rgb(48, 49, 147));
         } else {
@@ -585,12 +588,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void setColors(RemoteViews remoteViews, int backgroundResource, int backgroundColor, int textColor) {
-        // Set background
+        // Set theme
         if (backgroundResource != 0)
-            // Set background resource, i.e. drawable resource ID
+            // Set theme resource, i.e. drawable resource ID
             remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", backgroundResource);
         else
-            // Set background color
+            // Set theme color
             remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
 
         remoteViews.setInt(R.id.locationNameTextView, "setTextColor", textColor);
@@ -630,10 +633,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         if (json == null) {
             // Restore latest forecastJson
 
-            long updated = pref.getLong("latest_json_updated", 0L);
+            long updated = pref.getLong(LATEST_JSON_UPDATED, 0L);
 
             if (updated > (now.getTime() - FORECAST_DATA_VALIDITY)) {
-                String jsonstr = pref.getString("latest_json", null);
+                String jsonstr = pref.getString(LATEST_JSON, null);
 
                 try {
                     json = new JSONObject(jsonstr);
@@ -659,7 +662,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         } else {
             // Store latest forecastJson
             pref.saveString("latest_json", json.toString());
-            pref.saveLong("latest_json_updated", now.getTime());
+            pref.saveLong(LATEST_JSON_UPDATED, now.getTime());
         }
         return json;
     }
@@ -694,7 +697,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2) {
-        String background = pref.getString("background", "dark");
+        String theme = pref.getString(THEME, DARK);
 
         RemoteViews widgetRemoteViews = new RemoteViews(context.getPackageName(), getLayoutResourceId());
 
@@ -707,12 +710,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // Hide normal view
         widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", GONE);
 
-        if (background.equals("dark"))
-            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.parseColor("#191B22"));
-        else if (background.equals("light")) {
-            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.rgb(255, 255, 255));
-        } else
-            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.TRANSPARENT);
+        if (theme.equals(DARK))
+            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.BLACK);
+        else if (theme.equals(LIGHT))
+            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.WHITE);
+        else
+            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", R.drawable.gradient_background);
 
         widgetRemoteViews.setTextViewText(R.id.errorHeaderTextView, errorText1);
         widgetRemoteViews.setTextViewText(R.id.errorBodyTextView, errorText2);
@@ -722,12 +725,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected void saveLayoutResourceId(Context context, int appWidgetId, int layoutId) {
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
-        pref.saveInt("layout_res_id", layoutId);
+        pref.saveInt(LAYOUT_RES_ID, layoutId);
     }
 
     protected int loadLayoutResourceId(Context context, int appWidgetId) {
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
-        return pref.getInt("layout_res_id", 0);
+        return pref.getInt(LAYOUT_RES_ID, 0);
     }
 
     @NonNull

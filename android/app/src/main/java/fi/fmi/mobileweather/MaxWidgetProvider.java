@@ -1,27 +1,18 @@
 package fi.fmi.mobileweather;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+import static fi.fmi.mobileweather.Theme.LIGHT;
 
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import androidx.annotation.NonNull;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 
 public class MaxWidgetProvider extends BaseWidgetProvider {
 
@@ -35,11 +26,11 @@ public class MaxWidgetProvider extends BaseWidgetProvider {
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        String background = widgetInitResult.background();
+        String theme = widgetInitResult.theme();
 
         // set colors for views which are specific for large widget
         // (not set in the initWidget)
-        setLargeWidgetSpecificColors(widgetRemoteViews, background);
+        setLargeWidgetSpecificColors(widgetRemoteViews, theme);
 
         try {
             // Get the keys of the JSONObject
@@ -83,7 +74,7 @@ public class MaxWidgetProvider extends BaseWidgetProvider {
                     String weathersymbol = forecast.getString("smartSymbol");
                     widgetRemoteViews.setTextViewText(R.id.temperatureTextView, addPlusIfNeeded(temperature) + "°");
                     Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                            context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+                            context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
                     widgetRemoteViews.setImageViewBitmap(R.id.weatherIconImageView, icon);
 
                     // next iteration in loop
@@ -112,7 +103,7 @@ public class MaxWidgetProvider extends BaseWidgetProvider {
                 widgetRemoteViews.setTextViewText(temperatureTextViewId, temperature + "°");
 
                 Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                        context.getResources().getIdentifier("s" + weathersymbol + (background.equals("light") ? "_light" : "_dark"), "drawable", context.getPackageName()));
+                        context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
                 widgetRemoteViews.setImageViewBitmap(weatherIconImageViewId, icon);
             }
 
