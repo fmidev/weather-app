@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="fi.fmi.mobileweather.LargeWidgetConfigurationActivity"
-    android:initialLayout="@layout/large_widget_layout"
+    android:configure="fi.fmi.mobileweather.LargeForecastWidgetConfigurationActivity"
+    android:initialLayout="@layout/large_forecast_widget_layout"
     android:minWidth="300dp"
     android:minHeight="100dp"
-    android:previewImage="@drawable/large_widget_preview"
+    android:previewImage="@drawable/large_forecast_widget_preview"
     android:resizeMode="none"
     android:targetCellWidth="4"
     android:targetCellHeight="2"

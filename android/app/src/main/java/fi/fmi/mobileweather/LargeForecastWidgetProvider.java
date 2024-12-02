@@ -12,11 +12,11 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-public class LargeWidgetProvider extends BaseWidgetProvider {
+public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.large_widget_layout;
+        return R.layout.large_forecast_widget_layout;
     }
 
     // populate widget with data

@@ -1,33 +1,22 @@
 package fi.fmi.mobileweather;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import androidx.annotation.NonNull;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 
-public class MaxWidgetProvider extends BaseWidgetProvider {
+public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
     @Override
     protected int getLayoutResourceId() {
-        return R.layout.max_widget_layout;
+        return R.layout.max_forecast_widget_layout;
     }
 
     // populate widget with data
