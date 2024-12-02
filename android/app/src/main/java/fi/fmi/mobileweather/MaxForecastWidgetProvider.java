@@ -2,15 +2,17 @@ package fi.fmi.mobileweather;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.Html;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
@@ -105,9 +107,29 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                 widgetRemoteViews.setImageViewBitmap(weatherIconImageViewId, icon);
             }
 
-            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, context.getString(R.string.updated)
+            // Get the current time
+            Date currentTime = new Date();
+            // Format the time as "HH:mm"
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            String formattedTime = formatter.format(currentTime);
+
+            String htmlString = context.getString(R.string.updated)
                     + " "
-                    + DateFormat.getTimeInstance().format(new Date()));
+                    + "<b>"
+                    // add time of now in HH:mm format
+                    + formattedTime
+                    + "</b>";
+
+            // Convert the HTML string to a CharSequence
+            CharSequence formattedText;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                formattedText = Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY);
+            } else {
+                formattedText = Html.fromHtml(htmlString);
+            }
+
+            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, formattedText);
+
 
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
