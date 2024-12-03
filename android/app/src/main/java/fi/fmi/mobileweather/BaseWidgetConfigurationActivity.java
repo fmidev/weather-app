@@ -254,16 +254,21 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             Context context = getBaseContext();
 
             SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
+            Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
             RadioGroup theme = findViewById(R.id.backgroundRadioGroup);
             int selectedTheme = theme.getCheckedRadioButtonId();
+            String selectedThemeString = null;
 
             if (selectedTheme==R.id.optionLightRadioButton)
-                pref.saveString(THEME, LIGHT);
+                selectedThemeString = LIGHT;
             else if (selectedTheme==R.id.optionTransparentRadioButton)
-                pref.saveString(THEME, GRADIENT);
+                selectedThemeString = GRADIENT;
             else
-                pref.saveString(THEME, DARK);
+                selectedThemeString = DARK;
+
+            pref.saveString(THEME, selectedThemeString);
+            Log.d("Widget Update", "Selected theme: " + selectedThemeString);
 
             pref.saveString("forecast", "hours");
 
@@ -274,7 +279,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                 pref.saveInt("location", 0);
             else
                 pref.saveInt("location", selectedLocation);
-
 
             // Send a broadcast to trigger onUpdate()
             int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);

@@ -67,8 +67,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private static String weatherUrl;
     private static String announcementsUrl;
 
-    protected static String immediateThemeSetting;
-
     protected abstract int getLayoutResourceId();
 
     // ********** WidgetProvider main methods: **********
@@ -152,6 +150,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         this.appWidgetManager = appWidgetManager;
         this.appWidgetId = appWidgetId;
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
+        Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
         Log.d("Widget Location", "Trying to request location");
         if ((ContextCompat.checkSelfPermission(context,
@@ -465,12 +464,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         // Get theme setting
-        String theme;
-        if (immediateThemeSetting == null) {
-            theme = pref.getString(THEME, LIGHT);
-        } else {
-            theme = immediateThemeSetting;
-            immediateThemeSetting = null;
+        String theme = pref.getString(THEME, null);
+        Log.d("Widget Update", "Theme from shared preferences: " + theme);
+        if (theme == null) {
+            theme = LIGHT;
         }
 
         Log.d("Download json", "Theme: " + theme);
@@ -561,7 +558,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
         else if (theme.equals(GRADIENT)) {
             setColors(main,
-                    R.drawable.gradient_2,
+                    R.drawable.gradient_background,
                     0,
                     Color.WHITE);
         }
