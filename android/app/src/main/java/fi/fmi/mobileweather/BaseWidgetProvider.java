@@ -4,6 +4,7 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.PrefKey.*;
 import static fi.fmi.mobileweather.Theme.*;
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
@@ -567,7 +568,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             setColors(main,
                     0,
                     Color.WHITE,
-                    Color.parseColor("#303193"));
+                    getPrimaryBlue(context));
         }
     }
 
@@ -575,7 +576,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         if (theme.equals(DARK) || theme.equals(GRADIENT)) {
             setWeatherRowColors(remoteViews, Color.WHITE);
         } else { // LIGHT theme
-            setWeatherRowColors(remoteViews, Color.parseColor("#303193"));
+            setWeatherRowColors(remoteViews, getPrimaryBlue(context));
         }
     }
 

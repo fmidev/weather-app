@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="splashscreen_bg">#FFFFFF</color>
+  <color name="primaryBlue">#303193</color>
 </resources>

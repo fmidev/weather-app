@@ -2,6 +2,7 @@ package fi.fmi.mobileweather;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.Theme.DARK;
 import static fi.fmi.mobileweather.Theme.GRADIENT;
 import static fi.fmi.mobileweather.Theme.LIGHT;
@@ -168,7 +169,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
             remoteViews.setImageViewResource(R.id.logoImageView, R.drawable.fmi_logo_white);
         }
         else { // LIGHT theme
-            remoteViews.setInt(R.id.timeTextView, "setTextColor", Color.parseColor("#303193"));
+            remoteViews.setInt(R.id.timeTextView, "setTextColor", getPrimaryBlue(context));
             remoteViews.setViewVisibility(R.id.verticalBarImageView0, VISIBLE);
             remoteViews.setViewVisibility(R.id.verticalBarImageView1, VISIBLE);
             remoteViews.setImageViewResource(R.id.clockSymbolImageView, R.drawable.ic_clock_blue);
