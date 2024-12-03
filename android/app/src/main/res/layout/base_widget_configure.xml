@@ -102,7 +102,7 @@
                     android:layout_weight="1"
                     android:paddingTop="@dimen/radiobutton_padding"
                     android:paddingBottom="@dimen/radiobutton_padding"
-                    android:text="@string/transparent" />
+                    android:text="@string/gradient" />
             </RadioGroup>
 
             <TextView

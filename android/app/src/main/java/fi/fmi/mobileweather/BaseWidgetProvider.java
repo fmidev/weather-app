@@ -463,7 +463,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        // Get theme setting
+        // Get theme setting.
+        // NOTE: default value not set to LIGHT right here because of logging
         String theme = pref.getString(THEME, null);
         Log.d("Widget Update", "Theme from shared preferences: " + theme);
         if (theme == null) {
@@ -566,21 +567,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             setColors(main,
                     0,
                     Color.WHITE,
-                    Color.BLACK);
+                    Color.parseColor("#303193"));
         }
     }
 
-    protected void setLargeWidgetSpecificColors(RemoteViews main, String theme) {
-        if (theme.equals(DARK)) {
-            setWeatherRowColors(main,
-                    Color.rgb(255, 255, 255));
-        }
-        else if (theme.equals(LIGHT)) {
-            setWeatherRowColors(main,
-                    Color.rgb(48, 49, 147));
-        } else {
-            setWeatherRowColors(main,
-                    Color.rgb(48, 49, 147));
+    protected void setLargeWidgetSpecificColors(RemoteViews remoteViews, String theme) {
+        if (theme.equals(DARK) || theme.equals(GRADIENT)) {
+            setWeatherRowColors(remoteViews, Color.WHITE);
+        } else { // LIGHT theme
+            setWeatherRowColors(remoteViews, Color.parseColor("#303193"));
         }
     }
 

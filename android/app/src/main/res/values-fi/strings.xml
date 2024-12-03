@@ -38,6 +38,7 @@
     <string name="ready">Valmis</string>
     <string name="dark">Tumma</string>
     <string name="light">Vaalea</string>
+    <string name="gradient">Kaltevuus</string>
     <string name="transparent">Läpinäkyvä</string>
     <string name="Forecast">Ennuste</string>
     <string name="nexthours">Lähitunnit</string>

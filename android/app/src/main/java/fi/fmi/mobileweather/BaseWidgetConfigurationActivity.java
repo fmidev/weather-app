@@ -258,7 +258,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             RadioGroup theme = findViewById(R.id.backgroundRadioGroup);
             int selectedTheme = theme.getCheckedRadioButtonId();
-            String selectedThemeString = null;
+            String selectedThemeString;
 
             if (selectedTheme==R.id.optionLightRadioButton)
                 selectedThemeString = LIGHT;

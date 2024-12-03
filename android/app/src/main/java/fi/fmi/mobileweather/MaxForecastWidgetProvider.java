@@ -1,8 +1,13 @@
 package fi.fmi.mobileweather;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static fi.fmi.mobileweather.Theme.DARK;
+import static fi.fmi.mobileweather.Theme.GRADIENT;
 import static fi.fmi.mobileweather.Theme.LIGHT;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -29,9 +34,10 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
 
-        // set colors for views which are specific for large widget
+        // set colors for views which are specific for large and max widgets
         // (not set in the initWidget)
         setLargeWidgetSpecificColors(widgetRemoteViews, theme);
+        setMaxWidgetSpecificColors(widgetRemoteViews, theme);
 
         try {
             // Get the keys of the JSONObject
@@ -150,4 +156,26 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
         appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
     }
+
+    private void setMaxWidgetSpecificColors(RemoteViews remoteViews, String theme) {
+        if (theme.equals(DARK) || theme.equals(GRADIENT)) {
+            remoteViews.setInt(R.id.timeTextView, "setTextColor", Color.WHITE);
+            remoteViews.setViewVisibility(R.id.verticalBarImageView0, INVISIBLE);
+            remoteViews.setViewVisibility(R.id.verticalBarImageView1, INVISIBLE);
+            remoteViews.setImageViewResource(R.id.clockSymbolImageView, R.drawable.ic_clock_white);
+            remoteViews.setImageViewResource(R.id.weatherSymbolImageView, R.drawable.ic_weather_white);
+            remoteViews.setImageViewResource(R.id.temperatureSymbolImageView, R.drawable.ic_temperature_white);
+            remoteViews.setImageViewResource(R.id.logoImageView, R.drawable.fmi_logo_white);
+        }
+        else { // LIGHT theme
+            remoteViews.setInt(R.id.timeTextView, "setTextColor", Color.parseColor("#303193"));
+            remoteViews.setViewVisibility(R.id.verticalBarImageView0, VISIBLE);
+            remoteViews.setViewVisibility(R.id.verticalBarImageView1, VISIBLE);
+            remoteViews.setImageViewResource(R.id.clockSymbolImageView, R.drawable.ic_clock_blue);
+            remoteViews.setImageViewResource(R.id.weatherSymbolImageView, R.drawable.ic_weather_blue);
+            remoteViews.setImageViewResource(R.id.temperatureSymbolImageView, R.drawable.ic_temperature_blue);
+            remoteViews.setImageViewResource(R.id.logoImageView, R.drawable.fmi_logo_blue);
+        }
+    }
+
 }

@@ -94,12 +94,14 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/verticalBarImageView0"
                 android:layout_width="280dp"
                 android:layout_height="34dp"
                 android:background="#F6F6F7"
                 android:importantForAccessibility="no" />
 
             <ImageView
+                android:id="@+id/verticalBarImageView1"
                 android:layout_width="280dp"
                 android:layout_height="34dp"
                 android:layout_alignParentBottom="true"
@@ -115,26 +117,26 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/clockIconImageView"
+                    android:id="@+id/clockSymbolImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="7dp"
-                    android:background="@drawable/ic_clock" />
+                    android:background="@drawable/ic_clock_blue" />
 
                 <ImageView
-                    android:id="@id/weatherIconImageView"
+                    android:id="@+id/weatherSymbolImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/ic_weather" />
+                    android:background="@drawable/ic_weather_blue" />
 
                 <ImageView
-                    android:id="@+id/temperatureIconImageView"
+                    android:id="@+id/temperatureSymbolImageView"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginBottom="7dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@drawable/ic_temperature" />
+                    android:background="@drawable/ic_temperature_blue" />
 
             </RelativeLayout>
 
@@ -153,7 +155,6 @@
                     android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView0"
                     android:layout_alignEnd="@id/weatherIconImageView0"
-                    android:background="#F6F6F7"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -277,7 +278,6 @@
                     android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView3"
                     android:layout_alignEnd="@id/weatherIconImageView3"
-                    android:background="#F6F6F7"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -299,7 +299,6 @@
                     android:layout_alignStart="@id/weatherIconImageView3"
                     android:layout_alignEnd="@id/weatherIconImageView3"
                     android:layout_alignParentBottom="true"
-                    android:background="#F6F6F7"
                     android:gravity="center"
                     tools:text="+12°" />
 
@@ -320,7 +319,6 @@
                     android:layout_height="34dp"
                     android:layout_alignStart="@id/weatherIconImageView4"
                     android:layout_alignEnd="@id/weatherIconImageView4"
-                    android:background="#F6F6F7"
                     android:gravity="center"
                     tools:text="13:00" />
 
@@ -342,7 +340,6 @@
                     android:layout_alignStart="@id/weatherIconImageView4"
                     android:layout_alignEnd="@id/weatherIconImageView4"
                     android:layout_alignParentBottom="true"
-                    android:background="#F6F6F7"
                     android:gravity="center"
                     tools:text="+12°" />
 

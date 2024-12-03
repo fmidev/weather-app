@@ -39,6 +39,7 @@
     <string name="ready">Färdig</string>
     <string name="dark">Mörk</string>
     <string name="light">Ljus</string>
+    <string name="gradient">Lutning</string>
     <string name="transparent">Transparent</string>
     <string name="Forecast">Prognos</string>
     <string name="location">Plats</string>
