@@ -702,12 +702,19 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // Hide normal view
         widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", GONE);
 
-        if (theme.equals(DARK))
+        if (theme.equals(DARK)) {
             widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.BLACK);
-        else if (theme.equals(LIGHT))
+            widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", Color.WHITE);
+            widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", Color.WHITE);
+        } else if (theme.equals(LIGHT)) {
             widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.WHITE);
-        else
+            widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", Color.parseColor("#303193"));
+            widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", Color.parseColor("#303193"));
+        } else {
             widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", R.drawable.gradient_background);
+            widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", Color.WHITE);
+            widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", Color.WHITE);
+        }
 
         widgetRemoteViews.setTextViewText(R.id.errorHeaderTextView, errorText1);
         widgetRemoteViews.setTextViewText(R.id.errorBodyTextView, errorText2);
