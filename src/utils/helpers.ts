@@ -387,7 +387,6 @@ export const getIndexForDaySmartSymbol = (dayArray: TimeStepData[]): number => {
     return 15; // choose 15:00 (3.00 PM) local time as the default time
   }
   if (dayArray.length >= 9) {
-    console.log('length', dayArray.length);
     return 15 - (24 - dayArray.length); // choose index of 15:00 if available from a list with fewer than 24 hourly forecasts
   }
 

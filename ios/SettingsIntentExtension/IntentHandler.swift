@@ -8,7 +8,6 @@ func readStoredLocations() -> [LocationSetting] {
   
   if let userDefaults = UserDefaults(suiteName: appGroupID) {
     if let storedLocations = userDefaults.string(forKey: key) {
-      print(storedLocations)
       let json = JSON.init(parseJSON: storedLocations)
       guard let favorites = json["favorites"].string else {
         return locations
