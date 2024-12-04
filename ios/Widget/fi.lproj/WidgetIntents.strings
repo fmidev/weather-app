@@ -1,34 +1,76 @@
 "3FW92U" = "Tumma";
 
+"3grKS8" = "Suosikki";
+
+"4COQeq" = "Oma sijainti";
+
+"4RhFur" = "Valitse paikka";
+
 "7JHQz5" = "Liukuväri";
 
-"7NT5x4" = "Automatic";
+"7NT5x4" = "Ei valintaa";
 
-"FtzdgO-3FW92U" = "There are ${count} options matching ‘Dark’.";
+"9Xx8QY" = "Valitse widgetin asetukset";
 
-"FtzdgO-7JHQz5" = "There are ${count} options matching ‘Gradient’.";
+"Ay5Grj" = "Vahvista valinta ‘${location}’?";
 
-"FtzdgO-7NT5x4" = "There are ${count} options matching ‘Automatic’.";
+"B5Ez75" = "true";
 
-"FtzdgO-LA1KhN" = "There are ${count} options matching ‘Light’.";
+"B5nEl4" = "Geoid";
 
-"KVUJur" = "Valitse widgetin teema";
+"B7bhBR" = "Valitse widgetin asetukset";
+
+"BPnPIY" = "iso2 koodi";
+
+"FtzdgO-3FW92U" = "${count} valintaa vastaa ‘Tumma’.";
+
+"FtzdgO-7JHQz5" = "${count} valintaa vastaa  ‘Liukuväri’.";
+
+"FtzdgO-7NT5x4" = "${count} valintaa vastaa  ‘Ei valintaa’.";
+
+"FtzdgO-LA1KhN" = "${count} valintaa vastaa  ‘Vaalea’.";
+
+"FtzdgO-MXo86N" = "${count} valintaa vastaa  ‘Oletus’.";
+
+"KVUJur" = "Valitse widgetin asetukset";
 
 "LA1KhN" = "Vaalea";
 
+"MXo86N" = "Oletus";
+
+"MiKZcj" = "Aikavyöhyke";
+
 "NFZLYv" = "Teema";
+
+"RMuMjO" = "Valitse paikka";
 
 "ZLfwya" = "Asetukset";
 
+"cUPKLd" = "${count} valintaa vastaa ‘${location}’.";
+
+"eb2ozg" = "Paikan asetukset";
+
 "huHGsi" = "Teema";
 
-"uKmzwA-3FW92U" = "Just to confirm, you wanted ‘Dark’?";
+"ljcuLl" = "false";
 
-"uKmzwA-7JHQz5" = "Just to confirm, you wanted ‘Gradient’?";
+"rAwJLY" = "Haluatko käyttää nykyistä sijaintia?";
 
-"uKmzwA-7NT5x4" = "Just to confirm, you wanted ‘Automatic’?";
+"uKmzwA-3FW92U" = "Vahvista valinta ‘Tumma’?";
 
-"uKmzwA-LA1KhN" = "Just to confirm, you wanted ‘Light’?";
+"uKmzwA-7JHQz5" = "Vahvista valinta ‘Liukuväri’?";
 
-"zf4iAm" = "Valitse widgetin teema";
+"uKmzwA-7NT5x4" = "Vahvinsta valinta ‘Ei valintaa’?";
+
+"uKmzwA-LA1KhN" = "Vahvista valinta ‘Vaalea’?";
+
+"uKmzwA-MXo86N" = "Vahvista valinta ‘Oletus’?";
+
+"xZ5waw" = "Valitse widgetin asetukset";
+
+"xsQKsF" = "Latitudi";
+
+"yHDmBK" = "Area";
+
+"yoFqU9" = "Longitudi";
 

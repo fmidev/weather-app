@@ -1,34 +1,76 @@
-"3FW92U" = "Dark";
+"3FW92U" = "Mörk";
+
+"3grKS8" = "Favoritplats";
+
+"4COQeq" = "Nuvarande plats";
+
+"4RhFur" = "Välj plats";
 
 "7JHQz5" = "Gradient";
 
-"7NT5x4" = "Automatic";
+"7NT5x4" = "Ingen val";
 
-"FtzdgO-3FW92U" = "There are ${count} options matching ‘Dark’.";
+"9Xx8QY" = "Välj inställningar för widget";
 
-"FtzdgO-7JHQz5" = "There are ${count} options matching ‘Gradient’.";
+"Ay5Grj" = "Bara för att bekräfta, du ville ha ‘${location}’?";
 
-"FtzdgO-7NT5x4" = "There are ${count} options matching ‘Automatic’.";
+"B5Ez75" = "sant";
 
-"FtzdgO-LA1KhN" = "There are ${count} options matching ‘Light’.";
+"B5nEl4" = "Geoid";
 
-"KVUJur" = "Select theme for the widget";
+"B7bhBR" = "Välj inställningar för widget";
 
-"LA1KhN" = "Light";
+"BPnPIY" = "Iso 2";
 
-"NFZLYv" = "Theme";
+"FtzdgO-3FW92U" = "Det finns ${count} alternativ som matchar ‘Mörk’.";
 
-"ZLfwya" = "Settings";
+"FtzdgO-7JHQz5" = "Det finns ${count} alternativ som matchar ‘Gradient’.";
 
-"huHGsi" = "Theme";
+"FtzdgO-7NT5x4" = "Det finns ${count} alternativ som matchar ‘Ingen val’.";
 
-"uKmzwA-3FW92U" = "Just to confirm, you wanted ‘Dark’?";
+"FtzdgO-LA1KhN" = "Det finns ${count} alternativ som matchar ‘Ljus’.";
 
-"uKmzwA-7JHQz5" = "Just to confirm, you wanted ‘Gradient’?";
+"FtzdgO-MXo86N" = "Det finns ${count} alternativ som matchar ‘Använd standard’.";
 
-"uKmzwA-7NT5x4" = "Just to confirm, you wanted ‘Automatic’?";
+"KVUJur" = "Välj inställningar för widget";
 
-"uKmzwA-LA1KhN" = "Just to confirm, you wanted ‘Light’?";
+"LA1KhN" = "Ljus";
 
-"zf4iAm" = "Select theme for the widget";
+"MXo86N" = "Använd standard";
+
+"MiKZcj" = "Tidszon";
+
+"NFZLYv" = "Tema";
+
+"RMuMjO" = "Välj plats";
+
+"ZLfwya" = "Inställningar";
+
+"cUPKLd" = "Det finns ${count} alternativ som matchar ‘${location}’.";
+
+"eb2ozg" = "Platsinställning";
+
+"huHGsi" = "Tema";
+
+"ljcuLl" = "falskt";
+
+"rAwJLY" = "Vill du använda din nuvarande plats?";
+
+"uKmzwA-3FW92U" = "Bara för att bekräfta, du ville ha ‘Mörk’?";
+
+"uKmzwA-7JHQz5" = "Bara för att bekräfta, du ville ha ‘Gradient’?";
+
+"uKmzwA-7NT5x4" = "Bara för att bekräfta, du ville ha ‘Ingen val’?";
+
+"uKmzwA-LA1KhN" = "Bara för att bekräfta, du ville ha ‘Ljus’?";
+
+"uKmzwA-MXo86N" = "Bara för att bekräfta, du ville ha ‘Använd standard’?";
+
+"xZ5waw" = "Välj inställningar för widget";
+
+"xsQKsF" = "Latitud";
+
+"yHDmBK" = "Område";
+
+"yoFqU9" = "Longitud";
 

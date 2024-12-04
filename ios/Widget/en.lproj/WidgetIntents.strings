@@ -1,34 +1,76 @@
 "3FW92U" = "Dark";
 
+"3grKS8" = "Favorite location";
+
+"4COQeq" = "Current Location";
+
+"4RhFur" = "Select location";
+
 "7JHQz5" = "Gradient";
 
-"7NT5x4" = "Automatic";
+"7NT5x4" = "No selection";
+
+"9Xx8QY" = "Select settings for widget";
+
+"Ay5Grj" = "Just to confirm, you wanted ‘${location}’?";
+
+"B5Ez75" = "true";
+
+"B5nEl4" = "Geoid";
+
+"B7bhBR" = "Select settings for widget";
+
+"BPnPIY" = "Iso 2";
 
 "FtzdgO-3FW92U" = "There are ${count} options matching ‘Dark’.";
 
 "FtzdgO-7JHQz5" = "There are ${count} options matching ‘Gradient’.";
 
-"FtzdgO-7NT5x4" = "There are ${count} options matching ‘Automatic’.";
+"FtzdgO-7NT5x4" = "There are ${count} options matching ‘No selection’.";
 
 "FtzdgO-LA1KhN" = "There are ${count} options matching ‘Light’.";
 
-"KVUJur" = "Select theme for the widget";
+"FtzdgO-MXo86N" = "There are ${count} options matching ‘Use default’.";
+
+"KVUJur" = "Select settings for widget";
 
 "LA1KhN" = "Light";
 
+"MXo86N" = "Use default";
+
+"MiKZcj" = "Timezone";
+
 "NFZLYv" = "Theme";
+
+"RMuMjO" = "Select location";
 
 "ZLfwya" = "Settings";
 
+"cUPKLd" = "There are ${count} options matching ‘${location}’.";
+
+"eb2ozg" = "Location setting";
+
 "huHGsi" = "Theme";
+
+"ljcuLl" = "false";
+
+"rAwJLY" = "Do you want to use your current location?";
 
 "uKmzwA-3FW92U" = "Just to confirm, you wanted ‘Dark’?";
 
 "uKmzwA-7JHQz5" = "Just to confirm, you wanted ‘Gradient’?";
 
-"uKmzwA-7NT5x4" = "Just to confirm, you wanted ‘Automatic’?";
+"uKmzwA-7NT5x4" = "Just to confirm, you wanted ‘No selection’?";
 
 "uKmzwA-LA1KhN" = "Just to confirm, you wanted ‘Light’?";
 
-"zf4iAm" = "Select theme for the widget";
+"uKmzwA-MXo86N" = "Just to confirm, you wanted ‘Use default’?";
+
+"xZ5waw" = "Select settings for widget";
+
+"xsQKsF" = "Latitude";
+
+"yHDmBK" = "Area";
+
+"yoFqU9" = "Longitude";
 

@@ -20,7 +20,6 @@
 		7E1C7131F6AD991179B8D76B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 35013B407054ED7A9F8250D5 /* PrivacyInfo.xcprivacy */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A2042C6E2CFF2EEF00C41A9E /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2042C6D2CFF2EEE00C41A9E /* Intents.framework */; };
-		A20717322CFF4BE1003EA6CB /* SettingsIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20717312CFF4BE1003EA6CB /* SettingsIntentHandler.swift */; };
 		A20CB3152CCFCE0B005C4D66 /* typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20CB3142CCFCE01005C4D66 /* typography.swift */; };
 		A2239EB12CD22056007FE840 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB02CD22056007FE840 /* Localizable.xcstrings */; };
 		A2239EB42CD39885007FE840 /* widgetConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB32CD39885007FE840 /* widgetConfig.json */; };
@@ -141,7 +140,6 @@
 		99DF258CBD865F8BD6216BB5 /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		A2042C6C2CFF2EEE00C41A9E /* SettingsIntentExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SettingsIntentExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2042C6D2CFF2EEE00C41A9E /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
-		A20717312CFF4BE1003EA6CB /* SettingsIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsIntentHandler.swift; sourceTree = "<group>"; };
 		A20CB3142CCFCE01005C4D66 /* typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = typography.swift; sourceTree = "<group>"; };
 		A2239EB02CD22056007FE840 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A2239EB32CD39885007FE840 /* widgetConfig.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = widgetConfig.json; path = ../widgetConfig.json; sourceTree = SOURCE_ROOT; };
@@ -401,7 +399,6 @@
 				A2B3FFB12CC8E6AE00EC1293 /* WeatherWidgetBundle.swift */,
 				A2239EB02CD22056007FE840 /* Localizable.xcstrings */,
 				A2239EB32CD39885007FE840 /* widgetConfig.json */,
-				A20717312CFF4BE1003EA6CB /* SettingsIntentHandler.swift */,
 				A2F695BC2CFEE1520064BAFE /* WidgetIntents.intentdefinition */,
 			);
 			path = Widget;
@@ -1084,7 +1081,6 @@
 				A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */,
 				A24E08CE2CCBC22A00848BEB /* modifiers.swift in Sources */,
 				A22C0A3A2CDCFD0300F64B66 /* utils.swift in Sources */,
-				A20717322CFF4BE1003EA6CB /* SettingsIntentHandler.swift in Sources */,
 				A2F695BD2CFEE1520064BAFE /* WidgetIntents.intentdefinition in Sources */,
 				A2B3FFB62CC8E6AE00EC1293 /* ForecastWidget.swift in Sources */,
 				A273C5CD2CF74136002C95C2 /* WarningsTodayWidget.swift in Sources */,
