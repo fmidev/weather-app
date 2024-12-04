@@ -17,8 +17,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Handler;
@@ -359,13 +357,16 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
             // ** set the weather icon
 
-            String weathersymbol = first.getString("smartSymbol");
+            String weatherSymbol = first.getString("smartSymbol");
+            int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
+            widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
 
-            Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+
+            /*Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
                     context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
 
             widgetRemoteViews.setImageViewBitmap(R.id.weatherIconImageView, icon);
-
+*/
             // Update time TODO: should be hidden for release
             widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 

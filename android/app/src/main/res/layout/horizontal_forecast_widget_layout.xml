@@ -58,7 +58,7 @@
             android:layout_marginEnd="14dp"
             android:layout_gravity="center_vertical"
             android:contentDescription="TODO"
-            tools:src="@drawable/s32_light" />
+            tools:src="@drawable/s_32_light" />
 
         <TextView
             android:id="@+id/temperatureTextView"

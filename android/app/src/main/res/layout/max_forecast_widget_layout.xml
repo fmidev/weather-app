@@ -68,7 +68,7 @@
                 android:layout_height="46dp"
                 android:layout_marginEnd="18dp"
                 android:contentDescription="TODO"
-                tools:src="@drawable/s32_light" />
+                tools:src="@drawable/s_32_light" />
 
             <TextView
                 android:id="@+id/temperatureTextView"
@@ -167,7 +167,7 @@
                     android:layout_below="@id/timeTextView0"
                     android:layout_gravity="center"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView0"
@@ -208,7 +208,7 @@
                     android:layout_below="@id/timeTextView1"
                     android:layout_gravity="center"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView1"
@@ -249,7 +249,7 @@
                     android:layout_below="@id/timeTextView2"
                     android:layout_gravity="center"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView2"
@@ -290,7 +290,7 @@
                     android:layout_below="@id/timeTextView3"
                     android:layout_gravity="center"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView3"
@@ -331,7 +331,7 @@
                     android:layout_below="@id/timeTextView4"
                     android:layout_gravity="center"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView4"
