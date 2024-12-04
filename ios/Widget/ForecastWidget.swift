@@ -1,18 +1,19 @@
 import WidgetKit
 import CoreLocation
 import SwiftUI
+import Intents
 import AsyncLocationKit
 
-struct ForecastProvider: TimelineProvider {
+struct ForecastProvider: IntentTimelineProvider {
   func placeholder(in context: Context) -> TimeStepEntry {
     return defaultEntry
   }
 
-  func getSnapshot(in context: Context, completion: @escaping (TimeStepEntry) -> ()) {
+  func getSnapshot(for configuration: SettingsIntent, in context: Context, completion: @escaping (TimeStepEntry) -> ()) {
     completion(defaultEntry)
   }
 
-  func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+  func getTimeline(for configuration: SettingsIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
     Task {
       var error = nil as WidgetError?
       var forecast = [] as [TimeStep]?
@@ -21,6 +22,10 @@ struct ForecastProvider: TimelineProvider {
       var location:Location?
       var crisisMessage = nil as String?
       var settings = defaultWidgetSettings
+      
+      print("settings")
+      print(configuration.theme);
+      print(configuration.location as Any);
       
       let showLogo = getSetting("layout.logo.enabled") as? Bool;
       
@@ -253,19 +258,21 @@ struct ForecastWidgetEntryView : View {
 }
 
 struct ForecastWidget: Widget {
-    let kind: String = "ForecastWidget"
-  
-    var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: ForecastProvider()) { entry in
-          ForecastWidgetEntryView(entry: entry)
-                .containerBackground(Color("WidgetBackground"), for: .widget)
-                .padding(8)
-        }
-        .contentMarginsDisabled()
-        .configurationDisplayName("Forecast")
-        .description("Displays the forecast for the next hour or the coming hours.")
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
-    }
+  let kind: String = "ForecastWidget"
+
+  var body: some WidgetConfiguration {
+    IntentConfiguration(
+      kind: kind, intent: SettingsIntent.self, provider: ForecastProvider()
+    ) { entry in
+        ForecastWidgetEntryView(entry: entry)
+              .containerBackground(Color("WidgetBackground"), for: .widget)
+              .padding(8)
+      }
+      .contentMarginsDisabled()
+      .configurationDisplayName("Forecast")
+      .description("Displays the forecast for the next hour or the coming hours.")
+      .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+  }
 }
 
 #Preview(as: .systemSmall) {
