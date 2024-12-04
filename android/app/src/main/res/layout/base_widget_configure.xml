@@ -95,8 +95,10 @@
                     android:paddingBottom="@dimen/radiobutton_padding"
                     android:text="@string/light" />
 
+                <!-- TODO: Gradient theme disabled for now because gradient color not ready yet -->
                 <RadioButton
-                    android:id="@+id/optionTransparentRadioButton"
+                    android:id="@+id/optionGradientRadioButton"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

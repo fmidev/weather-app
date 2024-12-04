@@ -128,6 +128,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:layout_marginBottom="8dp"
+            android:textSize="13sp"
             tools:text="Could not update weather data" />
 
         <TextView

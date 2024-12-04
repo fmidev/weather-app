@@ -262,7 +262,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             if (selectedTheme==R.id.optionLightRadioButton)
                 selectedThemeString = LIGHT;
-            else if (selectedTheme==R.id.optionTransparentRadioButton)
+            // TODO: Gradient theme GONE in layout file for now because gradient color file not ready yet in this Android project
+            else if (selectedTheme==R.id.optionGradientRadioButton)
                 selectedThemeString = GRADIENT;
             else
                 selectedThemeString = DARK;

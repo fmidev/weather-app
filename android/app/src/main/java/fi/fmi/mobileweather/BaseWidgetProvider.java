@@ -707,20 +707,33 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.BLACK);
             widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", Color.WHITE);
             widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", Color.WHITE);
+            // Set the info icon image resource, if info image view exists for the widget
+            setInfoIconIfNeeded(context, widgetRemoteViews, R.drawable.fmi_logo_white);
+
         } else if (theme.equals(LIGHT)) {
             widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.WHITE);
-            widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", Color.parseColor("#303193"));
-            widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", Color.parseColor("#303193"));
-        } else {
+            widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", getPrimaryBlue(context));
+            widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", getPrimaryBlue(context));
+            // Set the info icon image resource, if info image view exists for the widget
+            setInfoIconIfNeeded(context, widgetRemoteViews, R.drawable.fmi_logo_blue);
+        } else { // GRADIENT theme
             widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", R.drawable.gradient_background);
             widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", Color.WHITE);
             widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", Color.WHITE);
+            // Set the info icon image resource, if info image view exists for the widget
+            setInfoIconIfNeeded(context, widgetRemoteViews, R.drawable.fmi_logo_white);
         }
 
         widgetRemoteViews.setTextViewText(R.id.errorHeaderTextView, errorText1);
         widgetRemoteViews.setTextViewText(R.id.errorBodyTextView, errorText2);
 
         appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
+    }
+
+    private static void setInfoIconIfNeeded(Context context, RemoteViews widgetRemoteViews, int drawableResId) {
+        if (context.getResources().getIdentifier("infoIconImageView", "id", context.getPackageName()) != 0) {
+            widgetRemoteViews.setImageViewResource(R.id.infoIconImageView, drawableResId);
+        }
     }
 
     protected void saveLayoutResourceId(Context context, int appWidgetId, int layoutId) {
