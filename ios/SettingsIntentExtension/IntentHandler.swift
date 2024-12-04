@@ -8,13 +8,29 @@ class IntentHandler: INExtension, SettingsIntentHandling {
   }
 
   func provideLocationOptionsCollection(for intent: SettingsIntent) async throws -> INObjectCollection<LocationSetting> {
+    let appGroupID = "group.fi.fmi.mobileweather.settings"
+    var options = [] as [LocationSetting]
+    
+    
+    
+    // Luetaan avain "persist:location" ryhmästä
+    if let userDefaults = UserDefaults(suiteName: appGroupID) {
+        if let storedLocations = userDefaults.string(forKey: "persist:location") {
+            print(storedLocations)
+        } else {
+            print("No location found for key 'persist:location'.")
+        }
+    } else {
+        print("Failed to access UserDefaults with group ID: \(appGroupID).")
+    }
+    
     print("provideLocationOptionsCollection called")
     let liperi = LocationSetting(identifier: "Liperi", display: "Liperi")
     liperi.geoid = 647852
     let tikkurila = LocationSetting(identifier: "Tikkurila", display: "Tikkurila")
     tikkurila.geoid = 843429
     
-    let options = [liperi, tikkurila]
+    options = [liperi, tikkurila]
     return INObjectCollection(items: options)
   }
   

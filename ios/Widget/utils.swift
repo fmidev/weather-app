@@ -142,3 +142,21 @@ func createPlacemark(geoid:Int, name: String, lat: Double, lon: Double) -> CLPla
   let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: address)
   return placemark
 }
+
+func readStoredLocations() -> [Location] {
+  let appGroupID = "group.fi.fmi.mobileweather.settings"
+  let key = "persist:location"
+  var locations = [Location]()
+
+  if let userDefaults = UserDefaults(suiteName: appGroupID) {
+    if let storedLocations = userDefaults.string(forKey: key) {
+      print(storedLocations)
+    } else {
+      print("No location found for key 'persist:location'.")
+    }
+  } else {
+    print("Failed to access UserDefaults with group ID: \(appGroupID).")
+  }
+  
+  return locations
+}

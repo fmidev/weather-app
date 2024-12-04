@@ -23,8 +23,10 @@ struct ForecastProvider: IntentTimelineProvider {
       var crisisMessage = nil as String?
       var settings = defaultWidgetSettings
       
+      let _ = readStoredLocations()
       print("settings")
       print(configuration.theme);
+      print(configuration.currentLocation as Any);
       print(configuration.location as Any);
       
       let showLogo = getSetting("layout.logo.enabled") as? Bool;
@@ -32,15 +34,30 @@ struct ForecastProvider: IntentTimelineProvider {
       if (showLogo != nil) {
         settings.showLogo = showLogo!
       }
-                 
-      let currentLocation = try await getCurrentLocation()
       
-      if (currentLocation != nil) {
-        location = try await fetchLocation(
-          lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
+      if (configuration.currentLocation == 0 && configuration.location != nil) {
+        // Use location from configuration
+        
+        location = Location(
+          id: configuration.location!.geoid as! Int,
+          name: configuration.location!.displayString,
+          area: "",
+          lat: 0,
+          lon: 0,
+          timezone: "Europe/Helsinki",
+          iso2: "FI",
+          country: "Finland"
         )
       } else {
-        error = .userLocationError
+        let currentLocation = try await getCurrentLocation()
+        
+        if (currentLocation != nil) {
+          location = try await fetchLocation(
+            lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
+          )
+        } else {
+          error = .userLocationError
+        }
       }
       
       if (getSetting("announcements.enabled") as? Bool == true) {
