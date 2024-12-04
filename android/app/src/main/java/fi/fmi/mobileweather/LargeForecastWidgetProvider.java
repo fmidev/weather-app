@@ -86,10 +86,6 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
                 widgetRemoteViews.setImageViewResource(weatherIconImageViewId, drawableResId);
-
-                /*Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                        context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
-                widgetRemoteViews.setImageViewBitmap(weatherIconImageViewId, icon);*/
             }
 
             // Update time TODO: should be hidden for release

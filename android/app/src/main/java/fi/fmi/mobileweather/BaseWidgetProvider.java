@@ -361,12 +361,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
             widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
 
-
-            /*Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                    context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
-
-            widgetRemoteViews.setImageViewBitmap(R.id.weatherIconImageView, icon);
-*/
             // Update time TODO: should be hidden for release
             widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
