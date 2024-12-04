@@ -60,4 +60,5 @@
     <string name="location_service_info_title">Vill du aktivera platstjänst?</string>
     <string name="ask_permission">Tillåta</string>
     <string name="updated">"Uppdaterad kl."</string>
+    <string name="device_mode">Use device mode</string>
 </resources>

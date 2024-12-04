@@ -75,7 +75,16 @@
                 android:id="@+id/backgroundRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checkedButton="@+id/optionDarkRadioButton">
+                android:checkedButton="@id/optionDeviceModeRadioButton">
+
+                <RadioButton
+                    android:id="@+id/optionDeviceModeRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/radiobutton_padding"
+                    android:paddingBottom="@dimen/radiobutton_padding"
+                    android:text="@string/device_mode" />
 
                 <RadioButton
                     android:id="@+id/optionDarkRadioButton"

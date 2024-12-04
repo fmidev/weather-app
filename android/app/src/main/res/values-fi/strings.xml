@@ -60,4 +60,5 @@
     <string name="location_service_info_title">Haluatko sallia paikannuksen?</string>
     <string name="ask_permission">Salli paikannus</string>
     <string name="updated">"Päivitetty klo "</string>
+    <string name="device_mode">Use device mode</string>
 </resources>

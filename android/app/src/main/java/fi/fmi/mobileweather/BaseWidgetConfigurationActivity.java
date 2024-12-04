@@ -3,6 +3,8 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
+import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
 
 import static fi.fmi.mobileweather.PrefKey.THEME;
 import static fi.fmi.mobileweather.Theme.DARK;
@@ -265,6 +267,11 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             // TODO: Gradient theme GONE in layout file for now because gradient color file not ready yet in this Android project
             else if (selectedTheme==R.id.optionGradientRadioButton)
                 selectedThemeString = GRADIENT;
+            else if (selectedTheme==R.id.optionDeviceModeRadioButton) {
+                // get the device mode (light or dark)
+                int currentNightMode = getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
+                selectedThemeString = (currentNightMode == UI_MODE_NIGHT_NO) ? LIGHT : DARK;
+            }
             else
                 selectedThemeString = DARK;
 
