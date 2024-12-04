@@ -90,6 +90,7 @@
       }
     },
     "Displays the forecast for the next hour or the coming hours." : {
+      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -104,6 +105,9 @@
           }
         }
       }
+    },
+    "Displays the forecast for the next hour or the coming hours. Press and hold the widget to edit settings." : {
+
     },
     "E" : {
       "extractionState" : "manual",
@@ -1888,6 +1892,7 @@
       }
     },
     "Weather warnings in your location" : {
+      "extractionState" : "stale",
       "localizations" : {
         "fi" : {
           "stringUnit" : {
@@ -1902,6 +1907,9 @@
           }
         }
       }
+    },
+    "Weather warnings in your location. Press and hold the widget to edit settings." : {
+
     },
     "Wind warning for land areas" : {
       "extractionState" : "manual",

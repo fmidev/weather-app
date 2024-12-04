@@ -19,7 +19,7 @@
 			<array>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Automatic</string>
+					<string>No selection</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>7NT5x4</string>
 					<key>INEnumValueName</key>
@@ -31,7 +31,7 @@
 					<key>INEnumValueDisplayNameID</key>
 					<string>LA1KhN</string>
 					<key>INEnumValueIndex</key>
-					<integer>1</integer>
+					<integer>2</integer>
 					<key>INEnumValueName</key>
 					<string>light</string>
 				</dict>
@@ -41,7 +41,7 @@
 					<key>INEnumValueDisplayNameID</key>
 					<string>3FW92U</string>
 					<key>INEnumValueIndex</key>
-					<integer>2</integer>
+					<integer>3</integer>
 					<key>INEnumValueName</key>
 					<string>dark</string>
 				</dict>
@@ -51,9 +51,19 @@
 					<key>INEnumValueDisplayNameID</key>
 					<string>7JHQz5</string>
 					<key>INEnumValueIndex</key>
-					<integer>3</integer>
+					<integer>4</integer>
 					<key>INEnumValueName</key>
 					<string>gradient</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Use default</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>MXo86N</string>
+					<key>INEnumValueIndex</key>
+					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>automatic</string>
 				</dict>
 			</array>
 		</dict>
@@ -150,6 +160,11 @@
 					<string>ThemeOptions</string>
 					<key>INIntentParameterEnumTypeNamespace</key>
 					<string>2kNpxZ</string>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<string>automatic</string>
+					</dict>
 					<key>INIntentParameterName</key>
 					<string>theme</string>
 					<key>INIntentParameterPromptDialogs</key>
@@ -353,7 +368,7 @@
 			<key>INTypeDisplayNameID</key>
 			<string>eb2ozg</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>101</integer>
+			<integer>108</integer>
 			<key>INTypeName</key>
 			<string>LocationSetting</string>
 			<key>INTypeProperties</key>
@@ -421,6 +436,76 @@
 					<integer>101</integer>
 					<key>INTypePropertyType</key>
 					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Latitude</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>xsQKsF</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>6</integer>
+					<key>INTypePropertyName</key>
+					<string>lat</string>
+					<key>INTypePropertyTag</key>
+					<integer>103</integer>
+					<key>INTypePropertyType</key>
+					<string>Decimal</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Longitude</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>yoFqU9</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>7</integer>
+					<key>INTypePropertyName</key>
+					<string>lon</string>
+					<key>INTypePropertyTag</key>
+					<integer>106</integer>
+					<key>INTypePropertyType</key>
+					<string>Decimal</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Timezone</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>MiKZcj</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>8</integer>
+					<key>INTypePropertyName</key>
+					<string>timezone</string>
+					<key>INTypePropertyTag</key>
+					<integer>105</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Area</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>yHDmBK</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>9</integer>
+					<key>INTypePropertyName</key>
+					<string>area</string>
+					<key>INTypePropertyTag</key>
+					<integer>107</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Iso 2</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>BPnPIY</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>10</integer>
+					<key>INTypePropertyName</key>
+					<string>iso2</string>
+					<key>INTypePropertyTag</key>
+					<integer>108</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
 				</dict>
 			</array>
 		</dict>

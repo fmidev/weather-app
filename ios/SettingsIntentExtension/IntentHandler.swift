@@ -1,4 +1,44 @@
 import Intents
+import SwiftyJSON
+
+func readStoredLocations() -> [LocationSetting] {
+  let appGroupID = "group.fi.fmi.mobileweather.settings"
+  let key = "persist:location"
+  var locations = [LocationSetting]()
+  
+  if let userDefaults = UserDefaults(suiteName: appGroupID) {
+    if let storedLocations = userDefaults.string(forKey: key) {
+      print(storedLocations)
+      let json = JSON.init(parseJSON: storedLocations)
+      guard let favorites = json["favorites"].string else {
+        return locations
+      }
+      let favoritesJson = JSON.init(parseJSON: favorites.replacingOccurrences(of: "\\", with: ""))
+      let favoritesArray = favoritesJson.arrayValue
+      
+      locations = favoritesArray.map({
+        let location = LocationSetting(
+          identifier: $0["id"].stringValue,
+          display: $0["name"].stringValue
+        )
+        location.geoid = NSNumber(value: Int($0["id"].stringValue) ?? 0)
+        location.lat = NSNumber(value: $0["lat"].doubleValue)
+        location.lon = NSNumber(value: $0["lon"].doubleValue)
+        location.timezone = $0["timezone"].stringValue
+        location.area = $0["area"].stringValue
+        location.iso2 = $0["country"].stringValue
+        return location
+      })
+      
+    } else {
+      print("No data found for key 'persist:location'.")
+    }
+  } else {
+    print("Failed to access UserDefaults with group ID: \(appGroupID).")
+  }
+  
+  return locations
+}
 
 class IntentHandler: INExtension, SettingsIntentHandling {
   func resolveCurrentLocation(for intent: SettingsIntent) async -> INBooleanResolutionResult {
@@ -8,52 +48,9 @@ class IntentHandler: INExtension, SettingsIntentHandling {
   }
 
   func provideLocationOptionsCollection(for intent: SettingsIntent) async throws -> INObjectCollection<LocationSetting> {
-    let appGroupID = "group.fi.fmi.mobileweather.settings"
-    var options = [] as [LocationSetting]
-    
-    
-    
-    // Luetaan avain "persist:location" ryhmästä
-    if let userDefaults = UserDefaults(suiteName: appGroupID) {
-        if let storedLocations = userDefaults.string(forKey: "persist:location") {
-            print(storedLocations)
-        } else {
-            print("No location found for key 'persist:location'.")
-        }
-    } else {
-        print("Failed to access UserDefaults with group ID: \(appGroupID).")
-    }
-    
-    print("provideLocationOptionsCollection called")
-    let liperi = LocationSetting(identifier: "Liperi", display: "Liperi")
-    liperi.geoid = 647852
-    let tikkurila = LocationSetting(identifier: "Tikkurila", display: "Tikkurila")
-    tikkurila.geoid = 843429
-    
-    options = [liperi, tikkurila]
+    let options = readStoredLocations()
     return INObjectCollection(items: options)
   }
-  
-  /*
-  func provideLocationOptionsCollection(for intent: SettingsIntent, with completion: @escaping (INObjectCollection<LocationSetting>?, Error?) -> Void) {
-    print("provideLocationOptionsCollection called")
-    let liperi = LocationSetting(identifier: "Liperi", display: "Liperi")
-    liperi.geoid = 647852
-    let tikkurila = LocationSetting(identifier: "Tikkurila", display: "Tikkurila")
-    tikkurila.geoid = 843429
-    
-    let options = [liperi, tikkurila]
-    completion(INObjectCollection(items: options), nil)
-  }
-  */
-  
-  /*
-  func provideLocationOptionsCollection(for intent: SettingsIntent) async throws -> INObjectCollection<NSString> {
-    print("provideLocationOptionsCollection called")
-    let options = ["Automaattinen", "Liperi", "Tikkurila"] as [NSString]
-    return INObjectCollection(items: options)
-  }
-  */
 
   func resolveLocation(for intent: SettingsIntent) async -> LocationSettingResolutionResult {
     return intent.location == nil ? .needsValue() : .success(with: intent.location!)

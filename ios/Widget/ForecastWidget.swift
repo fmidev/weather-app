@@ -22,13 +22,7 @@ struct ForecastProvider: IntentTimelineProvider {
       var location:Location?
       var crisisMessage = nil as String?
       var settings = defaultWidgetSettings
-      
-      let _ = readStoredLocations()
-      print("settings")
-      print(configuration.theme);
-      print(configuration.currentLocation as Any);
-      print(configuration.location as Any);
-      
+           
       let showLogo = getSetting("layout.logo.enabled") as? Bool;
       
       if (showLogo != nil) {
@@ -37,17 +31,7 @@ struct ForecastProvider: IntentTimelineProvider {
       
       if (configuration.currentLocation == 0 && configuration.location != nil) {
         // Use location from configuration
-        
-        location = Location(
-          id: configuration.location!.geoid as! Int,
-          name: configuration.location!.displayString,
-          area: "",
-          lat: 0,
-          lon: 0,
-          timezone: "Europe/Helsinki",
-          iso2: "FI",
-          country: "Finland"
-        )
+        location = convertLocationSettingToLocation(configuration.location!)
       } else {
         let currentLocation = try await getCurrentLocation()
         
@@ -287,8 +271,9 @@ struct ForecastWidget: Widget {
       }
       .contentMarginsDisabled()
       .configurationDisplayName("Forecast")
-      .description("Displays the forecast for the next hour or the coming hours.")
-      .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+      .description(
+        "Displays the forecast for the next hour or the coming hours. Press and hold the widget to edit settings."
+      ).supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
   }
 }
 

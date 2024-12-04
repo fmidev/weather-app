@@ -1,7 +1,5 @@
 import Foundation
-import CoreLocation
-import MapKit
-import Contacts
+import SwiftyJSON
 
 func mergeUvToForecast(forecast: [TimeStep], uvForecast: [UVTimeStep]) -> [TimeStep] {
   return forecast.map{item in
@@ -125,38 +123,15 @@ func resolveWarningType(_ type: String) -> WarningType {
   }
 }
 
-func createPlacemark(geoid:Int, name: String, lat: Double, lon: Double) -> CLPlacemark {
-  // Koordinaatit
-  let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-  
-  // Osoitteen komponentit
-  /*
-  let addressDictionary: [String: Any] = [
-    "name": name,
-    "postalCode": geoid
-  ]*/
-   
-  let address = [CNPostalAddressStreetKey: "181 Piccadilly, St. James's", CNPostalAddressCityKey: "London", CNPostalAddressPostalCodeKey: "W1A 1ER", CNPostalAddressISOCountryCodeKey: "GB"]
-  
-  // Luo MKPlacemark
-  let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: address)
-  return placemark
-}
-
-func readStoredLocations() -> [Location] {
-  let appGroupID = "group.fi.fmi.mobileweather.settings"
-  let key = "persist:location"
-  var locations = [Location]()
-
-  if let userDefaults = UserDefaults(suiteName: appGroupID) {
-    if let storedLocations = userDefaults.string(forKey: key) {
-      print(storedLocations)
-    } else {
-      print("No location found for key 'persist:location'.")
-    }
-  } else {
-    print("Failed to access UserDefaults with group ID: \(appGroupID).")
-  }
-  
-  return locations
-}
+func convertLocationSettingToLocation(_ location: LocationSetting) -> Location {
+  return Location(
+    id: location.geoid as! Int,
+    name: location.displayString,
+    area: location.area ?? "",
+    lat: location.lat as? Double ?? 0,
+    lon: location.lon as? Double ?? 0,
+    timezone: location.timezone ?? "Europe/Helsinki",
+    iso2: location.iso2 ?? "",
+    country: ""
+  )
+}  

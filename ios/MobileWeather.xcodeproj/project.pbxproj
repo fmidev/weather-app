@@ -14,6 +14,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* MobileWeatherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MobileWeatherTests.m */; };
+		610CF3EB365EB96FE3FBADA5 /* libPods-SettingsIntentExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83B7FB42C76BC882D2A2E9F6 /* libPods-SettingsIntentExtension.a */; };
 		6239D0E9AC9B1F6DD858CDAD /* libPods-MobileWeather-MobileWeatherTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 901F37809B560A181896EE10 /* libPods-MobileWeather-MobileWeatherTests.a */; };
 		78B5BEAA54F6CAC3B9F10A72 /* libPods-WidgetExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E635203A5C2F9B8574FD76C3 /* libPods-WidgetExtension.a */; };
 		7E1C7131F6AD991179B8D76B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 35013B407054ED7A9F8250D5 /* PrivacyInfo.xcprivacy */; };
@@ -128,9 +129,12 @@
 		2D02E47B1E0B4A5D006451C7 /* MobileWeather-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MobileWeather-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* MobileWeather-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MobileWeather-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		35013B407054ED7A9F8250D5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		42805CC06145D9C5A7155E1D /* Pods-SettingsIntentExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsIntentExtension.debug.xcconfig"; path = "Target Support Files/Pods-SettingsIntentExtension/Pods-SettingsIntentExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		44D8CDDE1DBE0F040C1E551E /* Pods-SettingsIntentExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SettingsIntentExtension.release.xcconfig"; path = "Target Support Files/Pods-SettingsIntentExtension/Pods-SettingsIntentExtension.release.xcconfig"; sourceTree = "<group>"; };
 		4A98B2A2495A0543BE9BC033 /* Pods-WidgetExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetExtension.release.xcconfig"; path = "Target Support Files/Pods-WidgetExtension/Pods-WidgetExtension.release.xcconfig"; sourceTree = "<group>"; };
 		56970789D0300BBFBA95D44A /* Pods-MobileWeather-MobileWeatherTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather-MobileWeatherTests.release.xcconfig"; path = "Target Support Files/Pods-MobileWeather-MobileWeatherTests/Pods-MobileWeather-MobileWeatherTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		83B7FB42C76BC882D2A2E9F6 /* libPods-SettingsIntentExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SettingsIntentExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		901F37809B560A181896EE10 /* libPods-MobileWeather-MobileWeatherTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobileWeather-MobileWeatherTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9629DD67B904687D291DE4B6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = ../PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		974E3F089372FFCFD0AECBEB /* libPods-MobileWeather.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobileWeather.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -243,6 +247,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2042C6E2CFF2EEF00C41A9E /* Intents.framework in Frameworks */,
+				610CF3EB365EB96FE3FBADA5 /* libPods-SettingsIntentExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,6 +311,7 @@
 				A2B3FF992CC7D1DA00EC1293 /* SwiftUI.framework */,
 				E635203A5C2F9B8574FD76C3 /* libPods-WidgetExtension.a */,
 				A2042C6D2CFF2EEE00C41A9E /* Intents.framework */,
+				83B7FB42C76BC882D2A2E9F6 /* libPods-SettingsIntentExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -319,6 +325,8 @@
 				56970789D0300BBFBA95D44A /* Pods-MobileWeather-MobileWeatherTests.release.xcconfig */,
 				A591DFB7F360D390A6A79074 /* Pods-WidgetExtension.debug.xcconfig */,
 				4A98B2A2495A0543BE9BC033 /* Pods-WidgetExtension.release.xcconfig */,
+				42805CC06145D9C5A7155E1D /* Pods-SettingsIntentExtension.debug.xcconfig */,
+				44D8CDDE1DBE0F040C1E551E /* Pods-SettingsIntentExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -497,9 +505,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A2042C792CFF2EEF00C41A9E /* Build configuration list for PBXNativeTarget "SettingsIntentExtension" */;
 			buildPhases = (
+				EB9251EE28C9F1EBE2F707C9 /* [CP] Check Pods Manifest.lock */,
 				A2042C682CFF2EEE00C41A9E /* Sources */,
 				A2042C692CFF2EEE00C41A9E /* Frameworks */,
 				A2042C6A2CFF2EEE00C41A9E /* Resources */,
+				FA8FC7F78C2105829CA20A69 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -510,8 +520,6 @@
 				A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */,
 			);
 			name = SettingsIntentExtension;
-			packageProductDependencies = (
-			);
 			productName = SettingsIntentExtension;
 			productReference = A2042C6C2CFF2EEE00C41A9E /* SettingsIntentExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -920,6 +928,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobileWeather-MobileWeatherTests/Pods-MobileWeather-MobileWeatherTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		EB9251EE28C9F1EBE2F707C9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SettingsIntentExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		F155B79920AEB0D76A6275A4 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -938,6 +968,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-WidgetExtension/Pods-WidgetExtension-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FA8FC7F78C2105829CA20A69 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SettingsIntentExtension/Pods-SettingsIntentExtension-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyJSON/SwiftyJSON.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SwiftyJSON.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SettingsIntentExtension/Pods-SettingsIntentExtension-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -1491,6 +1539,7 @@
 		};
 		A2042C762CFF2EEF00C41A9E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42805CC06145D9C5A7155E1D /* Pods-SettingsIntentExtension.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1499,12 +1548,13 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = SettingsIntentExtension/SettingsIntentExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DJHT89EW79;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1539,6 +1589,7 @@
 		};
 		A2042C772CFF2EEF00C41A9E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 44D8CDDE1DBE0F040C1E551E /* Pods-SettingsIntentExtension.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1547,13 +1598,14 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = SettingsIntentExtension/SettingsIntentExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DJHT89EW79;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
