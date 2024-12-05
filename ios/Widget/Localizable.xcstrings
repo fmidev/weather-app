@@ -345,6 +345,22 @@
         }
       }
     },
+    "More warnings (%lld)" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisää varoituksia (%lld)"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fler varningar (%lld)"
+          }
+        }
+      }
+    },
     "N" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1648,6 +1664,23 @@
         }
       }
     },
+    "Traffic weather warning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liikennesää"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trafikvädret"
+          }
+        }
+      }
+    },
     "Unknown error" : {
       "localizations" : {
         "fi" : {
@@ -1692,7 +1725,18 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Päivitetty klo **%@**"
+            "value" : "Uppdaterad kl. **%@**"
+          }
+        }
+      }
+    },
+    "Updated at %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Päivitetty klo %@"
           }
         }
       }

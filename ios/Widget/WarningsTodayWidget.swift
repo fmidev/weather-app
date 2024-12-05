@@ -158,12 +158,12 @@ struct WarningProvider: IntentTimelineProvider {
   }
 }
 
-struct SmallWarningTodayView : View {
+struct SmallWarningsTodayView : View {
   var entry: WarningProvider.Entry;
 
   var body: some View {
     if (entry.error != nil) {
-      WarningsErrorView(error: entry.error!)
+      WarningsErrorView(error: entry.error!, size: .small)
         .modifier(TextModifier())
     } else {
       VStack {
@@ -206,14 +206,86 @@ struct SmallWarningTodayView : View {
   }
 }
 
+struct WarningsTodayView : View {
+  var entry: WarningProvider.Entry;
+  var size : ErrorViewSize
+  var maxWarningRows: Int
+  
+  var body: some View {
+    if (entry.error != nil) {
+      WarningsErrorView(error: entry.error!, size: size)
+        .modifier(TextModifier())
+    } else {
+      VStack(alignment: .leading) {
+        Text(
+          "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
+        ).style(.location)
+          .padding(.top, 3)
+          .frame(maxWidth: .infinity, alignment: .center)
+        if (entry.warnings.isEmpty) {
+          Spacer()
+          Text("No warnings").frame(maxWidth: .infinity, alignment: .center)
+          Spacer()
+        } else {
+          Spacer()
+          if (maxWarningRows <= 2 && entry.warnings.count > 2) {
+            WarningRow(warning: entry.warnings[0])
+          } else {
+            let range = 0..<min(maxWarningRows, entry.warnings.count)
+            ForEach(range, id: \.self) { i in
+              WarningRow(warning: entry.warnings[i])
+              if (maxWarningRows > 2) {
+                Spacer().frame(minHeight: 7, maxHeight: 24)
+              }
+            }
+          }
+          Spacer()
+          if (entry.crisisMessage != nil) {
+            CrisisMessage(message: entry.crisisMessage!)
+          } else if entry.warnings.count > maxWarningRows {
+            HStack {
+              Spacer()
+              Text("More warnings (\(entry.warnings.count - maxWarningRows))")
+              Spacer()
+            }
+          }
+        }
+        if (entry.crisisMessage == nil) {
+          WarningsUpdated(
+            updated: entry.formatUpdated(),
+            logoPosition: size == .medium ? .right : .left
+          )
+        }
+      }.modifier(TextModifier())
+    }
+  }
+}
+
+struct WarningsTodayEntryView : View {
+  @Environment(\.widgetFamily) var family
+  var entry: WarningProvider.Entry
+  
+  var body: some View {
+    if (family == .systemSmall) {
+      SmallWarningsTodayView(entry: entry)
+    } else {
+      WarningsTodayView(
+        entry: entry,
+        size: family == .systemMedium ? .medium : .large,
+        maxWarningRows: family == .systemMedium ? 2 : 4
+      ).padding(.horizontal, 13)
+    }
+  }
+}
+
 struct WarningsTodayWidget: Widget {
   let kind: String = "WarningsTodayWidget"
 
   var body: some WidgetConfiguration {
     IntentConfiguration(kind: kind, intent: SettingsIntent.self, provider: WarningProvider()) { entry in
-        SmallWarningTodayView(entry: entry)
-          .containerBackground(Color("WidgetBackground"), for: .widget)
-          .padding(10)
+      WarningsTodayEntryView(entry: entry)
+        .containerBackground(Color("WidgetBackground"), for: .widget)
+        .padding(10)
     }
     .contentMarginsDisabled()
     .configurationDisplayName("Weather warnings for today")
@@ -223,7 +295,7 @@ struct WarningsTodayWidget: Widget {
 }
 
 #Preview(as: .systemSmall) {
-    WarningsTodayWidget()
+  WarningsTodayWidget()
 } timeline: {
   defaultWarningEntry
 }

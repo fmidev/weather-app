@@ -1,5 +1,6 @@
 import Alamofire
 import SwiftyJSON
+import Foundation
 
 func getLanguageCode() -> String {
   let lang = Locale.current.language.languageCode?.identifier ?? "fi"
@@ -107,8 +108,8 @@ func fetchWarnings(_ location: Location) async throws -> [WarningTimeStep]? {
       language: $0["language"].stringValue
     )
     if (timeStep.type == .seaWind || timeStep.type == .wind) {
-      guard let speed = $0["windIntensity"].int else { return timeStep }
-      guard let direction = $0["windDirection"].int else { return timeStep }
+      guard let speed = $0["physical"]["windIntensity"].int else { return timeStep }
+      guard let direction = $0["physical"]["windDirection"].int else { return timeStep }
       timeStep.wind = WindWarningDetails(direction: direction, speed: speed)
     }    
     return timeStep
