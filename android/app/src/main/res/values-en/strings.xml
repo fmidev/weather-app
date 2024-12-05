@@ -38,6 +38,7 @@
     <string name="ready">Ready</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="gradient">Gradient</string>
     <string name="transparent">Transparent</string>
     <string name="Forecast">Forecast</string>
     <string name="nexthours">Next hours</string>

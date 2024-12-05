@@ -4,6 +4,11 @@ import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
 
+import static fi.fmi.mobileweather.PrefKey.THEME;
+import static fi.fmi.mobileweather.Theme.DARK;
+import static fi.fmi.mobileweather.Theme.GRADIENT;
+import static fi.fmi.mobileweather.Theme.LIGHT;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -249,16 +254,22 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             Context context = getBaseContext();
 
             SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
+            Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
-            RadioGroup background = findViewById(R.id.backgroundRadioGroup);
-            int selectedBackground = background.getCheckedRadioButtonId();
+            RadioGroup theme = findViewById(R.id.backgroundRadioGroup);
+            int selectedTheme = theme.getCheckedRadioButtonId();
+            String selectedThemeString;
 
-            if (selectedBackground==R.id.optionLightRadioButton)
-                pref.saveString("background", "light");
-            else if (selectedBackground==R.id.optionTransparentRadioButton)
-                pref.saveString("background", "transparent");
+            if (selectedTheme==R.id.optionLightRadioButton)
+                selectedThemeString = LIGHT;
+            // TODO: Gradient theme GONE in layout file for now because gradient color file not ready yet in this Android project
+            else if (selectedTheme==R.id.optionGradientRadioButton)
+                selectedThemeString = GRADIENT;
             else
-                pref.saveString("background", "dark");
+                selectedThemeString = DARK;
+
+            pref.saveString(THEME, selectedThemeString);
+            Log.d("Widget Update", "Selected theme: " + selectedThemeString);
 
             pref.saveString("forecast", "hours");
 
@@ -269,7 +280,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                 pref.saveInt("location", 0);
             else
                 pref.saveInt("location", selectedLocation);
-
 
             // Send a broadcast to trigger onUpdate()
             int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
