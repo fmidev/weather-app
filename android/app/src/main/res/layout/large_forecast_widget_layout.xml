@@ -67,7 +67,7 @@
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView0"
@@ -106,7 +106,7 @@
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView1"
@@ -144,7 +144,7 @@
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView2"
@@ -182,7 +182,7 @@
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView3"
@@ -220,7 +220,7 @@
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/s32_light" />
+                    tools:src="@drawable/s_32_light" />
 
                 <TextView
                     android:id="@+id/temperatureTextView4"

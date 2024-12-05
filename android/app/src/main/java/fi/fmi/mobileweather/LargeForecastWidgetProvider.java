@@ -2,8 +2,6 @@ package fi.fmi.mobileweather;
 
 import static fi.fmi.mobileweather.Theme.LIGHT;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -71,7 +69,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 // time at the selected location
                 String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
-                String weathersymbol = forecast.getString("smartSymbol");
+                String weatherSymbol = forecast.getString("smartSymbol");
 
                 // get timeTextView0 or timeTextView1 etc. based on i from widgetRemoteViews
                 int timeTextViewId = context.getResources().getIdentifier("timeTextView" + i, "id", context.getPackageName());
@@ -86,9 +84,8 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 temperature = addPlusIfNeeded(temperature);
                 widgetRemoteViews.setTextViewText(temperatureTextViewId, temperature + "°");
 
-                Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                        context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
-                widgetRemoteViews.setImageViewBitmap(weatherIconImageViewId, icon);
+                int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
+                widgetRemoteViews.setImageViewResource(weatherIconImageViewId, drawableResId);
             }
 
             // Update time TODO: should be hidden for release

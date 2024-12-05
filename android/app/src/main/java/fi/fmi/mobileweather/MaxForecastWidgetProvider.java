@@ -6,8 +6,7 @@ import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.Theme.DARK;
 import static fi.fmi.mobileweather.Theme.GRADIENT;
 import static fi.fmi.mobileweather.Theme.LIGHT;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
@@ -79,11 +78,12 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                     widgetRemoteViews.setTextViewText(R.id.timeTextView, formattedTime);
 
                     String temperature = forecast.getString("temperature");
-                    String weathersymbol = forecast.getString("smartSymbol");
+                    String weatherSymbol = forecast.getString("smartSymbol");
+
                     widgetRemoteViews.setTextViewText(R.id.temperatureTextView, addPlusIfNeeded(temperature) + "°");
-                    Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                            context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
-                    widgetRemoteViews.setImageViewBitmap(R.id.weatherIconImageView, icon);
+
+                    int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
+                    widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
 
                     // next iteration in loop
                     continue;
@@ -92,7 +92,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                 // time at the selected location
                 String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
-                String weathersymbol = forecast.getString("smartSymbol");
+                String weatherSymbol = forecast.getString("smartSymbol");
 
                 // j = weather row layout index
                 int j = i - 1;
@@ -110,9 +110,8 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                 temperature = addPlusIfNeeded(temperature);
                 widgetRemoteViews.setTextViewText(temperatureTextViewId, temperature + "°");
 
-                Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                        context.getResources().getIdentifier("s" + weathersymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName()));
-                widgetRemoteViews.setImageViewBitmap(weatherIconImageViewId, icon);
+                int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
+                widgetRemoteViews.setImageViewResource(weatherIconImageViewId, drawableResId);
             }
 
             // Get the current time

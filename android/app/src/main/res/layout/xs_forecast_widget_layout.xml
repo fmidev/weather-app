@@ -43,7 +43,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="0dp"
         android:contentDescription="TODO"
-        tools:src="@drawable/s32_light" />
+        tools:src="@drawable/s_32_light" />
 
     <LinearLayout
         android:id="@+id/weatherLayout"
