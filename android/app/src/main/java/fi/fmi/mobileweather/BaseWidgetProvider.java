@@ -576,32 +576,41 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void setColors(RemoteViews remoteViews, int backgroundResource, int backgroundColor, int textColor) {
-        // Set theme
-        if (backgroundResource != 0)
-            // Set theme resource, i.e. drawable resource ID
+        if (backgroundResource != 0) {
             remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", backgroundResource);
-        else
-            // Set theme color
+        } else {
             remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
+        }
 
-        remoteViews.setInt(R.id.locationNameTextView, "setTextColor", textColor);
-        remoteViews.setInt(R.id.locationRegionTextView, "setTextColor", textColor);
-        remoteViews.setInt(R.id.temperatureTextView, "setTextColor", textColor);
-        remoteViews.setInt(R.id.temperatureUnitTextView, "setTextColor", textColor);
-        remoteViews.setInt(R.id.updateTimeTextView, "setTextColor", textColor);
+        int[] textViews = {
+                R.id.locationNameTextView,
+                R.id.locationRegionTextView,
+                R.id.temperatureTextView,
+                R.id.temperatureUnitTextView,
+                R.id.updateTimeTextView
+        };
+
+        for (int textView : textViews) {
+            remoteViews.setInt(textView, "setTextColor", textColor);
+        }
     }
 
     protected void setWeatherRowColors(RemoteViews remoteViews, int textColor) {
-        remoteViews.setInt(R.id.timeTextView0, "setTextColor", textColor);
-        remoteViews.setInt(R.id.temperatureTextView0, "setTextColor", textColor);
-        remoteViews.setInt(R.id.timeTextView1, "setTextColor", textColor);
-        remoteViews.setInt(R.id.temperatureTextView1, "setTextColor", textColor);
-        remoteViews.setInt(R.id.timeTextView2, "setTextColor", textColor);
-        remoteViews.setInt(R.id.temperatureTextView2, "setTextColor", textColor);
-        remoteViews.setInt(R.id.timeTextView3, "setTextColor", textColor);
-        remoteViews.setInt(R.id.temperatureTextView3, "setTextColor", textColor);
-        remoteViews.setInt(R.id.timeTextView4, "setTextColor", textColor);
-        remoteViews.setInt(R.id.temperatureTextView4, "setTextColor", textColor);
+        int[] timeTextViews = {
+                R.id.timeTextView0, R.id.timeTextView1, R.id.timeTextView2,
+                R.id.timeTextView3, R.id.timeTextView4
+        };
+        int[] temperatureTextViews = {
+                R.id.temperatureTextView0, R.id.temperatureTextView1, R.id.temperatureTextView2,
+                R.id.temperatureTextView3, R.id.temperatureTextView4
+        };
+
+        for (int textView : timeTextViews) {
+            remoteViews.setInt(textView, "setTextColor", textColor);
+        }
+        for (int textView : temperatureTextViews) {
+            remoteViews.setInt(textView, "setTextColor", textColor);
+        }
     }
 
     protected String addPlusIfNeeded(String temperature) {
@@ -698,26 +707,30 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // Hide normal view
         widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", GONE);
 
-        if (theme.equals(DARK)) {
-            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.BLACK);
-            widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", Color.WHITE);
-            widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", Color.WHITE);
-            // Set the info icon image resource, if info image view exists for the widget
-            setInfoIconIfNeeded(context, widgetRemoteViews, R.drawable.fmi_logo_white);
+        int backgroundColor, textColor, infoIconResId;
 
+        if (theme.equals(DARK)) {
+            backgroundColor = Color.BLACK;
+            textColor = Color.WHITE;
+            infoIconResId = R.drawable.fmi_logo_white;
         } else if (theme.equals(LIGHT)) {
-            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", Color.WHITE);
-            widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", getPrimaryBlue(context));
-            widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", getPrimaryBlue(context));
-            // Set the info icon image resource, if info image view exists for the widget
-            setInfoIconIfNeeded(context, widgetRemoteViews, R.drawable.fmi_logo_blue);
+            backgroundColor = Color.WHITE;
+            textColor = getPrimaryBlue(context);
+            infoIconResId = R.drawable.fmi_logo_blue;
         } else { // GRADIENT theme
             widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", R.drawable.gradient_background);
-            widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", Color.WHITE);
-            widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", Color.WHITE);
-            // Set the info icon image resource, if info image view exists for the widget
-            setInfoIconIfNeeded(context, widgetRemoteViews, R.drawable.fmi_logo_white);
+            textColor = Color.WHITE;
+            infoIconResId = R.drawable.fmi_logo_white;
+            backgroundColor = 0; // No background color needed for gradient
         }
+
+        if (backgroundColor != 0) {
+            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
+        }
+
+        widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", textColor);
+        widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", textColor);
+        setInfoIconIfNeeded(context, widgetRemoteViews, infoIconResId);
 
         widgetRemoteViews.setTextViewText(R.id.errorHeaderTextView, errorText1);
         widgetRemoteViews.setTextViewText(R.id.errorBodyTextView, errorText2);
