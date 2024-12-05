@@ -133,12 +133,12 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             if (impl != null) {
                 try {
-                    RadioGroup locationRadioGroup = (RadioGroup) findViewById(R.id.locationRadioGroup);
+                    RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
 
                     JSONObject dump = new JSONObject(impl);
                     JSONArray favorites = new JSONArray(dump.getString("favorites"));
 
-                    TextView favoriteinfo = (TextView) findViewById(R.id.favoriteInfoTextView);
+                    TextView favoriteinfo = findViewById(R.id.favoriteInfoTextView);
 
                     if (favorites.length()==0)
                         favoriteinfo.setVisibility(View.VISIBLE);
@@ -191,10 +191,10 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                     positionedRadioButton.setEnabled(true);
                     locationRadioGroup.check(R.id.optionPositionedRadioButton);
 
-                    Button grantbutton = (Button) findViewById(1);
+                    /*Button grantbutton = findViewById(1);
 
                     if (grantbutton!=null)
-                        grantbutton.setVisibility(View.GONE);
+                        grantbutton.setVisibility(View.GONE);*/
 
                 } else {
 
@@ -210,7 +210,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
                     // Add grant permission for positioning button
 
-                    Button grantButton = (Button) findViewById(1);
+                    /*Button grantButton = findViewById(1);
 
                     if (grantButton==null) {
 
@@ -229,9 +229,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         });
                         view.addView(grantButton);
                     }
-
+*/
                 }
-                return;
             }
         }
     }
