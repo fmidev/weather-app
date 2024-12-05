@@ -196,6 +196,11 @@ struct TimeStepEntry: TimelineEntry {
   }
 }
 
+struct WidgetSettings: Codable {
+  let theme: String
+  let showLogo: Bool
+}
+
 struct WarningEntry: TimelineEntry, Codable {
   let date: Date
   let updated: Date
@@ -372,8 +377,4 @@ struct WarningTimeStep: Codable {
       
     return date >= startTime.startOfDay()! && date <= endTime.endOfDay()!
   }
-}
-
-struct WidgetSettings {
-  var showLogo: Bool
 }

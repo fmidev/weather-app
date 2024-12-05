@@ -21,13 +21,7 @@ struct ForecastProvider: IntentTimelineProvider {
       var entries: [TimeStepEntry] = []
       var location:Location?
       var crisisMessage = nil as String?
-      var settings = defaultWidgetSettings
-           
-      let showLogo = getSetting("layout.logo.enabled") as? Bool;
-      
-      if (showLogo != nil) {
-        settings.showLogo = showLogo!
-      }
+      var settings = convertSettingsIntentToWidgetSettings(configuration)
       
       if (configuration.currentLocation == 0 && configuration.location != nil) {
         // Use location from configuration
@@ -82,7 +76,9 @@ struct ForecastProvider: IntentTimelineProvider {
             return forecast![index + $0]
           }
           
-          let date = Date(timeIntervalSince1970: TimeInterval(item.epochtime)).addingTimeInterval(TimeInterval(-60*60))
+          let date = Date(
+            timeIntervalSince1970: TimeInterval(item.epochtime)).addingTimeInterval(TimeInterval(-60*60)
+          )
           entries.append(
             TimeStepEntry(
               date: date,
@@ -113,10 +109,7 @@ struct ForecastProvider: IntentTimelineProvider {
             
       let timeline = Timeline(
         entries: entries,
-        policy:
-            .after(
-              Date() + TimeInterval(UPDATE_INTERVAL * 60)
-            )
+        policy: .after(Date() + TimeInterval(UPDATE_INTERVAL * 60))
       )
       completion(timeline)
     }
@@ -209,6 +202,7 @@ struct MediumWidgetView : View {
 
 struct LargeWidgetView : View {
   var entry: ForecastProvider.Entry
+  @Environment(\.colorScheme) var colorScheme
 
   var body: some View {
     if (entry.error != nil) {
@@ -221,6 +215,9 @@ struct LargeWidgetView : View {
         Text("at \(entry.timeSteps[0].formatTime(timezone: entry.location.timezone))")
           .style(.largeTime)
         NextHourForecast(timeStep: entry.timeSteps[0], large: true)
+        if (colorScheme == .dark) {
+          Divider().background(.white)
+        }
         LargeNextHoursForecast(
           timeSteps: entry.timeSteps,
           timezone: entry.location.timezone
@@ -245,29 +242,67 @@ struct LargeWidgetView : View {
 
 struct ForecastWidgetEntryView : View {
   @Environment(\.widgetFamily) var family
+  @Environment(\.colorScheme) var colorScheme
+
   var entry: ForecastProvider.Entry
   
   var body: some View {
     if (family == .systemLarge) {
       LargeWidgetView(entry: entry)
+        .colorScheme(resolveColorScheme(settings: entry.settings) ?? colorScheme)
     } else if (family == .systemMedium) {
       MediumWidgetView(entry: entry)
+        .colorScheme(resolveColorScheme(settings: entry.settings) ?? colorScheme)
     } else {
       SmallWidgetView(entry: entry)
+        .colorScheme(resolveColorScheme(settings: entry.settings) ?? colorScheme)
     }
   }
 }
 
 struct ForecastWidget: Widget {
   let kind: String = "ForecastWidget"
-
+  
+  func backroundGradient() -> LinearGradient {
+    return LinearGradient(
+      gradient: Gradient(stops: [
+        Gradient.Stop(color: Color(red: 2/255, green: 184/255, blue: 206/255), location: 0.0),
+        Gradient.Stop(color: Color(red: 0/255, green: 127/255, blue: 173/255), location: 0.095),
+        Gradient.Stop(color: Color(red: 31/255, green: 32/255, blue: 96/255), location: 0.4251),
+        Gradient.Stop(color: Color(red: 15/255, green: 15/255, blue: 45/255), location: 1.0)
+      ]),
+      startPoint: .top,
+      endPoint: .bottom
+    )
+  }
+  
+  func singleColorWidgetBackground(_ settings: WidgetSettings) -> LinearGradient {
+    let uiStyle = resolveUserInterfaceStyle(settings: settings)
+    var color = Color("WidgetBackground")
+    
+    if (uiStyle != nil) {
+      color = Color(UIColor(named: "WidgetBackground")!.resolvedColor(with: UITraitCollection(userInterfaceStyle: uiStyle!)))
+    }
+    
+    return LinearGradient(
+      gradient: Gradient(stops: [
+        Gradient.Stop(color: color, location: 0.0),
+        Gradient.Stop(color: color, location: 1.0)
+      ]),
+      startPoint: .top,
+      endPoint: .bottom
+    )
+  }
+   
   var body: some WidgetConfiguration {
     IntentConfiguration(
       kind: kind, intent: SettingsIntent.self, provider: ForecastProvider()
     ) { entry in
         ForecastWidgetEntryView(entry: entry)
-              .containerBackground(Color("WidgetBackground"), for: .widget)
-              .padding(8)
+          .containerBackground(
+            entry.settings.theme == "gradient" ? backroundGradient() : singleColorWidgetBackground(entry.settings),
+            for: .widget
+          ).padding(8)
       }
       .contentMarginsDisabled()
       .configurationDisplayName("Forecast")

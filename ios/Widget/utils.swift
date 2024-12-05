@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import SwiftyJSON
 
 func mergeUvToForecast(forecast: [TimeStep], uvForecast: [UVTimeStep]) -> [TimeStep] {
@@ -134,4 +135,37 @@ func convertLocationSettingToLocation(_ location: LocationSetting) -> Location {
     iso2: location.iso2 ?? "",
     country: ""
   )
-}  
+}
+
+func convertSettingsIntentToWidgetSettings(_ intent: SettingsIntent) -> WidgetSettings {
+  let showLogo = getSetting("layout.logo.enabled") as? Bool ?? true
+  
+  switch intent.theme.rawValue {
+    case 2: return WidgetSettings(theme: "light", showLogo: showLogo)
+    case 3: return WidgetSettings(theme: "dark", showLogo: showLogo)
+    case 4: return WidgetSettings(theme: "gradient", showLogo: showLogo)
+    default: return WidgetSettings(theme: "automatic", showLogo: showLogo)
+  }
+}
+
+func resolveColorScheme(settings: WidgetSettings) -> ColorScheme? {
+  if (settings.theme == "gradient" || settings.theme == "dark") {
+    return .dark
+  }
+  if (settings.theme == "light") {
+    return .light
+  }
+  
+  return nil
+}
+
+func resolveUserInterfaceStyle(settings: WidgetSettings) -> UIUserInterfaceStyle? {
+  if (settings.theme == "gradient" || settings.theme == "dark") {
+    return .dark
+  }
+  if (settings.theme == "light") {
+    return .light
+  }
+  
+  return nil
+}
