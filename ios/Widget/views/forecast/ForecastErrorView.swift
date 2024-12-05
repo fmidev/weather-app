@@ -1,7 +1,7 @@
 import SwiftUI
 import CoreLocation
 
-enum ForecastErrorViewSize {
+enum ErrorViewSize {
   case small
   case medium
   case large
@@ -9,7 +9,7 @@ enum ForecastErrorViewSize {
 
 struct ForecastErrorView: View {
   var error: WidgetError
-  var size: ForecastErrorViewSize
+  var size: ErrorViewSize
   
   @StateObject private var networkManager = NetworkStatusManager()
   let locationManager = CLLocationManager()
