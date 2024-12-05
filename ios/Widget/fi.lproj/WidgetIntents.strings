@@ -1,0 +1,76 @@
+"3FW92U" = "Tumma";
+
+"3grKS8" = "Suosikki";
+
+"4COQeq" = "Oma sijainti";
+
+"4RhFur" = "Valitse paikka";
+
+"7JHQz5" = "Liukuväri";
+
+"7NT5x4" = "Ei valintaa";
+
+"9Xx8QY" = "Valitse widgetin asetukset";
+
+"Ay5Grj" = "Vahvista valinta ‘${location}’?";
+
+"B5Ez75" = "true";
+
+"B5nEl4" = "Geoid";
+
+"B7bhBR" = "Valitse widgetin asetukset";
+
+"BPnPIY" = "iso2 koodi";
+
+"FtzdgO-3FW92U" = "${count} valintaa vastaa ‘Tumma’.";
+
+"FtzdgO-7JHQz5" = "${count} valintaa vastaa  ‘Liukuväri’.";
+
+"FtzdgO-7NT5x4" = "${count} valintaa vastaa  ‘Ei valintaa’.";
+
+"FtzdgO-LA1KhN" = "${count} valintaa vastaa  ‘Vaalea’.";
+
+"FtzdgO-MXo86N" = "${count} valintaa vastaa  ‘Oletus’.";
+
+"KVUJur" = "Valitse widgetin asetukset";
+
+"LA1KhN" = "Vaalea";
+
+"MXo86N" = "Oletus";
+
+"MiKZcj" = "Aikavyöhyke";
+
+"NFZLYv" = "Teema";
+
+"RMuMjO" = "Valitse paikka";
+
+"ZLfwya" = "Asetukset";
+
+"cUPKLd" = "${count} valintaa vastaa ‘${location}’.";
+
+"eb2ozg" = "Paikan asetukset";
+
+"huHGsi" = "Teema";
+
+"ljcuLl" = "false";
+
+"rAwJLY" = "Haluatko käyttää nykyistä sijaintia?";
+
+"uKmzwA-3FW92U" = "Vahvista valinta ‘Tumma’?";
+
+"uKmzwA-7JHQz5" = "Vahvista valinta ‘Liukuväri’?";
+
+"uKmzwA-7NT5x4" = "Vahvinsta valinta ‘Ei valintaa’?";
+
+"uKmzwA-LA1KhN" = "Vahvista valinta ‘Vaalea’?";
+
+"uKmzwA-MXo86N" = "Vahvista valinta ‘Oletus’?";
+
+"xZ5waw" = "Valitse widgetin asetukset";
+
+"xsQKsF" = "Latitudi";
+
+"yHDmBK" = "Area";
+
+"yoFqU9" = "Longitudi";
+

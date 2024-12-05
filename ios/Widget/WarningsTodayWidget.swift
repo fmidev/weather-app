@@ -3,18 +3,24 @@ import CoreLocation
 import SwiftUI
 import AsyncLocationKit
 
-struct WarningProvider: TimelineProvider {
+struct WarningProvider: IntentTimelineProvider {
   let USER_DEFAULTS_PREFIX = "warnings-today"
   
   func placeholder(in context: Context) -> WarningEntry {
     return defaultWarningEntry
   }
 
-  func getSnapshot(in context: Context, completion: @escaping (WarningEntry) -> ()) {
+  func getSnapshot(
+    for configuration: SettingsIntent,
+    in context: Context,
+    completion: @escaping (WarningEntry) -> ()) {
     completion(defaultWarningEntry)
   }
  
-  func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+  func getTimeline(
+    for configuration: SettingsIntent,
+    in context: Context,
+    completion: @escaping (Timeline<Entry>) -> ()) {
     Task {
       var error = nil as WidgetError?
       var warnings = [] as [WarningTimeStep]?
@@ -23,14 +29,19 @@ struct WarningProvider: TimelineProvider {
       var entries: [WarningEntry] = []
       let updateInterval = getSetting("warnings.interval") as? Int ?? UPDATE_INTERVAL
       
-      let currentLocation = try await getCurrentLocation()
-      
-      if (currentLocation != nil) {
-        location = try await fetchLocation(
-          lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
-        )
+      if (configuration.currentLocation == 0 && configuration.location != nil) {
+        // Use location from configuration
+        location = convertLocationSettingToLocation(configuration.location!)
       } else {
-        error = .userLocationError
+        let currentLocation = try await getCurrentLocation()
+        
+        if (currentLocation != nil) {
+          location = try await fetchLocation(
+            lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
+          )
+        } else {
+          error = .userLocationError
+        }
       }
       
       if (location?.iso2 != "FI") {
@@ -271,15 +282,15 @@ struct WarningsTodayWidget: Widget {
   let kind: String = "WarningsTodayWidget"
 
   var body: some WidgetConfiguration {
-    StaticConfiguration(kind: kind, provider: WarningProvider()) { entry in
-        WarningsTodayEntryView(entry: entry)
-          .containerBackground(Color("WidgetBackground"), for: .widget)
-          .padding(10)
+    IntentConfiguration(kind: kind, intent: SettingsIntent.self, provider: WarningProvider()) { entry in
+      WarningsTodayEntryView(entry: entry)
+        .containerBackground(Color("WidgetBackground"), for: .widget)
+        .padding(10)
     }
     .contentMarginsDisabled()
     .configurationDisplayName("Weather warnings for today")
-    .description("Weather warnings in your location")
-    .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+    .description("Weather warnings in your location. Press and hold the widget to edit settings.")
+    .supportedFamilies([.systemSmall])
   }
 }
 

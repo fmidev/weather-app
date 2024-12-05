@@ -89,18 +89,18 @@
         }
       }
     },
-    "Displays the forecast for the next hour or the coming hours." : {
+    "Displays the forecast for the next hour or the coming hours. Press and hold the widget to edit settings." : {
       "localizations" : {
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Näyttää ennusteen seuraavalle tai seuraaville tunneille."
+            "value" : "Näyttää ennusteen seuraavalle tai seuraaville tunneille. Paina widgettiä pitkään muokataksesi asetuksia."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Visar prognosen för den kommande timmen eller de följande timmarna."
+            "value" : "Visar prognosen för nästa timme eller de kommande timmarna. Tryck och håll ned widgeten för att redigera inställningarna."
           }
         }
       }
@@ -1931,18 +1931,18 @@
         }
       }
     },
-    "Weather warnings in your location" : {
+    "Weather warnings in your location. Press and hold the widget to edit settings." : {
       "localizations" : {
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Säävaroitukset omaan sijaintiisi"
+            "value" : "Säävaroitukset omaan sijaintiisi. Paina widgettiä pitkään muokataksesi asetuksia."
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vädervarningar på din plats"
+            "value" : "Vädervarningar på din plats. Tryck och håll ned widgeten för att redigera inställningarna."
           }
         }
       }

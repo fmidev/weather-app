@@ -1,4 +1,5 @@
 import Foundation
+import SwiftyJSON
 
 func mergeUvToForecast(forecast: [TimeStep], uvForecast: [UVTimeStep]) -> [TimeStep] {
   return forecast.map{item in
@@ -121,4 +122,16 @@ func resolveWarningType(_ type: String) -> WarningType {
     default: return .none
   }
 }
-  
+
+func convertLocationSettingToLocation(_ location: LocationSetting) -> Location {
+  return Location(
+    id: location.geoid as! Int,
+    name: location.displayString,
+    area: location.area ?? "",
+    lat: location.lat as? Double ?? 0,
+    lon: location.lon as? Double ?? 0,
+    timezone: location.timezone ?? "Europe/Helsinki",
+    iso2: location.iso2 ?? "",
+    country: ""
+  )
+}  
