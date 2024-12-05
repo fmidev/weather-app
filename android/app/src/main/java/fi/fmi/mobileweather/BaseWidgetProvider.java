@@ -151,6 +151,18 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
+        // Get selected location for the widget (0 means 'current location')
+        int selectedLocation = pref.getInt(SELECTED_LOCATION, 0);
+        if (selectedLocation == 0) {
+            // get current location
+            requestLocation(context, main, pref);
+        } else {
+            // use selected location (geoid)
+            executeWithGeoId(selectedLocation, main, pref);
+        }
+    }
+
+    private void requestLocation(Context context, RemoteViews main, SharedPreferencesHelper pref) {
         Log.d("Widget Location", "Trying to request location");
         if ((ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
@@ -170,7 +182,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                             Log.d("Widget Location", "Timer canceled");
                             timeoutHandler.removeCallbacks(timeoutRunnable);
                         }
-                        execute(latlon, main, pref);
+                        executeWithLatLon(latlon, main, pref);
                     });
             if (ok) {
                 // Set timeout for location request
@@ -182,7 +194,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     String latlon = pref.getString("latlon", null);
                     if (latlon != null) {
                         Log.d("Widget Location", "Timeout reached, update with stored location");
-                        execute(latlon, main, pref);
+                        executeWithLatLon(latlon, main, pref);
                     } else {
                         Log.d("Widget Location", "Timeout reached, no location available");
                     }
@@ -218,7 +230,35 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         WidgetNotification.clearWidgetUpdate(context);
     }
 
-    public void execute(String latlon, RemoteViews main, SharedPreferencesHelper pref) {
+    public void executeWithGeoId(int geoId, RemoteViews main, SharedPreferencesHelper pref) {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        // Get language string
+        String language = getLanguageString();
+        // temporary for testing.
+
+        // TODO: temporary for testing.
+        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
+//        String announceUrl = announcementsUrl;
+
+        // get forecast based on geoId
+        Future<JSONObject> future1 = executorService.submit(() -> fetchForecast(Integer.toString(geoId), null, language));
+        // get announcements
+        Future<JSONArray> future2 = executorService.submit(() -> fetchJsonArray(announceUrl));
+
+        executorService.submit(() -> {
+            try {
+                JSONObject result1 = future1.get();
+                JSONArray result2 = future2.get();
+                onPostExecute(result1, result2, main, pref);
+            } catch (Exception e) {
+                Log.e("Download json", "Exception: " + e.getMessage());
+                // NOTE: let's not show error view here, because connection problems with server
+                //       seem to be quite frequent and we don't want to show error view every time
+            }
+        });
+    }
+
+    public void executeWithLatLon(String latlon, RemoteViews main, SharedPreferencesHelper pref) {
 
         // if we have no location, do not update the widget
         if (latlon == null || latlon.isEmpty()) {
@@ -293,12 +333,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     "&endtime=data&format=json&attributes=geoid&lang=" +
                     language +
                     "&tz=utc&who=mobileweather-widget-android&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
-        } else { // otherwise use lat&lon to get forecast data
+        } else if (latlon != null && !latlon.isEmpty()) { // otherwise use lat&lon to get forecast data if available
             url = weatherUrl + "?latlon=" +
                     latlon +
                     "&endtime=data&format=json&attributes=geoid&lang=" +
                     language +
                     "&tz=utc&who=mobileweather-widget-android&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
+        } else {
+            return null;
         }
 
         try {
@@ -424,14 +466,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 return jsonstr;
 
             } catch (IOException e) {
-                Log.e("Exception", Objects.requireNonNull(e.getMessage()));
+                Log.e("Download json", "fetchJsonString exception" + Objects.requireNonNull(e.getMessage()));
             }
 
             // if something went wrong, return null
             return null;
 
         } catch (IOException e) {
-            Log.e("Exception", Objects.requireNonNull(e.getMessage()));
+            Log.e("Download json", "fetchJsonString exception" + Objects.requireNonNull(e.getMessage()));
             return null;
         }
     }

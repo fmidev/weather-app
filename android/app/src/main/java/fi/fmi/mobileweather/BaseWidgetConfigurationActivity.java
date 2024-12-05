@@ -6,6 +6,7 @@ import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
 import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
 
+import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.THEME;
 import static fi.fmi.mobileweather.Theme.DARK;
 import static fi.fmi.mobileweather.Theme.GRADIENT;
@@ -123,7 +124,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             }
         });
 
-        // Add favorites to location options
+        // Add app location favorites to location radio button group
 
         SQLiteDatabase readableDatabase = null;
         readableDatabase = ReactDatabaseSupplier.getInstance(this.getApplicationContext()).getReadableDatabase();
@@ -147,15 +148,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
                     for (int i = 0; i < favorites.length(); i++) {
                         JSONObject current = favorites.getJSONObject(i);
-                        int geoid = current.getInt("id");
+                        int geoId = current.getInt("id");
                         String name = current.getString("name");
                         int padding = this.getResources().getDimensionPixelSize(R.dimen.radiobutton_padding);
 
                         RadioButton favoriteRadioButton = new RadioButton(this);
                         favoriteRadioButton.setPadding(0, padding, 0, padding);
                         favoriteRadioButton.setText(name);
-                        favoriteRadioButton.setTag(geoid);
-                        favoriteRadioButton.setId(geoid);
+                        favoriteRadioButton.setTag(geoId);
+                        favoriteRadioButton.setId(geoId);
 
                         locationRadioGroup.addView(favoriteRadioButton);
 
@@ -277,15 +278,16 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             pref.saveString(THEME, selectedThemeString);
             Log.d("Widget Update", "Selected theme: " + selectedThemeString);
 
-            pref.saveString("forecast", "hours");
+//            pref.saveString("forecast", "hours");
 
-            RadioGroup location = findViewById(R.id.locationRadioGroup);
-            int selectedLocation = location.getCheckedRadioButtonId();
+            // get selected location (geoId) from checked radio button's ID
+            RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
+            int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
 
             if (selectedLocation==R.id.optionPositionedRadioButton)
-                pref.saveInt("location", 0);
+                pref.saveInt(SELECTED_LOCATION, 0);
             else
-                pref.saveInt("location", selectedLocation);
+                pref.saveInt(SELECTED_LOCATION, selectedLocation);
 
             // Send a broadcast to trigger onUpdate()
             int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
