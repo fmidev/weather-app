@@ -158,24 +158,21 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
     }
 
     private void setMaxWidgetSpecificColors(RemoteViews remoteViews, String theme) {
-        if (theme.equals(DARK) || theme.equals(GRADIENT)) {
-            remoteViews.setInt(R.id.timeTextView, "setTextColor", Color.WHITE);
-            remoteViews.setViewVisibility(R.id.verticalBarImageView0, INVISIBLE);
-            remoteViews.setViewVisibility(R.id.verticalBarImageView1, INVISIBLE);
-            remoteViews.setImageViewResource(R.id.clockSymbolImageView, R.drawable.ic_clock_white);
-            remoteViews.setImageViewResource(R.id.weatherSymbolImageView, R.drawable.ic_weather_white);
-            remoteViews.setImageViewResource(R.id.temperatureSymbolImageView, R.drawable.ic_temperature_white);
-            remoteViews.setImageViewResource(R.id.logoImageView, R.drawable.fmi_logo_white);
-        }
-        else { // LIGHT theme
-            remoteViews.setInt(R.id.timeTextView, "setTextColor", getPrimaryBlue(context));
-            remoteViews.setViewVisibility(R.id.verticalBarImageView0, VISIBLE);
-            remoteViews.setViewVisibility(R.id.verticalBarImageView1, VISIBLE);
-            remoteViews.setImageViewResource(R.id.clockSymbolImageView, R.drawable.ic_clock_blue);
-            remoteViews.setImageViewResource(R.id.weatherSymbolImageView, R.drawable.ic_weather_blue);
-            remoteViews.setImageViewResource(R.id.temperatureSymbolImageView, R.drawable.ic_temperature_blue);
-            remoteViews.setImageViewResource(R.id.logoImageView, R.drawable.fmi_logo_blue);
-        }
+        boolean isDarkOrGradient = theme.equals(DARK) || theme.equals(GRADIENT);
+        int textColor = isDarkOrGradient ? Color.WHITE : getPrimaryBlue(context);
+        int visibility = isDarkOrGradient ? INVISIBLE : VISIBLE;
+        int clockIcon = isDarkOrGradient ? R.drawable.ic_clock_white : R.drawable.ic_clock_blue;
+        int weatherIcon = isDarkOrGradient ? R.drawable.ic_weather_white : R.drawable.ic_weather_blue;
+        int temperatureIcon = isDarkOrGradient ? R.drawable.ic_temperature_white : R.drawable.ic_temperature_blue;
+        int logoIcon = isDarkOrGradient ? R.drawable.fmi_logo_white : R.drawable.fmi_logo_blue;
+
+        remoteViews.setInt(R.id.timeTextView, "setTextColor", textColor);
+        remoteViews.setViewVisibility(R.id.verticalBarImageView0, visibility);
+        remoteViews.setViewVisibility(R.id.verticalBarImageView1, visibility);
+        remoteViews.setImageViewResource(R.id.clockSymbolImageView, clockIcon);
+        remoteViews.setImageViewResource(R.id.weatherSymbolImageView, weatherIcon);
+        remoteViews.setImageViewResource(R.id.temperatureSymbolImageView, temperatureIcon);
+        remoteViews.setImageViewResource(R.id.logoImageView, logoIcon);
     }
 
 }
