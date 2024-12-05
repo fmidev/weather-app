@@ -86,7 +86,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         // Android Pie (SDK 28) and later are more restrictive when battery saving is enabled.
         // Therefore ask user to disable battery saving.
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        LinearLayout batteryOptimizationWarning = findViewById(R.id.batteryOptimizationWarning);
+
+        if (isPowerSavingEnabled(this)) {
+            batteryOptimizationWarning.setVisibility(View.VISIBLE);
+        } else {
+            batteryOptimizationWarning.setVisibility(View.GONE);
+        }
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String packageName = getPackageName();
             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
             LinearLayout batteryOptimizationWarning = (LinearLayout) findViewById(R.id.batteryOptimizationWarning);
@@ -96,7 +104,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             } else {
                 batteryOptimizationWarning.setVisibility(View.GONE);
             }
+        }*/
+    }
+
+    public static boolean isPowerSavingEnabled(Context context) {
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if (powerManager != null) {
+            return powerManager.isPowerSaveMode();
         }
+        return false;
     }
 
     public void initListViews() {
