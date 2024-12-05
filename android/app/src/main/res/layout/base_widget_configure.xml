@@ -107,13 +107,13 @@
                 <!-- TODO: Gradient theme disabled for now because gradient color not ready yet -->
                 <RadioButton
                     android:id="@+id/optionGradientRadioButton"
-                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingTop="@dimen/radiobutton_padding"
                     android:paddingBottom="@dimen/radiobutton_padding"
-                    android:text="@string/gradient" />
+                    android:text="@string/gradient"
+                    android:visibility="gone" />
             </RadioGroup>
 
             <TextView
@@ -121,15 +121,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/title_padding"
-                android:visibility="gone"
-                android:text="@string/Forecast" />
+                android:text="@string/Forecast"
+                android:visibility="gone" />
 
             <RadioGroup
                 android:id="@+id/forecastRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:checkedButton="@+id/optionHoursRadioButton">
+                android:checkedButton="@+id/optionHoursRadioButton"
+                android:visibility="gone">
 
                 <RadioButton
                     android:id="@+id/optionHoursRadioButton"
@@ -174,6 +174,29 @@
 
             </RadioGroup>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="45dp"
+                android:text="@string/add_favorite_locations_explanation"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/addFavoriteLocationsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="14dp"
+                android:drawablePadding="4dp"
+                android:text="@string/add_your_favorite_locations"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/ic_open_in_new_black" />
+
             <Button
                 android:id="@+id/okButton"
                 android:layout_width="match_parent"
@@ -185,14 +208,8 @@
                 android:id="@+id/favoriteInfoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/widget_favorite_info" />
-
-            <TextView
-                android:id="@+id/noticeResizeTextview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:text="@string/widget_resize_info" />
+                android:text="@string/widget_favorite_info"
+                android:visibility="gone" />
 
         </LinearLayout>
 

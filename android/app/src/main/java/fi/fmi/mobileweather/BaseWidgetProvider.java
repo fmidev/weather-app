@@ -237,8 +237,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // temporary for testing.
 
         // TODO: temporary for testing.
-        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
-//        String announceUrl = announcementsUrl;
+//        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
+        String announceUrl = announcementsUrl;
 
         // get forecast based on geoId
         Future<JSONObject> future1 = executorService.submit(() -> fetchForecast(Integer.toString(geoId), null, language));

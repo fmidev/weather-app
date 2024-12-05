@@ -15,6 +15,7 @@ import static fi.fmi.mobileweather.Theme.LIGHT;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -93,18 +94,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         } else {
             batteryOptimizationWarning.setVisibility(View.GONE);
         }
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            String packageName = getPackageName();
-            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            LinearLayout batteryOptimizationWarning = (LinearLayout) findViewById(R.id.batteryOptimizationWarning);
-
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                batteryOptimizationWarning.setVisibility(View.VISIBLE);
-            } else {
-                batteryOptimizationWarning.setVisibility(View.GONE);
-            }
-        }*/
     }
 
     public static boolean isPowerSavingEnabled(Context context) {
@@ -117,32 +106,27 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
     public void initListViews() {
 
-        Button okButton = (Button) findViewById(R.id.okButton);
-        okButton.setOnClickListener(new OnClickListener() {
+        setReadyButton();
 
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                handleOkButton();
-            }
-        });
-
-        Button appSettingsButton = (Button) findViewById(R.id.appSettingsButton);
-        appSettingsButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
-            }
-        });
+        setAppSettingsButton();
 
         // Add app location favorites to location radio button group
 
-        SQLiteDatabase readableDatabase = null;
+        setLocationFavoritesButtons();
+
+        setFavoriteLocationsClickListener();
+
+        requestLocationPermissions();
+    }
+
+    private void requestLocationPermissions() {
+        ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                1);
+    }
+
+    private void setLocationFavoritesButtons() {
+        SQLiteDatabase readableDatabase;
         readableDatabase = ReactDatabaseSupplier.getInstance(this.getApplicationContext()).getReadableDatabase();
 
         if (readableDatabase != null) {
@@ -182,19 +166,48 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                 }
             }
         }
+    }
 
-        ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                1);
+    private void setAppSettingsButton() {
+        Button appSettingsButton = (Button) findViewById(R.id.appSettingsButton);
+        appSettingsButton.setOnClickListener(new OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setReadyButton() {
+        Button okButton = findViewById(R.id.okButton);
+        okButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                handleOkButton();
+            }
+        });
+    }
+
+    private void setFavoriteLocationsClickListener() {
+        Intent intent = new Intent(this, MainActivity.class);
+        TextView addFavoriteLocationsTextView = findViewById(R.id.addFavoriteLocationsTextView);
+        // on click send the intent to open the main activity
+        addFavoriteLocationsTextView.setOnClickListener(v -> startActivity(intent));
     }
 
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
 
-        RadioGroup locationRadioGroup = (RadioGroup) findViewById(R.id.locationRadioGroup);
-        RadioButton positionedRadioButton = (RadioButton) findViewById(R.id.optionPositionedRadioButton);
-        LinearLayout view = (LinearLayout) findViewById(R.id.configurationLinearLayout);
+        RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
+        RadioButton positionedRadioButton = findViewById(R.id.optionPositionedRadioButton);
+        LinearLayout view = findViewById(R.id.configurationLinearLayout);
 
         switch (requestCode) {
             case 1: {
@@ -336,10 +349,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                             @RequiresApi(api = Build.VERSION_CODES.Q)
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                                Manifest.permission.ACCESS_FINE_LOCATION},
-                                        1);
+                                requestLocationPermissions();
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, null).show();
@@ -366,10 +376,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         .setMessage(R.string.location_service_info)
                         .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                                Manifest.permission.ACCESS_FINE_LOCATION},
-                                        1);
+                                requestLocationPermissions();
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, null).show();
