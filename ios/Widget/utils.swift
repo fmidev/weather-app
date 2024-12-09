@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import SwiftyJSON
 
 func mergeUvToForecast(forecast: [TimeStep], uvForecast: [UVTimeStep]) -> [TimeStep] {
@@ -134,4 +135,70 @@ func convertLocationSettingToLocation(_ location: LocationSetting) -> Location {
     iso2: location.iso2 ?? "",
     country: ""
   )
-}  
+}
+
+func convertSettingsIntentToWidgetSettings(_ intent: SettingsIntent) -> WidgetSettings {
+  let showLogo = getSetting("layout.logo.enabled") as? Bool ?? true
+  
+  switch intent.theme.rawValue {
+    case 2: return WidgetSettings(theme: "light", showLogo: showLogo)
+    case 3: return WidgetSettings(theme: "dark", showLogo: showLogo)
+    case 4: return WidgetSettings(theme: "gradient", showLogo: showLogo)
+    default: return WidgetSettings(theme: "automatic", showLogo: showLogo)
+  }
+}
+
+func resolveColorScheme(settings: WidgetSettings) -> ColorScheme? {
+  if (settings.theme == "gradient" || settings.theme == "dark") {
+    return .dark
+  }
+  if (settings.theme == "light") {
+    return .light
+  }
+  
+  return nil
+}
+
+func resolveUserInterfaceStyle(settings: WidgetSettings) -> UIUserInterfaceStyle? {
+  if (settings.theme == "gradient" || settings.theme == "dark") {
+    return .dark
+  }
+  if (settings.theme == "light") {
+    return .light
+  }
+  
+  return nil
+}
+
+func backroundGradient() -> LinearGradient {
+  return LinearGradient(
+    gradient: Gradient(stops: [
+      Gradient.Stop(color: Color(red: 2/255, green: 184/255, blue: 206/255), location: 0.0),
+      Gradient.Stop(color: Color(red: 0/255, green: 127/255, blue: 173/255), location: 0.095),
+      Gradient.Stop(color: Color(red: 31/255, green: 32/255, blue: 96/255), location: 0.4251),
+      Gradient.Stop(color: Color(red: 15/255, green: 15/255, blue: 45/255), location: 1.0)
+    ]),
+    startPoint: .top,
+    endPoint: .bottom
+  )
+}
+
+// containerBackground() method requires that options have same type. Therefore this utility
+// function creates single color background using LinearGradient.
+func singleColorWidgetBackground(_ settings: WidgetSettings) -> LinearGradient {
+  let uiStyle = resolveUserInterfaceStyle(settings: settings)
+  var color = Color("WidgetBackground")
+  
+  if (uiStyle != nil) {
+    color = Color(UIColor(named: "WidgetBackground")!.resolvedColor(with: UITraitCollection(userInterfaceStyle: uiStyle!)))
+  }
+  
+  return LinearGradient(
+    gradient: Gradient(stops: [
+      Gradient.Stop(color: color, location: 0.0),
+      Gradient.Stop(color: color, location: 1.0)
+    ]),
+    startPoint: .top,
+    endPoint: .bottom
+  )
+}

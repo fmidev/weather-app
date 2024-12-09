@@ -57,7 +57,6 @@
 		A4C8322926C6897A00FEC2EB /* symbols in Resources */ = {isa = PBXBuildFile; fileRef = A4C8322826C6897A00FEC2EB /* symbols */; };
 		A4CDDC8C280007F400D84935 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A4CDDC8E280007F400D84935 /* InfoPlist.strings */; };
 		AF2CB2F4800B89C89592A7FB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 9629DD67B904687D291DE4B6 /* PrivacyInfo.xcprivacy */; };
-		B2AC7200CA0A1DB251D59D3D /* libPods-WidgetExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDDC66C591DB598146877E07 /* libPods-WidgetExtension.a */; };
 		BFD98EF8D9DDD60D677C76DE /* libPods-MobileWeather.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 974E3F089372FFCFD0AECBEB /* libPods-MobileWeather.a */; };
 /* End PBXBuildFile section */
 
@@ -188,14 +187,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A21766F22CFF4F99001EEEFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		A21766F22CFF4F99001EEEFF /* Exceptions for "SettingsIntentExtension" folder in "WidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = A2B3FF952CC7D1DA00EC1293 /* WidgetExtension */;
 		};
-		A2E441DA2CFF50AB00802217 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		A2E441DA2CFF50AB00802217 /* Exceptions for "SettingsIntentExtension" folder in "SettingsIntentExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -205,9 +204,41 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (A21766F22CFF4F99001EEEFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, A2E441DA2CFF50AB00802217 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SettingsIntentExtension; sourceTree = "<group>"; };
-		A286CB982CF49C2900812898 /* managers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = managers; sourceTree = "<group>"; };
-		A299E3022CDB746F003502F5 /* views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = views; sourceTree = "<group>"; };
+		A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A21766F22CFF4F99001EEEFF /* Exceptions for "SettingsIntentExtension" folder in "WidgetExtension" target */,
+				A2E441DA2CFF50AB00802217 /* Exceptions for "SettingsIntentExtension" folder in "SettingsIntentExtension" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = SettingsIntentExtension;
+			sourceTree = "<group>";
+		};
+		A286CB982CF49C2900812898 /* managers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = managers;
+			sourceTree = "<group>";
+		};
+		A299E3022CDB746F003502F5 /* views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -690,28 +721,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		0AEE581C1A26F70557E1157E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-WidgetExtension-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		1A6A9BFAB5B37E0104F7794A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -828,26 +837,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobileWeather-MobileWeatherTests/Pods-MobileWeather-MobileWeatherTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8B52CD9CD65FA45445125705 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-WidgetExtension/Pods-WidgetExtension-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/Alamofire/Alamofire.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyJSON/SwiftyJSON.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Alamofire.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SwiftyJSON.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-WidgetExtension/Pods-WidgetExtension-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		92C4390534123651C377CBF9 /* [CP] Copy Pods Resources */ = {

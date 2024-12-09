@@ -28,6 +28,7 @@ struct WarningProvider: IntentTimelineProvider {
       var location:Location?
       var entries: [WarningEntry] = []
       let updateInterval = getSetting("warnings.interval") as? Int ?? UPDATE_INTERVAL
+      let settings = convertSettingsIntentToWidgetSettings(configuration)
       
       if (configuration.currentLocation == 0 && configuration.location != nil) {
         // Use location from configuration
@@ -58,19 +59,19 @@ struct WarningProvider: IntentTimelineProvider {
           error = .dataLoadingError
         }
       }
-      
+           
       if (error != nil) {
-        let lastUpdated = getUpdated()
+        let lastUpdated = getUpdated(settings: configuration)
         
         if (
           lastUpdated != nil &&
           lastUpdated!.addingTimeInterval(TimeInterval(WARNING_VALIDITY_PERIOD)) > Date()
         ) {
           // Try to restore old timeline
-          let oldEntries = getEntries()
-          if (oldEntries != nil) {
+          let oldEntries = getEntries(settings: configuration)
+          if (oldEntries != nil && oldEntries!.count > 0) {
             let timeline = Timeline(
-              entries: entries,
+              entries: oldEntries!,
               policy: .after(Date() + TimeInterval(updateInterval * 60))
             )
             completion(timeline)
@@ -84,7 +85,8 @@ struct WarningProvider: IntentTimelineProvider {
           location: defaultLocation,
           warnings: [],
           crisisMessage: nil,
-          error: error
+          error: error,
+          settings: settings
         )
         
         let timeline = Timeline(
@@ -112,7 +114,8 @@ struct WarningProvider: IntentTimelineProvider {
           location: location!,
           warnings: currentDayWarnings,
           crisisMessage: crisisMessage,
-          error: nil
+          error: nil,
+          settings: settings
         )
         entries.append(entry)
       }
@@ -123,10 +126,11 @@ struct WarningProvider: IntentTimelineProvider {
         location: location!,
         warnings: [],
         crisisMessage: crisisMessage,
-        error: .oldDataError
+        error: .oldDataError,
+        settings: settings
       )
       entries.append(expiredEntry)
-      saveEntries(entries)
+      saveEntries(entries, settings: configuration)
       
       let timeline = Timeline(
         entries: entries,
@@ -136,25 +140,44 @@ struct WarningProvider: IntentTimelineProvider {
     }
   }
   
-  func saveEntries(_ entries: [WarningEntry]) {
-    let userDefaults = UserDefaults.standard
-    if let data = try? JSONEncoder().encode(entries) {
-      userDefaults.set(data, forKey: USER_DEFAULTS_PREFIX+"-entries")
+  func getUserDefaultsKey(settings: SettingsIntent) -> String {
+    let currentLocation = settings.currentLocation == 0 ? "false" : "true"
+    let customLocation = settings.location == nil ? "nil" : settings.location!.displayString
+    
+    return "\(USER_DEFAULTS_PREFIX)-\(settings.theme.rawValue)-\(currentLocation)-\(customLocation)"
+  }
+  
+  func saveEntries(_ entries: [WarningEntry], settings: SettingsIntent) {
+    if (entries.count == 0) {
+      return
     }
-    UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: USER_DEFAULTS_PREFIX+"-updated")
+    
+    let userDefaults = UserDefaults.standard
+    let key = getUserDefaultsKey(settings: settings)
+    
+    if let data = try? JSONEncoder().encode(entries) {
+      userDefaults.set(data, forKey: key+"-entries")
+    }
+    UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: key+"-updated")
   }
 
-  func getEntries() -> [WarningEntry]? {
+  func getEntries(settings: SettingsIntent) -> [WarningEntry]? {
     let userDefaults = UserDefaults.standard
-    if let data = userDefaults.data(forKey: USER_DEFAULTS_PREFIX+"-entries"),
+    let key = getUserDefaultsKey(settings: settings)
+    
+    if let data = userDefaults.data(forKey: key+"-entries"),
       let entries = try? JSONDecoder().decode([WarningEntry].self, from: data) {
       return entries
     }
     return nil
   }
   
-  func getUpdated() -> Date? {
-    return Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: USER_DEFAULTS_PREFIX+"-updated"))
+  func getUpdated(settings: SettingsIntent) -> Date? {
+    let userDefaults = UserDefaults.standard
+    let key = getUserDefaultsKey(settings: settings)
+    return Date(
+      timeIntervalSince1970: userDefaults.double(forKey: key+"-updated")
+    )
   }
 }
 
@@ -263,17 +286,21 @@ struct WarningsTodayView : View {
 
 struct WarningsTodayEntryView : View {
   @Environment(\.widgetFamily) var family
+  @Environment(\.colorScheme) var colorScheme
   var entry: WarningProvider.Entry
   
   var body: some View {
     if (family == .systemSmall) {
       SmallWarningsTodayView(entry: entry)
+        .colorScheme(resolveColorScheme(settings: entry.settings) ?? colorScheme)
     } else {
       WarningsTodayView(
         entry: entry,
         size: family == .systemMedium ? .medium : .large,
         maxWarningRows: family == .systemMedium ? 2 : 4
-      ).padding(.horizontal, 13)
+      )
+        .colorScheme(resolveColorScheme(settings: entry.settings) ?? colorScheme)
+        .padding(.horizontal, 13)
     }
   }
 }
@@ -284,13 +311,15 @@ struct WarningsTodayWidget: Widget {
   var body: some WidgetConfiguration {
     IntentConfiguration(kind: kind, intent: SettingsIntent.self, provider: WarningProvider()) { entry in
       WarningsTodayEntryView(entry: entry)
-        .containerBackground(Color("WidgetBackground"), for: .widget)
+        .containerBackground(
+          entry.settings.theme == "gradient" ? backroundGradient() : singleColorWidgetBackground(entry.settings),
+          for: .widget)
         .padding(10)
     }
     .contentMarginsDisabled()
     .configurationDisplayName("Weather warnings for today")
     .description("Weather warnings in your location. Press and hold the widget to edit settings.")
-    .supportedFamilies([.systemSmall])
+    .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
   }
 }
 

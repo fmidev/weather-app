@@ -3,6 +3,7 @@ import SwiftUI
 struct LargeNextHoursForecast: View {
     var timeSteps: [TimeStep]
     var timezone: String
+    var transparent = true
   
     let COLUMN_WIDTH: CGFloat = 40
     
@@ -21,7 +22,7 @@ struct LargeNextHoursForecast: View {
           }
         }
         .padding(8)
-        .background(Color("ForecastRowBackground"))
+        .background(Color("ForecastRowBackground").opacity(transparent ? 0 : 1))
         
         HStack{
           Image(decorative: "symbol")
@@ -52,7 +53,7 @@ struct LargeNextHoursForecast: View {
           }
         }
         .padding(8)
-        .background(Color("ForecastRowBackground"))
+        .background(Color("ForecastRowBackground").opacity(transparent ? 0 : 1))
       }
     }
 }

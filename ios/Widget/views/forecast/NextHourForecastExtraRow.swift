@@ -8,10 +8,9 @@ struct NextHourForecastExtraRow: View {
   var body: some View {
     HStack(alignment: .bottom) {
       if (timeStep.uvCumulated != nil) {
-        Spacer()
         Text("UV **\(timeStep.uvCumulated!)**")
+        Spacer()
       }
-      Spacer()
       if (useCardinalsForWindDirection == true) {
         Image(timeStep.windCompass8, label: Text(timeStep.windCompass8.localized()))
           .resizable()
@@ -33,7 +32,6 @@ struct NextHourForecastExtraRow: View {
         .foregroundColor(Color("TextColor"))
         .frame(height: IMAGE_SIZE)
         .padding(.bottom, 2)
-      Spacer()
     }
   }
 }
