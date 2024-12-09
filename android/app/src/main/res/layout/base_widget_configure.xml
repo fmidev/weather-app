@@ -164,30 +164,19 @@
                 android:layout_marginEnd="45dp"
                 android:text="@string/add_favorite_locations_explanation" />
 
-            <LinearLayout
-                android:id="@+id/addFavoriteLocationsLayout"
+            <Button
+                android:id="@+id/addFavoriteLocationsButton"
+                style="@style/configHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="14dp"
-                android:orientation="horizontal"
-                android:background="@android:color/transparent">
-
-                <TextView
-                    android:id="@+id/addFavoriteLocationsText"
-                    style="@style/configHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_your_favorite_locations"
-                    android:textAllCaps="false" />
-
-                <ImageView
-                    android:id="@+id/addFavoriteLocationsIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:src="@drawable/ic_open_in_new_black" />
-            </LinearLayout>
+                android:background="@drawable/button_transparent"
+                android:contentDescription="@string/add_your_favorite_locations"
+                android:drawableEnd="@drawable/ic_open_in_new_black"
+                android:drawablePadding="4dp"
+                android:text="@string/add_your_favorite_locations"
+                android:textAllCaps="false" />
 
             <Button
                 android:id="@+id/okButton"

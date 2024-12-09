@@ -188,9 +188,9 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
     private void setAddFavoriteLocationsClickListener() {
         Intent intent = new Intent(this, MainActivity.class);
-        LinearLayout addFavoriteLocationsLayout = findViewById(R.id.addFavoriteLocationsLayout);
+        Button addFavoriteLocationsButton = findViewById(R.id.addFavoriteLocationsButton);
         // on click send the intent to open the app main activity
-        addFavoriteLocationsLayout.setOnClickListener(v -> startActivity(intent));
+        addFavoriteLocationsButton.setOnClickListener(v -> startActivity(intent));
     }
 
     public void onRequestPermissionsResult(int requestCode,
