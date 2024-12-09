@@ -170,7 +170,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
                 android:background="@drawable/button_transparent"
                 android:contentDescription="@string/add_your_favorite_locations"
                 android:drawableEnd="@drawable/ic_open_in_new_black"
@@ -188,13 +189,6 @@
                 android:textSize="14sp"
                 android:textAllCaps="false"
                 android:text="@string/ready" />
-
-            <TextView
-                android:id="@+id/favoriteInfoTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/widget_favorite_info"
-                android:visibility="gone" />
 
         </LinearLayout>
 

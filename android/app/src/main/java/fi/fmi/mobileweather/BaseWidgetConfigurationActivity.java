@@ -5,6 +5,9 @@ import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
 import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
+import static android.graphics.Color.BLACK;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
@@ -21,6 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +42,8 @@ import android.widget.TextView;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.app.ActivityCompat;
 
 import com.reactnativecommunity.asyncstorage.AsyncLocalStorageUtil;
@@ -91,9 +97,9 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         LinearLayout batteryOptimizationWarning = findViewById(R.id.batteryOptimizationWarning);
 
         if (isPowerSavingEnabled(this)) {
-            batteryOptimizationWarning.setVisibility(View.VISIBLE);
+            batteryOptimizationWarning.setVisibility(VISIBLE);
         } else {
-            batteryOptimizationWarning.setVisibility(View.GONE);
+            batteryOptimizationWarning.setVisibility(GONE);
         }
     }
 
@@ -138,13 +144,29 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                     JSONObject dump = new JSONObject(impl);
                     JSONArray favorites = new JSONArray(dump.getString("favorites"));
 
-                    TextView favoriteinfo = findViewById(R.id.favoriteInfoTextView);
+                    TextView addFavoriteLocationsExplanationTextView = findViewById(R.id.addFavoriteLocationsExplanationTextView);
+                    Button addFavoriteLocationsButton = findViewById(R.id.addFavoriteLocationsButton);
 
-                    if (favorites.length()==0)
-                        favoriteinfo.setVisibility(View.VISIBLE);
-                    else
-                        favoriteinfo.setVisibility(View.GONE);
+                    // if there are no favorite locations in the app yet
+                    if (favorites.length() == 0) {
+                        // show explanation text
+                        addFavoriteLocationsExplanationTextView.setVisibility(VISIBLE);
+                        // set the button text to add favorite locations in app
+                        addFavoriteLocationsButton.setText(R.string.add_your_favorite_locations);
+                    }
+                    else {
+                        // hide explanation text
+                        addFavoriteLocationsExplanationTextView.setVisibility(GONE);
+                        // set the button text to add more favorite locations in app
+                        addFavoriteLocationsButton.setText(R.string.add_more_favorite_locations);
+                    }
 
+//                    ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this, R.style.configBody);
+
+                    // Load the font from assets
+                    Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/roboto_regular.ttf");
+
+                    // add a radio button for each favorite location
                     for (int i = 0; i < favorites.length(); i++) {
                         JSONObject current = favorites.getJSONObject(i);
                         int geoId = current.getInt("id");
@@ -154,6 +176,10 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         RadioButton favoriteRadioButton = new RadioButton(this);
                         favoriteRadioButton.setPadding(0, padding, 0, padding);
                         favoriteRadioButton.setText(name);
+                        favoriteRadioButton.setTextColor(BLACK);
+                        favoriteRadioButton.setTextSize(15);
+                        favoriteRadioButton.setTypeface(customFont);
+                        favoriteRadioButton.setButtonTintList(AppCompatResources.getColorStateList(this, R.color.radio_button_selector));
                         favoriteRadioButton.setTag(geoId);
                         favoriteRadioButton.setId(geoId);
 
