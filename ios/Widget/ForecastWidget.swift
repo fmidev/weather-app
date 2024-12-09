@@ -5,6 +5,8 @@ import Intents
 import AsyncLocationKit
 
 struct ForecastProvider: IntentTimelineProvider {
+  let USER_DEFAULTS_PREFIX = "forecast"
+  
   func placeholder(in context: Context) -> TimeStepEntry {
     return defaultEntry
   }
@@ -21,7 +23,8 @@ struct ForecastProvider: IntentTimelineProvider {
       var entries: [TimeStepEntry] = []
       var location:Location?
       var crisisMessage = nil as String?
-      var settings = convertSettingsIntentToWidgetSettings(configuration)
+      let updateInterval = getSetting("weather.interval") as? Int ?? UPDATE_INTERVAL
+      let settings = convertSettingsIntentToWidgetSettings(configuration)
       
       if (configuration.currentLocation == 0 && configuration.location != nil) {
         // Use location from configuration
@@ -59,6 +62,24 @@ struct ForecastProvider: IntentTimelineProvider {
       let updated = Date()
        
       if (error != nil) {
+        let lastUpdated = getUpdated(settings: configuration)
+        
+        if (
+          lastUpdated != nil &&
+          lastUpdated!.addingTimeInterval(TimeInterval(WARNING_VALIDITY_PERIOD)) > Date()
+        ) {
+          // Try to restore old timeline
+          let oldEntries = getEntries(settings: configuration)
+          if (oldEntries != nil && oldEntries!.count > 0) {
+            let timeline = Timeline(
+              entries: oldEntries!,
+              policy: .after(Date() + TimeInterval(updateInterval * 60))
+            )
+            completion(timeline)
+            return
+          }
+        }
+        
         entries.append(
           TimeStepEntry(
             date: Date(),
@@ -105,14 +126,55 @@ struct ForecastProvider: IntentTimelineProvider {
             break
           }
         }
+        saveEntries(entries, settings: configuration)
       }
             
       let timeline = Timeline(
         entries: entries,
-        policy: .after(Date() + TimeInterval(UPDATE_INTERVAL * 60))
+        policy: .after(Date() + TimeInterval(updateInterval * 60))
       )
       completion(timeline)
     }
+  }
+  
+  func getUserDefaultsKey(settings: SettingsIntent) -> String {
+    let currentLocation = settings.currentLocation == 0 ? "false" : "true"
+    let customLocation = settings.location == nil ? "nil" : settings.location!.displayString
+    
+    return "\(USER_DEFAULTS_PREFIX)-\(settings.theme.rawValue)-\(currentLocation)-\(customLocation)"
+  }
+  
+  func saveEntries(_ entries: [TimeStepEntry], settings: SettingsIntent) {
+    if (entries.count == 0) {
+      return
+    }
+    
+    let userDefaults = UserDefaults.standard
+    let key = getUserDefaultsKey(settings: settings)
+    
+    if let data = try? JSONEncoder().encode(entries) {
+      userDefaults.set(data, forKey: key+"-entries")
+    }
+    UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: key+"-updated")
+  }
+
+  func getEntries(settings: SettingsIntent) -> [TimeStepEntry]? {
+    let userDefaults = UserDefaults.standard
+    let key = getUserDefaultsKey(settings: settings)
+    
+    if let data = userDefaults.data(forKey: key+"-entries"),
+      let entries = try? JSONDecoder().decode([TimeStepEntry].self, from: data) {
+      return entries
+    }
+    return nil
+  }
+  
+  func getUpdated(settings: SettingsIntent) -> Date? {
+    let userDefaults = UserDefaults.standard
+    let key = getUserDefaultsKey(settings: settings)
+    return Date(
+      timeIntervalSince1970: userDefaults.double(forKey: key+"-updated")
+    )
   }
 
 }
@@ -262,38 +324,7 @@ struct ForecastWidgetEntryView : View {
 
 struct ForecastWidget: Widget {
   let kind: String = "ForecastWidget"
-  
-  func backroundGradient() -> LinearGradient {
-    return LinearGradient(
-      gradient: Gradient(stops: [
-        Gradient.Stop(color: Color(red: 2/255, green: 184/255, blue: 206/255), location: 0.0),
-        Gradient.Stop(color: Color(red: 0/255, green: 127/255, blue: 173/255), location: 0.095),
-        Gradient.Stop(color: Color(red: 31/255, green: 32/255, blue: 96/255), location: 0.4251),
-        Gradient.Stop(color: Color(red: 15/255, green: 15/255, blue: 45/255), location: 1.0)
-      ]),
-      startPoint: .top,
-      endPoint: .bottom
-    )
-  }
-  
-  func singleColorWidgetBackground(_ settings: WidgetSettings) -> LinearGradient {
-    let uiStyle = resolveUserInterfaceStyle(settings: settings)
-    var color = Color("WidgetBackground")
     
-    if (uiStyle != nil) {
-      color = Color(UIColor(named: "WidgetBackground")!.resolvedColor(with: UITraitCollection(userInterfaceStyle: uiStyle!)))
-    }
-    
-    return LinearGradient(
-      gradient: Gradient(stops: [
-        Gradient.Stop(color: color, location: 0.0),
-        Gradient.Stop(color: color, location: 1.0)
-      ]),
-      startPoint: .top,
-      endPoint: .bottom
-    )
-  }
-   
   var body: some WidgetConfiguration {
     IntentConfiguration(
       kind: kind, intent: SettingsIntent.self, provider: ForecastProvider()

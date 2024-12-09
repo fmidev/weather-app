@@ -56,7 +56,7 @@ let defaultEntry = TimeStepEntry(
   },
   crisisMessage: nil,
   error: nil,
-  settings: WidgetSettings(theme: "automatic", showLogo: true)
+  settings: defaultWidgetSettings
 )
 
 let defaultWarningEntry = WarningEntry(
@@ -65,7 +65,8 @@ let defaultWarningEntry = WarningEntry(
   location: getDefaultLocation(),
   warnings: [],
   crisisMessage: nil,
-  error: nil
+  error: nil,
+  settings: defaultWidgetSettings
 )
 
 let defaultWarningTimeStep = WarningTimeStep(
@@ -74,6 +75,8 @@ let defaultWarningTimeStep = WarningTimeStep(
   duration: WarningDuration(startTime: Date(), endTime: Date().addingTimeInterval(12*60*60)),
   language: "fi"
 )
+
+let defaultWidgetSettings = WidgetSettings(theme: "automatic", showLogo: true)
 
 let WHO="mobileweather-widget-ios"
 let UPDATE_INTERVAL = 15

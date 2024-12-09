@@ -24,8 +24,8 @@ struct Location: Codable {
   }
 }
 
-struct TimeStep: Hashable, Identifiable {
-  let id = UUID()
+struct TimeStep: Hashable, Identifiable, Codable {
+  var id = UUID()
   let observation: Bool
   let epochtime: Int
   let temperature: Double
@@ -158,7 +158,7 @@ struct UVTimeStep {
   let uvCumulated: Int
 }
 
-struct TimeStepEntry: TimelineEntry {
+struct TimeStepEntry: TimelineEntry, Codable {
   let date: Date
   let updated: Date
   let location: Location
@@ -208,6 +208,7 @@ struct WarningEntry: TimelineEntry, Codable {
   let warnings: [WarningTimeStep]
   let crisisMessage: String?
   let error: WidgetError?
+  let settings: WidgetSettings
   
   func formatUpdated() -> String {
     let dateFormatter = DateFormatter()
