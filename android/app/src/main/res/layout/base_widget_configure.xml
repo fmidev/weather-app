@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dip"
+    android:padding="16dp"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
     <ScrollView
@@ -88,6 +89,7 @@
                     android:layout_weight="1"
                     android:paddingTop="@dimen/radiobutton_padding"
                     android:paddingBottom="@dimen/radiobutton_padding"
+                    android:buttonTint="@color/radio_button_selector"
                     android:text="@string/device_mode" />
 
                 <RadioButton
@@ -98,6 +100,7 @@
                     android:layout_weight="1"
                     android:paddingTop="@dimen/radiobutton_padding"
                     android:paddingBottom="@dimen/radiobutton_padding"
+                    android:buttonTint="@color/radio_button_selector"
                     android:text="@string/dark" />
 
                 <RadioButton
@@ -108,6 +111,7 @@
                     android:layout_weight="1"
                     android:paddingTop="@dimen/radiobutton_padding"
                     android:paddingBottom="@dimen/radiobutton_padding"
+                    android:buttonTint="@color/radio_button_selector"
                     android:text="@string/light" />
 
                 <!-- TODO: Gradient theme disabled for now because gradient color not ready yet -->
@@ -118,42 +122,9 @@
                     android:layout_weight="1"
                     android:paddingTop="@dimen/radiobutton_padding"
                     android:paddingBottom="@dimen/radiobutton_padding"
+                    android:buttonTint="@color/radio_button_selector"
                     android:text="@string/gradient"
                     android:visibility="gone" />
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/forecastTitleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/title_padding"
-                android:text="@string/Forecast"
-                android:visibility="gone" />
-
-            <RadioGroup
-                android:id="@+id/forecastRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checkedButton="@+id/optionHoursRadioButton"
-                android:visibility="gone">
-
-                <RadioButton
-                    android:id="@+id/optionHoursRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="@dimen/radiobutton_padding"
-                    android:paddingBottom="@dimen/radiobutton_padding"
-                    android:text="@string/next_hours_widget" />
-
-                <RadioButton
-                    android:id="@+id/optionDaysRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="@dimen/radiobutton_padding"
-                    android:paddingBottom="@dimen/radiobutton_padding"
-                    android:text="@string/next_days_widget" />
             </RadioGroup>
 
             <TextView
@@ -178,6 +149,7 @@
                     android:layout_weight="1"
                     android:paddingTop="@dimen/radiobutton_padding"
                     android:paddingBottom="@dimen/radiobutton_padding"
+                    android:buttonTint="@color/radio_button_selector"
                     android:text="@string/positioned_location" />
 
             </RadioGroup>
@@ -192,16 +164,30 @@
                 android:layout_marginEnd="45dp"
                 android:text="@string/add_favorite_locations_explanation" />
 
-            <TextView
-                android:id="@+id/addFavoriteLocationsTextView"
-                style="@style/configHeader"
+            <LinearLayout
+                android:id="@+id/addFavoriteLocationsLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="14dp"
-                android:drawablePadding="4dp"
-                android:text="@string/add_your_favorite_locations"
-                app:drawableEndCompat="@drawable/ic_open_in_new_black" />
+                android:orientation="horizontal"
+                android:background="@android:color/transparent">
+
+                <TextView
+                    android:id="@+id/addFavoriteLocationsText"
+                    style="@style/configHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_your_favorite_locations"
+                    android:textAllCaps="false" />
+
+                <ImageView
+                    android:id="@+id/addFavoriteLocationsIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_open_in_new_black" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/okButton"
