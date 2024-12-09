@@ -6,6 +6,7 @@ import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
 import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
 
+import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.THEME;
 import static fi.fmi.mobileweather.Theme.DARK;
@@ -15,7 +16,6 @@ import static fi.fmi.mobileweather.Theme.LIGHT;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -48,9 +48,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class BaseWidgetConfigurationActivity extends Activity {
-    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     protected abstract Class<?> getWidgetProviderClass();
+
+    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private RadioGroup locationRadioGroup;
 
     protected int getLayoutResourceId() {
         return R.layout.base_widget_configure;
@@ -77,7 +79,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         }
 
         initListViews();
-        askLocationPermission();
     }
 
     @Override
@@ -111,12 +112,10 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         setAppSettingsButton();
 
         // Add app location favorites to location radio button group
-
         setLocationFavoritesButtons();
+        setAddFavoriteLocationsClickListener();
 
-        setFavoriteLocationsClickListener();
-
-        requestLocationPermissions();
+//        requestLocationPermissions();
     }
 
     private void requestLocationPermissions() {
@@ -134,7 +133,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             if (impl != null) {
                 try {
-                    RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
+                    locationRadioGroup = findViewById(R.id.locationRadioGroup);
 
                     JSONObject dump = new JSONObject(impl);
                     JSONArray favorites = new JSONArray(dump.getString("favorites"));
@@ -159,10 +158,9 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         favoriteRadioButton.setId(geoId);
 
                         locationRadioGroup.addView(favoriteRadioButton);
-
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.d("Widget Update", "Error parsing location favorites: " + e.getMessage());
                 }
             }
         }
@@ -185,60 +183,51 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
     private void setReadyButton() {
         Button okButton = findViewById(R.id.okButton);
-        okButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                handleOkButton();
-            }
-        });
+        okButton.setOnClickListener(v -> showAppWidget());
     }
 
-    private void setFavoriteLocationsClickListener() {
+    private void setAddFavoriteLocationsClickListener() {
         Intent intent = new Intent(this, MainActivity.class);
         TextView addFavoriteLocationsTextView = findViewById(R.id.addFavoriteLocationsTextView);
-        // on click send the intent to open the main activity
+        // on click send the intent to open the app main activity
         addFavoriteLocationsTextView.setOnClickListener(v -> startActivity(intent));
     }
 
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
 
-        RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
-        RadioButton positionedRadioButton = findViewById(R.id.optionPositionedRadioButton);
-        LinearLayout view = findViewById(R.id.configurationLinearLayout);
+        /*RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
+        RadioButton currentLocationRadioButton = findViewById(R.id.currentLocationRadioButton);*/
 
-        switch (requestCode) {
-            case 1: {
+        if (requestCode == 1) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
 
-                    // Permission granted
+                // finalize the widget with the current location
+                finalizeWidget(CURRENT_LOCATION);
 
-                    positionedRadioButton.setEnabled(true);
-                    locationRadioGroup.check(R.id.optionPositionedRadioButton);
+                /*currentLocationRadioButton.setEnabled(true);
+                locationRadioGroup.check(R.id.currentLocationRadioButton);*/
 
                     /*Button grantbutton = findViewById(1);
 
                     if (grantbutton!=null)
                         grantbutton.setVisibility(View.GONE);*/
 
-                } else {
+            } else {
 
-                    // Permission denied
+                // Permission denied
 
-                    Toast.makeText(BaseWidgetConfigurationActivity.this, getString(R.string.denied_positioning),
-                            Toast.LENGTH_SHORT).show();
+                Toast.makeText(BaseWidgetConfigurationActivity.this, getString(R.string.denied_positioning),
+                        Toast.LENGTH_SHORT).show();
 
-                    // Uncheck positioned radiobutton and disable it
+                /*// Uncheck 'current location' radio button and disable it
+                locationRadioGroup.clearCheck();
+                currentLocationRadioButton.setEnabled(false);*/
 
-                    locationRadioGroup.clearCheck();
-                    positionedRadioButton.setEnabled(false);
-
-                    // Add grant permission for positioning button
+                // Add grant permission for positioning button
 
                     /*Button grantButton = findViewById(1);
 
@@ -260,13 +249,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         view.addView(grantButton);
                     }
 */
-                }
             }
         }
-    }
-
-    protected void handleOkButton() {
-        showAppWidget();
     }
 
     int widgetId;
@@ -277,87 +261,102 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
+
             widgetId = extras.getInt(EXTRA_APPWIDGET_ID,
                     INVALID_APPWIDGET_ID);
 
-            // Save settings
 
-            Context context = getBaseContext();
 
-            SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
-            Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
-
-            RadioGroup theme = findViewById(R.id.backgroundRadioGroup);
-            int selectedTheme = theme.getCheckedRadioButtonId();
-            String selectedThemeString;
-
-            if (selectedTheme==R.id.optionLightRadioButton)
-                selectedThemeString = LIGHT;
-            // TODO: Gradient theme GONE in layout file for now because gradient color file not ready yet in this Android project
-            else if (selectedTheme==R.id.optionGradientRadioButton)
-                selectedThemeString = GRADIENT;
-            else if (selectedTheme==R.id.optionDeviceModeRadioButton) {
-                // get the device mode (light or dark)
-                int currentNightMode = getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
-                selectedThemeString = (currentNightMode == UI_MODE_NIGHT_NO) ? LIGHT : DARK;
-            }
-            else
-                selectedThemeString = DARK;
-
-            pref.saveString(THEME, selectedThemeString);
-            Log.d("Widget Update", "Selected theme: " + selectedThemeString);
-
-//            pref.saveString("forecast", "hours");
-
-            // get selected location (geoId) from checked radio button's ID
-            RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
+            // get selected location (current location or geoId) from checked radio button's ID
             int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
 
-            if (selectedLocation==R.id.optionPositionedRadioButton)
-                pref.saveInt(SELECTED_LOCATION, 0);
-            else
-                pref.saveInt(SELECTED_LOCATION, selectedLocation);
+            if (selectedLocation==R.id.currentLocationRadioButton) {
+                // create a dialog to explain the user needs to enable background location
+                askLocationPermissionIfNeeded();
 
-            // Send a broadcast to trigger onUpdate()
-            int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-            // we need the actual widget provider class here
-            Intent updateIntent = new Intent(ACTION_APPWIDGET_UPDATE).setClass(context, getWidgetProviderClass());
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-            sendBroadcast(updateIntent);
+                // TODO: move this:
+//                pref.saveInt(SELECTED_LOCATION, 0);
+            }
+            else {
+                // finalize the widget with the selected location (geoId)
+                finalizeWidget(selectedLocation);
+            }
 
-            // Make sure we pass back the original appWidgetId
-            Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            setResult(RESULT_OK, resultValue);
-            finish();
+//                pref.saveInt(SELECTED_LOCATION, selectedLocation);
+
         }
         if (widgetId == INVALID_APPWIDGET_ID) {
             Log.i("widgetId", "Invalid appwidget id");
             finish();
         }
-
     }
 
-    public void askLocationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    private void finalizeWidget(int selectedLocation) {
+        // Save settings
 
+        Context context = getBaseContext();
+
+        SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
+        Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
+
+        pref.saveInt(SELECTED_LOCATION, selectedLocation);
+
+
+        RadioGroup theme = findViewById(R.id.themeRadioGroup);
+        int selectedTheme = theme.getCheckedRadioButtonId();
+        String selectedThemeString;
+
+        if (selectedTheme==R.id.optionLightRadioButton)
+            selectedThemeString = LIGHT;
+        // TODO: Gradient theme GONE in layout file for now because gradient color file not ready yet in this Android project
+        else if (selectedTheme==R.id.optionGradientRadioButton)
+            selectedThemeString = GRADIENT;
+        else if (selectedTheme==R.id.optionDeviceModeRadioButton) {
+            // get the device mode (light or dark)
+            int currentNightMode = getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
+            selectedThemeString = (currentNightMode == UI_MODE_NIGHT_NO) ? LIGHT : DARK;
+        }
+        else
+            selectedThemeString = DARK;
+
+        pref.saveString(THEME, selectedThemeString);
+        Log.d("Widget Update", "Selected theme: " + selectedThemeString);
+
+
+        // Send a broadcast to trigger onUpdate()
+        int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+        // we need the actual widget provider class here
+        Intent updateIntent = new Intent(ACTION_APPWIDGET_UPDATE).setClass(context, getWidgetProviderClass());
+        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+        sendBroadcast(updateIntent);
+
+        // Make sure we pass back the original appWidgetId
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        setResult(RESULT_OK, resultValue);
+        finish();
+    }
+
+    public void askLocationPermissionIfNeeded() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.allow_background_location_service)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.Q)
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            requestLocationPermissions();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+            /*} else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 new AlertDialog.Builder(this)
-                        .setTitle(R.string.location_service_info_title)
-                        .setMessage(R.string.location_service_info)
-                        .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.Q)
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                requestLocationPermissions();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null).show();
-            } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.location_service_info_title)
-                        .setMessage(R.string.location_service_info)
-                        .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
+                        .setMessage(R.string.allow_background_location_service)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @RequiresApi(api = Build.VERSION_CODES.Q)
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
@@ -365,15 +364,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                                         2);
                             }
                         })
-                        .setNegativeButton(android.R.string.cancel, null).show();
-            }
-        } else {
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+            }*/
+        /*} else {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 new AlertDialog.Builder(this)
-                        .setTitle(R.string.location_service_info_title)
-                        .setMessage(R.string.location_service_info)
+                        .setMessage(R.string.allow_background_location_service)
                         .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 requestLocationPermissions();
@@ -381,7 +380,19 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         })
                         .setNegativeButton(android.R.string.cancel, null).show();
             }
+        }*/
+        } else {
+            finalizeWidget(CURRENT_LOCATION);
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Release resources and unregister listeners or receivers here
+        if (locationRadioGroup != null) {
+            locationRadioGroup.removeAllViews();
+            locationRadioGroup = null;
+        }
+    }
 }

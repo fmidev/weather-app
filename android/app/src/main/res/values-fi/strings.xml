@@ -44,8 +44,8 @@
     <string name="nexthours">Lähitunnit</string>
     <string name="location">Paikkakunta</string>
     <string name="positioned_location">Paikannettu sijainti</string>
-    <string name="background">Tausta</string>
-    <string name="define_widget_settings">Määritä lisättävän widgetin asetukset.</string>
+    <string name="theme">Teema</string>
+    <string name="define_widget_settings">Määritä widget-asetukset</string>
     <string name="allow_positioning">Salli paikannus</string>
     <string name="denied_positioning">Kielsit paikannuksen. Käytä suosikkipaikkoja tai salli paikannus.</string>
     <string name="forecast_location_not_defined">Ennusteen paikkakuntaa ei ole määritelty.</string>
@@ -61,6 +61,8 @@
     <string name="ask_permission">Salli paikannus</string>
     <string name="updated">"Päivitetty klo "</string>
     <string name="device_mode">Use device mode</string>
-    <string name="add_your_favorite_locations">Add your favorite locations</string>
-    <string name="add_favorite_locations_explanation">Please add your favorite places in the Weather app, if you want to use widget without location services.  </string>
+    <string name="add_your_favorite_locations">Lisää suosikkipaikkasi</string>
+    <string name="add_favorite_locations_explanation">Lisää suosikkipaikkasi Sää-sovellukseen, jos haluat käyttää widgetiä ilman sijaintipalveluita.</string>
+    <string name="add_more_favorite_locations">Lisää suosikkipaikkoja</string>
+    <string name="allow_background_location_service">Anna Sää-sovelluksen taustasijaintipalvelun käyttää nykyistä sijaintiasi näyttääkseen lähelläsi sään.</string>
 </resources>

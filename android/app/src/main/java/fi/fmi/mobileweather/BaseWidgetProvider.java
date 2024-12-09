@@ -5,6 +5,7 @@ import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
+import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.*;
 import static fi.fmi.mobileweather.Theme.*;
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
@@ -151,9 +152,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
-        // Get selected location for the widget (0 means 'current location')
-        int selectedLocation = pref.getInt(SELECTED_LOCATION, 0);
-        if (selectedLocation == 0) {
+        // Get selected location for the widget
+        int selectedLocation = pref.getInt(SELECTED_LOCATION, CURRENT_LOCATION);
+        if (selectedLocation == CURRENT_LOCATION) {
             // get current location
             requestLocation(context, main, pref);
         } else {
@@ -466,14 +467,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 return jsonstr;
 
             } catch (IOException e) {
-                Log.e("Download json", "fetchJsonString exception" + Objects.requireNonNull(e.getMessage()));
+                Log.e("Download json", "fetchJsonString exception: " + Objects.requireNonNull(e.getMessage()));
             }
 
             // if something went wrong, return null
             return null;
 
         } catch (IOException e) {
-            Log.e("Download json", "fetchJsonString exception" + Objects.requireNonNull(e.getMessage()));
+            Log.e("Download json", "fetchJsonString exception: " + Objects.requireNonNull(e.getMessage()));
             return null;
         }
     }

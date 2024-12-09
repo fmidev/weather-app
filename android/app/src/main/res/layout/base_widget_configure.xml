@@ -14,7 +14,7 @@
         <LinearLayout
             android:id="@+id/configurationLinearLayout"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -59,26 +59,30 @@
 
             <TextView
                 android:id="@+id/textView3"
+                style="@style/configHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
+                android:textSize="16sp"
                 android:text="@string/define_widget_settings" />
 
             <TextView
                 android:id="@+id/textView"
+                style="@style/configHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/title_padding"
-                android:text="@string/background" />
+                android:text="@string/theme" />
 
             <RadioGroup
-                android:id="@+id/backgroundRadioGroup"
+                android:id="@+id/themeRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checkedButton="@id/optionDeviceModeRadioButton">
 
                 <RadioButton
                     android:id="@+id/optionDeviceModeRadioButton"
+                    style="@style/configBody"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -88,6 +92,7 @@
 
                 <RadioButton
                     android:id="@+id/optionDarkRadioButton"
+                    style="@style/configBody"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -97,6 +102,7 @@
 
                 <RadioButton
                     android:id="@+id/optionLightRadioButton"
+                    style="@style/configBody"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -152,6 +158,7 @@
 
             <TextView
                 android:id="@+id/locationTextView"
+                style="@style/configHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/title_padding"
@@ -161,10 +168,11 @@
                 android:id="@+id/locationRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checkedButton="@+id/optionPositionedRadioButton">
+                android:checkedButton="@+id/currentLocationRadioButton">
 
                 <RadioButton
-                    android:id="@+id/optionPositionedRadioButton"
+                    android:id="@+id/currentLocationRadioButton"
+                    style="@style/configBody"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -175,26 +183,24 @@
             </RadioGroup>
 
             <TextView
+                android:id="@+id/addFavoriteLocationsExplanationTextView"
+                style="@style/configBody"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="45dp"
-                android:text="@string/add_favorite_locations_explanation"
-                android:textColor="#000000"
-                android:textSize="15sp" />
+                android:text="@string/add_favorite_locations_explanation" />
 
             <TextView
                 android:id="@+id/addFavoriteLocationsTextView"
+                style="@style/configHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="14dp"
                 android:drawablePadding="4dp"
                 android:text="@string/add_your_favorite_locations"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:textStyle="bold"
                 app:drawableEndCompat="@drawable/ic_open_in_new_black" />
 
             <Button
@@ -202,6 +208,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
+                android:background="@drawable/button_round_violet"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textAllCaps="false"
                 android:text="@string/ready" />
 
             <TextView
