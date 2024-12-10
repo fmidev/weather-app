@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -119,8 +118,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         // Add app location favorites to location radio button group
         setLocationFavoritesButtons();
         setAddFavoriteLocationsClickListener();
-
-//        requestLocationPermissions();
     }
 
     private void setLocationFavoritesButtons() {
@@ -153,8 +150,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         // set the button text to add more favorite locations in app
                         addFavoriteLocationsButton.setText(R.string.add_more_favorite_locations);
                     }
-
-//                    ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this, R.style.configBody);
 
                     // Load the font from assets
                     Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/roboto_regular.ttf");
@@ -211,59 +206,16 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        /*RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
-        RadioButton currentLocationRadioButton = findViewById(R.id.currentLocationRadioButton);*/
-
-        if (requestCode == 1 || requestCode == 2) {// If request is cancelled, the result arrays are empty.
+        // if generic or background location permissions were requested
+        if (requestCode == 1 || requestCode == 2) {
+            // If location permission granted (if request is cancelled, the result arrays are empty)
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                // Permission granted
-
                 // finalize the widget with the current location
                 finalizeWidget(CURRENT_LOCATION);
-
-                /*currentLocationRadioButton.setEnabled(true);
-                locationRadioGroup.check(R.id.currentLocationRadioButton);*/
-
-                    /*Button grantbutton = findViewById(1);
-
-                    if (grantbutton!=null)
-                        grantbutton.setVisibility(View.GONE);*/
-
-            } else {
-
-                // Permission denied
-
+            } else { // Permission denied
                 Toast.makeText(BaseWidgetConfigurationActivity.this, getString(R.string.denied_positioning),
                         Toast.LENGTH_SHORT).show();
-
-                /*// Uncheck 'current location' radio button and disable it
-                locationRadioGroup.clearCheck();
-                currentLocationRadioButton.setEnabled(false);*/
-
-                // Add grant permission for positioning button
-
-                    /*Button grantButton = findViewById(1);
-
-                    if (grantButton==null) {
-
-                        grantButton = new Button(this);
-                        grantButton.setId(1);
-                        grantButton.setText(getString(R.string.allow_positioning));
-                        grantButton.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                                Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                                        1);
-                            }
-                        });
-                        view.addView(grantButton);
-                    }
-*/
             }
         }
     }
@@ -280,25 +232,17 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             widgetId = extras.getInt(EXTRA_APPWIDGET_ID,
                     INVALID_APPWIDGET_ID);
 
-
-
             // get selected location (current location or geoId) from checked radio button's ID
             int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
 
             if (selectedLocation==R.id.currentLocationRadioButton) {
                 // create a dialog to explain the user needs to enable background location
                 askLocationPermissionIfNeeded();
-
-                // TODO: move this:
-//                pref.saveInt(SELECTED_LOCATION, 0);
             }
             else {
                 // finalize the widget with the selected location (geoId)
                 finalizeWidget(selectedLocation);
             }
-
-//                pref.saveInt(SELECTED_LOCATION, selectedLocation);
-
         }
         if (widgetId == INVALID_APPWIDGET_ID) {
             Log.i("widgetId", "Invalid appwidget id");
@@ -317,8 +261,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         pref.saveInt(SELECTED_LOCATION, selectedLocation);
 
 
-        RadioGroup theme = findViewById(R.id.themeRadioGroup);
-        int selectedTheme = theme.getCheckedRadioButtonId();
+        RadioGroup themeRadioGroup = findViewById(R.id.themeRadioGroup);
+        int selectedTheme = themeRadioGroup.getCheckedRadioButtonId();
         String selectedThemeString;
 
         if (selectedTheme==R.id.optionLightRadioButton)
@@ -353,7 +297,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     public void askLocationPermissionIfNeeded() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             showGenericLocationPermissionDialog();
@@ -367,12 +310,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     private void showBackgroundLocationPermissionDialog() {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.allow_background_location_service)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                    @RequiresApi(api = Build.VERSION_CODES.Q)
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        requestBackgroundLocationPermission();
-                    }
-                })
+                .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> requestBackgroundLocationPermission())
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }
@@ -405,14 +343,10 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     private void showGenericLocationPermissionDialog() {
+        //                    @RequiresApi(api = Build.VERSION_CODES.Q)
         new AlertDialog.Builder(this)
                 .setMessage(R.string.allow_background_location_service)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                    @RequiresApi(api = Build.VERSION_CODES.Q)
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        requestGenericLocationPermissions();
-                    }
-                })
+                .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> requestGenericLocationPermissions())
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }
