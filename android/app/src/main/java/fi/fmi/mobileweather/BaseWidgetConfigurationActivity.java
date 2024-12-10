@@ -41,9 +41,8 @@ import android.widget.Toast;
 import android.widget.TextView;
 import android.content.pm.PackageManager;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.app.ActivityCompat;
 
 import com.reactnativecommunity.asyncstorage.AsyncLocalStorageUtil;
@@ -124,12 +123,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 //        requestLocationPermissions();
     }
 
-    private void requestLocationPermissions() {
-        ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                1);
-    }
-
     private void setLocationFavoritesButtons() {
         SQLiteDatabase readableDatabase;
         readableDatabase = ReactDatabaseSupplier.getInstance(this.getApplicationContext()).getReadableDatabase();
@@ -198,11 +191,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
+                openAppDetailsSettings();
             }
         });
     }
@@ -220,12 +209,12 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         /*RadioGroup locationRadioGroup = findViewById(R.id.locationRadioGroup);
         RadioButton currentLocationRadioButton = findViewById(R.id.currentLocationRadioButton);*/
 
-        if (requestCode == 1) {// If request is cancelled, the result arrays are empty.
+        if (requestCode == 1 || requestCode == 2) {// If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -366,50 +355,66 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     public void askLocationPermissionIfNeeded() {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.allow_background_location_service)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.Q)
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            requestLocationPermissions();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
-            /*} else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.allow_background_location_service)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.Q)
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                                        2);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .show();
-            }*/
-        /*} else {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.allow_background_location_service)
-                        .setPositiveButton(R.string.ask_permission, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                requestLocationPermissions();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null).show();
-            }
-        }*/
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            showGenericLocationPermissionDialog();
+        } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            showBackgroundLocationPermissionDialog();
         } else {
             finalizeWidget(CURRENT_LOCATION);
         }
+    }
+
+    private void showBackgroundLocationPermissionDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.allow_background_location_service)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @RequiresApi(api = Build.VERSION_CODES.Q)
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        requestBackgroundLocationPermission();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void requestGenericLocationPermissions() {
+        ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
+                new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                },
+                1);
+    }
+
+    private void requestBackgroundLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.requestPermissions(BaseWidgetConfigurationActivity.this,
+                    new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                    2);
+        } else {
+            // open app settings for user to enable background location
+            openAppDetailsSettings();
+        }
+    }
+
+    private void openAppDetailsSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    private void showGenericLocationPermissionDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.allow_background_location_service)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @RequiresApi(api = Build.VERSION_CODES.Q)
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        requestGenericLocationPermissions();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     @Override
