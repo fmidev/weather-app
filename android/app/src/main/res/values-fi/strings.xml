@@ -65,4 +65,5 @@
     <string name="add_favorite_locations_explanation">Lisää suosikkipaikkasi Sää-sovellukseen, jos haluat käyttää widgetiä ilman sijaintipalveluita.</string>
     <string name="add_more_favorite_locations">Lisää suosikkipaikkoja</string>
     <string name="allow_background_location_service">Anna Sää-sovelluksen taustasijaintipalvelun käyttää nykyistä sijaintiasi näyttääkseen lähelläsi sään.</string>
+    <string name="small_warnings_widget">Varoitukset pieni</string>
 </resources>

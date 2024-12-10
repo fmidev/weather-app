@@ -65,4 +65,5 @@
     <string name="add_favorite_locations_explanation">Please add your favorite places in the Weather app, if you want to use widget without location services.</string>
     <string name="add_more_favorite_locations">Add more favorite locations</string>
     <string name="allow_background_location_service">Please allow the Weather app background location service use your current location to show weather near you.</string>
+    <string name="small_warnings_widget">Warnings compact</string>
 </resources>
