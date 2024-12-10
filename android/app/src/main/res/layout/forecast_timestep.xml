@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/forecastTimeStep"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    android:orientation="horizontal">
 
-</RelativeLayout>
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/timeTextView"
+        style="@style/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        tools:text="13:00" />
+
+        <ImageView
+            android:id="@+id/weatherIconImageView"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription=""
+            tools:src="@drawable/s_32_light" />
+
+        <TextView
+            android:id="@+id/temperatureTextView"
+            style="@style/temperatureSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            tools:text="+12°" />
+    </LinearLayout>
+    <!-- Note: 'View' cannot be used with widgets, therefore ImageView here -->
+    <ImageView
+        style="@style/verticalLine"
+        android:layout_width="1dp"
+        android:layout_height="match_parent" />
+</LinearLayout>
