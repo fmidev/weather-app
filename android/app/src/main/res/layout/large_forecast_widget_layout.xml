@@ -53,6 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/fmi_logo_blue"
+            android:contentDescription=""
             android:visibility="gone" />
 
         <TextView
@@ -70,17 +71,6 @@
             android:visibility="gone"
             tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
             tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/updateTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/black"
-            android:textSize="10sp"
-            android:visibility="visible"
-            tools:ignore="SmallSp"
-            tools:text="11.34.24" />
 
     </LinearLayout>
 
@@ -106,6 +96,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginEnd="5dp"
+                android:contentDescription=""
                 android:background="@drawable/ic_info_blue" />
 
             <LinearLayout

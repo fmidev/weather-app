@@ -2,15 +2,13 @@ package fi.fmi.mobileweather;
 
 import static fi.fmi.mobileweather.Theme.LIGHT;
 
-import android.adservices.adselection.RemoveAdSelectionOverrideRequest;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Iterator;
 
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
@@ -23,6 +21,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     // populate widget with data
     @Override
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
+        int TIMESTEP_COUNT = 5;
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
@@ -53,10 +52,10 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 throw new Exception("No future time found or less than 5 future times available");
             }
 
-            RemoteViews forecastContainer = new RemoteViews(context.getPackageName(), R.id.hourForecastRowLayout);
+            widgetRemoteViews.removeAllViews(R.id.hourForecastRowLayout);
 
             // handle the first 5 JsonObjects with future time
-            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + 5); i++) {
+            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + TIMESTEP_COUNT); i++) {
                 JSONObject forecast = data.getJSONObject(i);
 
                 // if first future index
@@ -73,7 +72,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 // time at the selected location
                 String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
-                String weatherSymbol = forecast.getString("smartSymbol");
+                int weatherSymbol = forecast.getInt("smartSymbol");
 
                 // ** set the time, temperature and weather icon
 
@@ -84,13 +83,20 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 timeStep.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
-                widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
+                timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
+                int symbolId = context.getResources().getIdentifier(
+                        weatherSymbol > 100 ? "s_"+(weatherSymbol-100) : "s_"+weatherSymbol,
+                        "string",
+                        context.getPackageName()
+                );
+                timeStep.setContentDescription(R.id.weatherIconImageView, context.getString(symbolId));
 
-                forecastContainer.ap
+                if (i == TIMESTEP_COUNT - 1) {
+                    timeStep.setViewVisibility(R.id.forecastBorder, View.GONE);
+                }
+
+                widgetRemoteViews.addView(R.id.hourForecastRowLayout, timeStep);
             }
-
-            // Update time TODO: should be hidden for release
-            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
 
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
