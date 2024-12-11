@@ -236,16 +236,18 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
 
             if (selectedLocation==R.id.currentLocationRadioButton) {
+                Log.d("Widget Update", "Selected location: current");
                 // create a dialog to explain the user needs to enable background location
                 askLocationPermissionIfNeeded();
             }
             else {
+                Log.d("Widget Update", "Selected location: " + selectedLocation);
                 // finalize the widget with the selected location (geoId)
                 finalizeWidget(selectedLocation);
             }
         }
         if (widgetId == INVALID_APPWIDGET_ID) {
-            Log.i("widgetId", "Invalid appwidget id");
+            Log.i("Widget Update", "Invalid appwidget id");
             finish();
         }
     }
