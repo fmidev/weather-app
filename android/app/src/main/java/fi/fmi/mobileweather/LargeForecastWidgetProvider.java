@@ -21,7 +21,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     // populate widget with data
     @Override
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
-        int TIMESTEP_COUNT = 5;
+        final int TIMESTEP_COUNT = 5;
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
