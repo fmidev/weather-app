@@ -60,7 +60,7 @@
     <string name="location_service_info_title">Haluatko sallia paikannuksen?</string>
     <string name="ask_permission">Salli paikannus</string>
     <string name="updated">"Päivitetty klo "</string>
-    <string name="device_mode">Use device mode</string>
+    <string name="device_mode">Käytä laitetilaa</string>
     <string name="add_your_favorite_locations">Lisää suosikkipaikkasi</string>
     <string name="add_favorite_locations_explanation">Lisää suosikkipaikkasi Sää-sovellukseen, jos haluat käyttää widgetiä ilman sijaintipalveluita.</string>
     <string name="add_more_favorite_locations">Lisää suosikkipaikkoja</string>
