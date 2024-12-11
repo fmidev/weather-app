@@ -197,6 +197,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                         executeWithLatLon(latlon, main, pref, widgetId);
                     } else {
                         Log.d("Widget Location", "Timeout reached, no location available");
+                        showLocationErrorView(context, pref, widgetId);
                     }
                 };
                 Log.d("Widget Location", "Timer started");
@@ -204,20 +205,20 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 timeoutHandler.postDelayed(timeoutRunnable, 60 * 1000); // 1 minute timeout
             } else {
                 Log.d("Widget Location", "Location not available from Location Manager");
-                showErrorView(context, pref,
-                        context.getResources().getString(R.string.positioning_failed),
-                        "",
-                        widgetId
-                );
+                showLocationErrorView(context, pref, widgetId);
             }
         } else {
             Log.d("Widget Location", "Location permission not granted");
-            showErrorView(context, pref,
-                    context.getResources().getString(R.string.positioning_failed),
-                    "",
-                    widgetId
-            );
+            showLocationErrorView(context, pref, widgetId);
         }
+    }
+
+    private void showLocationErrorView(Context context, SharedPreferencesHelper pref, int widgetId) {
+        showErrorView(context, pref,
+                context.getResources().getString(R.string.positioning_failed),
+                "",
+                widgetId
+        );
     }
 
     @Override
