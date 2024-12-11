@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -151,26 +152,17 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         addFavoriteLocationsButton.setText(R.string.add_more_favorite_locations);
                     }
 
-                    // Load the font from assets
-                    Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/roboto_regular.ttf");
-
                     // add a radio button for each favorite location
+                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     for (int i = 0; i < favorites.length(); i++) {
                         JSONObject current = favorites.getJSONObject(i);
                         int geoId = current.getInt("id");
                         String name = current.getString("name");
-                        int padding = this.getResources().getDimensionPixelSize(R.dimen.radiobutton_padding);
 
-                        RadioButton favoriteRadioButton = new RadioButton(this);
-                        favoriteRadioButton.setPadding(0, padding, 0, padding);
+                        RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
                         favoriteRadioButton.setText(name);
-                        favoriteRadioButton.setTextColor(BLACK);
-                        favoriteRadioButton.setTextSize(15);
-                        favoriteRadioButton.setTypeface(customFont);
-                        favoriteRadioButton.setButtonTintList(AppCompatResources.getColorStateList(this, R.color.radio_button_selector));
                         favoriteRadioButton.setTag(geoId);
                         favoriteRadioButton.setId(geoId);
-
                         locationRadioGroup.addView(favoriteRadioButton);
                     }
                 } catch (JSONException e) {
