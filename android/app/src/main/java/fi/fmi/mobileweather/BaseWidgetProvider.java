@@ -5,6 +5,7 @@ import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
+import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.*;
 import static fi.fmi.mobileweather.Theme.*;
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
@@ -41,6 +42,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
@@ -58,7 +60,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private static final long CRISIS_DATA_VALIDITY = 12 * 60 * 60 * 1000;
 
     Context context;
-    int appWidgetId;
     AppWidgetManager appWidgetManager;
 
     private Handler timeoutHandler;
@@ -101,7 +102,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         ComponentName thisAppWidgetComponentName = new ComponentName(context.getPackageName(), getClass().getName());
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidgetComponentName);
 
-        Log.d("Widget Update","thisAppWidgetComponentName: " + thisAppWidgetComponentName);
+        Log.d("Widget Update","Widget Component Name: " + thisAppWidgetComponentName);
+        Log.d("Widget Update","Widget Ids: " + Arrays.toString(appWidgetIds));
 
         onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -136,10 +138,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         this.context = context;
         this.appWidgetManager = appWidgetManager;
-        this.appWidgetId = appWidgetId;
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
 
-        onPostExecute(null, null, main, pref);
+        onPostExecute(null, null, main, pref, appWidgetId);
     }
 
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews main) {
@@ -147,16 +148,27 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         this.context = context;
         this.appWidgetManager = appWidgetManager;
-        this.appWidgetId = appWidgetId;
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
-        Log.d("Widget Location", "Trying to request location");
+        // Get selected location for the widget
+        int selectedLocation = pref.getInt(SELECTED_LOCATION, CURRENT_LOCATION);
+        if (selectedLocation == CURRENT_LOCATION) {
+            // get current location
+            requestCurrentLocation(context, main, pref, appWidgetId);
+        } else {
+            // use selected location (geoid)
+            executeWithGeoId(selectedLocation, main, pref, appWidgetId);
+        }
+    }
+
+    private void requestCurrentLocation(Context context, RemoteViews main, SharedPreferencesHelper pref, int widgetId) {
+        Log.d("Widget Location", "Trying to request current location");
         if ((ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 || (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
 
-            Log.d("Widget Location", "Location requested");
+            Log.d("Widget Location", "Current location requested");
             Boolean ok = SingleShotLocationProvider.requestSingleUpdate(context,
                     location -> {
                         Log.d("Widget Location", "New location: " + location.toString());
@@ -170,7 +182,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                             Log.d("Widget Location", "Timer canceled");
                             timeoutHandler.removeCallbacks(timeoutRunnable);
                         }
-                        execute(latlon, main, pref);
+                        executeWithLatLon(latlon, main, pref, widgetId);
                     });
             if (ok) {
                 // Set timeout for location request
@@ -182,9 +194,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     String latlon = pref.getString("latlon", null);
                     if (latlon != null) {
                         Log.d("Widget Location", "Timeout reached, update with stored location");
-                        execute(latlon, main, pref);
+                        executeWithLatLon(latlon, main, pref, widgetId);
                     } else {
                         Log.d("Widget Location", "Timeout reached, no location available");
+                        showLocationErrorView(context, pref, widgetId);
                     }
                 };
                 Log.d("Widget Location", "Timer started");
@@ -192,18 +205,20 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 timeoutHandler.postDelayed(timeoutRunnable, 60 * 1000); // 1 minute timeout
             } else {
                 Log.d("Widget Location", "Location not available from Location Manager");
-                showErrorView(context, pref,
-                        context.getResources().getString(R.string.positioning_failed),
-                        ""
-                );
+                showLocationErrorView(context, pref, widgetId);
             }
         } else {
             Log.d("Widget Location", "Location permission not granted");
-            showErrorView(context, pref,
-                    context.getResources().getString(R.string.positioning_failed),
-                    ""
-            );
+            showLocationErrorView(context, pref, widgetId);
         }
+    }
+
+    private void showLocationErrorView(Context context, SharedPreferencesHelper pref, int widgetId) {
+        showErrorView(context, pref,
+                context.getResources().getString(R.string.positioning_failed),
+                "",
+                widgetId
+        );
     }
 
     @Override
@@ -218,7 +233,35 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         WidgetNotification.clearWidgetUpdate(context);
     }
 
-    public void execute(String latlon, RemoteViews main, SharedPreferencesHelper pref) {
+    public void executeWithGeoId(int geoId, RemoteViews main, SharedPreferencesHelper pref, int widgetId) {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        // Get language string
+        String language = getLanguageString();
+        // temporary for testing.
+
+        // TODO: temporary for testing.
+//        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
+        String announceUrl = announcementsUrl;
+
+        // get forecast based on geoId
+        Future<JSONObject> future1 = executorService.submit(() -> fetchForecast(Integer.toString(geoId), null, language));
+        // get announcements
+        Future<JSONArray> future2 = executorService.submit(() -> fetchJsonArray(announceUrl));
+
+        executorService.submit(() -> {
+            try {
+                JSONObject result1 = future1.get();
+                JSONArray result2 = future2.get();
+                onPostExecute(result1, result2, main, pref, widgetId);
+            } catch (Exception e) {
+                Log.e("Download json", "Exception: " + e.getMessage());
+                // NOTE: let's not show error view here, because connection problems with server
+                //       seem to be quite frequent and we don't want to show error view every time
+            }
+        });
+    }
+
+    public void executeWithLatLon(String latlon, RemoteViews main, SharedPreferencesHelper pref, int widgetId) {
 
         // if we have no location, do not update the widget
         if (latlon == null || latlon.isEmpty()) {
@@ -246,7 +289,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             try {
                 JSONObject result1 = future1.get();
                 JSONArray result2 = future2.get();
-                onPostExecute(result1, result2, main, pref);
+                onPostExecute(result1, result2, main, pref, widgetId);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
                 // NOTE: let's not show error view here, because connection problems with server
@@ -293,12 +336,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     "&endtime=data&format=json&attributes=geoid&lang=" +
                     language +
                     "&tz=utc&who=mobileweather-widget-android&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
-        } else { // otherwise use lat&lon to get forecast data
+        } else if (latlon != null && !latlon.isEmpty()) { // otherwise use lat&lon to get forecast data if available
             url = weatherUrl + "?latlon=" +
                     latlon +
                     "&endtime=data&format=json&attributes=geoid&lang=" +
                     language +
                     "&tz=utc&who=mobileweather-widget-android&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
+        } else {
+            return null;
         }
 
         try {
@@ -310,19 +355,23 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref) {
+    protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref, int widgetId) {
 
         // init widget, returns (new) forecast forecastJson, widget layout views and theme
-        WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref);
+        WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref, widgetId);
 
         // populate widget with data
-        setWidgetData(announcementsJson, pref, widgetInitResult);
+        setWidgetData(announcementsJson, pref, widgetInitResult, widgetId);
     }
 
-    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
+    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject forecastJson = widgetInitResult.forecastJson();
         String theme = widgetInitResult.theme();
+
+        if (forecastJson == null) {
+            return;
+        }
 
         try {
             // Get the keys of the JSONObject
@@ -367,20 +416,21 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
 
-            appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
+            appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
             return;
 
-        } catch (final JSONException e) {
+        } catch (final Exception e) {
             Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
             showErrorView(
                     context,
                     pref,
                     context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection)
+                    context.getResources().getString(R.string.check_internet_connection),
+                    widgetId
             );
         }
 
-        appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
+        appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
     }
 
 
@@ -424,14 +474,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 return jsonstr;
 
             } catch (IOException e) {
-                Log.e("Exception", Objects.requireNonNull(e.getMessage()));
+                Log.e("Download json", "fetchJsonString exception: " + Objects.requireNonNull(e.getMessage()));
             }
 
             // if something went wrong, return null
             return null;
 
         } catch (IOException e) {
-            Log.e("Exception", Objects.requireNonNull(e.getMessage()));
+            Log.e("Download json", "fetchJsonString exception: " + Objects.requireNonNull(e.getMessage()));
             return null;
         }
     }
@@ -455,7 +505,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @NonNull
-    protected WidgetInitResult initWidget(JSONObject forecastJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref) {
+    protected WidgetInitResult initWidget(JSONObject forecastJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref, int widgetId) {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -470,7 +520,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Log.d("Download json", "Theme: " + theme);
 
         // get remote views of widget
-        widgetRemoteViews = getRemoteViews(widgetRemoteViews);
+        widgetRemoteViews = getRemoteViews(widgetRemoteViews, widgetId);
 
         // Show normal view
         widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
@@ -479,14 +529,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         widgetRemoteViews.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
-        forecastJson = useNewOrStoredJsonObject(forecastJson, pref);
+        forecastJson = useNewOrStoredJsonObject(forecastJson, pref, widgetId);
         if (forecastJson == null) {
             Log.d("Download json", "No forecastJson data available");
             showErrorView(
                     context,
                     pref,
                     context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection)
+                    context.getResources().getString(R.string.check_internet_connection),
+                    widgetId
             );
         }
 
@@ -502,11 +553,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @NonNull
-    private RemoteViews getRemoteViews(RemoteViews widgetRemoteViews) {
+    private RemoteViews getRemoteViews(RemoteViews widgetRemoteViews, int widgetId) {
         // Get the layout for the App Widget now if needed
         if (widgetRemoteViews == null) {
             // Get the stored layout for the App Widget
-            int currentLayoutId = loadLayoutResourceId(context, appWidgetId);
+            int currentLayoutId = loadLayoutResourceId(context, widgetId);
             // If the layout is not stored, use the default layout
             if (currentLayoutId != 0) {
                 widgetRemoteViews = new RemoteViews(context.getPackageName(), currentLayoutId);
@@ -624,7 +675,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @Nullable
-    JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferencesHelper pref) {
+    JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferencesHelper pref, int widgetId) {
         Date now = new Date();
 
         if (json == null) {
@@ -642,7 +693,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                             context,
                             pref,
                             context.getResources().getString(R.string.update_failed),
-                            context.getResources().getString(R.string.check_internet_connection)
+                            context.getResources().getString(R.string.check_internet_connection),
+                            widgetId
                     );
                     return null;
                 }
@@ -651,7 +703,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                         context,
                         pref,
                         context.getResources().getString(R.string.update_failed),
-                        context.getResources().getString(R.string.check_internet_connection)
+                        context.getResources().getString(R.string.check_internet_connection),
+                        widgetId
                 );
                 return null;
             }
@@ -693,7 +746,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         return json;
     }
 
-    protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2) {
+    protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2, int widgetId) {
         String theme = pref.getString(THEME, DARK);
 
         RemoteViews widgetRemoteViews = new RemoteViews(context.getPackageName(), getLayoutResourceId());
@@ -735,7 +788,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         widgetRemoteViews.setTextViewText(R.id.errorHeaderTextView, errorText1);
         widgetRemoteViews.setTextViewText(R.id.errorBodyTextView, errorText2);
 
-        appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
+        appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
     }
 
     private static void setInfoIconIfNeeded(Context context, RemoteViews widgetRemoteViews, int drawableResId) {

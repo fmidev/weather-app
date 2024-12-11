@@ -2,4 +2,5 @@
 <resources>
   <color name="splashscreen_bg">#FFFFFF</color>
   <color name="primaryBlue">#303193</color>
+  <color name="lightGrey">#E8E8E8</color>
 </resources>
