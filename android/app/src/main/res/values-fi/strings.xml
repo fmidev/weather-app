@@ -60,10 +60,10 @@
     <string name="location_service_info_title">Haluatko sallia paikannuksen?</string>
     <string name="ask_permission">Salli paikannus</string>
     <string name="updated">"Päivitetty klo "</string>
-    <string name="device_mode">Use device mode</string>
+    <string name="device_mode">Oletus</string>
     <string name="add_your_favorite_locations">Lisää suosikkipaikkasi</string>
-    <string name="add_favorite_locations_explanation">Lisää suosikkipaikkasi Sää-sovellukseen, jos haluat käyttää widgetiä ilman sijaintipalveluita.</string>
+    <string name="add_favorite_locations_explanation">Lisää suosikkipaikkasi Sää-sovelluksessa, jos haluat käyttää widgettiä ilman sijaintipalveluita.</string>
     <string name="add_more_favorite_locations">Lisää suosikkipaikkoja</string>
-    <string name="allow_background_location_service">Anna Sää-sovelluksen taustasijaintipalvelun käyttää nykyistä sijaintiasi näyttääkseen lähelläsi sään.</string>
     <string name="small_warnings_widget">Varoitukset pieni</string>
+    <string name="allow_background_location_service">Salli taustasijaintipalvelu (Salli aina), jotta widget voi käyttää nykyistä sijaintiasi säätietojen näyttämiseen.</string>
 </resources>

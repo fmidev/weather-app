@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -121,6 +122,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     private void setLocationFavoritesButtons() {
+        locationRadioGroup = findViewById(R.id.locationRadioGroup);
+
         SQLiteDatabase readableDatabase;
         readableDatabase = ReactDatabaseSupplier.getInstance(this.getApplicationContext()).getReadableDatabase();
 
@@ -129,8 +132,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             if (impl != null) {
                 try {
-                    locationRadioGroup = findViewById(R.id.locationRadioGroup);
-
                     JSONObject dump = new JSONObject(impl);
                     JSONArray favorites = new JSONArray(dump.getString("favorites"));
 
@@ -151,26 +152,17 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         addFavoriteLocationsButton.setText(R.string.add_more_favorite_locations);
                     }
 
-                    // Load the font from assets
-                    Typeface customFont = Typeface.createFromAsset(getAssets(), "fonts/roboto_regular.ttf");
-
                     // add a radio button for each favorite location
+                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     for (int i = 0; i < favorites.length(); i++) {
                         JSONObject current = favorites.getJSONObject(i);
                         int geoId = current.getInt("id");
                         String name = current.getString("name");
-                        int padding = this.getResources().getDimensionPixelSize(R.dimen.radiobutton_padding);
 
-                        RadioButton favoriteRadioButton = new RadioButton(this);
-                        favoriteRadioButton.setPadding(0, padding, 0, padding);
+                        RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
                         favoriteRadioButton.setText(name);
-                        favoriteRadioButton.setTextColor(BLACK);
-                        favoriteRadioButton.setTextSize(15);
-                        favoriteRadioButton.setTypeface(customFont);
-                        favoriteRadioButton.setButtonTintList(AppCompatResources.getColorStateList(this, R.color.radio_button_selector));
                         favoriteRadioButton.setTag(geoId);
                         favoriteRadioButton.setId(geoId);
-
                         locationRadioGroup.addView(favoriteRadioButton);
                     }
                 } catch (JSONException e) {
@@ -236,16 +228,18 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             int selectedLocation = locationRadioGroup.getCheckedRadioButtonId();
 
             if (selectedLocation==R.id.currentLocationRadioButton) {
+                Log.d("Widget Update", "Selected location: current");
                 // create a dialog to explain the user needs to enable background location
                 askLocationPermissionIfNeeded();
             }
             else {
+                Log.d("Widget Update", "Selected location: " + selectedLocation);
                 // finalize the widget with the selected location (geoId)
                 finalizeWidget(selectedLocation);
             }
         }
         if (widgetId == INVALID_APPWIDGET_ID) {
-            Log.i("widgetId", "Invalid appwidget id");
+            Log.i("Widget Update", "Invalid appwidget id");
             finish();
         }
     }

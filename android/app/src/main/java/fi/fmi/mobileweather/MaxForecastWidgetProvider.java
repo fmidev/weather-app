@@ -29,7 +29,11 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
     // populate widget with data
     @Override
-    protected void setForecastWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
+//<<<<<<< HEAD
+    protected void setForecastWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
+/*=======
+    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
+>>>>>>> android-main*/
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
@@ -150,7 +154,8 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                     context,
                     pref,
                     "(parsing error) " + context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection)
+                    context.getResources().getString(R.string.check_internet_connection),
+                    appWidgetId
             );
         }
 
