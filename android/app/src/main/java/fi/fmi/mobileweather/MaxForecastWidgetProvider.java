@@ -29,11 +29,8 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
     // populate widget with data
     @Override
-//<<<<<<< HEAD
     protected void setForecastWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
-/*=======
-    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
->>>>>>> android-main*/
+
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();

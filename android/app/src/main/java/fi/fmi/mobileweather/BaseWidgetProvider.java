@@ -155,7 +155,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         int selectedLocation = pref.getInt(SELECTED_LOCATION, CURRENT_LOCATION);
         if (selectedLocation == CURRENT_LOCATION) {
             // get current location
-//<<<<<<< HEAD
             requestLocation(context, pref, appWidgetId);
         } else {
             // use selected location (geoid)
@@ -165,17 +164,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected void requestLocation(Context context, SharedPreferencesHelper pref, int widgetId) {
         Log.d("Widget Location", "Trying to request location");
-/*=======
-            requestCurrentLocation(context, main, pref, appWidgetId);
-        } else {
-            // use selected location (geoid)
-            executeWithGeoId(selectedLocation, main, pref, appWidgetId);
-        }
-    }
 
-    private void requestCurrentLocation(Context context, RemoteViews main, SharedPreferencesHelper pref, int widgetId) {
-        Log.d("Widget Location", "Trying to request current location");
->>>>>>> android-main*/
         if ((ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 || (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
@@ -369,7 +358,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-//<<<<<<< HEAD
     protected void onDataFetchingPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
 
         // init widget, returns (new) forecast forecastJson, widget layout views and theme
@@ -380,18 +368,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void setForecastWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
-/*=======
-    protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref, int widgetId) {
 
-        // init widget, returns (new) forecast forecastJson, widget layout views and theme
-        WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref, widgetId);
-
-        // populate widget with data
-        setWidgetData(announcementsJson, pref, widgetInitResult, widgetId);
-    }
-
-    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
->>>>>>> android-main*/
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject forecastJson = widgetInitResult.forecastJson();
         String theme = widgetInitResult.theme();
