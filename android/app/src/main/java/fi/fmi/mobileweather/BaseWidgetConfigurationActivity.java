@@ -122,6 +122,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     private void setLocationFavoritesButtons() {
+        locationRadioGroup = findViewById(R.id.locationRadioGroup);
+
         SQLiteDatabase readableDatabase;
         readableDatabase = ReactDatabaseSupplier.getInstance(this.getApplicationContext()).getReadableDatabase();
 
@@ -130,8 +132,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
             if (impl != null) {
                 try {
-                    locationRadioGroup = findViewById(R.id.locationRadioGroup);
-
                     JSONObject dump = new JSONObject(impl);
                     JSONArray favorites = new JSONArray(dump.getString("favorites"));
 
