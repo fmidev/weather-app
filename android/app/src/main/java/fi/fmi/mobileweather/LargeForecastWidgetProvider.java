@@ -20,7 +20,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
     // populate widget with data
     @Override
-    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult) {
+    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         final int TIMESTEP_COUNT = 5;
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
@@ -105,7 +105,8 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                     context,
                     pref,
                     "(parsing error) " + context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection)
+                    context.getResources().getString(R.string.check_internet_connection),
+                    appWidgetId
             );
         }
 

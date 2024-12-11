@@ -44,8 +44,8 @@
     <string name="nexthours">Lähitunnit</string>
     <string name="location">Paikkakunta</string>
     <string name="positioned_location">Paikannettu sijainti</string>
-    <string name="background">Tausta</string>
-    <string name="define_widget_settings">Määritä lisättävän widgetin asetukset.</string>
+    <string name="theme">Teema</string>
+    <string name="define_widget_settings">Määritä widget-asetukset</string>
     <string name="allow_positioning">Salli paikannus</string>
     <string name="denied_positioning">Kielsit paikannuksen. Käytä suosikkipaikkoja tai salli paikannus.</string>
     <string name="forecast_location_not_defined">Ennusteen paikkakuntaa ei ole määritelty.</string>
@@ -105,4 +105,9 @@
     <string name="s_71">Yksittäisiä ukkoskuuroja</string>
     <string name="s_74">Paikoin ukkoskuuroja</string>
     <string name="s_77">Ukkoskuuroja</string>
+    <string name="device_mode">Oletus</string>
+    <string name="add_your_favorite_locations">Lisää suosikkipaikkasi</string>
+    <string name="add_favorite_locations_explanation">Lisää suosikkipaikkasi Sää-sovelluksessa, jos haluat käyttää widgettiä ilman sijaintipalveluita.</string>
+    <string name="add_more_favorite_locations">Lisää suosikkipaikkoja</string>
+    <string name="allow_background_location_service">Salli taustasijaintipalvelu (Salli aina), jotta widget voi käyttää nykyistä sijaintiasi säätietojen näyttämiseen.</string>
 </resources>

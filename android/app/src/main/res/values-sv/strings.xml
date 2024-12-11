@@ -44,8 +44,8 @@
     <string name="Forecast">Prognos</string>
     <string name="location">Plats</string>
     <string name="positioned_location">Placerad plats</string>
-    <string name="background">Bakgrund</string>
-    <string name="define_widget_settings">Definiera inställningar för ny widget.</string>
+    <string name="theme">Tema</string>
+    <string name="define_widget_settings">Definiera widgetinställningar</string>
     <string name="allow_positioning">Tillåta positionering</string>
     <string name="denied_positioning">Du nekas positionering. Använd favoritpositioner eller tillåta positionering.</string>
     <string name="forecast_location_not_defined">Prognos plats inte definierat.</string>
@@ -105,4 +105,9 @@
     <string name="s_71">Enstaka åskskurar</string>
     <string name="s_74">Lokalt åskskurar</string>
     <string name="s_77">Lokalt åskskurar</string>
+    <string name="device_mode">Använd standard</string>
+    <string name="add_your_favorite_locations">Lägg till dina favoritplatser</string>
+    <string name="add_favorite_locations_explanation">Lägg till dina favoritplatser i Weather-appen om du vill använda widget utan platstjänster.</string>
+    <string name="add_more_favorite_locations">Lägg till fler favoritplatser</string>
+    <string name="allow_background_location_service">Tillåt att Weather-appens bakgrundsplatstjänst (Tillåt alltid) använder din nuvarande plats för att visa väder nära dig.</string>
 </resources>
