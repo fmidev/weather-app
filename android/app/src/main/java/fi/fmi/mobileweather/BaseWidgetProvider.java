@@ -357,12 +357,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
             // ** set the weather icon
 
-            String weatherSymbol = first.getString("smartSymbol");
+            int weatherSymbol = first.getInt("smartSymbol");
             int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
             widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
-
-            // Update time TODO: should be hidden for release
-            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
+            widgetRemoteViews.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
@@ -784,5 +782,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
         // if no future time found
         return -1;
+    }
+
+    protected String getSymbolTranslation(int symbol) {
+        // > 100 is night version, but we can use day symbol translation
+        int symbolId = context.getResources().getIdentifier(
+                symbol > 100 ? "s_"+(symbol-100) : "s_"+symbol,
+                "string",
+                context.getPackageName()
+        );
+        return context.getString(symbolId);
     }
 }

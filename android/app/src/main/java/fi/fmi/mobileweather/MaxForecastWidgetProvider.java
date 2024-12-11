@@ -92,7 +92,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                 // time at the selected location
                 String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
-                String weatherSymbol = forecast.getString("smartSymbol");
+                int weatherSymbol = forecast.getInt("smartSymbol");
 
                 // j = weather row layout index
                 int j = i - 1;
@@ -112,6 +112,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
                 widgetRemoteViews.setImageViewResource(weatherIconImageViewId, drawableResId);
+                widgetRemoteViews.setContentDescription(weatherIconImageViewId, getSymbolTranslation(weatherSymbol));
             }
 
             // Get the current time
@@ -136,7 +137,6 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
             }
 
             widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, formattedText);
-
 
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);

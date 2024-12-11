@@ -92,17 +92,6 @@
             tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
             tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/updateTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/black"
-            android:textSize="10sp"
-            android:visibility="visible"
-            tools:text="11.34.24"
-            tools:ignore="SmallSp" />
-
     </LinearLayout>
 
     <LinearLayout

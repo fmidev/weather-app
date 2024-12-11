@@ -84,12 +84,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
                 timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
-                int symbolId = context.getResources().getIdentifier(
-                        weatherSymbol > 100 ? "s_"+(weatherSymbol-100) : "s_"+weatherSymbol,
-                        "string",
-                        context.getPackageName()
-                );
-                timeStep.setContentDescription(R.id.weatherIconImageView, context.getString(symbolId));
+                timeStep.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
                 if (i == TIMESTEP_COUNT - 1) {
                     timeStep.setViewVisibility(R.id.forecastBorder, View.GONE);
