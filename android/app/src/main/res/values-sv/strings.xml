@@ -60,7 +60,7 @@
     <string name="location_service_info_title">Vill du aktivera platstjänst?</string>
     <string name="ask_permission">Tillåta</string>
     <string name="updated">"Uppdaterad kl."</string>
-    <string name="device_mode">Använda enhetsläget</string>
+    <string name="device_mode">Använd standard</string>
     <string name="add_your_favorite_locations">Lägg till dina favoritplatser</string>
     <string name="add_favorite_locations_explanation">Lägg till dina favoritplatser i Weather-appen om du vill använda widget utan platstjänster.</string>
     <string name="add_more_favorite_locations">Lägg till fler favoritplatser</string>
