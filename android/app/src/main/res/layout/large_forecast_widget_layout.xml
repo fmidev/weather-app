@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLinearLayout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
     android:padding="16dp">
@@ -17,7 +17,9 @@
             android:id="@+id/locationLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="top"
+            >
 
             <TextView
                 android:id="@+id/locationNameTextView"
@@ -45,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="bottom"
             >
 
             <LinearLayout
@@ -52,7 +55,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
-                android:paddingHorizontal="8dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -92,7 +94,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
-                android:paddingHorizontal="8dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -131,7 +132,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
-                android:paddingHorizontal="8dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -170,7 +170,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
-                android:paddingHorizontal="8dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -209,7 +208,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
-                android:paddingHorizontal="8dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -263,17 +261,6 @@
             android:visibility="gone"
             tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
             tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/updateTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/black"
-            android:textSize="10sp"
-            android:visibility="visible"
-            tools:ignore="SmallSp"
-            tools:text="11.34.24" />
 
     </LinearLayout>
 
