@@ -21,9 +21,9 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
     // populate widget with data
     @Override
-    protected void setForecastWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
+    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
 
-        JSONObject forecastJson = widgetInitResult.forecastJson();
+        JSONObject forecastJson = widgetInitResult.mainJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
         
@@ -40,7 +40,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 return;
             }
             String firstKey = keys.next();
-            Log.d("Download forecastJson", "First key (geoid): " + firstKey);
+            Log.d("Download mainJson", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
             JSONArray data = forecastJson.getJSONArray(firstKey);
