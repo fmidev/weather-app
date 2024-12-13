@@ -64,7 +64,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     private Handler timeoutHandler;
     private Runnable timeoutRunnable;
-    private static String weatherUrl;
+    protected static String weatherUrl;
     protected static String announcementsUrl;
     protected static String warningsUrl;
 
@@ -142,7 +142,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         this.appWidgetManager = appWidgetManager;
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
 
-        onDataFetchingPostExecute(null, null, remoteViews, pref, appWidgetId);
+        onDataFetchingPostExecute(null, null,null, remoteViews, pref, appWidgetId);
     }
 
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -257,7 +257,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             try {
                 JSONObject result1 = future1.get();
                 JSONArray result2 = future2.get();
-                onDataFetchingPostExecute(result1, result2, remoteViews, pref, widgetId);
+                onDataFetchingPostExecute(result1, result2,null, remoteViews, pref, widgetId);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
                 // NOTE: let's not show error view here, because connection problems with server
@@ -294,7 +294,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             try {
                 JSONObject result1 = future1.get();
                 JSONArray result2 = future2.get();
-                onDataFetchingPostExecute(result1, result2, null, pref, widgetId);
+                onDataFetchingPostExecute(result1, result2,null,null, pref, widgetId);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
                 // NOTE: let's not show error view here, because connection problems with server
@@ -303,7 +303,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         });
     }
 
-    private String fetchGeoid(String latlon) {
+    protected String fetchGeoid(String latlon) {
         try {
             String url = weatherUrl +
                     "?param=geoid,name,region,latitude,longitude,region,country,iso2,localtz&latlon=" +
@@ -327,7 +327,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             return null; // Return null if no "geoid" is found
 
         } catch (JSONException e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "In fetchGeoid exception: " + e.getMessage());
             return null;
         }
     }
@@ -355,21 +355,21 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             String jsonString = fetchJsonString(url);
             return new JSONObject(jsonString);
         } catch (JSONException e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "In base widget fetchMainData exception: " + e.getMessage());
             return null;
         }
     }
 
-    protected void onDataFetchingPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
+    protected void onDataFetchingPostExecute(JSONObject forecastJson, JSONArray announcementsJson, String locationJson, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
 
         // init widget, returns (new) forecast mainJson, widget layout views and theme
         WidgetInitResult widgetInitResult = initWidget(forecastJson, remoteViews, pref, widgetId);
 
         // populate widget UI with data
-        setWidgetUi(announcementsJson, pref, widgetInitResult, widgetId);
+        setWidgetUi(announcementsJson, pref, widgetInitResult, widgetId, locationJson);
     }
 
-    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
+    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId, String locationJson) {
 
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject forecastJson = widgetInitResult.mainJson();
@@ -426,7 +426,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             return;
 
         } catch (final Exception e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "In base widget setWidgetUi exception: " + e.getMessage());
             showErrorView(
                     context,
                     pref,
@@ -448,7 +448,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             String jsonString = fetchJsonString(src);
             return new JSONArray(jsonString);
         } catch (JSONException e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "In base widget fetchJsonArray xception: " + e.getMessage());
             return null;
         }
     }
@@ -475,7 +475,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
                 String jsonstr = responseStrBuilder.toString();
 
-                Log.d("Download json", "fetchData Forecast json: " + jsonstr);
+                Log.d("Download json", "fetchData json: " + jsonstr);
 
                 return jsonstr;
 

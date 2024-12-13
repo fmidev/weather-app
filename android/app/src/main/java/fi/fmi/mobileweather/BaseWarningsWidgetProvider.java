@@ -1,21 +1,17 @@
 package fi.fmi.mobileweather;
 
-import static fi.fmi.mobileweather.Theme.LIGHT;
-
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -31,7 +27,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             return;
         }
 
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
 
         // Get language string
         String language = getLanguageString();
@@ -40,22 +36,39 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 //        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
         String announceUrl = announcementsUrl;
 
-        // get forecast based on geoid
+        // get warnings data bases on latlon
         Future<JSONObject> future1 = executorService.submit(() -> fetchMainData(latlon, language));
         // get announcements
         Future<JSONArray> future2 = executorService.submit(() -> fetchJsonArray(announceUrl));
+        // get location name and region
+        Future<String> future3 = executorService.submit(() -> fetchLocationData(latlon));
 
         executorService.submit(() -> {
             try {
                 JSONObject result1 = future1.get();
                 JSONArray result2 = future2.get();
-                onDataFetchingPostExecute(result1, result2, null, pref, widgetId);
+                String result3 = future3.get();
+                onDataFetchingPostExecute(result1, result2, result3, null, pref, widgetId);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
                 // NOTE: let's not show error view here, because connection problems with server
                 //       seem to be quite frequent and we don't want to show error view every time
             }
         });
+    }
+
+    private String fetchLocationData(String latlon) {
+        // example: ?param=geoid,name,region,latitude,longitude,region,country,iso2,localtz&latlon=62.5,26.2&format=json
+        String url = weatherUrl
+                + "?param=geoid,name,region,latitude,longitude,region,country,iso2,localtz&latlon="
+                + latlon
+                + "&format=json";
+        try {
+            return fetchJsonString(url);
+        } catch (Exception e) {
+            Log.e("Download json", "fetchLocationData exception: " + e.getMessage());
+            return null;
+        }
     }
 
     protected JSONObject fetchMainData(String latlon, String language) {
@@ -75,96 +88,66 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             String jsonString = fetchJsonString(url);
             return new JSONObject(jsonString);
         } catch (JSONException e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "In base warnings fetchMainData exception: " + e.getMessage());
             return null;
         }
     }
 
     @Override
-    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
+    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId, String locationJson) {
 
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        JSONObject warningsJson = widgetInitResult.mainJson();
+        JSONObject warningsJsonObj = widgetInitResult.mainJson();
         String theme = widgetInitResult.theme();
 
-        if (warningsJson == null) {
+        if (warningsJsonObj == null) {
             return;
         }
 
         try {
-            List<Map<String, Object>> warningsList = parseWarningsJson(warningsJson);
 
-            // loop through the warnings and show them in the widget
-            for (int i = 0; i < warningsList.size(); i++) {
-                Map<String, Object> warningData = warningsList.get(i);
-                String type = (String) warningData.get("type");
-                String description = (String) warningData.get("description");
-                String startTime = (String) warningData.get("startTime");
-                String endTime = (String) warningData.get("endTime");
-                /*int windIntensity = (int) warningData.get("windIntensity");
-                String windIntensityUom = (String) warningData.get("windIntensityUom");
-                int windDirection = (int) warningData.get("windDirection");
-                String windDirectionUom = (String) warningData.get("windDirectionUom");
-*/
-                // set the warning data to the widget
-                widgetRemoteViews.setTextViewText(R.id.warningTypeTextView, type);
-//                widgetRemoteViews.setTextViewText(R.id.warningDescriptionTextView, description);
+            Gson gson = new Gson();
+
+            Type locationListType = new TypeToken<List<LocationRecord>>() {}.getType();
+            List<LocationRecord> locations = gson.fromJson(locationJson, locationListType);
+            LocationRecord location = locations.get(0);
+
+            WarningsRecordRoot warningsRecordRoot = gson.fromJson(warningsJsonObj.toString(), WarningsRecordRoot.class);
+            String updated = warningsRecordRoot.data().updated();
+
+            // show a maximum of 3 warnings
+            int numberOfWarningsToShow = Math.min(warningsRecordRoot.data().warnings().size(), 3);
+            for (int i = 0; i < numberOfWarningsToShow; i++) {
+                Warning warning = warningsRecordRoot.data().warnings().get(i);
+                String type = warning.type();
+                String language = warning.language();
+                String severity = warning.severity();
+                String description = warning.description();
+
+                String startTime = warning.duration().startTime();
+                String endTime = warning.duration().endTime();
+
+                // *** set the warning data to the widget
+
+                // Set the location name and region
+                widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name());
+                widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
+
+                // Set the icons in the layout
+                int iconResourceId = WarningsIconMapper.getIconResourceId(type);
+                if (iconResourceId != 0) {
+                    widgetRemoteViews.setImageViewResource(R.id.warningIconImageView0, iconResourceId);
+                }
+
+
+
+               /* widgetRemoteViews.setTextViewText(R.id.warningTypeTextView, type);
+                widgetRemoteViews.setTextViewText(R.id.warningDescriptionTextView, description);
                 widgetRemoteViews.setTextViewText(R.id.warningStartTimeTextView, startTime);
-                widgetRemoteViews.setTextViewText(R.id.warningEndTimeTextView, endTime);
-                /*widgetRemoteViews.setTextViewText(R.id.warningWindIntensityTextView, windIntensity + " " + windIntensityUom);
-                widgetRemoteViews.setTextViewText(R.id.warningWindDirectionTextView, windDirection + " " + windDirectionUom);
-*/
-                // update the widget
-                appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
+                widgetRemoteViews.setTextViewText(R.id.warningEndTimeTextView, endTime);*/
             }
-
-            /*// Get the keys of the JSONObject
-            Iterator<String> keys = warningsJson.keys();
-
-            // Retrieve the first key
-            if (!keys.hasNext()) {
-                return;
-            }
-            String firstKey = keys.next();
-            Log.d("Download json", "First key (geoid): " + firstKey);
-
-            // Extract the JSONArray associated with the first key
-            JSONArray data = warningsJson.getJSONArray(firstKey);
-
-            // Get the first JSONObject with future epochtime from the JSONArray
-            // find first epoch time which is in future
-            int firstFutureTimeIndex = getFirstFutureTimeIndex(data);
-            JSONObject first = data.getJSONObject(firstFutureTimeIndex);
-
-            String name = first.getString("name");
-            String region = first.getString("region");
-
-            // set location name and region
-            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, name+ ",");
-            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, region);
-
-            String temperature = first.getString("temperature");
-            temperature = addPlusIfNeeded(temperature);
-            widgetRemoteViews.setTextViewText(R.id.temperatureTextView, temperature);
-            widgetRemoteViews.setTextViewText(R.id.temperatureUnitTextView, "°C");
-
-            // ** set the weather icon
-
-            String weatherSymbol = first.getString("smartSymbol");
-            int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
-            widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
-
-            // Update time TODO: should be hidden for release
-            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
-
-            // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
-
-            appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
-            return;
-*/
-        } catch (final Exception e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e("Download json", "In base warnings setWidgetUi exception: " + e.getMessage());
             showErrorView(
                     context,
                     pref,
@@ -173,41 +156,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                     widgetId
             );
         }
-
         appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
-    }
-
-    protected List<Map<String, Object>> parseWarningsJson(JSONObject warningsJsonObject) {
-        List<Map<String, Object>> warningDataList = new ArrayList<>();
-        try {
-            JSONObject dataObject = warningsJsonObject.getJSONObject("data");
-            JSONArray warningsArray = dataObject.getJSONArray("warnings");
-
-            for (int i = 0; i < warningsArray.length(); i++) {
-                Map<String, Object> warningData = new HashMap<>();
-
-                JSONObject warning = warningsArray.getJSONObject(i);
-                warningData.put("type", warning.getString("type"));
-                warningData.put("language", warning.getString("language"));
-                warningData.put("severity", warning.getString("severity"));
-                warningData.put("description", warning.getString("description"));
-
-                JSONObject duration = warning.getJSONObject("duration");
-                warningData.put("startTime", duration.getString("startTime"));
-                warningData.put("endTime", duration.getString("endTime"));
-
-                /*JSONObject physical = warning.getJSONObject("physical");
-                warningData.put("windIntensity", physical.getInt("windIntensity"));
-                warningData.put("windIntensityUom", physical.getString("windIntensityUom"));
-                warningData.put("windDirection", physical.getInt("windDirection"));
-                warningData.put("windDirectionUom", physical.getString("windDirectionUom"));
-*/
-                warningDataList.add(warningData);
-            }
-        } catch (JSONException e) {
-            Log.d("Download json", "Exception Json parsing error: " + e.getMessage());
-        }
-        return warningDataList;
     }
 
 }
