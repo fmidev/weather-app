@@ -1,38 +1,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLinearLayout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
     android:padding="16dp">
 
     <LinearLayout
         android:id="@+id/normalLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/locationNameTextView"
-            style="@style/locationName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
-            android:maxWidth="141dp"
-            tools:text="Helsinki," />
+            android:orientation="horizontal"
+            android:tag="hide_if_crisis_message">
+            <TextView
+                android:id="@+id/locationNameTextView"
+                style="@style/locationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_marginRight="4dp"
+                tools:text="Helsinki," />
 
-        <TextView
-            android:id="@+id/locationRegionTextView"
-            style="@style/locationRegion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:maxWidth="141dp"
-            android:textSize="15sp"
-            tools:text="Suomi" />
+            <TextView
+                android:id="@+id/locationRegionTextView"
+                style="@style/locationRegion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textSize="15sp"
+                tools:text="Suomi" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/weatherLayout"
@@ -67,30 +73,6 @@
                 tools:text="°C" />
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/fmiLogoImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/fmi_logo_blue"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/crisisTextView"
-            style="@style/crisis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:paddingStart="6dp"
-            android:paddingTop="0dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="0dp"
-            android:visibility="gone"
-            tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
-            tools:visibility="visible" />
 
     </LinearLayout>
 

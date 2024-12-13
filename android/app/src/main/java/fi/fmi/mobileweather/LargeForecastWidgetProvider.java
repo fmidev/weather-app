@@ -29,10 +29,6 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
         final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 7 : 6;
         Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
 
-        // set colors for views which are specific for large widget
-        // (not set in the initWidget)
-        setLargeWidgetSpecificColors(widgetRemoteViews, theme);
-
         try {
             // Get the keys of the JSONObject
             Iterator<String> keys = forecastJson.keys();
@@ -80,7 +76,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 // ** set the time, temperature and weather icon
 
                 String formattedTime = getFormattedWeatherTime(localTime);
-                timeStep.setTextViewText(R.id.timeTextView, formattedTime);
+                timeStep.setTextViewText(R.id.timeStepTimeTextView, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
                 timeStep.setTextViewText(R.id.temperatureTextView, temperature + "°");
@@ -97,7 +93,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
             }
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
 
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;

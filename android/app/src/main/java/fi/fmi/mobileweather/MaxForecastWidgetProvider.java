@@ -40,7 +40,6 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
         // set colors for views which are specific for large and max widgets
         // (not set in the initWidget)
-        setLargeWidgetSpecificColors(widgetRemoteViews, theme);
         setMaxWidgetSpecificColors(widgetRemoteViews, theme);
 
         try {
@@ -144,7 +143,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
             widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, formattedText);
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
 
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;

@@ -92,26 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:background="#F6F6F7">
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp">
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="34dp"
-                    android:background="#F6F6F7">
-                </LinearLayout>
-            </LinearLayout>
-    
+            <include layout="@layout/large_forecast_background" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,15 +111,12 @@
         <TextView
             android:id="@+id/crisisTextView"
             style="@style/crisis"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:paddingStart="6dp"
-            android:paddingTop="0dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="0dp"
+            android:padding="6dp"
             android:visibility="gone"
             tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
             tools:visibility="visible" />

@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:paddingHorizontal="3dp">
         <TextView
-            android:id="@+id/timeTextView"
+            android:id="@+id/timeStepTimeTextView"
             style="@style/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
