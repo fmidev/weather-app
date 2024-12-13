@@ -4,25 +4,25 @@
     android:id="@+id/forecastTimeStep"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="6dp"
     android:orientation="horizontal">
 
-    <LinearLayout android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="3dp">
         <TextView
             android:id="@+id/timeTextView"
             style="@style/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|top"
+            android:layout_gravity="center_horizontal"
             tools:text="13:00" />
 
         <ImageView
             android:id="@+id/weatherIconImageView"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
             android:contentDescription=""
             tools:src="@drawable/s_32_light" />

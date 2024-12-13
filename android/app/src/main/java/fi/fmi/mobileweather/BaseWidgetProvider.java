@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -645,6 +646,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void setWeatherRowColors(RemoteViews remoteViews, int textColor) {
+        /*
         int[] timeTextViews = {
                 R.id.timeTextView0, R.id.timeTextView1, R.id.timeTextView2,
                 R.id.timeTextView3, R.id.timeTextView4
@@ -660,6 +662,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         for (int textView : temperatureTextViews) {
             remoteViews.setInt(textView, "setTextColor", textColor);
         }
+        */
     }
 
     protected String addPlusIfNeeded(String temperature) {
@@ -846,4 +849,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         );
         return context.getString(symbolId);
     }
+
+    protected int getWidgetWidthInPixels(int appWidgetId) {
+        Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+        int minWidth = options.getInt(appWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        return minWidth;
+    }
+
 }

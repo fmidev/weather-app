@@ -29,9 +29,10 @@
     </style>
 
     <style name="time">
-        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">13sp</item>
+        <item name="android:fontWeight">600</item>
         <item name="android:textColor">@color/primaryBlue</item>
     </style>
 
@@ -43,8 +44,8 @@
 
     <style name="temperatureSmall">
         <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textSize">13sp</item>
+        <item name="android:fontWeight">600</item>
         <item name="android:textColor">@color/primaryBlue</item>
     </style>
 
@@ -78,8 +79,8 @@
     </style>
 
     <style name="verticalLine">
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
         <item name="android:layout_marginStart">6dp</item>
         <item name="android:layout_marginEnd">6dp</item>
         <item name="android:background">#D8E7F2</item>

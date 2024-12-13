@@ -2,6 +2,7 @@ package fi.fmi.mobileweather;
 
 import static fi.fmi.mobileweather.Theme.LIGHT;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.view.View;
@@ -21,11 +22,13 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     // populate widget with data
     @Override
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
-        final int TIMESTEP_COUNT = 5;
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
-        
+
+        final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 7 : 6;
+        Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
+
         // set colors for views which are specific for large widget
         // (not set in the initWidget)
         setLargeWidgetSpecificColors(widgetRemoteViews, theme);
@@ -55,7 +58,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
             widgetRemoteViews.removeAllViews(R.id.hourForecastRowLayout);
 
             // handle the first 5 JsonObjects with future time
-            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + TIMESTEP_COUNT); i++) {
+            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + timeStepCount); i++) {
                 JSONObject forecast = data.getJSONObject(i);
 
                 // if first future index
@@ -86,7 +89,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
                 timeStep.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
-                if (i == TIMESTEP_COUNT - 1) {
+                if (i == timeStepCount - 1) {
                     timeStep.setViewVisibility(R.id.forecastBorder, View.GONE);
                 }
 
