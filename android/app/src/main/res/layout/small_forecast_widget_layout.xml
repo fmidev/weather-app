@@ -47,7 +47,6 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginEnd="7dp"
-                android:contentDescription="TODO"
                 tools:src="@drawable/s_32_light" />
 
             <TextView
@@ -74,6 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/fmi_logo_blue"
+            android:importantForAccessibility="no"
             android:visibility="gone" />
 
         <TextView

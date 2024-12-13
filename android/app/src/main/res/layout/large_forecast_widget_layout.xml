@@ -66,7 +66,6 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -105,7 +104,6 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -143,7 +141,6 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -181,7 +178,6 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -219,7 +215,6 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -240,6 +235,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/fmi_logo_blue"
+            android:importantForAccessibility="no"
             android:visibility="gone" />
 
         <TextView
@@ -293,6 +289,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginEnd="5dp"
+                android:importantForAccessibility="no"
                 android:background="@drawable/ic_info_blue" />
 
             <LinearLayout
