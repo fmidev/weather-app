@@ -134,17 +134,11 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
 
                 // Set the icons in the layout
+                int warningIconImageViewId = context.getResources().getIdentifier("warningIconImageView" + i, "id", context.getPackageName());
                 int iconResourceId = WarningsIconMapper.getIconResourceId(type);
                 if (iconResourceId != 0) {
-                    widgetRemoteViews.setImageViewResource(R.id.warningIconImageView0, iconResourceId);
+                    widgetRemoteViews.setImageViewResource(warningIconImageViewId, iconResourceId);
                 }
-
-
-
-               /* widgetRemoteViews.setTextViewText(R.id.warningTypeTextView, type);
-                widgetRemoteViews.setTextViewText(R.id.warningDescriptionTextView, description);
-                widgetRemoteViews.setTextViewText(R.id.warningStartTimeTextView, startTime);
-                widgetRemoteViews.setTextViewText(R.id.warningEndTimeTextView, endTime);*/
             }
         } catch (Exception e) {
             Log.e("Download json", "In base warnings setWidgetUi exception: " + e.getMessage());
