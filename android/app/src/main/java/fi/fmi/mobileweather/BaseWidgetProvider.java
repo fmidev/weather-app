@@ -159,9 +159,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             // get current location
             requestLocation(context, pref, appWidgetId);
         } else {
-            // use selected location (geoid)
-            executeDataFetchingWithGeoId(selectedLocation, null, pref, appWidgetId);
+            // use selected location
+            executeDataFetchingWithSelectedLocation(selectedLocation, pref, appWidgetId);
         }
+    }
+
+    protected void executeDataFetchingWithSelectedLocation(int geoId, SharedPreferencesHelper pref, int widgetId) {
+        executeDataFetchingWithGeoId(geoId, null, pref, widgetId);
     }
 
     protected void requestLocation(Context context, SharedPreferencesHelper pref, int widgetId) {

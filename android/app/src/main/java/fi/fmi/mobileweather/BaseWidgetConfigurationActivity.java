@@ -10,6 +10,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
+import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.THEME;
 import static fi.fmi.mobileweather.Theme.DARK;
@@ -135,6 +136,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                     JSONObject dump = new JSONObject(impl);
                     JSONArray favorites = new JSONArray(dump.getString("favorites"));
 
+                    Log.d("Widget Update", "Favorites: " + favorites.toString());
+
                     TextView addFavoriteLocationsExplanationTextView = findViewById(R.id.addFavoriteLocationsExplanationTextView);
                     Button addFavoriteLocationsButton = findViewById(R.id.addFavoriteLocationsButton);
 
@@ -159,9 +162,11 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         int geoId = current.getInt("id");
                         String name = current.getString("name");
 
+                        String latlon = getLatLonString(current);
+
                         RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
                         favoriteRadioButton.setText(name);
-                        favoriteRadioButton.setTag(geoId);
+                        favoriteRadioButton.setTag(latlon);
                         favoriteRadioButton.setId(geoId);
                         locationRadioGroup.addView(favoriteRadioButton);
                     }
@@ -170,6 +175,17 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                 }
             }
         }
+    }
+
+    @NonNull
+    private static String getLatLonString(JSONObject current) throws JSONException {
+        double latitude = current.getDouble("lat");
+        double longitude = current.getDouble("lon");
+        // Round to 4 decimals
+        latitude = (double)Math.round(latitude * 10000d) / 10000d;
+        longitude = (double)Math.round(longitude * 10000d) / 10000d;
+        String latlon = latitude + "," + longitude;
+        return latlon;
     }
 
     private void setAppSettingsButton() {
@@ -204,7 +220,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // finalize the widget with the current location
-                finalizeWidget(CURRENT_LOCATION);
+                finalizeWidget(CURRENT_LOCATION, null);
             } else { // Permission denied
                 Toast.makeText(BaseWidgetConfigurationActivity.this, getString(R.string.denied_positioning),
                         Toast.LENGTH_SHORT).show();
@@ -234,8 +250,11 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             }
             else {
                 Log.d("Widget Update", "Selected location: " + selectedLocation);
+                RadioButton selectedRadioButton = findViewById(selectedLocation);
+                String latlon = (String) selectedRadioButton.getTag();
+                Log.d("Widget Update", "Selected latlon: " + latlon);
                 // finalize the widget with the selected location (geoId)
-                finalizeWidget(selectedLocation);
+                finalizeWidget(selectedLocation, latlon);
             }
         }
         if (widgetId == INVALID_APPWIDGET_ID) {
@@ -244,7 +263,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         }
     }
 
-    private void finalizeWidget(int selectedLocation) {
+    private void finalizeWidget(int selectedLocation, String latlon) {
         // Save settings
 
         Context context = getBaseContext();
@@ -253,6 +272,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
         pref.saveInt(SELECTED_LOCATION, selectedLocation);
+        if (latlon != null)
+            pref.saveString(FAVORITE_LATLON, latlon);
 
 
         RadioGroup themeRadioGroup = findViewById(R.id.themeRadioGroup);
@@ -297,7 +318,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             showBackgroundLocationPermissionDialog();
         } else {
-            finalizeWidget(CURRENT_LOCATION);
+            finalizeWidget(CURRENT_LOCATION, null);
         }
     }
 

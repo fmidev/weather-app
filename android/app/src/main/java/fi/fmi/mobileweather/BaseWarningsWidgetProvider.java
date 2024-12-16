@@ -2,6 +2,12 @@ package fi.fmi.mobileweather;
 
 import static android.view.View.VISIBLE;
 
+import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
+import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
+import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
+
+import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -25,6 +31,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
+
+    @Override
+    protected void executeDataFetchingWithSelectedLocation(int geoId, SharedPreferencesHelper pref, int widgetId) {
+        String latlon = pref.getString(FAVORITE_LATLON, null);
+        executeDataFetchingWithLatLon(latlon, pref, widgetId);
+    }
 
     @Override
     protected void executeDataFetchingWithLatLon(String latlon, SharedPreferencesHelper pref, int widgetId) {
@@ -64,16 +76,6 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             }
         });
     }
-
-   /* @Override
-    protected void onDataFetchingPostExecute(JSONObject forecastJson, JSONArray announcementsJson, String locationJson, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
-
-        // init widget, returns (new) forecast mainJson, widget layout views and theme
-        WidgetInitResult widgetInitResult = initWidget(forecastJson, remoteViews, pref, widgetId);
-
-        // populate widget UI with data
-        setWidgetUi(announcementsJson, pref, widgetInitResult, widgetId, locationJson);
-    }*/
 
     private String fetchLocationData(String latlon) {
         // example: ?param=geoid,name,region,latitude,longitude,region,country,iso2,localtz&latlon=62.5,26.2&format=json
