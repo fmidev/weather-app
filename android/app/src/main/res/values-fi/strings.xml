@@ -66,4 +66,6 @@
     <string name="add_more_favorite_locations">Lisää suosikkipaikkoja</string>
     <string name="small_warnings_widget">Varoitukset pieni</string>
     <string name="allow_background_location_service">Salli taustasijaintipalvelu (Salli aina), jotta widget voi käyttää nykyistä sijaintiasi säätietojen näyttämiseen.</string>
+    <string name="warnings">Varoitukset</string>
+    <string name="no_warnings">Ei varoituksia</string>
 </resources>

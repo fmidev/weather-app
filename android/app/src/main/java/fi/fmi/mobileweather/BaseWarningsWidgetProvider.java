@@ -1,5 +1,7 @@
 package fi.fmi.mobileweather;
 
+import static android.view.View.VISIBLE;
+
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -11,7 +13,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -23,7 +31,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
         // if we have no location, do not update the widget
         if (latlon == null || latlon.isEmpty()) {
-            Log.d("Widget Update", "No location data available, widget not updated");
+            Log.d("Warnings Widget Update", "No location data available, widget not updated");
             return;
         }
 
@@ -50,12 +58,22 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 String result3 = future3.get();
                 onDataFetchingPostExecute(result1, result2, result3, null, pref, widgetId);
             } catch (Exception e) {
-                Log.e("Download json", "Exception: " + e.getMessage());
+                Log.e("Warnings Widget Update", "Exception: " + e.getMessage());
                 // NOTE: let's not show error view here, because connection problems with server
                 //       seem to be quite frequent and we don't want to show error view every time
             }
         });
     }
+
+   /* @Override
+    protected void onDataFetchingPostExecute(JSONObject forecastJson, JSONArray announcementsJson, String locationJson, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
+
+        // init widget, returns (new) forecast mainJson, widget layout views and theme
+        WidgetInitResult widgetInitResult = initWidget(forecastJson, remoteViews, pref, widgetId);
+
+        // populate widget UI with data
+        setWidgetUi(announcementsJson, pref, widgetInitResult, widgetId, locationJson);
+    }*/
 
     private String fetchLocationData(String latlon) {
         // example: ?param=geoid,name,region,latitude,longitude,region,country,iso2,localtz&latlon=62.5,26.2&format=json
@@ -66,7 +84,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         try {
             return fetchJsonString(url);
         } catch (Exception e) {
-            Log.e("Download json", "fetchLocationData exception: " + e.getMessage());
+            Log.e("Warnings Widget Update", "fetchLocationData exception: " + e.getMessage());
             return null;
         }
     }
@@ -88,13 +106,15 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             String jsonString = fetchJsonString(url);
             return new JSONObject(jsonString);
         } catch (JSONException e) {
-            Log.e("Download json", "In base warnings fetchMainData exception: " + e.getMessage());
+            Log.e("Warnings Widget Update", "In base warnings fetchMainData exception: " + e.getMessage());
             return null;
         }
     }
 
     @Override
     protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId, String locationJson) {
+
+        Log.d("Warnings Widget Update", "setWidgetUi called");
 
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject warningsJsonObj = widgetInitResult.mainJson();
@@ -113,11 +133,26 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             LocationRecord location = locations.get(0);
 
             WarningsRecordRoot warningsRecordRoot = gson.fromJson(warningsJsonObj.toString(), WarningsRecordRoot.class);
-            String updated = warningsRecordRoot.data().updated();
+//            String updated = warningsRecordRoot.data().updated();
+
+            // filter out the warnings by language
+            Iterator<Warning> iterator = warningsRecordRoot.data().warnings().iterator();
+            while (iterator.hasNext()) {
+                Warning warning = iterator.next();
+                if (!warning.language().equals(getLanguageString())) {
+                    iterator.remove();
+                }
+            }
+
+            Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj.toString());
+            Log.d("Warnings Widget Update", "WarningsRecordRoot: " + warningsRecordRoot.toString());
 
             // show a maximum of 3 warnings
-            int numberOfWarningsToShow = Math.min(warningsRecordRoot.data().warnings().size(), 3);
-            for (int i = 0; i < numberOfWarningsToShow; i++) {
+            int amountOfWarnings = warningsRecordRoot.data().warnings().size();
+            Log.d("Warnings Widget Update", "Amount of warnings: " + amountOfWarnings);
+            int amountOfWarningsToShow = Math.min(amountOfWarnings, 3);
+            Log.d("Warnings Widget Update", "Amount of warnings to show: " + amountOfWarningsToShow);
+            for (int i = 0; i < amountOfWarningsToShow; i++) {
                 Warning warning = warningsRecordRoot.data().warnings().get(i);
                 String type = warning.type();
                 String language = warning.language();
@@ -133,15 +168,60 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name());
                 widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
 
+                // make the warning icon layout visible
+                int warningIconLayoutId = context.getResources().getIdentifier("warningIconLayout" + i, "id", context.getPackageName());
+                widgetRemoteViews.setViewVisibility(warningIconLayoutId, VISIBLE);
+
+                // set the background circles
+                int circleBackgroundId = context.getResources().getIdentifier("warningIconBackgroundImageView" + i, "id", context.getPackageName());
+                Log.d("Warnings Widget Update", "circleBackgroundId: " + circleBackgroundId);
+                int circleBackgroundResourceId = WarningsIconMapper.getCircleBackgroundResourceId(severity);
+                Log.d("Warnings Widget Update", "CircleBackgroundResourceId: " + circleBackgroundResourceId);
+                if (circleBackgroundResourceId != 0) {
+                    widgetRemoteViews.setInt(circleBackgroundId, "setBackgroundResource", circleBackgroundResourceId);
+                }
+
                 // Set the icons in the layout
                 int warningIconImageViewId = context.getResources().getIdentifier("warningIconImageView" + i, "id", context.getPackageName());
+                Log.d("Warnings Widget Update", "warningIconImageViewId: " + warningIconImageViewId);
                 int iconResourceId = WarningsIconMapper.getIconResourceId(type);
+                Log.d("Warnings Widget Update", "IconResourceId: " + iconResourceId);
                 if (iconResourceId != 0) {
                     widgetRemoteViews.setImageViewResource(warningIconImageViewId, iconResourceId);
                 }
+
+                // if there is only one warning, set the description to the first warning
+                if (amountOfWarningsToShow == 1) {
+                    widgetRemoteViews.setTextViewText(R.id.warningTextView, description);
+                    widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWaringTimeFrame(startTime, endTime));
+                    // Show also the time fame
+                    widgetRemoteViews.setViewVisibility(R.id.warningTimeFrameTextView, VISIBLE);
+                    widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWaringTimeFrame(startTime, endTime));
+                }
             }
+
+            // if there is more than one warning, set the warning text to "Warnings (amount)" and do show time frame
+            if (amountOfWarningsToShow > 1) {
+                String warningsText = context.getResources().getString(R.string.warnings) + " (" + amountOfWarnings + ")";
+                widgetRemoteViews.setTextViewText(R.id.warningTextView, warningsText);
+            }
+
+            // if there are no warnings, show "No warnings"
+            if (amountOfWarningsToShow == 0) {
+                String warningsText = context.getResources().getString(R.string.no_warnings);
+                widgetRemoteViews.setTextViewText(R.id.warningTextView, warningsText);
+            }
+
+            // Crisis view
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
+
+            // Update time TODO: should be hidden for release
+            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
+
+            appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
+
         } catch (Exception e) {
-            Log.e("Download json", "In base warnings setWidgetUi exception: " + e.getMessage());
+            Log.e("Warnings Widget Update", "In base warnings setWidgetUi exception: " + e.getMessage());
             showErrorView(
                     context,
                     pref,
@@ -150,7 +230,19 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                     widgetId
             );
         }
-        appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
     }
 
+    protected String getFormattedWaringTimeFrame(String startTime, String endTime) throws ParseException {
+        // Define the input formatter
+        SimpleDateFormat inputFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        // Parse the time strings to Date
+        Date startDate = inputFormatter.parse(startTime);
+        Date endDate = inputFormatter.parse(endTime);
+
+        // Define the output formatter
+        SimpleDateFormat outputFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+        // Format the Dates to the desired format
+        return outputFormatter.format(startDate) + " - " + outputFormatter.format(endDate);
+    }
 }

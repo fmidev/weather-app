@@ -42,4 +42,16 @@ public class WarningsIconMapper {
         }
 
     }
+
+    public static int getCircleBackgroundResourceId(String severity) {
+        if (severity == null) {
+            return 0;
+        }
+
+        return switch (severity) {
+            case "Moderate" -> R.drawable.warning_circle_yellow;
+            case "Severe" -> R.drawable.warning_circle_orange;
+            default -> R.drawable.warning_circle_red;
+        };
+    }
 }
