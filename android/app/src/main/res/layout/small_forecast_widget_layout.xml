@@ -17,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:tag="hide_if_crisis_message">
+            android:orientation="horizontal">
             <TextView
                 android:id="@+id/locationNameTextView"
                 style="@style/locationName"
@@ -53,7 +52,6 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginEnd="7dp"
-                android:contentDescription="TODO"
                 tools:src="@drawable/s_32_light" />
 
             <TextView
