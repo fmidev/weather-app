@@ -157,10 +157,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             for (int i = 0; i < amountOfWarningsToShow; i++) {
                 Warning warning = warningsRecordRoot.data().warnings().get(i);
                 String type = warning.type();
-                String language = warning.language();
                 String severity = warning.severity();
-                String description = warning.description();
-
                 String startTime = warning.duration().startTime();
                 String endTime = warning.duration().endTime();
 
@@ -192,9 +189,10 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                     widgetRemoteViews.setImageViewResource(warningIconImageViewId, iconResourceId);
                 }
 
-                // if there is only one warning, set the description to the first warning
+                // if there is only one warning, set the warning 'title' to the first warning
                 if (amountOfWarningsToShow == 1) {
-                    widgetRemoteViews.setTextViewText(R.id.warningTextView, description);
+                    String warningTitle = context.getString(WarningsTextMapper.getStringResourceId(type));
+                    widgetRemoteViews.setTextViewText(R.id.warningTextView, warningTitle);
                     widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWaringTimeFrame(startTime, endTime));
                     // Show also the time fame
                     widgetRemoteViews.setViewVisibility(R.id.warningTimeFrameTextView, VISIBLE);

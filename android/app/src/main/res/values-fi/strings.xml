@@ -68,4 +68,21 @@
     <string name="allow_background_location_service">Salli taustasijaintipalvelu (Salli aina), jotta widget voi käyttää nykyistä sijaintiasi säätietojen näyttämiseen.</string>
     <string name="warnings">Varoitukset</string>
     <string name="no_warnings">Ei varoituksia</string>
+    <string name="warnings_flood">Tulvavaroitus</string>
+    <string name="warnings_grass_fire_weather">Ruohikkopalovaara</string>
+    <string name="warnings_hot_weather">Hellevaroitus</string>
+    <string name="warnings_forest_fire_weather">Maastopalo&shy;varoitus</string>
+    <string name="warnings_cold_weather">Pakkasvaroitus</string>
+    <string name="warnings_icing">Jäätämisvaroitus</string>
+    <string name="warnings_wind">Tuulivaroitus maa‑alueille</string>
+    <string name="warnings_sea_thunder_storm">Ukkospuuskia merialueilla</string>
+    <string name="warnings_pedestrian_safety">Jalankulkusää</string>
+    <string name="warnings_rain">Sadevaroitus</string>
+    <string name="warnings_sea_water_height_high">Varoitus korkeasta merivedestä</string>
+    <string name="warnings_sea_water_height_shallow">Varoitus matalasta merivedestä</string>
+    <string name="warnings_sea_wave_height">Aallokkovaroitus</string>
+    <string name="warnings_sea_wind">Tuulivaroitus merelle</string>
+    <string name="warnings_thunder_storm">Raju ukonilma</string>
+    <string name="warnings_traffic_weather">Liikennesää</string>
+    <string name="warnings_uv_note">UV-tiedote</string>
 </resources>

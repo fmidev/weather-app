@@ -68,4 +68,21 @@
     <string name="allow_background_location_service">Tillåt att Weather-appens bakgrundsplatstjänst (Tillåt alltid) använder din nuvarande plats för att visa väder nära dig.</string>
     <string name="warnings">Varningar</string>
     <string name="no_warnings">Inga varningar</string>
+    <string name="warnings_flood">Varning för översvämning</string>
+    <string name="warnings_grass_fire_weather">Risk för gräsbrand</string>
+    <string name="warnings_hot_weather">Varning för värmebölja</string>
+    <string name="warnings_forest_fire_weather">Varning för terrängbrand</string>
+    <string name="warnings_cold_weather">Varning för köld</string>
+    <string name="warnings_icing">Varning för nedisning av fartyg</string>
+    <string name="warnings_pedestrian_safety">Fotgängarvädret</string>
+    <string name="warnings_rain">Nederbördsvarning</string>
+    <string name="warnings_wind">Vindvarning för landområden</string>
+    <string name="warnings_sea_thunder_storm">Åskbyar på sjöområden</string>
+    <string name="warnings_sea_water_height_high">Varning för högt vattenstånd</string>
+    <string name="warnings_sea_water_height_shallow">Varning för lågt vattenstånd</string>
+    <string name="warnings_sea_wave_height">Varning för hård sjögång</string>
+    <string name="warnings_sea_wind">Vindvarning för havsområden</string>
+    <string name="warnings_thunder_storm">Varning för våldsamt åskväder</string>
+    <string name="warnings_traffic_weather">Trafikvädret</string>
+    <string name="warnings_uv_note">UV-meddelande</string>
 </resources>

@@ -70,4 +70,21 @@
     <string name="allow_background_location_service">Please allow the Weather app background location service (Allow all the time) use your current location to show weather near you.</string>
     <string name="warnings">Warnings</string>
     <string name="no_warnings">No warnings</string>
+    <string name="warnings_flood">Flood warning</string>
+    <string name="warnings_grass_fire_weather">Grass fire warning</string>
+    <string name="warnings_hot_weather">Heat wave warning</string>
+    <string name="warnings_forest_fire_weather" >Wildfire warning</string>
+    <string name="warnings_cold_weather" >Cold warning</string>
+    <string name="warnings_icing" >Ice accretion warning</string>
+    <string name="warnings_pedestrian_safety" >Pedestrian weather warning</string>
+    <string name="warnings_rain" >Heavy rain warning</string>
+    <string name="warnings_sea_water_height_high" >Warning for high sea level</string>
+    <string name="warnings_sea_water_height_shallow" >Warning for low sea level</string>
+    <string name="warnings_sea_wave_height" >Wave height warning</string>
+    <string name="warnings_sea_wind" >Wind warning for sea areas</string>
+    <string name="warnings_thunder_storm" >Severe thunderstorm warning</string>
+    <string name="warnings_traffic_weather" >Traffic weather warning</string>
+    <string name="warnings_uv_note" >UV advisory</string>
+    <string name="warnings_wind" >Wind warning for land areas</string>
+    <string name="warnings_sea_thunder_storm">Thunderstorm wind gusts for sea areas</string>
 </resources>
