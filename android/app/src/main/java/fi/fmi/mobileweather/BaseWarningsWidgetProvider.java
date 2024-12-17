@@ -1,15 +1,12 @@
 package fi.fmi.mobileweather;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
-import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
-import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
 import static fi.fmi.mobileweather.Theme.LIGHT;
 
-import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -152,6 +149,9 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj.toString());
             Log.d("Warnings Widget Update", "WarningsRecordRoot: " + warningsRecordRoot.toString());
 
+            // reset the warning icon layouts to GONE first
+            resetWidgetUi(widgetRemoteViews);
+
             // show a maximum of 3 warnings
             int amountOfWarnings = warningsRecordRoot.data().warnings().size();
             Log.d("Warnings Widget Update", "Amount of warnings: " + amountOfWarnings);
@@ -201,10 +201,10 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 if (amountOfWarningsToShow == 1) {
                     String warningTitle = context.getString(WarningsTextMapper.getStringResourceId(type));
                     widgetRemoteViews.setTextViewText(R.id.warningTextView, warningTitle);
-                    widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWaringTimeFrame(startTime, endTime));
+                    widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWarningTimeFrame(startTime, endTime));
                     // Show also the time fame
                     widgetRemoteViews.setViewVisibility(R.id.warningTimeFrameTextView, VISIBLE);
-                    widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWaringTimeFrame(startTime, endTime));
+                    widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWarningTimeFrame(startTime, endTime));
                 }
             }
 
@@ -240,14 +240,22 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         }
     }
 
-    protected String getFormattedWaringTimeFrame(String startTime, String endTime) throws ParseException {
+    private void resetWidgetUi(RemoteViews widgetRemoteViews) {
+        for (int i = 0; i < 3; i++) {
+            int warningIconLayoutId = context.getResources().getIdentifier("warningIconLayout" + i, "id", context.getPackageName());
+            widgetRemoteViews.setViewVisibility(warningIconLayoutId, GONE);
+        }
+        widgetRemoteViews.setViewVisibility(R.id.warningTimeFrameTextView, GONE);
+    }
+
+    protected String getFormattedWarningTimeFrame(String startTime, String endTime) throws ParseException {
         // Define the input formatter
         SimpleDateFormat inputFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         // Parse the time strings to Date
         Date startDate = inputFormatter.parse(startTime);
         Date endDate = inputFormatter.parse(endTime);
 
-        // Define the output formatter
+        // Define the output formatter // TODO: if time is not today, add a date
         SimpleDateFormat outputFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
         // Format the Dates to the desired format

@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:paddingTop="6dp"
-            android:textSize="15sp"
+            android:textSize="13sp"
             tools:text="Warnings (3)" />
 
         <TextView
@@ -130,8 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:paddingTop="6dp"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:visibility="gone"
             tools:visibility="visible"
             tools:text="15.00 - 21:00" />
