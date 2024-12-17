@@ -69,7 +69,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 // time at the selected location
                 String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
-                String weatherSymbol = forecast.getString("smartSymbol");
+                int weatherSymbol = forecast.getInt("smartSymbol");
 
                 // get timeTextView0 or timeTextView1 etc. based on i from widgetRemoteViews
                 int timeTextViewId = context.getResources().getIdentifier("timeTextView" + i, "id", context.getPackageName());
@@ -86,6 +86,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
                 widgetRemoteViews.setImageViewResource(weatherIconImageViewId, drawableResId);
+                widgetRemoteViews.setContentDescription(weatherIconImageViewId, getSymbolTranslation(weatherSymbol));
             }
 
             // Update time TODO: should be hidden for release

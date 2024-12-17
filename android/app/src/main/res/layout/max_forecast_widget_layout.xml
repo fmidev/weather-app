@@ -67,7 +67,6 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginEnd="18dp"
-                android:contentDescription="TODO"
                 tools:src="@drawable/s_32_light" />
 
             <TextView
@@ -166,7 +165,6 @@
                     android:layout_above="@id/temperatureTextView0"
                     android:layout_below="@id/timeTextView0"
                     android:layout_gravity="center"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -207,7 +205,6 @@
                     android:layout_above="@id/temperatureTextView1"
                     android:layout_below="@id/timeTextView1"
                     android:layout_gravity="center"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -248,7 +245,6 @@
                     android:layout_above="@id/temperatureTextView2"
                     android:layout_below="@id/timeTextView2"
                     android:layout_gravity="center"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -289,7 +285,6 @@
                     android:layout_above="@id/temperatureTextView3"
                     android:layout_below="@id/timeTextView3"
                     android:layout_gravity="center"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -330,7 +325,6 @@
                     android:layout_above="@id/temperatureTextView4"
                     android:layout_below="@id/timeTextView4"
                     android:layout_gravity="center"
-                    android:contentDescription="TODO"
                     tools:src="@drawable/s_32_light" />
 
                 <TextView
@@ -374,7 +368,6 @@
                 android:layout_height="27dp"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="11dp"
-                android:contentDescription="TODO"
                 android:src="@drawable/fmi_logo_blue" />
 
             <TextView
@@ -417,6 +410,7 @@
                 android:layout_height="22dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="5dp"
+                android:importantForAccessibility="no"
                 android:background="@drawable/ic_info_blue" />
 
             <LinearLayout
