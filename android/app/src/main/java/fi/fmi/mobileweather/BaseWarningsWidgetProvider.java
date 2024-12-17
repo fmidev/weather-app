@@ -2,12 +2,15 @@ package fi.fmi.mobileweather;
 
 import static android.view.View.VISIBLE;
 
+import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
+import static fi.fmi.mobileweather.Theme.LIGHT;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -188,6 +191,11 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 if (iconResourceId != 0) {
                     widgetRemoteViews.setImageViewResource(warningIconImageViewId, iconResourceId);
                 }
+
+                // set warning text and time frame colors based on theme
+                int textColor = theme.equals(LIGHT) ? getPrimaryBlue(context) : Color.WHITE;
+                widgetRemoteViews.setInt(R.id.warningTextView, "setTextColor", textColor);
+                widgetRemoteViews.setInt(R.id.warningTimeFrameTextView, "setTextColor", textColor);
 
                 // if there is only one warning, set the warning 'title' to the first warning
                 if (amountOfWarningsToShow == 1) {

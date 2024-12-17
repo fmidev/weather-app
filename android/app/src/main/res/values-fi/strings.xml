@@ -71,7 +71,7 @@
     <string name="warnings_flood">Tulvavaroitus</string>
     <string name="warnings_grass_fire_weather">Ruohikkopalovaara</string>
     <string name="warnings_hot_weather">Hellevaroitus</string>
-    <string name="warnings_forest_fire_weather">Maastopalo&shy;varoitus</string>
+    <string name="warnings_forest_fire_weather">Maastopalovaroitus</string>
     <string name="warnings_cold_weather">Pakkasvaroitus</string>
     <string name="warnings_icing">Jäätämisvaroitus</string>
     <string name="warnings_wind">Tuulivaroitus maa‑alueille</string>
