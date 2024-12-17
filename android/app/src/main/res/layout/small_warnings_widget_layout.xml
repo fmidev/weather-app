@@ -1,43 +1,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLinearLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:orientation="vertical"
     android:padding="16dp">
 
     <LinearLayout
         android:id="@+id/normalLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/locationNameTextView"
+            style="@style/locationName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/locationNameTextView"
-                style="@style/locationName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:layout_marginRight="4dp"
-                tools:text="Helsinki," />
+            android:maxWidth="141dp"
+            tools:text="Helsinki," />
 
-            <TextView
-                android:id="@+id/locationRegionTextView"
-                style="@style/locationRegion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:textSize="15sp"
-                tools:text="Suomi" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/locationRegionTextView"
+            style="@style/locationRegion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:maxWidth="141dp"
+            android:textSize="15sp"
+            tools:text="Suomi" />
 
         <LinearLayout
             android:id="@+id/warningIconsLayout"
@@ -184,7 +179,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/errorHeaderTextView"
