@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-public class WidgetUpdateWorker extends Worker {
+public class WeatherWidgetsUpdateWorker extends Worker {
 
-    public WidgetUpdateWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+    public WeatherWidgetsUpdateWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
     }
 
@@ -19,7 +19,7 @@ public class WidgetUpdateWorker extends Worker {
     @Override
     public Result doWork() {
         // Perform the widget update here
-        Log.d("Widget Update worker", "Widget update trigger by WorkManager");
+        Log.d("Widget Update worker", "Weather widgets update trigger by WorkManager");
 
         // broadcast the update to the widget
         broadcastUpdate();
@@ -29,10 +29,9 @@ public class WidgetUpdateWorker extends Worker {
     }
 
     private void broadcastUpdate() {
-        Log.d("Widget Update", "Broadcasting widget update");
+        Log.d("Widget Update", "Broadcasting waether forecast widget update");
 
-        // ** broadcast to all widget providers which can receive ACTION_APPWIDGET_AUTO_UPDATE
-        //    (SmallForecastWidgetProvider and LargeForecastWidgetProvider)
+        // ** Broadcast to all weather forcast widget providers which can receive ACTION_APPWIDGET_AUTO_UPDATE
 
         // Create intents for each widget provider class
         Intent smallWidgetIntent = new Intent(getApplicationContext(), SmallForecastWidgetProvider.class)
@@ -41,14 +40,12 @@ public class WidgetUpdateWorker extends Worker {
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
         Intent maxWidgetIntent = new Intent(getApplicationContext(), MaxForecastWidgetProvider.class)
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
-        Intent smallWarningsWidgetIntent = new Intent(getApplicationContext(), SmallWarningsWidgetProvider.class)
-                .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
+
 
         // Send broadcasts
         getApplicationContext().sendBroadcast(smallWidgetIntent);
         getApplicationContext().sendBroadcast(largeWidgetIntent);
         getApplicationContext().sendBroadcast(maxWidgetIntent);
-        getApplicationContext().sendBroadcast(smallWarningsWidgetIntent);
     }
 
 }

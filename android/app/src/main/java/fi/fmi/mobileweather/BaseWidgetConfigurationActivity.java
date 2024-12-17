@@ -9,7 +9,7 @@ import static android.graphics.Color.BLACK;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
+import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.THEME;

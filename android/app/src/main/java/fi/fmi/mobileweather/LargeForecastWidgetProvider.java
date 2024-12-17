@@ -13,6 +13,11 @@ import java.util.Date;
 import java.util.Iterator;
 
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
+
+    @Override
+    protected WidgetType getWidgetType() {
+        return WidgetType.WEATHER_FORECAST;
+    }
     // set the widget layout here
     @Override
     protected int getLayoutResourceId() {

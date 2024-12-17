@@ -2,7 +2,7 @@ package fi.fmi.mobileweather;
 
 import static android.view.View.VISIBLE;
 
-import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
+import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
 

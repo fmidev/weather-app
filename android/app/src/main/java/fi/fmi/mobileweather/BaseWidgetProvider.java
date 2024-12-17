@@ -5,7 +5,7 @@ import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
-import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
+import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.*;
 import static fi.fmi.mobileweather.Theme.*;
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
@@ -68,6 +68,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     protected static String announcementsUrl;
     protected static String warningsUrl;
 
+    protected abstract WidgetType getWidgetType();
     protected abstract int getLayoutResourceId();
 
     // ********** WidgetProvider main methods: **********
@@ -92,10 +93,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         WidgetSetup setup = WidgetSetupManager.getWidgetSetup();
         if (setup != null) {
             // Update the widget with the setup data
-            weatherUrl = setup.getWeather().getApiUrl();
+            weatherUrl = setup.weather().apiUrl();
             // TODO: needs to be language specific
-            announcementsUrl = setup.getAnnouncements().getApi().getFi();
-            warningsUrl = setup.getWarnings().getApiUrl();
+            announcementsUrl = setup.announcements().api().fi();
+            warningsUrl = setup.warnings().apiUrl();
         }
 
         // Get the list of appWidgetIds that have been bound to the given AppWidget provider.
@@ -132,7 +133,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         super.onEnabled(context);
 
         // Schedule an update for the widget (e.g. every 15 minutes)
-        WidgetNotification.scheduleWidgetUpdate(context, this.getClass());
+        WidgetNotification.scheduleWidgetUpdate(context, this.getClass(), getWidgetType());
     }
 
     protected void updateAppWidgetWithoutDataDownload(Context context, AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews remoteViews) {

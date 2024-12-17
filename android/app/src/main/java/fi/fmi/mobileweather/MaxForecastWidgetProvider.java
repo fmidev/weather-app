@@ -21,6 +21,10 @@ import java.util.Iterator;
 import java.util.Locale;
 
 public class MaxForecastWidgetProvider extends BaseWidgetProvider {
+    @Override
+    protected WidgetType getWidgetType() {
+        return WidgetType.WEATHER_FORECAST;
+    }
 
     @Override
     protected int getLayoutResourceId() {

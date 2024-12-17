@@ -51,7 +51,8 @@ public class WarningsIconMapper {
         return switch (severity) {
             case "Moderate" -> R.drawable.warning_circle_yellow;
             case "Severe" -> R.drawable.warning_circle_orange;
-            default -> R.drawable.warning_circle_red;
+            case "Extreme" -> R.drawable.warning_circle_red;
+            default -> R.drawable.warning_circle_white;
         };
     }
 }
