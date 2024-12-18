@@ -270,10 +270,4 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             return outputFormatter.format(startDate) + " - " + outputFormatter.format(endDate);
         }
     }
-
-    @Override
-    public void onDisabled(Context context) {
-        super.onDisabled(context);
-        WidgetNotification.clearWidgetUpdate(context, WARNINGS);
-    }
 }

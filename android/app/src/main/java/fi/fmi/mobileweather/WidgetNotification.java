@@ -47,7 +47,7 @@ public class WidgetNotification {
 
     private static void scheduleWeatherWidgetUpdate(Context context, Constraints constraints) {
         // get the update interval time from the widget setup
-        int weatherRepeatInterval = WidgetSetupManager.getWidgetSetup().weather().interval();
+        int weatherRepeatInterval = WidgetSetupManager.getWidgetSetup(context).weather().interval();
 
         PeriodicWorkRequest weatherUpdateRequest =
                 new PeriodicWorkRequest.Builder(WeatherWidgetsUpdateWorker.class,
@@ -67,7 +67,7 @@ public class WidgetNotification {
 
     private static void scheduleWarningsWidgetUpdate(Context context, Constraints constraints) {
         // get the update interval time from the widget setup
-        int warningsRepeatInterval = WidgetSetupManager.getWidgetSetup().warnings().interval();
+        int warningsRepeatInterval = WidgetSetupManager.getWidgetSetup(context).warnings().interval();
 
         PeriodicWorkRequest weatherUpdateRequest =
                 new PeriodicWorkRequest.Builder(WarningsWidgetsUpdateWorker.class,
@@ -88,8 +88,10 @@ public class WidgetNotification {
     public static void clearWidgetUpdate(Context context, WidgetType widgetType) {
         if (widgetType == WidgetType.WEATHER_FORECAST) {
             WorkManager.getInstance(context).cancelAllWorkByTag(WEATHER_WIDGET_UPDATE_WORK);
+            Log.d("Widget Update", "Weather forecast widgets update cleared");
         } else if (widgetType == WidgetType.WARNINGS) {
             WorkManager.getInstance(context).cancelAllWorkByTag(WARNINGS_WIDGET_UPDATE_WORK);
+            Log.d("Widget Update", "Warnings widgets update cleared");
         } else {
             Log.d("Widget Update", "Widget update could not be cleared, because widget type is not recognized");
         }

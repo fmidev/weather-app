@@ -88,10 +88,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private void updateAfterReceive(Context context) {
         Log.d("Widget Update","updateAfterReceive triggered");
 
-        // Initialize the widget setup
-        WidgetSetupManager.initializeSetup(context);
         // Use the setup data
-        WidgetSetup setup = WidgetSetupManager.getWidgetSetup();
+        WidgetSetup setup = WidgetSetupManager.getWidgetSetup(context);
         if (setup != null) {
             // Update the widget with the setup data
             weatherUrl = setup.weather().apiUrl();
@@ -132,7 +130,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Log.d("Widget Update","onEnabled");
         super.onEnabled(context);
-
+        
         // Schedule an update for the widget (e.g. every 15 minutes)
         WidgetNotification.scheduleWidgetUpdate(context, this.getClass(), getWidgetType());
     }
@@ -155,7 +153,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
-        // Get selected location for the widget
+        // Get selected location for the widget (current location as default)
         int selectedLocation = pref.getInt(SELECTED_LOCATION, CURRENT_LOCATION);
         if (selectedLocation == CURRENT_LOCATION) {
             // get current location
@@ -234,7 +232,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        WidgetNotification.clearWidgetUpdate(context, WEATHER_FORECAST);
+        WidgetNotification.clearWidgetUpdate(context, getWidgetType());
     }
 
     public void executeDataFetchingWithGeoId(int geoId, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {

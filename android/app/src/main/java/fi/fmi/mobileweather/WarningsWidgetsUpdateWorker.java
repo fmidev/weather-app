@@ -20,7 +20,7 @@ public class WarningsWidgetsUpdateWorker extends Worker {
     @Override
     public Result doWork() {
         // Perform the widget update here
-        Log.d("Widget Update worker", "Warnings widgets update trigger by WorkManager");
+        Log.d("Widget Update", "Warnings widgets update trigger by WorkManager");
 
         // broadcast the update to the widget
         broadcastUpdate();
