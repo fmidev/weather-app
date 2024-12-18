@@ -110,7 +110,7 @@ platform :ios do
    # Update signing settings and build iOS app for release
    desc "Build the iOS app for release"
     lane :build_release do |options|
-    xcode_select("/Applications/Xcode_16.2.app")
+    xcode_select("/Applications/Xcode.app")
     app_identifier = ENV["IOS_APP_IDENTIFIER"]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the build
     export_method = "app-store" # specify the export method

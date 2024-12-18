@@ -188,7 +188,7 @@ jobs:
    # needs: test
    name: IOS-build
    # Set MacOs version
-   runs-on: macos-15
+   runs-on: macos-15-large
    # Node version matrix
    strategy:
         matrix:
