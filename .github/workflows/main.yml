@@ -238,9 +238,7 @@ jobs:
 
       # Gem install bundler + bundle install
       - name: Install Ruby Dependencies
-        run: |
-          gem install bundler && bundle install
-          bundle update fastlane
+        run: gem install bundler && bundle install && bundle update fastlane
         working-directory: ios
 
       # Install Pods
