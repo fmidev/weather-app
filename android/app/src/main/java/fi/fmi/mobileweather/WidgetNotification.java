@@ -51,14 +51,16 @@ public class WidgetNotification {
                 new PeriodicWorkRequest.Builder(WeatherWidgetsUpdateWorker.class,
                         weatherRepeatInterval, TimeUnit.MINUTES)
                 .setConstraints(constraints)
-                .addTag("WidgetUpdate")
+                .addTag("WeatherWidgetUpdate")
                 .build();
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                "WidgetUpdate",
+                "WeatherWidgetUpdate",
                 ExistingPeriodicWorkPolicy.REPLACE,
                 weatherUpdateRequest
         );
+
+        Log.d("Widget Update", "Weather widget update scheduled with interval " + weatherRepeatInterval + " minutes");
     }
 
     private static void scheduleWarningsWidgetUpdate(Context context, Constraints constraints) {
@@ -69,14 +71,16 @@ public class WidgetNotification {
                 new PeriodicWorkRequest.Builder(WarningsWidgetsUpdateWorker.class,
                         warningsRepeatInterval, TimeUnit.MINUTES)
                         .setConstraints(constraints)
-                        .addTag("WidgetUpdate")
+                        .addTag("WarningsWidgetUpdate")
                         .build();
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                "WidgetUpdate",
+                "WarningsWidgetUpdate",
                 ExistingPeriodicWorkPolicy.REPLACE,
                 weatherUpdateRequest
         );
+
+        Log.d("Widget Update", "Warnings widget update scheduled with interval " + warningsRepeatInterval + " minutes");
     }
 
     // TODO: Cancel all OK here?
