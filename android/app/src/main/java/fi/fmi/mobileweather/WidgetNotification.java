@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class WidgetNotification {
 
     public static final String ACTION_APPWIDGET_AUTO_UPDATE = "fi.fmi.mobileweather.AUTO_UPDATE";
+    public static final String WEATHER_WIDGET_UPDATE_WORK = "WeatherWidgetUpdate";
+    public static final String WARNINGS_WIDGET_UPDATE_WORK = "WarningsWidgetUpdate";
 
     public static int[] getActiveWidgetIds(Context context, Class<? extends AppWidgetProvider> providerClass) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -51,11 +53,11 @@ public class WidgetNotification {
                 new PeriodicWorkRequest.Builder(WeatherWidgetsUpdateWorker.class,
                         weatherRepeatInterval, TimeUnit.MINUTES)
                 .setConstraints(constraints)
-                .addTag("WeatherWidgetUpdate")
+                .addTag(WEATHER_WIDGET_UPDATE_WORK)
                 .build();
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                "WeatherWidgetUpdate",
+                WEATHER_WIDGET_UPDATE_WORK,
                 ExistingPeriodicWorkPolicy.REPLACE,
                 weatherUpdateRequest
         );
@@ -71,11 +73,11 @@ public class WidgetNotification {
                 new PeriodicWorkRequest.Builder(WarningsWidgetsUpdateWorker.class,
                         warningsRepeatInterval, TimeUnit.MINUTES)
                         .setConstraints(constraints)
-                        .addTag("WarningsWidgetUpdate")
+                        .addTag(WARNINGS_WIDGET_UPDATE_WORK)
                         .build();
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                "WarningsWidgetUpdate",
+                WARNINGS_WIDGET_UPDATE_WORK,
                 ExistingPeriodicWorkPolicy.REPLACE,
                 weatherUpdateRequest
         );
@@ -83,9 +85,14 @@ public class WidgetNotification {
         Log.d("Widget Update", "Warnings widget update scheduled with interval " + warningsRepeatInterval + " minutes");
     }
 
-    // TODO: Cancel all OK here?
-    public static void clearWidgetUpdate(Context context) {
-        WorkManager.getInstance(context).cancelAllWorkByTag("WidgetUpdate");
+    public static void clearWidgetUpdate(Context context, WidgetType widgetType) {
+        if (widgetType == WidgetType.WEATHER_FORECAST) {
+            WorkManager.getInstance(context).cancelAllWorkByTag(WEATHER_WIDGET_UPDATE_WORK);
+        } else if (widgetType == WidgetType.WARNINGS) {
+            WorkManager.getInstance(context).cancelAllWorkByTag(WARNINGS_WIDGET_UPDATE_WORK);
+        } else {
+            Log.d("Widget Update", "Widget update could not be cleared, because widget type is not recognized");
+        }
     }
 
 }

@@ -7,7 +7,10 @@ import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.Theme.LIGHT;
+import static fi.fmi.mobileweather.WidgetType.WARNINGS;
+import static fi.fmi.mobileweather.WidgetType.WEATHER_FORECAST;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -266,5 +269,11 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         } else {
             return outputFormatter.format(startDate) + " - " + outputFormatter.format(endDate);
         }
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        super.onDisabled(context);
+        WidgetNotification.clearWidgetUpdate(context, WARNINGS);
     }
 }

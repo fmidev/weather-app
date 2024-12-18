@@ -9,6 +9,7 @@ import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.*;
 import static fi.fmi.mobileweather.Theme.*;
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
+import static fi.fmi.mobileweather.WidgetType.WEATHER_FORECAST;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -231,17 +232,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
-        WidgetNotification.clearWidgetUpdate(context);
-    }
-
-    @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
-        WidgetNotification.clearWidgetUpdate(context);
+        WidgetNotification.clearWidgetUpdate(context, WEATHER_FORECAST);
     }
-
 
     public void executeDataFetchingWithGeoId(int geoId, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
