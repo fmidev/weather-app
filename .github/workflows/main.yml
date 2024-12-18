@@ -238,7 +238,9 @@ jobs:
 
       # Gem install bundler + bundle install
       - name: Install Ruby Dependencies
-        run: gem install bundler && bundle install
+        run: |
+          gem install bundler && bundle install
+          bundle update fastlane
         working-directory: ios
 
       # Install Pods
@@ -262,12 +264,11 @@ jobs:
         run: |
           git config user.email "actions@users.noreply.github.com"
           git config user.name "actions"
-          bundle update fastlane
           bundle exec fastlane ios increment_version should_commit:true should_push:true
         working-directory: ios
 
       - name: Build & upload iOS binary
-        run: bundle exec fastlane ios build_upload_testflight
+        run: |bundle exec fastlane ios build_upload_testflight
         env:
          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
