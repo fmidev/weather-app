@@ -61,7 +61,6 @@ jobs:
        run: |
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
-
      # Run lint -tests
      - name: Run Eslint tests
        if: ${{ false }}
@@ -103,6 +102,15 @@ jobs:
         run: |
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
+
+      # Get widgetConfig
+      - name: Get widgetConfig
+        env:
+         widgetConfig: ${{ secrets.WIDGETCONFIG }}
+        shell: bash
+        run: |
+         touch widgetConfig.json
+         echo "$widgetConfig" >> widgetConfig.json
 
       # Set up Java 17
       - name: Set up Java 17
@@ -203,6 +211,15 @@ jobs:
         run: |
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
+
+      # Get widgetConfig
+      - name: Get widgetConfig
+        env:
+          widgetConfig: ${{ secrets.WIDGETCONFIG }}
+        shell: bash
+        run: |
+          touch widgetConfig.json
+          echo "$widgetConfig" >> widgetConfig.json
 
       # Install Ruby
       - name: Install Ruby
