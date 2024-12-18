@@ -1,5 +1,6 @@
 package fi.fmi.mobileweather;
 
+import static android.text.format.DateUtils.isToday;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -255,10 +256,15 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         Date startDate = inputFormatter.parse(startTime);
         Date endDate = inputFormatter.parse(endTime);
 
-        // Define the output formatter // TODO: if time is not today, add a date
+        // Define the output formatter
         SimpleDateFormat outputFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat outputFormatterWithDate = new SimpleDateFormat("dd.MM. HH:mm", Locale.getDefault());
 
-        // Format the Dates to the desired format
-        return outputFormatter.format(startDate) + " - " + outputFormatter.format(endDate);
+        // if start date is not today, add the date to the output
+        if (startDate != null && !isToday(startDate.getTime())) {
+            return outputFormatterWithDate.format(startDate) + " - " + outputFormatter.format(endDate);
+        } else {
+            return outputFormatter.format(startDate) + " - " + outputFormatter.format(endDate);
+        }
     }
 }
