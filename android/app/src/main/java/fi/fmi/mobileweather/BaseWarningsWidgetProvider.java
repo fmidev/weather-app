@@ -7,10 +7,7 @@ import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.Theme.LIGHT;
-import static fi.fmi.mobileweather.WidgetType.WARNINGS;
-import static fi.fmi.mobileweather.WidgetType.WEATHER_FORECAST;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -139,7 +136,10 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             LocationRecord location = locations.get(0);
 
             WarningsRecordRoot warningsRecordRoot = gson.fromJson(warningsJsonObj.toString(), WarningsRecordRoot.class);
-//            String updated = warningsRecordRoot.data().updated();
+
+            Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj);
+            Log.d("Warnings Widget Update", "WarningsRecordRoot: " + warningsRecordRoot);
+
 
             // filter out the warnings by language
             Iterator<Warning> iterator = warningsRecordRoot.data().warnings().iterator();
@@ -150,8 +150,20 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 }
             }
 
-            Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj.toString());
-            Log.d("Warnings Widget Update", "WarningsRecordRoot: " + warningsRecordRoot.toString());
+            // filter the warnings that only the ones remain if now is between the start and end date
+            // (perhaps npt this: or if the warning starts today later)
+            Iterator<Warning> iterator2 = warningsRecordRoot.data().warnings().iterator();
+            while (iterator2.hasNext()) {
+                Warning warning = iterator2.next();
+                String startTime = warning.duration().startTime();
+                String endTime = warning.duration().endTime();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                Date startDate = formatter.parse(startTime);
+                Date endDate = formatter.parse(endTime);
+                if (!isNowValid(startDate, endDate) /*&& !startsTodayLater(startDate)*/) {
+                    iterator2.remove();
+                }
+            }
 
             // reset the warning icon layouts to GONE first
             resetWidgetUi(widgetRemoteViews);
@@ -242,6 +254,16 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                     widgetId
             );
         }
+    }
+
+    private boolean startsTodayLater(Date startDate) {
+        // check if the start time is today and in the future
+        return isToday(startDate.getTime()) && startDate.after(new Date());
+    }
+
+    private boolean isNowValid(Date startDate, Date endDate) {
+        Date now = new Date();
+        return now.after(startDate) && now.before(endDate);
     }
 
     private void resetWidgetUi(RemoteViews widgetRemoteViews) {
