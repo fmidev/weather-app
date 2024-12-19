@@ -84,4 +84,4 @@ buck-out/
 .env.production
 android/app/release/
 defaultConfig.ts
-widgetConfig.json
+/widgetConfig.json
