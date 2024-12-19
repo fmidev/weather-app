@@ -187,14 +187,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A21766F22CFF4F99001EEEFF /* Exceptions for "SettingsIntentExtension" folder in "WidgetExtension" target */ = {
+		A21766F22CFF4F99001EEEFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = A2B3FF952CC7D1DA00EC1293 /* WidgetExtension */;
 		};
-		A2E441DA2CFF50AB00802217 /* Exceptions for "SettingsIntentExtension" folder in "SettingsIntentExtension" target */ = {
+		A2E441DA2CFF50AB00802217 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -204,41 +204,9 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				A21766F22CFF4F99001EEEFF /* Exceptions for "SettingsIntentExtension" folder in "WidgetExtension" target */,
-				A2E441DA2CFF50AB00802217 /* Exceptions for "SettingsIntentExtension" folder in "SettingsIntentExtension" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = SettingsIntentExtension;
-			sourceTree = "<group>";
-		};
-		A286CB982CF49C2900812898 /* managers */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = managers;
-			sourceTree = "<group>";
-		};
-		A299E3022CDB746F003502F5 /* views */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = views;
-			sourceTree = "<group>";
-		};
+		A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (A21766F22CFF4F99001EEEFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, A2E441DA2CFF50AB00802217 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SettingsIntentExtension; sourceTree = "<group>"; };
+		A286CB982CF49C2900812898 /* managers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = managers; sourceTree = "<group>"; };
+		A299E3022CDB746F003502F5 /* views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = views; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1239,7 +1207,7 @@
 				CODE_SIGN_ENTITLEMENTS = MobileWeather/MobileWeather.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 261;
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
@@ -1275,7 +1243,7 @@
 				CODE_SIGN_ENTITLEMENTS = MobileWeather/MobileWeather.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 261;
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
@@ -1579,7 +1547,7 @@
 				CODE_SIGN_ENTITLEMENTS = SettingsIntentExtension/SettingsIntentExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 261;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1601,7 +1569,6 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather.SettingsIntentExtension;
@@ -1630,7 +1597,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 261;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1648,7 +1615,6 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather.SettingsIntentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1675,7 +1641,7 @@
 				CODE_SIGN_ENTITLEMENTS = WidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 261;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1727,7 +1693,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 261;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
