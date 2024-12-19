@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -411,11 +412,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
             widgetRemoteViews.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
-            // Update time TODO: should be hidden for release
-            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
-
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, false);
 
             appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
             return;
@@ -568,10 +566,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         return widgetRemoteViews;
     }
 
-    protected void showCrisisViewIfNeeded(JSONArray announcementsJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref) {
+    protected void showCrisisViewIfNeeded(
+        JSONArray announcementsJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref, Boolean hideLocation
+    ) {
         announcementsJson = useNewOrStoredCrisisJsonObject(announcementsJson, pref);
         
-        // example forecastJson: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
+        // example announcement json: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
         if (announcementsJson != null) {
             boolean crisisFound = false;
             try {
@@ -582,6 +582,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                         String content = jsonObject.getString("content");
                         widgetRemoteViews.setViewVisibility(R.id.crisisTextView, VISIBLE);
                         widgetRemoteViews.setTextViewText(R.id.crisisTextView, content);
+                        if (hideLocation) {
+                            widgetRemoteViews.setViewVisibility(R.id.locationNameTextView, GONE);
+                            widgetRemoteViews.setViewVisibility(R.id.locationRegionTextView, GONE);
+                            widgetRemoteViews.setViewVisibility(R.id.timeTextView, GONE);
+                        }
                         crisisFound = true;
                         // if a crisis found, exit the loop
                         break;
@@ -592,6 +597,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             }
             if (!crisisFound) {
                 widgetRemoteViews.setViewVisibility(R.id.crisisTextView, GONE);
+                widgetRemoteViews.setViewVisibility(R.id.locationNameTextView, VISIBLE);
+                widgetRemoteViews.setViewVisibility(R.id.locationRegionTextView, VISIBLE);
+                widgetRemoteViews.setViewVisibility(R.id.timeTextView, VISIBLE);
             }
         } else {
             widgetRemoteViews.setViewVisibility(R.id.crisisTextView, GONE);
@@ -619,14 +627,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void setLargeWidgetSpecificColors(RemoteViews remoteViews, String theme) {
-        if (theme.equals(DARK) || theme.equals(GRADIENT)) {
-            setWeatherRowColors(remoteViews, Color.WHITE);
-        } else { // LIGHT theme
-            setWeatherRowColors(remoteViews, getPrimaryBlue(context));
-        }
-    }
-
     protected void setColors(RemoteViews remoteViews, int backgroundResource, int backgroundColor, int textColor) {
         if (backgroundResource != 0) {
             remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", backgroundResource);
@@ -643,24 +643,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         };
 
         for (int textView : textViews) {
-            remoteViews.setInt(textView, "setTextColor", textColor);
-        }
-    }
-
-    protected void setWeatherRowColors(RemoteViews remoteViews, int textColor) {
-        int[] timeTextViews = {
-                R.id.timeTextView0, R.id.timeTextView1, R.id.timeTextView2,
-                R.id.timeTextView3, R.id.timeTextView4
-        };
-        int[] temperatureTextViews = {
-                R.id.temperatureTextView0, R.id.temperatureTextView1, R.id.temperatureTextView2,
-                R.id.temperatureTextView3, R.id.temperatureTextView4
-        };
-
-        for (int textView : timeTextViews) {
-            remoteViews.setInt(textView, "setTextColor", textColor);
-        }
-        for (int textView : temperatureTextViews) {
             remoteViews.setInt(textView, "setTextColor", textColor);
         }
     }
@@ -849,4 +831,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         );
         return context.getString(symbolId);
     }
+
+    protected int getWidgetWidthInPixels(int appWidgetId) {
+        Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+        int minWidth = options.getInt(appWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        return minWidth;
+    }
+
 }

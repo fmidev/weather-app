@@ -2,14 +2,14 @@ package fi.fmi.mobileweather;
 
 import static fi.fmi.mobileweather.Theme.LIGHT;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Iterator;
 
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
@@ -25,10 +25,9 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
-        
-        // set colors for views which are specific for large widget
-        // (not set in the initWidget)
-        setLargeWidgetSpecificColors(widgetRemoteViews, theme);
+
+        final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 7 : 6;
+        Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
 
         try {
             // Get the keys of the JSONObject
@@ -52,8 +51,10 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 throw new Exception("No future time found or less than 5 future times available");
             }
 
+            widgetRemoteViews.removeAllViews(R.id.hourForecastRowLayout);
+
             // handle the first 5 JsonObjects with future time
-            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + 5); i++) {
+            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + timeStepCount); i++) {
                 JSONObject forecast = data.getJSONObject(i);
 
                 // if first future index
@@ -65,35 +66,34 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                     widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, region);
                 }
 
+                RemoteViews timeStep = new RemoteViews(context.getPackageName(), R.layout.forecast_timestep);
 
                 // time at the selected location
                 String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
                 int weatherSymbol = forecast.getInt("smartSymbol");
 
-                // get timeTextView0 or timeTextView1 etc. based on i from widgetRemoteViews
-                int timeTextViewId = context.getResources().getIdentifier("timeTextView" + i, "id", context.getPackageName());
-                int temperatureTextViewId = context.getResources().getIdentifier("temperatureTextView" + i, "id", context.getPackageName());
-                int weatherIconImageViewId = context.getResources().getIdentifier("weatherIconImageView" + i, "id", context.getPackageName());
-
                 // ** set the time, temperature and weather icon
 
                 String formattedTime = getFormattedWeatherTime(localTime);
-                widgetRemoteViews.setTextViewText(timeTextViewId, formattedTime);
+                timeStep.setTextViewText(R.id.timeStepTimeTextView, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
-                widgetRemoteViews.setTextViewText(temperatureTextViewId, temperature + "°");
+                timeStep.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
-                widgetRemoteViews.setImageViewResource(weatherIconImageViewId, drawableResId);
-                widgetRemoteViews.setContentDescription(weatherIconImageViewId, getSymbolTranslation(weatherSymbol));
+                timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
+                timeStep.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
+
+                if (i == timeStepCount - 1) {
+                    timeStep.setViewVisibility(R.id.forecastBorder, View.GONE);
+                }
+
+                widgetRemoteViews.addView(R.id.hourForecastRowLayout, timeStep);
             }
 
-            // Update time TODO: should be hidden for release
-            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
-
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
 
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;

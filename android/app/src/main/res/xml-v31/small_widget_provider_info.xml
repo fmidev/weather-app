@@ -2,10 +2,14 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="fi.fmi.mobileweather.SmallForecastWidgetConfigurationActivity"
     android:initialLayout="@layout/xs_forecast_widget_layout"
+    android:maxResizeWidth="600dp"
+    android:maxResizeHeight="100dp"
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:previewImage="@drawable/small_widget_preview"
     android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="2"
+    android:targetCellHeight="1"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen">
 </appwidget-provider>
