@@ -2,6 +2,6 @@
 <resources>
 
 <dimen name="widget_margin">0dp</dimen>
-    <dimen name="radiobutton_padding">5dp</dimen>
-    <dimen name="title_padding">10dp</dimen>
+    <dimen name="radiobutton_padding">10dp</dimen>
+    <dimen name="title_padding">14dp</dimen>
 </resources>
