@@ -142,28 +142,11 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
 
             // filter out the warnings by language
-            Iterator<Warning> iterator = warningsRecordRoot.data().warnings().iterator();
-            while (iterator.hasNext()) {
-                Warning warning = iterator.next();
-                if (!warning.language().equals(getLanguageString())) {
-                    iterator.remove();
-                }
-            }
+            filterByLanguage(warningsRecordRoot);
 
             // filter the warnings that only the ones remain if now is between the start and end date
             // (perhaps npt this: or if the warning starts today later)
-            Iterator<Warning> iterator2 = warningsRecordRoot.data().warnings().iterator();
-            while (iterator2.hasNext()) {
-                Warning warning = iterator2.next();
-                String startTime = warning.duration().startTime();
-                String endTime = warning.duration().endTime();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                Date startDate = formatter.parse(startTime);
-                Date endDate = formatter.parse(endTime);
-                if (!isNowValid(startDate, endDate) /*&& !startsTodayLater(startDate)*/) {
-                    iterator2.remove();
-                }
-            }
+            filterByValidity(warningsRecordRoot);
 
             // reset the warning icon layouts to GONE first
             resetWidgetUi(widgetRemoteViews);
@@ -253,6 +236,31 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                     context.getResources().getString(R.string.check_internet_connection),
                     widgetId
             );
+        }
+    }
+
+    private void filterByValidity(WarningsRecordRoot warningsRecordRoot) throws ParseException {
+        Iterator<Warning> iterator2 = warningsRecordRoot.data().warnings().iterator();
+        while (iterator2.hasNext()) {
+            Warning warning = iterator2.next();
+            String startTime = warning.duration().startTime();
+            String endTime = warning.duration().endTime();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+            Date startDate = formatter.parse(startTime);
+            Date endDate = formatter.parse(endTime);
+            if (!isNowValid(startDate, endDate) /*&& !startsTodayLater(startDate)*/) {
+                iterator2.remove();
+            }
+        }
+    }
+
+    private void filterByLanguage(WarningsRecordRoot warningsRecordRoot) {
+        Iterator<Warning> iterator = warningsRecordRoot.data().warnings().iterator();
+        while (iterator.hasNext()) {
+            Warning warning = iterator.next();
+            if (!warning.language().equals(getLanguageString())) {
+                iterator.remove();
+            }
         }
     }
 
