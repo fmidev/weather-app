@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="fi.fmi.mobileweather.MaxForecastWidgetConfigurationActivity"
+    android:initialLayout="@layout/max_forecast_widget_layout"
+    android:minWidth="300dp"
+    android:minHeight="100dp"
+    android:previewImage="@drawable/max_forecast_widget_preview"
+    android:resizeMode="none"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen">
+</appwidget-provider>
