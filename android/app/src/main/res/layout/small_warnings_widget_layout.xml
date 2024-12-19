@@ -62,7 +62,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="TODO"
-                    tools:src="@drawable/warnings_flood" />
+                    tools:src="@drawable/sea_wind"
+                    tools:rotation="60"/>
+
+                <TextView
+                    android:id="@+id/windIntensityTextView0"
+                    style="@style/windIntensity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="12"/>
             </FrameLayout>
 
             <FrameLayout
@@ -86,6 +97,15 @@
                     android:layout_height="match_parent"
                     android:contentDescription="TODO"
                     tools:src="@drawable/warnings_hot_weather" />
+
+                <TextView
+                    android:id="@+id/windIntensityTextView1"
+                    style="@style/windIntensity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="gone" />
+
             </FrameLayout>
 
             <FrameLayout
@@ -109,6 +129,15 @@
                     android:layout_height="match_parent"
                     android:contentDescription="TODO"
                     tools:src="@drawable/warnings_grass_fire_weather" />
+
+                <TextView
+                    android:id="@+id/windIntensityTextView2"
+                    style="@style/windIntensity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="gone" />
+
             </FrameLayout>
 
 

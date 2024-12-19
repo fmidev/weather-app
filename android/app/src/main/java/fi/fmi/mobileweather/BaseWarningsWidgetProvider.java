@@ -185,10 +185,24 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 // Set the icons in the layout
                 int warningIconImageViewId = context.getResources().getIdentifier("warningIconImageView" + i, "id", context.getPackageName());
                 Log.d("Warnings Widget Update", "warningIconImageViewId: " + warningIconImageViewId);
-                int iconResourceId = WarningsIconMapper.getIconResourceId(type);
-                Log.d("Warnings Widget Update", "IconResourceId: " + iconResourceId);
-                if (iconResourceId != 0) {
-                    widgetRemoteViews.setImageViewResource(warningIconImageViewId, iconResourceId);
+                // set the warning icon based on the warning type
+                if (type.equals("seaWind")) {
+                    int windIntensity = warning.physical().windIntensity();
+                    int windDirection = warning.physical().windDirection();
+
+                    widgetRemoteViews.setImageViewResource(warningIconImageViewId, R.drawable.sea_wind);
+                    // rotate the sea wind image view based on the wind direction number
+                    widgetRemoteViews.setFloat(warningIconImageViewId, "setRotation", windDirection);
+                    // add the wind intensity text in front of the image view
+                    int windIntensityTextViewId = context.getResources().getIdentifier("windIntensityTextView" + i, "id", context.getPackageName());
+                    widgetRemoteViews.setViewVisibility(windIntensityTextViewId, VISIBLE);
+                    widgetRemoteViews.setTextViewText(windIntensityTextViewId, Integer.toString(windIntensity));
+                } else {
+                    int iconResourceId = WarningsIconMapper.getIconResourceId(type);
+                    Log.d("Warnings Widget Update", "IconResourceId: " + iconResourceId);
+                    if (iconResourceId != 0) {
+                        widgetRemoteViews.setImageViewResource(warningIconImageViewId, iconResourceId);
+                    }
                 }
 
                 // set warning text and time frame colors based on theme
