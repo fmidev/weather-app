@@ -7,6 +7,7 @@ import {
   Switch,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -58,6 +59,8 @@ type ParamsBottomSheetProps = PropsFromRedux & {
   onClose: () => void;
 };
 
+const disabledStyle = Platform.OS === 'android' ? { opacity: 0.5 } : {};
+
 const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   displayParams,
   updateDisplayParams,
@@ -68,11 +71,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
-  const {
-    data,
-    defaultParameters: [defaultParameter],
-    excludeDayLength,
-  } = Config.get('weather').forecast;
+  const { data, excludeDayLength } = Config.get('weather').forecast;
   const activeParameters = data.flatMap(({ parameters }) => parameters);
 
   const regex = new RegExp(
@@ -170,12 +169,18 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
       </View>
 
       <Switch
+        testID={`weather_params_switch_${param}`}
+        style={
+          displayParams.length === 1 && displayParams[0][1] === param
+            ? disabledStyle
+            : {}
+        }
         trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
         thumbColor={WHITE}
         ios_backgroundColor={GRAYISH_BLUE}
         value={displayParams.some((arr) => arr.includes(param))}
         onValueChange={() => updateDisplayParams([index, param])}
-        disabled={param === defaultParameter}
+        disabled={displayParams.length === 1 && displayParams[0][1] === param}
       />
     </View>
   );
@@ -210,6 +215,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
             {activeConstants.map(rowRenderer)}
             <View style={styles.lastRow}>
               <AccessibleTouchableOpacity
+                testID="weather_params_restore_button"
                 accessible
                 accessibilityRole="button"
                 accessibilityHint={t('paramsBottomSheet.restoreDefaultHint')}

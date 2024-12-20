@@ -10,6 +10,7 @@ import static fi.fmi.mobileweather.Theme.LIGHT;
 import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import org.json.JSONArray;
@@ -38,10 +39,12 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
         JSONObject forecastJson = widgetInitResult.mainJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
+        final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 8 : 7;
+
+        Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
 
         // set colors for views which are specific for large and max widgets
         // (not set in the initWidget)
-        setLargeWidgetSpecificColors(widgetRemoteViews, theme);
         setMaxWidgetSpecificColors(widgetRemoteViews, theme);
 
         try {
@@ -66,8 +69,10 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                 throw new Exception("No future time found or less than 6 future times available");
             }
 
+            widgetRemoteViews.removeAllViews(R.id.forecastContainer);
+
             // handle the first 6 JsonObjects with future time
-            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + 6); i++) {
+            for (int i = firstFutureTimeIndex; i < (firstFutureTimeIndex + timeStepCount); i++) {
                 JSONObject forecast = data.getJSONObject(i);
 
                 // if first future index set main part of the widget
@@ -83,40 +88,40 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                     widgetRemoteViews.setTextViewText(R.id.timeTextView, formattedTime);
 
                     String temperature = forecast.getString("temperature");
-                    String weatherSymbol = forecast.getString("smartSymbol");
+                    int weatherSymbol = forecast.getInt("smartSymbol");
 
                     widgetRemoteViews.setTextViewText(R.id.temperatureTextView, addPlusIfNeeded(temperature) + "°");
 
                     int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
                     widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
+                    widgetRemoteViews.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
                     // next iteration in loop
                     continue;
                 }
+                RemoteViews timeStep = new RemoteViews(context.getPackageName(), R.layout.large_forecast_timestep);
 
                 // time at the selected location
                 String localTime = forecast.getString("localtime");
                 String temperature = forecast.getString("temperature");
-                String weatherSymbol = forecast.getString("smartSymbol");
+                int weatherSymbol = forecast.getInt("smartSymbol");
 
                 // j = weather row layout index
                 int j = i - 1;
 
-                // get timeTextView0 or timeTextView1 etc. based on i from widgetRemoteViews
-                int timeTextViewId = context.getResources().getIdentifier("timeTextView" + j, "id", context.getPackageName());
-                int temperatureTextViewId = context.getResources().getIdentifier("temperatureTextView" + j, "id", context.getPackageName());
-                int weatherIconImageViewId = context.getResources().getIdentifier("weatherIconImageView" + j, "id", context.getPackageName());
-
                 // ** set the time, temperature and weather icon
 
                 String formattedTime = getFormattedWeatherTime(localTime);
-                widgetRemoteViews.setTextViewText(timeTextViewId, formattedTime);
+                timeStep.setTextViewText(R.id.timeTextView, formattedTime);
 
                 temperature = addPlusIfNeeded(temperature);
-                widgetRemoteViews.setTextViewText(temperatureTextViewId, temperature + "°");
+                timeStep.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
-                widgetRemoteViews.setImageViewResource(weatherIconImageViewId, drawableResId);
+                timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
+                timeStep.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
+
+                widgetRemoteViews.addView(R.id.forecastContainer, timeStep);
             }
 
             // Get the current time
@@ -142,9 +147,8 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
             widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, formattedText);
 
-
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
 
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
@@ -166,19 +170,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
     private void setMaxWidgetSpecificColors(RemoteViews remoteViews, String theme) {
         boolean isDarkOrGradient = theme.equals(DARK) || theme.equals(GRADIENT);
         int textColor = isDarkOrGradient ? Color.WHITE : getPrimaryBlue(context);
-        int visibility = isDarkOrGradient ? INVISIBLE : VISIBLE;
-        int clockIcon = isDarkOrGradient ? R.drawable.ic_clock_white : R.drawable.ic_clock_blue;
-        int weatherIcon = isDarkOrGradient ? R.drawable.ic_weather_white : R.drawable.ic_weather_blue;
-        int temperatureIcon = isDarkOrGradient ? R.drawable.ic_temperature_white : R.drawable.ic_temperature_blue;
-        int logoIcon = isDarkOrGradient ? R.drawable.fmi_logo_white : R.drawable.fmi_logo_blue;
-
         remoteViews.setInt(R.id.timeTextView, "setTextColor", textColor);
-        remoteViews.setViewVisibility(R.id.verticalBarImageView0, visibility);
-        remoteViews.setViewVisibility(R.id.verticalBarImageView1, visibility);
-        remoteViews.setImageViewResource(R.id.clockSymbolImageView, clockIcon);
-        remoteViews.setImageViewResource(R.id.weatherSymbolImageView, weatherIcon);
-        remoteViews.setImageViewResource(R.id.temperatureSymbolImageView, temperatureIcon);
-        remoteViews.setImageViewResource(R.id.logoImageView, logoIcon);
     }
 
 }

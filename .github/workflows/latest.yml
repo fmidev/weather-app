@@ -87,6 +87,15 @@ jobs:
          touch defaultConfig.ts
          echo "$defaultConfig" >> defaultConfig.ts
 
+      # Get widgetConfig
+      - name: Get widgetConfig
+        env:
+          widgetConfig: ${{ secrets.WIDGETCONFIG }}
+        shell: bash
+        run: |
+          touch widgetConfig.json
+          echo "$widgetConfig" >> widgetConfig.json
+
       # Set up Java 17
       - name: Set up Java 17
         uses: actions/setup-java@v3

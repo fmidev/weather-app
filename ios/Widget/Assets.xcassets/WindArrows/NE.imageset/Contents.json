@@ -3,6 +3,16 @@
     {
       "filename" : "NE.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "NE-dark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

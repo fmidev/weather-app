@@ -51,12 +51,14 @@ target 'MobileWeather' do
   end
 end
 
-=begin
 target 'WidgetExtension' do
   platform :ios, '17.0'
   pod 'Alamofire', '~> 5.10'
   pod 'AsyncLocationKit', :git => 'https://github.com/AsyncSwift/AsyncLocationKit.git', :tag => '1.6.4'
   pod 'SwiftyJSON', '~> 5.0'
-  pod 'SwiftDate', '~> 7.0'
 end
-=end
+
+target 'SettingsIntentExtension' do
+  platform :ios, '17.0'
+  pod 'SwiftyJSON', '~> 5.0'
+end

@@ -234,7 +234,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             }
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
 
             // Update time TODO: should be hidden for release
             widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
