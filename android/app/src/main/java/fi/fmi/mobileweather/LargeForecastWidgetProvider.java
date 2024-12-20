@@ -13,6 +13,11 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
+
+    @Override
+    protected WidgetType getWidgetType() {
+        return WidgetType.WEATHER_FORECAST;
+    }
     // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
@@ -21,8 +26,9 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
     // populate widget with data
     @Override
-    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
-        JSONObject forecastJson = widgetInitResult.forecastJson();
+    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId, String locationJson) {
+
+        JSONObject forecastJson = widgetInitResult.mainJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
 
@@ -38,7 +44,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 return;
             }
             String firstKey = keys.next();
-            Log.d("Download forecastJson", "First key (geoid): " + firstKey);
+            Log.d("Download mainJson", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
             JSONArray data = forecastJson.getJSONArray(firstKey);
@@ -99,7 +105,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
             return;
 
         } catch (final Exception e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "In large widget setWidgetUi exception: " + e.getMessage());
             showErrorView(
                     context,
                     pref,

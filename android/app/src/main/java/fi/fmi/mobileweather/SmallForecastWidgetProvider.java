@@ -9,6 +9,11 @@ import android.widget.RemoteViews;
 
 public class SmallForecastWidgetProvider extends BaseWidgetProvider {
 
+    @Override
+    protected WidgetType getWidgetType() {
+        return WidgetType.WEATHER_FORECAST;
+    }
+
     // default layout resource ID
     @Override
     protected int getLayoutResourceId() {

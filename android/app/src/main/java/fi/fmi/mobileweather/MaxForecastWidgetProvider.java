@@ -22,6 +22,10 @@ import java.util.Iterator;
 import java.util.Locale;
 
 public class MaxForecastWidgetProvider extends BaseWidgetProvider {
+    @Override
+    protected WidgetType getWidgetType() {
+        return WidgetType.WEATHER_FORECAST;
+    }
 
     @Override
     protected int getLayoutResourceId() {
@@ -30,8 +34,9 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
     // populate widget with data
     @Override
-    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
-        JSONObject forecastJson = widgetInitResult.forecastJson();
+    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId, String locationJson) {
+
+        JSONObject forecastJson = widgetInitResult.mainJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
         final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 8 : 7;
@@ -51,7 +56,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                 return;
             }
             String firstKey = keys.next();
-            Log.d("Download forecastJson", "First key (geoid): " + firstKey);
+            Log.d("Download mainJson", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
             JSONArray data = forecastJson.getJSONArray(firstKey);
@@ -149,7 +154,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
             return;
 
         } catch (final Exception e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "In max widget setWidgetUi exception: " + e.getMessage());
             showErrorView(
                     context,
                     pref,

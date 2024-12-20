@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="fi.fmi.mobileweather.SmallWarningsWidgetConfigurationActivity"
+    android:initialLayout="@layout/small_warnings_widget_layout"
+    android:maxResizeWidth="700dp"
+    android:maxResizeHeight="200dp"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/small_warnings_widget_preview"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen">
+</appwidget-provider>
