@@ -4,6 +4,8 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode;
+import static androidx.core.content.ContextCompat.getSystemService;
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.*;
@@ -12,6 +14,7 @@ import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDA
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.app.UiModeManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -28,6 +31,7 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
 import org.json.JSONArray;
@@ -238,10 +242,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         // Get language string
         String language = getLanguageString();
-        // temporary for testing.
-
-        // TODO: temporary for testing.
-//        String announceUrl = "https://en-beta.ilmatieteenlaitos.fi/api/general/mobileannouncements";
         String announceUrl = announcementsUrl;
 
         // get forecast based on geoId
@@ -408,7 +408,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             // ** set the weather icon
 
             int weatherSymbol = first.getInt("smartSymbol");
-            int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
+            int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol, "drawable", context.getPackageName());
             widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
             widgetRemoteViews.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
@@ -512,10 +512,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // NOTE: default value not set to LIGHT right here because of logging
         String theme = pref.getString(THEME, null);
         Log.d("Widget Update", "Theme from shared preferences: " + theme);
-        if (theme == null) {
-            theme = LIGHT;
-        }
-
         Log.d("Download json", "Theme: " + theme);
 
         // get remote views of widget
@@ -539,8 +535,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     widgetId
             );
         }
-
-        setWidgetColors(widgetRemoteViews, theme);
 
         Log.d("Download json", "Forecast json: " + forecastJson);
         
@@ -603,47 +597,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             }
         } else {
             widgetRemoteViews.setViewVisibility(R.id.crisisTextView, GONE);
-        }
-    }
-
-    private void setWidgetColors(RemoteViews main, String theme) {
-        if (theme.equals(DARK)) {
-            setColors(main,
-                    0,
-                    Color.BLACK,
-                    Color.WHITE);
-        }
-        else if (theme.equals(GRADIENT)) {
-            setColors(main,
-                    R.drawable.gradient_background,
-                    0,
-                    Color.WHITE);
-        }
-        else { // light theme
-            setColors(main,
-                    0,
-                    Color.WHITE,
-                    getPrimaryBlue(context));
-        }
-    }
-
-    protected void setColors(RemoteViews remoteViews, int backgroundResource, int backgroundColor, int textColor) {
-        if (backgroundResource != 0) {
-            remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", backgroundResource);
-        } else {
-            remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
-        }
-
-        int[] textViews = {
-                R.id.locationNameTextView,
-                R.id.locationRegionTextView,
-                R.id.temperatureTextView,
-                R.id.temperatureUnitTextView,
-                R.id.updateTimeTextView
-        };
-
-        for (int textView : textViews) {
-            remoteViews.setInt(textView, "setTextColor", textColor);
         }
     }
 
@@ -742,31 +695,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         widgetRemoteViews.setInt(R.id.errorLayout, "setVisibility", VISIBLE);
         // Hide normal view
         widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", GONE);
-
-        int backgroundColor, textColor, infoIconResId;
-
-        if (theme.equals(DARK)) {
-            backgroundColor = Color.BLACK;
-            textColor = Color.WHITE;
-            infoIconResId = R.drawable.fmi_logo_white;
-        } else if (theme.equals(LIGHT)) {
-            backgroundColor = Color.WHITE;
-            textColor = getPrimaryBlue(context);
-            infoIconResId = R.drawable.fmi_logo_blue;
-        } else { // GRADIENT theme
-            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", R.drawable.gradient_background);
-            textColor = Color.WHITE;
-            infoIconResId = R.drawable.fmi_logo_white;
-            backgroundColor = 0; // No background color needed for gradient
-        }
-
-        if (backgroundColor != 0) {
-            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
-        }
-
-        widgetRemoteViews.setInt(R.id.errorHeaderTextView, "setTextColor", textColor);
-        widgetRemoteViews.setInt(R.id.errorBodyTextView, "setTextColor", textColor);
-        setInfoIconIfNeeded(context, widgetRemoteViews, infoIconResId);
 
         widgetRemoteViews.setTextViewText(R.id.errorHeaderTextView, errorText1);
         widgetRemoteViews.setTextViewText(R.id.errorBodyTextView, errorText2);

@@ -14,7 +14,7 @@
         android:layout_height="20dp"
         android:layout_marginVertical="7dp"
         android:gravity="center_horizontal|center_vertical"
-        android:background="@drawable/ic_clock_blue"
+        android:background="@drawable/ic_clock"
         android:importantForAccessibility="no" />
 
     <ImageView
@@ -23,7 +23,7 @@
         android:layout_height="20dp"
         android:layout_marginVertical="7dp"
         android:gravity="center_horizontal|center_vertical"
-        android:background="@drawable/ic_weather_blue"
+        android:background="@drawable/ic_weather"
         android:importantForAccessibility="no" />
 
     <ImageView
@@ -32,7 +32,7 @@
         android:layout_height="20dp"
         android:layout_marginVertical="7dp"
         android:gravity="center_horizontal|center_vertical"
-        android:background="@drawable/ic_temperature_blue"
+        android:background="@drawable/ic_temperature"
         android:importantForAccessibility="no" />
 
 </LinearLayout>

@@ -3,7 +3,7 @@
     android:id="@+id/mainLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/widgetBackground"
     android:orientation="vertical"
     android:padding="13dp">
 
@@ -58,7 +58,7 @@
                 android:gravity="center_vertical"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                tools:src="@drawable/s_32_light" />
+                tools:src="@drawable/s_32" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

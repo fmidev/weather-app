@@ -15,7 +15,7 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -23,7 +23,7 @@
     <style name="locationRegion">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -33,27 +33,27 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">13sp</item>
         <item name="android:fontWeight">600</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
     <style name="temperature">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">32sp</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
     <style name="temperatureSmall">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">13sp</item>
         <item name="android:fontWeight">600</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
     <style name="temperatureUnit">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">15sp</item>
         <item name="android:letterSpacing">-0.04</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
     <style name="crisis">
@@ -67,14 +67,14 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="errorBody">
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
         <item name="android:ellipsize">end</item>
     </style>
 
@@ -89,13 +89,13 @@
     <style name="currentWeatherTime">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
     <style name="updateTime">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/primaryBlue</item>
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
     <style name="configHeader">
