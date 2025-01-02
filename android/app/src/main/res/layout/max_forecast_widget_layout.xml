@@ -107,18 +107,11 @@
             </RelativeLayout>
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/crisisTextView"
-            style="@style/crisis"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/crisisViewContainer"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:padding="6dp"
-            android:visibility="gone"
-            tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
-            tools:visibility="visible" />
+            android:layout_width="match_parent"
+            android:orientation="vertical" />
 
     </LinearLayout>
 
