@@ -628,11 +628,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void setColors(RemoteViews remoteViews, int backgroundResource, int backgroundColor, int textColor) {
+        /*
         if (backgroundResource != 0) {
             remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", backgroundResource);
         } else {
             remoteViews.setInt(R.id.mainLinearLayout, "setBackgroundColor", backgroundColor);
         }
+        */
 
         int[] textViews = {
                 R.id.locationNameTextView,
