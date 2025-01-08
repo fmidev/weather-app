@@ -256,8 +256,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 onPostExecute(result1, result2, main, pref, widgetId);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
-                // NOTE: let's not show error view here, because connection problems with server
-                //       seem to be quite frequent and we don't want to show error view every time
+                showErrorView(
+                    context,
+                    pref,
+                    context.getResources().getString(R.string.update_failed),
+                    context.getResources().getString(R.string.check_internet_connection),
+                    widgetId
+                );
             }
         });
     }
@@ -293,8 +298,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 onPostExecute(result1, result2, main, pref, widgetId);
             } catch (Exception e) {
                 Log.e("Download json", "Exception: " + e.getMessage());
-                // NOTE: let's not show error view here, because connection problems with server
-                //       seem to be quite frequent and we don't want to show error view every time
+                showErrorView(
+                    context,
+                    pref,
+                    context.getResources().getString(R.string.update_failed),
+                    context.getResources().getString(R.string.check_internet_connection),
+                    widgetId
+                );
             }
         });
     }
@@ -308,6 +318,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
             String jsonString = fetchJsonString(url);
             // Response example: [{"geoid":658994,"name":"Hänniskylä","region":"Konnevesi","latitude":62.50000,"longitude":26.20000,"region":"Konnevesi","country":"Suomi","iso2":"FI","localtz":"Europe/Helsinki"}]
+
+            if (jsonString == null) {
+                return null;
+            }
 
             JSONArray jsonArray = new JSONArray(jsonString);
 
@@ -330,6 +344,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected JSONObject fetchForecast(String geoid, String latlon, String language) {
         String url;
+
+        Log.d("Fetch forecast", "geoid: "+geoid+" latlon: "+latlon);
+
         // if we have geoid use it to get forecast data
         if (geoid != null && !geoid.isEmpty()) {
             url = weatherUrl + "?geoid=" +
@@ -357,6 +374,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void onPostExecute(JSONObject forecastJson, JSONArray announcementsJson, RemoteViews main, SharedPreferencesHelper pref, int widgetId) {
+        Log.d("onPostExecute", String.valueOf(widgetId));
 
         // init widget, returns (new) forecast forecastJson, widget layout views and theme
         WidgetInitResult widgetInitResult = initWidget(forecastJson, main, pref, widgetId);
@@ -730,6 +748,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2, int widgetId) {
+        long updated = pref.getLong("updated", 0);
+
+        if (updated > 0 && (System.currentTimeMillis() - updated < FORECAST_DATA_VALIDITY)) {
+            // No need to show error, because old data is still valid
+            return;
+        }
+
+
         String theme = pref.getString(THEME, DARK);
 
         RemoteViews widgetRemoteViews = new RemoteViews(context.getPackageName(), getLayoutResourceId());
@@ -772,6 +798,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         widgetRemoteViews.setTextViewText(R.id.errorBodyTextView, errorText2);
 
         appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
+        pref.saveLong("updated", System.currentTimeMillis());
     }
 
     private static void setInfoIconIfNeeded(Context context, RemoteViews widgetRemoteViews, int drawableResId) {
@@ -837,5 +864,4 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         int minWidth = options.getInt(appWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         return minWidth;
     }
-
 }
