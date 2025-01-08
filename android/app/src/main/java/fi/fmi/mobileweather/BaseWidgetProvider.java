@@ -574,8 +574,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     String type = jsonObject.getString("type");
                     if (type.equals("Crisis")) {
                         String content = jsonObject.getString("content");
-                        widgetRemoteViews.setViewVisibility(R.id.crisisTextView, VISIBLE);
-                        widgetRemoteViews.setTextViewText(R.id.crisisTextView, content);
+                        RemoteViews crisisView = new RemoteViews(context.getPackageName(), R.layout.crisis_view);
+                        crisisView.setTextViewText(R.id.crisisText, content);
+                        widgetRemoteViews.addView(R.id.crisisViewContainer, crisisView);
+                        widgetRemoteViews.setViewVisibility(R.id.crisisViewContainer, VISIBLE);
+
                         if (hideLocation) {
                             widgetRemoteViews.setViewVisibility(R.id.locationNameTextView, GONE);
                             widgetRemoteViews.setViewVisibility(R.id.locationRegionTextView, GONE);
@@ -596,7 +599,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                 widgetRemoteViews.setViewVisibility(R.id.timeTextView, VISIBLE);
             }
         } else {
-            widgetRemoteViews.setViewVisibility(R.id.crisisTextView, GONE);
+            widgetRemoteViews.setViewVisibility(R.id.crisisViewContainer, GONE);
         }
     }
 

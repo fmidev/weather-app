@@ -77,6 +77,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     @Override
     public void onResume(){
         super.onResume();
+
+        setLocationFavoritesButtons();
     }
 
     public void initListViews() {
@@ -125,11 +127,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         int geoId = current.getInt("id");
                         String name = current.getString("name");
 
-                        RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
-                        favoriteRadioButton.setText(name);
-                        favoriteRadioButton.setTag(geoId);
-                        favoriteRadioButton.setId(geoId);
-                        locationRadioGroup.addView(favoriteRadioButton);
+                        RadioButton existingRadioButton = findViewById(geoId);
+
+                        if (existingRadioButton == null) {
+                            RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
+                            favoriteRadioButton.setText(name);
+                            favoriteRadioButton.setTag(geoId);
+                            favoriteRadioButton.setId(geoId);
+                            locationRadioGroup.addView(favoriteRadioButton);
+                        }
                     }
                 } catch (JSONException e) {
                     Log.d("Widget Update", "Error parsing location favorites: " + e.getMessage());
@@ -144,7 +150,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     private void setAddFavoriteLocationsClickListener() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fmiweather://search"));
         Button addFavoriteLocationsButton = findViewById(R.id.addFavoriteLocationsButton);
         // on click send the intent to open the app main activity
         addFavoriteLocationsButton.setOnClickListener(v -> startActivity(intent));

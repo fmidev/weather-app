@@ -61,6 +61,7 @@
         <item name="android:background">#D0021B</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">#FFFFFF</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="errorHeader">

@@ -6,4 +6,5 @@
   <color name="forecastRowBackgroundColor">#F6F6F7</color>
   <color name="widgetBackground">#FFFFFF</color>
   <color name="textColor">#303193</color>
+  <color name="crisisBackgroundColor">#D0021B</color>
 </resources>
