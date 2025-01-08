@@ -5,7 +5,6 @@ import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
 import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
-import static android.graphics.Color.BLACK;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -23,7 +22,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,7 +40,6 @@ import android.widget.TextView;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 
 import com.reactnativecommunity.asyncstorage.AsyncLocalStorageUtil;
@@ -100,6 +97,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         } else {
             batteryOptimizationWarning.setVisibility(GONE);
         }
+
+        setLocationFavoritesButtons();
     }
 
     public static boolean isPowerSavingEnabled(Context context) {
@@ -159,11 +158,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         int geoId = current.getInt("id");
                         String name = current.getString("name");
 
-                        RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
-                        favoriteRadioButton.setText(name);
-                        favoriteRadioButton.setTag(geoId);
-                        favoriteRadioButton.setId(geoId);
-                        locationRadioGroup.addView(favoriteRadioButton);
+                        RadioButton existingRadioButton = findViewById(geoId);
+
+                        if (existingRadioButton == null) {
+                            RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
+                            favoriteRadioButton.setText(name);
+                            favoriteRadioButton.setTag(geoId);
+                            favoriteRadioButton.setId(geoId);
+                            locationRadioGroup.addView(favoriteRadioButton);
+                        }
                     }
                 } catch (JSONException e) {
                     Log.d("Widget Update", "Error parsing location favorites: " + e.getMessage());
@@ -189,7 +192,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     private void setAddFavoriteLocationsClickListener() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fmiweather://search"));
         Button addFavoriteLocationsButton = findViewById(R.id.addFavoriteLocationsButton);
         // on click send the intent to open the app main activity
         addFavoriteLocationsButton.setOnClickListener(v -> startActivity(intent));
