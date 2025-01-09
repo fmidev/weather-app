@@ -24,8 +24,7 @@
             android:layout_height="28dp"
             android:layout_marginVertical="3dp"
             android:gravity="center_horizontal|center_vertical"
-            android:background="#FFFFFF"
-            tools:src="@drawable/s_32_light" />
+            tools:src="@drawable/s_32" />
 
         <TextView
             android:id="@+id/temperatureTextView"

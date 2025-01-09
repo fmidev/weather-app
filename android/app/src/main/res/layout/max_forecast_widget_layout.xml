@@ -4,7 +4,7 @@
     android:id="@+id/mainLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/widgetBackground"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -67,7 +67,7 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginEnd="18dp"
-                tools:src="@drawable/s_32_light" />
+                tools:src="@drawable/s_32" />
 
             <TextView
                 android:id="@+id/temperatureTextView"
@@ -139,7 +139,7 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="5dp"
                 android:importantForAccessibility="no"
-                android:background="@drawable/ic_info_blue" />
+                android:background="@drawable/ic_info" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

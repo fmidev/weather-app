@@ -3,17 +3,11 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
-import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
-import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
-import static fi.fmi.mobileweather.PrefKey.THEME;
-import static fi.fmi.mobileweather.Theme.DARK;
-import static fi.fmi.mobileweather.Theme.GRADIENT;
-import static fi.fmi.mobileweather.Theme.LIGHT;
 
 import android.Manifest;
 import android.app.Activity;
@@ -29,10 +23,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -87,33 +78,11 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     public void onResume(){
         super.onResume();
 
-        // Android Pie (SDK 28) and later are more restrictive when battery saving is enabled.
-        // Therefore ask user to disable battery saving.
-
-        LinearLayout batteryOptimizationWarning = findViewById(R.id.batteryOptimizationWarning);
-
-        if (isPowerSavingEnabled(this)) {
-            batteryOptimizationWarning.setVisibility(VISIBLE);
-        } else {
-            batteryOptimizationWarning.setVisibility(GONE);
-        }
-
         setLocationFavoritesButtons();
     }
 
-    public static boolean isPowerSavingEnabled(Context context) {
-        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        if (powerManager != null) {
-            return powerManager.isPowerSaveMode();
-        }
-        return false;
-    }
-
     public void initListViews() {
-
         setReadyButton();
-
-        setAppSettingsButton();
 
         // Add app location favorites to location radio button group
         setLocationFavoritesButtons();
@@ -173,17 +142,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                 }
             }
         }
-    }
-
-    private void setAppSettingsButton() {
-        Button appSettingsButton = (Button) findViewById(R.id.appSettingsButton);
-        appSettingsButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openAppDetailsSettings();
-            }
-        });
     }
 
     private void setReadyButton() {
@@ -256,28 +214,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
         pref.saveInt(SELECTED_LOCATION, selectedLocation);
-
-
-        RadioGroup themeRadioGroup = findViewById(R.id.themeRadioGroup);
-        int selectedTheme = themeRadioGroup.getCheckedRadioButtonId();
-        String selectedThemeString;
-
-        if (selectedTheme==R.id.optionLightRadioButton)
-            selectedThemeString = LIGHT;
-        // TODO: Gradient theme GONE in layout file for now because gradient color file not ready yet in this Android project
-        else if (selectedTheme==R.id.optionGradientRadioButton)
-            selectedThemeString = GRADIENT;
-        else if (selectedTheme==R.id.optionDeviceModeRadioButton) {
-            // get the device mode (light or dark)
-            int currentNightMode = getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
-            selectedThemeString = (currentNightMode == UI_MODE_NIGHT_NO) ? LIGHT : DARK;
-        }
-        else
-            selectedThemeString = DARK;
-
-        pref.saveString(THEME, selectedThemeString);
-        Log.d("Widget Update", "Selected theme: " + selectedThemeString);
-
 
         // Send a broadcast to trigger onUpdate()
         int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
