@@ -508,15 +508,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        // Get theme setting.
-        // NOTE: default value not set to LIGHT right here because of logging
-        String theme = pref.getString(THEME, null);
-        Log.d("Widget Update", "Theme from shared preferences: " + theme);
-        if (theme == null) {
-            theme = LIGHT;
-        }
-
-        Log.d("Download json", "Theme: " + theme);
+        boolean gradientBackround = pref.getInt(GRADIENT_BACKGROUND, 0) == 1;
 
         // get remote views of widget
         widgetRemoteViews = getRemoteViews(widgetRemoteViews, widgetId);
@@ -544,11 +536,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         Log.d("Download json", "Forecast json: " + forecastJson);
         
-        WidgetInitResult widgetInitResult = new WidgetInitResult(forecastJson, widgetRemoteViews, theme);
+        WidgetInitResult widgetInitResult = new WidgetInitResult(forecastJson, widgetRemoteViews, gradien);
         return widgetInitResult;
     }
 
-    protected record WidgetInitResult(JSONObject forecastJson, RemoteViews widgetRemoteViews, String theme) {
+    protected record WidgetInitResult(JSONObject forecastJson, RemoteViews widgetRemoteViews, boolean gradientBackground) {
     }
 
     @NonNull

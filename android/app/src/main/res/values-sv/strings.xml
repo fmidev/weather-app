@@ -110,4 +110,6 @@
     <string name="s_71">Enstaka åskskurar</string>
     <string name="s_74">Lokalt åskskurar</string>
     <string name="s_77">Lokalt åskskurar</string>
+    <string name="gradient_background">Gradientbakgrund</string>
+    <string name="gradient_background_limitations">Gradientbakgrund kräver att mörkt tema är aktiverat i systeminställningarna.</string>
 </resources>

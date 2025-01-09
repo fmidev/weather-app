@@ -110,4 +110,6 @@
     <string name="s_71">Isolated thundershowers</string>
     <string name="s_74">Scattered thundershowers</string>
     <string name="s_77">Thundershowers</string>
+    <string name="gradient_background">Gradient background</string>
+    <string name="gradient_background_limitations">Gradient background requires that dark theme is enabled on system settings.</string>
 </resources>
