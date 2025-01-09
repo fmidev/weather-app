@@ -11,10 +11,6 @@ import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.GRADIENT_BACKGROUND;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
-import static fi.fmi.mobileweather.PrefKey.THEME;
-import static fi.fmi.mobileweather.Theme.DARK;
-import static fi.fmi.mobileweather.Theme.GRADIENT;
-import static fi.fmi.mobileweather.Theme.LIGHT;
 
 import android.Manifest;
 import android.app.Activity;
@@ -32,8 +28,6 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -91,30 +85,11 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     public void onResume(){
         super.onResume();
 
-        // Android Pie (SDK 28) and later are more restrictive when battery saving is enabled.
-        // Therefore ask user to disable battery saving.
-
-        LinearLayout batteryOptimizationWarning = findViewById(R.id.batteryOptimizationWarning);
-
-        if (isPowerSavingEnabled(this)) {
-            batteryOptimizationWarning.setVisibility(VISIBLE);
-        } else {
-            batteryOptimizationWarning.setVisibility(GONE);
-        }
-    }
-
-    public static boolean isPowerSavingEnabled(Context context) {
-        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        if (powerManager != null) {
-            return powerManager.isPowerSaveMode();
-        }
-        return false;
+        setLocationFavoritesButtons();
     }
 
     public void initViews() {
-
         setReadyButton();
-        setAppSettingsButton();
 
         // Add app location favorites to location radio button group
         setLocationFavoritesButtons();
@@ -168,11 +143,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         int geoId = current.getInt("id");
                         String name = current.getString("name");
 
-                        RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
-                        favoriteRadioButton.setText(name);
-                        favoriteRadioButton.setTag(geoId);
-                        favoriteRadioButton.setId(geoId);
-                        locationRadioGroup.addView(favoriteRadioButton);
+                        RadioButton existingRadioButton = findViewById(geoId);
+
+                        if (existingRadioButton == null) {
+                            RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
+                            favoriteRadioButton.setText(name);
+                            favoriteRadioButton.setTag(geoId);
+                            favoriteRadioButton.setId(geoId);
+                            locationRadioGroup.addView(favoriteRadioButton);
+                        }
                     }
                 } catch (JSONException e) {
                     Log.d("Widget Update", "Error parsing location favorites: " + e.getMessage());
@@ -181,24 +160,13 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         }
     }
 
-    private void setAppSettingsButton() {
-        Button appSettingsButton = (Button) findViewById(R.id.appSettingsButton);
-        appSettingsButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openAppDetailsSettings();
-            }
-        });
-    }
-
     private void setReadyButton() {
         Button okButton = findViewById(R.id.okButton);
         okButton.setOnClickListener(v -> showAppWidget());
     }
 
     private void setAddFavoriteLocationsClickListener() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fmiweather://search"));
         Button addFavoriteLocationsButton = findViewById(R.id.addFavoriteLocationsButton);
         // on click send the intent to open the app main activity
         addFavoriteLocationsButton.setOnClickListener(v -> startActivity(intent));
@@ -265,7 +233,6 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
         CheckBox themeCheckbox= findViewById(R.id.gradientBackgroundCheckbox);
         boolean gradientBackgroundEnabled = themeCheckbox.isEnabled();
-
         pref.saveInt(GRADIENT_BACKGROUND, gradientBackgroundEnabled ? 1 : 0);
 
         // Send a broadcast to trigger onUpdate()

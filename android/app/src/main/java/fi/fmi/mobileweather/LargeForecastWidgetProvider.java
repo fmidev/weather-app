@@ -24,7 +24,6 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        String theme = widgetInitResult.theme();
 
         final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 7 : 6;
         Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
@@ -81,7 +80,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 temperature = addPlusIfNeeded(temperature);
                 timeStep.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
-                int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
+                int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol, "drawable", context.getPackageName());
                 timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
                 timeStep.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 

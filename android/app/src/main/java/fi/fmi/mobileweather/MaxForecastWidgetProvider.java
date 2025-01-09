@@ -33,14 +33,9 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        String theme = widgetInitResult.theme();
         final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 8 : 7;
 
         Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
-
-        // set colors for views which are specific for large and max widgets
-        // (not set in the initWidget)
-        setMaxWidgetSpecificColors(widgetRemoteViews, theme);
 
         try {
             // Get the keys of the JSONObject
@@ -87,7 +82,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
                     widgetRemoteViews.setTextViewText(R.id.temperatureTextView, addPlusIfNeeded(temperature) + "°");
 
-                    int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
+                    int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol, "drawable", context.getPackageName());
                     widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
                     widgetRemoteViews.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
@@ -112,7 +107,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
                 temperature = addPlusIfNeeded(temperature);
                 timeStep.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
-                int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol + (theme.equals(LIGHT) ? "_light" : "_dark"), "drawable", context.getPackageName());
+                int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol, "drawable", context.getPackageName());
                 timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
                 timeStep.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
@@ -160,12 +155,6 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
-    }
-
-    private void setMaxWidgetSpecificColors(RemoteViews remoteViews, String theme) {
-        boolean isDarkOrGradient = theme.equals(DARK) || theme.equals(GRADIENT);
-        int textColor = isDarkOrGradient ? Color.WHITE : getPrimaryBlue(context);
-        remoteViews.setInt(R.id.timeTextView, "setTextColor", textColor);
     }
 
 }
