@@ -253,6 +253,7 @@ const Navigator: React.FC<Props> = ({
 
   const SearchScreenOptions = {
     ...CommonHeaderOptions,
+    path: 'search',
     headerBackTitleVisible: false,
     headerTitle: t('navigation:search'),
     headerRight: () => (
@@ -430,6 +431,19 @@ const Navigator: React.FC<Props> = ({
     );
   }
 
+  const linking = {
+    prefixes: ['fmiweather://'],
+    config: {
+      screens: {
+        Weather: {
+          screens: {
+            Search: 'search',
+          },
+        },
+      },
+    },
+  };
+
   return (
     <>
       <StatusBar
@@ -438,7 +452,10 @@ const Navigator: React.FC<Props> = ({
       />
       <NavigationContainer
         onStateChange={navigationTabChanged}
-        theme={useDarkTheme ? darkTheme : lightTheme}>
+        theme={useDarkTheme ? darkTheme : lightTheme}
+        /*
+        // @ts-ignore */
+        linking={linking}>
         <Tab.Navigator
           initialRouteName={initialTab}
           screenOptions={{
