@@ -1,16 +1,11 @@
 package fi.fmi.mobileweather;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
-import static fi.fmi.mobileweather.Theme.DARK;
-import static fi.fmi.mobileweather.Theme.GRADIENT;
-import static fi.fmi.mobileweather.Theme.LIGHT;
-
-import android.graphics.Color;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import org.json.JSONArray;
@@ -22,7 +17,6 @@ import java.util.Iterator;
 import java.util.Locale;
 
 public class MaxForecastWidgetProvider extends BaseWidgetProvider {
-
     @Override
     protected int getLayoutResourceId() {
         return R.layout.max_forecast_widget_layout;

@@ -43,9 +43,11 @@
 
                 <CheckBox
                     android:id="@+id/gradientBackgroundCheckbox"
+                    style="@style/configBody"
+                    android:buttonTint="@color/radio_button_selector"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="@string/gradient_background" />
+                    android:text="@string/gradient_background" />
 
                 <TextView
                     style="@style/configBody"

@@ -1,7 +1,12 @@
 package fi.fmi.mobileweather;
 
-import static fi.fmi.mobileweather.Theme.LIGHT;
+import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
+import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -13,7 +18,6 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
-    // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
         return R.layout.large_forecast_widget_layout;

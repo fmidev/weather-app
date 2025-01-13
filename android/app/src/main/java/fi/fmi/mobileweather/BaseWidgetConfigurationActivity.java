@@ -231,8 +231,8 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
         pref.saveInt(SELECTED_LOCATION, selectedLocation);
 
-        CheckBox themeCheckbox= findViewById(R.id.gradientBackgroundCheckbox);
-        boolean gradientBackgroundEnabled = themeCheckbox.isEnabled();
+        CheckBox gradientBackgroundCheckbox= findViewById(R.id.gradientBackgroundCheckbox);
+        boolean gradientBackgroundEnabled = gradientBackgroundCheckbox.isChecked();
         pref.saveInt(GRADIENT_BACKGROUND, gradientBackgroundEnabled ? 1 : 0);
 
         // Send a broadcast to trigger onUpdate()

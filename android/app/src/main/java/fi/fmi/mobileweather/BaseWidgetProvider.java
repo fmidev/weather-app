@@ -2,26 +2,22 @@ package fi.fmi.mobileweather;
 
 
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
+import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode;
-import static androidx.core.content.ContextCompat.getSystemService;
-import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.*;
-import static fi.fmi.mobileweather.Theme.*;
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
 import android.Manifest;
 import android.app.PendingIntent;
-import android.app.UiModeManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,7 +40,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -78,11 +73,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Widget Update","onReceive");
+        Log.d("BaseWidgetProvider","onReceive");
         super.onReceive(context, intent);
         String action = intent.getAction();
         if( action != null &&
-                (action.equals(ACTION_APPWIDGET_AUTO_UPDATE) || action.equals(ACTION_APPWIDGET_UPDATE))) {
+            (action.equals(ACTION_APPWIDGET_AUTO_UPDATE) || action.equals(ACTION_APPWIDGET_UPDATE))) {
             updateAfterReceive(context);
         }
     }
@@ -136,6 +131,17 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
         // Schedule an update for the widget (e.g. every 15 minutes)
         WidgetNotification.scheduleWidgetUpdate(context, this.getClass());
+    }
+
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+
+        Log.d("Widget Update", "Options changed");
+
+        // Update the widget layout without downloading new data
+        RemoteViews views = new RemoteViews(context.getPackageName(), getLayoutResourceId());
+        updateAppWidgetWithoutDataDownload(context, appWidgetManager, appWidgetId, views);
     }
 
     protected void updateAppWidgetWithoutDataDownload(Context context, AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews main) {
@@ -507,10 +513,23 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        boolean gradientBackround = pref.getInt(GRADIENT_BACKGROUND, 0) == 1;
+        int currentNightMode = context.getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
+        boolean gradientBackround = currentNightMode == UI_MODE_NIGHT_YES && pref.getInt(GRADIENT_BACKGROUND, 0) == 1;
 
         // get remote views of widget
         widgetRemoteViews = getRemoteViews(widgetRemoteViews, widgetId);
+
+        Log.d("initWidget", "gradient: "+gradientBackround+" currentNightMode: "+currentNightMode);
+
+        // gradient background is supported in dark mode only
+        if (gradientBackround) {
+            Log.d("initWidget", "Set background gradient");
+            widgetRemoteViews.setInt(
+                R.id.mainLinearLayout, "setBackgroundResource", R.drawable.gradient_background
+            );
+        } else {
+            widgetRemoteViews.setInt(R.id.mainLinearLayout, "setBackgroundResource", R.color.widgetBackground);
+        }
 
         // Show normal view
         widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
@@ -681,8 +700,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2, int widgetId) {
-        String theme = pref.getString(THEME, DARK);
-
         RemoteViews widgetRemoteViews = new RemoteViews(context.getPackageName(), getLayoutResourceId());
 
         Intent intent = new Intent(context, MainActivity.class);
