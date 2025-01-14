@@ -4,9 +4,6 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode;
-import static androidx.core.content.ContextCompat.getSystemService;
-import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.*;
 import static fi.fmi.mobileweather.Theme.*;
@@ -14,14 +11,12 @@ import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDA
 
 import android.Manifest;
 import android.app.PendingIntent;
-import android.app.UiModeManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,8 +26,9 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +54,6 @@ import java.util.concurrent.Future;
 
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
-
     // forecast data valid for 24 hours
     private static final long FORECAST_DATA_VALIDITY = 24 * 60 * 60 * 1000;
     // crisis data valid for 12 hours
@@ -206,8 +201,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                     }
                 };
                 Log.d("Widget Location", "Timer started");
-                // 1 minute timeout
-                timeoutHandler.postDelayed(timeoutRunnable, 60 * 1000); // 1 minute timeout
+                timeoutHandler.postDelayed(timeoutRunnable, 10 * 1000); // 10 second timeout
             } else {
                 Log.d("Widget Location", "Location not available from Location Manager");
                 showLocationErrorView(context, pref, widgetId);
@@ -219,9 +213,10 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     private void showLocationErrorView(Context context, SharedPreferencesHelper pref, int widgetId) {
+        Log.d("ShowLocationErrorView", "Could not get current location");
         showErrorView(context, pref,
                 context.getResources().getString(R.string.positioning_failed),
-                "",
+                context.getResources().getString(R.string.retrying_location_services),
                 widgetId
         );
     }
@@ -706,13 +701,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2, int widgetId) {
         long updated = pref.getLong("updated", 0);
 
+        /*
         if (updated > 0 && (System.currentTimeMillis() - updated < FORECAST_DATA_VALIDITY)) {
+            Log.d("showErrorView", "Data is still valid");
             // No need to show error, because old data is still valid
             return;
         }
-
-
-        String theme = pref.getString(THEME, DARK);
+        */
 
         RemoteViews widgetRemoteViews = new RemoteViews(context.getPackageName(), getLayoutResourceId());
 

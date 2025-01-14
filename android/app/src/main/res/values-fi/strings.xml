@@ -110,4 +110,6 @@
     <string name="s_71">Yksittäisiä ukkoskuuroja</string>
     <string name="s_74">Paikoin ukkoskuuroja</string>
     <string name="s_77">Ukkoskuuroja</string>
+    <string name="location_services_not_allowed">"Paikannusta ei ole sallittu. Salli paikannus asetuksista. "</string>
+    <string name="retrying_location_services">Paikannusta yritetään uudestaan automaattisesti.</string>
 </resources>
