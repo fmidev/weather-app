@@ -11,21 +11,18 @@
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
-        android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/infoIconImageView"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginEnd="5dp"
-            android:importantForAccessibility="no"
-            android:background="@drawable/ic_info" />
-
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/infoIconImageView"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginEnd="5dp"
+                android:importantForAccessibility="no"
+                android:background="@drawable/ic_info" />
             <TextView
                 android:id="@+id/errorHeaderTextView"
                 style="@style/errorHeader"
@@ -35,17 +32,15 @@
                 android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:text="Header"/>
-
-            <TextView
-                android:id="@+id/errorBodyTextView"
-                style="@style/errorBody"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:layout_gravity="center_horizontal"
-                android:text="Text" />
         </LinearLayout>
-
+        <TextView
+            android:id="@+id/errorBodyTextView"
+            style="@style/errorBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:text="Text" />
     </LinearLayout>
     <ImageView
         android:layout_width="wrap_content"

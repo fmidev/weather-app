@@ -1,16 +1,9 @@
 package fi.fmi.mobileweather;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
-import static fi.fmi.mobileweather.Theme.DARK;
-import static fi.fmi.mobileweather.Theme.GRADIENT;
-import static fi.fmi.mobileweather.Theme.LIGHT;
+import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
 
-import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import org.json.JSONArray;
@@ -140,7 +133,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
-
+            pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
 
@@ -149,8 +142,8 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
             showErrorView(
                     context,
                     pref,
-                    "(parsing error) " + context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection),
+                    context.getResources().getString(R.string.update_failed),
+                    getConnectionErrorDescription(),
                     appWidgetId
             );
         }
