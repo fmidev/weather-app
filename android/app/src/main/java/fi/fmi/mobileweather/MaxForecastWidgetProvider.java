@@ -28,13 +28,19 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
         return R.layout.max_forecast_widget_layout;
     }
 
-    // populate widget with data
+    private double getTimestepCount(int widgetWidth) {
+        final int columnWidth = 46;
+        final int margins = 32;
+
+        return Math.floor((widgetWidth - margins)/columnWidth);
+    }
+
     @Override
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
-        final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 8 : 7;
+        final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
 
         Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
 

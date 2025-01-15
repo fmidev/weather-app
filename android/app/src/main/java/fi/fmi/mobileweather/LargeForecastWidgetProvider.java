@@ -20,14 +20,22 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     }
 
     // populate widget with data
+
+    private double getTimestepCount(int widgetWidth) {
+        final int columnWidth = 52;
+        final int margins = 32;
+
+        return Math.floor((widgetWidth - margins)/columnWidth);
+    }
+
     @Override
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         String theme = widgetInitResult.theme();
 
-        final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 7 : 6;
-        Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
+        final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
+        Log.d("setWidgetData", "widget width: "+String.valueOf(getWidgetWidthInPixels(appWidgetId)));
 
         try {
             // Get the keys of the JSONObject
@@ -85,7 +93,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
                 timeStep.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
-                if (i == timeStepCount - 1) {
+                if (i == firstFutureTimeIndex + timeStepCount - 1) {
                     timeStep.setViewVisibility(R.id.forecastBorder, View.GONE);
                 }
 
@@ -111,5 +119,4 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
         appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
     }
-
 }
