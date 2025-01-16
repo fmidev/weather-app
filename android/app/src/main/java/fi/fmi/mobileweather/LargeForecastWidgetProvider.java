@@ -1,6 +1,13 @@
 package fi.fmi.mobileweather;
 
-import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
+import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
+import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
+
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -11,8 +18,9 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
+
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
-    // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
         return R.layout.large_forecast_widget_layout;
@@ -31,7 +39,6 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        String theme = widgetInitResult.theme();
 
         final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
         Log.d("setWidgetData", "widget width: "+String.valueOf(getWidgetWidthInPixels(appWidgetId)));

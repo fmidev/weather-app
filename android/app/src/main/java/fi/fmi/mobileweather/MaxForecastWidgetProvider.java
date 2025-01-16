@@ -1,6 +1,9 @@
 package fi.fmi.mobileweather;
 
-import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 
 import android.text.Html;
 import android.util.Log;
@@ -14,8 +17,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-public class MaxForecastWidgetProvider extends BaseWidgetProvider {
+import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
 
+public class MaxForecastWidgetProvider extends BaseWidgetProvider {
     @Override
     protected int getLayoutResourceId() {
         return R.layout.max_forecast_widget_layout;
@@ -32,7 +36,6 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        String theme = widgetInitResult.theme();
         final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
 
         Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));

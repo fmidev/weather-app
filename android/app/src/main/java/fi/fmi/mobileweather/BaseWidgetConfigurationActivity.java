@@ -3,18 +3,23 @@ package fi.fmi.mobileweather;
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
+import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import static fi.fmi.mobileweather.Location.CURRENT_LOCATION;
+import static fi.fmi.mobileweather.PrefKey.GRADIENT_BACKGROUND;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.UiModeManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
@@ -24,6 +29,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -71,7 +78,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             return;
         }
 
-        initListViews();
+        initViews();
     }
 
     @Override
@@ -81,12 +88,21 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         setLocationFavoritesButtons();
     }
 
-    public void initListViews() {
+    public void initViews() {
         setReadyButton();
 
         // Add app location favorites to location radio button group
         setLocationFavoritesButtons();
         setAddFavoriteLocationsClickListener();
+
+        int currentNightMode = getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
+        LinearLayout themeOptions = findViewById(R.id.themeOptionsContainer);
+        if (currentNightMode == UI_MODE_NIGHT_NO) {
+            // Hide gradient background option
+            themeOptions.setVisibility(GONE);
+        } else {
+            themeOptions.setVisibility(VISIBLE);
+        }
     }
 
     private void setLocationFavoritesButtons() {
@@ -214,6 +230,10 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
         pref.saveInt(SELECTED_LOCATION, selectedLocation);
+
+        CheckBox gradientBackgroundCheckbox= findViewById(R.id.gradientBackgroundCheckbox);
+        boolean gradientBackgroundEnabled = gradientBackgroundCheckbox.isChecked();
+        pref.saveInt(GRADIENT_BACKGROUND, gradientBackgroundEnabled ? 1 : 0);
 
         // Send a broadcast to trigger onUpdate()
         int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);

@@ -110,6 +110,8 @@
     <string name="s_71">Isolated thundershowers</string>
     <string name="s_74">Scattered thundershowers</string>
     <string name="s_77">Thundershowers</string>
+    <string name="gradient_background">Gradient background</string>
+    <string name="gradient_background_limitations">Gradient background requires that dark theme is enabled on system settings.</string>
     <string name="location_services_not_allowed">Location services are not allowed. Please enable them in the settings.</string>
     <string name="retrying_location_services">Retrying location services automatically.</string>
     <string name="automatic_retry">Weather updates will refresh when the internet connection is back.</string>

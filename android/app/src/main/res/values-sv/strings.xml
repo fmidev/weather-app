@@ -110,6 +110,8 @@
     <string name="s_71">Enstaka åskskurar</string>
     <string name="s_74">Lokalt åskskurar</string>
     <string name="s_77">Lokalt åskskurar</string>
+    <string name="gradient_background">Gradientbakgrund</string>
+    <string name="gradient_background_limitations">Gradientbakgrund kräver att mörkt tema är aktiverat i systeminställningarna.</string>
     <string name="location_services_not_allowed">Platstjänster är inte tillåtna. Aktivera dem i inställningarna.</string>
     <string name="retrying_location_services">Platstjänster försöks automatiskt på nytt.</string>
     <string name="automatic_retry">Vädredata uppdateras när internet är tillbaka.</string>
