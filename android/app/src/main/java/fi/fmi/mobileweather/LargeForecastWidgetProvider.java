@@ -1,8 +1,7 @@
 package fi.fmi.mobileweather;
 
-import static fi.fmi.mobileweather.Theme.LIGHT;
+import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
 
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.view.View;
@@ -102,7 +101,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
-
+            pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
 
@@ -111,8 +110,8 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
             showErrorView(
                     context,
                     pref,
-                    "(parsing error) " + context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection),
+                    context.getResources().getString(R.string.update_failed),
+                    getConnectionErrorDescription(),
                     appWidgetId
             );
         }
