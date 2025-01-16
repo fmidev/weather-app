@@ -248,7 +248,7 @@ struct MediumWidgetView : View {
             if (entry.settings.showLogo) {
               Image(decorative: "FMI").resizable().frame(width: 56, height: 27)
             }
-          }.padding(.horizontal, 5)
+          }.padding(.horizontal, 10)
         }
         Spacer()
         ForecastRow(location: entry.location, timeSteps: entry.timeSteps)
@@ -267,37 +267,41 @@ struct LargeWidgetView : View {
   @Environment(\.colorScheme) var colorScheme
 
   var body: some View {
-    if (entry.error != nil) {
-      ForecastErrorView(error: entry.error!, size: .large)
-    } else {
-      VStack {
-        Text(
-          "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
-        ).style(.location)
-        Text("at \(entry.timeSteps[0].formatTime(timezone: entry.location.timezone))")
-          .style(.largeTime)
-        NextHourForecast(timeStep: entry.timeSteps[0], large: true)
-        if (colorScheme == .dark) {
-          Divider().background(.white)
-        }
-        LargeNextHoursForecast(
-          timeSteps: entry.timeSteps,
-          timezone: entry.location.timezone
-        )
-        if (entry.crisisMessage != nil) {
-          Spacer()
-          CrisisMessage(message: entry.crisisMessage!, large: true)
-          Spacer()
-        } else {
-          HStack {
-            Image(decorative: "FMI").resizable().frame(width: 56, height: 27)
-            Spacer()
-            Text("Updated at **\(entry.formatUpdated())**").style(.updatedTime)
-            Spacer()
-            Spacer().frame(width: 56, height: 27)
+    GeometryReader { geometry in
+      if (entry.error != nil) {
+        ForecastErrorView(error: entry.error!, size: .large)
+      } else {
+        VStack {
+          Text(
+            "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
+          ).style(.location)
+          Text("at \(entry.timeSteps[0].formatTime(timezone: entry.location.timezone))")
+            .style(.largeTime)
+          NextHourForecast(timeStep: entry.timeSteps[0], large: geometry.size.height >= 320)
+          if (colorScheme == .dark) {
+            Divider().background(.white)
           }
-        }
-      }.padding(.horizontal, 8).modifier(TextModifier())
+          LargeNextHoursForecast(
+            timeSteps: entry.timeSteps,
+            timezone: entry.location.timezone,
+            transparent: entry.settings.theme == "gradient"
+          )
+          if (entry.crisisMessage != nil) {
+            Spacer()
+            CrisisMessage(message: entry.crisisMessage!)
+            Spacer()
+          } else {
+            Spacer()
+            HStack {
+              Image(decorative: "FMI").resizable().frame(width: 56, height: 27)
+              Spacer()
+              Text("Updated at **\(entry.formatUpdated())**").style(.updatedTime)
+              Spacer()
+              Spacer().frame(width: 56, height: 27)
+            }
+          }
+        }.padding(.horizontal, 8).modifier(TextModifier())
+      }
     }
   }
 }
