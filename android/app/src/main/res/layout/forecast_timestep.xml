@@ -7,10 +7,9 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="43dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="3dp">
+        android:orientation="vertical">
         <TextView
             android:id="@+id/timeStepTimeTextView"
             style="@style/time"

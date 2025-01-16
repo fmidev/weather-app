@@ -97,8 +97,16 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         if (setup != null) {
             // Update the widget with the setup data
             weatherUrl = setup.getWeather().getApiUrl();
-            // TODO: needs to be language specific
-            announcementsUrl = setup.getAnnouncements().getApi().getFi();
+
+            if (getLanguageString() == "fi") {
+                announcementsUrl = setup.getAnnouncements().getApi().getFi();
+            } else if (getLanguageString() == "sv") {
+                announcementsUrl = setup.getAnnouncements().getApi().getSv();
+            } else {
+                announcementsUrl = setup.getAnnouncements().getApi().getEn();
+            }
+
+            Log.d("updateAfterReceive", "announcementsUrl: "+announcementsUrl);
         }
 
         // Get the list of appWidgetIds that have been bound to the given AppWidget provider.
@@ -403,7 +411,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             String temperature = first.getString("temperature");
             temperature = addPlusIfNeeded(temperature);
             widgetRemoteViews.setTextViewText(R.id.temperatureTextView, temperature);
-            widgetRemoteViews.setTextViewText(R.id.temperatureUnitTextView, "°C");
+            widgetRemoteViews.setTextViewText(R.id.temperatureUnitTextView, getWidgetWidthInPixels(widgetId) < 140 ? "°" :  "°C");
 
             // ** set the weather icon
 
