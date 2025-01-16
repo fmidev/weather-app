@@ -1,8 +1,14 @@
 package fi.fmi.mobileweather;
 
-import static fi.fmi.mobileweather.Theme.LIGHT;
+import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
+import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.view.View;
@@ -12,22 +18,30 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
+
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
-    // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
         return R.layout.large_forecast_widget_layout;
     }
 
     // populate widget with data
+
+    private double getTimestepCount(int widgetWidth) {
+        final int columnWidth = 52;
+        final int margins = 32;
+
+        return Math.floor((widgetWidth - margins)/columnWidth);
+    }
+
     @Override
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        String theme = widgetInitResult.theme();
 
-        final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 7 : 6;
-        Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
+        final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
+        Log.d("setWidgetData", "widget width: "+String.valueOf(getWidgetWidthInPixels(appWidgetId)));
 
         try {
             // Get the keys of the JSONObject
@@ -85,7 +99,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 timeStep.setImageViewResource(R.id.weatherIconImageView, drawableResId);
                 timeStep.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
-                if (i == timeStepCount - 1) {
+                if (i == firstFutureTimeIndex + timeStepCount - 1) {
                     timeStep.setViewVisibility(R.id.forecastBorder, View.GONE);
                 }
 
@@ -94,7 +108,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
-
+            pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
 
@@ -103,13 +117,12 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
             showErrorView(
                     context,
                     pref,
-                    "(parsing error) " + context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection),
+                    context.getResources().getString(R.string.update_failed),
+                    getConnectionErrorDescription(),
                     appWidgetId
             );
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
     }
-
 }

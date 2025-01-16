@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class WidgetNotification {
 
     public static final String ACTION_APPWIDGET_AUTO_UPDATE = "fi.fmi.mobileweather.AUTO_UPDATE";
+    public static final int DEFAULT_INTERVAL = 15;
+    public static final String WORK_NAME = "ForecastWidgetUpdateWork";
 
     public static int[] getActiveWidgetIds(Context context, Class<? extends AppWidgetProvider> providerClass) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -26,23 +28,33 @@ public class WidgetNotification {
     public static void scheduleWidgetUpdate(Context context, Class<? extends AppWidgetProvider> providerClass) {
         int[] widgetIds = getActiveWidgetIds(context, providerClass);
         if (widgetIds != null && widgetIds.length > 0) {
-            Log.d("Widget Update", "Trying to schedule widget update");
+            Log.d("scheduleWidgetUpdate", "Trying to schedule widget update");
             Constraints constraints = new Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .build();
 
             // get the update interval time from the widget setup
-            int repeatInterval = WidgetSetupManager.getWidgetSetup().getWeather().getInterval();
+
+            int repeatInterval = DEFAULT_INTERVAL;
+
+            try {
+                WidgetSetupManager.initializeSetup(context);
+                repeatInterval = WidgetSetupManager.getWidgetSetup().getWeather().getInterval();
+            } catch(Exception e) {
+                Log.e("scheduleWidgetUpdate", "Failed to read interval: "+e.getMessage());
+            }
+
+            Log.d("scheduleWidgetUpdate", "Interval: "+repeatInterval);
 
             PeriodicWorkRequest updateRequest =
                     new PeriodicWorkRequest.Builder(WidgetUpdateWorker.class,
                             repeatInterval, TimeUnit.MINUTES)
                     .setConstraints(constraints)
-                    .addTag("WidgetUpdate")
+                    .addTag("ForecastWidgetUpdate")
                     .build();
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                    "WidgetUpdate",
+                    WORK_NAME,
                     ExistingPeriodicWorkPolicy.REPLACE,
                     updateRequest
             );

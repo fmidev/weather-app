@@ -76,31 +76,12 @@
 
     <LinearLayout
         android:id="@+id/errorLayout"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
         android:orientation="vertical"
         tools:visibility="visible">
-
-        <TextView
-            android:id="@+id/errorHeaderTextView"
-            style="@style/errorHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
-            tools:text="Could not update weather data" />
-
-        <TextView
-            android:id="@+id/errorBodyTextView"
-            style="@style/errorBody"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            tools:text="Please check your internet connection." />
-
+        <include layout="@layout/small_errorview" />
     </LinearLayout>
 
 </LinearLayout>

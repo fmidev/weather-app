@@ -3,9 +3,10 @@
     android:configure="fi.fmi.mobileweather.MaxForecastWidgetConfigurationActivity"
     android:initialLayout="@layout/max_forecast_widget_layout"
     android:previewImage="@drawable/large_forecast_review"
-    android:resizeMode="none"
+    android:resizeMode="horizontal"
     android:targetCellWidth="4"
     android:targetCellHeight="2"
+    android:minResizeWidth="250dp"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen">
 </appwidget-provider>
