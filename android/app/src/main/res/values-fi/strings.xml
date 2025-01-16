@@ -114,7 +114,7 @@
     <string name="gradient_background_limitations">Tumman tilan täytyy olla valittuna järjestelmän asetuksissa, jotta liukuväritausta toimii.</string>
     <string name="location_services_not_allowed">"Paikannusta ei ole sallittu. Salli paikannus asetuksista."</string>
     <string name="retrying_location_services">Paikannusta yritetään uudestaan automaattisesti.</string>
-    <string name="automatic_retry">"Säätiedot päivitetään, kun internet yhteys palautuu."</string>
+    <string name="automatic_retry">Säätiedot päivitetään, kun internet yhteys palautuu.</string>
     <string name="old_weather_data">Säätiedot ovat vanhentuneet</string>
     <string name="ready">Valmis</string>
 </resources>
