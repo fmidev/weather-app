@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+
 import android.text.Html;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -16,18 +17,26 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
+import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
+
 public class MaxForecastWidgetProvider extends BaseWidgetProvider {
     @Override
     protected int getLayoutResourceId() {
         return R.layout.max_forecast_widget_layout;
     }
 
-    // populate widget with data
+    private double getTimestepCount(int widgetWidth) {
+        final int columnWidth = 46;
+        final int margins = 32;
+
+        return Math.floor((widgetWidth - margins)/columnWidth);
+    }
+
     @Override
     protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
         JSONObject forecastJson = widgetInitResult.forecastJson();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        final int timeStepCount = getWidgetWidthInPixels(appWidgetId) > 380 ? 8 : 7;
+        final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
 
         Log.d("widgetWidth", String.valueOf(getWidgetWidthInPixels(appWidgetId)));
 
@@ -133,7 +142,7 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
 
             // Crisis view
             showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
-
+            pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
 
@@ -142,8 +151,8 @@ public class MaxForecastWidgetProvider extends BaseWidgetProvider {
             showErrorView(
                     context,
                     pref,
-                    "(parsing error) " + context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection),
+                    context.getResources().getString(R.string.update_failed),
+                    getConnectionErrorDescription(),
                     appWidgetId
             );
         }

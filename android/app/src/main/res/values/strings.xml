@@ -33,10 +33,9 @@
     <string name="next_days_widget">Next days</string>
     <string name="observation">Observation</string>
     <string name="loading">Loading weather data...</string>
-    <string name="update_failed">Could not update weather data</string>
-    <string name="check_internet_connection">Please check your internet connection.</string>
-    <string name="positioning_failed">Could not get current location</string>
-    <string name="ready">Ready</string>
+    <string name="update_failed">Failed to load weather data</string>
+    <string name="airplane_mode">The device is in airplane mode. Weather updates will refresh when the internet connection is back.</string>
+    <string name="location_failed">Location failed</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
     <string name="gradient">Gradient</string>
@@ -113,4 +112,9 @@
     <string name="s_77">Thundershowers</string>
     <string name="gradient_background">Gradient background</string>
     <string name="gradient_background_limitations">Gradient background requires that dark theme is enabled on system settings.</string>
+    <string name="location_services_not_allowed">Location services are not allowed. Please enable them in the settings.</string>
+    <string name="retrying_location_services">Retrying location services automatically.</string>
+    <string name="automatic_retry">Weather updates will refresh when the internet connection is back.</string>
+    <string name="old_weather_data">The weather information is outdated</string>
+    <string name="ready">Ready</string>
 </resources>
