@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -32,7 +32,7 @@
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">13sp</item>
-        <item name="android:fontWeight">600</item>
+        <item name="android:fontWeight" tools:targetApi="o">600</item>
         <item name="android:textColor">@color/textColor</item>
     </style>
 
@@ -45,7 +45,7 @@
     <style name="temperatureSmall">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">13sp</item>
-        <item name="android:fontWeight">600</item>
+        <item name="android:fontWeight" tools:targetApi="o">600</item>
         <item name="android:textColor">@color/textColor</item>
     </style>
 

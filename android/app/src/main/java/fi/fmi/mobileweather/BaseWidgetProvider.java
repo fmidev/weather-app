@@ -609,8 +609,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         JSONArray announcementsJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref, Boolean hideLocation
     ) {
         announcementsJson = useNewOrStoredCrisisJsonObject(announcementsJson, pref);
-        
-        // example announcement json: [{"type":"Crisis","content":"Varoitusnauha -testi EN","link":"https://www.fmi.fi"}]
+        widgetRemoteViews.removeAllViews(R.id.crisisViewContainer);
+
         if (announcementsJson != null) {
             boolean crisisFound = false;
             try {
