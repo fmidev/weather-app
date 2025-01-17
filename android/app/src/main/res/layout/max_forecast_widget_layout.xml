@@ -4,7 +4,7 @@
     android:id="@+id/mainLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/widgetBackground"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="7dp"
+            android:layout_marginBottom="3dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -67,7 +67,7 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginEnd="18dp"
-                tools:src="@drawable/s_32_light" />
+                tools:src="@drawable/s_32" />
 
             <TextView
                 android:id="@+id/temperatureTextView"
@@ -107,77 +107,20 @@
             </RelativeLayout>
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/crisisTextView"
-            style="@style/crisis"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/crisisViewContainer"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:padding="6dp"
-            android:visibility="gone"
-            tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
-            tools:visibility="visible" />
+            android:layout_width="match_parent"
+            android:orientation="vertical" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/errorLayout"
-        android:layout_width="290dp"
-        android:layout_height="250dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/infoIconImageView"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="5dp"
-                android:importantForAccessibility="no"
-                android:background="@drawable/ic_info_blue" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/errorHeaderTextView"
-                    style="@style/errorHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center_horizontal"
-                    android:textSize="20sp"
-                    tools:text="Could not update weather data" />
-
-                <TextView
-                    android:id="@+id/errorBodyTextView"
-                    style="@style/errorBody"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
-                    android:textSize="15sp"
-                    tools:text="Please check your internet connection." />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <include layout="@layout/large_errorview" />
     </LinearLayout>
 
 </LinearLayout>

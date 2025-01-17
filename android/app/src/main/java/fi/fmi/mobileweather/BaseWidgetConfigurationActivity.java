@@ -5,26 +5,23 @@ import static android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_ID;
 import static android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID;
 import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
-import static android.graphics.Color.BLACK;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
-import static fi.fmi.mobileweather.PrefKey.THEME;
-import static fi.fmi.mobileweather.Theme.DARK;
-import static fi.fmi.mobileweather.Theme.GRADIENT;
-import static fi.fmi.mobileweather.Theme.LIGHT;
+import static fi.fmi.mobileweather.PrefKey.GRADIENT_BACKGROUND;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.UiModeManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,9 +29,8 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -43,7 +39,6 @@ import android.widget.TextView;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 
 import com.reactnativecommunity.asyncstorage.AsyncLocalStorageUtil;
@@ -84,42 +79,31 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
             return;
         }
 
-        initListViews();
+        initViews();
     }
 
     @Override
     public void onResume(){
         super.onResume();
 
-        // Android Pie (SDK 28) and later are more restrictive when battery saving is enabled.
-        // Therefore ask user to disable battery saving.
-
-        LinearLayout batteryOptimizationWarning = findViewById(R.id.batteryOptimizationWarning);
-
-        if (isPowerSavingEnabled(this)) {
-            batteryOptimizationWarning.setVisibility(VISIBLE);
-        } else {
-            batteryOptimizationWarning.setVisibility(GONE);
-        }
+        setLocationFavoritesButtons();
     }
 
-    public static boolean isPowerSavingEnabled(Context context) {
-        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        if (powerManager != null) {
-            return powerManager.isPowerSaveMode();
-        }
-        return false;
-    }
-
-    public void initListViews() {
-
+    public void initViews() {
         setReadyButton();
-
-        setAppSettingsButton();
 
         // Add app location favorites to location radio button group
         setLocationFavoritesButtons();
         setAddFavoriteLocationsClickListener();
+
+        int currentNightMode = getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
+        LinearLayout themeOptions = findViewById(R.id.themeOptionsContainer);
+        if (currentNightMode == UI_MODE_NIGHT_NO) {
+            // Hide gradient background option
+            themeOptions.setVisibility(GONE);
+        } else {
+            themeOptions.setVisibility(VISIBLE);
+        }
     }
 
     private void setLocationFavoritesButtons() {
@@ -164,11 +148,15 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
 
                         String latlon = getLatLonString(current);
 
-                        RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
-                        favoriteRadioButton.setText(name);
-                        favoriteRadioButton.setTag(latlon);
-                        favoriteRadioButton.setId(geoId);
-                        locationRadioGroup.addView(favoriteRadioButton);
+                        RadioButton existingRadioButton = findViewById(geoId);
+
+                        if (existingRadioButton == null) {
+                            RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
+                            favoriteRadioButton.setText(name);
+                            favoriteRadioButton.setTag(geoId);
+                            favoriteRadioButton.setId(geoId);
+                            locationRadioGroup.addView(favoriteRadioButton);
+                        }
                     }
                 } catch (JSONException e) {
                     Log.d("Widget Update", "Error parsing location favorites: " + e.getMessage());
@@ -189,6 +177,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     private void setAppSettingsButton() {
+        /*
         Button appSettingsButton = (Button) findViewById(R.id.appSettingsButton);
         appSettingsButton.setOnClickListener(new OnClickListener() {
 
@@ -197,6 +186,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                 openAppDetailsSettings();
             }
         });
+        */
     }
 
     private void setReadyButton() {
@@ -205,7 +195,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
     }
 
     private void setAddFavoriteLocationsClickListener() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fmiweather://search"));
         Button addFavoriteLocationsButton = findViewById(R.id.addFavoriteLocationsButton);
         // on click send the intent to open the app main activity
         addFavoriteLocationsButton.setOnClickListener(v -> startActivity(intent));
@@ -275,27 +265,9 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
         if (latlon != null)
             pref.saveString(FAVORITE_LATLON, latlon);
 
-
-        RadioGroup themeRadioGroup = findViewById(R.id.themeRadioGroup);
-        int selectedTheme = themeRadioGroup.getCheckedRadioButtonId();
-        String selectedThemeString;
-
-        if (selectedTheme==R.id.optionLightRadioButton)
-            selectedThemeString = LIGHT;
-        // TODO: Gradient theme GONE in layout file for now because gradient color file not ready yet in this Android project
-        else if (selectedTheme==R.id.optionGradientRadioButton)
-            selectedThemeString = GRADIENT;
-        else if (selectedTheme==R.id.optionDeviceModeRadioButton) {
-            // get the device mode (light or dark)
-            int currentNightMode = getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
-            selectedThemeString = (currentNightMode == UI_MODE_NIGHT_NO) ? LIGHT : DARK;
-        }
-        else
-            selectedThemeString = DARK;
-
-        pref.saveString(THEME, selectedThemeString);
-        Log.d("Widget Update", "Selected theme: " + selectedThemeString);
-
+        CheckBox gradientBackgroundCheckbox= findViewById(R.id.gradientBackgroundCheckbox);
+        boolean gradientBackgroundEnabled = gradientBackgroundCheckbox.isChecked();
+        pref.saveInt(GRADIENT_BACKGROUND, gradientBackgroundEnabled ? 1 : 0);
 
         // Send a broadcast to trigger onUpdate()
         int[] appWidgetIds = getIntent().getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);

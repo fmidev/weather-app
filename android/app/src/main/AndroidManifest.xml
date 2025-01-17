@@ -50,7 +50,16 @@
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
-        android:exported="true" />
+        android:exported="true">
+
+        <intent-filter>
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data android:scheme="fmiweather" />
+        </intent-filter>
+
+      </activity>
 
         <receiver android:name=".SmallForecastWidgetProvider" android:label="@string/small_widget" android:exported="false">
             <intent-filter>

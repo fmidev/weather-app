@@ -19,6 +19,7 @@ public class WidgetNotification {
     public static final String ACTION_APPWIDGET_AUTO_UPDATE = "fi.fmi.mobileweather.AUTO_UPDATE";
     public static final String WEATHER_WIDGET_UPDATE_WORK = "WeatherWidgetUpdate";
     public static final String WARNINGS_WIDGET_UPDATE_WORK = "WarningsWidgetUpdate";
+    public static final int DEFAULT_INTERVAL = 15;
 
     public static int[] getActiveWidgetIds(Context context, Class<? extends AppWidgetProvider> providerClass) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -28,7 +29,7 @@ public class WidgetNotification {
     public static void scheduleWidgetUpdate(Context context, Class<? extends AppWidgetProvider> providerClass, WidgetType widgetType) {
         int[] widgetIds = getActiveWidgetIds(context, providerClass);
         if (widgetIds != null && widgetIds.length > 0) {
-            Log.d("Widget Update", "Trying to schedule widget update");
+            Log.d("scheduleWidgetUpdate", "Trying to schedule widget update");
             Constraints constraints = new Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .build();

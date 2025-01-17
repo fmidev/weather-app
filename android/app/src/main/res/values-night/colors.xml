@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="splashscreen_bg">#191B22</color>
-  <color name="forecastRowBackgroundColor">#000000</color>
+  <color name="forecastRowBackgroundColor">#00000000</color>
+  <color name="widgetBackground">#000000</color>
+  <color name="textColor">#FFFFFF</color>
 </resources>

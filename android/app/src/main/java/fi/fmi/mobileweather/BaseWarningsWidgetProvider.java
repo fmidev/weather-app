@@ -6,7 +6,6 @@ import static android.view.View.VISIBLE;
 
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
-import static fi.fmi.mobileweather.Theme.LIGHT;
 
 import android.graphics.Color;
 import android.util.Log;
@@ -121,7 +120,6 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject warningsJsonObj = widgetInitResult.mainJson();
-        String theme = widgetInitResult.theme();
 
         if (warningsJsonObj == null) {
             return;
@@ -205,11 +203,6 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                     }
                 }
 
-                // set warning text and time frame colors based on theme
-                int textColor = theme.equals(LIGHT) ? getPrimaryBlue(context) : Color.WHITE;
-                widgetRemoteViews.setInt(R.id.warningTextView, "setTextColor", textColor);
-                widgetRemoteViews.setInt(R.id.warningTimeFrameTextView, "setTextColor", textColor);
-
                 // if there is only one warning, set the warning 'title' to the first warning
                 if (amountOfWarningsToShow == 1) {
                     String warningTitle = context.getString(WarningsTextMapper.getStringResourceId(type));
@@ -247,7 +240,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                     context,
                     pref,
                     context.getResources().getString(R.string.update_failed),
-                    context.getResources().getString(R.string.check_internet_connection),
+                    getConnectionErrorDescription(),
                     widgetId
             );
         }

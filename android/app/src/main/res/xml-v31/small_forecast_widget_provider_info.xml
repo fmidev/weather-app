@@ -6,7 +6,7 @@
     android:maxResizeHeight="100dp"
     android:minWidth="40dp"
     android:minHeight="40dp"
-    android:previewImage="@drawable/small_widget_preview"
+    android:previewImage="@drawable/small_forecast_review"
     android:resizeMode="horizontal|vertical"
     android:targetCellWidth="2"
     android:targetCellHeight="1"

@@ -33,9 +33,9 @@
     <string name="next_days_widget">Lähipäivät</string>
     <string name="observation">Havainto</string>
     <string name="loading">Ladataan säätietoja...</string>
-    <string name="update_failed">Säätietojen päivittäminen epäonnistui</string>
-    <string name="positioning_failed">Paikannus epäonnistui</string>
-    <string name="ready">Valmis</string>
+    <string name="update_failed">"Säätietojen lataus epäonnistui "</string>
+    <string name="airplane_mode">Laite on lentokonetilassa. Säätiedot päivitetään, kun internet-yhteys palautuu.</string>
+    <string name="location_failed">Paikannus epäonnistui</string>
     <string name="dark">Tumma</string>
     <string name="light">Vaalea</string>
     <string name="gradient">Kaltevuus</string>
@@ -130,4 +130,11 @@
     <string name="s_71">Yksittäisiä ukkoskuuroja</string>
     <string name="s_74">Paikoin ukkoskuuroja</string>
     <string name="s_77">Ukkoskuuroja</string>
+    <string name="gradient_background">Liukuväritausta</string>
+    <string name="gradient_background_limitations">Tumman tilan täytyy olla valittuna järjestelmän asetuksissa, jotta liukuväritausta toimii.</string>
+    <string name="location_services_not_allowed">"Paikannusta ei ole sallittu. Salli paikannus asetuksista."</string>
+    <string name="retrying_location_services">Paikannusta yritetään uudestaan automaattisesti.</string>
+    <string name="automatic_retry">Säätiedot päivitetään, kun internet yhteys palautuu.</string>
+    <string name="old_weather_data">Säätiedot ovat vanhentuneet</string>
+    <string name="ready">Valmis</string>
 </resources>
