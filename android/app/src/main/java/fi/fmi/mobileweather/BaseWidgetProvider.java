@@ -89,8 +89,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // Use the setup data
         WidgetSetup setup = WidgetSetupManager.getWidgetSetup(context);
         if (setup != null) {
-            // Update the widget with the setup data
             weatherUrl = setup.weather().apiUrl();
+            warningsUrl = setup.warnings().apiUrl();
 
             if (getLanguageString() == "fi") {
                 announcementsUrl = setup.announcements().api().fi();

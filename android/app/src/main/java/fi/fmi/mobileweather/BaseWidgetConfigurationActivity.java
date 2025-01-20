@@ -153,7 +153,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                         if (existingRadioButton == null) {
                             RadioButton favoriteRadioButton = (RadioButton) inflater.inflate(R.layout.favorite_radio_button, locationRadioGroup, false);
                             favoriteRadioButton.setText(name);
-                            favoriteRadioButton.setTag(geoId);
+                            favoriteRadioButton.setTag(latlon);
                             favoriteRadioButton.setId(geoId);
                             locationRadioGroup.addView(favoriteRadioButton);
                         }
