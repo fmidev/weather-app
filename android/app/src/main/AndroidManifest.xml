@@ -76,6 +76,21 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".MediumForecastWidgetProvider" android:label="@string/medium_widget" android:exported="false">
+            <intent-filter>
+                <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_widget_provider_info" />
+        </receiver>
+        <activity android:name=".MediumForecastWidgetConfigurationActivity" android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <receiver android:name=".LargeForecastWidgetProvider" android:label="@string/large_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
@@ -86,21 +101,6 @@
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/large_widget_provider_info" />
         </receiver>
         <activity android:name=".LargeForecastWidgetConfigurationActivity" android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <receiver android:name=".MaxForecastWidgetProvider" android:label="@string/max_widget" android:exported="false">
-            <intent-filter>
-                <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/max_widget_provider_info" />
-        </receiver>
-        <activity android:name=".MaxForecastWidgetConfigurationActivity" android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
