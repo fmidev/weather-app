@@ -7,9 +7,13 @@ import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
 import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -22,13 +26,18 @@ import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
@@ -137,35 +146,38 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
             Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj);
             Log.d("Warnings Widget Update", "WarningsRecordRoot: " + warningsRecordRoot);
-
-
-            // filter out the warnings by language
-            filterByLanguage(warningsRecordRoot);
+            Log.d("Warnings Widget Update", "Original size: " + warningsRecordRoot.data().warnings().size());
 
             // filter the warnings that only the ones remain if now is between the start and end date
             // (perhaps npt this: or if the warning starts today later)
-            filterByValidity(warningsRecordRoot);
+            var warnings = warningsRecordRoot.data().warnings();
+            warnings = filterByValidity(warnings);
+            Collections.sort(warnings);
+
+            Log.d("Warnings Widget Update", "After size: " + warnings.size());
+
+            warnings = filterUnique(warnings);
 
             // reset the warning icon layouts to GONE first
             resetWidgetUi(widgetRemoteViews);
 
+            // Set the location name and region
+            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name()+", ");
+            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
+
             // show a maximum of 3 warnings
-            int amountOfWarnings = warningsRecordRoot.data().warnings().size();
+            int amountOfWarnings = warnings.size();
             Log.d("Warnings Widget Update", "Amount of warnings: " + amountOfWarnings);
             int amountOfWarningsToShow = Math.min(amountOfWarnings, 3);
             Log.d("Warnings Widget Update", "Amount of warnings to show: " + amountOfWarningsToShow);
             for (int i = 0; i < amountOfWarningsToShow; i++) {
-                Warning warning = warningsRecordRoot.data().warnings().get(i);
+                Warning warning = warnings.get(i);
                 String type = warning.type();
                 String severity = warning.severity();
                 String startTime = warning.duration().startTime();
                 String endTime = warning.duration().endTime();
 
                 // *** set the warning data to the widget
-
-                // Set the location name and region
-                widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name());
-                widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
 
                 // make the warning icon layout visible
                 int warningIconLayoutId = context.getResources().getIdentifier("warningIconLayout" + i, "id", context.getPackageName());
@@ -246,29 +258,67 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         }
     }
 
-    private void filterByValidity(WarningsRecordRoot warningsRecordRoot) throws ParseException {
-        Iterator<Warning> iterator2 = warningsRecordRoot.data().warnings().iterator();
-        while (iterator2.hasNext()) {
-            Warning warning = iterator2.next();
-            String startTime = warning.duration().startTime();
-            String endTime = warning.duration().endTime();
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-            Date startDate = formatter.parse(startTime);
-            Date endDate = formatter.parse(endTime);
-            if (!isNowValid(startDate, endDate) /*&& !startsTodayLater(startDate)*/) {
-                iterator2.remove();
+    private boolean isValidDate(Warning warning) {
+        Date now = new Date();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        String startTime = warning.duration().startTime();
+        String endTime = warning.duration().endTime();
+        Date startDate;
+        Date endDate;
+
+        try {
+            startDate = dateFormatter.parse(startTime);
+            endDate = dateFormatter.parse(endTime);
+        } catch (Exception e) {
+            return false;
+        }
+
+        if (startDate != null && endDate != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Date startOfDay = calendar.getTime();
+
+            calendar.setTime(endDate);
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            calendar.set(Calendar.MILLISECOND, 999);
+            Date endOfDay = calendar.getTime();
+
+            if (now.after(startOfDay) && now.before(endOfDay)) {
+                return true;
             }
         }
+
+        return false;
     }
 
-    private void filterByLanguage(WarningsRecordRoot warningsRecordRoot) {
-        Iterator<Warning> iterator = warningsRecordRoot.data().warnings().iterator();
+    @SuppressLint("NewApi")
+    private List<Warning> filterByValidity(List<Warning> warnings) throws ParseException {
+        var items = warnings.stream().filter(warning -> Objects.equals(warning.language(), "fi")).collect(Collectors.toList());
+        items = items.stream().filter(this::isValidDate).collect(Collectors.toList());
+        return items;
+    }
+
+    @SuppressLint("NewApi")
+    private List<Warning> filterUnique(List<Warning> warnings) {
+        List<Warning> processed = new ArrayList<>();
+        Iterator<Warning> iterator = warnings.iterator();
         while (iterator.hasNext()) {
-            Warning warning = iterator.next();
-            if (!warning.language().equals(getLanguageString())) {
-                iterator.remove();
+            Warning current = iterator.next();
+            boolean contains = processed.stream().anyMatch(item ->
+                Objects.equals(item.type(), current.type()) && Objects.equals(item.severity(), current.severity())
+            );
+            if (!contains) {
+                processed.add(current);
             }
         }
+
+        return processed;
     }
 
     private boolean startsTodayLater(Date startDate) {
