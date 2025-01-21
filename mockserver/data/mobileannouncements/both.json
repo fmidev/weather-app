@@ -1,0 +1,12 @@
+[
+  {
+    "type": "Crisis",
+    "content": "Voimakkaat tuulet ja rankkasateet voivat aiheuttaa tulvia ja sähkökatkoja. Vältä ulkona liikkumista ja seuraa viranomaisten ohjeita.",
+    "link": "https://www.fmi.fi"
+  },
+  {
+    "type": "Maintenance",
+    "content": "Palvelunestohyökkäys vaikuttaa sääpalveluiden toimintaan. Korjaustoimenpiteet ovat käynnissä.",
+    "link": "https://www.fmi.fi"
+  }
+]

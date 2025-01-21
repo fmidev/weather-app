@@ -36,9 +36,9 @@ public class WeatherWidgetsUpdateWorker extends Worker {
         // Create intents for each widget provider class
         Intent smallWidgetIntent = new Intent(getApplicationContext(), SmallForecastWidgetProvider.class)
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
-        Intent largeWidgetIntent = new Intent(getApplicationContext(), LargeForecastWidgetProvider.class)
+        Intent largeWidgetIntent = new Intent(getApplicationContext(), MediumForecastWidgetProvider.class)
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
-        Intent maxWidgetIntent = new Intent(getApplicationContext(), MaxForecastWidgetProvider.class)
+        Intent maxWidgetIntent = new Intent(getApplicationContext(), LargeForecastWidgetProvider.class)
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
 
 

@@ -217,7 +217,7 @@ app.put('/setup/:type/:setting', (req, res) => {
     dataModeSetting = DataMode[setting];
   } else if (
     type === 'announcement' &&
-    ['none', 'maintenance', 'crisis'].includes(setting)
+    ['none', 'maintenance', 'crisis', 'both'].includes(setting)
   ) {
     announcementSetting = setting;
   } else if (type === 'debug' && ['true', 'false'].includes(setting)) {
