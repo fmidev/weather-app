@@ -119,4 +119,12 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <style name="customText">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
 </resources>

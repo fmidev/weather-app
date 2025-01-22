@@ -10,6 +10,9 @@ import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
 import android.annotation.SuppressLint;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -161,6 +164,17 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             List<LocationRecord> locations = gson.fromJson(widgetData.location(), locationListType);
             LocationRecord location = locations.get(0);
 
+            if (location.iso2() != "fi") {
+                showErrorView(
+                        context,
+                        pref,
+                        context.getResources().getString(R.string.location_outside_data_area_title),
+                        context.getResources().getString(R.string.location_outside_data_area_description),
+                        widgetId
+                );
+                return;
+            }
+
             WarningsRecordRoot warningsRecordRoot = gson.fromJson(warningsJsonObj.toString(), WarningsRecordRoot.class);
 
             Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj);
@@ -236,8 +250,9 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
             // if there are no warnings, show "No warnings"
             if (amountOfWarningsToShow == 0) {
-                String warningsText = context.getResources().getString(R.string.no_warnings);
-                widgetRemoteViews.setTextViewText(R.id.warningTextView, warningsText);
+                RemoteViews customTextView = new RemoteViews(context.getPackageName(), R.layout.custom_text_layout);
+                customTextView.setTextViewText(R.id.customTextView, context.getResources().getString(R.string.no_warnings));
+                widgetRemoteViews.addView(R.id.warningIconContainer, customTextView);
             }
 
             // Crisis view

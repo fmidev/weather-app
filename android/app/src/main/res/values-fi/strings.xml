@@ -140,4 +140,6 @@
     <string name="failed_to_load_alerts">aroitusten lataus epäonnistui</string>
     <string name="airplane_mode_warnings">Laite on lentokonetilassa. Varoitukset päivitetään, kun internet-yhteys palautuu.</string>
     <string name="automatic_retry_warnings">Varoitukset päivitetään, kun internet-yhteys palautuu.</string>
+    <string name="location_outside_data_area_title">Varoituksia ei ole saatavilla tähän sijaintiin</string>
+    <string name="location_outside_data_area_description">Varoitukset ovat saatavilla vain Suomen alueella.</string>
 </resources>

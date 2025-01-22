@@ -140,4 +140,6 @@
     <string name="failed_to_load_alerts">Misslyckades med att ladda varningar</string>
     <string name="airplane_mode_warnings">" Enheten är i flygplansläge. Varningarna uppdateras när internet är tillbaka."</string>
     <string name="automatic_retry_warnings">Varningarna uppdateras när internet är tillbaka.</string>
+    <string name="location_outside_data_area_title">Det finns inga varningar för denna plats</string>
+    <string name="location_outside_data_area_description">Varningar är endast tillgängliga i Finland.</string>
 </resources>
