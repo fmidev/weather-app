@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import fi.fmi.mobileweather.model.LocationRecord;
 import fi.fmi.mobileweather.model.Warning;
 import fi.fmi.mobileweather.model.WarningsRecordRoot;
+import fi.fmi.mobileweather.model.WidgetData;
 import fi.fmi.mobileweather.util.AirplaneModeUtil;
 import fi.fmi.mobileweather.util.WarningsIconMapper;
 import fi.fmi.mobileweather.util.WarningsTextMapper;
@@ -77,7 +78,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         String announceUrl = announcementsUrl;
 
         // get warnings data bases on latlon
-        Future<JSONObject> warningsFuture = executorService.submit(() -> fetchMainData(latlon, language));
+        Future<JSONObject> warningsFuture = executorService.submit(() -> fetchWarnings(latlon, language));
         // get announcements
         Future<JSONArray> announcementsFuture = executorService.submit(() -> fetchJsonArray(announceUrl));
         // get location name and region
@@ -88,9 +89,10 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             // Announcements failure is not critical
             try { announcementsResult = announcementsFuture.get(); } catch(Exception e) {}
             try {
-                JSONObject warningsresult = warningsFuture.get();
+                JSONObject warningsResult = warningsFuture.get();
                 String locationResult = locationFuture.get();
-                onDataFetchingPostExecute(warningsresult, announcementsResult, locationResult, null, pref, widgetId);
+                var widgetData = new WidgetData(announcementsResult, null, warningsResult, locationResult);
+                onDataFetchingPostExecute(widgetData, null, pref, widgetId);
             } catch (Exception e) {
                 Log.e("Warnings Widget Update", "Exception: " + e.getMessage());
                 showErrorView(
@@ -118,7 +120,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         }
     }
 
-    protected JSONObject fetchMainData(String latlon, String language) {
+    protected JSONObject fetchWarnings(String latlon, String language) {
 
         String url;
         if (latlon != null && !latlon.isEmpty()) {
@@ -141,38 +143,34 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
     }
 
     @Override
-    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId, String locationJson) {
+    protected void setWidgetUi(WidgetData widgetData, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
 
         Log.d("Warnings Widget Update", "setWidgetUi called");
 
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        JSONObject warningsJsonObj = widgetInitResult.mainJson();
+        JSONObject warningsJsonObj = widgetData.warnings();
 
         if (warningsJsonObj == null) {
             return;
         }
 
         try {
-
             Gson gson = new Gson();
 
             Type locationListType = new TypeToken<List<LocationRecord>>() {}.getType();
-            List<LocationRecord> locations = gson.fromJson(locationJson, locationListType);
+            List<LocationRecord> locations = gson.fromJson(widgetData.location(), locationListType);
             LocationRecord location = locations.get(0);
 
             WarningsRecordRoot warningsRecordRoot = gson.fromJson(warningsJsonObj.toString(), WarningsRecordRoot.class);
 
             Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj);
             Log.d("Warnings Widget Update", "WarningsRecordRoot: " + warningsRecordRoot);
-            Log.d("Warnings Widget Update", "Original size: " + warningsRecordRoot.data().warnings().size());
 
             // filter the warnings that only the ones remain if now is between the start and end date
             // (perhaps npt this: or if the warning starts today later)
             var warnings = warningsRecordRoot.data().warnings();
             warnings = filterByValidity(warnings);
             Collections.sort(warnings);
-
-            Log.d("Warnings Widget Update", "After size: " + warnings.size());
 
             warnings = filterUnique(warnings);
 
@@ -186,9 +184,8 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
             // show a maximum of 6 warnings
             int amountOfWarnings = warnings.size();
-            Log.d("Warnings Widget Update", "Amount of warnings: " + amountOfWarnings);
             int amountOfWarningsToShow = Math.min(amountOfWarnings, 6);
-            Log.d("Warnings Widget Update", "Amount of warnings to show: " + amountOfWarningsToShow);
+
             for (int i = 0; i < amountOfWarningsToShow; i++) {
                 RemoteViews warningIcon = new RemoteViews(context.getPackageName(), R.layout.warning_icon);
                 Warning warning = warnings.get(i);
@@ -244,7 +241,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             }
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, false, true);
+            showCrisisViewIfNeeded(widgetData.announcements(), widgetRemoteViews, pref, false, true);
             appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
             pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
         } catch (Exception e) {

@@ -8,4 +8,8 @@ public record WidgetData(
     JSONObject forecast,
     JSONObject warnings,
     String location
-) {}
+) {
+    public WidgetData(JSONArray announcements, JSONObject forecast) {
+        this(announcements, forecast, null, null);
+    }
+}

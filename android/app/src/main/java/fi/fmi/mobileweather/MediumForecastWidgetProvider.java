@@ -12,6 +12,7 @@ import java.util.Iterator;
 import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
 
 import fi.fmi.mobileweather.enumeration.WidgetType;
+import fi.fmi.mobileweather.model.WidgetData;
 
 public class MediumForecastWidgetProvider extends BaseWidgetProvider {
     @Override
@@ -34,9 +35,9 @@ public class MediumForecastWidgetProvider extends BaseWidgetProvider {
     }
 
     @Override
-    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId, String locationJson) {
+    protected void setWidgetUi(WidgetData widgetData, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
 
-        JSONObject forecastJson = widgetInitResult.mainJson();
+        JSONObject forecastJson = widgetData.forecast();
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
 
         final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
@@ -106,7 +107,7 @@ public class MediumForecastWidgetProvider extends BaseWidgetProvider {
             }
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true, false);
+            showCrisisViewIfNeeded(widgetData.announcements(), widgetRemoteViews, pref, true, false);
             pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;

@@ -51,6 +51,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import fi.fmi.mobileweather.enumeration.WidgetType;
+import fi.fmi.mobileweather.model.WidgetData;
 import fi.fmi.mobileweather.util.AirplaneModeUtil;
 
 
@@ -161,7 +162,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         this.appWidgetManager = appWidgetManager;
         SharedPreferencesHelper pref = SharedPreferencesHelper.getInstance(context, appWidgetId);
 
-        onDataFetchingPostExecute(null, null,null, remoteViews, pref, appWidgetId);
+        onDataFetchingPostExecute(null, remoteViews, pref, appWidgetId);
     }
 
     protected void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -266,7 +267,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         String announceUrl = announcementsUrl;
 
         // get forecast based on geoId
-        Future<JSONObject> forecastFuture = executorService.submit(() -> fetchMainData(Integer.toString(geoId), null, language));
+        Future<JSONObject> forecastFuture = executorService.submit(() -> fetchForecast(Integer.toString(geoId), null, language));
         // get announcements
         Future<JSONArray> announcementsFuture = executorService.submit(() -> fetchJsonArray(announceUrl));
 
@@ -276,7 +277,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             try { announcementsResult = announcementsFuture.get(); } catch(Exception e) {}
             try {
                 JSONObject forecastResult = forecastFuture.get();
-                onDataFetchingPostExecute(forecastResult, announcementsResult,null, remoteViews, pref, widgetId);
+                var widgetData = new WidgetData(announcementsResult, forecastResult);
+                onDataFetchingPostExecute(widgetData, remoteViews, pref, widgetId);
             } catch (Exception e) {
                 Log.e("executeWithGeoId", "Exception: " + e.getMessage());
                 showErrorView(
@@ -306,7 +308,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // get geoid
         Future<String> geoFuture = executorService.submit(() -> fetchGeoid(latlon));
         // get forecast based on geoid
-        Future<JSONObject> forecastFuture = executorService.submit(() -> fetchMainData(geoFuture.get(), latlon, language));
+        Future<JSONObject> forecastFuture = executorService.submit(() -> fetchForecast(geoFuture.get(), latlon, language));
         // get announcements
         Future<JSONArray> announcementsFuture = executorService.submit(() -> fetchJsonArray(announceUrl));
 
@@ -316,7 +318,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             try { announcementsResult = announcementsFuture.get(); } catch(Exception e) {}
             try {
                 JSONObject forecastResult = forecastFuture.get();
-                onDataFetchingPostExecute(forecastResult, announcementsResult,null,null, pref, widgetId);
+                var widgetData = new WidgetData(announcementsResult, forecastResult);
+                onDataFetchingPostExecute(widgetData,null, pref, widgetId);
             } catch (Exception e) {
                 Log.e("executeWithLatLon", "Exception: " + e.getMessage());
                 showErrorView(
@@ -363,24 +366,19 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected JSONObject fetchMainData(String geoid, String latlon, String language) {
+    protected JSONObject fetchForecast(String geoid, String latlon, String language) {
         String url;
 
         Log.d("Fetch forecast", "geoid: "+geoid+" latlon: "+latlon);
 
-        // if we have geoid use it to get forecast data
+        var params = "geoid,epochtime,localtime,utctime,name,region,iso2,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
+
         if (geoid != null && !geoid.isEmpty()) {
-            url = weatherUrl + "?geoid=" +
-                    geoid +
-                    "&endtime=data&format=json&attributes=geoid&lang=" +
-                    language +
-                    "&tz=utc&who=mobileweather-widget-android&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
-        } else if (latlon != null && !latlon.isEmpty()) { // otherwise use lat&lon to get forecast data if available
-            url = weatherUrl + "?latlon=" +
-                    latlon +
-                    "&endtime=data&format=json&attributes=geoid&lang=" +
-                    language +
-                    "&tz=utc&who=mobileweather-widget-android&producer=default&param=geoid,epochtime,localtime,utctime,name,region,iso2,sunrise,sunset,sunriseToday,sunsetToday,dayLength,modtime,dark,temperature,feelsLike,smartSymbol,windDirection,windSpeedMS,windCompass8";
+            url = weatherUrl + "?geoid=" + geoid + "&endtime=data&format=json&attributes=geoid&lang=" +
+                    language + "&who=mobileweather-widget-android&producer=default&param="+params;
+        } else if (latlon != null && !latlon.isEmpty()) {
+            url = weatherUrl + "?latlon=" + latlon + "&endtime=data&format=json&attributes=geoid&lang=" +
+                    language + "&who=mobileweather-widget-android&producer=default&param="+params;
         } else {
             return null;
         }
@@ -394,19 +392,19 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected void onDataFetchingPostExecute(JSONObject forecastJson, JSONArray announcementsJson, String locationJson, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
+    protected void onDataFetchingPostExecute(WidgetData data, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
 
         // init widget, returns (new) forecast mainJson, widget layout views and theme
-        WidgetInitResult widgetInitResult = initWidget(forecastJson, remoteViews, pref, widgetId);
+        WidgetInitResult widgetInitResult = initWidget(data.forecast(), remoteViews, pref, widgetId);
 
         // populate widget UI with data
-        setWidgetUi(announcementsJson, pref, widgetInitResult, widgetId, locationJson);
+        setWidgetUi(data, pref, widgetInitResult, widgetId);
     }
 
-    protected void setWidgetUi(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId, String locationJson) {
+    protected void setWidgetUi(WidgetData widgetData, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
 
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
-        JSONObject forecastJson = widgetInitResult.mainJson();
+        JSONObject forecastJson = widgetData.forecast();
 
         if (forecastJson == null) {
             return;
@@ -451,7 +449,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             widgetRemoteViews.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, false, false);
+            showCrisisViewIfNeeded(widgetData.announcements(), widgetRemoteViews, pref, false, false);
 
             appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
             pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
