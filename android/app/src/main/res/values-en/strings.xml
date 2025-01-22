@@ -137,4 +137,7 @@
     <string name="automatic_retry">Weather updates will refresh when the internet connection is back.</string>
     <string name="old_weather_data">The weather information is outdated</string>
     <string name="ready">Ready</string>
+    <string name="failed_to_load_alerts">Failed to load alerts</string>
+    <string name="airplane_mode_warnings">"The device is in airplane mode. Warnings will be updated once the internet connection is back. "</string>
+    <string name="automatic_retry_warnings">Warnings will refresh when the internet connection is back.</string>
 </resources>

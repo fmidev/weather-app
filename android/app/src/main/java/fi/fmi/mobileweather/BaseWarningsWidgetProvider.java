@@ -4,16 +4,12 @@ import static android.text.format.DateUtils.isToday;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import static fi.fmi.mobileweather.ColorUtils.getPrimaryBlue;
-import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
+import static fi.fmi.mobileweather.model.PrefKey.FAVORITE_LATLON;
+import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
-
-import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,10 +30,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
+
+import fi.fmi.mobileweather.model.LocationRecord;
+import fi.fmi.mobileweather.model.Warning;
+import fi.fmi.mobileweather.model.WarningsRecordRoot;
+import fi.fmi.mobileweather.util.AirplaneModeUtil;
+import fi.fmi.mobileweather.util.WarningsIconMapper;
+import fi.fmi.mobileweather.util.WarningsTextMapper;
 
 public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
@@ -45,6 +49,13 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
     protected void executeDataFetchingWithSelectedLocation(int geoId, SharedPreferencesHelper pref, int widgetId) {
         String latlon = pref.getString(FAVORITE_LATLON, null);
         executeDataFetchingWithLatLon(latlon, pref, widgetId);
+    }
+
+    @Override
+    protected String getConnectionErrorDescription() {
+        return AirplaneModeUtil.isAirplaneModeOn(context) ?
+                context.getResources().getString(R.string.airplane_mode_warnings) :
+                context.getResources().getString(R.string.automatic_retry_warnings);
     }
 
     @Override
@@ -66,22 +77,29 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         String announceUrl = announcementsUrl;
 
         // get warnings data bases on latlon
-        Future<JSONObject> future1 = executorService.submit(() -> fetchMainData(latlon, language));
+        Future<JSONObject> warningsFuture = executorService.submit(() -> fetchMainData(latlon, language));
         // get announcements
-        Future<JSONArray> future2 = executorService.submit(() -> fetchJsonArray(announceUrl));
+        Future<JSONArray> announcementsFuture = executorService.submit(() -> fetchJsonArray(announceUrl));
         // get location name and region
-        Future<String> future3 = executorService.submit(() -> fetchLocationData(latlon));
+        Future<String> locationFuture = executorService.submit(() -> fetchLocationData(latlon));
 
         executorService.submit(() -> {
+            JSONArray announcementsResult = null;
+            // Announcements failure is not critical
+            try { announcementsResult = announcementsFuture.get(); } catch(Exception e) {}
             try {
-                JSONObject result1 = future1.get();
-                JSONArray result2 = future2.get();
-                String result3 = future3.get();
-                onDataFetchingPostExecute(result1, result2, result3, null, pref, widgetId);
+                JSONObject warningsresult = warningsFuture.get();
+                String locationResult = locationFuture.get();
+                onDataFetchingPostExecute(warningsresult, announcementsResult, locationResult, null, pref, widgetId);
             } catch (Exception e) {
                 Log.e("Warnings Widget Update", "Exception: " + e.getMessage());
-                // NOTE: let's not show error view here, because connection problems with server
-                //       seem to be quite frequent and we don't want to show error view every time
+                showErrorView(
+                        context,
+                        pref,
+                        context.getResources().getString(R.string.failed_to_load_alerts),
+                        getConnectionErrorDescription(),
+                        widgetId
+                );
             }
         });
     }
@@ -162,65 +180,52 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             resetWidgetUi(widgetRemoteViews);
 
             // Set the location name and region
-            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name()+", ");
+            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name());
             widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
+            widgetRemoteViews.removeAllViews(R.id.warningIconContainer);
 
-            // show a maximum of 3 warnings
+            // show a maximum of 6 warnings
             int amountOfWarnings = warnings.size();
             Log.d("Warnings Widget Update", "Amount of warnings: " + amountOfWarnings);
-            int amountOfWarningsToShow = Math.min(amountOfWarnings, 3);
+            int amountOfWarningsToShow = Math.min(amountOfWarnings, 6);
             Log.d("Warnings Widget Update", "Amount of warnings to show: " + amountOfWarningsToShow);
             for (int i = 0; i < amountOfWarningsToShow; i++) {
+                RemoteViews warningIcon = new RemoteViews(context.getPackageName(), R.layout.warning_icon);
                 Warning warning = warnings.get(i);
                 String type = warning.type();
                 String severity = warning.severity();
                 String startTime = warning.duration().startTime();
                 String endTime = warning.duration().endTime();
 
-                // *** set the warning data to the widget
-
-                // make the warning icon layout visible
-                int warningIconLayoutId = context.getResources().getIdentifier("warningIconLayout" + i, "id", context.getPackageName());
-                widgetRemoteViews.setViewVisibility(warningIconLayoutId, VISIBLE);
-
-                // set the background circles
-                int circleBackgroundId = context.getResources().getIdentifier("warningIconBackgroundImageView" + i, "id", context.getPackageName());
-                Log.d("Warnings Widget Update", "circleBackgroundId: " + circleBackgroundId);
                 int circleBackgroundResourceId = WarningsIconMapper.getCircleBackgroundResourceId(severity);
-                Log.d("Warnings Widget Update", "CircleBackgroundResourceId: " + circleBackgroundResourceId);
                 if (circleBackgroundResourceId != 0) {
-                    widgetRemoteViews.setInt(circleBackgroundId, "setBackgroundResource", circleBackgroundResourceId);
+                    warningIcon.setInt(R.id.warningIconBackgroundImageView, "setBackgroundResource", circleBackgroundResourceId);
                 }
 
-                // Set the icons in the layout
-                int warningIconImageViewId = context.getResources().getIdentifier("warningIconImageView" + i, "id", context.getPackageName());
-                Log.d("Warnings Widget Update", "warningIconImageViewId: " + warningIconImageViewId);
-                // set the warning icon based on the warning type
                 if (type.equals("seaWind")) {
                     int windIntensity = warning.physical().windIntensity();
                     int windDirection = warning.physical().windDirection();
 
-                    widgetRemoteViews.setImageViewResource(warningIconImageViewId, R.drawable.sea_wind);
+                    warningIcon.setImageViewResource(R.id.warningIconImageView, R.drawable.sea_wind);
                     // rotate the sea wind image view based on the wind direction number
-                    widgetRemoteViews.setFloat(warningIconImageViewId, "setRotation", windDirection);
+                    warningIcon.setFloat(R.id.warningIconImageView, "setRotation", windDirection);
                     // add the wind intensity text in front of the image view
-                    int windIntensityTextViewId = context.getResources().getIdentifier("windIntensityTextView" + i, "id", context.getPackageName());
-                    widgetRemoteViews.setViewVisibility(windIntensityTextViewId, VISIBLE);
-                    widgetRemoteViews.setTextViewText(windIntensityTextViewId, Integer.toString(windIntensity));
+                    warningIcon.setViewVisibility(R.id.windIntensityTextView, VISIBLE);
+                    warningIcon.setTextViewText(R.id.windIntensityTextView, Integer.toString(windIntensity));
                 } else {
                     int iconResourceId = WarningsIconMapper.getIconResourceId(type);
                     Log.d("Warnings Widget Update", "IconResourceId: " + iconResourceId);
                     if (iconResourceId != 0) {
-                        widgetRemoteViews.setImageViewResource(warningIconImageViewId, iconResourceId);
+                        warningIcon.setImageViewResource(R.id.warningIconImageView, iconResourceId);
                     }
                 }
+
+                widgetRemoteViews.addView(R.id.warningIconContainer, warningIcon);
 
                 // if there is only one warning, set the warning 'title' to the first warning
                 if (amountOfWarningsToShow == 1) {
                     String warningTitle = context.getString(WarningsTextMapper.getStringResourceId(type));
                     widgetRemoteViews.setTextViewText(R.id.warningTextView, warningTitle);
-                    widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWarningTimeFrame(startTime, endTime));
-                    // Show also the time fame
                     widgetRemoteViews.setViewVisibility(R.id.warningTimeFrameTextView, VISIBLE);
                     widgetRemoteViews.setTextViewText(R.id.warningTimeFrameTextView, getFormattedWarningTimeFrame(startTime, endTime));
                 }
@@ -239,13 +244,9 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             }
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
-
-            // Update time TODO: should be hidden for release
-            widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, DateFormat.getTimeInstance().format(new Date()));
-
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, false, true);
             appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
-
+            pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
         } catch (Exception e) {
             Log.e("Warnings Widget Update", "In base warnings setWidgetUi exception: " + e.getMessage());
             showErrorView(
@@ -342,17 +343,19 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
     protected String getFormattedWarningTimeFrame(String startTime, String endTime) throws ParseException {
         // Define the input formatter
         SimpleDateFormat inputFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        inputFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         // Parse the time strings to Date
         Date startDate = inputFormatter.parse(startTime);
         Date endDate = inputFormatter.parse(endTime);
 
         // Define the output formatter
         SimpleDateFormat outputFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        outputFormatter.setTimeZone(TimeZone.getTimeZone("Europe/Helsinki"));
         SimpleDateFormat outputFormatterWithDate = new SimpleDateFormat("dd.MM. HH:mm", Locale.getDefault());
+        outputFormatterWithDate.setTimeZone(TimeZone.getTimeZone("Europe/Helsinki"));
 
-        // if start date is not today, add the date to the output
-        if (startDate != null && !isToday(startDate.getTime())) {
-            return outputFormatterWithDate.format(startDate) + " - " + outputFormatter.format(endDate);
+        if (startDate != null && !isToday(endDate.getTime())) {
+            return outputFormatterWithDate.format(startDate) + " - " + outputFormatterWithDate.format(endDate);
         } else {
             return outputFormatter.format(startDate) + " - " + outputFormatter.format(endDate);
         }

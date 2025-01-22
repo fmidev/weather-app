@@ -1,6 +1,6 @@
 package fi.fmi.mobileweather;
 
-import android.content.BroadcastReceiver;
+import fi.fmi.mobileweather.enumeration.WidgetType;
 
 public class SmallWarningsWidgetProvider extends BaseWarningsWidgetProvider {
     @Override

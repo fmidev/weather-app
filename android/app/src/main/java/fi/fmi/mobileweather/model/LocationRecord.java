@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.model;
 
 public record LocationRecord(
     int geoid,

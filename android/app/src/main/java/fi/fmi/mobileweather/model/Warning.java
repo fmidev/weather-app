@@ -1,10 +1,8 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.model;
 
 import android.util.Log;
 
-import java.util.List;
-
-record Warning(
+public record Warning(
     String type,
     String language,
     String severity,
@@ -54,33 +52,6 @@ record Warning(
 
         return Integer.compare(other.getTypePriorityValue(), this.getTypePriorityValue());
     }
-}
-
-record Duration(
-    String startTime,
-    String endTime
-) {
-}
-
-record Physical(
-    int windIntensity,
-    String windIntensityUom,
-    int windDirection,
-    String windDirectionUom
-) {
-}
-
-record Data(
-    String updated,
-    List<Warning> warnings,
-    String startTime,
-    String endTime
-) {
-}
-
-record WarningsRecordRoot(
-    Data data
-) {
 }
 
 //}

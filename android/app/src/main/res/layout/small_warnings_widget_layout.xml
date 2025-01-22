@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     android:background="@color/widgetBackground"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingVertical="8dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/normalLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,11 +15,11 @@
 
         <LinearLayout
             android:id="@+id/locationLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="4dp"
-            android:orientation="horizontal">
+            android:layout_alignParentTop="true"
+            android:paddingHorizontal="8dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/locationNameTextView"
@@ -42,188 +42,63 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/warningIconsLayout"
+        <GridLayout
+            android:id="@+id/warningIconContainer"
+            android:columnCount="3"
+            android:rowCount="2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="horizontal" />
 
-            <FrameLayout
-                android:id="@+id/warningIconLayout0"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="5dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+        >
+            <TextView
+                android:id="@+id/warningTextView"
+                style="@style/locationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="6dp"
+                android:textSize="13sp"
+                android:paddingHorizontal="8dp"
+                tools:text="Warnings (3)" />
+
+            <TextView
+                android:id="@+id/warningTimeFrameTextView"
+                style="@style/locationRegion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="13sp"
+                android:paddingHorizontal="8dp"
                 android:visibility="gone"
-                tools:visibility="visible">
+                tools:visibility="visible"
+                tools:text="15.00 - 21:00" />
 
-                <ImageView
-                    android:id="@+id/warningIconBackgroundImageView0"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/warning_circle_red"
-                    android:contentDescription="TODO" />
-
-                <ImageView
-                    android:id="@+id/warningIconImageView0"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="TODO"
-                    tools:src="@drawable/sea_wind"
-                    tools:rotation="60"/>
-
-                <TextView
-                    android:id="@+id/windIntensityTextView0"
-                    style="@style/windIntensity"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    tools:text="12"/>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/warningIconLayout1"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="5dp"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/warningIconBackgroundImageView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/warning_circle_orange"
-                    android:contentDescription="TODO" />
-
-                <ImageView
-                    android:id="@+id/warningIconImageView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="TODO"
-                    tools:src="@drawable/warnings_hot_weather" />
-
-                <TextView
-                    android:id="@+id/windIntensityTextView1"
-                    style="@style/windIntensity"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:visibility="gone" />
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/warningIconLayout2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="5dp"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/warningIconBackgroundImageView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/warning_circle_yellow"
-                    android:contentDescription="TODO" />
-
-                <ImageView
-                    android:id="@+id/warningIconImageView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="TODO"
-                    tools:src="@drawable/warnings_grass_fire_weather" />
-
-                <TextView
-                    android:id="@+id/windIntensityTextView2"
-                    style="@style/windIntensity"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:visibility="gone" />
-
-            </FrameLayout>
-
+            <LinearLayout
+                android:id="@+id/crisisViewContainer"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/warningTextView"
-            style="@style/locationName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="6dp"
-            android:textSize="13sp"
-            tools:text="Warnings (3)" />
-
-        <TextView
-            android:id="@+id/warningTimeFrameTextView"
-            style="@style/locationRegion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="13sp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="15.00 - 21:00" />
-
-        <ImageView
-            android:id="@+id/fmiLogoImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/fmi_logo"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/crisisTextView"
-            style="@style/crisis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:paddingStart="6dp"
-            android:paddingTop="0dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="0dp"
-            android:visibility="gone"
-            tools:text="Viranomaistiedote: 13.11.2024 klo: 11.00: Alueella Lauttasaaren ranni..."
-            tools:visibility="visible" />
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/errorLayout"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
-        tools:visibility="gone">
-
-        <TextView
-            android:id="@+id/errorHeaderTextView"
-            style="@style/errorHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_horizontal"
-            tools:text="Could not update warnings data" />
-
-        <TextView
-            android:id="@+id/errorBodyTextView"
-            style="@style/errorBody"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            tools:text="Please check your internet connection." />
-
+        android:orientation="vertical"
+        tools:visibility="visible">
+        <include layout="@layout/small_errorview" />
     </LinearLayout>
 
 </LinearLayout>

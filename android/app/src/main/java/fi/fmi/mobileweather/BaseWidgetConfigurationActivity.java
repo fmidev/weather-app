@@ -8,24 +8,21 @@ import static android.content.res.Configuration.UI_MODE_NIGHT_NO;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
-import static fi.fmi.mobileweather.PrefKey.FAVORITE_LATLON;
-import static fi.fmi.mobileweather.PrefKey.SELECTED_LOCATION;
-import static fi.fmi.mobileweather.PrefKey.GRADIENT_BACKGROUND;
+import static fi.fmi.mobileweather.model.LocationConstants.CURRENT_LOCATION;
+import static fi.fmi.mobileweather.model.PrefKey.FAVORITE_LATLON;
+import static fi.fmi.mobileweather.model.PrefKey.SELECTED_LOCATION;
+import static fi.fmi.mobileweather.model.PrefKey.GRADIENT_BACKGROUND;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.UiModeManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;

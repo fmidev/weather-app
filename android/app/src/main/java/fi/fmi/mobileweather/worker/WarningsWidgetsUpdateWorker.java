@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.worker;
 
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
@@ -9,6 +9,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import fi.fmi.mobileweather.SmallWarningsWidgetProvider;
 
 public class WarningsWidgetsUpdateWorker extends Worker {
 

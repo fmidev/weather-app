@@ -137,4 +137,7 @@
     <string name="automatic_retry">Säätiedot päivitetään, kun internet yhteys palautuu.</string>
     <string name="old_weather_data">Säätiedot ovat vanhentuneet</string>
     <string name="ready">Valmis</string>
+    <string name="failed_to_load_alerts">aroitusten lataus epäonnistui</string>
+    <string name="airplane_mode_warnings">Laite on lentokonetilassa. Varoitukset päivitetään, kun internet-yhteys palautuu.</string>
+    <string name="automatic_retry_warnings">Varoitukset päivitetään, kun internet-yhteys palautuu.</string>
 </resources>

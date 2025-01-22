@@ -1,33 +1,12 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.util;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import fi.fmi.mobileweather.R;
+
 public class WarningsIconMapper {
     private static final Map<String, Integer> iconMap = new HashMap<>();
-
-    /*var description: String {
-    switch self {
-      case .thunderstorm: return "thunderstorm"
-      case .forestFireWeather: return "forestFireWeather"
-      case .grassFireWeather: return "grassFireWeather"
-      case .wind: return "wind"
-      case .trafficWeather: return "trafficWeather"
-      case .rain: return "rain"
-      case .pedestrianSafety: return "pedestrianSafety"
-      case .hotWeather: return "hotWeather"
-      case .coldWeather: return "coldWeather"
-      case .uvNote: return "uvNote"
-      case .flooding: return "flooding"
-      case .seaWind: return "seaWind"
-      case .seaThunderStorm: return "seaThunderStorm"
-      case .seaWaveHeight: return "seaWaveHeight"
-      case .seaWaterHeightHighWater: return "seaWaterHeightHighWater"
-      case .seaWaterHeightShallowWater: return "seaWaterHeightShallowWater"
-      case .seaIcing: return "seaIcing"
-      case .none: return "none"
-    }
-  }*/
 
     // TODO: these to be checked:
     static {

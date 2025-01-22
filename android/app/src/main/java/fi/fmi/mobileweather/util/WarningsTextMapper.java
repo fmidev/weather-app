@@ -1,7 +1,9 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.util;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import fi.fmi.mobileweather.R;
 
 // TODO: these to be checked:
 public class WarningsTextMapper {

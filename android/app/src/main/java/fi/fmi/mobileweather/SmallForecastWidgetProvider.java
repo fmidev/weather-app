@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import fi.fmi.mobileweather.enumeration.WidgetType;
+
 public class SmallForecastWidgetProvider extends BaseWidgetProvider {
 
     @Override

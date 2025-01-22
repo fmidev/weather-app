@@ -5,7 +5,7 @@
     android:previewImage="@drawable/small_warnings_widget_preview"
     android:resizeMode="none"
     android:targetCellWidth="2"
-    android:targetCellHeight="1"
+    android:targetCellHeight="2"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen">
 </appwidget-provider>

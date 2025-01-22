@@ -6,10 +6,9 @@ import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static fi.fmi.mobileweather.LocationConstants.CURRENT_LOCATION;
-import static fi.fmi.mobileweather.PrefKey.*;
+import static fi.fmi.mobileweather.model.LocationConstants.CURRENT_LOCATION;
+import static fi.fmi.mobileweather.model.PrefKey.*;
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
-import static fi.fmi.mobileweather.WidgetType.WEATHER_FORECAST;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -50,6 +49,9 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import fi.fmi.mobileweather.enumeration.WidgetType;
+import fi.fmi.mobileweather.util.AirplaneModeUtil;
 
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
@@ -449,7 +451,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             widgetRemoteViews.setContentDescription(R.id.weatherIconImageView, getSymbolTranslation(weatherSymbol));
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, false);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, false, false);
 
             appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
             pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
@@ -606,7 +608,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void showCrisisViewIfNeeded(
-        JSONArray announcementsJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref, Boolean hideLocation
+        JSONArray announcementsJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref,
+        Boolean hideLocation, Boolean hideIcon
     ) {
         announcementsJson = useNewOrStoredCrisisJsonObject(announcementsJson, pref);
         widgetRemoteViews.removeAllViews(R.id.crisisViewContainer);
@@ -621,6 +624,11 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                         String content = jsonObject.getString("content");
                         RemoteViews crisisView = new RemoteViews(context.getPackageName(), R.layout.crisis_view);
                         crisisView.setTextViewText(R.id.crisisText, content);
+
+                        if (hideIcon) {
+                            crisisView.setViewVisibility(R.id.crisisIcon, GONE);
+                        }
+
                         widgetRemoteViews.addView(R.id.crisisViewContainer, crisisView);
                         widgetRemoteViews.setViewVisibility(R.id.crisisViewContainer, VISIBLE);
 
@@ -629,6 +637,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
                             widgetRemoteViews.setViewVisibility(R.id.locationRegionTextView, GONE);
                             widgetRemoteViews.setViewVisibility(R.id.timeTextView, GONE);
                         }
+
                         crisisFound = true;
                         // if a crisis found, exit the loop
                         break;

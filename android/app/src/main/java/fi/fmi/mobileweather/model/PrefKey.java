@@ -1,7 +1,6 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.model;
 
 public class PrefKey {
-    public static final String THEME = "theme";
     public static final String SELECTED_LOCATION = "selected_location";
     public static final String LAYOUT_RES_ID = "layout_res_id";
     public static final String LATEST_JSON = "latest_json";

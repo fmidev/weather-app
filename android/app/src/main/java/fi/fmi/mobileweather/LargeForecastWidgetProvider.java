@@ -12,7 +12,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
+import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
+
+import fi.fmi.mobileweather.enumeration.WidgetType;
 
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 
@@ -143,7 +145,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
             widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, formattedText);
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
+            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true, false);
             pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;

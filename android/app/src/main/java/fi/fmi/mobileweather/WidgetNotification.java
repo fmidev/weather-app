@@ -14,6 +14,10 @@ import androidx.work.WorkManager;
 
 import java.util.concurrent.TimeUnit;
 
+import fi.fmi.mobileweather.enumeration.WidgetType;
+import fi.fmi.mobileweather.worker.WarningsWidgetsUpdateWorker;
+import fi.fmi.mobileweather.worker.WeatherWidgetsUpdateWorker;
+
 public class WidgetNotification {
 
     public static final String ACTION_APPWIDGET_AUTO_UPDATE = "fi.fmi.mobileweather.AUTO_UPDATE";

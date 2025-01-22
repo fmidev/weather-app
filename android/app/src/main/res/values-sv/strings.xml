@@ -137,4 +137,7 @@
     <string name="automatic_retry">Vädredata uppdateras när internet är tillbaka.</string>
     <string name="old_weather_data">Väderinformationen är inaktuell</string>
     <string name="ready">Färdig</string>
+    <string name="failed_to_load_alerts">Misslyckades med att ladda varningar</string>
+    <string name="airplane_mode_warnings">" Enheten är i flygplansläge. Varningarna uppdateras när internet är tillbaka."</string>
+    <string name="automatic_retry_warnings">Varningarna uppdateras när internet är tillbaka.</string>
 </resources>
