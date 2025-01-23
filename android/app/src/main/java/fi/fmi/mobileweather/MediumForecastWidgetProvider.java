@@ -38,6 +38,7 @@ public class MediumForecastWidgetProvider extends BaseWidgetProvider {
     protected void setWidgetUi(WidgetData widgetData, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
 
         JSONObject forecastJson = widgetData.forecast();
+
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
 
         final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));

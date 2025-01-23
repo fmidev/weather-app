@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/widgetBackground"
     android:orientation="vertical"
-    android:paddingVertical="8dp">
+    android:paddingVertical="16dp">
 
     <RelativeLayout
         android:id="@+id/normalLayout"

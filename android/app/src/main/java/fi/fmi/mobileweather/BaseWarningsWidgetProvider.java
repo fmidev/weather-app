@@ -164,7 +164,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             List<LocationRecord> locations = gson.fromJson(widgetData.location(), locationListType);
             LocationRecord location = locations.get(0);
 
-            if (location.iso2() != "fi") {
+            if (!location.iso2().equals("FI")) {
                 showErrorView(
                         context,
                         pref,
@@ -213,13 +213,13 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                     warningIcon.setInt(R.id.warningIconBackgroundImageView, "setBackgroundResource", circleBackgroundResourceId);
                 }
 
-                if (type.equals("seaWind")) {
+                if (type.equals("seaWind") || type.equals("wind")) {
                     int windIntensity = warning.physical().windIntensity();
                     int windDirection = warning.physical().windDirection();
 
                     warningIcon.setImageViewResource(R.id.warningIconImageView, R.drawable.sea_wind);
                     // rotate the sea wind image view based on the wind direction number
-                    warningIcon.setFloat(R.id.warningIconImageView, "setRotation", windDirection);
+                    warningIcon.setFloat(R.id.warningIconImageView, "setRotation", windDirection - 180);
                     // add the wind intensity text in front of the image view
                     warningIcon.setViewVisibility(R.id.windIntensityTextView, VISIBLE);
                     warningIcon.setTextViewText(R.id.windIntensityTextView, Integer.toString(windIntensity));
@@ -250,6 +250,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
             // if there are no warnings, show "No warnings"
             if (amountOfWarningsToShow == 0) {
+                widgetRemoteViews.setTextViewText(R.id.warningTextView, "");
                 RemoteViews customTextView = new RemoteViews(context.getPackageName(), R.layout.custom_text_layout);
                 customTextView.setTextViewText(R.id.customTextView, context.getResources().getString(R.string.no_warnings));
                 widgetRemoteViews.addView(R.id.warningIconContainer, customTextView);
@@ -371,5 +372,30 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         } else {
             return outputFormatter.format(startDate) + " - " + outputFormatter.format(endDate);
         }
+    }
+    @Override
+    protected void onDataFetchingPostExecute(WidgetData data, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
+        // Init widget, mainly layout initialization
+        WidgetInitResult widgetInitResult = initWidget(remoteViews, pref, widgetId);
+
+        var warnings = useNewOrStoredJsonObject(data != null ? data.warnings() : null, pref, widgetId);
+        if (warnings == null) {
+            Log.d("onDataFetchingPostExecute", "No warning data available");
+            showErrorView(
+                    context,
+                    pref,
+                    context.getResources().getString(R.string.failed_to_load_alerts),
+                    getConnectionErrorDescription(),
+                    widgetId
+            );
+            return;
+        }
+
+        var announcements = useNewOrStoredCrisisJsonObject(data != null ? data.announcements() : null, pref);
+
+        setWidgetUi(
+            new WidgetData(announcements, null, warnings, data != null ? data.location() : null),
+            pref, widgetInitResult, widgetId
+        );
     }
 }

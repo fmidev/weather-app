@@ -60,6 +60,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     private static final long FORECAST_DATA_VALIDITY = 24 * 60 * 60 * 1000;
     // crisis data valid for 12 hours
     private static final long CRISIS_DATA_VALIDITY = 12 * 60 * 60 * 1000;
+    private static final long WARNING_DATA_VALIDITY = 12 * 60 * 60 * 1000;
 
     Context context;
     AppWidgetManager appWidgetManager;
@@ -393,22 +394,31 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     protected void onDataFetchingPostExecute(WidgetData data, RemoteViews remoteViews, SharedPreferencesHelper pref, int widgetId) {
+        // Init widget, mainly layout initialization
+        WidgetInitResult widgetInitResult = initWidget(remoteViews, pref, widgetId);
 
-        // init widget, returns (new) forecast mainJson, widget layout views and theme
-        WidgetInitResult widgetInitResult = initWidget(data.forecast(), remoteViews, pref, widgetId);
+        var forecast = useNewOrStoredJsonObject(data != null ? data.forecast() : null, pref, widgetId);
+        if (forecast == null) {
+            Log.d("onDataFetchingPostExecute", "No forecast data available");
+            showErrorView(
+                    context,
+                    pref,
+                    context.getResources().getString(R.string.update_failed),
+                    getConnectionErrorDescription(),
+                    widgetId
+            );
+            return;
+        }
 
-        // populate widget UI with data
-        setWidgetUi(data, pref, widgetInitResult, widgetId);
+        var announcements = useNewOrStoredCrisisJsonObject(data != null ? data.announcements() : null, pref);
+
+        setWidgetUi(new WidgetData(announcements, forecast), pref, widgetInitResult, widgetId);
+
     }
 
     protected void setWidgetUi(WidgetData widgetData, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
-
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject forecastJson = widgetData.forecast();
-
-        if (forecastJson == null) {
-            return;
-        }
 
         try {
             // Get the keys of the JSONObject
@@ -541,7 +551,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     }
 
     @NonNull
-    protected WidgetInitResult initWidget(JSONObject mainJson, RemoteViews widgetRemoteViews, SharedPreferencesHelper pref, int widgetId) {
+    protected WidgetInitResult initWidget(RemoteViews widgetRemoteViews, SharedPreferencesHelper pref, int widgetId) {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
@@ -567,27 +577,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         widgetRemoteViews.setInt(R.id.normalLayout, "setVisibility", VISIBLE);
         // Hide error view
         widgetRemoteViews.setInt(R.id.errorLayout, "setVisibility", GONE);
-
         widgetRemoteViews.setOnClickPendingIntent(R.id.mainLinearLayout, pendingIntent);
 
-        mainJson = useNewOrStoredJsonObject(mainJson, pref, widgetId);
-        if (mainJson == null) {
-            Log.d("Download json", "No mainJson data available");
-            showErrorView(
-                context,
-                pref,
-                context.getResources().getString(R.string.update_failed),
-                getConnectionErrorDescription(),
-                widgetId
-            );
-        }
-
-        Log.d("Download json", "Forecast json: " + mainJson);
-
-        return new WidgetInitResult(mainJson, widgetRemoteViews, gradientBackround);
+        return new WidgetInitResult(widgetRemoteViews, gradientBackround);
     }
 
-    protected record WidgetInitResult(JSONObject mainJson, RemoteViews widgetRemoteViews, boolean gradientBackground) {
+    protected record WidgetInitResult(RemoteViews widgetRemoteViews, boolean gradientBackground) {
     }
 
     @NonNull
@@ -668,13 +663,14 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     @Nullable
     JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferencesHelper pref, int widgetId) {
         Date now = new Date();
+        long validity = getWidgetType() == WidgetType.WEATHER_FORECAST ? FORECAST_DATA_VALIDITY : WARNING_DATA_VALIDITY;
 
         if (json == null) {
             // Restore latest mainJson
 
             long updated = pref.getLong(LATEST_JSON_UPDATED, 0L);
 
-            if (updated > (now.getTime() - FORECAST_DATA_VALIDITY)) {
+            if (updated > (now.getTime() - validity)) {
                 String jsonstr = pref.getString(LATEST_JSON, null);
 
                 try {
@@ -745,8 +741,9 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected void showErrorView(Context context, SharedPreferencesHelper pref, String errorText1, String errorText2, int widgetId) {
         long updated = pref.getLong(WIDGET_UI_UPDATED, 0);
+        long validity = getWidgetType() == WidgetType.WEATHER_FORECAST ? FORECAST_DATA_VALIDITY : WARNING_DATA_VALIDITY;
 
-        if (updated > 0 && (System.currentTimeMillis() - updated < FORECAST_DATA_VALIDITY)) {
+        if (updated > 0 && (System.currentTimeMillis() - updated < validity)) {
             Log.d("showErrorView", "Skip errorview, because data is still valid: " + updated);
             // No need to show error, because old data is still valid
             return;
