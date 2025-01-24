@@ -1,9 +1,11 @@
 import { TimeStepData } from '@store/observation/types';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { getObservationCellValue } from '@utils/helpers';
+import { CustomTheme } from '@utils/colors';
 
 type DailyObservationRowProps = {
   parameter: 'daily' | 'snowDepth06';
@@ -20,6 +22,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
 
+  const { colors } = useTheme() as CustomTheme;
   const currentDay = moment(epochtime * 1000).format('YYYY-MM-DD');
 
   const getDailyValue = (param: keyof TimeStepData) => {
@@ -80,6 +83,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
           styles.listText,
           styles.rowItem,
           centered ? styles.centeredText : {},
+          { color: colors.hourListText },
         ]}
         accessibilityLabel={accessibilityLabel}>
         {cellValue}
