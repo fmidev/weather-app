@@ -273,37 +273,39 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
     }
 
     private boolean isValidDate(Warning warning) {
-        Date now = new Date();
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Helsinki");
+        TimeZone utc = TimeZone.getTimeZone("UTC");
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        dateFormatter.setTimeZone(utc);
         String startTime = warning.duration().startTime();
-        String endTime = warning.duration().endTime();
         Date startDate;
-        Date endDate;
 
         try {
             startDate = dateFormatter.parse(startTime);
-            endDate = dateFormatter.parse(endTime);
         } catch (Exception e) {
             return false;
         }
 
-        if (startDate != null && endDate != null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(startDate);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            Date startOfDay = calendar.getTime();
+        if (startDate != null) {
+            Calendar warningStart = Calendar.getInstance();
+            warningStart.setTimeZone(timeZone);
+            warningStart.setTime(startDate);
 
-            calendar.setTime(endDate);
-            calendar.set(Calendar.HOUR_OF_DAY, 23);
-            calendar.set(Calendar.MINUTE, 59);
-            calendar.set(Calendar.SECOND, 59);
-            calendar.set(Calendar.MILLISECOND, 999);
-            Date endOfDay = calendar.getTime();
+            Calendar startOfDay = Calendar.getInstance();
+            startOfDay.setTimeZone(timeZone);
+            startOfDay.set(Calendar.HOUR_OF_DAY, 0);
+            startOfDay.set(Calendar.MINUTE, 0);
+            startOfDay.set(Calendar.SECOND, 0);
+            startOfDay.set(Calendar.MILLISECOND, 0);
 
-            if (now.after(startOfDay) && now.before(endOfDay)) {
+            Calendar endOfDay = Calendar.getInstance();
+            endOfDay.setTimeZone(timeZone);
+            endOfDay.set(Calendar.HOUR_OF_DAY, 23);
+            endOfDay.set(Calendar.MINUTE, 59);
+            endOfDay.set(Calendar.SECOND, 59);
+            endOfDay.set(Calendar.MILLISECOND, 999);
+
+            if (warningStart.after(startOfDay) && warningStart.before(endOfDay)) {
                 return true;
             }
         }
