@@ -141,7 +141,7 @@ platform :ios do
     code_sign_identity: ENV["IOS_CODE_SIGNING_IDENTITY"], # replace with name of code signing identity if different
     bundle_identifier: widget_identifier,
     profile_name: widget_profile_name,
-    build_configurations: ["Release"] # only toggle code signing settings for Release configurations
+    build_configurations: ["Release"], # only toggle code signing settings for Release configurations
     targets: ["WidgetExtension"]
   )
 
@@ -152,7 +152,7 @@ platform :ios do
     code_sign_identity: ENV["IOS_CODE_SIGNING_IDENTITY"], # replace with name of code signing identity if different
     bundle_identifier: settings_identifier,
     profile_name: settings_profile_name,
-    build_configurations: ["Release"] # only toggle code signing settings for Release configurations
+    build_configurations: ["Release"], # only toggle code signing settings for Release configurations
     targets: ["SettingsIntentExtension"]
   )
    
