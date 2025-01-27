@@ -76,8 +76,12 @@ platform :ios do
    desc "Check certs and profiles"
     lane :prepare_signing do |options|
     app_identifier = ENV["IOS_APP_IDENTIFIER"]
+    widget_identifier = ENV["IOS_WIDGET_IDENTIFIER"]
+    settings_identifier = ENV["IOS_SETTINGS_IDENTIFIER"]
     api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # replace with the name of your existing profile
+    widget_profile_name = ENV["IOS_WIDGET_PROVISIONINGPROFILE_NAME"]
+    settings_profile_name = ENV["IOS_SETTINGS_PROVISIONINGPROFILE_NAME"]
     ENV['KEYCHAIN_NAME'] = 'my-custom-keychain.keychain'
     ENV['KEYCHAIN_PATH'] = File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
 
@@ -105,6 +109,20 @@ platform :ios do
     app_identifier: app_identifier,
     provisioning_name: profile_name,
     )
+
+    # widget profile
+    sigh(
+      api_key: api_key,
+      app_identifier: widget_identifier,
+      provisioning_name: profile_name,
+      )
+
+    # settings extension profile
+    sigh(
+      api_key: api_key,
+      app_identifier: settings_identifier,
+      provisioning_name: settings_profile_name,
+      )
    end
 	
    # Update signing settings and build iOS app for release
