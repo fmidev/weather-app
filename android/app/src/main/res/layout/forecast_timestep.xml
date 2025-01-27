@@ -7,10 +7,9 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="43dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="3dp">
+        android:orientation="vertical">
         <TextView
             android:id="@+id/timeStepTimeTextView"
             style="@style/time"
@@ -25,7 +24,7 @@
             android:layout_height="22dp"
             android:layout_gravity="center_horizontal"
             android:contentDescription=""
-            tools:src="@drawable/s_32_light" />
+            tools:src="@drawable/s_32" />
 
         <TextView
             android:id="@+id/temperatureTextView"

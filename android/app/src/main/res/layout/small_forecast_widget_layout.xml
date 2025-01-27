@@ -3,7 +3,7 @@
     android:id="@+id/mainLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/widgetBackground"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -16,27 +16,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/locationNameTextView"
-                style="@style/locationName"
+            android:orientation="vertical">
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:layout_marginRight="4dp"
-                tools:text="Helsinki," />
-
-            <TextView
-                android:id="@+id/locationRegionTextView"
-                style="@style/locationRegion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:textSize="15sp"
-                tools:text="Suomi" />
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/locationNameTextView"
+                    style="@style/locationName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    tools:text="Helsinki," />
+                <TextView
+                    android:id="@+id/locationRegionTextView"
+                    style="@style/locationRegion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    tools:text="Suomi" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -52,7 +52,7 @@
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginEnd="7dp"
-                tools:src="@drawable/s_32_light" />
+                tools:src="@drawable/s_32" />
 
             <TextView
                 android:id="@+id/temperatureTextView"
@@ -76,31 +76,12 @@
 
     <LinearLayout
         android:id="@+id/errorLayout"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
         android:orientation="vertical"
         tools:visibility="visible">
-
-        <TextView
-            android:id="@+id/errorHeaderTextView"
-            style="@style/errorHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
-            tools:text="Could not update weather data" />
-
-        <TextView
-            android:id="@+id/errorBodyTextView"
-            style="@style/errorBody"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            tools:text="Please check your internet connection." />
-
+        <include layout="@layout/small_errorview" />
     </LinearLayout>
 
 </LinearLayout>

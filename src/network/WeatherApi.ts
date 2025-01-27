@@ -42,6 +42,7 @@ export const getForecast = async (
     [
       'geoid',
       'epochtime',
+      'localtime',
       'name',
       'sunrise',
       'sunset',
