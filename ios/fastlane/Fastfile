@@ -115,7 +115,11 @@ platform :ios do
       select_for_current_build_only: true,
     )
     app_identifier = ENV["IOS_APP_IDENTIFIER"]
+    widget_identifier = ENV["IOS_WIDGET_IDENTIFIER"]
+    settings_identifier = ENV["IOS_SETTINGS_IDENTIFIER"]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the build
+    widget_profile_name = ENV["IOS_WIDGET_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the widget
+    settings_profile_name = ENV["IOS_SETTINGS_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the settings
     export_method = "app-store" # specify the export method
     compile_bitcode = false # specify whether to enable bitcode
  
@@ -144,9 +148,10 @@ platform :ios do
      skip_archive: false,
      export_options: {
       method: export_method,
-      provisioningProfiles: {
-       app_identifier => profile_name
-      },
+      provisioningProfiles: 
+        { app_identifier => profile_name },
+        { widget_identifier => widget_profile_name },
+        { settings_identifier => settings_profile_name }
       compileBitcode: compile_bitcode
      }
    )
