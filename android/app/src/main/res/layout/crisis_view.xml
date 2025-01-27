@@ -10,7 +10,7 @@
     android:background="@color/crisisBackgroundColor">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/crisisIcon"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerInParent="true"

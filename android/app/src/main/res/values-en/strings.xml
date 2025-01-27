@@ -64,7 +64,27 @@
     <string name="add_your_favorite_locations">Add your favorite locations</string>
     <string name="add_favorite_locations_explanation">Please add your favorite places in the Weather app, if you want to use widget without location services.</string>
     <string name="add_more_favorite_locations">Add more favorite locations</string>
+    <string name="small_warnings_widget">Warnings compact</string>
     <string name="allow_background_location_service">Please allow the Weather app background location service (Allow all the time) use your current location to show weather near you.</string>
+    <string name="warnings">Warnings</string>
+    <string name="no_warnings">No warnings</string>
+    <string name="warnings_flood">Flood warning</string>
+    <string name="warnings_grass_fire_weather">Grass fire warning</string>
+    <string name="warnings_hot_weather">Heat wave warning</string>
+    <string name="warnings_forest_fire_weather">Wildfire warning</string>
+    <string name="warnings_cold_weather">Cold warning</string>
+    <string name="warnings_icing">Ice accretion warning</string>
+    <string name="warnings_wind" >Wind warning for land areas</string>
+    <string name="warnings_sea_thunder_storm">Thunderstorm wind gusts for sea areas</string>
+    <string name="warnings_pedestrian_safety">Pedestrian weather warning</string>
+    <string name="warnings_rain">Heavy rain warning</string>
+    <string name="warnings_sea_water_height_high">Warning for high sea level</string>
+    <string name="warnings_sea_water_height_shallow">Warning for low sea level</string>
+    <string name="warnings_sea_wave_height">Wave height warning</string>
+    <string name="warnings_sea_wind">Wind warning for sea areas</string>
+    <string name="warnings_thunder_storm">Severe thunderstorm warning</string>
+    <string name="warnings_traffic_weather">Traffic weather warning</string>
+    <string name="warnings_uv_note">UV advisory</string>
     <string name="s_1">Clear</string>
     <string name="s_2">Mostly clear</string>
     <string name="s_4">Partly cloudy</string>
@@ -117,4 +137,9 @@
     <string name="automatic_retry">Weather updates will refresh when the internet connection is back.</string>
     <string name="old_weather_data">The weather information is outdated</string>
     <string name="ready">Ready</string>
+    <string name="failed_to_load_alerts">Failed to load alerts</string>
+    <string name="airplane_mode_warnings">"The device is in airplane mode. Warnings will be updated once the internet connection is back. "</string>
+    <string name="automatic_retry_warnings">Warnings will refresh when the internet connection is back.</string>
+    <string name="location_outside_data_area_title">No alerts are available for this location</string>
+    <string name="location_outside_data_area_description">Warnings are only available for the Finland region.</string>
 </resources>

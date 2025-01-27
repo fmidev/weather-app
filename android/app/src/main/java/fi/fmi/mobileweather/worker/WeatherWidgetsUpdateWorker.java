@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.worker;
 
 import static fi.fmi.mobileweather.WidgetNotification.ACTION_APPWIDGET_AUTO_UPDATE;
 
@@ -9,9 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-public class WidgetUpdateWorker extends Worker {
+import fi.fmi.mobileweather.LargeForecastWidgetProvider;
+import fi.fmi.mobileweather.MediumForecastWidgetProvider;
+import fi.fmi.mobileweather.SmallForecastWidgetProvider;
 
-    public WidgetUpdateWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+public class WeatherWidgetsUpdateWorker extends Worker {
+
+    public WeatherWidgetsUpdateWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
     }
 
@@ -19,7 +23,7 @@ public class WidgetUpdateWorker extends Worker {
     @Override
     public Result doWork() {
         // Perform the widget update here
-        Log.d("Widget Update worker", "Widget update trigger by WorkManager");
+        Log.d("Widget Update worker", "Weather widgets update trigger by WorkManager");
 
         // broadcast the update to the widget
         broadcastUpdate();
@@ -29,10 +33,9 @@ public class WidgetUpdateWorker extends Worker {
     }
 
     private void broadcastUpdate() {
-        Log.d("Widget Update", "Broadcasting widget update");
+        Log.d("Widget Update", "Broadcasting waether forecast widget update");
 
-        // ** broadcast to all widget providers which can receive ACTION_APPWIDGET_AUTO_UPDATE
-        //    (SmallForecastWidgetProvider and LargeForecastWidgetProvider)
+        // ** Broadcast to all weather forcast widget providers which can receive ACTION_APPWIDGET_AUTO_UPDATE
 
         // Create intents for each widget provider class
         Intent smallWidgetIntent = new Intent(getApplicationContext(), SmallForecastWidgetProvider.class)
@@ -41,6 +44,7 @@ public class WidgetUpdateWorker extends Worker {
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
         Intent maxWidgetIntent = new Intent(getApplicationContext(), LargeForecastWidgetProvider.class)
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
+
 
         // Send broadcasts
         getApplicationContext().sendBroadcast(smallWidgetIntent);

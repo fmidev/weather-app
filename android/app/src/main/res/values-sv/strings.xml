@@ -64,7 +64,27 @@
     <string name="add_your_favorite_locations">Lägg till dina favoritplatser</string>
     <string name="add_favorite_locations_explanation">Lägg till dina favoritplatser i Weather-appen om du vill använda widget utan platstjänster.</string>
     <string name="add_more_favorite_locations">Lägg till fler favoritplatser</string>
+    <string name="small_warnings_widget">Varningar kompakt</string>
     <string name="allow_background_location_service">Tillåt att Weather-appens bakgrundsplatstjänst (Tillåt alltid) använder din nuvarande plats för att visa väder nära dig.</string>
+    <string name="warnings">Varningar</string>
+    <string name="no_warnings">Inga varningar</string>
+    <string name="warnings_flood">Varning för översvämning</string>
+    <string name="warnings_grass_fire_weather">Risk för gräsbrand</string>
+    <string name="warnings_hot_weather">Varning för värmebölja</string>
+    <string name="warnings_forest_fire_weather">Varning för terrängbrand</string>
+    <string name="warnings_cold_weather">Varning för köld</string>
+    <string name="warnings_icing">Varning för nedisning av fartyg</string>
+    <string name="warnings_pedestrian_safety">Fotgängarvädret</string>
+    <string name="warnings_rain">Nederbördsvarning</string>
+    <string name="warnings_wind">Vindvarning för landområden</string>
+    <string name="warnings_sea_thunder_storm">Åskbyar på sjöområden</string>
+    <string name="warnings_sea_water_height_high">Varning för högt vattenstånd</string>
+    <string name="warnings_sea_water_height_shallow">Varning för lågt vattenstånd</string>
+    <string name="warnings_sea_wave_height">Varning för hård sjögång</string>
+    <string name="warnings_sea_wind">Vindvarning för havsområden</string>
+    <string name="warnings_thunder_storm">Varning för våldsamt åskväder</string>
+    <string name="warnings_traffic_weather">Trafikvädret</string>
+    <string name="warnings_uv_note">UV-meddelande</string>
     <string name="s_1">Klart</string>
     <string name="s_2">Mest Klart</string>
     <string name="s_4">Halvklart</string>
@@ -117,4 +137,9 @@
     <string name="automatic_retry">Vädredata uppdateras när internet är tillbaka.</string>
     <string name="old_weather_data">Väderinformationen är inaktuell</string>
     <string name="ready">Färdig</string>
+    <string name="failed_to_load_alerts">Misslyckades med att ladda varningar</string>
+    <string name="airplane_mode_warnings">" Enheten är i flygplansläge. Varningarna uppdateras när internet är tillbaka."</string>
+    <string name="automatic_retry_warnings">Varningarna uppdateras när internet är tillbaka.</string>
+    <string name="location_outside_data_area_title">Det finns inga varningar för denna plats</string>
+    <string name="location_outside_data_area_description">Varningar är endast tillgängliga i Finland.</string>
 </resources>
