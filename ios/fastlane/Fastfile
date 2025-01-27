@@ -148,10 +148,11 @@ platform :ios do
      skip_archive: false,
      export_options: {
       method: export_method,
-      provisioningProfiles: 
-        { app_identifier => profile_name },
-        { widget_identifier => widget_profile_name },
-        { settings_identifier => settings_profile_name }
+      provisioningProfiles: {
+        app_identifier => profile_name,
+        widget_identifier => widget_profile_name,
+        settings_identifier => settings_profile_name
+      },
       compileBitcode: compile_bitcode
      }
    )
