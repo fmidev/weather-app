@@ -114,7 +114,7 @@ platform :ios do
     sigh(
       api_key: api_key,
       app_identifier: widget_identifier,
-      provisioning_name: profile_name,
+      provisioning_name: widget_profile_name,
       )
 
     # settings extension profile
@@ -151,7 +151,29 @@ platform :ios do
      profile_name: profile_name,
      build_configurations: ["Release"] # only toggle code signing settings for Release configurations
    )
-  
+
+   update_code_signing_settings(
+    use_automatic_signing: false,
+    path: XCODE_PROJECT,
+    team_id: ENV["IOS_DEVELOPER_TEAM_ID"],
+    code_sign_identity: ENV["IOS_CODE_SIGNING_IDENTITY"], # replace with name of code signing identity if different
+    bundle_identifier: widget_identifier,
+    profile_name: widget_profile_name,
+    build_configurations: ["Release"], # only toggle code signing settings for Release configurations
+    targets: ["WidgetExtension"]
+  )
+
+  update_code_signing_settings(
+    use_automatic_signing: false,
+    path: XCODE_PROJECT,
+    team_id: ENV["IOS_DEVELOPER_TEAM_ID"],
+    code_sign_identity: ENV["IOS_CODE_SIGNING_IDENTITY"], # replace with name of code signing identity if different
+    bundle_identifier: settings_identifier,
+    profile_name: settings_profile_name,
+    build_configurations: ["Release"], # only toggle code signing settings for Release configurations
+    targets: ["SettingsIntentExtension"]
+  )
+   
    # Build the app
    gym(
      clean: true,
