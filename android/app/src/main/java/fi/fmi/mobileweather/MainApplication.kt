@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather
 
 import android.app.Application
 import com.facebook.react.PackageList

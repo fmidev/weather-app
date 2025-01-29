@@ -16,6 +16,7 @@ import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
 
 import fi.fmi.mobileweather.enumeration.WidgetType;
 import fi.fmi.mobileweather.model.WidgetData;
+import fi.fmi.mobileweather.util.SharedPreferencesHelper;
 
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
 

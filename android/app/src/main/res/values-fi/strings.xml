@@ -142,4 +142,6 @@
     <string name="automatic_retry_warnings">Varoitukset päivitetään, kun internet-yhteys palautuu.</string>
     <string name="location_outside_data_area_title">Varoituksia ei ole saatavilla tähän sijaintiin</string>
     <string name="location_outside_data_area_description">Varoitukset ovat saatavilla vain Suomen alueella.</string>
+    <string name="medium_warnings_widget">Varoitukset</string>
+    <string name="more_warnings">Lisää varoituksia</string>
 </resources>
