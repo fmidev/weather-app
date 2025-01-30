@@ -7,6 +7,9 @@ import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.model.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
 
+import fi.fmi.mobileweather.model.PrefKey;
+import fi.fmi.mobileweather.util.SharedPreferencesHelper;
+
 import android.annotation.SuppressLint;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -153,7 +156,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject warningsJsonObj = widgetData.warnings();
 
-        if (warningsJsonObj == null) {
+        if (warningsJsonObj == null || widgetData.location() == null) {
             return;
         }
 
@@ -175,6 +178,9 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 return;
             }
 
+            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name()+", ");
+            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
+
             WarningsRecordRoot warningsRecordRoot = gson.fromJson(warningsJsonObj.toString(), WarningsRecordRoot.class);
 
             Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj);
@@ -191,14 +197,11 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             // reset the warning icon layouts to GONE first
             resetWidgetUi(widgetRemoteViews);
 
-            // Set the location name and region
-            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name());
-            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
             widgetRemoteViews.removeAllViews(R.id.warningIconContainer);
 
-            // show a maximum of 6 warnings
+            // show a maximum of 2 warnings
             int amountOfWarnings = warnings.size();
-            int amountOfWarningsToShow = Math.min(amountOfWarnings, 6);
+            int amountOfWarningsToShow = Math.min(amountOfWarnings, 2);
 
             for (int i = 0; i < amountOfWarningsToShow; i++) {
                 RemoteViews warningIcon = new RemoteViews(context.getPackageName(), R.layout.warning_icon);
@@ -272,7 +275,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         }
     }
 
-    private boolean isValidDate(Warning warning) {
+    protected boolean isValidDate(Warning warning) {
         TimeZone timeZone = TimeZone.getTimeZone("Europe/Helsinki");
         TimeZone utc = TimeZone.getTimeZone("UTC");
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
@@ -305,23 +308,21 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             endOfDay.set(Calendar.SECOND, 59);
             endOfDay.set(Calendar.MILLISECOND, 999);
 
-            if (warningStart.after(startOfDay) && warningStart.before(endOfDay)) {
-                return true;
-            }
+            return warningStart.after(startOfDay) && warningStart.before(endOfDay);
         }
 
         return false;
     }
 
     @SuppressLint("NewApi")
-    private List<Warning> filterByValidity(List<Warning> warnings) throws ParseException {
+    protected List<Warning> filterByValidity(List<Warning> warnings) throws ParseException {
         var items = warnings.stream().filter(warning -> Objects.equals(warning.language(), "fi")).collect(Collectors.toList());
         items = items.stream().filter(this::isValidDate).collect(Collectors.toList());
         return items;
     }
 
     @SuppressLint("NewApi")
-    private List<Warning> filterUnique(List<Warning> warnings) {
+    protected List<Warning> filterUnique(List<Warning> warnings) {
         List<Warning> processed = new ArrayList<>();
         Iterator<Warning> iterator = warnings.iterator();
         while (iterator.hasNext()) {
@@ -335,16 +336,6 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         }
 
         return processed;
-    }
-
-    private boolean startsTodayLater(Date startDate) {
-        // check if the start time is today and in the future
-        return isToday(startDate.getTime()) && startDate.after(new Date());
-    }
-
-    private boolean isNowValid(Date startDate, Date endDate) {
-        Date now = new Date();
-        return now.after(startDate) && now.before(endDate);
     }
 
     private void resetWidgetUi(RemoteViews widgetRemoteViews) {
@@ -395,8 +386,17 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
         var announcements = useNewOrStoredCrisisJsonObject(data != null ? data.announcements() : null, pref);
 
+        String location;
+
+        if (data.location() != null) {
+            location = data.location();
+            pref.saveString(PrefKey.WARNING_LOCATION, location);
+        } else {
+            location = pref.getString(PrefKey.WARNING_LOCATION, null);
+        }
+
         setWidgetUi(
-            new WidgetData(announcements, null, warnings, data != null ? data.location() : null),
+            new WidgetData(announcements, null, warnings, location),
             pref, widgetInitResult, widgetId
         );
     }

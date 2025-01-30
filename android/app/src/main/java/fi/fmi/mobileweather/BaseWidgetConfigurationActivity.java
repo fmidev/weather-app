@@ -13,6 +13,8 @@ import static fi.fmi.mobileweather.model.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.model.PrefKey.SELECTED_LOCATION;
 import static fi.fmi.mobileweather.model.PrefKey.GRADIENT_BACKGROUND;
 
+import fi.fmi.mobileweather.util.SharedPreferencesHelper;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -117,7 +119,7 @@ public abstract class BaseWidgetConfigurationActivity extends Activity {
                     JSONObject dump = new JSONObject(impl);
                     JSONArray favorites = new JSONArray(dump.getString("favorites"));
 
-                    Log.d("Widget Update", "Favorites: " + favorites.toString());
+                    Log.d("Widget Update", "Favorites: " + favorites);
 
                     TextView addFavoriteLocationsExplanationTextView = findViewById(R.id.addFavoriteLocationsExplanationTextView);
                     Button addFavoriteLocationsButton = findViewById(R.id.addFavoriteLocationsButton);

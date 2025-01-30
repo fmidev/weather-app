@@ -1,13 +1,11 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.Location;
-import android.location.LocationProvider;
 import android.os.Looper;
 import android.os.HandlerThread;
 

@@ -13,6 +13,7 @@ import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
 
 import fi.fmi.mobileweather.enumeration.WidgetType;
 import fi.fmi.mobileweather.model.WidgetData;
+import fi.fmi.mobileweather.util.SharedPreferencesHelper;
 
 public class MediumForecastWidgetProvider extends BaseWidgetProvider {
     @Override
@@ -42,7 +43,7 @@ public class MediumForecastWidgetProvider extends BaseWidgetProvider {
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
 
         final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
-        Log.d("setWidgetData", "widget width: "+String.valueOf(getWidgetWidthInPixels(appWidgetId)));
+        Log.d("setWidgetData", "widget width: "+ getWidgetWidthInPixels(appWidgetId));
 
         try {
             // Get the keys of the JSONObject

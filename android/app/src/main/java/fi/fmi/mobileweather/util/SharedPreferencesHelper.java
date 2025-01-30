@@ -1,11 +1,11 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedPreferencesHelper {
     private static final String PREFS_NAME_PREFIX = "fi.fmi.mobileweather.widget_";
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     private SharedPreferencesHelper(Context context, int appWidgetId) {
         sharedPreferences = context.getSharedPreferences(PREFS_NAME_PREFIX + appWidgetId, Context.MODE_PRIVATE);

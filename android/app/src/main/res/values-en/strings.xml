@@ -142,4 +142,6 @@
     <string name="automatic_retry_warnings">Warnings will refresh when the internet connection is back.</string>
     <string name="location_outside_data_area_title">No alerts are available for this location</string>
     <string name="location_outside_data_area_description">Warnings are only available for the Finland region.</string>
+    <string name="medium_warnings_widget">Warnings</string>
+    <string name="more_warnings">More warnings</string>
 </resources>
