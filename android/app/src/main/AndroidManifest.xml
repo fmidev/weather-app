@@ -113,6 +113,19 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".MediumWarningsWidgetProvider" android:label="@string/medium_warnings_widget" android:exported="false">
+            <intent-filter>
+                <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_warnings_widget_provider_info" />
+        </receiver>
+        <activity android:name=".MediumWarningsWidgetConfigurationActivity" android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
