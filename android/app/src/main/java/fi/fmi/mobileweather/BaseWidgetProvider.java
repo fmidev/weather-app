@@ -177,13 +177,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
         // Get selected location for the widget (current location as default)
-        int selectedLocation = pref.getInt(SELECTED_LOCATION, CURRENT_LOCATION);
+        int selectedLocation = pref.getInt(SELECTED_LOCATION, Integer.MAX_VALUE);
         if (selectedLocation == CURRENT_LOCATION) {
             // get current location
             requestLocation(context, pref, appWidgetId);
-        } else {
+        } else if (selectedLocation != Integer.MAX_VALUE){
             // use selected location
             executeDataFetchingWithSelectedLocation(selectedLocation, pref, appWidgetId);
+        } else {
+            Log.e("updateAppWidget", "Incorrect location: "+selectedLocation);
         }
     }
 
@@ -824,5 +826,13 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         return minWidth;
+    }
+
+    protected void logStackTrace(Exception e) {
+        var element = e.getStackTrace()[0];
+        Log.d("setWidgetUI", "File: " + element.getFileName());
+        Log.d("setWidgetUI", "Class: " + element.getClassName());
+        Log.d("setWidgetUI", "Method: " + element.getMethodName());
+        Log.d("setWidgetUI", "Line: " + element.getLineNumber());
     }
 }

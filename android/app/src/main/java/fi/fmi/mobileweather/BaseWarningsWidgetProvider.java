@@ -7,6 +7,7 @@ import static android.view.View.VISIBLE;
 import static fi.fmi.mobileweather.model.PrefKey.FAVORITE_LATLON;
 import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
 
+import fi.fmi.mobileweather.model.PrefKey;
 import fi.fmi.mobileweather.util.SharedPreferencesHelper;
 
 import android.annotation.SuppressLint;
@@ -155,7 +156,7 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject warningsJsonObj = widgetData.warnings();
 
-        if (warningsJsonObj == null) {
+        if (warningsJsonObj == null || widgetData.location() == null) {
             return;
         }
 
@@ -177,6 +178,9 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
                 return;
             }
 
+            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name()+", ");
+            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
+
             WarningsRecordRoot warningsRecordRoot = gson.fromJson(warningsJsonObj.toString(), WarningsRecordRoot.class);
 
             Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj);
@@ -193,9 +197,6 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
             // reset the warning icon layouts to GONE first
             resetWidgetUi(widgetRemoteViews);
 
-            // Set the location name and region
-            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name());
-            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
             widgetRemoteViews.removeAllViews(R.id.warningIconContainer);
 
             // show a maximum of 2 warnings
@@ -385,8 +386,17 @@ public abstract class BaseWarningsWidgetProvider extends BaseWidgetProvider {
 
         var announcements = useNewOrStoredCrisisJsonObject(data != null ? data.announcements() : null, pref);
 
+        String location;
+
+        if (data.location() != null) {
+            location = data.location();
+            pref.saveString(PrefKey.WARNING_LOCATION, location);
+        } else {
+            location = pref.getString(PrefKey.WARNING_LOCATION, null);
+        }
+
         setWidgetUi(
-            new WidgetData(announcements, null, warnings, data != null ? data.location() : null),
+            new WidgetData(announcements, null, warnings, location),
             pref, widgetInitResult, widgetId
         );
     }

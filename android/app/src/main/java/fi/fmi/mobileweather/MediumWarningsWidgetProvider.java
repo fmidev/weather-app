@@ -50,7 +50,7 @@ public class MediumWarningsWidgetProvider extends BaseWarningsWidgetProvider {
     protected void setWidgetUi(WidgetData widgetData, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int widgetId) {
         final int MAX_NUMBER_OF_WARNINGS = 3;
 
-        Log.d("Warnings Widget Update", "setWidgetUi called");
+        Log.d("setWidgetUi", "called for widget: "+widgetId);
 
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         JSONObject warningsJsonObj = widgetData.warnings();
@@ -59,7 +59,7 @@ public class MediumWarningsWidgetProvider extends BaseWarningsWidgetProvider {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         var updatedText = context.getResources().getString(R.string.updated) + " "+ currentTime.format(formatter);
 
-        if (warningsJsonObj == null) {
+        if (warningsJsonObj == null || widgetData.location() == null) {
             return;
         }
 
@@ -81,6 +81,9 @@ public class MediumWarningsWidgetProvider extends BaseWarningsWidgetProvider {
                 return;
             }
 
+            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name()+", ");
+            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
+
             WarningsRecordRoot warningsRecordRoot = gson.fromJson(warningsJsonObj.toString(), WarningsRecordRoot.class);
 
             Log.d("Warnings Widget Update", "WarningsJson: " + warningsJsonObj);
@@ -96,9 +99,6 @@ public class MediumWarningsWidgetProvider extends BaseWarningsWidgetProvider {
 
             warnings = filterUnique(warnings);
 
-            // Set the location name and region
-            widgetRemoteViews.setTextViewText(R.id.locationNameTextView, location.name()+", ");
-            widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, location.region());
             widgetRemoteViews.removeAllViews(R.id.warningRowContainer);
 
             // show a maximum of 6 warnings
@@ -165,7 +165,7 @@ public class MediumWarningsWidgetProvider extends BaseWarningsWidgetProvider {
             appWidgetManager.updateAppWidget(widgetId, widgetRemoteViews);
             pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
         } catch (Exception e) {
-            Log.e("Warnings Widget Update", "In base warnings setWidgetUi exception: " + e.getMessage());
+            Log.e("setWidgetUi", "In medium warnings setWidgetUi exception: " + e.getMessage());
             showErrorView(
                     context,
                     pref,

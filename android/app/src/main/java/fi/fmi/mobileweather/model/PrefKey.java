@@ -8,4 +8,6 @@ public class PrefKey {
     public static final String FAVORITE_LATLON = "favorite_latlon";
     public static final String WIDGET_UI_UPDATED = "widget_ui_updated";
     public static final String GRADIENT_BACKGROUND = "gradient_background";
+
+    public static final String WARNING_LOCATION = "warning_location";
 }

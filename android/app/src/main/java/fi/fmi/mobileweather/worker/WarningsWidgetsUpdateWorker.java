@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import fi.fmi.mobileweather.MediumWarningsWidgetProvider;
 import fi.fmi.mobileweather.SmallWarningsWidgetProvider;
 
 public class WarningsWidgetsUpdateWorker extends Worker {
@@ -39,9 +40,12 @@ public class WarningsWidgetsUpdateWorker extends Worker {
         // Create intents for each widget provider class
         Intent smallWarningsWidgetIntent = new Intent(getApplicationContext(), SmallWarningsWidgetProvider.class)
                 .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
+        Intent mediumWarningsWidgetIntent = new Intent(getApplicationContext(), MediumWarningsWidgetProvider.class)
+                .setAction(ACTION_APPWIDGET_AUTO_UPDATE);
 
         // Send broadcasts
         getApplicationContext().sendBroadcast(smallWarningsWidgetIntent);
+        getApplicationContext().sendBroadcast(mediumWarningsWidgetIntent);
     }
 
 }
