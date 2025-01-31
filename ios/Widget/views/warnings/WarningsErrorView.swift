@@ -42,7 +42,7 @@ struct WarningsErrorView: View {
               .style(size == .large ? .largeErrorTitle : .errorTitle)
               .multilineTextAlignment(.center)
           case .locationOutsideDataArea:
-            Text("Location outside data area")
+            Text("No alerts are available for this location")
               .style(size == .large ? .largeErrorTitle : .errorTitle)
               .multilineTextAlignment(.center)
         }

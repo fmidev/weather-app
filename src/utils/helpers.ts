@@ -28,6 +28,7 @@ const getPosition = (
 ) =>
   Geolocation.getCurrentPosition(
     (position) => {
+      console.log('getCurrentPosition callback', position);
       let { latitude, longitude } = position.coords;
       latitude = roundCoordinates(latitude);
       longitude = roundCoordinates(longitude);
@@ -63,9 +64,9 @@ const getPosition = (
       console.log('GEOLOCATION NOT AVAILABLE', error);
     },
     {
-      enableHighAccuracy: true,
+      enableHighAccuracy: Platform.OS === 'ios', // iOS only
       timeout: 15000,
-      maximumAge: 10000,
+      maximumAge: 60000,
     }
   );
 

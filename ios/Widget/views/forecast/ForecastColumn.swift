@@ -7,7 +7,7 @@ struct ForecastColumn: View {
     
   var body: some View {
     VStack {
-      Text(timeStep.formatTime()).style(.time)
+      Text(timeStep.formatTime(timezone: location.timezone)).style(.time)
       Spacer()
       Image(
         String(timeStep.smartSymbol),
