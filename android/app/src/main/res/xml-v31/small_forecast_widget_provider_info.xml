@@ -3,8 +3,6 @@
     android:configure="fi.fmi.mobileweather.SmallForecastWidgetConfigurationActivity"
     android:initialLayout="@layout/xs_forecast_widget_layout"
     android:maxResizeWidth="600dp"
-    android:minWidth="40dp"
-    android:minHeight="40dp"
     android:previewImage="@drawable/small_forecast_review"
     android:resizeMode="horizontal"
     android:targetCellWidth="2"

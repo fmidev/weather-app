@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -53,7 +54,8 @@ import java.util.concurrent.Future;
 import fi.fmi.mobileweather.enumeration.WidgetType;
 import fi.fmi.mobileweather.model.WidgetData;
 import fi.fmi.mobileweather.util.AirplaneModeUtil;
-
+import fi.fmi.mobileweather.util.SharedPreferencesHelper;
+import fi.fmi.mobileweather.util.SingleShotLocationProvider;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
     // forecast data valid for 24 hours
@@ -175,13 +177,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         Log.d("Widget Update","pref for this appWidgetId: " + appWidgetId);
 
         // Get selected location for the widget (current location as default)
-        int selectedLocation = pref.getInt(SELECTED_LOCATION, CURRENT_LOCATION);
+        int selectedLocation = pref.getInt(SELECTED_LOCATION, Integer.MAX_VALUE);
         if (selectedLocation == CURRENT_LOCATION) {
             // get current location
             requestLocation(context, pref, appWidgetId);
-        } else {
+        } else if (selectedLocation != Integer.MAX_VALUE){
             // use selected location
             executeDataFetchingWithSelectedLocation(selectedLocation, pref, appWidgetId);
+        } else {
+            Log.e("updateAppWidget", "Incorrect location: "+selectedLocation);
         }
     }
 
@@ -506,7 +510,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             InputStream input = connection.getInputStream();
 
             try {
-                BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+                BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
                 StringBuilder responseStrBuilder = new StringBuilder();
 
                 String inputStr;
@@ -820,7 +824,15 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
 
     protected int getWidgetWidthInPixels(int appWidgetId) {
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
-        int minWidth = options.getInt(appWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+        int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         return minWidth;
+    }
+
+    protected void logStackTrace(Exception e) {
+        var element = e.getStackTrace()[0];
+        Log.d("setWidgetUI", "File: " + element.getFileName());
+        Log.d("setWidgetUI", "Class: " + element.getClassName());
+        Log.d("setWidgetUI", "Method: " + element.getMethodName());
+        Log.d("setWidgetUI", "Line: " + element.getLineNumber());
     }
 }

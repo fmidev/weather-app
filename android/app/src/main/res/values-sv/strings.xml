@@ -142,4 +142,6 @@
     <string name="automatic_retry_warnings">Varningarna uppdateras när internet är tillbaka.</string>
     <string name="location_outside_data_area_title">Det finns inga varningar för denna plats</string>
     <string name="location_outside_data_area_description">Varningar är endast tillgängliga i Finland.</string>
+    <string name="medium_warnings_widget">Varningar</string>
+    <string name="more_warnings">Fler varningar</string>
 </resources>
