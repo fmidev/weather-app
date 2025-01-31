@@ -64,11 +64,9 @@
         <receiver android:name=".SmallForecastWidgetProvider" android:label="@string/small_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_widget_provider_info" />
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_forecast_widget_provider_info" />
         </receiver>
         <activity android:name=".SmallForecastWidgetConfigurationActivity" android:exported="false">
             <intent-filter>
@@ -79,11 +77,9 @@
         <receiver android:name=".MediumForecastWidgetProvider" android:label="@string/medium_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_widget_provider_info" />
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_forecast_widget_provider_info" />
         </receiver>
         <activity android:name=".MediumForecastWidgetConfigurationActivity" android:exported="false">
             <intent-filter>
@@ -94,13 +90,37 @@
         <receiver android:name=".LargeForecastWidgetProvider" android:label="@string/large_widget" android:exported="false">
             <intent-filter>
                 <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/large_widget_provider_info" />
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/large_forecast_widget_provider_info" />
         </receiver>
         <activity android:name=".LargeForecastWidgetConfigurationActivity" android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".SmallWarningsWidgetProvider" android:label="@string/small_warnings_widget" android:exported="false">
+            <intent-filter>
+                <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_warnings_widget_provider_info" />
+        </receiver>
+        <activity android:name=".SmallWarningsWidgetConfigurationActivity" android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".MediumWarningsWidgetProvider" android:label="@string/medium_warnings_widget" android:exported="false">
+            <intent-filter>
+                <action android:name="fi.fmi.mobileweather.AUTO_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_warnings_widget_provider_info" />
+        </receiver>
+        <activity android:name=".MediumWarningsWidgetConfigurationActivity" android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>

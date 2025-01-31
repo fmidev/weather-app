@@ -28,6 +28,7 @@ const getPosition = (
 ) =>
   Geolocation.getCurrentPosition(
     (position) => {
+      console.log('getCurrentPosition callback', position);
       let { latitude, longitude } = position.coords;
       latitude = roundCoordinates(latitude);
       longitude = roundCoordinates(longitude);
@@ -63,9 +64,9 @@ const getPosition = (
       console.log('GEOLOCATION NOT AVAILABLE', error);
     },
     {
-      enableHighAccuracy: true,
+      enableHighAccuracy: Platform.OS === 'ios', // iOS only
       timeout: 15000,
-      maximumAge: 10000,
+      maximumAge: 60000,
     }
   );
 
@@ -383,15 +384,14 @@ export const isOdd = (num: number) => !!(num % 2);
 
 /** Returns the index of 15:00 or nearest */
 export const getIndexForDaySmartSymbol = (dayArray: TimeStepData[]): number => {
-  if (dayArray.length === 24) {
-    return 15; // choose 15:00 (3.00 PM) local time as the default time
-  }
-  if (dayArray.length >= 9) {
-    return 15 - (24 - dayArray.length); // choose index of 15:00 if available from a list with fewer than 24 hourly forecasts
-  }
+  const index = dayArray.findIndex(
+    (item) => item.localtime.substring(9, 11) === '15'
+  );
 
-  // Return first timestamp of day if no 15:00 available (current local time > 15:00)
-  return 0;
+  if (index > -1) return index;
+
+  const firstHour = parseInt(dayArray[0].localtime.substring(9, 11), 10);
+  return firstHour < 15 ? dayArray.length - 1 : 0;
 };
 
 const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];

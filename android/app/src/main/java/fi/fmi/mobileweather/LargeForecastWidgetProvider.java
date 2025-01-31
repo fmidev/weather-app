@@ -12,9 +12,19 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-import static fi.fmi.mobileweather.PrefKey.WIDGET_UI_UPDATED;
+import static fi.fmi.mobileweather.model.PrefKey.WIDGET_UI_UPDATED;
+
+import fi.fmi.mobileweather.enumeration.WidgetType;
+import fi.fmi.mobileweather.model.WidgetData;
+import fi.fmi.mobileweather.util.SharedPreferencesHelper;
 
 public class LargeForecastWidgetProvider extends BaseWidgetProvider {
+
+    @Override
+    protected WidgetType getWidgetType() {
+        return WidgetType.WEATHER_FORECAST;
+    }
+    // set the widget layout here
     @Override
     protected int getLayoutResourceId() {
         return R.layout.large_forecast_widget_layout;
@@ -28,8 +38,10 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
     }
 
     @Override
-    protected void setWidgetData(JSONArray announcementsJson, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
-        JSONObject forecastJson = widgetInitResult.forecastJson();
+    protected void setWidgetUi(WidgetData widgetData, SharedPreferencesHelper pref, WidgetInitResult widgetInitResult, int appWidgetId) {
+
+        JSONObject forecastJson = widgetData.forecast();
+
         RemoteViews widgetRemoteViews = widgetInitResult.widgetRemoteViews();
         final double timeStepCount = getTimestepCount(getWidgetWidthInPixels(appWidgetId));
 
@@ -44,7 +56,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 return;
             }
             String firstKey = keys.next();
-            Log.d("Download forecastJson", "First key (geoid): " + firstKey);
+            Log.d("Download mainJson", "First key (geoid): " + firstKey);
 
             // Extract the JSONArray associated with the first key
             JSONArray data = forecastJson.getJSONArray(firstKey);
@@ -136,13 +148,13 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
             widgetRemoteViews.setTextViewText(R.id.updateTimeTextView, formattedText);
 
             // Crisis view
-            showCrisisViewIfNeeded(announcementsJson, widgetRemoteViews, pref, true);
+            showCrisisViewIfNeeded(widgetData.announcements(), widgetRemoteViews, pref, true, false);
             pref.saveLong(WIDGET_UI_UPDATED, System.currentTimeMillis());
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
             return;
 
         } catch (final Exception e) {
-            Log.e("Download json", "Exception Json parsing error: " + e.getMessage());
+            Log.e("Download json", "In large widget setWidgetUi exception: " + e.getMessage());
             showErrorView(
                     context,
                     pref,

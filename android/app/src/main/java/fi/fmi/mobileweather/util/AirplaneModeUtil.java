@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather;
+package fi.fmi.mobileweather.util;
 
 import android.content.Context;
 import android.provider.Settings;

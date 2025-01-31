@@ -78,7 +78,7 @@ struct TimeStep: Hashable, Identifiable, Codable {
   func formatTime(timezone: String? = nil) -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "HH:mm"
-    
+      
     if (timezone != nil) {
       dateFormatter.timeZone = TimeZone(identifier: timezone!)
     }
@@ -175,16 +175,12 @@ struct TimeStepEntry: TimelineEntry, Codable {
     return location.name + ", "
   }
   
-  func formatAreaOrCountry() -> String {
+  func formatArea() -> String {
     if (location.name == location.area) {
       return ""
     }
     
-    if (location.iso2 == "FI") {
-      return location.area
-    }
-        
-    return location.country != nil ? location.country! : ""
+    return location.area
   }
   
   func formatUpdated() -> String {
@@ -234,16 +230,12 @@ struct WarningEntry: TimelineEntry, Codable {
     return location.name + ", "
   }
   
-  func formatAreaOrCountry() -> String {
+  func formatArea() -> String {
     if (location.name == location.area) {
       return ""
     }
     
-    if (location.iso2 == "FI") {
-      return location.area
-    }
-        
-    return location.country != nil ? location.country! : ""
+    return location.area
   }
 }
 

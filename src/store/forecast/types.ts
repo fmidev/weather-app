@@ -82,6 +82,7 @@ export interface ForecastParameters {
 // copied almost as is from https://github.com/fmidev/mobileweather/blob/2b15990947985506a7b0711eef6df5c5826078b5/www/js/main.js#L554
 export interface TimeStepData extends Partial<ForecastParameters> {
   epochtime: number;
+  localtime: string;
   name: string;
   sunrise: string;
   sunset: string;
