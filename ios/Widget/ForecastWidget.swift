@@ -209,7 +209,7 @@ struct SmallWidgetView : View {
     } else {
       VStack(spacing: 0) {
         Text(entry.formatLocation()).style(.boldLocation).padding(.top, 8)
-        Text(entry.formatAreaOrCountry()).style(.location)
+        Text(entry.formatArea()).style(.location)
         Spacer()
         NextHourForecast(timeStep: entry.timeSteps[0])
         Spacer()
@@ -242,7 +242,7 @@ struct MediumWidgetView : View {
         if (entry.crisisMessage == nil) {
           HStack {
             Text(
-              "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
+              "**\(entry.formatLocation())** \(entry.formatArea())"
             ).style(.location)
             Spacer()
             if (entry.settings.showLogo) {
@@ -273,7 +273,7 @@ struct LargeWidgetView : View {
       } else {
         VStack {
           Text(
-            "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
+            "**\(entry.formatLocation())** \(entry.formatArea())"
           ).style(.location)
           Text("at \(entry.timeSteps[0].formatTime(timezone: entry.location.timezone))")
             .style(.largeTime)

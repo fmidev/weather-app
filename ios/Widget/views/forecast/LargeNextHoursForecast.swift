@@ -5,7 +5,7 @@ struct LargeNextHoursForecast: View {
     var timezone: String
     var transparent = true
   
-    let COLUMN_WIDTH: CGFloat = 36
+    let COLUMN_WIDTH: CGFloat = 38
     
     var body: some View {
       VStack{

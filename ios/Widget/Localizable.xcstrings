@@ -326,9 +326,6 @@
         }
       }
     },
-    "Location outside data area" : {
-
-    },
     "Location services are not allowed. Please enable them in the settings." : {
       "localizations" : {
         "fi" : {
@@ -420,6 +417,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nästa timmes prognos"
+          }
+        }
+      }
+    },
+    "No alerts are available for this location" : {
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varoituksia ei ole saatavilla tähän sijaintiin"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Det finns inga varningar för denna plats"
           }
         }
       }

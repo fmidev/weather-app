@@ -241,7 +241,7 @@ struct WarningsTodayView : View {
     } else {
       VStack(alignment: .leading) {
         Text(
-          "**\(entry.formatLocation())** \(entry.formatAreaOrCountry())"
+          "**\(entry.formatLocation())** \(entry.formatArea())"
         ).style(.location)
           .padding(.top, 3)
           .frame(maxWidth: .infinity, alignment: .center)
