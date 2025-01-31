@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
   },
   announcements: {
     width: '100%',
+    marginTop: 30,
   },
 });
 

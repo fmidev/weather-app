@@ -85,7 +85,7 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
               {announcement.content}
             </Text>
           </View>
-          <View style={styles.iconContainer}>
+          <View style={[styles.iconContainer, styles.rightIcon]}>
             <Icon
               name="open-in-new"
               color={textColor}
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   iconContainer: {
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -124,21 +123,24 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   textContainer: {
+    alignItems: 'flex-start',
     marginLeft: 12,
     flexShrink: 1,
-    alignItems: 'flex-start',
   },
   link: {
     textDecorationLine: 'underline',
   },
-  textIcon: {
+  rightIcon: {
+    flexGrow: 1,
     justifyContent: 'flex-end',
+    alignItems: 'flex-end',
     marginRight: 24,
   },
   touchable: {
     minHeight: 18,
     width: '100%',
     flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
 });
 
