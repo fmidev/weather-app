@@ -86,13 +86,7 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
             </Text>
           </View>
           <View style={[styles.iconContainer, styles.rightIcon]}>
-            <Icon
-              name="open-in-new"
-              color={textColor}
-              width={18}
-              height={18}
-              style={styles.textIcon}
-            />
+            <Icon name="open-in-new" color={textColor} width={18} height={18} />
           </View>
         </AccessibleTouchableOpacity>
       ) : (
