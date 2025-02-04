@@ -188,7 +188,7 @@ jobs:
    # needs: test
    name: IOS-build
    # Set MacOs version
-   runs-on: macos-latest
+   runs-on: macos-15
    # Node version matrix
    strategy:
         matrix:
@@ -238,7 +238,7 @@ jobs:
 
       # Gem install bundler + bundle install
       - name: Install Ruby Dependencies
-        run: gem install bundler && bundle install
+        run: gem install bundler && bundle install && bundle update fastlane
         working-directory: ios
 
       # Install Pods
@@ -266,7 +266,9 @@ jobs:
         working-directory: ios
 
       - name: Build & upload iOS binary
-        run: bundle exec fastlane ios build_upload_testflight
+        run: |
+          bundle update fastlane
+          bundle exec fastlane ios build_upload_testflight
         env:
          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -275,8 +277,12 @@ jobs:
          CERTIFICATE_PATH: ${{runner.temp}}/build_certificate.p12
          IOS_DIST_SIGNING_KEY_PASSWORD: ${{ secrets.IOS_DIST_SIGNING_KEY_PASSWORD }}
          IOS_APP_IDENTIFIER: ${{ secrets.IOS_APP_IDENTIFIER }}
+         IOS_WIDGET_IDENTIFIER: ${{ secrets.IOS_WIDGET_IDENTIFIER }}
+         IOS_SETTINGS_IDENTIFIER: ${{ secrets.IOS_SETTINGS_IDENTIFIER }}
          IOS_DEVELOPER_TEAM_ID: ${{ secrets.IOS_DEVELOPER_TEAM_ID }}
          IOS_PROVISIONINGPROFILE_NAME: ${{ secrets.IOS_PROVISIONINGPROFILE_NAME }}
+         IOS_WIDGET_PROVISIONINGPROFILE_NAME: ${{ secrets.IOS_WIDGET_PROVISIONINGPROFILE_NAME }}
+         IOS_SETTINGS_PROVISIONINGPROFILE_NAME: ${{ secrets.IOS_SETTINGS_PROVISIONINGPROFILE_NAME }}
          IOS_CODE_SIGNING_IDENTITY: ${{ secrets.IOS_CODE_SIGNING_IDENTITY }}
          # SLACK_WEB_HOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
         working-directory: ios

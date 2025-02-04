@@ -76,8 +76,12 @@ platform :ios do
    desc "Check certs and profiles"
     lane :prepare_signing do |options|
     app_identifier = ENV["IOS_APP_IDENTIFIER"]
+    widget_identifier = ENV["IOS_WIDGET_IDENTIFIER"]
+    settings_identifier = ENV["IOS_SETTINGS_IDENTIFIER"]
     api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # replace with the name of your existing profile
+    widget_profile_name = ENV["IOS_WIDGET_PROVISIONINGPROFILE_NAME"]
+    settings_profile_name = ENV["IOS_SETTINGS_PROVISIONINGPROFILE_NAME"]
     ENV['KEYCHAIN_NAME'] = 'my-custom-keychain.keychain'
     ENV['KEYCHAIN_PATH'] = File.expand_path("~/Library/Keychains/#{ENV['KEYCHAIN_NAME']}-db")
 
@@ -105,14 +109,35 @@ platform :ios do
     app_identifier: app_identifier,
     provisioning_name: profile_name,
     )
+
+    # widget profile
+    sigh(
+      api_key: api_key,
+      app_identifier: widget_identifier,
+      provisioning_name: widget_profile_name,
+      )
+
+    # settings extension profile
+    sigh(
+      api_key: api_key,
+      app_identifier: settings_identifier,
+      provisioning_name: settings_profile_name,
+      )
    end
 	
    # Update signing settings and build iOS app for release
    desc "Build the iOS app for release"
     lane :build_release do |options|
-    xcode_select("/Applications/Xcode_15.3.app")
+    xcodes(
+      version: '16',
+      select_for_current_build_only: true,
+    )
     app_identifier = ENV["IOS_APP_IDENTIFIER"]
+    widget_identifier = ENV["IOS_WIDGET_IDENTIFIER"]
+    settings_identifier = ENV["IOS_SETTINGS_IDENTIFIER"]
     profile_name = ENV["IOS_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the build
+    widget_profile_name = ENV["IOS_WIDGET_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the widget
+    settings_profile_name = ENV["IOS_SETTINGS_PROVISIONINGPROFILE_NAME"] # the name of the profile to use for the settings
     export_method = "app-store" # specify the export method
     compile_bitcode = false # specify whether to enable bitcode
  
@@ -126,6 +151,28 @@ platform :ios do
      profile_name: profile_name,
      build_configurations: ["Release"] # only toggle code signing settings for Release configurations
    )
+
+   update_code_signing_settings(
+    use_automatic_signing: false,
+    path: XCODE_PROJECT,
+    team_id: ENV["IOS_DEVELOPER_TEAM_ID"],
+    code_sign_identity: ENV["IOS_CODE_SIGNING_IDENTITY"], # replace with name of code signing identity if different
+    bundle_identifier: widget_identifier,
+    profile_name: widget_profile_name,
+    build_configurations: ["Release"], # only toggle code signing settings for Release configurations
+    targets: ["WidgetExtension"]
+  )
+
+  update_code_signing_settings(
+    use_automatic_signing: false,
+    path: XCODE_PROJECT,
+    team_id: ENV["IOS_DEVELOPER_TEAM_ID"],
+    code_sign_identity: ENV["IOS_CODE_SIGNING_IDENTITY"], # replace with name of code signing identity if different
+    bundle_identifier: settings_identifier,
+    profile_name: settings_profile_name,
+    build_configurations: ["Release"], # only toggle code signing settings for Release configurations
+    targets: ["SettingsIntentExtension"]
+  )
    
    # Build the app
    gym(
@@ -142,7 +189,9 @@ platform :ios do
      export_options: {
       method: export_method,
       provisioningProfiles: {
-       app_identifier => profile_name
+        app_identifier => profile_name,
+        widget_identifier => widget_profile_name,
+        settings_identifier => settings_profile_name
       },
       compileBitcode: compile_bitcode
      }
