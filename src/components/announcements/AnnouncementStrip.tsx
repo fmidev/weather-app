@@ -69,25 +69,24 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
 
   return (
     <View style={[style, styles.container, { backgroundColor }]}>
-      <AnnouncementIcon type={type} />
+      <View style={styles.iconContainer}>
+        <AnnouncementIcon type={type} />
+      </View>
       {isLink ? (
         <AccessibleTouchableOpacity
-          style={styles.textContainer}
+          style={styles.touchable}
           accessibilityRole="link"
           accessibilityHint={t('openInBrowser')}
           onPress={() => Linking.openURL(announcement.link)}>
-          <View>
+          <View style={[styles.textContainer]}>
             <Text
               style={[styles.text, styles.link, { color: textColor }]}
               accessibilityLabel={`${prefix} ${announcement.content}`}>
               {announcement.content}
-              <Icon
-                name="open-in-new"
-                color={textColor}
-                height={18}
-                style={styles.textIcon}
-              />
             </Text>
+          </View>
+          <View style={[styles.iconContainer, styles.rightIcon]}>
+            <Icon name="open-in-new" color={textColor} width={18} height={18} />
           </View>
         </AccessibleTouchableOpacity>
       ) : (
@@ -108,21 +107,34 @@ const styles = StyleSheet.create({
     padding: 12,
     flexDirection: 'row',
   },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   text: {
     fontFamily: 'Roboto-Medium',
     fontSize: 16,
     alignItems: 'flex-end',
   },
   textContainer: {
+    alignItems: 'flex-start',
     marginLeft: 12,
     flexShrink: 1,
-    alignItems: 'flex-start',
   },
   link: {
     textDecorationLine: 'underline',
   },
-  textIcon: {
-    marginBottom: -3,
+  rightIcon: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    marginRight: 24,
+  },
+  touchable: {
+    minHeight: 18,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
 });
 
