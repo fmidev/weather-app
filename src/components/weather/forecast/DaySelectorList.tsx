@@ -14,9 +14,11 @@ import { converter, toPrecision } from '@utils/units';
 import PrecipitationStrip from './PrecipitationStrip';
 import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
+import { selectForecastInvalidData } from '@store/forecast/selectors';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
+  invalidData: selectForecastInvalidData(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -43,6 +45,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   setActiveDayIndex,
   dayData,
   units,
+  invalidData,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
@@ -90,16 +93,20 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     );
     const isActive = index === activeDayIndex;
 
-    const convertedMaxTemperature = toPrecision(
-      'temperature',
-      temperatureUnit,
-      converter(temperatureUnit, maxTemperature)
-    );
-    const convertedMinTemperature = toPrecision(
-      'temperature',
-      temperatureUnit,
-      converter(temperatureUnit, minTemperature)
-    );
+    const convertedMaxTemperature = invalidData
+      ? '-'
+      : toPrecision(
+          'temperature',
+          temperatureUnit,
+          converter(temperatureUnit, maxTemperature)
+        );
+    const convertedMinTemperature = invalidData
+      ? '-'
+      : toPrecision(
+          'temperature',
+          temperatureUnit,
+          converter(temperatureUnit, minTemperature)
+        );
 
     const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
     const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';

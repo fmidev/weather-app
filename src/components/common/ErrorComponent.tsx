@@ -3,10 +3,12 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import NetInfo from '@react-native-community/netinfo';
+import { useNavigationState } from '@react-navigation/native';
 
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { selectError as selectForecastError } from '@store/forecast/selectors';
+import { selectForecastInvalidData as selectForecastInvalidDataError } from '@store/forecast/selectors';
 import { selectError as selectObservationError } from '@store/observation/selector';
 import { selectError as selectWarningsError } from '@store/warnings/selectors';
 import { selectActiveOverlay, selectOverlaysError } from '@store/map/selectors';
@@ -25,6 +27,7 @@ import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
   forecastError: selectForecastError(state),
+  forecastInvalidDataError: selectForecastInvalidDataError(state),
   observationError: selectObservationError(state),
   warningsError: selectWarningsError(state),
   activeOverlay: selectActiveOverlay(state),
@@ -60,6 +63,7 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
   location,
   activeOverlay,
   forecastError,
+  forecastInvalidDataError,
   observationError,
   warningsError,
   overlaysError,
@@ -68,6 +72,10 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
   fetchWarnings,
   updateOverlays,
 }) => {
+  const activeRoute = useNavigationState(
+    (state) => state?.routes[state.index].name || 'Weather'
+  );
+
   const { t, i18n } = useTranslation('error');
   const [errorType, setErrorType] = useState<keyof Messages | undefined>(
     undefined
@@ -76,7 +84,6 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
   const tryUpdateForecast = useCallback(() => {
     const geoid = location.id;
     fetchForecast({ geoid }, [geoid]);
-    setErrorType(undefined);
   }, [fetchForecast, location]);
 
   const tryUpdateObservation = useCallback(() => {
@@ -84,17 +91,14 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
       ? { geoid: location.id }
       : { latlon: `${location.lat},${location.lon}` };
     fetchObservation(observationLocation, location.country);
-    setErrorType(undefined);
   }, [fetchObservation, location]);
 
   const tryUpdateWarnings = useCallback(() => {
     fetchWarnings(location);
-    setErrorType(undefined);
   }, [fetchWarnings, location]);
 
   const tryUpdateOverlays = useCallback(() => {
     updateOverlays(activeOverlay);
-    setErrorType(undefined);
   }, [updateOverlays, activeOverlay]);
 
   const tryAgainFunctions: {
@@ -141,7 +145,7 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
         setErrorType('noInternet');
       }
       if (state.isConnected) {
-        if (forecastError) {
+        if (forecastError && activeRoute === 'Weather') {
           if (
             typeof forecastError === 'object' &&
             forecastError.message.includes('400') &&
@@ -151,24 +155,27 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
           } else {
             setErrorType('forecast');
           }
-        }
-        if (observationError) {
+        } else if (forecastInvalidDataError && activeRoute === 'Weather') {
+          setErrorType('forecast');
+        } else if (observationError && activeRoute === 'Weather') {
           setErrorType('observation');
-        }
-        if (warningsError) {
+        } else if (warningsError && activeRoute === 'Warnings') {
           setErrorType('warnings');
-        }
-        if (overlaysError) {
+        } else if (overlaysError && activeRoute === 'Map') {
           setErrorType('overlays');
+        } else {
+          setErrorType(undefined);
         }
       }
     });
   }, [
     forecastError,
+    forecastInvalidDataError,
     observationError,
     warningsError,
     overlaysError,
     messages.outOfServiceArea,
+    activeRoute,
   ]);
 
   return errorType ? (

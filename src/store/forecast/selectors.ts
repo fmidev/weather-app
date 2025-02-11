@@ -57,6 +57,14 @@ export const selectNextHourForecast = createSelector(
   (forecast) => forecast && forecast[0]
 );
 
+export const selectForecastInvalidData = createSelector(
+  selectForecast,
+  (forecast) =>
+    forecast &&
+    forecast.length > 0 &&
+    forecast.every((timeStep) => timeStep.temperature === null)
+);
+
 export const selectForecastByDay = createSelector(
   [selectForecast],
   (forecast) =>
