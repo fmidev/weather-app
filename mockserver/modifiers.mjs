@@ -85,6 +85,11 @@ export const updateForecast = (json, geoid, mode) => {
       const epochtime = forecastStart + index * 3600;
       item.epochtime = epochtime;
 
+      item.localtime = new Date(epochtime * 1000)
+        .toISOString()
+        .replace(/[-:Z.]/g, '')
+        .substring(0, 13);
+
       if (item.sunrise && item.sunset && item.modtime) {
         if (item.sunrise && item.sunset && item.modtime) {
           item.sunrise = getSuntime(epochtime, item.sunrise);
@@ -97,6 +102,11 @@ export const updateForecast = (json, geoid, mode) => {
     } else {
       const epochtime = item.epochtime + interval;
 
+      item.localtime = new Date(epochtime * 1000)
+        .toISOString()
+        .replace(/[-:Z.]/g, '')
+        .substring(0, 13);
+
       if (epochtime > now.getTime() / 1000) {
         item.epochtime = epochtime;
 
@@ -105,7 +115,6 @@ export const updateForecast = (json, geoid, mode) => {
           item.sunset = getSuntime(epochtime, item.sunset);
           item.modtime = modtime;
         }
-
         itemsInFuture.push(item);
       }
     }
