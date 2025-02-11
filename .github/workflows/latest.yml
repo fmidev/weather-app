@@ -150,3 +150,13 @@ jobs:
             ${{ github.workspace }}/android/app/build/outputs/apk/latest/app-latest.apk
           retention-days: 7
           overwrite: true
+
+      # Release to get static url for apk
+      - name: Update release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          files: ${{ github.workspace }}/android/app/build/outputs/apk/latest/app-latest.apk
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: true
+          draft: false
