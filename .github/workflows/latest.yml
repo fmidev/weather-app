@@ -159,4 +159,10 @@ jobs:
           files: ${{ github.workspace }}/android/app/build/outputs/apk/latest/app-latest.apk
           token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: true
-          draft: false
+          draft: true
+
+      - name: Remove source code from release
+        run: |
+          gh release edit v1.0.0 --repo $GITHUB_REPOSITORY --draft=false --remove-files "Source code (zip)" "Source code (tar.gz)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
