@@ -155,7 +155,7 @@ jobs:
       - name: Update release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
+          name: "Latest"
           files: ${{ github.workspace }}/android/app/build/outputs/apk/latest/app-latest.apk
           token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: true
