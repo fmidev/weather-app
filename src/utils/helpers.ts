@@ -28,7 +28,6 @@ const getPosition = (
 ) =>
   Geolocation.getCurrentPosition(
     (position) => {
-      console.log('getCurrentPosition callback', position);
       let { latitude, longitude } = position.coords;
       latitude = roundCoordinates(latitude);
       longitude = roundCoordinates(longitude);
