@@ -11,4 +11,7 @@ Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.maxFontSizeMultiplier = 1.35;
 TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.maxFontSizeMultiplier = 1.35;
+
+console.log('appName', appName);
+
 AppRegistry.registerComponent(appName, () => App);
