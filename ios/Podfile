@@ -38,11 +38,6 @@ target 'MobileWeather' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'MobileWeatherTests' do
-    inherit! :complete
-    # Pods for testing
-  end
-
   post_install do |installer|
 
     installer.pods_project.targets.each do |target|
