@@ -22,7 +22,6 @@ import type { NavigationState } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { useTranslation } from 'react-i18next';
-import SplashScreen from 'react-native-splash-screen';
 import { LaunchArguments } from 'react-native-launch-arguments';
 
 import OthersScreen from '@screens/OthersScreen';
@@ -145,13 +144,6 @@ const Navigator: React.FC<Props> = ({
       i18n.off('languageChanged', handleLanguageChanged);
     };
   }, [handleLanguageChanged, i18n]);
-
-  // hide splash screen only when theme is known to avoid weird behavior
-  useEffect(() => {
-    if (theme && !!ready) {
-      SplashScreen.hide();
-    }
-  }, [theme, ready]);
 
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
