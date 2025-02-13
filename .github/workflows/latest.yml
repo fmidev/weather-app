@@ -151,6 +151,14 @@ jobs:
           retention-days: 7
           overwrite: true
 
+      - name: Update latest tag
+        run: |
+          git fetch --tags
+          git tag -f latest  # Updates tag to latest commit
+          git push --force origin latest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Release to get static url for apk
       - name: Update release
         uses: softprops/action-gh-release@v2

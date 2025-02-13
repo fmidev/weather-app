@@ -180,7 +180,7 @@ const Latest: React.FC<LatestProps> = ({
       {hoursSinceLatestObservation > 2 && dailyData.length === 0 && (
         <InfoMessage translationKey="tooOld" />
       )}
-      {data.length <= 2 && dailyData.length > 0 && (
+      {data.length <= 3 && dailyData.length > 0 && (
         <InfoMessage translationKey="onlyDailyValues" />
       )}
       {!!latestObservation && hoursSinceLatestObservation <= 2 && (
