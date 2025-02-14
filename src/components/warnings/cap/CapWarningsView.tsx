@@ -3,7 +3,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Icon from '@components/common/Icon';
 import { State } from '@store/types';

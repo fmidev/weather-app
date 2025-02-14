@@ -40,7 +40,7 @@ import {
 } from '@assets/images';
 
 import { useOrientation } from '@utils/hooks';
-import { GRAY_1, CustomTheme } from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@assets/colors';
 import { Config } from '@config';
 
 const mapStateToProps = (state: State) => ({

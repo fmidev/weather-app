@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 import PrecipitationStrip from '../forecast/PrecipitationStrip';
 

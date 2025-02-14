@@ -1,9 +1,9 @@
 import React from 'react';
 import { VictoryBar, VictoryGroup, VictoryLine } from 'victory-native';
 import { getPrecipitationLevel } from '@utils/helpers';
-import chartTheme from '@utils/chartTheme';
+import chartTheme from '@assets/chartTheme';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { ChartDataProps } from './types';
 import { Config } from '@config';
 

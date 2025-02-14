@@ -18,7 +18,7 @@ import { getCurrentPosition } from '@network/WeatherApi';
 import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
 import { CapWarning, Severity } from '@store/warnings/types';
-import { Rain } from './colors';
+import { Rain } from '../assets/colors';
 import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
 

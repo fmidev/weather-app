@@ -57,7 +57,7 @@ import {
   TRANSPARENT,
   SHADOW_DARK,
   SHADOW_LIGHT,
-} from '@utils/colors';
+} from '@assets/colors';
 import {
   selectInitialTab,
   selectDidLaunchApp,

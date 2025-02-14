@@ -21,7 +21,7 @@ import {
   GRAYISH_BLUE,
   GRAY_1,
   CustomTheme,
-} from '@utils/colors';
+} from '@assets/colors';
 import { Config } from '@config';
 
 const mapStateToProps = (state: State) => ({

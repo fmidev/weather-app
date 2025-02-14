@@ -15,7 +15,7 @@ import {
   CAP_WARNING_YELLOW,
   CAP_WARNING_ORANGE,
   CAP_WARNING_RED,
-} from '@utils/colors';
+} from '@assets/colors';
 import { useTheme } from '@react-navigation/native';
 import { t } from 'i18next';
 import CapSeverityBar from './CapSeverityBar';

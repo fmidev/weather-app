@@ -11,7 +11,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from '@components/common/Icon';
 import CloseButton from '@components/common/CloseButton';
-import { GRAY_1, CustomTheme } from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@assets/colors';
 
 type SearchInfoSheetProps = {
   onClose: () => void;

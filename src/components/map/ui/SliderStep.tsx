@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { ClockType } from '@store/settings/types';
 
 type SliderStepProps = {

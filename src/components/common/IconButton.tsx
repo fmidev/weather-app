@@ -7,7 +7,7 @@ import {
   ColorValue,
 } from 'react-native';
 
-import { LIGHT_BLUE, PRIMARY_BLUE } from '@utils/colors';
+import { LIGHT_BLUE, PRIMARY_BLUE } from '@assets/colors';
 
 import Icon from './Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';

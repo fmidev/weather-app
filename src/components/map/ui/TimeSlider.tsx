@@ -47,7 +47,7 @@ import {
   GRAY_6,
   GRAY_6_TRANSPARENT,
   TRANSPARENT,
-} from '@utils/colors';
+} from '@assets/colors';
 import { selectClockType } from '@store/settings/selectors';
 import SliderStep from './SliderStep';
 

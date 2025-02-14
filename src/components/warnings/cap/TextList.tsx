@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { BLACK, GRAYISH_BLUE, CustomTheme } from '@utils/colors';
+import { BLACK, GRAYISH_BLUE, CustomTheme } from '@assets/colors';
 import { CapWarning } from '@store/warnings/types';
 import WarningBlock from './WarningBlock';
 

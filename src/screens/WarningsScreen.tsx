@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused, useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 
 import {
   fetchWarnings as fetchWarningsAction,
