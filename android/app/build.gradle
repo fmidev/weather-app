@@ -157,6 +157,7 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.7.1'
     androidTestImplementation('com.wix:detox:+')
     implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
