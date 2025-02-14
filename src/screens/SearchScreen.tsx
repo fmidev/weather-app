@@ -46,7 +46,7 @@ import AreaList from '@components/search/AreaList';
 import IconButton from '@components/common/IconButton';
 
 import { getGeolocation } from '@utils/helpers';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),

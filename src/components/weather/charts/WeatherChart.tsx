@@ -1,8 +1,8 @@
 import React from 'react';
 import { VictoryLine, VictoryBar, VictoryGroup } from 'victory-native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { useTheme } from '@react-navigation/native';
-import chartTheme from '@utils/chartTheme';
+import chartTheme from '@assets/chartTheme';
 import { getPrecipitationLevel } from '@utils/helpers';
 import { ChartDataProps } from './types';
 import { secondaryYDomainForWeatherChart } from '@utils/chart';

@@ -19,7 +19,7 @@ import { selectUnits } from '@store/settings/selectors';
 import { weatherSymbolGetter } from '@assets/images';
 
 import { getFeelsLikeIconName, getWindDirection } from '@utils/helpers';
-import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@assets/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';

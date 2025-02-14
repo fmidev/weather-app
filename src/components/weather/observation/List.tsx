@@ -11,7 +11,7 @@ import {
   DailyObservationParameters,
   TimeStepData,
 } from '@store/observation/types';
-import { GRAY_1_OPACITY, CustomTheme } from '@utils/colors';
+import { GRAY_1_OPACITY, CustomTheme } from '@assets/colors';
 import { capitalize } from '@utils/chart';
 import {
   getObservationCellValue,

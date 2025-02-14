@@ -1,3 +1,6 @@
+# react-native-maps doesn't support new arch yet
+ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+
 # Transform this into a `node_require` generic function:
 def node_require(script)
   # Resolve script with node to allow for hoisting
@@ -34,11 +37,6 @@ target 'MobileWeather' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-
-  target 'MobileWeatherTests' do
-    inherit! :complete
-    # Pods for testing
-  end
 
   post_install do |installer|
 

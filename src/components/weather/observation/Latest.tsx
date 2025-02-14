@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import {
   getObservationCellValue,

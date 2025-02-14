@@ -5,7 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { getObservationCellValue } from '@utils/helpers';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 
 type DailyObservationRowProps = {
   parameter: 'daily' | 'snowDepth06';

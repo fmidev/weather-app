@@ -11,7 +11,7 @@ import { useTheme } from '@react-navigation/native';
 
 import CloseButton from '@components/common/CloseButton';
 
-import { CustomTheme, GREEN, ORANGE, RED, YELLOW } from '@utils/colors';
+import { CustomTheme, GREEN, ORANGE, RED, YELLOW } from '@assets/colors';
 import useOrientation from '@utils/hooks';
 import { WarningType } from '@store/warnings/types';
 import { knownWarningTypes } from '@store/warnings/constants';

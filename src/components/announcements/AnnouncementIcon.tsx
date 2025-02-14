@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import Icon from '@components/common/Icon';
 
-import { RED, PRIMARY_BLUE } from '@utils/colors';
+import { RED, PRIMARY_BLUE } from '@assets/colors';
 import type { AnnouncementType } from './types';
 
 type AnnouncementIconProps = {

@@ -1,6 +1,7 @@
 import i18n, { LanguageDetectorAsyncModule } from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { Platform, NativeModules } from 'react-native';
+import * as RNLocalize from "react-native-localize";
+
 import { getItem, LOCALE } from '../src/utils/async_storage';
 import en from './en.json';
 import fi from './fi.json';
@@ -8,16 +9,21 @@ import sv from './sv.json';
 
 const languageResources = { en, fi, sv };
 
-let systemLng =
-  Platform.OS === 'ios'
-    ? NativeModules.SettingsManager.settings.AppleLocale ||
-      NativeModules.SettingsManager.settings.AppleLanguages[0]
-    : NativeModules.I18nManager.localeIdentifier;
+const getDeviceLanguage = () => {
+  const locales = RNLocalize.getLocales();
 
-systemLng = systemLng.substr(0, systemLng.indexOf('_'));
+  if (locales.length > 0) {
+    return locales[0].languageTag; // Esim. "fi-FI"
+  }
+
+  return "en";
+};
+
+
+let systemLng = getDeviceLanguage().split('-')[0];
 
 if (Object.keys(languageResources).indexOf(systemLng) < 0) {
-  systemLng = null;
+  systemLng = "";
 }
 
 const languageDetector = <LanguageDetectorAsyncModule>{

@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from 'react-native';
 
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { CustomTheme, TRANSPARENT } from '@utils/colors';
+import { CustomTheme, TRANSPARENT } from '@assets/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';

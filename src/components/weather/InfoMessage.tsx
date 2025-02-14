@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { CustomTheme, GRAY_1_OPACITY_15, GRAY_4, WHITE } from '@utils/colors';
+import { CustomTheme, GRAY_1_OPACITY_15, GRAY_4, WHITE } from '@assets/colors';
 
 const InfoMessage: React.FC<{ translationKey: string }> = ({
   translationKey,

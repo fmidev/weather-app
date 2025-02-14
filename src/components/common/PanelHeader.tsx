@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import { CustomTheme, WHITE } from '@utils/colors';
+import { CustomTheme, WHITE } from '@assets/colors';
 
 type PanelHeaderProps = {
   title: string;

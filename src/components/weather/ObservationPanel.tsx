@@ -24,7 +24,7 @@ import {
 } from '@store/observation/actions';
 
 import { State } from '@store/types';
-import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 import { Config } from '@config';
 import { ObservationParameters } from '@store/observation/types';

@@ -16,7 +16,7 @@ import {
 } from '@store/observation/selector';
 import { setStationId as setStationIdAction } from '@store/observation/actions';
 
-import { GRAY_1, CustomTheme } from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 
 const mapStateToProps = (state: State) => ({

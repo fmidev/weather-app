@@ -9,7 +9,7 @@ import {
 import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,

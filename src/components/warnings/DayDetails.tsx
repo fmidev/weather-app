@@ -5,7 +5,7 @@ import moment from 'moment';
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { Warning } from '@store/warnings/types';
 import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';

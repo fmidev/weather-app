@@ -3,11 +3,11 @@ import { View, StyleSheet } from 'react-native';
 
 import { getWindDirection } from '@utils/helpers';
 import { VictoryLine, VictoryGroup, VictoryArea } from 'victory-native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { useTheme } from '@react-navigation/native';
 import Icon from '@components/common/Icon';
 import moment from 'moment';
-import chartTheme from '@utils/chartTheme';
+import chartTheme from '@assets/chartTheme';
 import { ChartDataProps } from './types';
 
 const WindChart: React.FC<ChartDataProps> = ({

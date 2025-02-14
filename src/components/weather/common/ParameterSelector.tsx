@@ -19,7 +19,7 @@ import {
   GRAY_6,
   GRAY_6_TRANSPARENT,
   CustomTheme,
-} from '@utils/colors';
+} from '@assets/colors';
 import { ChartType } from '../charts/types';
 
 type ParameterSelectorProps = {

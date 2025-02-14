@@ -23,7 +23,7 @@ import {
   WHITE_TRANSPARENT,
   BLACK_TRANSPARENT,
   CustomTheme,
-} from '@utils/colors';
+} from '@assets/colors';
 
 import { isOdd } from '@utils/helpers';
 import { DAY_LENGTH } from '@store/forecast/constants';

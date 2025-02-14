@@ -1,5 +1,5 @@
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View, StyleSheet } from 'react-native';

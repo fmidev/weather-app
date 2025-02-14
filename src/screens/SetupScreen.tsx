@@ -17,7 +17,7 @@ import { SetupStackParamList } from '@navigators/types';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
-import { GRAY_1, CustomTheme } from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@assets/colors';
 import { useOrientation } from '@utils/hooks';
 
 type SetupScreenProps = {

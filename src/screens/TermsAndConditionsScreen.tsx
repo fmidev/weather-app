@@ -12,7 +12,7 @@ import { useTheme, useFocusEffect } from '@react-navigation/native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 
 type TermsAndConditionsScreenProps = {
   showCloseButton?: boolean;

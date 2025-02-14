@@ -9,7 +9,7 @@ import Icon from '@components/common/Icon';
 import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 
 import { weatherSymbolGetter } from '@assets/images';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
 import { isOdd, getWindDirection } from '@utils/helpers';
 import { Config } from '@config';

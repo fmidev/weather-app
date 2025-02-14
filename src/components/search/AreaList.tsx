@@ -6,7 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
-import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { Location } from '@store/location/types';
 
 type ClearProps =

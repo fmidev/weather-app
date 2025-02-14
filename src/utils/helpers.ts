@@ -18,7 +18,7 @@ import { getCurrentPosition } from '@network/WeatherApi';
 import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
 import { CapWarning, Severity } from '@store/warnings/types';
-import { Rain } from './colors';
+import { Rain } from '../assets/colors';
 import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
 
@@ -28,7 +28,6 @@ const getPosition = (
 ) =>
   Geolocation.getCurrentPosition(
     (position) => {
-      console.log('getCurrentPosition callback', position);
       let { latitude, longitude } = position.coords;
       latitude = roundCoordinates(latitude);
       longitude = roundCoordinates(longitude);

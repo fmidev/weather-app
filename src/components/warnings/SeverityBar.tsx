@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { GREEN, ORANGE, RED, YELLOW } from '@utils/colors';
+import { GREEN, ORANGE, RED, YELLOW } from '@assets/colors';
 
 type SeverityBarProps = {
   severity: number;

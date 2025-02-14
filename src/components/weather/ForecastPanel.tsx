@@ -21,7 +21,7 @@ import {
   selectForecastAge,
 } from '@store/forecast/selectors';
 
-import { GRAY_1, CustomTheme } from '@utils/colors';
+import { GRAY_1, CustomTheme } from '@assets/colors';
 
 import Icon from '@components/common/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';

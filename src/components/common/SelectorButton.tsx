@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 function SelectorButton({

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 import Icon from './Icon';

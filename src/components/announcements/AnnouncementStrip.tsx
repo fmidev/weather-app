@@ -22,7 +22,7 @@ import {
 } from '@store/announcements/selectors';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 
-import { LIGHT_RED, DARK_RED, LIGHT_BLUE, PRIMARY_BLUE } from '@utils/colors';
+import { LIGHT_RED, DARK_RED, LIGHT_BLUE, PRIMARY_BLUE } from '@assets/colors';
 import AnnouncementIcon from './AnnouncementIcon';
 import type { AnnouncementType } from './types';
 

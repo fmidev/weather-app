@@ -18,7 +18,7 @@ import { fetchObservation as fetchObservationAction } from '@store/observation/a
 import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
 import { updateOverlays as updateOverlaysAction } from '@store/map/actions';
 
-import { YELLOW, BLACK } from '@utils/colors';
+import { YELLOW, BLACK } from '@assets/colors';
 
 import { Config } from '@config';
 import Icon from './Icon';

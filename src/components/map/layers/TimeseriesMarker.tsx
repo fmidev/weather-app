@@ -7,7 +7,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { weatherSymbolGetter } from '@assets/images';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { converter, toPrecision } from '@utils/units';
 
 import { State } from '@store/types';

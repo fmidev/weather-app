@@ -1,7 +1,7 @@
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { useTheme } from '@react-navigation/native';
 import { CapWarning, Severity, WarningType } from '@store/warnings/types';
-import { CustomTheme, SECONDARY_BLUE } from '@utils/colors';
+import { CustomTheme, SECONDARY_BLUE } from '@assets/colors';
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import WarningSymbol from '../WarningsSymbol';
