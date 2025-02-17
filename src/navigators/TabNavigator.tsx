@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  AppState,
   Appearance,
   Platform,
-  AppStateStatus,
   StyleSheet,
   StatusBar,
   StyleProp,
@@ -158,11 +156,6 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements,
   ]);
 
-  const handleAppStateChange = (state: AppStateStatus) => {
-    if (state === 'active') {
-      setUseDarkTheme(isDark(theme));
-    }
-  };
 
   const navigationTabChanged = (state: NavigationState | undefined) => {
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
@@ -172,15 +165,13 @@ const Navigator: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setUseDarkTheme(isDark(theme));
-    const appStateSubscriber = AppState.addEventListener(
-      'change',
-      handleAppStateChange
-    );
-    return () => appStateSubscriber.remove();
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setUseDarkTheme(isDark(colorScheme || undefined));
+    });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [theme]);
+    return () => subscription.remove();
+  }, []);
+
 
   const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
     <View style={styles.headerBackImage}>
