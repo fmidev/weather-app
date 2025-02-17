@@ -1,6 +1,6 @@
 import React from 'react';
 import { VictoryBar, VictoryGroup, VictoryScatter } from 'victory-native';
-import chartTheme from '@utils/chartTheme';
+import chartTheme from '@assets/chartTheme';
 import { ChartDataProps } from './types';
 
 const DailyChart: React.FC<ChartDataProps> = ({

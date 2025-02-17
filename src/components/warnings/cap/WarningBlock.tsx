@@ -1,7 +1,7 @@
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { useTheme } from '@react-navigation/native';
 import { Severity, CapWarning, WarningType } from '@store/warnings/types';
-import { CustomTheme, GRAYISH_BLUE, GRAY_4 } from '@utils/colors';
+import { CustomTheme, GRAYISH_BLUE, GRAY_4 } from '@assets/colors';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import {
   Text,

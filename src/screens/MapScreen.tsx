@@ -30,7 +30,7 @@ import {
 } from '@store/map/actions';
 
 import darkMapStyle from '@utils/dark_map_style.json';
-import { GRAY_1 } from '@utils/colors';
+import { GRAY_1 } from '@assets/colors';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 

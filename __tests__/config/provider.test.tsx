@@ -16,6 +16,14 @@ jest.spyOn(axios.CancelToken, 'source').mockReturnValue({
   },
 });
 
+jest.mock('react-native-launch-arguments', () => {
+  return {
+    LaunchArguments: {
+      value: jest.fn().mockReturnValue({}),
+    },
+  };
+});
+
 const TestComponent = () => <Text>{Config.get('weather').apiUrl}</Text>;
 
 describe('ConfigProvider children renders', () => {

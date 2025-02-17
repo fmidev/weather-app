@@ -27,7 +27,7 @@ import {
   RAIN_7,
   RAIN_8,
   TRANSPARENT,
-} from '@utils/colors';
+} from '@assets/colors';
 
 export const lightTheme = {
   dark: false,

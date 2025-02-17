@@ -33,7 +33,7 @@ import {
 import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
 import { UnitType } from '@store/settings/types';
 import { selectStoredGeoids } from '@store/location/selector';
-import { GRAY_1 } from '@utils/colors';
+import { GRAY_1 } from '@assets/colors';
 
 import { Config } from '@config';
 

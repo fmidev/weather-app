@@ -9,13 +9,13 @@ import { Config } from '@config';
 
 import CloseButton from '@components/common/CloseButton';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 
 import { State } from '@store/types';
 import { selectActiveOverlay } from '@store/map/selectors';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { getTemperatureIndexColor } from '@utils/colors';
+import { getTemperatureIndexColor } from '@assets/colors';
 
 type InfoBottomSheetProps = {
   onClose: () => void;

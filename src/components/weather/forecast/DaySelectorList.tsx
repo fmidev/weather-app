@@ -7,7 +7,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';

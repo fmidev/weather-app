@@ -19,7 +19,7 @@ import {
   HOT,
   WHITE,
   CustomTheme,
-} from '@utils/colors';
+} from '@assets/colors';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),

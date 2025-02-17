@@ -14,7 +14,7 @@ import { useTheme, useFocusEffect } from '@react-navigation/native';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Icon from '@components/common/Icon';
 
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import packageJSON from '../../package.json';
 
 const TermsAndConditionsScreen: React.FC = () => {

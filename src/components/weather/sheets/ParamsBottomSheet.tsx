@@ -37,7 +37,7 @@ import {
   SECONDARY_BLUE,
   GRAYISH_BLUE,
   CustomTheme,
-} from '@utils/colors';
+} from '@assets/colors';
 import { Config } from '@config';
 import { DisplayParameters } from '@store/forecast/types';
 

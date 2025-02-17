@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { calculateTemperatureTickCount, chartYLabelText } from '@utils/chart';
 import { useTranslation } from 'react-i18next';
 import { ChartDomain, ChartMinMax, ChartType } from './types';

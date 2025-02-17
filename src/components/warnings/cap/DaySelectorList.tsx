@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme, GRAYISH_BLUE } from '@utils/colors';
+import { CustomTheme, GRAYISH_BLUE } from '@assets/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CapSeverityBar from './CapSeverityBar';
 

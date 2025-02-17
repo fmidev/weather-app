@@ -5,7 +5,7 @@ import { WebView } from 'react-native-webview';
 import { useTheme } from '@react-navigation/native';
 import { Config } from '@config';
 import PanelHeader from '@components/weather/common/PanelHeader';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 
 type WarningsWebViewPanelProps = {
   updateInterval: number;

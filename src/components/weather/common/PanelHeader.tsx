@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { RED, WHITE } from '@utils/colors';
+import { RED, WHITE } from '@assets/colors';
 import CommonPanelHeader from '@components/common/PanelHeader';
 
 type PanelHeaderProps = {

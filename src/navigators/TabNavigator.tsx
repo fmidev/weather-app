@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  AppState,
   Appearance,
   Platform,
-  AppStateStatus,
   StyleSheet,
   StatusBar,
   StyleProp,
@@ -22,7 +20,6 @@ import type { NavigationState } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { useTranslation } from 'react-i18next';
-import SplashScreen from 'react-native-splash-screen';
 import { LaunchArguments } from 'react-native-launch-arguments';
 
 import OthersScreen from '@screens/OthersScreen';
@@ -58,7 +55,7 @@ import {
   TRANSPARENT,
   SHADOW_DARK,
   SHADOW_LIGHT,
-} from '@utils/colors';
+} from '@assets/colors';
 import {
   selectInitialTab,
   selectDidLaunchApp,
@@ -146,13 +143,6 @@ const Navigator: React.FC<Props> = ({
     };
   }, [handleLanguageChanged, i18n]);
 
-  // hide splash screen only when theme is known to avoid weird behavior
-  useEffect(() => {
-    if (theme && !!ready) {
-      SplashScreen.hide();
-    }
-  }, [theme, ready]);
-
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
       getGeolocation(setCurrentLocation, t, true);
@@ -166,11 +156,6 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements,
   ]);
 
-  const handleAppStateChange = (state: AppStateStatus) => {
-    if (state === 'active') {
-      setUseDarkTheme(isDark(theme));
-    }
-  };
 
   const navigationTabChanged = (state: NavigationState | undefined) => {
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
@@ -180,15 +165,13 @@ const Navigator: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setUseDarkTheme(isDark(theme));
-    const appStateSubscriber = AppState.addEventListener(
-      'change',
-      handleAppStateChange
-    );
-    return () => appStateSubscriber.remove();
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setUseDarkTheme(isDark(colorScheme || undefined));
+    });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [theme]);
+    return () => subscription.remove();
+  }, []);
+
 
   const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
     <View style={styles.headerBackImage}>

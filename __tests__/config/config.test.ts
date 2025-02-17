@@ -2,6 +2,14 @@
 import DynamicConfig from '@config/DynamicConfig';
 import defaultConfig from './testConfig';
 
+jest.mock('react-native-launch-arguments', () => {
+  return {
+    LaunchArguments: {
+      value: jest.fn().mockReturnValue({}),
+    },
+  };
+});
+
 describe('Modify arrays', () => {
   it('Value list', () => {
     expect(

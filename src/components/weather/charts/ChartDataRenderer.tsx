@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
-import chartTheme from '@utils/chartTheme';
+import chartTheme from '@assets/chartTheme';
 import { VictoryAxis, VictoryChart } from 'victory-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@utils/colors';
+import { CustomTheme } from '@assets/colors';
 import { tickFormat } from '@utils/chart';
 import { ClockType, UnitMap } from '@store/settings/types';
 import { ChartDataProps, ChartDomain, ChartType, ChartValues } from './types';

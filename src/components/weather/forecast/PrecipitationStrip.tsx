@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import moment from 'moment';
 
-import { CustomTheme, GRAY_1 } from '@utils/colors';
+import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { getPrecipitationLevel } from '@utils/helpers';
 import { useTheme } from '@react-navigation/native';
 

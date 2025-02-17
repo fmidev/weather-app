@@ -7,7 +7,7 @@ import {
   CAP_WARNING_YELLOW,
   CustomTheme,
   GRAY_8,
-} from '@utils/colors';
+} from '@assets/colors';
 import moment from 'moment';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
