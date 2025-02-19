@@ -45,8 +45,9 @@ const MapView = ({
     const dayStart = date.hours(0).minutes(0);
     const dayEnd = date.clone().add(1, 'days');
     const warnings = capData?.filter((warning) => {
-      const effectiveMoment = moment(warning.info.effective);
-      const expiryMoment = moment(warning.info.expires);
+      const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+      const effectiveMoment = moment(info.effective);
+      const expiryMoment = moment(info.expires);
 
       const endsDuringDay =
         effectiveMoment.isBefore(dayStart) && expiryMoment.isAfter(dayStart);
@@ -68,11 +69,13 @@ const MapView = ({
     const currentUniqueWarnings: CapWarning[] = [];
 
     applicableWarnings?.forEach((warning) => {
+      const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
       if (
         !currentUniqueWarnings.find(
-          (w) =>
-            w.info.event === warning.info.event &&
-            w.info.severity === warning.info.severity
+          (w) => {
+            const wInfo = Array.isArray(w.info) ? w.info[0] : w.info;
+            return wInfo.event === info.event && wInfo.severity === info.severity
+          }
         )
       ) {
         currentUniqueWarnings.push(warning);
@@ -92,27 +95,30 @@ const MapView = ({
 
   const polygonArray =
     applicableWarnings
-      ?.map((warning) => ({
-        identifier: warning.identifier,
-        event: warning.info.event,
-        severity: warning?.info?.severity,
-        polygons: [warning?.info.area.polygon].flat().map((polygon, index) => ({
-          key: `${warning.identifier}-${index}`,
-          latLng: polygon
-            ?.split(' ')
-            .map((coordinates) =>
-              coordinates.split(',').map((coordinate) => Number(coordinate))
-            )
-            .map((pair) => ({
-              latitude: pair[0],
-              longitude: pair[1],
-            })),
-        })),
-      }))
+      ?.map((warning) => {
+        const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+        return {
+          identifier: warning.identifier,
+          event: info.event,
+          severity: info?.severity,
+          polygons: [info.area.polygon].flat().map((polygon, index) => ({
+            key: `${warning.identifier}-${index}`,
+            latLng: polygon
+              ?.split(' ')
+              .map((coordinates) =>
+                coordinates.split(',').map((coordinate) => Number(coordinate))
+              )
+              .map((pair) => ({
+                latitude: pair[0],
+                longitude: pair[1],
+              })),
+          })),
+      }})
       .flat() || [];
 
   const handleWarningTypePress = (warning: CapWarning) => {
-    const { severity, event } = warning.info;
+    const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+    const { severity, event } = info;
 
     if (
       selectedFilters.find(

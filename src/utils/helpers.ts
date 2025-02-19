@@ -402,14 +402,18 @@ const getSeveritiesForTimePeriod = (
 ) => {
   const severitiesForTimePeriod = warnings
     ?.filter((warning) => {
-      const effective = moment(warning.info.effective);
-      const expires = moment(warning.info.expires);
+      const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+      const effective = moment(info.effective);
+      const expires = moment(info.expires);
       const beginsDuringPeriod = effective.isBetween(start, end);
       const endsDuringPeriod = expires.isBetween(start, end);
       const periodContained = effective.isBefore(start) && expires.isAfter(end);
       return beginsDuringPeriod || endsDuringPeriod || periodContained;
     })
-    .map((warning) => severities.indexOf(warning.info.severity) + 1);
+    .map((warning) => {
+      const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+      return severities.indexOf(info.severity) + 1
+    });
 
   const maxSeverity = Math.max(...(severitiesForTimePeriod ?? [0]));
   return maxSeverity;

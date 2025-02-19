@@ -56,6 +56,26 @@ export interface Warning {
   description: string;
 }
 
+export interface CapInfo {
+  language: string;
+  category: string;
+  event: string;
+  urgency: string;
+  severity: Severity;
+  certainty: string;
+  effective: Date;
+  onset: Date;
+  expires: Date;
+  senderName: string;
+  description: string;
+  web: string;
+  area: {
+    areaDesc: string;
+    polygon: string;
+    circle: string;
+  };
+}
+
 export interface CapWarning {
   identifier: string;
   sender: string;
@@ -64,25 +84,7 @@ export interface CapWarning {
   msgType: string;
   scope: string;
   references: string;
-  info: {
-    language: string;
-    category: string;
-    event: string;
-    urgency: string;
-    severity: Severity;
-    certainty: string;
-    effective: Date;
-    onset: Date;
-    expires: Date;
-    senderName: string;
-    description: string;
-    web: string;
-    area: {
-      areaDesc: string;
-      polygon: string;
-      circle: string;
-    };
-  };
+  info: CapInfo | [CapInfo]
 }
 
 export interface LocationWarnings {

@@ -21,31 +21,35 @@ const WarningTypeFiltersList = ({
       style={styles.row}
       horizontal
       showsHorizontalScrollIndicator={false}>
-      {warnings?.slice(0).map((warning) => (
-        <AccessibleTouchableOpacity
-          key={`${warning.info.event}-${warning.info.severity}`}
-          onPress={() => onWarningTypePress(warning)}>
-          <View
-            style={[
-              styles.filterButton,
+      {warnings?.slice(0).map((warning) => {
+        const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
 
-              {
-                backgroundColor: colors.background,
-                borderColor: colors.background,
-              },
-              !activeWarnings.find(
-                ({ severity, event }) =>
-                  warning.info.severity === severity &&
-                  warning.info.event === event
-              ) && styles.activeFilter,
-            ]}>
-            <WarningSymbol
-              severity={warning.info.severity}
-              type={warning.info.event as WarningType}
-            />
-          </View>
-        </AccessibleTouchableOpacity>
-      ))}
+        return (
+          <AccessibleTouchableOpacity
+            key={`${info.event}-${info.severity}`}
+            onPress={() => onWarningTypePress(warning)}>
+            <View
+              style={[
+                styles.filterButton,
+
+                {
+                  backgroundColor: colors.background,
+                  borderColor: colors.background,
+                },
+                !activeWarnings.find(
+                  ({ severity, event }) =>
+                    info.severity === severity &&
+                    info.event === event
+                ) && styles.activeFilter,
+              ]}>
+              <WarningSymbol
+                severity={info.severity}
+                type={info.event as WarningType}
+              />
+            </View>
+          </AccessibleTouchableOpacity>
+        )
+      })}
     </ScrollView>
   );
 };
