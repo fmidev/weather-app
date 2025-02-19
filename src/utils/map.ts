@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
-import { parse } from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
 
 import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
@@ -192,6 +192,15 @@ const getWMSLayerUrlsAndBounds = async (
     ...new Set(overlay.sources.map(({ source }) => source)),
   ];
 
+  const options = {
+    attributeNamePrefix: '',
+    ignoreAttributes: false,
+    ignoreNameSpace: false,
+    textNodeName: 'text',
+  };
+
+  const parser = new XMLParser(options);
+
   await Promise.all(
     activeSources.map(async (src) => {
       const { data } = await axiosClient({
@@ -213,12 +222,7 @@ const getWMSLayerUrlsAndBounds = async (
         },
       });
 
-      const parsedResponse = parse(data, {
-        attributeNamePrefix: '',
-        ignoreAttributes: false,
-        ignoreNameSpace: false,
-        textNodeName: 'text',
-      });
+      const parsedResponse = parser.parse(data);
 
       const {
         WMS_Capabilities: {
