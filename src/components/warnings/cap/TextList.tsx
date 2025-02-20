@@ -45,10 +45,8 @@ const TextList = ({
   const groupAlerts = useCallback((data?: CapWarning[]) => {
     const alerts: { [key: string]: CapWarning[] } = {};
     data?.forEach((alert) => {
-      alerts[alert.info.event] =
-        alert.info.event in alerts
-          ? [...alerts[alert.info.event], alert]
-          : [alert];
+      const info = Array.isArray(alert.info) ? alert.info[0] : alert.info;
+      alerts[info.event] = info.event in alerts ? [...alerts[info.event], alert] : [alert];
     });
     return alerts;
   }, []);

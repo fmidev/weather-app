@@ -55,10 +55,11 @@ const WarningItem = ({
   showDescription?: boolean;
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const areaDesc = warning.info.area.areaDesc
+  const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+  const areaDesc = info.area.areaDesc
     .charAt(0)
     .toUpperCase()
-    .concat(warning.info.area.areaDesc.substring(1));
+    .concat(info.area.areaDesc.substring(1));
 
   return (
     <View>
@@ -71,8 +72,8 @@ const WarningItem = ({
           },
         ]}>
         <WarningSymbol
-          type={warning.info.event as WarningType}
-          severity={warning.info.severity}
+          type={info.event as WarningType}
+          severity={info.severity}
           size={32}
         />
         <View style={[styles.headingMainContent, { width: width - 136 }]}>
@@ -87,13 +88,13 @@ const WarningItem = ({
                 { width: width - 136 },
               ]}
               ref={scrollViewRef}>
-              {dailySeverities?.map((daySeverities) => (
-                <CapSeverityBar severities={daySeverities} />
+              {dailySeverities?.map((daySeverities, index) => (
+                <CapSeverityBar key={`${index}-${daySeverities.toString()}`} severities={daySeverities} />
               ))}
             </ScrollView>
           )}
           <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
-            {(warning.info.event as WarningType) ? warning.info.event : ''}
+            {(info.event as WarningType) ? info.event : ''}
             {warningCount && warningCount > 1 ? ` (${warningCount} pcs)` : ''}
           </Text>
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
@@ -117,7 +118,7 @@ const WarningItem = ({
 
       {showDescription && (
         <View style={styles.warningDescription}>
-          <Text style={{ color: GRAY_4 }}>{warning.info.description}</Text>
+          <Text style={{ color: GRAY_4 }}>{info.description}</Text>
         </View>
       )}
     </View>
@@ -161,8 +162,9 @@ function WarningBlock({
   const headerWarning = useMemo(() => {
     let mostSevere = warnings[0];
     warnings.forEach((warning) => {
-      const currentSeverity = severities.indexOf(mostSevere.info.severity);
-      const severity = severities.indexOf(warning.info.severity);
+      const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+      const currentSeverity = severities.indexOf(info.severity);
+      const severity = severities.indexOf(info.severity);
       if (severity > currentSeverity) {
         mostSevere = warning;
       }
@@ -173,16 +175,19 @@ function WarningBlock({
   const headerWarningAreas = [
     ...new Set(
       warnings
-        .map((warning) => warning.info.area.areaDesc)
+        .map((warning) => Array.isArray(warning.info) ? warning.info[0].area.areaDesc : warning.info.area.areaDesc)
         .map((area) => area.charAt(0).toUpperCase().concat(area.substring(1)))
     ),
   ].join(', ');
 
   const getHeaderWarningTimeSpans = (capWarnings: CapWarning[]): string[] => {
-    const timespans = capWarnings.map((warning) => ({
-      effective: warning.info.effective,
-      expiry: warning.info.expires,
-    }));
+    const timespans = capWarnings.map((warning) => {
+      const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+      return {
+        effective: info.effective,
+        expiry: info.expires,
+      }
+    });
     timespans.sort(
       (span1, span2) =>
         moment(span1.effective).toDate().getTime() -
@@ -245,8 +250,9 @@ function WarningBlock({
   ].join(', ');
 
   const warningTimeSpans = warnings.map((warning) => {
-    const start = moment(warning.info.effective);
-    const end = moment(warning.info.expires);
+    const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+    const start = moment(info.effective);
+    const end = moment(info.expires);
     const startFormatted = start
       .locale(locale)
       .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`);
@@ -283,9 +289,11 @@ function WarningBlock({
             styles.openableContent,
             { backgroundColor: colors.accordionContentBackground },
           ]}>
-          {warnings.map((warning, index) => (
-            <>
+          {warnings.map((warning, index) => {
+            const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+            return (
               <WarningItem
+                key={`${warning.identifier}-${info.area.areaDesc}`}
                 warning={warning}
                 includeArrow={false}
                 includeSeverityBars={false}
@@ -293,8 +301,8 @@ function WarningBlock({
                 showDescription
                 timespan={warningTimeSpans[index]}
               />
-            </>
-          ))}
+            )}
+          )}
         </View>
       )}
     </View>

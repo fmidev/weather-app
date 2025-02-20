@@ -17,6 +17,7 @@ function CapSeverityBar({ severities }: { severities: number[] }) {
     CAP_WARNING_ORANGE,
     CAP_WARNING_RED,
   ];
+
   return (
     <View
       style={[
@@ -27,6 +28,7 @@ function CapSeverityBar({ severities }: { severities: number[] }) {
       ]}>
       {severities.map((severity, index) => (
         <View
+          key={`${severity}-${index}`}
           style={[
             styles.bar,
             index !== 3 &&

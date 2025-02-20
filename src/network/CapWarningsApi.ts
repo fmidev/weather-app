@@ -1,20 +1,19 @@
 import { Config } from '@config';
 import { CapWarning } from '@store/warnings/types';
 import axiosClient from '@utils/axiosClient';
-import { parse } from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
 import moment from 'moment';
 
 const isRelevantMessage = (warning: CapWarning) => {
   const isActual = warning.status === 'Actual';
   const isPublic = warning.scope === 'Public';
-  const isMet = warning.info.category === 'Met';
+  const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+  const isMet = info.category === 'Met';
   const isAckOrError = ['Ack', 'Error'].includes(warning.msgType);
-  const hasValidUrgency = ['Immediate', 'Expected', 'Future'].includes(
-    warning.info.urgency
-  );
-  const hasArea =
-    Boolean(warning.info.area?.polygon) || Boolean(warning.info.area?.circle);
-  const hasExpired = moment(warning.info.expires).isBefore(moment.now());
+  const hasValidUrgency = ['Immediate', 'Expected', 'Future'].includes(info.urgency);
+  const hasArea = Boolean(info.area?.polygon) || Boolean(info.area?.circle);
+
+  const hasExpired = moment(info.expires).isBefore(moment.now());
 
   return (
     isActual &&
@@ -31,22 +30,31 @@ const parseReferences = (references: string) =>
   references.split(' ').map((ref) => ref.split(',')[1]);
 
 const getCapWarnings = async () => {
+  const CAP_MIME_TYPE = 'application/cap+xml';
+  const options = {
+    ignoreAttributes: false,
+    processEntities: true,
+  };
+  const parser = new XMLParser(options);
+
   const { capViewSettings } = Config.get('warnings');
 
   const url = capViewSettings?.datasources[0]?.url;
   const { data: feedData } = await axiosClient({ url });
-  const { feed } = parse(feedData, { ignoreAttributes: false });
+  const { feed } = parser.parse(feedData);
   const entriesList = Array.isArray(feed.entry) ? feed.entry : [feed.entry];
+
+  const urls : [string] = entriesList.map((entry: { link: [{ '@_href': string, '@_type': string | undefined }] }) => {
+    const links = entry.link.filter((link) => link['@_type'] && link['@_type'] === CAP_MIME_TYPE);
+    return links[0]['@_href'];
+  });
+  const uniqueUrls = [...new Set(urls)];
+
   const capWarnings: CapWarning[] = (
     await Promise.all(
-      entriesList.map((entry: { link: { '@_href': string } }) =>
-        axiosClient({
-          url: entry.link['@_href'],
-        })
-      )
+      uniqueUrls.map(capUrl => axiosClient({ url: capUrl }))
     )
-  )
-    .map(({ data }) => parse(data).alert)
+  ).map(({ data }) => parser.parse(data).alert)
     .filter((warning) => warning); // remove undefined, null
 
   const relevantMessages = capWarnings.filter(isRelevantMessage);
