@@ -2,12 +2,14 @@ import i18n, { LanguageDetectorAsyncModule } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as RNLocalize from "react-native-localize";
 
+import { Config } from '@config';
 import { getItem, LOCALE } from '../src/utils/async_storage';
 import en from './en.json';
 import fi from './fi.json';
 import sv from './sv.json';
+import es from './es.json';
 
-const languageResources = { en, fi, sv };
+const languageResources = { en, fi, sv, es };
 
 const getDeviceLanguage = () => {
   const locales = RNLocalize.getLocales();
@@ -39,12 +41,14 @@ const languageDetector = <LanguageDetectorAsyncModule>{
   cacheUserLanguage: () => {},
 };
 
+const { fallbackLanguage } = Config.get('settings');
+
 i18n
   .use(languageDetector)
   .use(initReactI18next)
   .init({
     compatibilityJSON: 'v3',
-    fallbackLng: 'fi',
+    fallbackLng: fallbackLanguage || 'fi',
     resources: languageResources,
     ns: ['navigation'],
     defaultNS: 'navigation',

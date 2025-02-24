@@ -228,6 +228,7 @@ export interface ConfigType {
   warnings: WarningsEnabled | WarningsDisabled;
   settings: {
     languages: string[];
+    fallbackLanguage?: 'fi' | 'en' | 'sv' | 'es';
     units: {
       temperature: 'C' | 'F';
       precipitation: 'mm' | 'in';
