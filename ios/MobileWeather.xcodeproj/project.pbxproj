@@ -51,6 +51,7 @@
 		974E3F089372FFCFD0AECBEB /* libPods-MobileWeather.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MobileWeather.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		99DF258CBD865F8BD6216BB5 /* Pods-MobileWeather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MobileWeather.release.xcconfig"; path = "Target Support Files/Pods-MobileWeather/Pods-MobileWeather.release.xcconfig"; sourceTree = "<group>"; };
 		A2042C6D2CFF2EEE00C41A9E /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		A24F933F2D707E5F00EBFF4E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A273C5EE2CF74B5C002C95C2 /* MobileWeather.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MobileWeather.entitlements; sourceTree = "<group>"; };
 		A273C5EF2CF74C5A002C95C2 /* WidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetExtension.entitlements; sourceTree = "<group>"; };
 		A292E7552D5F16C000DC288E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -235,6 +236,7 @@
 				Base,
 				sv,
 				fi,
+				es,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -432,6 +434,7 @@
 				A4CDDC8D280007F400D84935 /* en */,
 				A4CDDC8F280008B500D84935 /* sv */,
 				A4CDDC90280008BC00D84935 /* fi */,
+				A24F933F2D707E5F00EBFF4E /* es */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
