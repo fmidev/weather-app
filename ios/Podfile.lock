@@ -1,6 +1,4 @@
 PODS:
-  - Alamofire (5.10.2)
-  - AsyncLocationKit (1.6.3)
   - boost (1.84.0)
   - BVLinearGradient (2.8.3):
     - React-Core
@@ -1655,12 +1653,9 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.1)
-  - SwiftyJSON (5.0.2)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 5.10)
-  - AsyncLocationKit (from `https://github.com/AsyncSwift/AsyncLocationKit.git`, tag `1.6.4`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -1746,19 +1741,13 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
-  - SwiftyJSON (~> 5.0)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
-    - Alamofire
     - SocketRocket
-    - SwiftyJSON
 
 EXTERNAL SOURCES:
-  AsyncLocationKit:
-    :git: https://github.com/AsyncSwift/AsyncLocationKit.git
-    :tag: 1.6.4
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BVLinearGradient:
@@ -1929,14 +1918,7 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
-CHECKOUT OPTIONS:
-  AsyncLocationKit:
-    :git: https://github.com/AsyncSwift/AsyncLocationKit.git
-    :tag: 1.6.4
-
 SPEC CHECKSUMS:
-  Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AsyncLocationKit: b34a2ee37910405a98401021b6aedeb37440a1a2
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
@@ -2021,9 +2003,8 @@ SPEC CHECKSUMS:
   RNSVG: 515a902fc18a375907eb4c3abec0b803fbfa37ef
   RNVectorIcons: 85ed086927e7548461d593e68b190c38a6606a05
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  SwiftyJSON: f5b1bf1cd8dd53cd25887ac0eabcfd92301c6a5a
   Yoga: 1fd059161b449018342943b095a6d4e69bcaa719
 
-PODFILE CHECKSUM: 70449bc1f469c3fb9d0969e3c1c42f391681ab07
+PODFILE CHECKSUM: 78cfe60b7539ad6e1088acd2ccf5168e102b5b3c
 
 COCOAPODS: 1.16.2
