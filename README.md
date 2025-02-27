@@ -11,7 +11,7 @@ Follow this [guide](https://reactnative.dev/docs/0.74/environment-setup) for set
 
 ## **Installation**
 
-`git clone https://github.com/fmidev/weather-app.git `
+`git clone --recurse-submodules https://github.com/fmidev/weather-app.git `
 
 `cd weather-app`
 
