@@ -96,12 +96,12 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "fi.fmi.mobileweather"
+    namespace "co.gov.ideam.mobileweather"
     defaultConfig {
-        applicationId "fi.fmi.mobileweather"
+        applicationId "co.gov.ideam.mobileweather"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3000065
+        versionCode 1
         versionName "5.0.0"
         testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
