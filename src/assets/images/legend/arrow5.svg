@@ -1,6 +1,0 @@
-<svg width="30" height="40" id="windarrow_00" class="WindArrow" overflow="visible" xmlns="http://www.w3.org/2000/svg">
-  <desc>Plain wind arrow (north wind)</desc>
-  <g transform="translate(15, 20)" fill="#FA542E">
-    <path d="M0 -8 -5 0 -1.7 0 -1.7 8 1.7 8 1.7 0 5 0Z" stroke="black" stroke-width="0.5" transform="scale(2.2)" />
-  </g>
-</svg>
