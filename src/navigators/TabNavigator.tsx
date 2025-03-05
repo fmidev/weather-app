@@ -278,7 +278,7 @@ const Navigator: React.FC<Props> = ({
       <WeatherStack.Screen
         name="StackWeather"
         component={WeatherScreen}
-        options={LocationHeaderOptions}
+        options={{ headerShown: false }}
       />
       <WeatherStack.Screen
         name="Search"

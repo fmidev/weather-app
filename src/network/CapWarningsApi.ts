@@ -40,7 +40,9 @@ const getCapWarnings = async () => {
   const { capViewSettings } = Config.get('warnings');
 
   const url = capViewSettings?.datasources[0]?.url;
+  console.log(url);
   const { data: feedData } = await axiosClient({ url });
+  console.log('feedData', feedData);
   const { feed } = parser.parse(feedData);
   const entriesList = Array.isArray(feed.entry) ? feed.entry : [feed.entry];
 

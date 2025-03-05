@@ -156,7 +156,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           ) : (
             <NextHourForecastPanel currentHour={currentHour} />
           )}
-          <NextHourForecastPanel currentHour={currentHour} />
           <ForecastPanel currentHour={currentHour} />
           <ObservationPanel />
         </ScrollView>

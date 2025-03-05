@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, Text, StyleSheet, BackgroundImage } from 'react-native';
+import { ActivityIndicator, View, Text, StyleSheet, ImageBackground} from 'react-native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/sv';
@@ -14,12 +15,12 @@ import {
   selectLoading,
   selectNextHourForecast,
 } from '@store/forecast/selectors';
-import { selectTimeZone } from '@store/location/selector';
+import { selectTimeZone, selectCurrent } from '@store/location/selector';
 import { selectUnits } from '@store/settings/selectors';
 import { weatherBackgroundGetter } from '@assets/images/backgrounds';
 
-import { getFeelsLikeIconName, getWindDirection } from '@utils/helpers';
-import { CustomTheme, GRAY_1 } from '@assets/colors';
+import { getFeelsLikeIconName, getGeolocation, getWindDirection } from '@utils/helpers';
+import { CustomTheme, GRAY_1, PRIMARY_BLUE } from '@assets/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
@@ -29,6 +30,10 @@ import {
   getForecastParameterUnitTranslationKey,
 } from '@utils/units';
 import { selectClockType } from '@store/settings/selectors';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { setCurrentLocation } from '@store/location/actions';
+import IconButton from '@components/common/IconButton';
+import { WeatherStackParamList } from '@navigators/types';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -36,6 +41,7 @@ const mapStateToProps = (state: State) => ({
   nextHourForecast: selectNextHourForecast(state),
   timezone: selectTimeZone(state),
   units: selectUnits(state),
+  location: selectCurrent(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -52,6 +58,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   nextHourForecast,
   timezone,
   units,
+  location,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentHour, // To force re-render when the hour changes
 }) => {
@@ -62,6 +69,8 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   useEffect(() => {
     moment.tz.setDefault(timezone);
   }, [timezone]);
+
+  const navigation = useNavigation<NavigationProp<WeatherStackParamList>>()
 
   if (loading || !nextHourForecast) {
     return (
@@ -127,26 +136,217 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   );
 
   return (
-    <View style={styles.container}>
-      <BackgroundImage source={require('../../images/backgrounds/light/1.jpg')} resizeMode="cover">
-        <Text style={styles.text}>
-          Testing
-        </Text>
-      </BackgroundImage>
-    </View>
+    <ImageBackground source={weatherBackground} resizeMode="cover">
+      <SafeAreaView style={styles.container} >
+        <View style={[styles.row]} accessible accessibilityRole="header">
+          <IconButton
+            testID="locate_button"
+            icon="locate"
+            accessibilityLabel=""
+            iconColor={colors.text}
+            backgroundColor={colors.inputBackground}
+            onPress={() => {
+              getGeolocation(setCurrentLocation, t);
+            }}
+            circular
+          />
+          <View style={styles.locationTextContainer} accessible>
+            <Text
+              style={[
+                styles.text,
+                styles.bold,
+                { color: colors.primaryText },
+              ]}>
+              {`${location.name}${location.area ? `, ${location.area}` : ''}`}
+            </Text>
+          </View>
+          <IconButton
+            testID="search_button"
+            icon="search"
+            accessibilityLabel=""
+            iconColor={colors.text}
+            backgroundColor={colors.inputBackground}
+            onPress={() => {
+              navigation.navigate('Search')
+            }}
+            circular
+          />
+        </View>
+        <View style={[styles.alignCenter, styles.forecastVerticalSpace]} accessible>
+          <Text
+            style={[
+              styles.text,
+              { color: colors.primaryText },
+            ]}>{t('nextHourForecast')} {`${t('at')} ${currentTime.format(
+            clockType === 12 ? 'h.mm a' : 'H'
+          )}`}</Text>
+        </View>
+        <View style={styles.row}>
+          <View style={[styles.row, styles.alignStart]} accessible>
+            <Text
+              style={[styles.temperatureText, { color: colors.primaryText }]}>
+              {numericOrDash(temperatureValue)}
+            </Text>
+            <Text
+              style={[styles.unitText, { color: colors.primaryText }]}
+              accessibilityLabel={`${numericOrDash(temperatureValue)} ${t(
+                getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
+              )} `}>
+              °{temperatureUnit}
+            </Text>
+          </View>
+        </View>
+        <View style={[styles.alignCenter, styles.forecastVerticalSpace]}>
+          <Text style={[styles.text, styles.centeredText, { color: colors.primaryText }]}>
+            {t(`symbols:${nextHourForecast.smartSymbol}`)}
+          </Text>
+        </View>
+        <View style={[styles.row, styles.justifySpaceBetween, styles.bottomInfoRow]}>
+          <View
+            accessible
+            style={styles.row}
+            accessibilityLabel={
+              nextHourForecast.windCompass8
+                ? `${t(
+                    `observation:windDirection:${nextHourForecast.windCompass8}`
+                  )} ${windSpeedValue} ${t(
+                    `forecast:${getForecastParameterUnitTranslationKey(windUnit)}`
+                  )}`
+                : undefined
+            }>
+            {activeParameters.includes('windDirection') && (
+              <Icon
+                name="wind-next-hour"
+                width={28}
+                height={28}
+                style={[
+                  styles.withMarginRight,
+                  {
+                    transform: [
+                      {
+                        rotate: `${getWindDirection(
+                          nextHourForecast.windDirection
+                        )}deg`,
+                      },
+                    ],
+                  },
+                ]}
+              />
+            )}
+            {activeParameters.includes('windSpeedMS') && (
+              <View style={styles.alignStart}>
+                <View style={styles.row}>
+                  <Text
+                    style={[
+                      styles.text,
+                      styles.bold,
+                      { color: colors.hourListText },
+                    ]}>
+                    {numericOrDash(windSpeedValue)}
+                  </Text>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {` ${windUnit}`}
+                  </Text>
+                </View>
+              </View>
+            )}
+          </View>
+        <View accessible style={styles.row}>
+          {activeParameters.includes('precipitation1h') && (
+            <>
+              <Icon name="precipitation" color={colors.hourListText} />
+              <Text
+                style={[styles.text, { color: colors.hourListText }]}
+                accessibilityLabel={`${t('forecast:precipitation')} ${
+                  precipitationValue
+                    ?.toString()
+                    .replace('.', decimalSeparator) ||
+                  (0).toFixed(1).replace('.', decimalSeparator)
+                } ${t(
+                  `forecast:${getForecastParameterUnitTranslationKey(
+                    precipitationUnit
+                  )}`
+                )}`}>
+                <Text style={styles.bold}>{`${
+                  precipitationValue?.replace('.', decimalSeparator) ||
+                  (0).toFixed(1).replace('.', decimalSeparator)
+                }`}</Text>
+                {` ${precipitationUnit}`}
+              </Text>
+            </>
+          )}
+        </View>
+        <View style={styles.row}>
+          {activeParameters.includes('uvCumulated') && (
+            <Text
+              style={[styles.text, { color: colors.hourListText }]}
+              accessibilityLabel={t('params.uvCumulated', {
+                value: numericOrDash(nextHourForecast.uvCumulated?.toString()),
+              })}>
+              {'UV '}
+              <Text style={styles.bold}>
+                {numericOrDash(nextHourForecast.uvCumulated?.toString())}
+              </Text>
+            </Text>
+          )}
+        </View>
+          {activeParameters.includes('feelsLike') && (
+            <>
+              <View
+                accessible
+                accessibilityLabel={`${t('feelsLike')} ${numericOrDash(
+                  feelsLikeValue
+                )} ${t(
+                  getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
+                )}`}>
+                <Text
+                  style={[
+                    styles.text,
+                    styles.withMarginRight,
+                    { color: colors.hourListText },
+                  ]}>
+                  {t('feelsLike').toLowerCase()}{' '}
+                  <Text>
+                    {numericOrDash(feelsLikeValue)}
+                  </Text>
+                  <Text>°</Text>
+                </Text>
+              </View>
+              <Icon
+                name={getFeelsLikeIconName(
+                  nextHourForecast,
+                  currentTime.toObject()
+                )}
+                style={styles.feelsLikeIcon}
+                height={40}
+                width={40}
+                color={colors.primaryText}
+              />
+            </>
+          )}
+      </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 24,
-    paddingHorizontal: 44,
-    minHeight: 440,
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    height: 400,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+  },
+  locationTextContainer: {
+    flex: 1,
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: -24,
   },
   justifySpaceBetween: {
     justifyContent: 'space-between',
@@ -168,6 +368,9 @@ const styles = StyleSheet.create({
   alignEnd: {
     alignItems: 'flex-end',
   },
+  forecastVerticalSpace: {
+    marginVertical: 15,
+  },
   alignCenter: {
     alignItems: 'center',
   },
@@ -182,10 +385,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
   },
+  shadowText: {
+    textShadowColor: 'white', // Reunuksen väri
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 3,
+  },
   unitText: {
     fontSize: 24,
     fontFamily: 'Roboto-Regular',
     paddingTop: 12,
+  },
+  centeredText: {
+    textAlign: 'center',
   },
   bold: {
     fontFamily: 'Roboto-Bold',
@@ -198,8 +409,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Light',
   },
   bottomInfoRow: {
+    marginTop: 20,
     marginBottom: 11,
+    paddingBottom: 10,
+    borderBottomColor: PRIMARY_BLUE,
+    borderBottomWidth: 1,
   },
+  feelsLikeIcon: {
+    marginTop: -20,
+  }
 });
 
 export default connector(NextHourForecastPanelWithWeatherBackground);
