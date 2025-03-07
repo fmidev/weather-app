@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Appearance,
@@ -69,7 +70,7 @@ import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import ErrorComponent from '@components/common/ErrorComponent';
 
 import { Config } from '@config';
-import { lightTheme, darkTheme } from './themes';
+import { lightTheme, darkTheme } from '../assets/themes';
 import {
   TabParamList,
   OthersStackParamList,

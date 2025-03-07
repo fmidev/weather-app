@@ -20,7 +20,7 @@ import { selectUnits } from '@store/settings/selectors';
 import { weatherBackgroundGetter } from '@assets/images/backgrounds';
 
 import { getFeelsLikeIconName, getGeolocation, getWindDirection } from '@utils/helpers';
-import { CustomTheme, GRAY_1, PRIMARY_BLUE } from '@assets/colors';
+import { CustomTheme } from '@assets/colors';
 
 import Icon from '@components/common/Icon';
 import { Config } from '@config';
@@ -34,6 +34,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { setCurrentLocation } from '@store/location/actions';
 import IconButton from '@components/common/IconButton';
 import { WeatherStackParamList } from '@navigators/types';
+import NextHoursForecast from './NextHoursForecast';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -59,7 +60,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   timezone,
   units,
   location,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   currentHour, // To force re-render when the hour changes
 }) => {
   const { t, i18n } = useTranslation('forecast');
@@ -79,6 +80,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
       </View>
     );
   }
+
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
   );
@@ -135,6 +137,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     nextHourForecast.precipitation1h
   );
 
+  const canRoundHours = currentTime.minute() === 0;
+  const timeFormat12h = canRoundHours ? 'h a' : 'h:mm a';
+  const timeFormat24h = canRoundHours ? 'H' : 'H:mm';
+
   return (
     <ImageBackground source={weatherBackground} resizeMode="cover">
       <SafeAreaView style={styles.container} >
@@ -153,7 +159,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
           <View style={styles.locationTextContainer} accessible>
             <Text
               style={[
-                styles.text,
+                styles.largeText,
                 styles.bold,
                 { color: colors.primaryText },
               ]}>
@@ -178,7 +184,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               styles.text,
               { color: colors.primaryText },
             ]}>{t('nextHourForecast')} {`${t('at')} ${currentTime.format(
-            clockType === 12 ? 'h.mm a' : 'H'
+            clockType === 12 ? timeFormat12h : timeFormat24h
           )}`}</Text>
         </View>
         <View style={styles.row}>
@@ -201,7 +207,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             {t(`symbols:${nextHourForecast.smartSymbol}`)}
           </Text>
         </View>
-        <View style={[styles.row, styles.justifySpaceBetween, styles.bottomInfoRow]}>
+        <View style={[styles.row, styles.justifySpaceBetween, styles.bottomInfoRow, { borderBottomColor: colors.border }]}>
           <View
             accessible
             style={styles.row}
@@ -325,6 +331,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             </>
           )}
       </View>
+      <NextHoursForecast currentHour={currentHour} />
       </SafeAreaView>
     </ImageBackground>
   );
@@ -334,7 +341,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 16,
     paddingHorizontal: 16,
-    height: 400,
+    minHeight: 460,
   },
   row: {
     flexDirection: 'row',
@@ -351,22 +358,11 @@ const styles = StyleSheet.create({
   justifySpaceBetween: {
     justifyContent: 'space-between',
   },
-  feelsLikeRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginHorizontal: 'auto',
-  },
   alignStart: {
     alignItems: 'flex-start',
   },
-  withMarginBottom: {
-    marginBottom: 15,
-  },
   withMarginRight: {
     marginRight: 8,
-  },
-  alignEnd: {
-    alignItems: 'flex-end',
   },
   forecastVerticalSpace: {
     marginVertical: 15,
@@ -374,21 +370,13 @@ const styles = StyleSheet.create({
   alignCenter: {
     alignItems: 'center',
   },
-  separator: {
-    width: '100%',
-    height: 1,
-    opacity: 0.2,
-    backgroundColor: GRAY_1,
-    marginBottom: 8,
-  },
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
   },
-  shadowText: {
-    textShadowColor: 'white', // Reunuksen väri
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 3,
+  largeText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
   },
   unitText: {
     fontSize: 24,
@@ -401,9 +389,6 @@ const styles = StyleSheet.create({
   bold: {
     fontFamily: 'Roboto-Bold',
   },
-  feelsLikeText: {
-    fontSize: 20,
-  },
   temperatureText: {
     fontSize: 72,
     fontFamily: 'Roboto-Light',
@@ -412,7 +397,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 11,
     paddingBottom: 10,
-    borderBottomColor: PRIMARY_BLUE,
     borderBottomWidth: 1,
   },
   feelsLikeIcon: {
