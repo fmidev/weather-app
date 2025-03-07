@@ -41,11 +41,11 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   }
 
   const safeAreaWidth = width - insets.left - insets.right;
-  const count = Math.min(forecast.length, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
+  const count = Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
 
   return (
     <View testID="next_hours_forecast" style={[styles.container, styles.row]}>
-      { forecast.slice(0, count).map(item => (
+      { forecast.slice(1, count + 1).map(item => (
         <HourForecast key={item.epochtime} timeStep={item} />))}
     </View>
   );

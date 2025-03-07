@@ -126,6 +126,7 @@ const Navigator: React.FC<Props> = ({
 
   const warningsEnabled = Config.get('warnings').enabled;
   const onboardingWizardEnabled = Config.get('onboardingWizard').enabled;
+  const weatherLayout = Config.get('weather').layout;
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
   const [warningsSeverity, setWarningsSeverity] = useState<number>(0);
@@ -279,7 +280,7 @@ const Navigator: React.FC<Props> = ({
       <WeatherStack.Screen
         name="StackWeather"
         component={WeatherScreen}
-        options={{ headerShown: false }}
+        options={ weatherLayout === 'fmi' ? { headerShown: false } : LocationHeaderOptions }
       />
       <WeatherStack.Screen
         name="Search"

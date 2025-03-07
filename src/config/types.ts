@@ -205,7 +205,7 @@ export interface ConfigType {
   };
   weather: {
     apiUrl: string;
-    layout: 'default' | 'fmi';
+    layout?: 'default' | 'fmi';
     forecast: {
       ageWarning?: number;
       updateInterval: number;
