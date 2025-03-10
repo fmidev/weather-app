@@ -60,7 +60,6 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   timezone,
   units,
   location,
-
   currentHour, // To force re-render when the hour changes
 }) => {
   const { t, i18n } = useTranslation('forecast');
