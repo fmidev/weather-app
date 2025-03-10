@@ -57,6 +57,11 @@ export const selectNextHourForecast = createSelector(
   (forecast) => forecast && forecast[0]
 );
 
+export const selectNextHoursForecast = createSelector(
+  selectForecast,
+  (forecast) => forecast && forecast.slice(0, 12)
+);
+
 export const selectForecastInvalidData = createSelector(
   selectForecast,
   (forecast) =>
