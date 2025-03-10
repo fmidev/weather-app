@@ -2,19 +2,21 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { RED, WHITE } from '@assets/colors';
+import { RED, BLACK } from '@assets/colors';
 import CommonPanelHeader from '@components/common/PanelHeader';
 
 type PanelHeaderProps = {
   title: string;
   lastUpdated?: { time?: string; ageCheck?: boolean };
   justifyCenter?: boolean;
+  thin?: boolean;
 };
 
 const PanelHeader: React.FC<PanelHeaderProps> = ({
   title,
   lastUpdated,
   justifyCenter,
+  thin,
 }) => {
   const { t } = useTranslation('forecast');
 
@@ -22,7 +24,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
     <Text
       style={[
         styles.updatedText,
-        { color: lastUpdated.ageCheck ? RED : WHITE },
+        { color: lastUpdated.ageCheck ? RED : BLACK },
       ]}>
       {t('updated')} <Text style={styles.bold}>{lastUpdated.time}</Text>
     </Text>
@@ -33,6 +35,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
       title={title}
       additionalContent={lastUpdatedComponent}
       justifyCenter={justifyCenter}
+      thin={thin}
     />
   );
 };

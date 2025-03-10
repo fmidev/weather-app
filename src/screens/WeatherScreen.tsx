@@ -14,6 +14,7 @@ import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
 import GradientWrapper from '@components/weather/GradientWrapper';
 import NextHourForecastPanel from '@components/weather/NextHourForecastPanel';
 import ForecastPanel from '@components/weather/ForecastPanel';
+import ForecastPanelWithVerticalLayout from '@components/weather/ForecastPanelWithVerticalLayout';
 import ObservationPanel from '@components/weather/ObservationPanel';
 
 import { Config } from '@config';
@@ -151,7 +152,11 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           stickyHeaderIndices={announcements && [0]}>
           <Announcements style={styles.announcements} />
           <NextHourForecastPanel currentHour={currentHour} />
-          <ForecastPanel currentHour={currentHour} />
+          { weatherConfig.layout === 'fmi' ? (
+            <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
+          ) : (
+            <ForecastPanel currentHour={currentHour} />
+          )}
           <ObservationPanel />
         </ScrollView>
       </View>

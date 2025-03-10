@@ -2,13 +2,14 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import { CustomTheme, WHITE } from '@assets/colors';
+import { CustomTheme, BLACK } from '@assets/colors';
 
 type PanelHeaderProps = {
   title: string;
   justifyCenter?: boolean;
   accessibilityHint?: string;
   additionalContent?: React.ReactChild;
+  thin?: boolean;
 };
 
 const PanelHeader: React.FC<PanelHeaderProps> = ({
@@ -16,6 +17,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
   justifyCenter,
   accessibilityHint,
   additionalContent,
+  thin,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   return (
@@ -27,12 +29,13 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
       style={[
         styles.cardHeader,
         justifyCenter && styles.justifyCenter,
+        thin === true && styles.thin,
         {
           backgroundColor: colors.cardHeader,
           borderBottomColor: colors.border,
         },
       ]}>
-      <Text style={[styles.headerTitle, { color: WHITE }]}>{title}</Text>
+      <Text style={[styles.headerTitle, { color: BLACK }]}>{title}</Text>
       {additionalContent}
     </View>
   );
@@ -47,6 +50,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  thin : {
+    paddingVertical: 6,
+    marginHorizontal: 16,
+    marginVertical: 16,
+    borderBottomWidth: 0,
   },
   justifyCenter: {
     justifyContent: 'center',
