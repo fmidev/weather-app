@@ -7,7 +7,7 @@ import moment from 'moment';
 
 import { State } from '@store/types';
 
-import { CustomTheme } from '@assets/colors';
+import { CustomTheme, WHITE } from '@assets/colors';
 import { selectClockType, selectUnits } from '@store/settings/selectors';
 import { TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
@@ -25,10 +25,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type NextHoursForecastProps = PropsFromRedux & {
   timeStep: TimeStepData;
+  forceDark?: boolean;
 };
 
 const HourForecast: React.FC<NextHoursForecastProps> = ({
-  clockType, units, timeStep,
+  clockType, units, timeStep, forceDark
 }) => {
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
@@ -51,11 +52,13 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
     dark
   );
 
+  const textColor = forceDark === true ? WHITE : colors.primaryText;
+
   return (
     <View style={styles.container}>
       <Text
         accessibilityLabel={`${t('forecast:at')} ${time}.`}
-        style={[styles.timeText, { color: colors.hourListText }]}
+        style={[styles.timeText, { color: textColor }]}
       >
         { time }
       </Text>

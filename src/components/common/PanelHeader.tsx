@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import { CustomTheme, BLACK } from '@assets/colors';
+import { CustomTheme } from '@assets/colors';
 
 type PanelHeaderProps = {
   title: string;
@@ -35,7 +35,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
           borderBottomColor: colors.border,
         },
       ]}>
-      <Text style={[styles.headerTitle, { color: BLACK }]}>{title}</Text>
+      <Text style={[styles.headerTitle, { color: colors.primaryText }]}>{title}</Text>
       {additionalContent}
     </View>
   );

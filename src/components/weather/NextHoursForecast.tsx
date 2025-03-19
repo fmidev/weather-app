@@ -43,17 +43,20 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   const safeAreaWidth = width - insets.left - insets.right;
   const count = Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
 
+  const forceDark = forecast[0].smartSymbol && forecast[0].smartSymbol > 100 ? true : false;
+
   return (
     <View testID="next_hours_forecast" style={[styles.container, styles.row]}>
       { forecast.slice(1, count + 1).map(item => (
-        <HourForecast key={item.epochtime} timeStep={item} />))}
+        <HourForecast key={item.epochtime} timeStep={item} forceDark={forceDark} />))}
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 10,
+    marginTop: -60,
   },
   row: {
     flexDirection: 'row',

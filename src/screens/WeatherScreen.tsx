@@ -142,7 +142,21 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   const currentHour = new Date().getHours();
 
-  return (
+  return weatherConfig.layout === 'fmi' ? (
+      <View testID="weather_view">
+        <ScrollView
+          testID="weather_scrollview"
+          style={[styles.container]}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+          stickyHeaderIndices={announcements && [0]}>
+          <Announcements style={styles.announcements} />
+          <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
+          <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
+          <ObservationPanel />
+        </ScrollView>
+      </View>
+    ) : (
     <GradientWrapper>
       <View testID="weather_view">
         <ScrollView
@@ -153,17 +167,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           stickyHeaderIndices={announcements && [0]}>
           <Announcements style={styles.announcements} />
           <NextHourForecastPanel currentHour={currentHour} />
-          { weatherConfig.layout === 'fmi' ? (
-            <>
-              <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
-              <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
-            </>
-          ) : (
-            <>
-              <NextHourForecastPanel currentHour={currentHour} />
-              <ForecastPanel currentHour={currentHour}/>
-            </>
-          )}
+          <ForecastPanel currentHour={currentHour}/>
           <ObservationPanel />
         </ScrollView>
       </View>

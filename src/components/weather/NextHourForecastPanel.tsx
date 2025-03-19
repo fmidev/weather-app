@@ -5,6 +5,7 @@ import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/sv';
 import 'moment/locale/en-gb';
+import 'moment/locale/es';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 

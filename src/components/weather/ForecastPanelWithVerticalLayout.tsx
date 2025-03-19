@@ -5,6 +5,7 @@ import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/sv';
 import 'moment/locale/en-gb';
+import 'moment/locale/es';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -30,11 +31,10 @@ import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecas
 import { Config } from '@config';
 import { selectClockType } from '@store/settings/selectors';
 import PanelHeader from './common/PanelHeader';
-import DaySelectorList from './forecast/DaySelectorList';
-import ForecastByHourList from './forecast/ForecastByHourList';
 import ChartList from './forecast/ChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
+import Vertical10DaysForecast from './forecast/Vertical10DaysForecast';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -74,6 +74,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   timezone,
   displayFormat,
   updateDisplayFormat,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentHour, // just for re-rendering every hour
 }) => {
   const { colors } = useTheme() as CustomTheme;
@@ -148,10 +149,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 style={[
                   styles.contentSelectionContainer,
                   {
-                    backgroundColor:
-                      displayFormat === TABLE
-                        ? colors.timeStepBackground
-                        : colors.inputButtonBackground,
+                    backgroundColor: colors.inputButtonBackground,
                     borderColor:
                       displayFormat === TABLE
                         ? colors.chartSecondaryLine
@@ -185,10 +183,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 style={[
                   styles.contentSelectionContainer,
                   {
-                    backgroundColor:
-                      displayFormat === CHART
-                        ? colors.timeStepBackground
-                        : colors.inputButtonBackground,
+                    backgroundColor: colors.inputButtonBackground,
                     borderColor:
                       displayFormat === CHART
                         ? colors.chartSecondaryLine
@@ -212,9 +207,6 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
             </AccessibleTouchableOpacity>
           </View>
           <View style={[styles.row, styles.justifyEnd]}>
-            <View
-              style={[styles.separator, { backgroundColor: colors.border }]}
-            />
             <AccessibleTouchableOpacity
               testID="params_button"
               accessibilityRole="button"
@@ -256,28 +248,12 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
           </View>
         </View>
       </View>
-      <View style={styles.forecastContainer}>
-        {headerLevelForecast && headerLevelForecast.length > 0 && (
-          <DaySelectorList
-            activeDayIndex={activeDayIndex}
-            setActiveDayIndex={setActiveDayIndex}
-            dayData={headerLevelForecast}
-          />
-        )}
-      </View>
       <View style={[styles.forecastContainer]}>
         {loading && (
           <ActivityIndicator accessibilityLabel={t('weather:loading')} />
         )}
-        {sections && sections.length > 0 && displayFormat === TABLE && (
-          <ForecastByHourList
-            data={data}
-            isOpen
-            activeDayIndex={activeDayIndex}
-            setActiveDayIndex={(i) => setActiveDayIndex(i)}
-            currentDayOffset={sections[0].data.length}
-            currentHour={currentHour}
-          />
+        {headerLevelForecast && headerLevelForecast.length > 0 && displayFormat === TABLE && (
+          <Vertical10DaysForecast dayData={headerLevelForecast} />
         )}
         {sections &&
           sections.length > 0 &&
@@ -327,12 +303,6 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
 const styles = StyleSheet.create({
   panelWrapper: {
     borderRadius: 8,
-    shadowOffset: {
-      width: -2,
-      height: 2,
-    },
-    shadowRadius: 16,
-    shadowOpacity: 1,
     elevation: 3,
   },
   panelContainer: {
@@ -369,10 +339,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-  },
-  separator: {
-    minHeight: '70%',
-    width: 1,
   },
   bottomSheetButton: {
     paddingHorizontal: 10,

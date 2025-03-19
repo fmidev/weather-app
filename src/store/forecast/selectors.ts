@@ -99,9 +99,14 @@ export const selectHeaderLevelForecast = createSelector(
     Object.keys(forecastByDay).map((key: string) => {
       const dayArr = forecastByDay[key];
       const tempArray = dayArr.map((h) => h.temperature || 0);
+      const windArray = dayArr.map((h) => h.windSpeedMS || 0);
+
       // get forecasted min and max temps for current day
       const maxTemperature = Math.max(...tempArray);
       const minTemperature = Math.min(...tempArray);
+      const maxWindSpeed = Math.max(...windArray);
+      const minWindSpeed = Math.min(...windArray);
+
       // calculate total precipitation
       const sumPrecipitation = dayArr
         .map((h) => h.precipitation1h || 0)
@@ -121,6 +126,8 @@ export const selectHeaderLevelForecast = createSelector(
       return {
         maxTemperature,
         minTemperature,
+        maxWindSpeed,
+        minWindSpeed,
         totalPrecipitation: roundedTotalPrecipitation,
         timeStamp,
         smartSymbol,

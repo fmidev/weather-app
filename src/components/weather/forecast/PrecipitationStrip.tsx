@@ -11,11 +11,13 @@ type PrecipitationStripProps = {
     | { precipitation: number | undefined; timestamp: number }[]
     | false;
   style?: ViewStyle;
+  border?: boolean;
 };
 
 const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
   precipitationData,
   style,
+  border,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const precipitationHourArr =
@@ -62,7 +64,8 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
   };
 
   return (
-    <View style={[styles.row, style]}>
+    // eslint-disable-next-line react-native/no-inline-styles
+    <View style={[styles.row, style, border && { borderWidth: 1, borderColor: colors.border }]}>
       {normalizedPrecipitationData &&
         normalizedPrecipitationData.map((obj, i) => (
           <View
@@ -72,6 +75,8 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
               {
                 ...backgroundStyleGetter(obj.precipitation),
               },
+              // eslint-disable-next-line react-native/no-inline-styles
+              border && { height: 12 }
             ]}
           />
         ))}

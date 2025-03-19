@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     backgroundColor: LIGHT_BLUE,
   },
   circularButton: {
-    width: 48,
-    height: 48,
+    width: 36,
+    height: 36,
     borderRadius: 24,
     padding: 12,
     alignItems: 'center',
