@@ -52,7 +52,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
   const { excludeDayLength } = Config.get('weather').forecast;
-  const flatListRef = useRef<FlatList<typeof ForecastListColumn>>(null);
+  const flatListRef = useRef<FlatList<TimeStepData>>(null);
 
   const dimensions = useWindowDimensions();
   const maxTableHeight = dimensions.height - 220;
