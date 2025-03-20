@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   headerText: {
     marginHorizontal: 16,
     width: 130,
-    height: 25,
+    height: 22,
     textAlign: 'center',
   },
   spacer: {
