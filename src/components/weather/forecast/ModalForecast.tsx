@@ -356,7 +356,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
 
           setCurrentIndex(index);
           flatListRef.current?.scrollToIndex({
-            animated: true,
+            animated: false,
             index: index,
             viewPosition: 0,
           });
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
   },
   symbolBlock: {
     height: '100%',
-    width: 51,
+    width: 38,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
-    width: 52,
+    width: 38,
     justifyContent: 'center',
     alignItems: 'center',
   },
