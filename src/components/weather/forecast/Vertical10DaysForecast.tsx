@@ -55,7 +55,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const decimalSeparator = locale === 'en' ? '.' : ',';
 
   const { width} = useWindowDimensions();
-  const isWideDisplay = () => width > 400;
+  const isWideDisplay = () => width > 500;
 
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
