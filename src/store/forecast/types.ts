@@ -89,6 +89,7 @@ export interface TimeStepData extends Partial<ForecastParameters> {
   sunriseToday: number;
   sunsetToday: number;
   dayLength: number;
+  moonphase: number;
   modtime: string;
   dark: number;
   [key: string]: string | number | undefined;

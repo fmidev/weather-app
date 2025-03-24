@@ -16,6 +16,7 @@ import NextHourForecastPanel from '@components/weather/NextHourForecastPanel';
 import NextHourForecastPanelWithWeatherBackground from '@components/weather/NextHourForecastPanelWithWeatherBackground';
 import ForecastPanel from '@components/weather/ForecastPanel';
 import ObservationPanel from '@components/weather/ObservationPanel';
+import SunAndMoonPanel from '@components/weather/SunAndMoonPanel';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
@@ -158,6 +159,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           )}
           <ForecastPanel currentHour={currentHour} />
           <ObservationPanel />
+          { weatherConfig.layout === 'fmi' && (
+            <SunAndMoonPanel />
+          )}
         </ScrollView>
       </View>
     </GradientWrapper>

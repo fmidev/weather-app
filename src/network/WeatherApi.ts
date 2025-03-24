@@ -49,6 +49,7 @@ export const getForecast = async (
       'sunriseToday',
       'sunsetToday',
       'dayLength',
+      'moonPhase',
       'modtime',
       'dark',
     ],

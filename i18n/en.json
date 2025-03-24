@@ -179,6 +179,17 @@
       "showLess": "Show less",
       "timezone": "Time zone",
       "timezoneDescription": "All times on the application are displayed according to the selected time zone."
+    },
+    "moonPhases": {
+      "dayLength": "Day length",
+      "newMoon": "New moon",
+      "waxingCrescent": "Waxing crescent",
+      "firstQuarter": "First quarter",
+      "waxingGibbous": "Waxing gibbous",
+      "fullMoon": "Full moon",
+      "waningGibbous": "Waning gibbous",
+      "lastQuarter": "Last quarter",
+      "waningCrescent": "Waning crescent"
     }
   },
   "observation": {
