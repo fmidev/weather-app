@@ -45,7 +45,11 @@ const IconButton: React.FC<IconButtonProps> = ({
         style,
         { backgroundColor: backgroundColor || undefined },
       ]}>
-      <AccessibleTouchableOpacity testID={testID} onPress={onPress}>
+      <AccessibleTouchableOpacity
+        testID={testID}
+        onPress={onPress}
+        hitSlop={ circular ? { top: 6, bottom: 6, left: 6, right: 6 } : undefined}
+      >
         <View>
           <Icon
             name={icon}
