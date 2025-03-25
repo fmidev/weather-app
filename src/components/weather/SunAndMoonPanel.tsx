@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { MotiView } from 'moti';
+import { Skeleton } from 'moti/skeleton';
 import moment from 'moment';
 
 import { State } from '@store/types';
@@ -34,13 +36,20 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 }) => {
   const ICON_SIZE = 16;
   const { t } = useTranslation('forecast');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
+
+  const colorMode = dark ? 'dark' : 'light';
 
   if (loading || !forecast) {
     return (
-      <View>
-        <ActivityIndicator accessibilityLabel={t('weather:loading')} />
-      </View>
+      <MotiView style={[styles.flex, styles.row, styles.center, { backgroundColor: colors.background }]}>
+        <View style={styles.sunBox}>
+          <Skeleton colorMode={colorMode} width={175} height={100} radius={10} />
+        </View>
+        <View style={styles.moonBox}>
+          <Skeleton colorMode={colorMode} width={175} height={100} radius={10} />
+        </View>
+      </MotiView>
     );
   }
 
@@ -242,15 +251,16 @@ const styles = StyleSheet.create({
     maxWidth: 175,
     height: 100,
     borderRadius: 10,
-    marginVertical: 16,
   },
   sunBox: {
     marginLeft: 16,
     marginRight: 8,
+    marginVertical: 16,
   },
   moonBox: {
     marginRight: 16,
     marginLeft: 8,
+    marginVertical: 16,
   },
   background: {
     borderRadius: 10,
