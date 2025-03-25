@@ -482,3 +482,5 @@ export const roundCoordinates = (value: number): number => {
 
   return +(Math.round(parseFloat(value + 'e+4')) + 'e-4');
 };
+
+export const uppercaseFirst = (str: string) => str ? str[0].toUpperCase() + str.slice(1) : '';
