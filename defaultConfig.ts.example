@@ -53,6 +53,7 @@ const defaultConfig: ConfigType = {
   },
   weather: {
     apiUrl: 'url',
+    layout: 'default', // fmi for vertical layout
     forecast: {
       updateInterval: 5,
       timePeriod: 'data', // accepts also: 5, '+5d', '+120h'
