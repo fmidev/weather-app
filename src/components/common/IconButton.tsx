@@ -45,7 +45,11 @@ const IconButton: React.FC<IconButtonProps> = ({
         style,
         { backgroundColor: backgroundColor || undefined },
       ]}>
-      <AccessibleTouchableOpacity testID={testID} onPress={onPress}>
+      <AccessibleTouchableOpacity
+        testID={testID}
+        onPress={onPress}
+        hitSlop={ circular ? { top: 6, bottom: 6, left: 6, right: 6 } : undefined}
+      >
         <View>
           <Icon
             name={icon}
@@ -85,8 +89,8 @@ const styles = StyleSheet.create({
     backgroundColor: LIGHT_BLUE,
   },
   circularButton: {
-    width: 48,
-    height: 48,
+    width: 36,
+    height: 36,
     borderRadius: 24,
     padding: 12,
     alignItems: 'center',

@@ -25,6 +25,7 @@ type ForecastListColumnProps = {
   data: TimeStepData;
   displayParams: [number, DisplayParameters][];
   units?: UnitMap;
+  modal?: boolean;
 };
 
 const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
@@ -32,6 +33,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   data,
   displayParams,
   units,
+  modal, // Different styling for modal
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
@@ -54,8 +56,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
       accessible
       key={data.epochtime}
       style={[
-        styles.hourColumn,
-        ...(time === '00' || time === '12 am'
+        modal ? styles.modalHourColumn : styles.hourColumn,
+        ...(!modal===true && (time === '00' || time === '12 am')
           ? [
               styles.dayChangeBorder,
               {
@@ -65,7 +67,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             ]
           : [{ borderColor: colors.border }]),
       ]}>
-      <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
+      <View style={[styles.hourBlock, modal !== true && { backgroundColor: colors.listTint }]}>
         <Text
           accessibilityLabel={`${t('forecast:at')} ${time}.`}
           style={[styles.hourText, { color: colors.hourListText }]}>
@@ -384,6 +386,12 @@ const styles = StyleSheet.create({
     width: 52,
     borderRightWidth: 1,
     borderTopWidth: 1,
+    alignItems: 'center',
+  },
+  modalHourColumn: {
+    width: 48,
+    borderRightWidth: 0,
+    borderTopWidth: 0,
     alignItems: 'center',
   },
   dayChangeBorder: {
