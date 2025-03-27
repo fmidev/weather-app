@@ -34,6 +34,7 @@ import { setCurrentLocation } from '@store/location/actions';
 import IconButton from '@components/common/IconButton';
 import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
+import { selectIsAuroraBorealisLikely } from '@store/observation/selector';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -41,6 +42,7 @@ const mapStateToProps = (state: State) => ({
   timezone: selectTimeZone(state),
   units: selectUnits(state),
   location: selectCurrent(state),
+  isAuroraBorealisLikely : selectIsAuroraBorealisLikely(state)
 });
 
 const connector = connect(mapStateToProps, {});
@@ -57,6 +59,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   timezone,
   units,
   location,
+  isAuroraBorealisLikely,
   currentHour, // To force re-render when the hour changes
 }) => {
   const { t, i18n } = useTranslation('forecast');
@@ -91,11 +94,6 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     units?.precipitation.unitAbb ?? defaultUnits.precipitation;
 
   const currentTime = moment.unix(nextHourForecast.epochtime);
-  const weatherBackground = weatherBackgroundGetter(
-    nextHourForecast?.smartSymbol?.toString() || '0',
-    dark
-  );
-
   const numericOrDash = (val: string | undefined | null): string =>
     val && !Number.isNaN(val) ? val : '-';
 
@@ -137,6 +135,15 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   // Either show UV or precipitation
   const showUv = nextHourForecast.precipitation1h === 0 || dark;
+
+  const auroraBorealis = nextHourForecast?.smartSymbol && nextHourForecast?.smartSymbol > 100
+                          && nextHourForecast?.totalCloudCover && nextHourForecast?.totalCloudCover <= 50
+                          && isAuroraBorealisLikely;
+
+  const weatherBackground = weatherBackgroundGetter(
+    auroraBorealis ? 'aurora' : nextHourForecast?.smartSymbol?.toString() || '0',
+    dark
+  );
 
   const textColor = nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100 ? WHITE :  colors.primaryText;
 

@@ -67,6 +67,12 @@ export interface MapLayer {
   tileFormat?: string;
 }
 
+interface GeoMagneticObservations {
+  enabled: boolean;
+  producer: string;
+  countryCodes: string[];
+}
+
 interface Observation {
   updateInterval: number;
   numberOfStations: number;
@@ -75,6 +81,7 @@ interface Observation {
   timePeriod: number;
   parameters: (keyof ObservationParameters)[];
   dailyParameters?: (keyof DailyObservationParameters)[];
+  geoMagneticObservations?: GeoMagneticObservations;
 }
 
 interface ObservationEnabled extends Observation {
