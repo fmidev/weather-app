@@ -159,7 +159,7 @@ export const getObservation = async (
     starttime: '-1h',
     param: ['distance','epochtime','fmisid','name','geomagneticRIndex'].join(','),
     fmisid: nearestGeoMagneticStation?.fmisid,
-    producer: 'magnetic_disturbance_observations',
+    producer: geoMagneticObservations?.producer,
     who: packageJSON.name,
     format: 'json',
     lang: language,
