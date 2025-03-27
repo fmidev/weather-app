@@ -16,12 +16,12 @@ const TemperatureChart: React.FC<ChartDataProps> = ({
   return (
     <VictoryGroup theme={chartTheme} width={chartWidth}>
       {temperature && temperature.length > 0 && (
-          <VictoryLine
-            data={temperature}
-            domain={chartDomain}
-            style={{ data: { stroke: colors.chartPrimaryLine } }}
-            interpolation="basis"
-          />
+        <VictoryLine
+          data={temperature}
+          domain={chartDomain}
+          style={{ data: { stroke: colors.chartPrimaryLine } }}
+          interpolation="basis"
+        />
       )}
       {feelsLike && feelsLike.length > 0 && (
         <VictoryLine
