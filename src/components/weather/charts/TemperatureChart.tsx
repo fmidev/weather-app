@@ -1,5 +1,5 @@
 import React from 'react';
-import { VictoryLine, VictoryGroup } from 'victory-native';
+import { VictoryLine, VictoryGroup, VictoryScatter } from 'victory-native';
 import { CustomTheme } from '@assets/colors';
 import { useTheme } from '@react-navigation/native';
 import chartTheme from '@assets/chartTheme';
@@ -16,12 +16,20 @@ const TemperatureChart: React.FC<ChartDataProps> = ({
   return (
     <VictoryGroup theme={chartTheme} width={chartWidth}>
       {temperature && temperature.length > 0 && (
-        <VictoryLine
-          data={temperature}
-          domain={chartDomain}
-          style={{ data: { stroke: colors.chartPrimaryLine } }}
-          interpolation="basis"
-        />
+          <VictoryScatter
+            data={temperature.filter(item => item.y !== null)}
+            domain={chartDomain}
+            size={1}
+            style={{ data: { stroke: colors.chartPrimaryLine } }}
+          />
+      )}
+      {temperature && temperature.length > 0 && (
+          <VictoryLine
+            data={temperature}
+            domain={chartDomain}
+            style={{ data: { stroke: colors.chartPrimaryLine } }}
+            interpolation="basis"
+          />
       )}
       {feelsLike && feelsLike.length > 0 && (
         <VictoryLine
