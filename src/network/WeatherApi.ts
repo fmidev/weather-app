@@ -8,6 +8,7 @@ import i18n from '@i18n';
 import axiosClient from '@utils/axiosClient';
 import { TimeseriesLocation } from '@store/location/types';
 import packageJSON from '../../package.json';
+import { findNearestGeoMagneticObservationStation, GeoMagneticStation, isAuroraBorealisLikely } from '@utils/geoMagneticStations';
 
 const isLocationValid = (
   location: ForecastLocation | ObservationLocation
@@ -73,7 +74,7 @@ export const getForecast = async (
 export const getObservation = async (
   location: ObservationLocation,
   country: string
-): Promise<ObservationDataRaw[]> => {
+): Promise<Array<ObservationDataRaw | boolean>> => {
   const {
     apiUrl,
     observation: {
@@ -84,6 +85,7 @@ export const getObservation = async (
       timePeriod,
       parameters,
       dailyParameters,
+      geoMagneticObservations,
     },
   } = Config.get('weather');
   const { language } = i18n;
@@ -103,8 +105,14 @@ export const getObservation = async (
     observationProducer as string
   );
 
+  const geoMagneticObservationsEnabled = geoMagneticObservations?.countryCodes.includes(country)
+                                          && location.latlon !== undefined
+                                          && geoMagneticObservations?.enabled === true;
+
+  const locationParam = location.geoid ? { geoid: location.geoid } : { latlon: location.latlon };
+
   const hourlyParams = {
-    ...location,
+    ...locationParam,
     numberofstations: numberOfStations,
     starttime: `-${timePeriod}h`,
     endtime: '0',
@@ -137,12 +145,45 @@ export const getObservation = async (
     ].join(','),
   };
 
-  const [observationData, dailyObservationData] = await Promise.all([
+  let nearestGeoMagneticStation: GeoMagneticStation | undefined;
+
+  if (geoMagneticObservationsEnabled && location.latlon) {
+    const [lat, lon] = location.latlon.split(',');
+    nearestGeoMagneticStation = findNearestGeoMagneticObservationStation(
+      parseFloat(lat),
+      parseFloat(lon)
+    );
+  }
+
+  const geoMagneticParams = {
+    starttime: '-1h',
+    param: ['distance','epochtime','fmisid','name','geomagneticRIndex'].join(','),
+    fmisid: nearestGeoMagneticStation?.fmisid,
+    producer: geoMagneticObservations?.producer,
+    who: packageJSON.name,
+    format: 'json',
+    lang: language,
+    timestep: 'data',
+  };
+
+  const [observationData, dailyObservationData, geoMagneticObservationData] = await Promise.all([
     axiosClient({ url: apiUrl, params: hourlyParams }),
     dailyObservationsEnabled
       ? axiosClient({ url: apiUrl, params: dailyParams })
       : Promise.resolve({ data: {} }),
+    geoMagneticObservationsEnabled
+      ? axiosClient({ url: apiUrl, params: geoMagneticParams })
+      : Promise.resolve({ data: {} }),
   ]);
+
+  if (geoMagneticObservationsEnabled && nearestGeoMagneticStation && geoMagneticObservationData.data.length > 0) {
+    const { data } = geoMagneticObservationData
+    return [
+      observationData.data,
+      dailyObservationData.data,
+      isAuroraBorealisLikely(data[data.length - 1].geomagneticRIndex, nearestGeoMagneticStation),
+    ];
+  }
 
   return [observationData.data, dailyObservationData.data];
 };
