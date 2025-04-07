@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import { useOrientation } from '@utils/hooks';
-import Icon from './Icon';
+import Icon from '../../assets/Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 type HeaderButtonProps = {

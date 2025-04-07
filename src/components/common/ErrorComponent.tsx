@@ -21,7 +21,7 @@ import { updateOverlays as updateOverlaysAction } from '@store/map/actions';
 import { YELLOW, BLACK } from '@assets/colors';
 
 import { Config } from '@config';
-import Icon from './Icon';
+import Icon from '../../assets/Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 const mapStateToProps = (state: State) => ({

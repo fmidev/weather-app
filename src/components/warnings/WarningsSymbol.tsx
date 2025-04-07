@@ -1,4 +1,4 @@
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { Severity, WarningType } from '@store/warnings/types';
 import React from 'react';
 

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import Icon from './Icon';
+import Icon from '../../assets/Icon';
 
 const HeaderIcon: React.FC = () => {
   const {

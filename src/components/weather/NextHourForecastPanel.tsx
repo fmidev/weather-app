@@ -22,7 +22,7 @@ import { weatherSymbolGetter } from '@assets/images';
 import { getFeelsLikeIconName, getWindDirection } from '@utils/helpers';
 import { CustomTheme, GRAY_1 } from '@assets/colors';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { Config } from '@config';
 import {
   converter,

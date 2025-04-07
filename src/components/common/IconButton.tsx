@@ -9,7 +9,7 @@ import {
 
 import { LIGHT_BLUE, PRIMARY_BLUE } from '@assets/colors';
 
-import Icon from './Icon';
+import Icon from '../../assets/Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 type ButtonProps = { onPress: () => void; accessibilityLabel: string };
