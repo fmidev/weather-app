@@ -44,7 +44,11 @@ const formatData = (
                 distance: Number(distance),
                 type: stationType,
               });
-              data[Number(id)] = [...dataHolder].reverse();
+              data[Number(id)] = [...dataHolder].reverse().filter(
+                // Filter observations to 10 min interval + always the latest observation
+                // to limit data amount
+                (item, index) => item.epochtime % 600 === 0 || index === 0
+              );
             }
           );
         }
