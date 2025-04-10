@@ -180,7 +180,7 @@
       "timezone": "Tidszon",
       "timezoneDescription": "Alla klockslag för applikationen anges enligt den valda tidszonens placering."
     },
-    "moonPhases": {
+    "sunAndMoon": {
       "dayLength": "Dagens längd",
       "newMoon": "Nymåne",
       "waxingCrescent": "Växande halvmåne",
