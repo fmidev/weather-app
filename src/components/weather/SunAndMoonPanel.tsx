@@ -7,7 +7,7 @@ import { Skeleton } from 'moti/skeleton';
 import moment from 'moment';
 
 import { State } from '@store/types';
-import { selectLoading, selectNextHourForecast } from '@store/forecast/selectors';
+import { selectIsWaningMoonPhase, selectLoading, selectNextHourForecast } from '@store/forecast/selectors';
 import { selectClockType } from '@store/settings/selectors';
 
 import { sunBackground, moonPhaseImages } from '@assets/images/backgrounds';
@@ -20,6 +20,7 @@ import { Config } from '@config';
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
   forecast: selectNextHourForecast(state),
+  waningMoonPhase: selectIsWaningMoonPhase(state),
   clockType: selectClockType(state),
 });
 
@@ -32,6 +33,7 @@ type NextHoursForecastProps = PropsFromRedux & {};
 const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
   loading,
   forecast,
+  waningMoonPhase,
   clockType
 }) => {
   const ICON_SIZE = 16;
@@ -77,7 +79,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 
   const timeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
 
-  const moonPhase = resolveMoonPhase(forecast.moonPhase as number);
+  const moonPhase = resolveMoonPhase(forecast.moonPhase as number, waningMoonPhase);
   const moonBackground = moonPhaseImages[moonPhase];
 
   return (

@@ -235,6 +235,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
         isVisible={modalVisible}
         backdropOpacity={0.5}
         onSwipeComplete={ () => setModalVisible(false ) }
+        onBackButtonPress={ () => setModalVisible(false ) }
         swipeDirection={['up', 'down']}
         propagateSwipe={true}
         scrollHorizontal={true}
