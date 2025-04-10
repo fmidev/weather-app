@@ -75,7 +75,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   if (loading || !nextHourForecast) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, styles.column]}>
         <ActivityIndicator accessibilityLabel={t('weather:loading')} />
       </View>
     );
@@ -346,6 +346,11 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  column: {
+    flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },

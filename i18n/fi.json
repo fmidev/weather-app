@@ -179,6 +179,17 @@
       "showLess": "Näytä vähemmän",
       "timezone": "Aikavyöhyke",
       "timezoneDescription": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan."
+    },
+    "sunAndMoon": {
+      "dayLength": "Päivän pituus",
+      "newMoon": "Uusikuu",
+      "waxingCrescent": "Kasvava sirppi",
+      "firstQuarter": "Ensimmäinen neljännes",
+      "waxingGibbous": "Kasvava puolikuu",
+      "fullMoon": "Täysikuu",
+      "waningGibbous": "Vähenevä puolikuu",
+      "lastQuarter": "Viimeinen neljännes",
+      "waningCrescent": "Vähenevä sirppi",
     }
   },
   "observation": {

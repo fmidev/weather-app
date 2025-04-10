@@ -179,6 +179,17 @@
       "showLess": "Visa mindre",
       "timezone": "Tidszon",
       "timezoneDescription": "Alla klockslag för applikationen anges enligt den valda tidszonens placering."
+    },
+    "sunAndMoon": {
+      "dayLength": "Dagens längd",
+      "newMoon": "Nymåne",
+      "waxingCrescent": "Växande halvmåne",
+      "firstQuarter": "Första kvarteret",
+      "waxingGibbous": "Växande gibbous",
+      "fullMoon": "Fullmåne",
+      "waningGibbous": "Avtagande gibbous",
+      "lastQuarter": "Sista kvarteret",
+      "waningCrescent": "Avtagande halvmåne"
     }
   },
   "observation": {
