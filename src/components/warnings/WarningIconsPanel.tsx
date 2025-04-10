@@ -11,7 +11,6 @@ import {
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
-import { selectCurrent } from '@store/location/selector';
 import WarningIcon from './WarningIcon';
 import DayDetailsDescription from './DayDetailsDescription';
 import { TabParamList } from '@navigators/types';
@@ -43,11 +42,9 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
     return null;
   }
 
-  /*
   const openWarnings = () => {
     navigation.navigate('Warnings');
   }
-  */
 
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
