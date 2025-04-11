@@ -12,7 +12,7 @@ type SimpleHeaderProps = {
   thin?: boolean;
 };
 
-const PanelHeader: React.FC<SimpleHeaderProps> = ({
+const SimpleHeader: React.FC<SimpleHeaderProps> = ({
   title,
   justifyCenter,
   accessibilityHint,
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PanelHeader;
+export default SimpleHeader;
