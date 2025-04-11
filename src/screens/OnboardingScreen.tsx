@@ -85,12 +85,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           styles.iconContainer,
           { backgroundColor: colors.background, shadowColor: colors.shadow },
         ]}>
-        <Icon name={icon} width={32} height={32} color={colors.primaryText} />
+        <Icon name={icon} width={32} height={32} color={colors.text} />
       </View>
       <Text
         testID="onboarding_title_text"
         ref={titleRef}
-        style={[styles.title, { color: colors.primaryText }]}
+        style={[styles.title, { color: colors.text }]}
         accessibilityRole="header"
         accessibilityLabel={`${t('step', {
           current: pageIndex + 1,
@@ -108,9 +108,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         accessibilityRole="button"
         style={styles.buttonContainer}
         onPress={handlePress}>
-        <View style={[styles.button, { borderColor: colors.primaryText }]}>
+        <View style={[styles.button, { borderColor: colors.text }]}>
           <View style={styles.textContainer}>
-            <Text style={[styles.text, { color: colors.primaryText }]}>
+            <Text style={[styles.text, { color: colors.text }]}>
               {t('next')}
             </Text>
           </View>
@@ -194,7 +194,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         accessibilityRole="button"
         style={styles.skipButton}
         onPress={() => navigation.navigate('SetupScreen')}>
-        <Text style={[styles.text, { color: colors.primaryText }]}>
+        <Text style={[styles.text, { color: colors.text }]}>
           {t('skip')}
         </Text>
       </AccessibleTouchableOpacity>

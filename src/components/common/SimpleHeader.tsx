@@ -4,22 +4,20 @@ import { useTheme } from '@react-navigation/native';
 
 import { CustomTheme } from '@assets/colors';
 
-type PanelHeaderProps = {
+type SimpleHeaderProps = {
   title: string;
   justifyCenter?: boolean;
   accessibilityHint?: string;
-  additionalContent?: React.ReactChild;
+  additionalContent?: React.ReactNode;
   thin?: boolean;
-  background?: string;
 };
 
-const PanelHeader: React.FC<PanelHeaderProps> = ({
+const SimpleHeader: React.FC<SimpleHeaderProps> = ({
   title,
   justifyCenter,
   accessibilityHint,
   additionalContent,
   thin,
-  background
 }) => {
   const { colors } = useTheme() as CustomTheme;
   return (
@@ -32,10 +30,6 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
         styles.cardHeader,
         justifyCenter && styles.justifyCenter,
         thin === true && styles.thin,
-        {
-          backgroundColor: background ? background : colors.cardHeader,
-          borderBottomColor: colors.border,
-        },
       ]}>
       <Text style={[styles.headerTitle, { color: colors.primaryText }]}>{title}</Text>
       {additionalContent}
@@ -47,7 +41,6 @@ const styles = StyleSheet.create({
   cardHeader: {
     paddingHorizontal: 16,
     paddingVertical: 11,
-    borderBottomWidth: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
@@ -57,7 +50,6 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginHorizontal: 16,
     marginVertical: 16,
-    borderBottomWidth: 0,
   },
   justifyCenter: {
     justifyContent: 'center',
@@ -68,4 +60,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PanelHeader;
+export default SimpleHeader;

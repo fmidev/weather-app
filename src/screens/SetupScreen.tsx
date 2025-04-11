@@ -75,7 +75,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
       ]}>
       <Text
         testID="setup_title_text"
-        style={[styles.title, { color: colors.primaryText }]}
+        style={[styles.title, { color: colors.text }]}
         accessibilityRole="header">
         {title}
       </Text>
@@ -98,7 +98,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
                   { borderBottomColor: colors.primary },
                 ]}>
                 <Text
-                  style={[styles.textHighlight, { color: colors.primaryText }]}>
+                  style={[styles.textHighlight, { color: colors.text }]}>
                   {secondaryButtonText}
                 </Text>
               </View>
@@ -117,7 +117,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             <View
               style={[
                 styles.button,
-                { backgroundColor: colors.primaryText },
+                { backgroundColor: colors.text },
                 primaryButtonDisabled && styles.disabled,
               ]}>
               <View style={styles.textContainer}>
@@ -143,7 +143,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             <View
               style={[
                 styles.button,
-                { backgroundColor: colors.primaryText },
+                { backgroundColor: colors.text },
                 primaryButtonDisabled && styles.disabled,
               ]}>
               <View style={styles.textContainer}>
@@ -165,7 +165,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
                   { borderBottomColor: colors.primary },
                 ]}>
                 <Text
-                  style={[styles.textHighlight, { color: colors.primaryText }]}>
+                  style={[styles.textHighlight, { color: colors.text }]}>
                   {secondaryButtonText}
                 </Text>
               </View>
