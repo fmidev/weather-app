@@ -25,6 +25,7 @@ struct ForecastProvider: IntentTimelineProvider {
       var crisisMessage = nil as String?
       let updateInterval = getSetting("weather.interval") as? Int ?? UPDATE_INTERVAL
       let settings = convertSettingsIntentToWidgetSettings(configuration)
+      let oldEntries = getEntries(settings: configuration) // Previous timeline
       
       if (configuration.currentLocation == 0 && configuration.location != nil) {
         // Use location from configuration
@@ -37,7 +38,11 @@ struct ForecastProvider: IntentTimelineProvider {
             lat: currentLocation!.coordinate.latitude, lon: currentLocation!.coordinate.longitude
           )
         } else {
-          error = .userLocationError
+          if (oldEntries != nil && oldEntries!.count > 0) {
+            location = oldEntries![0].location // Use previous location
+          } else {
+            error = .userLocationError
+          }
         }
       }
       
@@ -66,10 +71,8 @@ struct ForecastProvider: IntentTimelineProvider {
         
         if (
           lastUpdated != nil &&
-          lastUpdated!.addingTimeInterval(TimeInterval(WARNING_VALIDITY_PERIOD)) > Date()
+          lastUpdated!.addingTimeInterval(TimeInterval(FORECAST_VALIDITY_PERIOD)) > Date()
         ) {
-          // Try to restore old timeline
-          let oldEntries = getEntries(settings: configuration)
           if (oldEntries != nil && oldEntries!.count > 0) {
             let timeline = Timeline(
               entries: oldEntries!,
