@@ -40,6 +40,7 @@ import List from './observation/List';
 import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
 import { observationTypeParameters } from './charts/settings';
+import SimpleHeader from '@components/common/SimpleHeader';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -94,6 +95,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const decimalSeparator = locale === 'en' ? '.' : ',';
   const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const { enabled, parameters } = Config.get('weather').observation;
+  const { layout } = Config.get('weather')
 
   useEffect(() => {
     const sid = stationList[0]?.id;
@@ -169,14 +171,18 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} km`;
   return (
     <View
-      style={[
+      style={layout === 'fmi' ? styles.extraPadding : [
         styles.panelWrapper,
         {
           backgroundColor: colors.background,
           shadowColor: colors.shadow,
-        },
+        }
       ]}>
-      <PanelHeader title={t('panelHeader')} />
+      { layout === 'fmi' ? (
+        <SimpleHeader title={t('panelHeader')} />
+      ) : (
+        <PanelHeader title={t('panelHeader')} />
+      )}
       <View style={styles.panelContainer}>
         {loading && <ActivityIndicator />}
         {stationList.length > 0 && (
@@ -195,6 +201,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 title={title}
                 accessibilityLabel=""
                 iconStart="map-marker"
+                rounded={layout === 'fmi'}
               />
             </View>
           </View>
@@ -355,6 +362,9 @@ const styles = StyleSheet.create({
     marginLeft: -6,
     marginRight: -6,
     marginTop: 2,
+  },
+  extraPadding: {
+    paddingTop: 16
   },
   observationText: {
     fontSize: 14,

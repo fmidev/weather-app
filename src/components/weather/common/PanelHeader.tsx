@@ -11,6 +11,7 @@ type PanelHeaderProps = {
   lastUpdated?: { time?: string; ageCheck?: boolean };
   justifyCenter?: boolean;
   thin?: boolean;
+  background?: string;
 };
 
 const PanelHeader: React.FC<PanelHeaderProps> = ({
@@ -18,6 +19,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
   lastUpdated,
   justifyCenter,
   thin,
+  background,
 }) => {
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
@@ -38,6 +40,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
       additionalContent={lastUpdatedComponent}
       justifyCenter={justifyCenter}
       thin={thin}
+      background={background}
     />
   );
 };
