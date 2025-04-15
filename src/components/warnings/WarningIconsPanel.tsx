@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useTheme, useNavigation, NavigationProp } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -36,8 +36,6 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
 
   moment.locale(i18n.language);
 
-  console.log('dailyWarnings', dailyWarnings);
-
   if (!warningsAge) {
     return null;
   }
@@ -49,10 +47,11 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   return (
-    <View
-      testID="warnings_panel"
-      style={[styles.cardWrapper, { backgroundColor: colors.warningCard }]}
-    >
+    <TouchableOpacity onPress={openWarnings}>
+      <View
+        testID="warnings_panel"
+        style={[styles.cardWrapper, { backgroundColor: colors.warningCard }]}
+      >
         <View style={styles.cardContainer}>
           <View
             accessible
@@ -72,17 +71,17 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
             style={[
               styles.weekWarningsContainer,
               {
-                borderColor: colors.border,
+                borderColor: colors.warningCardBorder
               },
             ]}>
             <View
               style={[
                 styles.warningDaysContainer,
                 {
-                  borderColor: colors.border,
+                  borderColor: colors.warningCardBorder,
                 },
               ]}>
-              {dailyWarnings.map(({ severity, type, date, count }, index) => (
+              {dailyWarnings.map(({ severity, type, date, count, warnings }, index) => (
                 <View key={date}>
                   {count > 0 && (
                     <View
@@ -107,7 +106,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                       index === 4 && styles.endBorderRadius,
                       index < 4 && styles.withBorderRight,
                       {
-                        borderRightColor: colors.border,
+                        borderRightColor: colors.warningCardBorder,
                       },
                     ]}>
                     <View style={[styles.activeBorder]} />
@@ -122,14 +121,19 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                       ]}>
                       {moment(date).format(weekdayAbbreviationFormat)}
                     </Text>
-                    <WarningIcon type={type} severity={severity} />
+                    <WarningIcon
+                      type={type}
+                      severity={severity}
+                      {...(type === 'wind' || type === 'seaWind' ? { physical: warnings[0].physical } : {})}
+                    />
                   </View>
                 </View>
               ))}
             </View>
           </View>
         </View>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
