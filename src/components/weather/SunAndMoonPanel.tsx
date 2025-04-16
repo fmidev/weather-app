@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 16,
+    paddingBottom: 8,
   },
   sunIcon: {
     marginRight: 8,
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   moonPhase: {
-    width: 100,
+    width: 80,
     color: WHITE
   },
 });
