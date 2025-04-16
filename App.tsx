@@ -1,5 +1,6 @@
-import 'react-native-gesture-handler';
 import React from 'react';
+import 'react-native-reanimated';
+import 'react-native-gesture-handler';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
