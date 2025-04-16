@@ -43,7 +43,7 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   const safeAreaWidth = width - insets.left - insets.right;
   const count = Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
 
-  const forceDark = forecast[0].smartSymbol && forecast[0].smartSymbol > 100 ? true : false;
+  const forceDark = forecast[0]?.smartSymbol && forecast[0]?.smartSymbol > 100 ? true : false;
 
   return (
     <View testID="next_hours_forecast" style={[styles.container, styles.row]}>
