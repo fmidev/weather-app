@@ -26,7 +26,7 @@ struct NextHourForecast: View {
         }
         Text(timeStep.formatTemperature())
           .style(large ? .veryLargeTemperature : .largeTemperature)
-        Text("°C")
+        Text("°")
           .style(large ? .largeTemperatureUnit : .temperatureUnit)
           .baselineOffset(large ? LARGE_BASELINE_OFFSET : BASELINE_OFFSET)
       }
