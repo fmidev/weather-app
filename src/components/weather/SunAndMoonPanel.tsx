@@ -215,7 +215,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
       <View style={[styles.box, styles.moonBox]}>
         <ImageBackground source={moonBackground} resizeMode="cover" style={styles.flex} imageStyle={styles.background}>
           <View style={styles.info} accessible>
-            <Text style={[styles.text,  {color: WHITE }]}>{t(`sunAndMoon.${moonPhase}`)}</Text>
+            <Text style={[styles.text, styles.moonPhase]}>{t(`sunAndMoon.${moonPhase}`)}</Text>
           </View>
         </ImageBackground>
       </View>
@@ -269,6 +269,11 @@ const styles = StyleSheet.create({
   },
   info: {
     padding: 16,
+    paddingBottom: 8,
+  },
+  moonPhase: {
+    width: 100,
+    color: WHITE
   },
 });
 
