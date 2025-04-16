@@ -13,6 +13,7 @@ type CollapsiblePanelHeaderProps = {
   accessibilityLabel: string;
   onPress: () => void;
   iconStart?: string;
+  rounded?: boolean;
 };
 
 const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
@@ -21,6 +22,7 @@ const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   open,
   title,
   iconStart,
+  rounded,
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
@@ -36,6 +38,7 @@ const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
             borderBottomColor: colors.border,
             backgroundColor: colors.inputBackground,
           },
+          rounded && styles.rounded,
         ]}>
         {iconStart && (
           <View style={styles.iconStartContainer}>
@@ -80,6 +83,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 2,
     borderRadius: 5,
+  },
+  rounded: {
+    borderRadius: 20,
+    borderBottomWidth: 0,
   },
   title: {
     fontSize: 16,
