@@ -8,7 +8,7 @@ import { State } from '@store/types';
 import { selectCurrent, selectIsGeolocation } from '@store/location/selector';
 
 import { useOrientation } from '@utils/hooks';
-import Icon from './Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 const mapStateToProps = (state: State) => ({

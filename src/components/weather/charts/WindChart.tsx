@@ -5,7 +5,7 @@ import { getWindDirection } from '@utils/helpers';
 import { VictoryLine, VictoryGroup, VictoryArea } from 'victory-native';
 import { CustomTheme } from '@assets/colors';
 import { useTheme } from '@react-navigation/native';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import moment from 'moment';
 import chartTheme from '@assets/chartTheme';
 import { ChartDataProps } from './types';

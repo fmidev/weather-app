@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { OthersStackParamList } from '@navigators/types';
 import { Config } from '@config';

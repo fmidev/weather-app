@@ -5,7 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { CustomTheme, TRANSPARENT } from '@assets/colors';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { Config } from '@config';
 import { ChartType } from './types';
 import { selectDailyObservationParametersWithData } from '@store/observation/selector';

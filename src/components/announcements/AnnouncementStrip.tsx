@@ -10,7 +10,7 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { Config } from '@config';

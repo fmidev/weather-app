@@ -11,7 +11,7 @@ import { CustomTheme } from '@assets/colors';
 import { selectForecastByDay } from '@store/forecast/selectors';
 import ModalForecast from './ModalForecast';
 import { uppercaseFirst } from '@utils/helpers';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import CloseButton from '@components/common/CloseButton';
 
 const mapStateToProps = (state: State) => ({

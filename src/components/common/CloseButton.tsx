@@ -5,7 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
-import Icon from './Icon';
+import Icon from '@assets/Icon';
 
 type CloseButtonProps = {
   onPress: () => void;

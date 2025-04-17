@@ -16,7 +16,7 @@ import PrecipitationStrip from './PrecipitationStrip';
 import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { selectForecastInvalidData } from '@store/forecast/selectors';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 

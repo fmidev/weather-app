@@ -4,7 +4,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 

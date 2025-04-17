@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 
 import { CustomTheme } from '@assets/colors';
 import packageJSON from '../../package.json';

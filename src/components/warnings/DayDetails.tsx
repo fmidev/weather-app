@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';

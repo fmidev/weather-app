@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 
 import SettingsReducer, { settingsPersist } from './settings/reducer';
 import ForecastReducer, { forecastPersist } from './forecast/reducer';
-import ObservationReducer, { observationPersist } from './observation/reducer';
+import ObservationReducer from './observation/reducer';
 import MapReducer, { mapPersist } from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
 import NavigationReducer, { navigationPersist } from './navigation/reducer';
@@ -35,10 +35,7 @@ export default combineReducers({
     persistReducerConfig(forecastPersist),
     ForecastReducer
   ),
-  observation: persistReducer(
-    persistReducerConfig(observationPersist),
-    ObservationReducer
-  ),
+  observation: ObservationReducer,
   location: persistReducer(
     sharedReducerConfig(locationPersist),
     LocationReducer

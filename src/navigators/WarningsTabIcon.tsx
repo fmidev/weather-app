@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 
 import { selectCurrentDayWarningData } from '@store/warnings/selectors';
 import { selectTheme } from '@store/settings/selectors';

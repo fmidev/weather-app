@@ -13,7 +13,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 

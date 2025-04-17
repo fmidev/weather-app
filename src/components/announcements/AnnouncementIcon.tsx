@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 
 import { RED, PRIMARY_BLUE } from '@assets/colors';
 import type { AnnouncementType } from './types';
