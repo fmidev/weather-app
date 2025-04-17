@@ -453,7 +453,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             String temperature = first.getString("temperature");
             temperature = addPlusIfNeeded(temperature);
             widgetRemoteViews.setTextViewText(R.id.temperatureTextView, temperature);
-            widgetRemoteViews.setTextViewText(R.id.temperatureUnitTextView, getWidgetWidthInPixels(widgetId) < 140 ? "°" :  "°C");
+            widgetRemoteViews.setTextViewText(R.id.temperatureUnitTextView, "°");
 
             // ** set the weather icon
 
