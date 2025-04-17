@@ -157,7 +157,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
           <SunAndMoonPanel />
           <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
-          {warningsConfig.enabled && location.country === 'FI' && (
+          {warningsConfig.enabled && Object.keys(warningsConfig.apiUrl).includes(location.country) && (
             <WarningIconsPanel />
           )}
           <ObservationPanel />
