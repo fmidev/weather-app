@@ -1,6 +1,6 @@
 module.exports = {
   "presets": ['module:@react-native/babel-preset'],
-  "plugins": [
+  "plugins": ['react-native-reanimated/plugin',
     [
       "module-resolver",
       {
@@ -15,7 +15,8 @@ module.exports = {
           "@store": "./src/store",
           "@utils": "./src/utils",
           "@config": "./src/config",
-          "@i18n": "./i18n"
+          "@i18n": "./i18n",
+          "moti/skeleton": "moti/skeleton/react-native-linear-gradient"
         }
       }
     ]
