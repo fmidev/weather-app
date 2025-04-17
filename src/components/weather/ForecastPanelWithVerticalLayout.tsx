@@ -149,7 +149,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 style={[
                   styles.contentSelectionContainer,
                   {
-                    backgroundColor: colors.inputButtonBackground,
+                    backgroundColor:
+                      displayFormat === TABLE
+                        ? colors.timeStepBackground : colors.inputButtonBackground,
                     borderColor:
                       displayFormat === TABLE
                         ? colors.chartSecondaryLine
@@ -183,7 +185,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 style={[
                   styles.contentSelectionContainer,
                   {
-                    backgroundColor: colors.inputButtonBackground,
+                    backgroundColor:
+                      displayFormat === CHART
+                        ? colors.timeStepBackground : colors.inputButtonBackground,
                     borderColor:
                       displayFormat === CHART
                         ? colors.chartSecondaryLine
