@@ -14,7 +14,7 @@ import { sunBackground, moonPhaseImages } from '@assets/images/backgrounds';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme, WHITE, BLACK } from '@assets/colors';
 import { resolveMoonPhase } from '@utils/moon';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { Config } from '@config';
 
 const mapStateToProps = (state: State) => ({

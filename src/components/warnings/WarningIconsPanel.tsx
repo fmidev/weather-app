@@ -14,6 +14,8 @@ import moment from 'moment';
 import WarningIcon from './WarningIcon';
 import DayDetailsDescription from './DayDetailsDescription';
 import { TabParamList } from '@navigators/types';
+import { MotiView } from 'moti';
+import { Skeleton } from 'moti/skeleton';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
@@ -31,13 +33,18 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   warningsAge,
 }) => {
   const { t, i18n } = useTranslation('warnings');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const navigation = useNavigation<NavigationProp<TabParamList>>();
 
   moment.locale(i18n.language);
+  const colorMode = dark ? 'dark' : 'light';
 
   if (!warningsAge) {
-    return null;
+    return (
+      <MotiView style={[styles.cardWrapper, styles.noPadding]}>
+        <Skeleton colorMode={colorMode} width={'100%'} height={160} radius={10} />
+      </MotiView>
+    );
   }
 
   const openWarnings = () => {
@@ -82,7 +89,13 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                 },
               ]}>
               {dailyWarnings.map(({ severity, type, date, count, warnings }, index) => (
-                <View key={date}>
+                <View
+                  key={date}
+                  accessible
+                  accessibilityLabel={`${moment(date).format('dddd DD MMMM')}, ${t('hasWarnings')}: ${count}${
+                    count > 0 ? ', ' + warnings[0].description : ''
+                  }`}
+                >
                   {count > 0 && (
                     <View
                       accessibilityElementsHidden
@@ -142,6 +155,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 16,
     paddingHorizontal: 16,
+  },
+  noPadding: {
+    paddingHorizontal: 0,
   },
   activeBorder: {
     height: 3,
