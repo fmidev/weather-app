@@ -156,7 +156,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                 {stepMoment.locale(locale).format(dateFormat)}
               </Text>
             </View>
-            <View accessibilityLabel={`${t(`symbols:${daySmartSymbol}`)}.`}>
+            <View accessibilityLabel={t(`symbols:${smartSymbol && smartSymbol > 100 ? smartSymbol - 100 : smartSymbol}`)}>
               {daySmartSymbol?.({
                 width: 44,
                 height: 44,

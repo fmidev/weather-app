@@ -24,6 +24,7 @@ function HourSelectorButton({
   return (
     <AccessibleTouchableOpacity
       accessibilityRole="button"
+      accessibilityLabel={accessibilityHint}
       accessibilityHint={accessibilityHint}
       activeOpacity={1}
       onPress={onPress}

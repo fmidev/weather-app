@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import HourSelectorButton from '@components/common/HourSelectorButton';
+import { useTranslation } from 'react-i18next';
 
 type TimeSelectButtonGroupProps = {
   onTimeSelect?: (hour: number) => void;
@@ -22,7 +23,7 @@ const TimeSelectButtonGroup: React.FC<TimeSelectButtonGroupProps> = ({
   endHour,
   selectedHour
 }) => {
-
+  const { t } = useTranslation('forecast');
   const [selected, setSelected] = useState(selectedHour);
   const hours = [0, 6, 12, 17]
 
@@ -37,13 +38,15 @@ const TimeSelectButtonGroup: React.FC<TimeSelectButtonGroupProps> = ({
         hours.map((hour, index) => {
           const active = selected >= hour && selected < hour + 5
           const text = formatText(hour);
+          const accessibilityLabel = `${t('at')} ${text}`;
+
           return (
             <View style={[styles.flex, styles.flexRow]} key={hour}>
               <HourSelectorButton
                 active={ active }
                 disabled={ hour > endHour || hour + 5 < startHour }
                 text={text}
-                accessibilityHint={text}
+                accessibilityHint={accessibilityLabel}
                 onPress={ hour + 5 < startHour ? () => {} : () => {
                   setSelected(hour);
                   if (onTimeSelect) {
