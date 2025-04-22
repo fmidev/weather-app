@@ -12,7 +12,7 @@ import { converter, toPrecision } from '@utils/units';
 
 import { State } from '@store/types';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { selectSelectedCallout } from '@store/map/selectors';
 import { updateSelectedCallout as updateSelectedCalloutAction } from '@store/map/actions';
 

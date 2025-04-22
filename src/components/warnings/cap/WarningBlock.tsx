@@ -10,7 +10,7 @@ import {
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import { getSeveritiesForDays } from '@utils/helpers';

@@ -77,6 +77,7 @@
     "dayLength": "Dagens längd",
     "hours": "timmar",
     "minutes": "minuter",
+    "moonPhase": "Månfas",
     "feelsLike": "Känns som",
     "temperature": "Temperatur",
     "fromTo": "{{ min }} {{ unit }} linje {{ max }} {{ unit }}",
@@ -91,6 +92,9 @@
     "paramsAccessibilityHint": "Öppna valet av storheter",
     "active": "vald",
     "notActive": "ej vald",
+    "previousDay": "Föregående dag",
+    "nextDay": "Följande dag",
+    "closeModal": "Stäng dagsprognosen",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",

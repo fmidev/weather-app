@@ -9,7 +9,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import CloseButton from '@components/common/CloseButton';
 import { GRAY_1, CustomTheme } from '@assets/colors';
 

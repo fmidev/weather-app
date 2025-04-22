@@ -22,6 +22,7 @@ import SunAndMoonPanel from '@components/weather/SunAndMoonPanel';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import Announcements from '@components/announcements/Announcements';
+import WarningIconsPanel from '@components/warnings/WarningIconsPanel';
 
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
@@ -156,6 +157,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
           <SunAndMoonPanel />
           <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
+          {warningsConfig.enabled && Object.keys(warningsConfig.apiUrl).includes(location.country) && (
+            <WarningIconsPanel />
+          )}
           <ObservationPanel />
         </ScrollView>
       </View>

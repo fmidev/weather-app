@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import CloseButton from '@components/common/CloseButton';
 
 import { MapStackParamList, WeatherStackParamList } from '@navigators/types';

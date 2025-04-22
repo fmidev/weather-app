@@ -45,6 +45,11 @@ export type WarningType = (typeof knownWarningTypes)[number];
 
 export type Severity = Exclude<(typeof severityList)[number], ''>;
 
+export interface WarningPhysical {
+  windIntensity: number;
+  windDirection: number;
+}
+
 export interface Warning {
   type: WarningType;
   language: string;
@@ -54,6 +59,7 @@ export interface Warning {
   };
   severity: Severity;
   description: string;
+  physical?: WarningPhysical;
 }
 
 export interface CapInfo {

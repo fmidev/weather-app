@@ -13,7 +13,7 @@ import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { State } from '@store/types';
 import { TimeStepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
