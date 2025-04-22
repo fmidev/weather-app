@@ -15,7 +15,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { GRAY_1, CustomTheme } from '@assets/colors';

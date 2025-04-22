@@ -37,7 +37,7 @@ import OnboardingScreen from '@screens/OnboardingScreen';
 
 import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';

@@ -4,7 +4,7 @@ import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 
 import {
   ObservationParameters,
