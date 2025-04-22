@@ -86,6 +86,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   );
 
   const paddingTop = insets.top === 0 ? 32 : 8;
+  const bottomInfoRowMarginTop = 90 - insets.top - paddingTop;
   const defaultUnits = Config.get('settings').units;
   const temperatureUnit =
     units?.temperature.unitAbb ?? defaultUnits.temperature;
@@ -208,7 +209,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               </Text>
             </View>
           </View>
-          <View style={[styles.row, styles.justifySpaceBetween, styles.bottomInfoRow, { borderBottomColor: colors.border }]}>
+          <View style={[
+            styles.row, styles.justifySpaceBetween, styles.bottomInfoRow,
+              { borderBottomColor: colors.border, marginTop: bottomInfoRowMarginTop }
+          ]}>
             <View
               accessible
               style={styles.row}
@@ -400,10 +404,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Light',
   },
   bottomInfoRow: {
-    marginTop: 20,
     marginBottom: 11,
     paddingBottom: 10,
-    borderBottomWidth: 1,
   },
   feelsLikeIcon: {
     marginTop: -20,

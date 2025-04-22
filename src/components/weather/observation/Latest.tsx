@@ -47,8 +47,8 @@ const Latest: React.FC<LatestProps> = ({
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   const dateFormat =
     clockType === 12
-      ? `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] h.mm a`
-      : `D.M. [${t('at')}] HH.mm`;
+      ? `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] h:mm a`
+      : `D.M. [${t('at')}] HH:mm`;
 
   const latestObservation = getLatestObservationAvoidingMissingValues(data);
 
