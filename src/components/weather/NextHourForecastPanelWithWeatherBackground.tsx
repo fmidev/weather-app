@@ -154,11 +154,11 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
         resizeMode="cover"
       >
       <SafeAreaView style={[styles.container, { paddingTop: paddingTop }]} >
-          <View style={[styles.row]} accessible accessibilityRole="header">
+          <View style={[styles.row]}>
             <IconButton
               testID="locate_button"
               icon="locate"
-              accessibilityLabel=""
+              accessibilityLabel={t('navigation:locate')}
               iconColor={textColor}
               backgroundColor={colors.inputBackground}
               onPress={() => {
@@ -166,7 +166,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               }}
               circular
             />
-            <View style={styles.locationTextContainer} accessible>
+            <View style={styles.locationTextContainer} accessible accessibilityRole="header">
               <Text
                 style={[
                   styles.largeText,
@@ -179,7 +179,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             <IconButton
               testID="search_button"
               icon="search"
-              accessibilityLabel=""
+              accessibilityLabel={t('navigation:search')}
               iconColor={textColor}
               backgroundColor={colors.inputBackground}
               onPress={() => {

@@ -53,31 +53,31 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
   );
 
   const textColor = forceDark === true ? WHITE : colors.primaryText;
+  const accessibilityLabel = `${t('forecast:at')} ${time}, ${t(`symbols:${timeStep.smartSymbol}`)}, ${t('forecast:params:temperature', {
+        value: convertedTemperature,
+        unit: t(
+          `forecast:${getForecastParameterUnitTranslationKey(
+            temperatureUnit
+          )}`
+        ),
+      })}`
 
   return (
-    <View style={styles.container}>
-      <Text
-        accessibilityLabel={`${t('forecast:at')} ${time}.`}
-        style={[styles.timeText, { color: textColor }]}
-      >
+    <View
+      style={styles.container}
+      accessible
+      accessibilityLabel={accessibilityLabel}
+    >
+      <Text style={[styles.timeText, { color: textColor }]}>
         { time }
       </Text>
-      <View accessibilityLabel={`${t(`symbols:${timeStep.smartSymbol}`)}.`}>
+      <View>
         {smartSymbol?.({
           width: 36,
           height: 36,
         })}
       </View>
-      <View
-        accessibilityLabel={t('forecast:params:temperature', {
-          value: convertedTemperature,
-          unit: t(
-            `forecast:${getForecastParameterUnitTranslationKey(
-              temperatureUnit
-            )}`
-          ),
-        })}
-        >
+      <View>
         <Text
           style={[styles.temperatureText, { color: colors.hourListText }]}>
           {`${convertedTemperature}°${temperatureUnit}`}

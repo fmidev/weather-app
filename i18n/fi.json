@@ -77,6 +77,7 @@
     "dayLength": "Päivän pituus",
     "hours": "tuntia",
     "minutes": "minuuttia",
+    "moonPhase": "Kuunvaihe",
     "feelsLike": "Tuntuu kuin",
     "temperature": "Lämpötila",
     "fromTo": "{{ min }} {{ unit }} viiva {{ max }} {{ unit }}",
@@ -91,6 +92,9 @@
     "paramsAccessibilityHint": "Avaa suureiden valinta",
     "active": "valittu",
     "notActive": "ei valittu",
+    "previousDay": "Edellinen päivä",
+    "nextDay": "Seuraava päivä",
+    "closeModal": "Sulje päiväennuste",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
@@ -99,7 +103,7 @@
       "hourlymaximumgust": "puuskanopeus: {{ value }} {{ unit }}.",
       "relativeHumidity": "suhteellinen kosteus: {{ value }}%.",
       "precipitation1h": "tunnin sademäärä: {{ value }} {{ unit }}.",
-      "uvCumulated": "UV indeksi: {{ value }}.",
+      "uvCumulated": "UV indeksi: {{ value }}",
       "pressure": "ilmanpaine: {{ value }} {{ unit }}."
     },
     "paramsBottomSheet": {

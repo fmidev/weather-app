@@ -84,19 +84,22 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 
   return (
     <View style={[styles.flex, styles.row, styles.center, { backgroundColor: colors.background }]}>
-      <View style={[styles.box, styles.sunBox]}>
+      <View
+        style={[styles.box, styles.sunBox]}
+        accessible
+      >
         <ImageBackground source={sunBackground}
           resizeMode="cover"
           style={styles.flex}
           imageStyle={styles.background}
         >
-          <View style={styles.info} accessible>
+          <View style={styles.info} accessible accessibilityRole="header">
             <Text style={[styles.text]}>
               {t('dayLength')}
             </Text>
           </View>
             {isPolarNight && !isMidnightSun && (
-              <View>
+              <View accessible>
                 <View accessible style={styles.sunInfo}>
                   <Icon
                     width={ICON_SIZE}
@@ -127,7 +130,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
             )}
 
             {isMidnightSun && !isPolarNight && (
-              <View>
+              <View accessible>
                 <View accessible style={styles.sunInfo}>
                   <Icon
                     width={ICON_SIZE}
@@ -215,7 +218,10 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
       <View style={[styles.box, styles.moonBox]}>
         <ImageBackground source={moonBackground} resizeMode="cover" style={styles.flex} imageStyle={styles.background}>
           <View style={styles.info} accessible>
-            <Text style={[styles.text, styles.moonPhase]}>{t(`sunAndMoon.${moonPhase}`)}</Text>
+            <Text
+              accessibilityLabel={t('moonPhase')+': ' + t(`sunAndMoon.${moonPhase}`)}
+              style={[styles.text, styles.moonPhase]}>
+                {t(`sunAndMoon.${moonPhase}`)}</Text>
           </View>
         </ImageBackground>
       </View>
