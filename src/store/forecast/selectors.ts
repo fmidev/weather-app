@@ -94,7 +94,11 @@ export const selectForecastByDay = createSelector(
 
 export const selectIsWaningMoonPhase = createSelector(
   [selectForecast],
-  (forecast) => forecast && forecast[0]?.moonPhase && forecast[23]?.moonPhase && forecast[23].moonPhase < forecast[0].moonPhase
+  (forecast) =>
+    forecast &&
+    forecast[23]?.moonPhase !== undefined &&
+    forecast[0]?.moonPhase !== undefined &&
+    forecast[23].moonPhase < forecast[0].moonPhase
 )
 
 export const selectHeaderLevelForecast = createSelector(
