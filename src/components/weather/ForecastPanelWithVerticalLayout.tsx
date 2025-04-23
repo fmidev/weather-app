@@ -111,8 +111,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   const forecastLastUpdated = {
     time: forecastLastUpdatedMoment
       ? forecastLastUpdatedMoment.format(
-          `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] ${
-            clockType === 12 ? 'h.mm a' : 'HH.mm'
+          `${locale === 'en' ? 'D MMM' : 'D.M.'} ${
+            clockType === 12 ? 'h:mm a' : 'HH:mm'
           }`
         )
       : undefined,
@@ -149,7 +149,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 style={[
                   styles.contentSelectionContainer,
                   {
-                    backgroundColor: colors.inputButtonBackground,
+                    backgroundColor:
+                      displayFormat === TABLE
+                        ? colors.timeStepBackground : colors.inputButtonBackground,
                     borderColor:
                       displayFormat === TABLE
                         ? colors.chartSecondaryLine
@@ -183,7 +185,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 style={[
                   styles.contentSelectionContainer,
                   {
-                    backgroundColor: colors.inputButtonBackground,
+                    backgroundColor:
+                      displayFormat === CHART
+                        ? colors.timeStepBackground : colors.inputButtonBackground,
                     borderColor:
                       displayFormat === CHART
                         ? colors.chartSecondaryLine
