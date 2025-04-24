@@ -318,6 +318,7 @@
     "appearance": "Ulkoasu",
     "appearanceLight": "Vaalea",
     "appearanceDark": "Tumma",
+    "appearanceBlue": "Sininen",
     "appearanceAutomatic": "Automaattinen",
     "allowLocation": "Salli paikannus",
     "locationNever": "Ei koskaan",

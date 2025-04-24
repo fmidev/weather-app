@@ -70,7 +70,7 @@ import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import ErrorComponent from '@components/common/ErrorComponent';
 
 import { Config } from '@config';
-import { lightTheme, darkTheme } from '../assets/themes';
+import { lightTheme, darkTheme, blueTheme } from '../assets/themes';
 import {
   TabParamList,
   OthersStackParamList,
@@ -115,6 +115,8 @@ const Navigator: React.FC<Props> = ({
   setDidLaunchApp,
   fetchAnnouncements,
 }) => {
+  console.log('theme', theme);
+
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
@@ -123,6 +125,7 @@ const Navigator: React.FC<Props> = ({
     currentTheme === 'dark' ||
     ((!currentTheme || currentTheme === 'automatic') &&
       Appearance.getColorScheme() === 'dark');
+  const isBlue = (currentTheme: string | undefined): boolean => currentTheme === 'blue';
 
   const warningsEnabled = Config.get('warnings').enabled;
   const onboardingWizardEnabled = Config.get('onboardingWizard').enabled;
@@ -158,6 +161,11 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements,
   ]);
 
+  const resolveTheme = () => {
+    if (isBlue(theme)) return blueTheme;
+    if (isDark(theme)) return darkTheme;
+    return lightTheme;
+  }
 
   const navigationTabChanged = (state: NavigationState | undefined) => {
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
@@ -194,6 +202,7 @@ const Navigator: React.FC<Props> = ({
     },
     headerStyle: {
       ...styles.header,
+      backgroundColor: resolveTheme().colors.background,
       shadowColor:
         useDarkTheme || Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
     },
@@ -410,7 +419,7 @@ const Navigator: React.FC<Props> = ({
 
   if (!didLaunchApp && onboardingWizardEnabled && launchArgs?.e2e !== true) {
     return (
-      <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
+      <NavigationContainer theme={resolveTheme()}>
         <SetupStackScreen />
       </NavigationContainer>
     );
@@ -437,7 +446,7 @@ const Navigator: React.FC<Props> = ({
       />
       <NavigationContainer
         onStateChange={navigationTabChanged}
-        theme={useDarkTheme ? darkTheme : lightTheme}
+        theme={resolveTheme()}
         /*
         // @ts-ignore */
         linking={linking}>
@@ -445,17 +454,14 @@ const Navigator: React.FC<Props> = ({
           initialRouteName={initialTab}
           screenOptions={{
             tabBarHideOnKeyboard: true,
-            tabBarActiveTintColor: useDarkTheme
-              ? darkTheme.colors.tabBarActive
-              : lightTheme.colors.tabBarActive,
-            tabBarInactiveTintColor: useDarkTheme
-              ? darkTheme.colors.tabBarInactive
-              : lightTheme.colors.tabBarInactive,
+            tabBarStyle: {
+              backgroundColor: resolveTheme().colors.background,
+            },
+            tabBarActiveTintColor: resolveTheme().colors.tabBarActive,
+            tabBarInactiveTintColor: resolveTheme().colors.tabBarInactive,
             tabBarLabelStyle: styles.tabText,
             tabBarButton: ({ style, accessibilityState, ...rest }) => {
-              const activeColor = useDarkTheme
-                ? darkTheme.colors.tabBarActive
-                : lightTheme.colors.tabBarActive;
+              const activeColor = resolveTheme().colors.tabBarActive;
 
               return (
                 <AccessibleTouchableOpacity

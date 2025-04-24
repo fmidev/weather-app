@@ -65,7 +65,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors, dark, blue } = useTheme() as CustomTheme;
+
+  console.log('NextHourForecastPanelWithWeatherBackground', dark, blue);
+
   useEffect(() => {
     moment.tz.setDefault(timezone);
   }, [timezone]);
@@ -143,7 +146,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   const weatherBackground = weatherBackgroundGetter(
     auroraBorealis ? 'aurora' : nextHourForecast?.smartSymbol?.toString() || '0',
-    dark
+    dark, blue
   );
 
   const textColor = nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100 ? WHITE :  colors.primaryText;

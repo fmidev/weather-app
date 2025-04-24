@@ -495,6 +495,39 @@ const SettingsScreen: React.FC<Props> = ({
                   </View>
                 </AccessibleTouchableOpacity>
               </View>
+              { themes.blue && (
+                <View
+                  style={[
+                    styles.rowWrapper,
+                    styles.withBorderBottom,
+                    { borderBottomColor: colors.border },
+                  ]}>
+                  <AccessibleTouchableOpacity
+                    onPress={() => (theme === 'blue' ? {} : updateTheme('blue'))}
+                    delayPressIn={100}
+                    testID="settings_set_theme_blue"
+                    accessibilityState={{ selected: theme === 'blue' }}
+                    accessibilityRole="button"
+                    accessibilityHint={`${t('settings:appearanceHint')} ${t(
+                      'settings:appearanceBlue'
+                    )}`}>
+                    <View style={styles.row}>
+                      <Text style={[styles.text, { color: colors.text }]}>
+                        {t('settings:appearanceBlue')}
+                      </Text>
+                      {theme === 'blue' && (
+                        <View testID="settings_theme_blue">
+                          <Icon
+                            name="checkmark"
+                            size={22}
+                            style={{ color: colors.text }}
+                          />
+                        </View>
+                      )}
+                    </View>
+                  </AccessibleTouchableOpacity>
+                </View>
+              )}
               <View
                 style={[
                   styles.rowWrapper,

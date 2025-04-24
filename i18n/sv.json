@@ -318,6 +318,7 @@
     "appearance": "Utseende",
     "appearanceLight": "Ljus",
     "appearanceDark": "Mörk",
+    "appearanceBlue": "Blå",
     "appearanceAutomatic": "Automatisk",
     "allowLocation": "Tillåt positionering",
     "locationNever": "Aldrig",

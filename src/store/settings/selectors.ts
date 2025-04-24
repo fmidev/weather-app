@@ -20,7 +20,9 @@ export const selectTheme = createSelector(selectSettingsDomain, (settings) => {
     theme = 'light';
   } else if (configThemes.dark && !configThemes.light) {
     theme = 'dark';
-  } else if (configThemes.light && configThemes.dark) {
+  } else if (configThemes.blue && !configThemes.blue) {
+    theme = 'blue';
+  }else if (configThemes.light && configThemes.dark) {
     theme = 'automatic';
   }
 

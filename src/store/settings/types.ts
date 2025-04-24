@@ -37,7 +37,7 @@ interface UpdateTheme {
   theme: Theme;
 }
 
-export type Theme = 'light' | 'dark' | 'automatic';
+export type Theme = 'light' | 'dark' | 'blue' | 'automatic';
 
 export type SettingsActionTypes =
   | InitSettings

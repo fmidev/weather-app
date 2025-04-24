@@ -318,6 +318,7 @@
     "appearance": "Appearance",
     "appearanceLight": "Light",
     "appearanceDark": "Dark",
+    "appearanceBlue": "Blue",
     "appearanceAutomatic": "Automatic",
     "allowLocation": "Allow location",
     "locationNever": "Never",

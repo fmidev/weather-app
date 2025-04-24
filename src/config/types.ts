@@ -175,13 +175,20 @@ interface UnresolvedGeoIdErrorMessage {
 interface LightThemeEnabled {
   light: true;
   dark: boolean;
+  blue: boolean;
 }
 interface DarkThemeEnabled {
   light: boolean;
   dark: true;
+  blue: boolean;
+}
+interface BlueThemeEnabled {
+  light: boolean;
+  dark: boolean;
+  blue: true;
 }
 
-type Themes = LightThemeEnabled | DarkThemeEnabled;
+type Themes = LightThemeEnabled | DarkThemeEnabled | BlueThemeEnabled;
 
 interface OnboardingWizard {
   enabled: boolean;
