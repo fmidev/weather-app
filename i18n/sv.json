@@ -95,6 +95,8 @@
     "previousDay": "Föregående dag",
     "nextDay": "Följande dag",
     "closeModal": "Stäng dagsprognosen",
+    "today": "Idag",
+    "tomorrow": "Imorgon",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",
