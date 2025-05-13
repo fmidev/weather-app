@@ -30,7 +30,7 @@ import {
   getForecastParameterUnitTranslationKey,
 } from '@utils/units';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { setCurrentLocation } from '@store/location/actions';
+import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import IconButton from '@components/common/IconButton';
 import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
@@ -45,7 +45,11 @@ const mapStateToProps = (state: State) => ({
   isAuroraBorealisLikely : selectIsAuroraBorealisLikely(state)
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = {
+  setCurrentLocation: setCurrentLocationAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -59,6 +63,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   timezone,
   units,
   location,
+  setCurrentLocation,
   isAuroraBorealisLikely,
   currentHour, // To force re-render when the hour changes
 }) => {
