@@ -95,6 +95,8 @@
     "previousDay": "Previous day",
     "nextDay": "Next day",
     "closeModal": "Close daily forecast",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",
       "feelsLike": "feels like: {{ value }} {{ unit }}.",
