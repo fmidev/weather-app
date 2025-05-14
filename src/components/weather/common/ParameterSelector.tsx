@@ -168,7 +168,6 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginHorizontal: -8,
     flexDirection: 'row',
     alignItems: 'center',
   },

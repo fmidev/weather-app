@@ -46,7 +46,9 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   const forceDark = forecast[0]?.smartSymbol && forecast[0]?.smartSymbol > 100 ? true : false;
 
   return (
-    <View testID="next_hours_forecast" style={[styles.container, styles.row]}>
+    <View testID="next_hours_forecast" style={
+      [styles.container, styles.row, { paddingLeft: insets.left, paddingRight: insets.right }]
+    }>
       { forecast.slice(1, count + 1).map(item => (
         <HourForecast key={item.epochtime} timeStep={item} forceDark={forceDark} />))}
     </View>

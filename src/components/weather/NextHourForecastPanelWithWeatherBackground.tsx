@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, Text, StyleSheet, ImageBackground} from 'react-native';
+import { ActivityIndicator, View, Text, StyleSheet, ImageBackground, useWindowDimensions} from 'react-native';
 import { useNavigation, NavigationProp, useTheme } from '@react-navigation/native';
+import { LinearGradient } from 'react-native-linear-gradient';
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/sv';
@@ -72,6 +73,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   const navigation = useNavigation<NavigationProp<WeatherStackParamList>>()
   const insets = useSafeAreaInsets();
+  const { width} = useWindowDimensions();
 
   if (loading || !nextHourForecast) {
     return (
@@ -140,21 +142,28 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   const auroraBorealis = nextHourForecast?.smartSymbol && nextHourForecast?.smartSymbol > 100
                           && nextHourForecast?.totalCloudCover && nextHourForecast?.totalCloudCover <= 50
                           && isAuroraBorealisLikely;
-
+  const isWideDisplay = () => width > 500;
   const weatherBackground = weatherBackgroundGetter(
     auroraBorealis ? 'aurora' : nextHourForecast?.smartSymbol?.toString() || '0',
-    dark
+    isWideDisplay(),
   );
 
   const textColor = nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100 ? WHITE :  colors.primaryText;
+  const gradientColors = dark ? ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']
+                          : ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)'];
 
   return (
     <>
       <ImageBackground
         source={weatherBackground}
         resizeMode="cover"
+        style={styles.backgroundImage}
       >
-      <SafeAreaView style={[styles.container, { paddingTop: paddingTop }]} >
+        <LinearGradient
+          colors={gradientColors}
+          style={styles.gradient}
+        />
+        <SafeAreaView style={[styles.container, { paddingTop: paddingTop }]} >
           <View style={[styles.row]}>
             <IconButton
               testID="locate_button"
@@ -409,7 +418,17 @@ const styles = StyleSheet.create({
   },
   feelsLikeIcon: {
     marginTop: -20,
-  }
+  },
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  gradient: {
+    height: 100,
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+  },
 });
 
 export default connector(NextHourForecastPanelWithWeatherBackground);
