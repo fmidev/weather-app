@@ -13,7 +13,7 @@ struct LargeNextHoursForecast: View {
           Image(decorative: "clock")
           Spacer()
           ForEach(1..<timeSteps.count, id: \.self) { i in
-            Text(timeSteps[i].formatTime(timezone: timezone))
+            Text(timeSteps[i].formatHours(timezone: timezone))
               .style(.time)
               .frame(width: COLUMN_WIDTH)
             if (i<timeSteps.count-1) {
