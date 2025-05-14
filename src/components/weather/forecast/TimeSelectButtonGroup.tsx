@@ -25,7 +25,7 @@ const TimeSelectButtonGroup: React.FC<TimeSelectButtonGroupProps> = ({
 }) => {
   const { t } = useTranslation('forecast');
   const [selected, setSelected] = useState(selectedHour);
-  const hours = [0, 6, 12, 17]
+  const hours = [0, 6, 12, 18]
 
   useEffect(() => {
     setSelected(selectedHour);
