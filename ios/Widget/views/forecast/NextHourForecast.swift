@@ -5,7 +5,7 @@ struct NextHourForecast: View {
   var large: Bool = false
   let SYMBOL_SIZE: CGFloat = 54
   let LARGE_SYMBOL_SIZE: CGFloat = 78
-  let BASELINE_OFFSET: CGFloat = 15
+  let BASELINE_OFFSET: CGFloat = 12
   let LARGE_BASELINE_OFFSET: CGFloat = 25
   let SPACING_BETWEEN_ELEMENTS: CGFloat = 22
    
