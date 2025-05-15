@@ -150,9 +150,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
           <View style={[styles.row, { borderColor: colors.border }]} key={stepMoment.unix()}>
             <View style={styles.day}>
               <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
-                {index === 0 ?
-                  (stepMoment.isSame(moment(), 'day') ? t('forecast:today') : t('forecast:tomorrow'))
-                  : uppercaseFirst(stepMoment.locale(locale).format(weekdayAbbreviationFormat))}
+                {index === 0 && stepMoment.isSame(moment(), 'day') ?
+                  t('forecast:today') : uppercaseFirst(stepMoment.locale(locale).format(weekdayAbbreviationFormat))}
               </Text>
               <Text style={[styles.text, { color: colors.primaryText }]}>
                 {stepMoment.locale(locale).format(dateFormat)}
@@ -298,7 +297,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   day: {
-    width: 60,
+    width: 70,
   },
   centeredView: {
     flex: 1,
