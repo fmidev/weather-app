@@ -19,7 +19,7 @@ import {
 } from '@store/forecast/selectors';
 import { selectTimeZone, selectCurrent } from '@store/location/selector';
 import { selectUnits } from '@store/settings/selectors';
-import { shouldUseWhiteText, weatherBackgroundGetter } from '@assets/images/backgrounds';
+import { getOverrideTextColor, weatherBackgroundGetter } from '@assets/images/backgrounds';
 
 import { getFeelsLikeIconName, getGeolocation, getWindDirection } from '@utils/helpers';
 import { CustomTheme, WHITE, BLACK } from '@assets/colors';
@@ -154,10 +154,14 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     auroraBorealis ? 'aurora' : nextHourForecast?.smartSymbol?.toString() || '0',
     isWideDisplay(),
   );
-  const whiteText = shouldUseWhiteText(nextHourForecast?.smartSymbol?.toString() || '0', isWideDisplay());
-  const forceDark = nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100;
-  const textColor = forceDark || whiteText ? WHITE :  colors.primaryText;
-  const shadowTextColor = forceDark || dark || whiteText ? BLACK : WHITE;
+  const overrideTextColor = getOverrideTextColor(
+    nextHourForecast?.smartSymbol?.toString() || '0',
+    isWideDisplay(),
+    !!(nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100)
+  );
+  const forceDark = !!(nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100);
+  const textColor = forceDark || overrideTextColor === 'white' ? WHITE :  colors.primaryText;
+  const shadowTextColor = forceDark || dark || overrideTextColor === 'white' ? BLACK : WHITE;
   const gradientColors = dark ? ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']
                           : ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)'];
 
@@ -179,7 +183,9 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               icon="locate"
               accessibilityLabel={t('navigation:locate')}
               iconColor={textColor}
-              backgroundColor={forceDark ? darkTheme.colors.inputBackground : colors.inputBackground}
+              backgroundColor={
+                forceDark || overrideTextColor === 'white' ? darkTheme.colors.inputBackground : colors.inputBackground
+              }
               onPress={() => {
                 getGeolocation(setCurrentLocation, t);
               }}
@@ -201,7 +207,9 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               icon="search"
               accessibilityLabel={t('navigation:search')}
               iconColor={textColor}
-              backgroundColor={forceDark ? darkTheme.colors.inputBackground : colors.inputBackground}
+              backgroundColor={
+                forceDark || overrideTextColor === 'white' ? darkTheme.colors.inputBackground : colors.inputBackground
+              }
               onPress={() => {
                 navigation.navigate('Search')
               }}
