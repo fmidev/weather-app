@@ -164,6 +164,8 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   const shadowTextColor = forceDark || dark || overrideTextColor === 'white' ? BLACK : WHITE;
   const gradientColors = dark ? ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']
                           : ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)'];
+  const iconButtonBackground = forceDark || overrideTextColor === 'white' ?
+    darkTheme.colors.weatherButtonBackground: colors.weatherButtonBackground;
 
   return (
     <>
@@ -183,9 +185,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               icon="locate"
               accessibilityLabel={t('navigation:locate')}
               iconColor={textColor}
-              backgroundColor={
-                forceDark || overrideTextColor === 'white' ? darkTheme.colors.inputBackground : colors.inputBackground
-              }
+              backgroundColor={iconButtonBackground}
               onPress={() => {
                 getGeolocation(setCurrentLocation, t);
               }}
@@ -207,9 +207,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               icon="search"
               accessibilityLabel={t('navigation:search')}
               iconColor={textColor}
-              backgroundColor={
-                forceDark || overrideTextColor === 'white' ? darkTheme.colors.inputBackground : colors.inputBackground
-              }
+              backgroundColor={iconButtonBackground}
               onPress={() => {
                 navigation.navigate('Search')
               }}

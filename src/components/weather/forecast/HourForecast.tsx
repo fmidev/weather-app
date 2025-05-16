@@ -46,7 +46,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
 
   const time = moment
     .unix(timeStep.epochtime)
-    .format(clockType === 12 ? 'h a' : 'HH:mm');
+    .format(clockType === 12 ? 'h a' : 'HH');
   const smartSymbol = weatherSymbolGetter(
     (timeStep.smartSymbol || 0).toString(),
     dark
