@@ -195,6 +195,10 @@ interface Feedback {
   };
 }
 
+interface MeteorologistSnapshot {
+  url: string;
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -231,6 +235,7 @@ export interface ConfigType {
       };
     };
     observation: ObservationEnabled | ObservationDisabled;
+    meteorologist?: MeteorologistSnapshot;
     useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;

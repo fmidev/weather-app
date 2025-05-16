@@ -23,6 +23,7 @@ import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import Announcements from '@components/announcements/Announcements';
 import WarningIconsPanel from '@components/warnings/WarningIconsPanel';
+import MeteorologistSnapshot from '@components/weather/MeteorologistSnapshot';
 
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
@@ -159,6 +160,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
           {warningsConfig.enabled && Object.keys(warningsConfig.apiUrl).includes(location.country) && (
             <WarningIconsPanel />
+          )}
+          { location.country === 'FI' && weatherConfig.meteorologist && (
+            <MeteorologistSnapshot />
           )}
           <ObservationPanel />
         </ScrollView>
