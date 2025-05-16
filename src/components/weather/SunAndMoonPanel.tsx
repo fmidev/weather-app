@@ -77,7 +77,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
       ? `D.M.YYYY [${t('at')}] h:mm a`
       : `D.M.YYYY [${t('at')}] HH:mm`;
 
-  const timeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
+  const timeFormat = clockType === 12 ? 'h.mm' : 'HH:mm';
+  const accessibleTimeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
 
   const moonPhase = resolveMoonPhase(forecast.moonPhase as number, waningMoonPhase);
   const moonBackground = moonPhaseImages[moonPhase];
@@ -123,7 +124,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                       'at'
                     )} ${sunrise.format(timeFormat)}`}
                     style={[styles.text, { color: colors.primaryText}]}>
-                    {sunrise.format(timeFormat)}
+                    {sunrise.format(accessibleTimeFormat)}
                   </Text>
                 </View>
               </View>
@@ -154,7 +155,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                       'at'
                     )} ${sunset.format(dateFormat)}`}
                     style={[styles.text, { color: colors.primaryText}]}>
-                    {sunset.format(dateFormat)}
+                    {sunset.format(accessibleTimeFormat)}
                   </Text>
                 </View>
               </View>
@@ -173,10 +174,20 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     <Text
                       accessibilityLabel={`${t('sunrise')} ${t(
                         'at'
-                      )} ${sunrise.format(timeFormat)}`}
+                      )} ${sunrise.format(accessibleTimeFormat)}`}
                       style={[styles.text, { color: colors.primaryText}]}>
                       {sunrise.format(timeFormat)}
                     </Text>
+                    { clockType === 12 && (
+                      <Text
+                        style={[styles.smallText, { color: colors.primaryText}]}
+                        accessible={false}
+                        importantForAccessibility="no"
+                        accessibilityLabel=""
+                      >
+                        {sunrise.format('a')}
+                      </Text>
+                    )}
                   </View>
                   <View style={[styles.sunInfo]} accessible>
                     <Icon
@@ -188,10 +199,20 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     <Text
                       accessibilityLabel={`${t('sunset')} ${t(
                         'at'
-                      )} ${sunset.format(timeFormat)}`}
+                      )} ${sunset.format(accessibleTimeFormat)}`}
                       style={[styles.text, { color: colors.primaryText}]}>
                       {sunset.format(timeFormat)}
                     </Text>
+                    { clockType === 12 && (
+                      <Text
+                        style={[styles.smallText, { color: colors.primaryText}]}
+                        accessible={false}
+                        importantForAccessibility="no"
+                        accessibilityLabel=""
+                      >
+                        {sunset.format('a')}
+                      </Text>
+                    )}
                   </View>
                 </View>
                 {(excludeDayDuration === undefined || !excludeDayDuration) && (
@@ -237,6 +258,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: BLACK,
   },
+  smallText: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 12,
+    lineHeight: 13,
+    paddingTop: 2,
+    paddingLeft: 2,
+    color: BLACK,
+  },
   flex: {
     flex: 1,
   },
@@ -250,11 +279,11 @@ const styles = StyleSheet.create({
   sunInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 16,
+    marginLeft: 12,
     paddingBottom: 8,
   },
   sunIcon: {
-    marginRight: 8,
+    marginRight: 4,
     color: BLACK,
   },
   box: {
@@ -280,6 +309,7 @@ const styles = StyleSheet.create({
   info: {
     padding: 16,
     paddingBottom: 8,
+    paddingHorizontal: 12,
   },
   moonPhase: {
     width: 80,

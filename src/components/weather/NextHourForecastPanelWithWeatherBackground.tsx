@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, Text, StyleSheet, ImageBackground} from 'react-native';
+import { ActivityIndicator, View, Text, StyleSheet, ImageBackground, useWindowDimensions} from 'react-native';
 import { useNavigation, NavigationProp, useTheme } from '@react-navigation/native';
+import { LinearGradient } from 'react-native-linear-gradient';
+
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
 import 'moment/locale/sv';
@@ -17,10 +19,10 @@ import {
 } from '@store/forecast/selectors';
 import { selectTimeZone, selectCurrent } from '@store/location/selector';
 import { selectUnits } from '@store/settings/selectors';
-import { weatherBackgroundGetter } from '@assets/images/backgrounds';
+import { getOverrideTextColor, weatherBackgroundGetter } from '@assets/images/backgrounds';
 
 import { getFeelsLikeIconName, getGeolocation, getWindDirection } from '@utils/helpers';
-import { CustomTheme, WHITE } from '@assets/colors';
+import { CustomTheme, WHITE, BLACK } from '@assets/colors';
 
 import Icon from '@assets/Icon';
 import { Config } from '@config';
@@ -30,11 +32,13 @@ import {
   getForecastParameterUnitTranslationKey,
 } from '@utils/units';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { setCurrentLocation } from '@store/location/actions';
+import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import IconButton from '@components/common/IconButton';
 import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
 import { selectIsAuroraBorealisLikely } from '@store/observation/selector';
+import { darkTheme } from '@assets/themes';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -45,7 +49,11 @@ const mapStateToProps = (state: State) => ({
   isAuroraBorealisLikely : selectIsAuroraBorealisLikely(state)
 });
 
-const connector = connect(mapStateToProps, {});
+const mapDispatchToProps = {
+  setCurrentLocation: setCurrentLocationAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -59,6 +67,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   timezone,
   units,
   location,
+  setCurrentLocation,
   isAuroraBorealisLikely,
   currentHour, // To force re-render when the hour changes
 }) => {
@@ -72,6 +81,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   const navigation = useNavigation<NavigationProp<WeatherStackParamList>>()
   const insets = useSafeAreaInsets();
+  const { width} = useWindowDimensions();
 
   if (loading || !nextHourForecast) {
     return (
@@ -140,49 +150,70 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   const auroraBorealis = nextHourForecast?.smartSymbol && nextHourForecast?.smartSymbol > 100
                           && nextHourForecast?.totalCloudCover && nextHourForecast?.totalCloudCover <= 50
                           && isAuroraBorealisLikely;
-
+  const isWideDisplay = () => width > 500;
   const weatherBackground = weatherBackgroundGetter(
     auroraBorealis ? 'aurora' : nextHourForecast?.smartSymbol?.toString() || '0',
-    dark
+    isWideDisplay(),
   );
-
-  const textColor = nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100 ? WHITE :  colors.primaryText;
+  const overrideTextColor = getOverrideTextColor(
+    nextHourForecast?.smartSymbol?.toString() || '0',
+    isWideDisplay(),
+    !!(nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100)
+  );
+  const forceDark = !!(nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100);
+  const textColor = forceDark || overrideTextColor === 'white' ? WHITE :  colors.primaryText;
+  const shadowTextColor = forceDark || dark || overrideTextColor === 'white' ? BLACK : WHITE;
+  const gradientColors = dark ? ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']
+                          : ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)'];
+  const iconButtonBackground = forceDark || overrideTextColor === 'white' ?
+    darkTheme.colors.weatherButtonBackground: colors.weatherButtonBackground;
 
   return (
     <>
       <ImageBackground
         source={weatherBackground}
         resizeMode="cover"
+        style={styles.backgroundImage}
       >
-      <SafeAreaView style={[styles.container, { paddingTop: paddingTop }]} >
+        <LinearGradient
+          colors={gradientColors}
+          style={styles.gradient}
+        />
+        <SafeAreaView style={[styles.container, { paddingTop: paddingTop }]} >
           <View style={[styles.row]}>
             <IconButton
               testID="locate_button"
               icon="locate"
               accessibilityLabel={t('navigation:locate')}
               iconColor={textColor}
-              backgroundColor={colors.inputBackground}
+              backgroundColor={iconButtonBackground}
               onPress={() => {
                 getGeolocation(setCurrentLocation, t);
               }}
               circular
             />
             <View style={styles.locationTextContainer} accessible accessibilityRole="header">
-              <Text
-                style={[
-                  styles.largeText,
-                  styles.bold,
-                  { color: textColor },
-                ]}>
-                {`${location.name}${location.area ? `, ${location.area}` : ''}`}
-              </Text>
+              <AccessibleTouchableOpacity
+                onPress={() => { navigation.navigate('Search') }}
+                accessibilityLabel={t('navigation:search')}
+              >
+                <Text
+                  style={[
+                    styles.largeText,
+                    styles.bold,
+                    styles.shadowText,
+                    { color: textColor, textShadowColor: shadowTextColor },
+                  ]}>
+                  {`${location.name}${location.area ? `, ${location.area}` : ''}`}
+                </Text>
+              </AccessibleTouchableOpacity>
             </View>
             <IconButton
               testID="search_button"
               icon="search"
               accessibilityLabel={t('navigation:search')}
               iconColor={textColor}
-              backgroundColor={colors.inputBackground}
+              backgroundColor={iconButtonBackground}
               onPress={() => {
                 navigation.navigate('Search')
               }}
@@ -190,18 +221,27 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             />
           </View>
           <View style={[styles.alignCenter, styles.forecastVerticalSpace]}>
-            <Text style={[styles.text, styles.centeredText, { color: textColor }]}>
+            <Text style={[
+              styles.text,
+              styles.centeredText,
+              styles.shadowText,
+              { color: textColor, textShadowColor: shadowTextColor }]}
+            >
               {t(`symbols:${nextHourForecast?.smartSymbol?.toString() }`)}
             </Text>
           </View>
           <View style={styles.row}>
             <View style={[styles.row, styles.alignStart]} accessible>
               <Text
-                style={[styles.temperatureText, { color: textColor }]}>
+                style={[
+                  styles.temperatureText,
+                  styles.shadowText,
+                  { color: textColor, textShadowColor: shadowTextColor }
+                ]}>
                 {numericOrDash(temperatureValue)}
               </Text>
               <Text
-                style={[styles.unitText, { color: textColor }]}
+                style={[styles.unitText, styles.shadowText, { color: textColor, textShadowColor: shadowTextColor }]}
                 accessibilityLabel={`${numericOrDash(temperatureValue)} ${t(
                   getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
                 )} `}>
@@ -251,11 +291,16 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                       style={[
                         styles.text,
                         styles.bold,
-                        { color: textColor },
+                        styles.shadowText,
+                        { color: textColor, textShadowColor: shadowTextColor },
                       ]}>
                       {numericOrDash(windSpeedValue)}
                     </Text>
-                    <Text style={[styles.text, { color: textColor }]}>
+                    <Text style={[
+                      styles.text,
+                      styles.shadowText,
+                      { color: textColor, textShadowColor: shadowTextColor }
+                    ]}>
                       {` ${windUnit}`}
                     </Text>
                   </View>
@@ -267,7 +312,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               <>
                 <Icon name="precipitation" color={textColor} />
                 <Text
-                  style={[styles.text, { color: textColor }]}
+                  style={[styles.text, styles.shadowText, { color: textColor, textShadowColor: shadowTextColor }]}
                   accessibilityLabel={`${t('forecast:precipitation')} ${
                     precipitationValue
                       ?.toString()
@@ -278,7 +323,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                       precipitationUnit
                     )}`
                   )}`}>
-                  <Text style={styles.bold}>{`${
+                  <Text style={[styles.bold, styles.shadowText, {textShadowColor: shadowTextColor}]}>{`${
                     precipitationValue?.replace('.', decimalSeparator) ||
                     (0).toFixed(1).replace('.', decimalSeparator)
                   }`}</Text>
@@ -290,12 +335,12 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
           <View style={styles.row}>
             { showUv && activeParameters.includes('uvCumulated') && (
               <Text
-                style={[styles.text, { color: textColor }]}
+                style={[styles.text, styles.shadowText, { color: textColor, textShadowColor: shadowTextColor }]}
                 accessibilityLabel={t('params.uvCumulated', {
                   value: numericOrDash(nextHourForecast.uvCumulated?.toString()),
                 })}>
                 {'UV '}
-                <Text style={styles.bold}>
+                <Text style={[styles.bold, styles.shadowText, {textShadowColor: shadowTextColor}]}>
                   {numericOrDash(nextHourForecast.uvCumulated?.toString())}
                 </Text>
               </Text>
@@ -313,10 +358,11 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                   <Text
                     style={[
                       styles.text,
+                      styles.shadowText,
                       styles.withMarginRight,
-                      { color: textColor },
+                      { color: textColor, textShadowColor: shadowTextColor },
                     ]}>
-                    {t('feelsLike').toLowerCase()}{' '}
+                    {t('feelsLike')}{' '}
                     <Text>
                       {numericOrDash(feelsLikeValue)}
                     </Text>
@@ -396,6 +442,10 @@ const styles = StyleSheet.create({
   centeredText: {
     textAlign: 'center',
   },
+  shadowText: {
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
   bold: {
     fontFamily: 'Roboto-Bold',
   },
@@ -409,7 +459,17 @@ const styles = StyleSheet.create({
   },
   feelsLikeIcon: {
     marginTop: -20,
-  }
+  },
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  gradient: {
+    height: 100,
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+  },
 });
 
 export default connector(NextHourForecastPanelWithWeatherBackground);

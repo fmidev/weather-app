@@ -95,6 +95,8 @@
     "previousDay": "Edellinen päivä",
     "nextDay": "Seuraava päivä",
     "closeModal": "Sulje päiväennuste",
+    "today": "Tänään",
+    "tomorrow": "Huomenna",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",

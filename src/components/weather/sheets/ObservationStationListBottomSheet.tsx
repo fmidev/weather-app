@@ -18,6 +18,7 @@ import { setStationId as setStationIdAction } from '@store/observation/actions';
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/helpers';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const mapStateToProps = (state: State) => ({
   dataId: selectDataId(state),
@@ -40,6 +41,7 @@ type ObservationStationListBottomSheetProps = PropsFromRedux & {
 const ObservationStationListBottomSheet: React.FC<
   ObservationStationListBottomSheetProps
 > = ({ onClose, dataId, stationId, setStationId, stationList }) => {
+  const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const { colors } = useTheme() as CustomTheme;
@@ -47,7 +49,10 @@ const ObservationStationListBottomSheet: React.FC<
   const decimalSeparator = locale === 'en' ? '.' : ',';
 
   return (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, {
+      paddingLeft: insets.left,
+      paddingRight: insets.right
+    }]}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton

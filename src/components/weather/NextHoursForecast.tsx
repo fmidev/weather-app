@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, StyleSheet, useWindowDimensions } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { State } from '@store/types';
@@ -28,6 +28,7 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   currentHour, // To force re-render when the hour changes
 }) => {
   const HOUR_FORECAST_WIDTH = 70;
+  const TIMESTEP_COUNT_FOR_PHONES = 12;
   const { t } = useTranslation('forecast');
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -40,15 +41,35 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
     );
   }
 
+  const isWideDisplay = () => width > 500;
   const safeAreaWidth = width - insets.left - insets.right;
-  const count = Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
+  const count = !isWideDisplay() ?
+                TIMESTEP_COUNT_FOR_PHONES
+                : Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
 
   const forceDark = forecast[0]?.smartSymbol && forecast[0]?.smartSymbol > 100 ? true : false;
 
-  return (
-    <View testID="next_hours_forecast" style={[styles.container, styles.row]}>
+  return isWideDisplay() ? (
+    <View testID="next_hours_forecast" style={
+      [styles.container, styles.row, { paddingLeft: insets.left, paddingRight: insets.right }]
+    }>
       { forecast.slice(1, count + 1).map(item => (
-        <HourForecast key={item.epochtime} timeStep={item} forceDark={forceDark} />))}
+        <HourForecast key={item.epochtime} timeStep={item} forceDark={forceDark} />)
+      )}
+    </View>
+  ) : (
+    <View testID="next_hours_forecast" style={
+      [styles.container, styles.row, { paddingLeft: insets.left, paddingRight: insets.right }]
+    }>
+      <ScrollView
+        testID="next_hours_forecast"
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        { forecast.slice(1, count + 1).map(item => (
+          <HourForecast key={item.epochtime} timeStep={item} forceDark={forceDark} />)
+        )}
+      </ScrollView>
     </View>
   );
 };

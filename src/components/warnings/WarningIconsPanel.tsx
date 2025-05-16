@@ -16,6 +16,7 @@ import DayDetailsDescription from './DayDetailsDescription';
 import { TabParamList } from '@navigators/types';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
@@ -32,6 +33,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   dailyWarnings,
   warningsAge,
 }) => {
+  const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation('warnings');
   const { colors, dark } = useTheme() as CustomTheme;
   const navigation = useNavigation<NavigationProp<TabParamList>>();
@@ -57,7 +59,11 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
     <TouchableOpacity onPress={openWarnings}>
       <View
         testID="warnings_panel"
-        style={[styles.cardWrapper, { backgroundColor: colors.warningCard }]}
+        style={[styles.cardWrapper, {
+          backgroundColor: colors.warningCard,
+          marginLeft: insets.left + 16,
+          marginRight: insets.right + 16
+        }]}
       >
         <View style={styles.cardContainer}>
           <View

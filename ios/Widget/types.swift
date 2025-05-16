@@ -40,13 +40,12 @@ struct TimeStep: Hashable, Identifiable, Codable {
   func formatTemperature(includeDegree: Bool = false, useFeelsLike: Bool = false) -> String {
     let value = useFeelsLike ? feelsLike : temperature
     
-    let prefix = value >= 0 ? "+" : ""
     let suffix = includeDegree ? "°" : ""
     
     if (observation) {
-      return prefix+String(value)+suffix
+      return String(value)+suffix
     }
-    return prefix+String(Int(value.rounded()))+suffix
+    return String(Int(value.rounded()))+suffix
   }
   
   func formatWindSpeed() -> String {
@@ -87,6 +86,20 @@ struct TimeStep: Hashable, Identifiable, Codable {
     
     return dateFormatter.string(from: date)
   }
+  
+  func formatHours(timezone: String? = nil) -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "HH"
+      
+    if (timezone != nil) {
+      dateFormatter.timeZone = TimeZone(identifier: timezone!)
+    }
+    
+    let date = Date(timeIntervalSince1970: TimeInterval(epochtime))
+    
+    return dateFormatter.string(from: date)
+  }
+  
   
   func getFeelsLikeIcon() -> String {
     let shouldUseFinnishHolidays = getSetting("location.default.country") as? String == "FI"
