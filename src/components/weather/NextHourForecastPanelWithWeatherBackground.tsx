@@ -38,6 +38,7 @@ import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
 import { selectIsAuroraBorealisLikely } from '@store/observation/selector';
 import { darkTheme } from '@assets/themes';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -192,15 +193,20 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               circular
             />
             <View style={styles.locationTextContainer} accessible accessibilityRole="header">
-              <Text
-                style={[
-                  styles.largeText,
-                  styles.bold,
-                  styles.shadowText,
-                  { color: textColor, textShadowColor: shadowTextColor },
-                ]}>
-                {`${location.name}${location.area ? `, ${location.area}` : ''}`}
-              </Text>
+              <AccessibleTouchableOpacity
+                onPress={() => { navigation.navigate('Search') }}
+                accessibilityLabel={t('navigation:search')}
+              >
+                <Text
+                  style={[
+                    styles.largeText,
+                    styles.bold,
+                    styles.shadowText,
+                    { color: textColor, textShadowColor: shadowTextColor },
+                  ]}>
+                  {`${location.name}${location.area ? `, ${location.area}` : ''}`}
+                </Text>
+              </AccessibleTouchableOpacity>
             </View>
             <IconButton
               testID="search_button"
