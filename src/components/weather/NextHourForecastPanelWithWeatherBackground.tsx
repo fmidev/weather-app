@@ -358,7 +358,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                       styles.withMarginRight,
                       { color: textColor, textShadowColor: shadowTextColor },
                     ]}>
-                    {t('feelsLike').toLowerCase()}{' '}
+                    {t('feelsLike')}{' '}
                     <Text>
                       {numericOrDash(feelsLikeValue)}
                     </Text>
