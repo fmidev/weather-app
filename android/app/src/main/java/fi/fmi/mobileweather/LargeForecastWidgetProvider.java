@@ -90,7 +90,7 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                     String temperature = forecast.getString("temperature");
                     int weatherSymbol = forecast.getInt("smartSymbol");
 
-                    widgetRemoteViews.setTextViewText(R.id.temperatureTextView, addPlusIfNeeded(temperature) + "°");
+                    widgetRemoteViews.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
                     int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol, "drawable", context.getPackageName());
                     widgetRemoteViews.setImageViewResource(R.id.weatherIconImageView, drawableResId);
@@ -114,7 +114,6 @@ public class LargeForecastWidgetProvider extends BaseWidgetProvider {
                 String formattedTime = getFormattedWeatherTime(localTime);
                 timeStep.setTextViewText(R.id.timeTextView, formattedTime);
 
-                temperature = addPlusIfNeeded(temperature);
                 timeStep.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol, "drawable", context.getPackageName());
