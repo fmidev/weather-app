@@ -195,6 +195,22 @@ interface Feedback {
   };
 }
 
+interface News {
+  apiUrl: {
+    [country: string]: string;
+  };
+  count: number;
+  updateInterval: number;
+}
+
+interface NewsEnabled extends News {
+  enabled: true;
+}
+
+interface NewsDisabled extends Partial<News> {
+  enabled: false;
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -234,6 +250,7 @@ export interface ConfigType {
     useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;
+  news: NewsEnabled | NewsDisabled;
   settings: {
     languages: string[];
     units: {
