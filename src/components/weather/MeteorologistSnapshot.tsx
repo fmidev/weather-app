@@ -49,7 +49,7 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
     return (
       <View style={[styles.box, styles.content, { backgroundColor: colors.meteorologistSnapshotCard}]}>
         <Text style={[styles.title, { color: colors.primaryText }]}>Meteorologin sääkatsaus</Text>
-        <Text style={[styles.text, { color: colors.primaryText }]}>Sääkatsauksen lataus epäonnistui</Text>
+        <Text style={[styles.text, { color: colors.primaryText }]}>Sääkatsauksen hakeminen epäonnistui</Text>
       </View>
     )
   }
