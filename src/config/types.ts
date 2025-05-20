@@ -195,8 +195,9 @@ interface Feedback {
   };
 }
 
-interface MeteorologistSnapshot {
+interface MeteorologistSnapshotConfig {
   url: string;
+  updateInterval: number;
 }
 
 export interface ConfigType {
@@ -235,7 +236,7 @@ export interface ConfigType {
       };
     };
     observation: ObservationEnabled | ObservationDisabled;
-    meteorologist?: MeteorologistSnapshot;
+    meteorologist?: MeteorologistSnapshotConfig;
     useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;
