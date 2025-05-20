@@ -9,9 +9,8 @@ import MapReducer, { mapPersist } from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
 import NavigationReducer, { navigationPersist } from './navigation/reducer';
 import WarningsReducer, { warningsPersist } from './warnings/reducer';
-import AnnouncementsReducer, {
-  announcementsPersist,
-} from './announcements/reducer';
+import AnnouncementsReducer, { announcementsPersist } from './announcements/reducer';
+import MeteorologistReducer, { meteorologistPersist } from './meteorologist/reducer';
 
 import { PersistConfig } from './types';
 import { SharedReduxStorage } from '@store/SharedReduxStorage';
@@ -52,5 +51,9 @@ export default combineReducers({
   announcements: persistReducer(
     persistReducerConfig(announcementsPersist),
     AnnouncementsReducer
+  ),
+  meteorologist: persistReducer(
+    persistReducerConfig(meteorologistPersist),
+    MeteorologistReducer
   ),
 });

@@ -211,6 +211,11 @@ interface NewsDisabled extends Partial<News> {
   enabled: false;
 }
 
+interface MeteorologistSnapshotConfig {
+  url: string;
+  updateInterval: number;
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -247,6 +252,7 @@ export interface ConfigType {
       };
     };
     observation: ObservationEnabled | ObservationDisabled;
+    meteorologist?: MeteorologistSnapshotConfig;
     useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;
