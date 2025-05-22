@@ -199,8 +199,9 @@ interface News {
   apiUrl: {
     [country: string]: string;
   };
-  count: number;
+  numberOfNews: number;
   updateInterval: number;
+  outdated: number;
 }
 
 interface NewsEnabled extends News {

@@ -703,5 +703,15 @@
     "crisisPrefix": "Varoitus:",
     "maintenancePrefix": "Huomio:",
     "openInBrowser": "Avaa selaimessa"
+  },
+  "news": {
+    "title": "Ajankohtaista",
+    "error": "Uutisten hakeminen epäonnistui",
+    "readMore": "Lue lisää verkkosivuilta",
+    "uutinen": "Uutinen",
+    "tiedote": "Tiedote",
+    "artikkeli": "Artikkeli",
+    "puheenvuoro": "Puheenvuoro",
+    "updated": "Päivitetty:"
   }
 }

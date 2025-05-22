@@ -11,6 +11,7 @@ import { selectLoading, selectError, selectMeteorologistSnapshot } from '@store/
 import { selectClockType } from '@store/settings/selectors';
 import { CustomTheme } from '@assets/colors';
 import Icon from '@assets/Icon';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -31,13 +32,17 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   snapshot,
   clockType,
 }) => {
+  const insets = useSafeAreaInsets();
   const { dark, colors } = useTheme() as CustomTheme;
   const colorMode = dark ? 'dark' : 'light';
   const timeFormat = clockType === 12 ? 'D.M.YYYY h.mm a' : 'D.M.YYYY HH:mm';
 
   if (loading) {
     return (
-      <MotiView>
+      <MotiView style={{
+        marginLeft: insets.left + 16,
+        marginRight: insets.right + 16
+      }}>
         <View style={styles.box}>
           <Skeleton colorMode={colorMode} width={'100%'} height={200} radius={10} />
         </View>
@@ -47,7 +52,11 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
 
   if (error || !snapshot) {
     return (
-      <View style={[styles.box, styles.content, { backgroundColor: colors.meteorologistSnapshotCard}]}>
+      <View style={[styles.box, styles.content, {
+        backgroundColor: colors.meteorologistSnapshotCard,
+        marginLeft: insets.left + 16,
+        marginRight: insets.right + 16
+      }]}>
         <Text style={[styles.title, { color: colors.primaryText }]}>Meteorologin sääkatsaus</Text>
         <Text style={[styles.text, { color: colors.primaryText }]}>Sääkatsauksen hakeminen epäonnistui</Text>
       </View>
@@ -56,7 +65,11 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
 
   if (snapshot) {
     return (
-      <View style={[styles.box, styles.content, { backgroundColor: colors.meteorologistSnapshotCard}]}>
+      <View style={[styles.box, styles.content, {
+        backgroundColor: colors.meteorologistSnapshotCard,
+        marginLeft: insets.left + 16,
+        marginRight: insets.right + 16
+      }]}>
         <Text
           accessibilityRole="header"
           style={[styles.title, { color: colors.primaryText }]}
@@ -85,12 +98,10 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
 }
 
 const styles = StyleSheet.create({
-  // eslint-disable-next-line react-native/no-color-literals
   box: {
     margin: 16,
     minHeight: 150,
     borderRadius: 10,
-    backgroundColor: '#f3f3f3',
   },
   content: {
     padding: 16,

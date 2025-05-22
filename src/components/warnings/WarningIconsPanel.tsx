@@ -43,7 +43,10 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
 
   if (!warningsAge) {
     return (
-      <MotiView style={[styles.cardWrapper, styles.noPadding]}>
+      <MotiView style={[styles.cardWrapper, styles.noPadding, {
+        marginLeft: insets.left + 16,
+        marginRight: insets.right + 16
+      }]}>
         <Skeleton colorMode={colorMode} width={'100%'} height={160} radius={10} />
       </MotiView>
     );
