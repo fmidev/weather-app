@@ -120,6 +120,17 @@ const defaultConfig: ConfigType = {
   onboardingWizard: {
     enabled: true,
   },
+  news: {
+    enabled: true,
+    apiUrl: {
+      fi: 'https://www.ilmatieteenlaitos.fi/api/news',
+      sv: 'https://sv.ilmatieteenlaitos.fi/api/news',
+      en: 'https://en.ilmatieteenlaitos.fi/api/news',
+    },
+    numberOfNews: 3,
+    updateInterval: 30,
+    outdated: 0,
+  },
 };
 
 export default defaultConfig;
