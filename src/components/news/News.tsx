@@ -31,7 +31,7 @@ const News: React.FC<NewsProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const { t, } = useTranslation('news');
-  const { count } = Config.get('news');
+  const { numberOfNews } = Config.get('news');
   const { dark } = useTheme() as CustomTheme;
   const colorMode = dark ? 'dark' : 'light';
 
@@ -42,7 +42,7 @@ const News: React.FC<NewsProps> = ({
         marginRight: insets.right + 16
       }}>
         <PanelHeader title={t('title')} news />
-        { new Array(count).fill(null).map((_, index) => (
+        { new Array(numberOfNews).fill(null).map((_, index) => (
           <View style={styles.newsBox} key={index}>
             <Skeleton colorMode={colorMode} width={'100%'} height={200} radius={10} />
           </View>
