@@ -123,9 +123,9 @@ const defaultConfig: ConfigType = {
   news: {
     enabled: true,
     apiUrl: {
-      fi: 'https://www.ilmatieteenlaitos.fi/api/news',
-      sv: 'https://sv.ilmatieteenlaitos.fi/api/news',
-      en: 'https://en.ilmatieteenlaitos.fi/api/news',
+      fi: 'apiUrl',
+      sv: 'apiUrl',
+      en: 'apiUrl',
     },
     numberOfNews: 3,
     updateInterval: 30,
