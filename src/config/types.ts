@@ -195,6 +195,23 @@ interface Feedback {
   };
 }
 
+interface News {
+  apiUrl: {
+    [country: string]: string;
+  };
+  numberOfNews: number;
+  updateInterval: number;
+  outdated: number;
+}
+
+interface NewsEnabled extends News {
+  enabled: true;
+}
+
+interface NewsDisabled extends Partial<News> {
+  enabled: false;
+}
+
 interface MeteorologistSnapshotConfig {
   url: string;
   updateInterval: number;
@@ -240,6 +257,7 @@ export interface ConfigType {
     useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;
+  news: NewsEnabled | NewsDisabled;
   settings: {
     languages: string[];
     units: {

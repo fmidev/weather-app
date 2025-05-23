@@ -11,6 +11,7 @@ import NavigationReducer, { navigationPersist } from './navigation/reducer';
 import WarningsReducer, { warningsPersist } from './warnings/reducer';
 import AnnouncementsReducer, { announcementsPersist } from './announcements/reducer';
 import MeteorologistReducer, { meteorologistPersist } from './meteorologist/reducer';
+import NewsReducer, { newsPersist } from './news/reducer';
 
 import { PersistConfig } from './types';
 import { SharedReduxStorage } from '@store/SharedReduxStorage';
@@ -55,5 +56,9 @@ export default combineReducers({
   meteorologist: persistReducer(
     persistReducerConfig(meteorologistPersist),
     MeteorologistReducer
+  ),
+  news: persistReducer(
+    persistReducerConfig(newsPersist),
+    NewsReducer
   ),
 });
