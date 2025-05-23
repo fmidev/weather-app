@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, ScrollView, StyleSheet, Platform } from 'react-native';
+import { View, ScrollView, StyleSheet, Platform, useWindowDimensions } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
@@ -59,6 +59,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 }) => {
   const { i18n } = useTranslation();
   const isFocused = useIsFocused();
+  const { width} = useWindowDimensions();
   const [forecastUpdated, setForecastUpdated] = useState<number>(Date.now());
   const [observationUpdated, setObservationUpdated] = useState<number>(Date.now());
   const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
@@ -70,6 +71,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const showMeteorologistSnapshot = weatherConfig.meteorologist?.url &&
                                     location.country === 'FI' &&
                                     i18n.language === 'fi';
+  const showLocalWarnings = warningsConfig.enabled &&
+                            Object.keys(warningsConfig.apiUrl).includes(location.country);
+  const isWideDisplay = () => width > 700;
 
   const updateForecast = useCallback(() => {
     const geoid = location.id;
@@ -189,10 +193,21 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
           <SunAndMoonPanel />
           <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
-          {warningsConfig.enabled && Object.keys(warningsConfig.apiUrl).includes(location.country) && (
-            <WarningIconsPanel />
-          )}
-          { showMeteorologistSnapshot && <MeteorologistSnapshot />}
+          {isWideDisplay() && showLocalWarnings && showMeteorologistSnapshot ? (
+            <View style={styles.grid}>
+              <View style={styles.gridItem}>
+                <WarningIconsPanel gridLayout />
+              </View>
+              <View style={styles.gridItem}>
+                <MeteorologistSnapshot gridLayout />
+              </View>
+            </View>
+          ) :
+            <>
+              { showLocalWarnings && <WarningIconsPanel /> }
+              { showMeteorologistSnapshot && <MeteorologistSnapshot /> }
+            </>
+          }
           <ObservationPanel />
           <News />
         </ScrollView>
@@ -229,6 +244,16 @@ const styles = StyleSheet.create({
   },
   announcements: {
     elevation: 10,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  gridItem: {
+    width: '50%',
+    height: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
 });
 

@@ -19,6 +19,10 @@
         <action android:name="android.intent.action.VIEW"/>
         <data android:scheme="youtube" android:host="com.google.android.youtube" />
       </intent>
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="https"/>
+      </intent>
     </queries>
 
     <application

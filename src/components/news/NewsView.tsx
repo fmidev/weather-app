@@ -10,39 +10,52 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 
 type NewsProps = {
   item: NewsItem;
+  titleNumberOfLines?: number;
+  gridLayout?: boolean;
 }
 
-const NewsView: React.FC<NewsProps> = ({ item }) => {
+const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('news');
   const dateFormat = 'D.M.YYYY';
   const dateAndTimeFormat = 'D.M.YYYY HH:mm';
+  const titleHeight = titleNumberOfLines ? titleNumberOfLines * 20 : null;
 
   const openLink = async (type: string, id: string) => {
     const urlPrefix = i18n.language === 'fi' ? 'www' : i18n.language;
-    const url = `https://${urlPrefix}.ilmatieteenlaitos.fi/${t(type).toLowerCase()}/${id}?referrer=fmi-mobile-app`;
+    let url = `https://${urlPrefix}.ilmatieteenlaitos.fi/${t(type).toLowerCase()}/${id}?referrer=fmi-mobile-app`;
     const supported = await Linking.canOpenURL(url);
 
     if (supported) {
       await Linking.openURL(url);
+    } else {
+      console.log(`Don't know how to open URI: ${url}`);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={[styles.meta, {color: colors.primaryText }]}>
+    // eslint-disable-next-line react-native/no-inline-styles
+    <View style={[styles.container, gridLayout ? { paddingHorizontal: 4 } : {}]}>
+      <Text style={
+        [styles.meta, {color: colors.primaryText }]
+      }>
         {`${t(item.type)} ${moment(item.createdAt).format(dateFormat)}`}
         { item.createdAt.substring(0, 10) !== item.updatedAt.substring(0,10) &&
         ` (${t('updated')} ${moment(item.updatedAt).format(dateAndTimeFormat)})`}
       </Text>
-      <Text style={[styles.title, {color: colors.primaryText }]} accessibilityRole="header">{item.title}</Text>
+      <Text
+        numberOfLines={titleNumberOfLines}
+        style={[styles.title, {color: colors.primaryText }, titleHeight ? { height: titleHeight } : {}]}
+        accessibilityRole="header">
+        {item.title}
+      </Text>
       <AccessibleTouchableOpacity
         accessibilityRole="imagebutton"
         accessibilityLabel={item.imageAlt}
         accessibilityHint={t('readMore')}
         onPress={() => { openLink(item.type, item.id) }}
       >
-        <Image src={item.imageUrl} style={styles.image} />
+        <Image src={item.imageUrl} style={[styles.image]} />
       </AccessibleTouchableOpacity>
       <SimpleButton
         accessibilityHint={t('readMore')}
@@ -55,6 +68,7 @@ const NewsView: React.FC<NewsProps> = ({ item }) => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     marginVertical: 8,
   },
   meta: {

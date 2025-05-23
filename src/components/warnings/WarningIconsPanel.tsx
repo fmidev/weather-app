@@ -7,7 +7,7 @@ import { CustomTheme } from '@assets/colors';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,
-  selectWarningsAge,
+  selectLoading,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
@@ -20,18 +20,21 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
-  warningsAge: selectWarningsAge(state),
+  loading: selectLoading(state),
 });
 
-const connector = connect(mapStateToProps);
+const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type WarningIconsPanelProps = PropsFromRedux & {};
+type WarningIconsPanelProps = PropsFromRedux & {
+  gridLayout?: boolean;
+};
 
 const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   dailyWarnings,
-  warningsAge,
+  loading,
+  gridLayout,
 }) => {
   const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation('warnings');
@@ -41,7 +44,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   moment.locale(i18n.language);
   const colorMode = dark ? 'dark' : 'light';
 
-  if (!warningsAge) {
+  if (loading) {
     return (
       <MotiView style={[styles.cardWrapper, styles.noPadding, {
         marginLeft: insets.left + 16,
@@ -62,10 +65,11 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
     <TouchableOpacity onPress={openWarnings}>
       <View
         testID="warnings_panel"
+        // eslint-disable-next-line react-native/no-inline-styles
         style={[styles.cardWrapper, {
           backgroundColor: colors.warningCard,
           marginLeft: insets.left + 16,
-          marginRight: insets.right + 16
+          marginRight: gridLayout ? 8 : insets.right + 16,
         }]}
       >
         <View style={styles.cardContainer}>
@@ -164,6 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 16,
     paddingHorizontal: 16,
+    height: 160,
   },
   noPadding: {
     paddingHorizontal: 0,
@@ -213,6 +218,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 0,
     marginVertical: 12,
+    height: 60,
   },
   warningDaysContainer: {
     borderBottomWidth: 0,

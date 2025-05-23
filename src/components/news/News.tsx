@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
@@ -29,11 +29,13 @@ const News: React.FC<NewsProps> = ({
   error,
   news,
 }) => {
+  const { width} = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const { t, } = useTranslation('news');
   const { numberOfNews } = Config.get('news');
   const { dark } = useTheme() as CustomTheme;
   const colorMode = dark ? 'dark' : 'light';
+  const isWideDisplay = () => width > 700;
 
   if (loading) {
     return (
@@ -70,7 +72,17 @@ const News: React.FC<NewsProps> = ({
         marginRight: insets.right + 16
       }}>
         <PanelHeader title={t('title')} news />
-        { news.map((item) => <NewsView item={item} key={item.id} />) }
+        { !isWideDisplay() ?
+          news.map((item) => <NewsView item={item} key={item.id} />)
+        : (
+          <View style={styles.grid}>
+          { news.map((item) => (
+            <View style={styles.gridItem} key={item.id}>
+            <NewsView item={item} titleNumberOfLines={2} gridLayout />
+            </View>
+          ))}
+          </View>
+        )}
       </View>
     )
   }
@@ -79,6 +91,15 @@ const News: React.FC<NewsProps> = ({
 }
 
 const styles = StyleSheet.create({
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  gridItem: {
+    width: '50%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
   newsBox: {
     margin: 16,
     minHeight: 150,

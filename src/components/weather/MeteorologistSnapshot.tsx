@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text } from 'react-native';
@@ -22,7 +23,11 @@ const mapStateToProps = (state: State) => ({
 
 const connector = connect(mapStateToProps, {});
 
-type MeteorologistSnapshotProps = ConnectedProps<typeof connector>;
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type MeteorologistSnapshotProps = PropsFromRedux & {
+  gridLayout?: boolean;
+};
 
 // Only available in finnish for locations in Finland
 
@@ -31,21 +36,21 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   error,
   snapshot,
   clockType,
+  gridLayout,
 }) => {
   const insets = useSafeAreaInsets();
   const { dark, colors } = useTheme() as CustomTheme;
   const colorMode = dark ? 'dark' : 'light';
   const timeFormat = clockType === 12 ? 'D.M.YYYY h.mm a' : 'D.M.YYYY HH:mm';
+  const marginLeft = gridLayout ? 8 : insets.left + 16;
+  const marginRight = gridLayout ? insets.right : insets.right + 16;
+  const minHeight = gridLayout ? 160 : 150;
 
   if (loading) {
     return (
-      <MotiView style={{
-        marginLeft: insets.left + 16,
-        marginRight: insets.right + 16
-      }}>
-        <View style={styles.box}>
-          <Skeleton colorMode={colorMode} width={'100%'} height={200} radius={10} />
-        </View>
+      // eslint-disable-next-line react-native/no-inline-styles
+      <MotiView style={{ marginLeft, marginRight, marginTop: 16 }}>
+        <Skeleton colorMode={colorMode} width={'100%'} height={minHeight} radius={10} />
       </MotiView>
     );
   }
@@ -54,8 +59,9 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
     return (
       <View style={[styles.box, styles.content, {
         backgroundColor: colors.meteorologistSnapshotCard,
-        marginLeft: insets.left + 16,
-        marginRight: insets.right + 16
+        marginLeft,
+        marginRight,
+        minHeight
       }]}>
         <Text style={[styles.title, { color: colors.primaryText }]}>Meteorologin sääkatsaus</Text>
         <Text style={[styles.text, { color: colors.primaryText }]}>Sääkatsauksen hakeminen epäonnistui</Text>
@@ -67,8 +73,9 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
     return (
       <View style={[styles.box, styles.content, {
         backgroundColor: colors.meteorologistSnapshotCard,
-        marginLeft: insets.left + 16,
-        marginRight: insets.right + 16
+        marginLeft,
+        marginRight,
+        minHeight,
       }]}>
         <Text
           accessibilityRole="header"
