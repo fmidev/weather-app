@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, ScrollView, StyleSheet, Platform } from 'react-native';
+import { View, ScrollView, StyleSheet, Platform, useWindowDimensions } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
@@ -10,6 +10,8 @@ import { selectAnnouncements } from '@store/announcements/selectors';
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
 import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
+import { fetchMeteorologistSnapshot as fetchMeteorologistSnapshotAction } from '@store/meteorologist/actions';
+import { fetchNews as fetchNewsAction } from '@store/news/actions';
 
 import GradientWrapper from '@components/weather/GradientWrapper';
 import NextHourForecastPanel from '@components/weather/NextHourForecastPanel';
@@ -18,11 +20,14 @@ import ForecastPanel from '@components/weather/ForecastPanel';
 import ForecastPanelWithVerticalLayout from '@components/weather/ForecastPanelWithVerticalLayout';
 import ObservationPanel from '@components/weather/ObservationPanel';
 import SunAndMoonPanel from '@components/weather/SunAndMoonPanel';
+import News from '@components/news/News';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import Announcements from '@components/announcements/Announcements';
 import WarningIconsPanel from '@components/warnings/WarningIconsPanel';
+import MeteorologistSnapshot from '@components/weather/MeteorologistSnapshot';
+import { useTranslation } from 'react-i18next';
 
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
@@ -33,6 +38,8 @@ const mapDispatchToProps = {
   fetchForecast: fetchForecastAction,
   fetchObservation: fetchObservationAction,
   fetchWarnings: fetchWarningsAction,
+  fetchMeteorologistSnapshot: fetchMeteorologistSnapshotAction,
+  fetchNews: fetchNewsAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -45,18 +52,28 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   fetchForecast,
   fetchObservation,
   fetchWarnings,
+  fetchMeteorologistSnapshot,
+  fetchNews,
   location,
   announcements,
 }) => {
+  const { i18n } = useTranslation();
   const isFocused = useIsFocused();
+  const { width} = useWindowDimensions();
   const [forecastUpdated, setForecastUpdated] = useState<number>(Date.now());
-  const [observationUpdated, setObservationUpdated] = useState<number>(
-    Date.now()
-  );
+  const [observationUpdated, setObservationUpdated] = useState<number>(Date.now());
   const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
+  const [meteorologistUpdated, setMeteorologistUpdated] = useState<number>(Date.now());
+  const [newsUpdated, setNewsUpdated] = useState<number>(Date.now());
   const { shouldReload } = useReloader();
 
-  const { weather: weatherConfig, warnings: warningsConfig } = Config.getAll();
+  const { weather: weatherConfig, warnings: warningsConfig, news: newsConfig } = Config.getAll();
+  const showMeteorologistSnapshot = weatherConfig.meteorologist?.url &&
+                                    location.country === 'FI' &&
+                                    i18n.language === 'fi';
+  const showLocalWarnings = warningsConfig.enabled &&
+                            Object.keys(warningsConfig.apiUrl).includes(location.country);
+  const isWideDisplay = () => width > 700;
 
   const updateForecast = useCallback(() => {
     const geoid = location.id;
@@ -102,6 +119,20 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchWarnings, location.lat, location.lon, warningsConfig]);
 
+  const updateMeteorologistSnapshot = useCallback(() => {
+    if (showMeteorologistSnapshot) {
+      fetchMeteorologistSnapshot();
+      setMeteorologistUpdated(Date.now());
+    }
+  }, [showMeteorologistSnapshot, fetchMeteorologistSnapshot]);
+
+  const updateNews = useCallback(() => {
+    if (newsConfig.enabled) {
+      fetchNews(i18n.language);
+      setNewsUpdated(Date.now());
+    }
+  }, [fetchNews, i18n.language, newsConfig.enabled]);
+
   useEffect(() => {
     const now = Date.now();
     const observationUpdateTime =
@@ -110,8 +141,12 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     const forecastUpdateTime =
       forecastUpdated +
       (weatherConfig.forecast.updateInterval ?? 5) * 60 * 1000;
+    const meteorologistUpdateTime = meteorologistUpdated +
+      (weatherConfig.meteorologist?.updateInterval ?? 10) * 60 * 1000;
     const warningsUpdateTime =
       warningsUpdated + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
+    const newsUpdateTime =
+      newsUpdated + (newsConfig.updateInterval ?? 30) * 60 * 1000;
 
     if (isFocused) {
       if (now > forecastUpdateTime || shouldReload > forecastUpdateTime) {
@@ -123,25 +158,26 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       if (now > warningsUpdateTime || shouldReload > warningsUpdateTime) {
         updateWarnings();
       }
+      if (now > meteorologistUpdateTime || shouldReload > meteorologistUpdateTime) {
+        updateMeteorologistSnapshot();
+      }
+      if (now > newsUpdateTime || shouldReload > newsUpdateTime) {
+        updateNews();
+      }
     }
-  }, [
-    isFocused,
-    forecastUpdated,
-    observationUpdated,
-    warningsUpdated,
-    shouldReload,
-    weatherConfig,
-    warningsConfig,
-    updateForecast,
-    updateObservation,
-    updateWarnings,
-  ]);
+  }, [isFocused, forecastUpdated, observationUpdated, warningsUpdated, meteorologistUpdated,
+    shouldReload, weatherConfig, warningsConfig, updateForecast, updateObservation, updateWarnings,
+    updateMeteorologistSnapshot, newsUpdated, newsConfig.updateInterval, updateNews]);
 
   useEffect(() => {
     updateForecast();
     updateObservation();
     updateWarnings();
-  }, [location, updateForecast, updateObservation, updateWarnings]);
+    updateMeteorologistSnapshot();
+    updateNews();
+  }, [
+    location, updateForecast, updateObservation, updateWarnings, updateMeteorologistSnapshot, updateNews
+  ]);
 
   const currentHour = new Date().getHours();
 
@@ -157,10 +193,23 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
           <SunAndMoonPanel />
           <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
-          {warningsConfig.enabled && Object.keys(warningsConfig.apiUrl).includes(location.country) && (
-            <WarningIconsPanel />
-          )}
+          {isWideDisplay() && showLocalWarnings && showMeteorologistSnapshot ? (
+            <View style={styles.grid}>
+              <View style={styles.gridItem}>
+                <WarningIconsPanel gridLayout />
+              </View>
+              <View style={styles.gridItem}>
+                <MeteorologistSnapshot gridLayout />
+              </View>
+            </View>
+          ) :
+            <>
+              { showLocalWarnings && <WarningIconsPanel /> }
+              { showMeteorologistSnapshot && <MeteorologistSnapshot /> }
+            </>
+          }
           <ObservationPanel />
+          <News />
         </ScrollView>
       </View>
     ) : (
@@ -195,6 +244,16 @@ const styles = StyleSheet.create({
   },
   announcements: {
     elevation: 10,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  gridItem: {
+    width: '50%',
+    height: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
 });
 

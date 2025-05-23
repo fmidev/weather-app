@@ -35,6 +35,7 @@ import ChartList from './forecast/ChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 import Vertical10DaysForecast from './forecast/Vertical10DaysForecast';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -77,6 +78,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentHour, // just for re-rendering every hour
 }) => {
+  const insets = useSafeAreaInsets();
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
@@ -126,6 +128,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
         {
           backgroundColor: colors.background,
           shadowColor: colors.shadow,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
         },
       ]}>
       <PanelHeader

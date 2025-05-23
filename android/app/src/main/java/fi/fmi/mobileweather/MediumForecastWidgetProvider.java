@@ -93,8 +93,6 @@ public class MediumForecastWidgetProvider extends BaseWidgetProvider {
 
                 String formattedTime = getFormattedWeatherTime(localTime);
                 timeStep.setTextViewText(R.id.timeStepTimeTextView, formattedTime);
-
-                temperature = addPlusIfNeeded(temperature);
                 timeStep.setTextViewText(R.id.temperatureTextView, temperature + "°");
 
                 int drawableResId = context.getResources().getIdentifier("s_" + weatherSymbol, "drawable", context.getPackageName());

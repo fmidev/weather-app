@@ -95,6 +95,8 @@
     "previousDay": "Edellinen päivä",
     "nextDay": "Seuraava päivä",
     "closeModal": "Sulje päiväennuste",
+    "today": "Tänään",
+    "tomorrow": "Huomenna",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
@@ -701,5 +703,15 @@
     "crisisPrefix": "Varoitus:",
     "maintenancePrefix": "Huomio:",
     "openInBrowser": "Avaa selaimessa"
+  },
+  "news": {
+    "title": "Ajankohtaista",
+    "error": "Uutisten hakeminen epäonnistui",
+    "readMore": "Lue lisää verkkosivuilta",
+    "uutinen": "Uutinen",
+    "tiedote": "Tiedote",
+    "artikkeli": "Artikkeli",
+    "puheenvuoro": "Puheenvuoro",
+    "updated": "Päivitetty:"
   }
 }

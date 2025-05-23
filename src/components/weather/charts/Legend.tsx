@@ -323,6 +323,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               </View>
               <View style={styles.legendRowNoMargin}>
                 <Text
+                  numberOfLines={1}
                   style={[
                     styles.rowFirstHalfText,
                     { color: colors.hourListText },
@@ -336,6 +337,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               </View>
               <View style={styles.legendRowNoMargin}>
                 <Text
+                  numberOfLines={1}
                   style={[
                     styles.rowFirstHalfText,
                     { color: colors.hourListText },
@@ -349,6 +351,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               </View>
               <View style={styles.legendRowNoMargin}>
                 <Text
+                  numberOfLines={1}
                   style={[
                     styles.rowFirstHalfText,
                     { color: colors.hourListText },
@@ -362,6 +365,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               </View>
               <View style={styles.legendRowNoMargin}>
                 <Text
+                  numberOfLines={1}
                   style={[
                     styles.rowFirstHalfText,
                     { color: colors.hourListText },
@@ -375,6 +379,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               </View>
               <View style={styles.legendRowNoMargin}>
                 <Text
+                  numberOfLines={1}
                   style={[
                     styles.rowFirstHalfText,
                     { color: colors.hourListText },
@@ -451,10 +456,10 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   rowFirstHalf: {
-    width: 60,
+    width: 80,
   },
   rowFirstHalfText: {
-    width: 65,
+    width: 85,
   },
   legendRowNoMargin: {
     flexDirection: 'row',

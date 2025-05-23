@@ -451,7 +451,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
             widgetRemoteViews.setTextViewText(R.id.locationRegionTextView, region);
 
             String temperature = first.getString("temperature");
-            temperature = addPlusIfNeeded(temperature);
             widgetRemoteViews.setTextViewText(R.id.temperatureTextView, temperature);
             widgetRemoteViews.setTextViewText(R.id.temperatureUnitTextView, "°");
 
@@ -654,16 +653,6 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected String addPlusIfNeeded(String temperature) {
-        // temperature string to float
-        float tempFloat = Float.parseFloat(temperature);
-        // if temperature is positive, add plus sign to temperature string
-        if (tempFloat > 0) {
-            temperature = "+" + temperature;
-        }
-        return temperature;
-    }
-
     @Nullable
     JSONObject useNewOrStoredJsonObject(JSONObject json, SharedPreferencesHelper pref, int widgetId) {
         Date now = new Date();
@@ -787,7 +776,7 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         // Parse the time string to Date
         Date date = inputFormatter.parse(localTime);
         // Define the output formatter
-        SimpleDateFormat outputFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat outputFormatter = new SimpleDateFormat("HH", Locale.getDefault());
         // Format the Date to the desired format and return the result
         return outputFormatter.format(date);
     }

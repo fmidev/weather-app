@@ -10,6 +10,7 @@ type PanelHeaderProps = {
   accessibilityHint?: string;
   additionalContent?: React.ReactChild;
   thin?: boolean;
+  news?: boolean;
   background?: string;
 };
 
@@ -19,6 +20,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
   accessibilityHint,
   additionalContent,
   thin,
+  news,
   background
 }) => {
   const { colors } = useTheme() as CustomTheme;
@@ -32,6 +34,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
         styles.cardHeader,
         justifyCenter && styles.justifyCenter,
         thin === true && styles.thin,
+        news === true && styles.news,
         {
           backgroundColor: background ? background : colors.cardHeader,
           borderBottomColor: colors.border,
@@ -56,6 +59,11 @@ const styles = StyleSheet.create({
   thin : {
     paddingVertical: 6,
     marginHorizontal: 16,
+    marginVertical: 16,
+    borderBottomWidth: 0,
+  },
+  news: {
+    paddingVertical: 6,
     marginVertical: 16,
     borderBottomWidth: 0,
   },
