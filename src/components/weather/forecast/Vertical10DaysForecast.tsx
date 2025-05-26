@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, GestureResponderEvent, PanResponderGestureState } from 'react-native';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
@@ -237,9 +237,15 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
         backdropOpacity={0.5}
         onSwipeComplete={ () => setModalVisible(false ) }
         onBackButtonPress={ () => setModalVisible(false ) }
-        swipeDirection={['up', 'down']}
-        propagateSwipe={true}
-        scrollHorizontal={true}
+        onBackdropPress={ () => setModalVisible(false ) }
+        swipeDirection={['down', 'up']}
+        propagateSwipe={(_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+          const { dx, dy } = gestureState;
+          if (Math.abs(dx) > Math.abs(dy)) {
+            return true;
+          }
+          return false;
+        }}
       >
         <View style={styles.centeredView}>
           <View style={[styles.modalView, { backgroundColor: colors.modalBackground }]}>

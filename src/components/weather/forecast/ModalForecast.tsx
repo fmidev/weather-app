@@ -6,7 +6,7 @@ import {
   StyleSheet,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  Pressable,
+  FlatList,
   useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ import { DAY_LENGTH } from '@store/forecast/constants';
 import { Config } from '@config';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+
 import TimeSelectButtonGroup from './TimeSelectButtonGroup';
 
 const mapStateToProps = (state: State) => ({
@@ -362,16 +362,15 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
           });
         }}
       />
-      <ScrollView style={[styles.table, { maxHeight: maxTableHeight }]}>
+      <View style={[styles.table, { maxHeight: maxTableHeight }]}>
         <View style={styles.row}>
           <ForecastListHeaderColumn displayParams={displayParams} units={units} modal />
-          <View style={styles.listContainer}>
             <FlatList
               ref={flatListRef}
               data={data}
               keyExtractor={(item) => `${item.epochtime}`}
               renderItem={({ item }: any) => (
-                <Pressable>
+                <View style={styles.flex} onStartShouldSetResponder={() => true}>
                   <ForecastListColumn
                     clockType={clockType}
                     data={item}
@@ -379,19 +378,18 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                     units={units}
                     modal
                   />
-                </Pressable>
+                </View>
               )}
               onScroll={handleOnScroll}
               horizontal
               showsHorizontalScrollIndicator={false}
             />
-          </View>
         </View>
         {displayParams
           .map((displayParam) => displayParam[1])
           .includes(DAY_LENGTH) &&
           !excludeDayLength && <DayDurationRow />}
-      </ScrollView>
+      </View>
     </>
   );
 };
@@ -453,6 +451,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  flex: {
+    flex: 1,}
 });
 
 export default memo(connector(ModalForecast));
