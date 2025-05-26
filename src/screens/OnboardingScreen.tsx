@@ -20,17 +20,22 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { useOrientation } from '@utils/hooks';
+import { Config } from '@config';
+import { providerLogos } from '@assets/images';
 
 type OnboardingScreenProps = {
   navigation: StackNavigationProp<SetupStackParamList, 'Onboarding'>;
 };
 
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
-  const { t } = useTranslation('onboarding');
+  const { languageSpecificLogo } = Config.get('onboardingWizard');
+  const { t, i18n } = useTranslation('onboarding');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
   const titleRef = useRef() as React.MutableRefObject<Text>;
   const isLandscape = useOrientation();
+
+  const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];
 
   const onboardingInfo = [
     {
@@ -126,15 +131,15 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         resizeMode="contain"
         source={
           dark
-            ? require('../assets/images/weather-background-dark.png')
-            : require('../assets/images/weather-background-light.png')
+            ? require(`../assets/images/weather-background-dark.png`)
+            : require(`../assets/images/weather-background-light.png`)
         }>
         <Image
           testID="onboarding_logo_image"
           source={
             dark
-              ? require('../assets/images/provider-logo-dark.png')
-              : require('../assets/images/provider-logo-light.png')
+              ? showLanguageSpecificLogo? providerLogos[i18n.language].dark : require(`../assets/images/provider-logo-dark.png`)
+              : showLanguageSpecificLogo ? providerLogos[i18n.language].light : require(`../assets/images/provider-logo-light.png`)
           }
           resizeMode="contain"
           style={styles.logo}
