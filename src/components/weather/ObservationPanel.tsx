@@ -168,7 +168,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   );
   const title = `${currentStation?.name || ''} – ${t(
     'distance'
-  )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} km`;
+  )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} ${t('unitAbbreviations:km')}`;
   return (
     <View
       style={layout === 'fmi' ? styles.extraPadding : [
