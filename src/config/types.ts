@@ -185,6 +185,7 @@ type Themes = LightThemeEnabled | DarkThemeEnabled;
 
 interface OnboardingWizard {
   enabled: boolean;
+  languageSpecificLogo?: boolean;
 }
 
 interface Feedback {
