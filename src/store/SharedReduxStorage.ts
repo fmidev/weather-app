@@ -6,14 +6,17 @@ import {
   type StorageKey,
 } from '../utils/async_storage';
 import DefaultPreference from 'react-native-default-preference';
+import { IOS_APP_GROUP } from '@assets/constants';
 
-DefaultPreference.setName('group.fi.fmi.mobileweather.settings');
+DefaultPreference.setName(IOS_APP_GROUP);
 
 // Allows to share data with iOS/Android widgets
 export const SharedReduxStorage: Storage = {
   setItem: async (key: string, value: string) => {
     await setItem(key as StorageKey, value); // Writes to Android SqlLite database
-    await DefaultPreference.set(key, value); // Writes to iOS UserDefaults and Android SharedPreferences
+    if (IOS_APP_GROUP) {
+      await DefaultPreference.set(key, value); // Writes to iOS UserDefaults and Android SharedPreferences
+    }
   },
   getItem: async (key: string): Promise<string | null> => {
     const value = await getItem(key as StorageKey);
@@ -21,6 +24,8 @@ export const SharedReduxStorage: Storage = {
   },
   removeItem: async (key: string) => {
     await removeItem(key as StorageKey);
-    await DefaultPreference.clear(key);
+    if (IOS_APP_GROUP) {
+      await DefaultPreference.clear(key);
+    }
   },
 };
