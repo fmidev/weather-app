@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Config } from '@config';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 
 import packageJSON from '../../package.json';
 

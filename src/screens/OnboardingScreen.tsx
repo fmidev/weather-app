@@ -15,22 +15,27 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { useOrientation } from '@utils/hooks';
+import { Config } from '@config';
+import { providerLogos } from '@assets/images';
 
 type OnboardingScreenProps = {
   navigation: StackNavigationProp<SetupStackParamList, 'Onboarding'>;
 };
 
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
-  const { t } = useTranslation('onboarding');
+  const { languageSpecificLogo } = Config.get('onboardingWizard');
+  const { t, i18n } = useTranslation('onboarding');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
   const titleRef = useRef() as React.MutableRefObject<Text>;
   const isLandscape = useOrientation();
+
+  const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];
 
   const onboardingInfo = [
     {
@@ -85,12 +90,12 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           styles.iconContainer,
           { backgroundColor: colors.background, shadowColor: colors.shadow },
         ]}>
-        <Icon name={icon} width={32} height={32} color={colors.primaryText} />
+        <Icon name={icon} width={32} height={32} color={colors.text} />
       </View>
       <Text
         testID="onboarding_title_text"
         ref={titleRef}
-        style={[styles.title, { color: colors.primaryText }]}
+        style={[styles.title, { color: colors.text }]}
         accessibilityRole="header"
         accessibilityLabel={`${t('step', {
           current: pageIndex + 1,
@@ -108,9 +113,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         accessibilityRole="button"
         style={styles.buttonContainer}
         onPress={handlePress}>
-        <View style={[styles.button, { borderColor: colors.primaryText }]}>
+        <View style={[styles.button, { borderColor: colors.text }]}>
           <View style={styles.textContainer}>
-            <Text style={[styles.text, { color: colors.primaryText }]}>
+            <Text style={[styles.text, { color: colors.text }]}>
               {t('next')}
             </Text>
           </View>
@@ -126,15 +131,15 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         resizeMode="contain"
         source={
           dark
-            ? require('../assets/images/weather-background-dark.png')
-            : require('../assets/images/weather-background-light.png')
+            ? require(`../assets/images/weather-background-dark.png`)
+            : require(`../assets/images/weather-background-light.png`)
         }>
         <Image
           testID="onboarding_logo_image"
           source={
             dark
-              ? require('../assets/images/provider-logo-dark.png')
-              : require('../assets/images/provider-logo-light.png')
+              ? showLanguageSpecificLogo? providerLogos[i18n.language].dark : require(`../assets/images/provider-logo-dark.png`)
+              : showLanguageSpecificLogo ? providerLogos[i18n.language].light : require(`../assets/images/provider-logo-light.png`)
           }
           resizeMode="contain"
           style={styles.logo}
@@ -194,7 +199,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         accessibilityRole="button"
         style={styles.skipButton}
         onPress={() => navigation.navigate('SetupScreen')}>
-        <Text style={[styles.text, { color: colors.primaryText }]}>
+        <Text style={[styles.text, { color: colors.text }]}>
           {t('skip')}
         </Text>
       </AccessibleTouchableOpacity>

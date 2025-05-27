@@ -11,7 +11,7 @@ import { CustomTheme } from '@assets/colors';
 import { selectForecastByDay } from '@store/forecast/selectors';
 import ModalForecast from './ModalForecast';
 import { uppercaseFirst } from '@utils/helpers';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import CloseButton from '@components/common/CloseButton';
 
 const mapStateToProps = (state: State) => ({
@@ -44,20 +44,36 @@ const DailyModal: React.FC<ModalContentProps> = ({
       <View style={styles.header}>
         <View style={[styles.flex, styles.flexRow, styles.center]}>
           { activeDayIndex > 0 ?
-            (<Icon name="arrow-left" color={colors.primaryText} onPress={ () => onDayChange(false) } />)
+            (<View accessible>
+                <Icon
+                name="arrow-left"
+                color={colors.primaryText}
+                onPress={ () => onDayChange(false) }
+                accessibilityLabel={t('previousDay')}
+                />
+              </View>)
             :
             (<View style={styles.spacer} />)
           }
-          <Text style={[styles.text, styles.bold, styles.headerText, { color: colors.primaryText }]}>
+          <Text
+            accessibilityRole="header"
+            style={[styles.text, styles.bold, styles.headerText, { color: colors.primaryText }]}>
             {uppercaseFirst(moment(timeStamp).format('dddd, D.M.'))}
           </Text>
-          <Icon name="arrow-right" color={colors.primaryText} onPress={() => onDayChange(true) } />
+          <View accessible>
+            <Icon
+              name="arrow-right"
+              color={colors.primaryText}
+              onPress={() => onDayChange(true) }
+              accessibilityLabel={t('nextDay')}
+            />
+          </View>
         </View>
-        <View style={styles.closeButtonContainer}>
+        <View style={styles.closeButtonContainer} accessible>
           <CloseButton
             testID="forecast_modal_close_button"
             onPress={onClose}
-            accessibilityLabel={t('close')}
+            accessibilityLabel={t('closeModal')}
           />
         </View>
       </View>

@@ -10,10 +10,10 @@ import {
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import { getSeveritiesForDays } from '@utils/helpers';
+import { getSeveritiesForDays, selectCapInfoByLanguage } from '@utils/helpers';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
 import { connect } from 'react-redux';
@@ -54,8 +54,9 @@ const WarningItem = ({
   includeArrow: boolean | undefined;
   showDescription?: boolean;
 }) => {
+  const { i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
-  const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+  const info = Array.isArray(warning.info) ? selectCapInfoByLanguage(warning.info, i18n.language): warning.info;
   const areaDesc = info.area.areaDesc
     .charAt(0)
     .toUpperCase()
@@ -175,7 +176,8 @@ function WarningBlock({
   const headerWarningAreas = [
     ...new Set(
       warnings
-        .map((warning) => Array.isArray(warning.info) ? warning.info[0].area.areaDesc : warning.info.area.areaDesc)
+        .map((warning) => Array.isArray(warning.info) ?
+          selectCapInfoByLanguage(warning.info, locale).area.areaDesc : warning.info.area.areaDesc)
         .map((area) => area.charAt(0).toUpperCase().concat(area.substring(1)))
     ),
   ].join(', ');

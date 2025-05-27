@@ -16,6 +16,7 @@ import {
 const INITIAL_STATE: ObservationState = {
   data: {},
   dailyData: {},
+  isAuroraBorealisLikely: false,
   error: false,
   id: 0,
   loading: false,
@@ -43,7 +44,11 @@ const formatData = (
                 distance: Number(distance),
                 type: stationType,
               });
-              data[Number(id)] = [...dataHolder].reverse();
+              data[Number(id)] = [...dataHolder].reverse().filter(
+                // Filter observations to 10 min interval + always the latest observation
+                // to limit data amount
+                (item, index) => item.epochtime % 600 === 0 || index === 0
+              );
             }
           );
         }
@@ -69,12 +74,13 @@ export default (
     }
 
     case FETCH_OBSERVATION_SUCCESS: {
-      const { data, stations } = formatData(action.payload.data[0]);
-      const { data: dailyData } = formatData(action.payload.data[1]);
+      const { data, stations } = formatData(action.payload.data[0] as ObservationDataRaw);
+      const { data: dailyData } = formatData(action.payload.data[1] as ObservationDataRaw);
       const newState = {
         ...state,
         data,
         dailyData,
+        isAuroraBorealisLikely: action.payload.data.length >= 3 && action.payload.data[2] === true,
         stations,
         id:
           action.payload.location.geoid || action.payload.location.latlon || 0,

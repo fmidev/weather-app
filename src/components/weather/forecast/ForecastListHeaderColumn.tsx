@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 
 import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
@@ -11,6 +11,7 @@ import { DisplayParameters } from '@store/forecast/types';
 import { Config } from '@config';
 import { UnitMap } from '@store/settings/types';
 import LinearGradient from 'react-native-linear-gradient';
+import { useTranslation } from 'react-i18next';
 
 type ForecastListHeaderColumnProps = {
   displayParams: [number, DisplayParameters][];
@@ -25,6 +26,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
   const defaultUnits = Config.get('settings').units;
+  const { t } = useTranslation('unitAbbreviations');
 
   const lightGradient = [
     'rgba(238, 239, 241, 0.64)',
@@ -73,7 +75,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 <Icon name="wind" color={colors.hourListText} />
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  {units?.wind.unitAbb ?? defaultUnits.wind}
+                  {t(units?.wind.unitAbb ?? defaultUnits.wind)}
                 </Text>
               </View>
             );
@@ -91,7 +93,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 <Icon name="gust" color={colors.hourListText} />
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  {units?.wind.unitAbb ?? defaultUnits.wind}
+                  {t(units?.wind.unitAbb ?? defaultUnits.wind)}
                 </Text>
               </View>
             );
@@ -109,7 +111,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 <Icon name="precipitation" color={colors.hourListText} />
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  {units?.precipitation.unitAbb ?? defaultUnits.precipitation}
+                  {t(units?.precipitation.unitAbb ?? defaultUnits.precipitation)}
                 </Text>
               </View>
             );
@@ -147,7 +149,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 ]}>
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  RH%
+                  {t('RH%')}
                 </Text>
               </View>
             );
@@ -165,7 +167,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 ]}>
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  {units?.pressure.unitAbb ?? defaultUnits.pressure}
+                  {t(units?.pressure.unitAbb ?? defaultUnits.pressure)}
                 </Text>
               </View>
             );
@@ -183,7 +185,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 ]}>
                 <Text
                   style={[styles.panelText, { color: colors.hourListText }]}>
-                  UV
+                  {t('UV')}
                 </Text>
               </View>
             );

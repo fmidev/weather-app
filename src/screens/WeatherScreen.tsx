@@ -17,10 +17,12 @@ import NextHourForecastPanelWithWeatherBackground from '@components/weather/Next
 import ForecastPanel from '@components/weather/ForecastPanel';
 import ForecastPanelWithVerticalLayout from '@components/weather/ForecastPanelWithVerticalLayout';
 import ObservationPanel from '@components/weather/ObservationPanel';
+import SunAndMoonPanel from '@components/weather/SunAndMoonPanel';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import Announcements from '@components/announcements/Announcements';
+import WarningIconsPanel from '@components/warnings/WarningIconsPanel';
 
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
@@ -75,9 +77,10 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   const updateObservation = useCallback(() => {
     if (weatherConfig.observation.enabled) {
-      const observationLocation = location.id
-        ? { geoid: location.id }
-        : { latlon: `${location.lat},${location.lon}` };
+      const observationLocation = {
+        geoid: location.id,
+        latlon: `${location.lat},${location.lon}`
+      }
 
       fetchObservation(observationLocation, location.country);
       setObservationUpdated(Date.now());
@@ -152,7 +155,11 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           stickyHeaderIndices={announcements && [0]}>
           <Announcements style={styles.announcements} />
           <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
+          <SunAndMoonPanel />
           <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
+          {warningsConfig.enabled && Object.keys(warningsConfig.apiUrl).includes(location.country) && (
+            <WarningIconsPanel />
+          )}
           <ObservationPanel />
         </ScrollView>
       </View>

@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
@@ -147,7 +147,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               styles.withMarginRight,
               { color: colors.hourListText },
             ]}>
-            {getUnitForParameter(param)}
+            {t(`unitAbbreviations:${getUnitForParameter(param)}`)}
           </Text>
         )}
         {param === UV_CUMULATED && (
@@ -163,7 +163,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         )}
         <Text style={[styles.text, { color: colors.hourListText }]}>
           {t(`paramsBottomSheet.${param}`, {
-            unit: getUnitForParameter(param),
+            unit: t(`unitAbbreviations:${getUnitForParameter(param)}`),
           })}
         </Text>
       </View>

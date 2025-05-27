@@ -13,7 +13,7 @@ import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { State } from '@store/types';
 import { TimeStepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
@@ -66,6 +66,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
+  const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { excludeDayLength } = Config.get('weather').forecast;
 
   const virtualizedList = useRef() as React.MutableRefObject<
@@ -358,7 +359,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                         styles.bold,
                         { color: colors.hourListText },
                       ]}>
-                      {`${dayHours} h ${dayMinutes} min`}
+                      {`${dayHours} ${unitTranslate('h')} ${dayMinutes} ${unitTranslate('min')}`}
                     </Text>
                   </View>
                 </>

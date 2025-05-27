@@ -77,6 +77,7 @@
     "dayLength": "Dagens längd",
     "hours": "timmar",
     "minutes": "minuter",
+    "moonPhase": "Månfas",
     "feelsLike": "Känns som",
     "temperature": "Temperatur",
     "fromTo": "{{ min }} {{ unit }} linje {{ max }} {{ unit }}",
@@ -91,6 +92,9 @@
     "paramsAccessibilityHint": "Öppna valet av storheter",
     "active": "vald",
     "notActive": "ej vald",
+    "previousDay": "Föregående dag",
+    "nextDay": "Följande dag",
+    "closeModal": "Stäng dagsprognosen",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",
@@ -179,6 +183,17 @@
       "showLess": "Visa mindre",
       "timezone": "Tidszon",
       "timezoneDescription": "Alla klockslag för applikationen anges enligt den valda tidszonens placering."
+    },
+    "sunAndMoon": {
+      "dayLength": "Dagens längd",
+      "newMoon": "Nymåne",
+      "waxingCrescent": "Växande halvmåne",
+      "firstQuarter": "Första kvarteret",
+      "waxingGibbous": "Växande gibbous",
+      "fullMoon": "Fullmåne",
+      "waningGibbous": "Avtagande gibbous",
+      "lastQuarter": "Sista kvarteret",
+      "waningCrescent": "Avtagande halvmåne"
     }
   },
   "observation": {
@@ -686,5 +701,7 @@
     "crisisPrefix": "Varning:",
     "maintenancePrefix": "OBS:",
     "openInBrowser": "Öppna i webbläsaren"
+  },
+  "unitAbbreviations": {
   }
 }

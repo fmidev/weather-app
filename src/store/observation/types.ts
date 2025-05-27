@@ -16,7 +16,7 @@ interface FetchObservation {
 interface FetchObservationSuccess {
   type: typeof FETCH_OBSERVATION_SUCCESS;
   payload: {
-    data: ObservationDataRaw[];
+    data: Array<ObservationDataRaw | boolean>;
     location: ObservationLocation;
   };
 }
@@ -75,6 +75,10 @@ export interface DailyObservationParameters {
   snowDepth06: number | null;
 }
 
+export interface GeoMagneticObservationParameters {
+  geomagneticRIndex: number | null;
+}
+
 export interface TimeStepData
   extends Partial<ObservationParameters & DailyObservationParameters> {
   epochtime: number;
@@ -120,6 +124,7 @@ export type StationId = {
 export interface ObservationState {
   data: ObservationData | undefined;
   dailyData: ObservationData | undefined;
+  isAuroraBorealisLikely: boolean | undefined;
   stations: StationInfo[] | [];
   stationId: StationId | undefined;
   id: Id;

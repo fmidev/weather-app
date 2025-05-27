@@ -46,7 +46,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
         showsVerticalScrollIndicator={false}>
         <Text
           ref={titleRef}
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('generalTitle')}
         </Text>
@@ -54,7 +54,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('generalDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('contentsTitle')}
         </Text>
@@ -62,7 +62,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('contentsDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('personalInfoTitle')}
         </Text>
@@ -70,7 +70,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('personalInfoDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('immaterialRightsTitle')}
         </Text>
@@ -78,7 +78,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('immaterialRightsDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('liabilityTitle')}
         </Text>
@@ -86,7 +86,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('liabilityDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('rightToChangesTitle')}
         </Text>
@@ -94,7 +94,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('rightToChangesDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('applicableLawTitle')}
         </Text>
@@ -102,7 +102,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('applicableLawDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('contactDetailsTitle')}
         </Text>

@@ -17,7 +17,7 @@ import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
-import { CapWarning, Severity } from '@store/warnings/types';
+import { CapInfo, CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from '../assets/colors';
 import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
@@ -216,12 +216,14 @@ export const getObservationCellValue = (
   decimals?: number,
   divider?: number,
   showUnit?: boolean,
-  decimalSeparator: ',' | '.' = ','
+  decimalSeparator: ',' | '.' = ',',
+  t?: (key: string) => string,
 ): string => {
   const unitAbb = unit.replace('°', ''); // get rid of ° in temperature units
   const unitParameterObject = UNITS.find((x) =>
     x.unitTypes.find((unitDefinition) => unitDefinition.unitAbb === unitAbb)
   );
+  const translatedUnit = t ? t(unitAbb) : unitAbb;
 
   const divideWith = divider || 1;
   if (!item || !param) return '-';
@@ -244,7 +246,7 @@ export const getObservationCellValue = (
       : Number(value).toFixed(decimals || 0)
     )
       .toString()
-      .replace('.', decimalSeparator)} ${showUnit ? unit : ''}`.trim();
+      .replace('.', decimalSeparator)} ${showUnit ? translatedUnit : ''}`.trim();
   }
   return '-';
 };
@@ -276,24 +278,25 @@ export const getLatestObservationAvoidingMissingValues = (
 
 export const getParameterUnit = (
   param: keyof (ObsTimeStepData | ForTimeStepData),
-  units?: UnitMap
+  units?: UnitMap,
+  t?: (key: string) => string
 ): string => {
   const { wind, temperature, precipitation, pressure } =
     Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
     case 'ri_10min':
-      return units?.precipitation.unitAbb ?? precipitation;
+      return t ? t(units?.precipitation.unitAbb ?? precipitation) : units?.precipitation.unitAbb ?? precipitation;
     case 'humidity':
       return '%';
     case 'temperature':
     case 'dewPoint':
-      return `°${units?.temperature.unitAbb ?? temperature}`;
+      return t ? `°${ t(units?.temperature.unitAbb ?? temperature) }` : `°${ units?.temperature.unitAbb ?? temperature}`;
     case 'windSpeedMS':
     case 'windGust':
-      return units?.wind.unitAbb ?? wind;
+      return t ? t(units?.wind.unitAbb ?? wind) : units?.wind.unitAbb ?? wind;
     case 'pressure':
-      return units?.pressure.unitAbb ?? pressure;
+      return t ? t(units?.pressure.unitAbb ?? pressure) : units?.pressure.unitAbb ?? pressure;
     case 'visibility':
       return 'km';
     case 'snowDepth':
@@ -484,3 +487,15 @@ export const roundCoordinates = (value: number): number => {
 };
 
 export const uppercaseFirst = (str: string) => str ? str[0].toUpperCase() + str.slice(1) : '';
+
+export const selectCapInfoByLanguage = (infos: Array<CapInfo>, language: string):CapInfo => {
+  const info = infos.find((item) => {
+    const [l] = item.language.split('-');
+    return l === language;
+  });
+
+  if (info) {
+    return info
+  }
+  return infos[0];
+}

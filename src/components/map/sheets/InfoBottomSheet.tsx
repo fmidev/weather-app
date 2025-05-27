@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';

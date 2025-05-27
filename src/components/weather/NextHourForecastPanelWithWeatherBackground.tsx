@@ -22,7 +22,7 @@ import { weatherBackgroundGetter } from '@assets/images/backgrounds';
 import { getFeelsLikeIconName, getGeolocation, getWindDirection } from '@utils/helpers';
 import { CustomTheme, WHITE } from '@assets/colors';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { Config } from '@config';
 import {
   converter,
@@ -34,6 +34,7 @@ import { setCurrentLocation } from '@store/location/actions';
 import IconButton from '@components/common/IconButton';
 import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
+import { selectIsAuroraBorealisLikely } from '@store/observation/selector';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -41,6 +42,7 @@ const mapStateToProps = (state: State) => ({
   timezone: selectTimeZone(state),
   units: selectUnits(state),
   location: selectCurrent(state),
+  isAuroraBorealisLikely : selectIsAuroraBorealisLikely(state)
 });
 
 const connector = connect(mapStateToProps, {});
@@ -57,6 +59,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   timezone,
   units,
   location,
+  isAuroraBorealisLikely,
   currentHour, // To force re-render when the hour changes
 }) => {
   const { t, i18n } = useTranslation('forecast');
@@ -72,7 +75,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   if (loading || !nextHourForecast) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, styles.column]}>
         <ActivityIndicator accessibilityLabel={t('weather:loading')} />
       </View>
     );
@@ -83,6 +86,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   );
 
   const paddingTop = insets.top === 0 ? 32 : 8;
+  const bottomInfoRowMarginTop = 90 - insets.top - paddingTop;
   const defaultUnits = Config.get('settings').units;
   const temperatureUnit =
     units?.temperature.unitAbb ?? defaultUnits.temperature;
@@ -91,11 +95,6 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     units?.precipitation.unitAbb ?? defaultUnits.precipitation;
 
   const currentTime = moment.unix(nextHourForecast.epochtime);
-  const weatherBackground = weatherBackgroundGetter(
-    nextHourForecast?.smartSymbol?.toString() || '0',
-    dark
-  );
-
   const numericOrDash = (val: string | undefined | null): string =>
     val && !Number.isNaN(val) ? val : '-';
 
@@ -138,6 +137,15 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   // Either show UV or precipitation
   const showUv = nextHourForecast.precipitation1h === 0 || dark;
 
+  const auroraBorealis = nextHourForecast?.smartSymbol && nextHourForecast?.smartSymbol > 100
+                          && nextHourForecast?.totalCloudCover && nextHourForecast?.totalCloudCover <= 50
+                          && isAuroraBorealisLikely;
+
+  const weatherBackground = weatherBackgroundGetter(
+    auroraBorealis ? 'aurora' : nextHourForecast?.smartSymbol?.toString() || '0',
+    dark
+  );
+
   const textColor = nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100 ? WHITE :  colors.primaryText;
 
   return (
@@ -147,11 +155,11 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
         resizeMode="cover"
       >
       <SafeAreaView style={[styles.container, { paddingTop: paddingTop }]} >
-          <View style={[styles.row]} accessible accessibilityRole="header">
+          <View style={[styles.row]}>
             <IconButton
               testID="locate_button"
               icon="locate"
-              accessibilityLabel=""
+              accessibilityLabel={t('navigation:locate')}
               iconColor={textColor}
               backgroundColor={colors.inputBackground}
               onPress={() => {
@@ -159,7 +167,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               }}
               circular
             />
-            <View style={styles.locationTextContainer} accessible>
+            <View style={styles.locationTextContainer} accessible accessibilityRole="header">
               <Text
                 style={[
                   styles.largeText,
@@ -172,7 +180,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             <IconButton
               testID="search_button"
               icon="search"
-              accessibilityLabel=""
+              accessibilityLabel={t('navigation:search')}
               iconColor={textColor}
               backgroundColor={colors.inputBackground}
               onPress={() => {
@@ -201,7 +209,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               </Text>
             </View>
           </View>
-          <View style={[styles.row, styles.justifySpaceBetween, styles.bottomInfoRow, { borderBottomColor: colors.border }]}>
+          <View style={[
+            styles.row, styles.justifySpaceBetween, styles.bottomInfoRow,
+              { borderBottomColor: colors.border, marginTop: bottomInfoRowMarginTop }
+          ]}>
             <View
               accessible
               style={styles.row}
@@ -342,6 +353,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
+  column: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
   locationTextContainer: {
     flex: 1,
     flexGrow: 1,
@@ -388,10 +404,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Light',
   },
   bottomInfoRow: {
-    marginTop: 20,
     marginBottom: 11,
     paddingBottom: 10,
-    borderBottomWidth: 1,
   },
   feelsLikeIcon: {
     marginTop: -20,

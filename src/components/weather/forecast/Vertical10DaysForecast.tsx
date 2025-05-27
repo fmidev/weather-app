@@ -16,7 +16,7 @@ import PrecipitationStrip from './PrecipitationStrip';
 import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { selectForecastInvalidData } from '@store/forecast/selectors';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 
@@ -156,7 +156,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                 {stepMoment.locale(locale).format(dateFormat)}
               </Text>
             </View>
-            <View accessibilityLabel={`${t(`symbols:${daySmartSymbol}`)}.`}>
+            <View accessibilityLabel={t(`symbols:${smartSymbol}`)}>
               {daySmartSymbol?.({
                 width: 44,
                 height: 44,
@@ -235,6 +235,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
         isVisible={modalVisible}
         backdropOpacity={0.5}
         onSwipeComplete={ () => setModalVisible(false ) }
+        onBackButtonPress={ () => setModalVisible(false ) }
         swipeDirection={['up', 'down']}
         propagateSwipe={true}
         scrollHorizontal={true}
