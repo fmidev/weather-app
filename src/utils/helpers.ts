@@ -17,7 +17,7 @@ import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
-import { CapWarning, Severity } from '@store/warnings/types';
+import { CapInfo, CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from '../assets/colors';
 import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
@@ -487,3 +487,15 @@ export const roundCoordinates = (value: number): number => {
 };
 
 export const uppercaseFirst = (str: string) => str ? str[0].toUpperCase() + str.slice(1) : '';
+
+export const selectCapInfoByLanguage = (infos: Array<CapInfo>, language: string):CapInfo => {
+  const info = infos.find((item) => {
+    const [l] = item.language.split('-');
+    return l === language;
+  });
+
+  if (info) {
+    return info
+  }
+  return infos[0];
+}
