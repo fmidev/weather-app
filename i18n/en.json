@@ -701,5 +701,7 @@
     "crisisPrefix": "Warning:",
     "maintenancePrefix": "Attention:",
     "openInBrowser": "Open in browser"
+  },
+  "unitAbbreviations": {
   }
 }

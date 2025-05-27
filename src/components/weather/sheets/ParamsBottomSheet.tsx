@@ -147,7 +147,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               styles.withMarginRight,
               { color: colors.hourListText },
             ]}>
-            {getUnitForParameter(param)}
+            {t(`unitAbbreviations:${getUnitForParameter(param)}`)}
           </Text>
         )}
         {param === UV_CUMULATED && (
@@ -163,7 +163,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         )}
         <Text style={[styles.text, { color: colors.hourListText }]}>
           {t(`paramsBottomSheet.${param}`, {
-            unit: getUnitForParameter(param),
+            unit: t(`unitAbbreviations:${getUnitForParameter(param)}`),
           })}
         </Text>
       </View>

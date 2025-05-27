@@ -19,6 +19,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
   data,
 }) => {
   const { t, i18n } = useTranslation('observation');
+  const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
 
@@ -56,7 +57,8 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
       param.includes('snowDepth') ? 0 : 1,
       undefined,
       true,
-      decimalSeparator
+      decimalSeparator,
+      unitTranslate
     );
 
     if (secondParam) {
@@ -67,7 +69,8 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
         1,
         undefined,
         true,
-        decimalSeparator
+        decimalSeparator,
+        unitTranslate
       )}`;
     }
 

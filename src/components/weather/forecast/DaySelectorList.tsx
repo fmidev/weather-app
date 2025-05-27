@@ -166,7 +166,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
                     ? 'forecast:celsius'
                     : 'forecast:fahrenheit'
                 ),
-              })}>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${temperatureUnit}`}</Text>
+              })}>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${t(`unitAbbreviations:${temperatureUnit}`)}`}</Text>
           )}
         </AccessibleTouchableOpacity>
         {activeParameters.includes('precipitation1h') && (

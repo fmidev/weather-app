@@ -51,6 +51,7 @@ const List: React.FC<ListProps> = ({
   units,
 }) => {
   const { t, i18n } = useTranslation('observation');
+  const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { colors } = useTheme() as CustomTheme;
   const { parameters, dailyParameters } = Config.get('weather').observation;
 
@@ -136,7 +137,8 @@ const List: React.FC<ListProps> = ({
               ]}>
               {`${t(`measurements.maxAndMinTemperatures`)} ${getParameterUnit(
                 param,
-                units
+                units,
+                unitTranslate
               )}`}
             </Text>
           );
@@ -151,7 +153,7 @@ const List: React.FC<ListProps> = ({
               styles.bold,
               { color: colors.hourListText },
             ]}>
-            {`${t(`measurements.${param}`)} ${getParameterUnit(param, units)}`}
+            {`${t(`measurements.${param}`)} ${getParameterUnit(param, units, unitTranslate)}`}
           </Text>
         );
       })}
