@@ -272,7 +272,7 @@ const SettingsScreen: React.FC<Props> = ({
                         style={[styles.text, { color: colors.text }]}
                         testID={`${key}_unitAbb`}>
                         {key === 'temperature' ? '°' : ''}
-                        {units[key].unitAbb}
+                        {t(`unitAbbreviations:${units[key].unitAbb}`)}
                       </Text>
                     </View>
                     {unitTypesByKey(key) && (

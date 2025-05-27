@@ -701,5 +701,7 @@
     "crisisPrefix": "Varning:",
     "maintenancePrefix": "OBS:",
     "openInBrowser": "Öppna i webbläsaren"
+  },
+  "unitAbbreviations": {
   }
 }

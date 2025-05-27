@@ -701,5 +701,7 @@
     "crisisPrefix": "Varoitus:",
     "maintenancePrefix": "Huomio:",
     "openInBrowser": "Avaa selaimessa"
+  },
+  "unitAbbreviations": {
   }
 }

@@ -34,6 +34,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
+  const { t: unitTranslate } = useTranslation('unitAbbreviations');
 
   const defaultUnits = Config.get('settings').units;
   const precipitationUnit =
@@ -48,7 +49,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
     return null;
   }
 
-  let labelText: any = chartYLabelText(chartType, units)[right ? 1 : 0];
+  let labelText: any = chartYLabelText(chartType, units, unitTranslate)[right ? 1 : 0];
   labelText =
     labelText.indexOf(':') > 0
       ? t(labelText).toLocaleLowerCase().split(' ')
