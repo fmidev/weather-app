@@ -1,7 +1,7 @@
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { useTheme } from '@react-navigation/native';
 import { Severity, CapWarning, WarningType } from '@store/warnings/types';
-import { CustomTheme, GRAYISH_BLUE, GRAY_4 } from '@assets/colors';
+import { CustomTheme, GRAYISH_BLUE } from '@assets/colors';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import {
   Text,
@@ -69,7 +69,7 @@ const WarningItem = ({
           styles.headingContainer,
           showDescription && styles.noBorderBottom,
           {
-            backgroundColor: !showDescription ? colors.background : undefined,
+            backgroundColor: colors.background
           },
         ]}>
         <WarningSymbol
@@ -101,7 +101,7 @@ const WarningItem = ({
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
           </Text>
-          <Text style={[styles.headingText]}>
+          <Text style={[styles.headingText, { color: colors.hourListText}] }>
             {areasDescription || areaDesc}
           </Text>
         </View>
@@ -118,8 +118,8 @@ const WarningItem = ({
       </View>
 
       {showDescription && (
-        <View style={styles.warningDescription}>
-          <Text style={{ color: GRAY_4 }}>{info.description}</Text>
+        <View style={[styles.warningDescription, { backgroundColor: colors.background}]}>
+          <Text style={{ color: colors.hourListText }}>{info.description}</Text>
         </View>
       )}
     </View>
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   warningDescription: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: GRAYISH_BLUE,
