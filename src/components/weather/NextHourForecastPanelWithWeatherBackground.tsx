@@ -144,23 +144,29 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     nextHourForecast.precipitation1h
   );
 
+  let smartSymbol = nextHourForecast?.smartSymbol ?? 0;
+
+  // Don't show night weather background before sunset
+
+  const sunset = moment(`${nextHourForecast.sunset}Z`);
+
+  if (moment().isBefore(sunset) && nextHourForecast?.sunsetToday === 1 && smartSymbol > 100) {
+    smartSymbol = smartSymbol - 100; // Convert to day variant
+  }
+
   // Either show UV or precipitation
   const showUv = nextHourForecast.precipitation1h === 0 || dark;
 
-  const auroraBorealis = nextHourForecast?.smartSymbol && nextHourForecast?.smartSymbol > 100
+  const auroraBorealis = smartSymbol && smartSymbol > 100
                           && nextHourForecast?.totalCloudCover && nextHourForecast?.totalCloudCover <= 50
                           && isAuroraBorealisLikely;
   const isWideDisplay = () => width > 500;
   const weatherBackground = weatherBackgroundGetter(
-    auroraBorealis ? 'aurora' : nextHourForecast?.smartSymbol?.toString() || '0',
+    auroraBorealis ? 'aurora' : smartSymbol.toString(),
     isWideDisplay(),
   );
-  const overrideTextColor = getOverrideTextColor(
-    nextHourForecast?.smartSymbol?.toString() || '0',
-    isWideDisplay(),
-    !!(nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100)
-  );
-  const forceDark = !!(nextHourForecast.smartSymbol && nextHourForecast.smartSymbol > 100);
+  const overrideTextColor = getOverrideTextColor(smartSymbol.toString(), isWideDisplay(), smartSymbol > 100);
+  const forceDark = !!(smartSymbol && smartSymbol > 100);
   const textColor = forceDark || overrideTextColor === 'white' ? WHITE :  colors.primaryText;
   const shadowTextColor = forceDark || dark || overrideTextColor === 'white' ? BLACK : WHITE;
   const gradientColors = dark ? ['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']
@@ -227,7 +233,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               styles.shadowText,
               { color: textColor, textShadowColor: shadowTextColor }]}
             >
-              {t(`symbols:${nextHourForecast?.smartSymbol?.toString() }`)}
+              {t(`symbols:${smartSymbol.toString() }`)}
             </Text>
           </View>
           <View style={styles.row}>
