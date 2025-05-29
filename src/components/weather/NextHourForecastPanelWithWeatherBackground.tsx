@@ -366,7 +366,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                     <Text>
                       {numericOrDash(feelsLikeValue)}
                     </Text>
-                    <Text>°</Text>
+                    <Text>{`°${temperatureUnit}`}</Text>
                   </Text>
                 </View>
                 <Icon
