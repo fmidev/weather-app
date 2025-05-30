@@ -77,7 +77,7 @@
     "dayLength": "Päivän pituus",
     "hours": "tuntia",
     "minutes": "minuuttia",
-    "moonPhase": "Kuunvaihe",
+    "moonPhase": "Kuun vaihe",
     "feelsLike": "Tuntuu kuin",
     "temperature": "Lämpötila",
     "fromTo": "{{ min }} {{ unit }} viiva {{ max }} {{ unit }}",
