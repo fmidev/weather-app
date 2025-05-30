@@ -204,7 +204,9 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                 accessibilityLabel={t('navigation:search')}
               >
                 <Text
+                  numberOfLines={1}
                   style={[
+                    styles.locationText,
                     styles.largeText,
                     styles.bold,
                     styles.shadowText,
@@ -255,138 +257,140 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               </Text>
             </View>
           </View>
-          <View style={[
-            styles.row, styles.justifySpaceBetween, styles.bottomInfoRow,
-              { borderBottomColor: colors.border, marginTop: bottomInfoRowMarginTop }
-          ]}>
-            <View
-              accessible
-              style={styles.row}
-              accessibilityLabel={
-                nextHourForecast.windCompass8
-                  ? `${t(
-                      `observation:windDirection:${nextHourForecast.windCompass8}`
-                    )} ${windSpeedValue} ${t(
-                      `forecast:${getForecastParameterUnitTranslationKey(windUnit)}`
-                    )}`
-                  : undefined
-              }>
-              {activeParameters.includes('windDirection') && (
-                <Icon
-                  name="wind-next-hour"
-                  width={28}
-                  height={28}
-                  style={[
-                    styles.withMarginRight,
-                    {
-                      transform: [
-                        {
-                          rotate: `${getWindDirection(
-                            nextHourForecast.windDirection
-                          )}deg`,
-                        },
-                      ],
-                    },
-                  ]}
-                />
+          <View style={styles.bottomInfoRowContainer}>
+            <View style={[
+              styles.row, styles.justifySpaceBetween, styles.bottomInfoRow,
+                { borderBottomColor: colors.border, marginTop: bottomInfoRowMarginTop }
+            ]}>
+              <View
+                accessible
+                style={styles.row}
+                accessibilityLabel={
+                  nextHourForecast.windCompass8
+                    ? `${t(
+                        `observation:windDirection:${nextHourForecast.windCompass8}`
+                      )} ${windSpeedValue} ${t(
+                        `forecast:${getForecastParameterUnitTranslationKey(windUnit)}`
+                      )}`
+                    : undefined
+                }>
+                {activeParameters.includes('windDirection') && (
+                  <Icon
+                    name="wind-next-hour"
+                    width={28}
+                    height={28}
+                    style={[
+                      styles.withMarginRight,
+                      {
+                        transform: [
+                          {
+                            rotate: `${getWindDirection(
+                              nextHourForecast.windDirection
+                            )}deg`,
+                          },
+                        ],
+                      },
+                    ]}
+                  />
+                )}
+                {activeParameters.includes('windSpeedMS') && (
+                  <View style={styles.alignStart}>
+                    <View style={styles.row}>
+                      <Text
+                        style={[
+                          styles.text,
+                          styles.bold,
+                          styles.shadowText,
+                          { color: textColor, textShadowColor: shadowTextColor },
+                        ]}>
+                        {numericOrDash(windSpeedValue)}
+                      </Text>
+                      <Text style={[
+                        styles.text,
+                        styles.shadowText,
+                        { color: textColor, textShadowColor: shadowTextColor }
+                      ]}>
+                        {` ${windUnit}`}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </View>
+            <View accessible style={styles.row}>
+              { !showUv && activeParameters.includes('precipitation1h') && (
+                <>
+                  <Icon name="precipitation" color={textColor} />
+                  <Text
+                    style={[styles.text, styles.shadowText, { color: textColor, textShadowColor: shadowTextColor }]}
+                    accessibilityLabel={`${t('forecast:precipitation')} ${
+                      precipitationValue
+                        ?.toString()
+                        .replace('.', decimalSeparator) ||
+                      (0).toFixed(1).replace('.', decimalSeparator)
+                    } ${t(
+                      `forecast:${getForecastParameterUnitTranslationKey(
+                        precipitationUnit
+                      )}`
+                    )}`}>
+                    <Text style={[styles.bold, styles.shadowText, {textShadowColor: shadowTextColor}]}>{`${
+                      precipitationValue?.replace('.', decimalSeparator) ||
+                      (0).toFixed(1).replace('.', decimalSeparator)
+                    }`}</Text>
+                    {` ${precipitationUnit}`}
+                  </Text>
+                </>
               )}
-              {activeParameters.includes('windSpeedMS') && (
-                <View style={styles.alignStart}>
-                  <View style={styles.row}>
+            </View>
+            <View style={styles.row}>
+              { showUv && activeParameters.includes('uvCumulated') && (
+                <Text
+                  style={[styles.text, styles.shadowText, { color: textColor, textShadowColor: shadowTextColor }]}
+                  accessibilityLabel={t('params.uvCumulated', {
+                    value: numericOrDash(nextHourForecast.uvCumulated?.toString()),
+                  })}>
+                  {'UV '}
+                  <Text style={[styles.bold, styles.shadowText, {textShadowColor: shadowTextColor}]}>
+                    {numericOrDash(nextHourForecast.uvCumulated?.toString())}
+                  </Text>
+                </Text>
+              )}
+            </View>
+              {activeParameters.includes('feelsLike') && (
+                <View style={styles.row}>
+                  <View
+                    accessible
+                    accessibilityLabel={`${t('feelsLike')} ${numericOrDash(
+                      feelsLikeValue
+                    )} ${t(
+                      getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
+                    )}`}>
                     <Text
                       style={[
                         styles.text,
-                        styles.bold,
                         styles.shadowText,
+                        styles.withMarginRight,
                         { color: textColor, textShadowColor: shadowTextColor },
                       ]}>
-                      {numericOrDash(windSpeedValue)}
-                    </Text>
-                    <Text style={[
-                      styles.text,
-                      styles.shadowText,
-                      { color: textColor, textShadowColor: shadowTextColor }
-                    ]}>
-                      {` ${windUnit}`}
+                      {t('feelsLike')}{' '}
+                      <Text>
+                        {numericOrDash(feelsLikeValue)}
+                      </Text>
+                      <Text>°</Text>
                     </Text>
                   </View>
+                  <Icon
+                    name={getFeelsLikeIconName(
+                      nextHourForecast,
+                      currentTime.toObject()
+                    )}
+                    style={styles.feelsLikeIcon}
+                    height={40}
+                    width={40}
+                    color={textColor}
+                  />
                 </View>
-              )}
-            </View>
-          <View accessible style={styles.row}>
-            { !showUv && activeParameters.includes('precipitation1h') && (
-              <>
-                <Icon name="precipitation" color={textColor} />
-                <Text
-                  style={[styles.text, styles.shadowText, { color: textColor, textShadowColor: shadowTextColor }]}
-                  accessibilityLabel={`${t('forecast:precipitation')} ${
-                    precipitationValue
-                      ?.toString()
-                      .replace('.', decimalSeparator) ||
-                    (0).toFixed(1).replace('.', decimalSeparator)
-                  } ${t(
-                    `forecast:${getForecastParameterUnitTranslationKey(
-                      precipitationUnit
-                    )}`
-                  )}`}>
-                  <Text style={[styles.bold, styles.shadowText, {textShadowColor: shadowTextColor}]}>{`${
-                    precipitationValue?.replace('.', decimalSeparator) ||
-                    (0).toFixed(1).replace('.', decimalSeparator)
-                  }`}</Text>
-                  {` ${precipitationUnit}`}
-                </Text>
-              </>
             )}
           </View>
-          <View style={styles.row}>
-            { showUv && activeParameters.includes('uvCumulated') && (
-              <Text
-                style={[styles.text, styles.shadowText, { color: textColor, textShadowColor: shadowTextColor }]}
-                accessibilityLabel={t('params.uvCumulated', {
-                  value: numericOrDash(nextHourForecast.uvCumulated?.toString()),
-                })}>
-                {'UV '}
-                <Text style={[styles.bold, styles.shadowText, {textShadowColor: shadowTextColor}]}>
-                  {numericOrDash(nextHourForecast.uvCumulated?.toString())}
-                </Text>
-              </Text>
-            )}
-          </View>
-            {activeParameters.includes('feelsLike') && (
-              <View style={styles.row}>
-                <View
-                  accessible
-                  accessibilityLabel={`${t('feelsLike')} ${numericOrDash(
-                    feelsLikeValue
-                  )} ${t(
-                    getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
-                  )}`}>
-                  <Text
-                    style={[
-                      styles.text,
-                      styles.shadowText,
-                      styles.withMarginRight,
-                      { color: textColor, textShadowColor: shadowTextColor },
-                    ]}>
-                    {t('feelsLike')}{' '}
-                    <Text>
-                      {numericOrDash(feelsLikeValue)}
-                    </Text>
-                    <Text>°</Text>
-                  </Text>
-                </View>
-                <Icon
-                  name={getFeelsLikeIconName(
-                    nextHourForecast,
-                    currentTime.toObject()
-                  )}
-                  style={styles.feelsLikeIcon}
-                  height={40}
-                  width={40}
-                  color={textColor}
-                />
-              </View>
-            )}
         </View>
       </SafeAreaView>
     </ImageBackground>
@@ -454,14 +458,22 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   temperatureText: {
     fontSize: 72,
     fontFamily: 'Roboto-Light',
   },
+  bottomInfoRowContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
   bottomInfoRow: {
+    flexGrow: 1,
     marginBottom: 11,
     paddingBottom: 10,
+    maxWidth: 440,
   },
   feelsLikeIcon: {
     marginTop: -20,
@@ -476,6 +488,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
   },
+  locationText: {
+    paddingHorizontal: 16,
+  }
 });
 
 export default connector(NextHourForecastPanelWithWeatherBackground);
