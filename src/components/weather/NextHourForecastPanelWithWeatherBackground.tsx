@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, Text, StyleSheet, ImageBackground, useWindowDimensions} from 'react-native';
+import {
+  ActivityIndicator, View, Text, StyleSheet, ImageBackground, useWindowDimensions, Platform
+} from 'react-native';
 import { useNavigation, NavigationProp, useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'react-native-linear-gradient';
 
@@ -96,6 +98,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   );
 
   const paddingTop = insets.top === 0 ? 32 : 8;
+  const paddingBottom = Platform.OS === 'android' ? 32 : 0;
   const bottomInfoRowMarginTop = 90 - insets.top - paddingTop;
   const defaultUnits = Config.get('settings').units;
   const temperatureUnit =
@@ -185,7 +188,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
           colors={gradientColors}
           style={styles.gradient}
         />
-        <SafeAreaView style={[styles.container, { paddingTop: paddingTop }]} >
+        <SafeAreaView style={[styles.container, { paddingTop: paddingTop, paddingBottom: paddingBottom }]} >
           <View style={[styles.row]}>
             <IconButton
               testID="locate_button"
