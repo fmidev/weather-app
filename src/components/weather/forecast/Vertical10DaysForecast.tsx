@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, GestureResponderEvent, PanResponderGestureState } from 'react-native';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
@@ -15,7 +15,8 @@ import { converter, getForecastParameterUnitTranslationKey, toPrecision } from '
 import PrecipitationStrip from './PrecipitationStrip';
 import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
-import { selectForecastInvalidData } from '@store/forecast/selectors';
+import { selectForecastInvalidData, selectDisplayParams } from '@store/forecast/selectors';
+
 import Icon from '@assets/Icon';
 import { uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
@@ -23,6 +24,7 @@ import ModalContent from './ModalContent';
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
   invalidData: selectForecastInvalidData(state),
+  displayParams: selectDisplayParams(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -48,7 +50,9 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   dayData,
   units,
   invalidData,
+  displayParams,
 }) => {
+  const dimensions = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
@@ -69,6 +73,10 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTimeStamp, setModalTimeStamp] = useState(0);
   const [modalActiveDayIndex, setModalActiveDayIndex] = useState(0);
+  const [initialPosition, setInitialPosition] = useState<'start' | 'end'>('start');
+
+  const shouldHorizontalScroll = dimensions.height < 500 ||
+                                (dimensions.height < 900 && displayParams.length >= 12);
 
   const rowRenderer = ({
     item,
@@ -139,6 +147,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
     const showModal = (epochtime: number, activeDayIndex: number) => {
       setModalTimeStamp(epochtime*1000);
       setModalActiveDayIndex(activeDayIndex);
+      setInitialPosition('start');
       setModalVisible(true);
     }
 
@@ -236,9 +245,17 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
         backdropOpacity={0.5}
         onSwipeComplete={ () => setModalVisible(false ) }
         onBackButtonPress={ () => setModalVisible(false ) }
-        swipeDirection={['up', 'down']}
-        propagateSwipe={true}
-        scrollHorizontal={true}
+        onBackdropPress={ () => setModalVisible(false ) }
+        swipeDirection={['down', 'up']}
+        propagateSwipe={(_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+          if (shouldHorizontalScroll) return true;
+
+          const { dx, dy } = gestureState;
+          if (Math.abs(dx) > Math.abs(dy)) {
+            return true;
+          }
+          return false;
+        }}
       >
         <View style={styles.centeredView}>
           <View style={[styles.modalView, { backgroundColor: colors.modalBackground }]}>
@@ -246,6 +263,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               activeDayIndex={modalActiveDayIndex}
               timeStamp={modalTimeStamp}
               onClose={() => setModalVisible(false) }
+              initialPosition={initialPosition}
               onDayChange={ (forward: boolean) => {
                 let newDayIndex = forward ? modalActiveDayIndex + 1 : modalActiveDayIndex - 1;
                 if (newDayIndex < 0) newDayIndex = 0;
@@ -253,6 +271,11 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
 
                 setModalActiveDayIndex(newDayIndex);
                 setModalTimeStamp(dayData[newDayIndex].timeStamp*1000);
+                if (forward) {
+                  setInitialPosition('start');
+                } else {
+                  setInitialPosition('end');
+                }
               }}
             />
           </View>

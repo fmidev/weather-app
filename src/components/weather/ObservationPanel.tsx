@@ -41,7 +41,6 @@ import List from './observation/List';
 import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
 import { observationTypeParameters } from './charts/settings';
-import SimpleHeader from '@components/common/SimpleHeader';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -183,11 +182,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           shadowColor: colors.shadow,
         }
       ]}>
-      { layout === 'fmi' ? (
-        <SimpleHeader title={t('panelHeader')} />
-      ) : (
-        <PanelHeader title={t('panelHeader')} />
-      )}
+      <PanelHeader title={t('panelHeader')} thin={layout === 'fmi'} />
       <View style={styles.panelContainer}>
         {loading && <ActivityIndicator />}
         {stationList.length > 0 && (

@@ -27,6 +27,7 @@ type ModalContentProps = PropsFromRedux & {
   timeStamp: number;
   onClose: () => void;
   onDayChange: (forward: boolean) => void;
+  initialPosition: 'start' | 'end';
 };
 
 const DailyModal: React.FC<ModalContentProps> = ({
@@ -34,7 +35,8 @@ const DailyModal: React.FC<ModalContentProps> = ({
   activeDayIndex,
   timeStamp,
   onClose,
-  onDayChange
+  onDayChange,
+  initialPosition
 }) => {
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
@@ -77,7 +79,10 @@ const DailyModal: React.FC<ModalContentProps> = ({
           />
         </View>
       </View>
-      <ModalForecast data={data ? data[moment(timeStamp).format('D.M.')] : []} />
+      <ModalForecast
+        data={data ? data[moment(timeStamp).format('D.M.')] : []}
+        initialPosition={initialPosition}
+      />
     </View>
   );
 };
