@@ -121,14 +121,14 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
     const convertedMaxWindSpeed = invalidData
       ? '-'
       : toPrecision(
-          'windSpeed',
+          'wind',
           windUnit,
           converter(windUnit, maxWindSpeed)
         );
     const convertedMinWindSpeed = invalidData
     ? '-'
     : toPrecision(
-        'windSpeed',
+        'wind',
         windUnit,
         converter(windUnit, minWindSpeed)
       );
