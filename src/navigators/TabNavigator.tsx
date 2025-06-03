@@ -174,6 +174,11 @@ const Navigator: React.FC<Props> = ({
     return () => subscription.remove();
   }, []);
 
+  useEffect(() => {
+    if (theme !== 'automatic') {
+      setUseDarkTheme(isDark(theme));
+    }
+  }, [theme]);
 
   const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
     <View style={styles.headerBackImage}>
