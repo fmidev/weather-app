@@ -164,6 +164,8 @@ export const toPrecision = (
 
 // converts given numeric value to corresponding unit abbreviation
 export const converter = (unitAbb: string, value: number): number => {
+  if (value === null || value === undefined) return value;
+
   switch (unitAbb) {
     // temperature
     case 'F':
