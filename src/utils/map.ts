@@ -260,7 +260,7 @@ const getWMSLayerUrlsAndBounds = async (
         : wmsLayer.Dimension.text.split(/[,/]/);
 
       const layerStart = steps[0];
-      const layerEnd = steps.length > 3 ? steps[steps.length - 1] : steps[1];
+      const layerEnd = steps[1]; // Multiple time intervals are not supported
 
       const url = sources[layerSrc.source];
 

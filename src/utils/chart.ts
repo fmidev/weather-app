@@ -181,7 +181,7 @@ export const getTickFormat =
   (locale: string, clockType: ClockType, daily?: boolean) => (tick: any) =>
     tickFormat(tick, locale, clockType, daily);
 
-export const chartYLabelText = (chartType: ChartType, units?: UnitMap) => {
+export const chartYLabelText = (chartType: ChartType, units?: UnitMap, t?: (key:string) => string) => {
   const defaultUnits = Config.get('settings').units;
 
   const temperatureUnit =
@@ -195,24 +195,24 @@ export const chartYLabelText = (chartType: ChartType, units?: UnitMap) => {
     case 'humidity':
       return ['%'];
     case 'temperature':
-      return [`°${temperatureUnit}`];
+      return [`°${t ? t(temperatureUnit) : temperatureUnit}`];
     case 'pressure':
-      return [pressureUnit];
+      return [t ? t(pressureUnit) : pressureUnit];
     case 'visCloud':
       return ['km', 'weather:charts:totalCloudCover'];
     case 'precipitation':
-      return [precipitationUnit, '%'];
+      return [t ? t(precipitationUnit) : precipitationUnit, '%'];
     case 'wind':
-      return [windUnit];
+      return [t ? t(windUnit) : windUnit];
     case 'uv':
-      return ['UV'];
+      return [t ? t('UV') : 'UV'];
     case 'snowDepth':
-      return ['cm'];
+      return [t ? t('cm') : 'cm'];
     case 'cloud':
-      return ['m'];
+      return [t ? t('m') : 'm'];
     case 'weather':
     case 'daily':
-      return [`°${temperatureUnit}`, precipitationUnit];
+      return [`°${ t ? t(temperatureUnit) : temperatureUnit}`, t ? t(precipitationUnit) : precipitationUnit];
     default:
       return [''];
   }

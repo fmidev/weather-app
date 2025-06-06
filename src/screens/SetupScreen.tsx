@@ -19,6 +19,8 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { useOrientation } from '@utils/hooks';
+import { Config } from '@config';
+import { providerLogos } from '@assets/images';
 
 type SetupScreenProps = {
   setUpDone: () => void;
@@ -26,11 +28,13 @@ type SetupScreenProps = {
 };
 
 const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
-  const { t } = useTranslation('setUp');
+  const { languageSpecificLogo } = Config.get('onboardingWizard');
+  const { t, i18n } = useTranslation('setUp');
   const { colors, dark } = useTheme() as CustomTheme;
   const [didViewTerms, setDidViewTerms] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const isLandscape = useOrientation();
+  const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];
 
   const requestLocationPermissions = () => {
     const permission =
@@ -189,8 +193,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
         <Image
           source={
             dark
-              ? require('../assets/images/provider-logo-dark.png')
-              : require('../assets/images/provider-logo-light.png')
+              ? showLanguageSpecificLogo ? providerLogos[i18n.language].dark : require(`../assets/images/provider-logo-dark.png`)
+              : showLanguageSpecificLogo ? providerLogos[i18n.language].light : require(`../assets/images/provider-logo-light.png`)
           }
           resizeMode="contain"
           style={styles.logo}

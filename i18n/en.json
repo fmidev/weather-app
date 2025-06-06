@@ -713,5 +713,7 @@
     "artikkeli": "Article",
     "puheenvuoro": "Comment",
     "updated": "Updated at: "
+  },
+  "unitAbbreviations": {
   }
 }

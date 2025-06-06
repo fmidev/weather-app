@@ -66,6 +66,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
+  const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { excludeDayLength } = Config.get('weather').forecast;
 
   const virtualizedList = useRef() as React.MutableRefObject<
@@ -358,7 +359,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                         styles.bold,
                         { color: colors.hourListText },
                       ]}>
-                      {`${dayHours} h ${dayMinutes} min`}
+                      {`${dayHours} ${unitTranslate('h')} ${dayMinutes} ${unitTranslate('min')}`}
                     </Text>
                   </View>
                 </>
