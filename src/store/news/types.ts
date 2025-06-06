@@ -32,7 +32,7 @@ export interface NewsItem {
   id: string;
   type: string;
   title: string;
-  imageUrl: string;
+  imageUrl: string | null;
   imageAlt: string;
   createdAt: string;
   updatedAt: string;
