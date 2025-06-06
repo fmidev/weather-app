@@ -3,6 +3,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { selectCurrent } from '@store/location/selector';
 import {
@@ -40,7 +41,6 @@ import List from './observation/List';
 import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
 import { observationTypeParameters } from './charts/settings';
-import SimpleHeader from '@components/common/SimpleHeader';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -89,6 +89,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const isDaily =
     chartParameter === 'daily' ||
     (chartParameter && preferredDailyParameters.includes(chartParameter));
+  const insets = useSafeAreaInsets();
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
@@ -171,18 +172,17 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} ${t('unitAbbreviations:km')}`;
   return (
     <View
-      style={layout === 'fmi' ? styles.extraPadding : [
+      style={layout === 'fmi' ? [ styles.extraPadding, {
+        marginLeft: insets.left,
+        marginRight: insets.right,
+      }] : [
         styles.panelWrapper,
         {
           backgroundColor: colors.background,
           shadowColor: colors.shadow,
         }
       ]}>
-      { layout === 'fmi' ? (
-        <SimpleHeader title={t('panelHeader')} />
-      ) : (
-        <PanelHeader title={t('panelHeader')} />
-      )}
+      <PanelHeader title={t('panelHeader')} thin={layout === 'fmi'} />
       <View style={styles.panelContainer}>
         {loading && <ActivityIndicator />}
         {stationList.length > 0 && (

@@ -6,6 +6,8 @@ import { LocationState } from './location/types';
 import { NavigationState } from './navigation/types';
 import { WarningsState } from './warnings/types';
 import { AnnouncementsState } from './announcements/types';
+import { MeteorologistState } from './meteorologist/types';
+import { NewsState } from './news/types';
 
 export interface State {
   settings: SettingsState;
@@ -16,6 +18,8 @@ export interface State {
   navigation: NavigationState;
   warnings: WarningsState;
   announcements: AnnouncementsState;
+  meteorologist: MeteorologistState;
+  news: NewsState;
 }
 
 export interface PersistConfig {

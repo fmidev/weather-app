@@ -40,7 +40,7 @@ extension Font {
       case .temperature:
         Font.custom("Roboto-Medium", size: 13)
       case .largeTemperature:
-        Font.custom("Roboto-Regular", size: 36)
+        Font.custom("Roboto-Regular", size: 32)
       case .veryLargeTemperature:
         Font.custom("Roboto-Light", size: 58)
       case .errorTitle:

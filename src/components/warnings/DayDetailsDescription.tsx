@@ -16,7 +16,7 @@ const DayDetailsDescription: React.FC<DayDetailsDescriptionProps> = ({ warnings 
   const firstWarning = warnings.length > 0 && warnings[0]
 
   return (
-    <View>
+    <View style={styles.container}>
       {warnings.length === 0 && (
         <View>
           <Text style={[styles.description, { color: colors.hourListText }]}>
@@ -26,6 +26,7 @@ const DayDetailsDescription: React.FC<DayDetailsDescriptionProps> = ({ warnings 
       )}
       {firstWarning && (
         <View
+          style={styles.container}
           key={`${firstWarning.type}-${firstWarning.duration.startTime}-${firstWarning.duration.endTime}-${firstWarning.severity}`}>
           <View style={styles.flex}>
             <Text numberOfLines={3} style={[styles.description, { color: colors.hourListText }]}>
@@ -39,6 +40,10 @@ const DayDetailsDescription: React.FC<DayDetailsDescriptionProps> = ({ warnings 
 };
 
 const styles = StyleSheet.create({
+  container: {
+    minHeight: 18,
+    maxHeight: 50,
+  },
   flex: {
     flex: 1,
   },

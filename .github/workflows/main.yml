@@ -249,7 +249,9 @@ jobs:
 
       # Install Pods
       - name: Install pods
-        run: pod install
+        run: |
+          sudo gem install cocoapods
+          pod install
         working-directory: ios
 
       # Create and encode p12 certificate and import certificate to keychain 

@@ -95,6 +95,8 @@
     "previousDay": "Föregående dag",
     "nextDay": "Följande dag",
     "closeModal": "Stäng dagsprognosen",
+    "today": "Idag",
+    "tomorrow": "Imorgon",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",
@@ -701,6 +703,16 @@
     "crisisPrefix": "Varning:",
     "maintenancePrefix": "OBS:",
     "openInBrowser": "Öppna i webbläsaren"
+  },
+  "news": {
+    "title": "Aktuellt",
+    "error": "Ett fel inträffade när nyheterna laddades",
+    "readMore": "Läs mer på webbplatsen",
+    "uutinen": "Nyhet",
+    "tiedote": "Pressmeddelande",
+    "artikkeli": "Artikel",
+    "puheenvuoro": "Kommentar",
+    "updated": "Uppdaterad:"
   },
   "unitAbbreviations": {
   }

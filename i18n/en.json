@@ -95,6 +95,8 @@
     "previousDay": "Previous day",
     "nextDay": "Next day",
     "closeModal": "Close daily forecast",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",
       "feelsLike": "feels like: {{ value }} {{ unit }}.",
@@ -701,6 +703,16 @@
     "crisisPrefix": "Warning:",
     "maintenancePrefix": "Attention:",
     "openInBrowser": "Open in browser"
+  },
+  "news": {
+    "title": "News",
+    "error": "Error loading news",
+    "readMore": "Read more on the website",
+    "uutinen": "News",
+    "tiedote": "Press-release",
+    "artikkeli": "Article",
+    "puheenvuoro": "Comment",
+    "updated": "Updated at: "
   },
   "unitAbbreviations": {
   }
