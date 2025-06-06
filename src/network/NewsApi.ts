@@ -12,13 +12,21 @@ const getNews = async (language: string): Promise<NewsItem[]> => {
   const url = apiUrl[language]+`?limit=${numberOfNews}`;
   const { data } = await axiosClient({ url });
 
-  const newsItems = data.items.map((item:any):NewsItem => {
+  const newsItems = data.items.flatMap((item:any):NewsItem | [] => {
+    if (!item.sys?.id || !item.fields?.title || !item.fields?.type
+       || !item.sys?.createdAt || !item.sys?.updatedAt || !item.fields?.site
+    ) {
+      return [];
+    }
+
+    const imageMissing = !item.fields?.thumbnail?.fields?.image;
+
     return {
       id: item.sys.id,
       title: item.fields.title,
       type: item.fields.type,
-      imageUrl: 'https:' + item.fields.thumbnail.fields.image.fields.file.url,
-      imageAlt: item.fields.thumbnail.fields.image.fields.altText,
+      imageUrl: imageMissing ? null : 'https:' + item.fields.thumbnail.fields.image.fields.file.url,
+      imageAlt: imageMissing ? '' : item.fields.thumbnail.fields.image.fields.altText,
       createdAt: item.sys.createdAt,
       updatedAt: item.sys.updatedAt,
       language: item.fields.site

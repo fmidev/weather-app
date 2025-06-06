@@ -55,7 +55,17 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
         accessibilityHint={t('readMore')}
         onPress={() => { openLink(item.type, item.id) }}
       >
-        <Image src={item.imageUrl} style={[styles.image]} />
+        { !item.imageUrl ? (
+          <Image
+            source={require('@assets/images/press-release-default.webp')}
+            style={styles.image}
+          />
+        ) : (
+          <Image
+            src={item.imageUrl}
+            style={styles.image}
+          />
+        )}
       </AccessibleTouchableOpacity>
       <SimpleButton
         accessibilityHint={t('readMore')}
