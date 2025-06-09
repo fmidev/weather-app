@@ -588,7 +588,13 @@
       "hotWeather": "Heat wave warning",
       "coldWeather": "Freezing temperature warning",
       "uvNote": "UV bulletin",
-      "flooding": "Flood warning"
+      "flooding": "Flood warning",
+      "seaWind": "Wind warning for sea areas",
+      "seaThunderStorm": "Thunderstorm wind gusts for sea areas",
+      "seaWaveHeight": "Wave height warning",
+      "seaWaterHeightHighWater": "Warning for high sea level",
+      "seaWaterHeightShallowWater": "Warning for low sea level",
+      "seaIcing": "Ice accretion warning"
     },
     "severities": {
       "0": "No danger",

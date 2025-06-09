@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
-import WarningSymbol from './WarningsSymbol';
+import WarningIcon from './WarningIcon';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -33,7 +33,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
   }>([]);
 
   const locale = i18n.language;
-  const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
+  const timeFormat = clockType === 12 ? 'h.mm a' : 'H:mm';
 
   useEffect(() => {
     setOpenWarnings([]);
@@ -48,7 +48,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
           </Text>
         </View>
       )}
-      {warnings.map(({ description, type, severity, duration }, index) => (
+      {warnings.map(({ description, type, severity, duration, physical }, index) => (
         <View
           key={`${type}-${duration.startTime}-${duration.endTime}-${severity}`}>
           <View style={styles.flex}>
@@ -67,7 +67,11 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
                 })
               }>
               <View style={styles.iconPadding}>
-                <WarningSymbol type={type} severity={severity} />
+                <WarningIcon
+                  type={type}
+                  severityDescription={severity}
+                  physical={physical}
+                />
               </View>
               <View style={styles.flex}>
                 <Text

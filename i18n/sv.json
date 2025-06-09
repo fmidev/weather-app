@@ -588,7 +588,13 @@
       "hotWeather": "Varning för värmebölja",
       "coldWeather": "Varning för köld",
       "uvNote": "UV-meddelande",
-      "flooding": "Varning för översvämning"
+      "flooding": "Varning för översvämning",
+      "seaWind": "Vindvarning för havsområden",
+      "seaThunderStorm": "Thunderstorm wind gusts for sea areas",
+      "seaWaveHeight": "Varning för hård sjögång",
+      "seaWaterHeightHighWater": "Varning för högt vattenstånd",
+      "seaWaterHeightShallowWater": "Varning för lågt vattenstånd",
+      "seaIcing": "Varning för nedisning av fartyg"
     },
     "severities": {
       "0": "Ingen fara",

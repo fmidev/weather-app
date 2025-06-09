@@ -588,7 +588,13 @@
       "hotWeather": "Hellevaroitus",
       "coldWeather": "Pakkasvaroitus",
       "uvNote": "UV-tiedote",
-      "flooding": "Tulvavaroitus"
+      "flooding": "Tulvavaroitus",
+      "seaWind": "Tuulivaroitus merelle",
+      "seaThunderStorm": "Ukkospuuskia merialueilla",
+      "seaWaveHeight": "Aallokkovaroitus",
+      "seaWaterHeightHighWater": "Varoitus korkeasta merivedestä",
+      "seaWaterHeightShallowWater": "Varoitus matalasta merivedestä",
+      "seaIcing": "Jäätämisvaroitus"
     },
     "severities": {
       "0": "Ei vaaraa",
