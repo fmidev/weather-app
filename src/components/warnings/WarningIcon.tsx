@@ -21,10 +21,10 @@ const resolveSeverity = (severity: Severity): number => {
 const WarningIcon: React.FC<WarningIconProps> = (
   { severity, severityDescription, type, physical }
 ) => {
-  if (!severity && !severityDescription) return null;
+  if (severity === undefined && !severityDescription) return null;
 
   const colors = [GREEN, YELLOW, ORANGE, RED];
-  const severityValue = severity ?? resolveSeverity(severityDescription!);
+  const severityValue = severity !== undefined ? severity : resolveSeverity(severityDescription!);
   const color = colors[severityValue];
 
   return (
