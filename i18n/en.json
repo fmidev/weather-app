@@ -80,6 +80,7 @@
     "moonPhase": "Moon phase",
     "feelsLike": "Feels like",
     "temperature": "Temperature",
+    "windSpeed": "Wind speed",
     "fromTo": "From {{ min }} {{ unit }} to {{ max }} {{ unit }}",
     "hourListOpenAccessibilityLabel": "Open hourly forecast for the day",
     "hourListCloseAccessibilityLabel": "Close hourly forecast for the day",
