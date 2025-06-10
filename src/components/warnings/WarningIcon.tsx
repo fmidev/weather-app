@@ -15,6 +15,7 @@ const resolveSeverity = (severity: Severity): number => {
   if (severity === "Moderate") return 1;
   if (severity === "Severe") return 2;
   if (severity === "Extreme") return 3;
+  return 0;
 }
 
 const WarningIcon: React.FC<WarningIconProps> = (
