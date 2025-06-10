@@ -20,7 +20,7 @@ const INITIAL_STATE: ForecastState = {
   loading: false,
   error: false,
   displayParams: [],
-  displayFormat: 'table',
+  displayFormat: 'days',
   chartDisplayParam: undefined,
   fetchTimestamp: Date.now(),
   fetchSuccessTime: 0,

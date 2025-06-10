@@ -46,7 +46,7 @@ interface RestoreDefaultDisplayParams {
 
 interface UpdateDisplayFormat {
   type: typeof UPDATE_FORECAST_DISPLAY_FORMAT;
-  value: 'table' | 'chart';
+  value: 'days' | 'table' | 'chart';
 }
 
 interface UpdateForecastChartParameter {
@@ -114,7 +114,7 @@ export interface ForecastState {
   loading: boolean;
   error: boolean | Error | string;
   displayParams: [number, DisplayParameters][];
-  displayFormat: 'table' | 'chart';
+  displayFormat: 'days' | 'table' | 'chart';
   chartDisplayParam: ChartType | undefined;
   fetchTimestamp: number;
   fetchSuccessTime: number;

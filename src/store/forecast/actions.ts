@@ -50,7 +50,7 @@ export const restoreDefaultDisplayParams =
   };
 
 export const updateDisplayFormat =
-  (value: 'table' | 'chart') => (dispatch: Dispatch<ForecastActionTypes>) => {
+  (value: 'days' | 'table' | 'chart') => (dispatch: Dispatch<ForecastActionTypes>) => {
     dispatch({ type: UPDATE_FORECAST_DISPLAY_FORMAT, value });
   };
 

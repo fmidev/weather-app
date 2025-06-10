@@ -84,6 +84,7 @@
     "hourListOpenAccessibilityLabel": "Open hourly forecast for the day",
     "hourListCloseAccessibilityLabel": "Close hourly forecast for the day",
     "at": "at",
+    "days": "Days",
     "table": "Table",
     "tableAccessibilityHint": "Switch to forecast table view",
     "chart": "Graph",

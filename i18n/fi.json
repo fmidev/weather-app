@@ -84,6 +84,7 @@
     "hourListOpenAccessibilityLabel": "Avaa tuntiennuste päivälle",
     "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle",
     "at": "klo",
+    "days": "Päivät",
     "table": "Taulukko",
     "tableAccessibilityHint": "Näytä ennusteen taulukkonäkymä",
     "chart": "Graafi",

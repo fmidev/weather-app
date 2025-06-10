@@ -36,7 +36,10 @@ import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 import Vertical10DaysForecast from './forecast/Vertical10DaysForecast';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ForecastByHourList from './forecast/ForecastByHourList';
+import DaySelectorList from './forecast/DaySelectorList';
 
+const DAYS = 'days';
 const TABLE = 'table';
 const CHART = 'chart';
 
@@ -75,7 +78,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   timezone,
   displayFormat,
   updateDisplayFormat,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   currentHour, // just for re-rendering every hour
 }) => {
   const insets = useSafeAreaInsets();
@@ -141,6 +144,43 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
         <View style={[styles.row]}>
           <View style={[styles.row, styles.justifyStart]}>
             <AccessibleTouchableOpacity
+              testID="forecast_days_button"
+              accessibilityRole="button"
+              accessibilityHint={`${t('tableAccessibilityHint')}. ${
+                displayFormat === DAYS ? t('active') : t('notActive')
+              }`}
+              activeOpacity={1}
+              onPress={() => updateDisplayFormat(DAYS)}
+              style={styles.withMarginRight}>
+              <View
+                style={[
+                  styles.contentSelectionContainer,
+                  {
+                    backgroundColor:
+                      displayFormat === DAYS
+                        ? colors.timeStepBackground : colors.inputButtonBackground,
+                    borderColor:
+                      displayFormat === DAYS
+                        ? colors.chartSecondaryLine
+                        : colors.secondaryBorder,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styles.forecastText,
+                    displayFormat === DAYS && styles.selectedText,
+                    {
+                      color:
+                        displayFormat === DAYS
+                          ? colors.primaryText
+                          : colors.hourListText,
+                    },
+                  ]}>
+                  {t('days')}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
+            <AccessibleTouchableOpacity
               testID="forecast_table_button"
               accessibilityRole="button"
               accessibilityHint={`${t('tableAccessibilityHint')}. ${
@@ -184,7 +224,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 displayFormat === CHART ? t('active') : t('notActive')
               }`}
               activeOpacity={1}
-              onPress={() => updateDisplayFormat(CHART)}>
+              onPress={() => { updateDisplayFormat(CHART) } }>
               <View
                 style={[
                   styles.contentSelectionContainer,
@@ -256,12 +296,31 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
           </View>
         </View>
       </View>
+      {headerLevelForecast && headerLevelForecast.length > 0 && displayFormat === TABLE && (
+        <View style={[styles.forecastContainer]}>
+          <DaySelectorList
+            activeDayIndex={activeDayIndex}
+            setActiveDayIndex={setActiveDayIndex}
+            dayData={headerLevelForecast}
+          />
+        </View>
+      )}
       <View style={[styles.forecastContainer]}>
         {loading && (
           <ActivityIndicator accessibilityLabel={t('weather:loading')} />
         )}
-        {headerLevelForecast && headerLevelForecast.length > 0 && displayFormat === TABLE && (
+        {headerLevelForecast && headerLevelForecast.length > 0 && displayFormat === DAYS && (
           <Vertical10DaysForecast dayData={headerLevelForecast} />
+        )}
+        {sections && sections.length > 0 && displayFormat === TABLE && (
+          <ForecastByHourList
+            data={data}
+            isOpen
+            activeDayIndex={activeDayIndex}
+            setActiveDayIndex={(i) => setActiveDayIndex(i)}
+            currentDayOffset={sections[0].data.length}
+            currentHour={currentHour}
+          />
         )}
         {sections &&
           sections.length > 0 &&
@@ -335,12 +394,13 @@ const styles = StyleSheet.create({
   },
   justifyEnd: {
     justifyContent: 'flex-end',
+    maxWidth: 90,
   },
   selectedText: {
     fontFamily: 'Roboto-Bold',
   },
   withMarginRight: {
-    marginRight: 16,
+    marginRight: 10,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,

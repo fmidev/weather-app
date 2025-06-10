@@ -84,6 +84,7 @@
     "hourListOpenAccessibilityLabel": "Öppna timprognos för dagen",
     "hourListCloseAccessibilityLabel": "Stäng timprognosen för dagen",
     "at": "kl.",
+    "days": "Dagar",
     "table": "Tabell",
     "tableAccessibilityHint": "Öppna prognosens tabellvy",
     "chart": "Graf",
