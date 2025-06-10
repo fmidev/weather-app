@@ -147,11 +147,13 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                       ]}>
                       {moment(date).format(weekdayAbbreviationFormat)}
                     </Text>
-                    <WarningIcon
-                      type={type}
-                      severity={severity}
-                      {...(type === 'wind' || type === 'seaWind' ? { physical: warnings[0].physical } : {})}
-                    />
+                    <View style={styles.iconContainer}>
+                      <WarningIcon
+                        type={type}
+                        severity={severity}
+                        {...(type === 'wind' || type === 'seaWind' ? { physical: warnings[0].physical } : {})}
+                      />
+                    </View>
                   </View>
                 </View>
               ))}
@@ -247,6 +249,9 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     textAlign: 'center',
   },
+  iconContainer: {
+    paddingTop: 6,
+  }
 });
 
 export default connector(WarningIconsPanel);

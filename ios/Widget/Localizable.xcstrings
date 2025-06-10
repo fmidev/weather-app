@@ -1677,6 +1677,23 @@
         }
       }
     },
+    "Thunderstorm wind gusts for sea areas" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ukkospuuskia merialueilla"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Åskbyar på sjöområden"
+          }
+        }
+      }
+    },
     "Traffic weather warning" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -2,26 +2,39 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { GREEN, ORANGE, RED, YELLOW, WHITE } from '@assets/colors';
 import Icon from '@assets/Icon';
-import type { WarningPhysical, WarningType } from '@store/warnings/types';
+import type { Severity, WarningPhysical, WarningType } from '@store/warnings/types';
 
 type WarningIconProps = {
-  severity: number;
+  severity?: number;
+  severityDescription?: Severity;
   type: WarningType;
   physical?: WarningPhysical
 };
 
-const WarningIcon: React.FC<WarningIconProps> = ({ severity, type, physical }) => {
+const resolveSeverity = (severity: Severity): number => {
+  if (severity === "Moderate") return 1;
+  if (severity === "Severe") return 2;
+  if (severity === "Extreme") return 3;
+  return 0;
+}
+
+const WarningIcon: React.FC<WarningIconProps> = (
+  { severity, severityDescription, type, physical }
+) => {
+  if (severity === undefined && !severityDescription) return null;
+
   const colors = [GREEN, YELLOW, ORANGE, RED];
-  const color = colors[severity];
+  const severityValue = severity !== undefined ? severity : resolveSeverity(severityDescription!);
+  const color = colors[severityValue];
 
   return (
     <View style={[styles.icon, { backgroundColor: color }]}>
-      { severity > 0 && (
+      { severityValue > 0 && (
         <Icon name={`fmi-warnings-${type}`} size={30} style={ physical?.windDirection ? {
           transform: [{ rotate: (180 + physical?.windDirection) + 'deg' }]
         } : {}}/>
       )}
-      { severity > 0 && physical?.windIntensity && (
+      { severityValue > 0 && physical?.windIntensity && (
         <Text style={styles.text}>{physical?.windIntensity}</Text>
       )}
     </View>
@@ -33,7 +46,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    marginTop: 8,
+    alignItems: 'center',
   },
   text: {
     position: 'absolute',

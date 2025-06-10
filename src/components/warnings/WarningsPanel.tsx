@@ -108,20 +108,11 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               accessibilityRole="header">
               <Text
                 style={[
-                  styles.headerText,
-                  {
-                    color: colors.primaryText,
-                  },
-                ]}>
-                {t('panelTitle')}
-              </Text>
-              <Text
-                style={[
                   styles.bold,
                   styles.headerText,
                   { color: colors.primaryText },
                 ]}>
-                {location.name}
+                {`${t('panelTitle')}, ${location.name}`}
               </Text>
             </View>
             <AccessibleTouchableOpacity
@@ -286,18 +277,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold'
   },
   flex: {
     flex: 1,
   },
   iconPadding: {
-    padding: 15,
+    paddingHorizontal: 15,
   },
   filler: {
     width: 24,
   },
   bold: {
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   medium: {
     fontFamily: 'Roboto-Medium',

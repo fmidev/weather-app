@@ -562,7 +562,7 @@
     "177": "$t(symbols:77)"
   },
   "warnings": {
-    "panelTitle": "Varoitukset maa-alueilla",
+    "panelTitle": "Varoitukset",
     "panelTitleSlim": "Varoitukset",
     "panelTitleCap": "Varoitukset",
     "warningsForNDays": "Varoitukset {{ days }} vrk",
@@ -588,7 +588,13 @@
       "hotWeather": "Hellevaroitus",
       "coldWeather": "Pakkasvaroitus",
       "uvNote": "UV-tiedote",
-      "flooding": "Tulvavaroitus"
+      "flooding": "Tulvavaroitus",
+      "seaWind": "Tuulivaroitus merelle",
+      "seaThunderStorm": "Ukkospuuskia merialueilla",
+      "seaWaveHeight": "Aallokkovaroitus",
+      "seaWaterHeightHighWater": "Varoitus korkeasta merivedestä",
+      "seaWaterHeightShallowWater": "Varoitus matalasta merivedestä",
+      "seaIcing": "Jäätämisvaroitus"
     },
     "severities": {
       "0": "Ei vaaraa",
