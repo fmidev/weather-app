@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, GestureResponderEvent, PanResponderGestureState } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View, Text, StyleSheet, useWindowDimensions, GestureResponderEvent, PanResponderGestureState,
+  AppState, AppStateStatus
+} from 'react-native';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
@@ -77,6 +80,28 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
 
   const shouldHorizontalScroll = dimensions.height < 500 ||
                                 (dimensions.height < 900 && displayParams.length >= 12);
+
+  const appState = useRef<AppStateStatus>(AppState.currentState);
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      // Close the modal if the day has changed and there is no forecast for selected day
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        if (modalTimeStamp < Date.now() && modalActiveDayIndex === 0
+          && !moment().isSame(moment(modalTimeStamp), 'day')) {
+          setModalVisible(false);
+        }
+      }
+
+      appState.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [modalActiveDayIndex, modalTimeStamp]);
 
   const rowRenderer = ({
     item,

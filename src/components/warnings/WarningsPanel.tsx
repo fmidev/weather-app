@@ -8,12 +8,14 @@ import {
 } from 'react-native';
 import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { MotiView } from 'moti';
+import { Skeleton } from 'moti/skeleton';
 
 import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,
-  selectWarningsAge,
+  selectLoading,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
@@ -28,7 +30,7 @@ import InfoSheet from './InfoSheet';
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
   location: selectCurrent(state),
-  warningsAge: selectWarningsAge(state),
+  loading: selectLoading(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -40,14 +42,15 @@ type WarningsPanelProps = PropsFromRedux & {};
 const WarningsPanel: React.FC<WarningsPanelProps> = ({
   dailyWarnings,
   location,
-  warningsAge,
+  loading,
 }) => {
   const { t, i18n } = useTranslation('warnings');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const headerRef = useRef() as React.MutableRefObject<View>;
+  const colorMode = dark ? 'dark' : 'light';
 
   moment.locale(i18n.language);
 
@@ -64,8 +67,20 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
     }
   });
 
-  if (!warningsAge) {
-    return null;
+  if (loading) {
+    return (
+      <MotiView style={{backgroundColor: colors.background}}>
+        <View style={[styles.loading, styles.loadingFirst]}>
+          <Skeleton colorMode={colorMode} width={'100%'} height={40} radius={10} />
+        </View>
+        <View style={styles.loading}>
+          <Skeleton colorMode={colorMode} width={'100%'} height={65} radius={10} />
+        </View>
+        <View style={[styles.loading, styles.loadingLast, { borderColor: colors.border}]}>
+          <Skeleton colorMode={colorMode} width={'100%'} height={20} radius={10} />
+        </View>
+      </MotiView>
+    );
   }
 
   const locale = i18n.language;
@@ -339,6 +354,18 @@ const styles = StyleSheet.create({
   draggableIcon: {
     backgroundColor: GRAY_1,
     width: 65,
+  },
+  loading: {
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+  },
+  loadingFirst: {
+    paddingTop: 24,
+  },
+  loadingLast: {
+    paddingBottom: 18,
+    borderBottomWidth: 1,
+    marginBottom: 26,
   },
 });
 

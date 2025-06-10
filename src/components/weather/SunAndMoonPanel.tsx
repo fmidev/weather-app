@@ -59,6 +59,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 
   const sunrise = moment(`${forecast.sunrise}Z`);
   const sunset = moment(`${forecast.sunset}Z`);
+  const sunriseSunsetDiff = Math.abs(sunset.diff(sunrise, 'hours'));
   const dayHours = Math.floor(forecast.dayLength / 60);
   const dayMinutes = forecast.dayLength % 60;
 
@@ -70,10 +71,10 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
   const isPolarNight = (excludePolarNightAndMidnightSun === undefined || !excludePolarNightAndMidnightSun)
                         &&!isSunriseAndDayInSameDay && sunset.isBefore(sunrise);
   const isMidnightSun = (excludePolarNightAndMidnightSun === undefined || !excludePolarNightAndMidnightSun)
-                        && !isSunriseAndDayInSameDay && sunrise.isBefore(sunset);
+                        && !isSunriseAndDayInSameDay && sunrise.isBefore(sunset) && sunriseSunsetDiff >= 36;
 
-  const dateFormat =
-    clockType === 12
+  const dateFormat = clockType === 12 ? `D.M.YYYY h:mm a` : `D.M.YYYY HH:mm`;
+  const accessibleDateFormat = clockType === 12
       ? `D.M.YYYY [${t('at')}] h:mm a`
       : `D.M.YYYY [${t('at')}] HH:mm`;
 
@@ -120,11 +121,9 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.sunIcon, { color: colors.primaryText}]}
                   />
                   <Text
-                    accessibilityLabel={`${t('sunrise')} ${t(
-                      'at'
-                    )} ${sunrise.format(timeFormat)}`}
+                    accessibilityLabel={`${t('sunrise')} ${sunrise.format(accessibleDateFormat)}`}
                     style={[styles.text, { color: colors.primaryText}]}>
-                    {sunrise.format(accessibleTimeFormat)}
+                    {sunrise.format(dateFormat)}
                   </Text>
                 </View>
               </View>
@@ -151,11 +150,9 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.sunIcon, { color: colors.primaryText}]}
                   />
                   <Text
-                    accessibilityLabel={`${t('sunset')} ${t(
-                      'at'
-                    )} ${sunset.format(dateFormat)}`}
+                    accessibilityLabel={`${t('sunset')} ${sunset.format(accessibleDateFormat)}`}
                     style={[styles.text, { color: colors.primaryText}]}>
-                    {sunset.format(accessibleTimeFormat)}
+                    {sunset.format(dateFormat)}
                   </Text>
                 </View>
               </View>
