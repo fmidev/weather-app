@@ -80,6 +80,7 @@
     "moonPhase": "Kuun vaihe",
     "feelsLike": "Tuntuu kuin",
     "temperature": "Lämpötila",
+    "windSpeed": "Tuulen nopeus",
     "fromTo": "{{ min }} {{ unit }} viiva {{ max }} {{ unit }}",
     "hourListOpenAccessibilityLabel": "Avaa tuntiennuste päivälle",
     "hourListCloseAccessibilityLabel": "Sulje tuntiennuste päivälle",
