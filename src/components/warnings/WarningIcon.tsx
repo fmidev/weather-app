@@ -27,8 +27,6 @@ const WarningIcon: React.FC<WarningIconProps> = (
   const severityValue = severity ?? resolveSeverity(severityDescription!);
   const color = colors[severityValue];
 
-  console.log(type, severity, severityDescription);
-
   return (
     <View style={[styles.icon, { backgroundColor: color }]}>
       { severityValue > 0 && (
