@@ -8,6 +8,7 @@ import 'moment/locale/en-gb';
 import 'moment/locale/es';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { State } from '@store/types';
@@ -35,7 +36,6 @@ import ChartList from './forecast/ChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 import Vertical10DaysForecast from './forecast/Vertical10DaysForecast';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ForecastByHourList from './forecast/ForecastByHourList';
 import DaySelectorList from './forecast/DaySelectorList';
 
