@@ -103,6 +103,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
 
     const sunrise = moment(`${step.sunrise}Z`);
     const sunset = moment(`${step.sunset}Z`);
+    const sunriseSunsetDiff = Math.abs(sunset.diff(sunrise, 'hours'));
     const dayHours = Math.floor(step.dayLength / 60);
     const dayMinutes = step.dayLength % 60;
 
@@ -124,7 +125,8 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
       (excludePolarNightAndMidnightSun === undefined ||
         !excludePolarNightAndMidnightSun) &&
       !isSunriseAndDayInSameDay &&
-      sunrise.isBefore(sunset);
+      sunrise.isBefore(sunset) &&
+      sunriseSunsetDiff >= 36;
 
     const dateFormat =
       clockType === 12
