@@ -562,7 +562,7 @@
     "177": "$t(symbols:77)"
   },
   "warnings": {
-    "panelTitle": "Warnings on land areas",
+    "panelTitle": "Warnings",
     "panelTitleSlim": "Warnings",
     "panelTitleCap": "Warnings",
     "warningsForNDays": "Warnings {{ days }} days",

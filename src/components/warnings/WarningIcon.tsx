@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    marginTop: 8,
+    alignItems: 'center',
   },
   text: {
     position: 'absolute',

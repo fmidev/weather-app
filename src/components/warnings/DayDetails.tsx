@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   iconPadding: {
-    padding: 5,
+    paddingTop: 5,
+    paddingRight: 5,
   },
   flex: {
     flex: 1,

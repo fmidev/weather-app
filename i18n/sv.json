@@ -562,7 +562,7 @@
     "177": "$t(symbols:77)"
   },
   "warnings": {
-    "panelTitle": "Varningar för landområden",
+    "panelTitle": "Varningar",
     "panelTitleSlim": "Varningar",
     "panelTitleCap": "Varningar",
     "warningsForNDays": "Varningar {{ days }} dygn",
