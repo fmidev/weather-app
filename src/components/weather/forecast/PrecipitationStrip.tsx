@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   precipitationBlock: {
     flex: 1,
-    height: 18,
+    height: 14,
   },
 });
 

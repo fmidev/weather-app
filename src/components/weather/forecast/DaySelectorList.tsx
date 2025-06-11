@@ -15,6 +15,7 @@ import PrecipitationStrip from './PrecipitationStrip';
 import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { selectForecastInvalidData } from '@store/forecast/selectors';
+import Icon from '@assets/Icon';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -57,8 +58,9 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   );
 
   const defaultUnits = Config.get('settings').units;
-  const temperatureUnit =
-    units?.temperature.unitAbb ?? defaultUnits.temperature;
+  const temperatureUnit = units?.temperature.unitAbb ?? defaultUnits.temperature;
+  const precipitationUnit = units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+  const decimalSeparator = locale === 'en' ? '.' : ',';
 
   useEffect(() => {
     if (activeDayIndex >= 0 && dayData && dayData.length) {
@@ -77,6 +79,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       timeStamp: number;
       maxTemperature: number;
       minTemperature: number;
+      totalPrecipitation: number;
       smartSymbol: number | undefined;
       precipitationData: {
         precipitation: number | undefined;
@@ -85,7 +88,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     };
     index: number;
   }) => {
-    const { timeStamp, maxTemperature, minTemperature, smartSymbol } = item;
+    const { timeStamp, maxTemperature, minTemperature, totalPrecipitation, smartSymbol } = item;
     const stepMoment = moment.unix(timeStamp);
     const daySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
@@ -106,6 +109,13 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
           'temperature',
           temperatureUnit,
           converter(temperatureUnit, minTemperature)
+        );
+    const convertedTotalPrecipitation = invalidData
+      ? '-'
+      : toPrecision(
+          'precipitation',
+          precipitationUnit,
+          converter(precipitationUnit, totalPrecipitation)
         );
 
     const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
@@ -168,6 +178,19 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
                 ),
               })}>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${t(`unitAbbreviations:${temperatureUnit}`)}`}</Text>
           )}
+          { activeParameters.includes('precipitation1h') && (
+              <View style={[styles.precipitation, styles.flexRow, styles.center]}>
+                <Icon name="precipitation" color={colors.hourListText} width={18} height={18} />
+                <Text
+                  style={[styles.forecastText, { color: colors.primaryText }]}>
+                  <Text style={styles.forecastText}>{`${
+                    convertedTotalPrecipitation?.replace('.', decimalSeparator) ||
+                    (0).toFixed(1).replace('.', decimalSeparator)
+                  }`}</Text>
+                  {` ${precipitationUnit}`}
+              </Text>
+              </View>
+          )}
         </AccessibleTouchableOpacity>
         {activeParameters.includes('precipitation1h') && (
           <PrecipitationStrip
@@ -228,12 +251,23 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   precipitationStrip: {
     marginBottom: -6,
     marginHorizontal: -6,
     marginTop: 4,
   },
+  flexRow: {
+    flexDirection: 'row',
+  },
+  center: {
+    alignItems: 'center',
+  },
+  precipitation: {
+    paddingVertical: 2,
+    marginLeft: -2,
+  }
 });
 
 export default connector(DaySelectorList);
