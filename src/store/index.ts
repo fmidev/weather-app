@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist';
 
 import SettingsReducer, { settingsPersist } from './settings/reducer';
 import ForecastReducer, { forecastPersist } from './forecast/reducer';
-import ObservationReducer from './observation/reducer';
+import ObservationReducer, { observationPersist } from './observation/reducer';
 import MapReducer, { mapPersist } from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
 import NavigationReducer, { navigationPersist } from './navigation/reducer';
@@ -15,6 +15,7 @@ import NewsReducer, { newsPersist } from './news/reducer';
 
 import { PersistConfig } from './types';
 import { SharedReduxStorage } from '@store/SharedReduxStorage';
+import { reduxMMKVStorage } from '@store/mmkvStorage';
 
 const persistReducerConfig = (config: PersistConfig) => ({
   ...config,
@@ -26,6 +27,11 @@ const sharedReducerConfig = (config: PersistConfig) => ({
   storage: SharedReduxStorage,
 });
 
+const mmkvReducerConfig = (config: PersistConfig) => ({
+  ...config,
+  storage: reduxMMKVStorage,
+});
+
 export default combineReducers({
   settings: persistReducer(
     persistReducerConfig(settingsPersist),
@@ -35,7 +41,10 @@ export default combineReducers({
     persistReducerConfig(forecastPersist),
     ForecastReducer
   ),
-  observation: ObservationReducer,
+  observation: persistReducer(
+    mmkvReducerConfig(observationPersist),
+    ObservationReducer
+  ),
   location: persistReducer(
     sharedReducerConfig(locationPersist),
     LocationReducer
