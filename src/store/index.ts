@@ -15,6 +15,7 @@ import NewsReducer, { newsPersist } from './news/reducer';
 
 import { PersistConfig } from './types';
 import { SharedReduxStorage } from '@store/SharedReduxStorage';
+import { reduxMMKVStorage } from '@store/mmkvStorage';
 
 const persistReducerConfig = (config: PersistConfig) => ({
   ...config,
@@ -24,6 +25,11 @@ const persistReducerConfig = (config: PersistConfig) => ({
 const sharedReducerConfig = (config: PersistConfig) => ({
   ...config,
   storage: SharedReduxStorage,
+});
+
+const mmkvReducerConfig = (config: PersistConfig) => ({
+  ...config,
+  storage: reduxMMKVStorage,
 });
 
 export default combineReducers({
@@ -36,7 +42,7 @@ export default combineReducers({
     ForecastReducer
   ),
   observation: persistReducer(
-    persistReducerConfig(observationPersist),
+    mmkvReducerConfig(observationPersist),
     ObservationReducer
   ),
   location: persistReducer(

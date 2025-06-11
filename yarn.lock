@@ -7450,6 +7450,11 @@ react-native-maps@^1.20.1:
   dependencies:
     "@types/geojson" "^7946.0.13"
 
+react-native-mmkv@2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
+  integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
+
 react-native-modal@^14.0.0-rc.0:
   version "14.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-14.0.0-rc.0.tgz#8891c08a573cc0772e359c03cd6e36f6e28334ff"
