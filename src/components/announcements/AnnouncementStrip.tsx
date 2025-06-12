@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
@@ -25,7 +26,6 @@ import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcem
 import { LIGHT_RED, DARK_RED, LIGHT_BLUE, PRIMARY_BLUE } from '@assets/colors';
 import AnnouncementIcon from './AnnouncementIcon';
 import type { AnnouncementType } from './types';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const mapStateToProps = (state: State) => ({
   crisis: selectCrisis(state),
