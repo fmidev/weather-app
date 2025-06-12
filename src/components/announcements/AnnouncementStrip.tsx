@@ -25,6 +25,7 @@ import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcem
 import { LIGHT_RED, DARK_RED, LIGHT_BLUE, PRIMARY_BLUE } from '@assets/colors';
 import AnnouncementIcon from './AnnouncementIcon';
 import type { AnnouncementType } from './types';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const mapStateToProps = (state: State) => ({
   crisis: selectCrisis(state),
@@ -51,24 +52,26 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   crisis,
   maintenance,
 }) => {
+  const insets = useSafeAreaInsets();
   const { t } = useTranslation('announcements');
   const { enabled } = Config.get('announcements');
+  const { layout } = Config.get('weather');
 
   const announcement = type === 'crisis' ? crisis : maintenance;
   const backgroundColor = type === 'crisis' ? LIGHT_RED : LIGHT_BLUE;
   const textColor = type === 'crisis' ? DARK_RED : PRIMARY_BLUE;
   const prefix = type === 'crisis' ? t('crisisPrefix') : t('maintenancePrefix');
+  const paddingTop = layout === 'fmi' ? insets.top + 5 : 5;
 
   if (!announcement || !enabled) {
     return null;
   }
 
   const linkRegex = new RegExp(/^http.*$/);
-
   const isLink = linkRegex.test(announcement.link);
 
   return (
-    <View style={[style, styles.container, { backgroundColor }]}>
+    <View style={[style, styles.container, { backgroundColor, paddingTop }]}>
       <View style={styles.iconContainer}>
         <AnnouncementIcon type={type} />
       </View>
