@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Linking } from 'react-native';
+import { View, Text, StyleSheet, Image, Linking, useWindowDimensions } from 'react-native';
 import type { NewsItem } from '@store/news/types';
 import moment from 'moment';
 import SimpleButton from '@components/common/SimpleButton';
@@ -14,9 +14,12 @@ type NewsProps = {
   gridLayout?: boolean;
 }
 
+const MAX_IMAGE_WIDTH = 512;
+
 const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('news');
+  const { width } = useWindowDimensions();
   const dateFormat = 'D.M.YYYY';
   const dateAndTimeFormat = 'D.M.YYYY HH:mm';
   const titleHeight = titleNumberOfLines ? titleNumberOfLines * 20 : null;
@@ -32,6 +35,8 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
       console.log(`Don't know how to open URI: ${url}`);
     }
   };
+
+  const imageWidth = Math.min(width, MAX_IMAGE_WIDTH);
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
@@ -62,7 +67,7 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
           />
         ) : (
           <Image
-            src={item.imageUrl}
+            src={`${item.imageUrl}?w=${imageWidth}`}
             style={styles.image}
           />
         )}
