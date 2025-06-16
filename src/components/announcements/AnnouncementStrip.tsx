@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
@@ -51,24 +52,26 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   crisis,
   maintenance,
 }) => {
+  const insets = useSafeAreaInsets();
   const { t } = useTranslation('announcements');
   const { enabled } = Config.get('announcements');
+  const { layout } = Config.get('weather');
 
   const announcement = type === 'crisis' ? crisis : maintenance;
   const backgroundColor = type === 'crisis' ? LIGHT_RED : LIGHT_BLUE;
   const textColor = type === 'crisis' ? DARK_RED : PRIMARY_BLUE;
   const prefix = type === 'crisis' ? t('crisisPrefix') : t('maintenancePrefix');
+  const paddingTop = layout === 'fmi' ? insets.top + 5 : 5;
 
   if (!announcement || !enabled) {
     return null;
   }
 
   const linkRegex = new RegExp(/^http.*$/);
-
   const isLink = linkRegex.test(announcement.link);
 
   return (
-    <View style={[style, styles.container, { backgroundColor }]}>
+    <View style={[style, styles.container, { backgroundColor, paddingTop }]}>
       <View style={styles.iconContainer}>
         <AnnouncementIcon type={type} />
       </View>
