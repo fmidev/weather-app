@@ -199,7 +199,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
             {activeParameters.includes('temperature') && (
               <Text
                 style={[styles.text, styles.temperatureWidth, { color: colors.primaryText }]}
-                accessibilityLabel={t('forecast:fromTo', {
+                accessibilityLabel={`${t('forecast:temperature')} ${t('forecast:fromTo', {
                   min: convertedMinTemperature,
                   max: convertedMaxTemperature,
                   unit: t(
@@ -207,22 +207,22 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                       ? 'forecast:celsius'
                       : 'forecast:fahrenheit'
                   ),
-                })}>{`${convertedMinTemperature}° ... ${convertedMaxTemperature}°`}</Text>
+                })}`}>{`${convertedMinTemperature}° ... ${convertedMaxTemperature}°`}</Text>
             )}
             {isWideDisplay() && activeParameters.includes('windSpeedMS') && (
               <View style={styles.flexRow}>
                 <Icon name="wind" color={colors.hourListText} />
                 <Text
                 style={[styles.text, styles.windWidth, { color: colors.primaryText }]}
-                accessibilityLabel={t('forecast:fromTo', {
-                  min: convertedMinTemperature,
-                  max: convertedMaxTemperature,
+                accessibilityLabel={`${t('forecast:windSpeed')} ${t('forecast:fromTo', {
+                  min: convertedMinWindSpeed,
+                  max: convertedMaxWindSpeed,
                   unit: t(
                     windUnit === 'm/s'
                       ? 'forecast:metersPerSecond'
                       : 'forecast:kilometersPerHour'
                   ),
-                })}>
+                })}`}>
                   {`${convertedMinWindSpeed} ... ${convertedMaxWindSpeed} ${windUnit}`}
                 </Text>
               </View>

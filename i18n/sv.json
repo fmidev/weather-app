@@ -80,6 +80,7 @@
     "moonPhase": "Månfas",
     "feelsLike": "Känns som",
     "temperature": "Temperatur",
+    "windSpeed": "Vindhastighet",
     "fromTo": "{{ min }} {{ unit }} linje {{ max }} {{ unit }}",
     "hourListOpenAccessibilityLabel": "Öppna timprognos för dagen",
     "hourListCloseAccessibilityLabel": "Stäng timprognosen för dagen",
