@@ -213,7 +213,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     </SafeAreaView>
     { Platform.OS === 'android' ? (
       <View style={[styles.blur, {backgroundColor: blurBackground}]}>
-        <NextHourForecastBar forecast={nextHourForecast} />
+        <NextHourForecastBar forecast={nextHourForecast} wide={isWideDisplay()} />
         <NextHoursForecast currentHour={currentHour} />
       </View>
     ) : (
