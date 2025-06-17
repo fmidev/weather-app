@@ -43,10 +43,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type NextHourForecastBarProps = PropsFromRedux & {
   forecast: TimeStepData;
+  wide?: boolean;
 };
 
 const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
   forecast,
+  wide,
   units,
 }) => {
   const { t, i18n } = useTranslation('forecast');
@@ -158,7 +160,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
           )}
         </View>
       <View accessible style={styles.row}>
-        { !showUv && activeParameters.includes('precipitation1h') && (
+        { (wide || !showUv) && activeParameters.includes('precipitation1h') && (
           <>
             <Icon name="precipitation" color={textColor} />
             <Text
@@ -183,7 +185,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
         )}
       </View>
       <View style={styles.row}>
-        { showUv && activeParameters.includes('uvCumulated') && (
+        { (wide || showUv) && activeParameters.includes('uvCumulated') && (
           <Text
             style={[styles.text, { color: textColor }]}
             accessibilityLabel={t('params.uvCumulated', {

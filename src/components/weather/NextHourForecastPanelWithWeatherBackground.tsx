@@ -222,8 +222,8 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
         blurType="dark"
         blurAmount={5}
         reducedTransparencyFallbackColor={blurBackground}
-        >
-        <NextHourForecastBar forecast={nextHourForecast} />
+      >
+        <NextHourForecastBar forecast={nextHourForecast} wide={isWideDisplay()} />
         <NextHoursForecast currentHour={currentHour} />
       </BlurView>
     )}
