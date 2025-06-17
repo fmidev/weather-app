@@ -25,14 +25,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type NextHoursForecastProps = PropsFromRedux & {
   timeStep: TimeStepData;
-  forceDark?: boolean;
 };
 
 const HourForecast: React.FC<NextHoursForecastProps> = ({
-  clockType, units, timeStep, forceDark
+  clockType, units, timeStep
 }) => {
   const { t } = useTranslation('forecast');
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { dark } = useTheme() as CustomTheme;
 
   const temperatureUnit = units?.temperature.unitAbb ?? Config.get('settings').units.temperature;
   const convertedTemperature =
@@ -52,7 +51,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
     dark
   );
 
-  const textColor = forceDark === true ? WHITE : colors.primaryText;
+  const textColor = WHITE;
   const accessibilityLabel = `${t('forecast:at')} ${time}, ${t(`symbols:${timeStep.smartSymbol}`)}, ${t('forecast:params:temperature', {
         value: convertedTemperature,
         unit: t(
@@ -79,7 +78,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
       </View>
       <View>
         <Text
-          style={[styles.temperatureText, { color: colors.hourListText }]}>
+          style={[styles.temperatureText, { color: textColor }]}>
           {`${convertedTemperature}°${temperatureUnit}`}
         </Text>
       </View>
@@ -89,7 +88,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: 70,
+    width: 60,
     alignItems: 'center',
   },
   timeText: {

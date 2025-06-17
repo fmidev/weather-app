@@ -47,14 +47,12 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
                 TIMESTEP_COUNT_FOR_PHONES
                 : Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
 
-  const forceDark = forecast[0]?.smartSymbol && forecast[0]?.smartSymbol > 100 ? true : false;
-
   return isWideDisplay() ? (
     <View testID="next_hours_forecast" style={
       [styles.container, styles.row, { paddingLeft: insets.left, paddingRight: insets.right }]
     }>
       { forecast.slice(1, count + 1).map(item => (
-        <HourForecast key={item.epochtime} timeStep={item} forceDark={forceDark} />)
+        <HourForecast key={item.epochtime} timeStep={item} />)
       )}
     </View>
   ) : (
@@ -67,7 +65,7 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
         showsHorizontalScrollIndicator={false}
       >
         { forecast.slice(1, count + 1).map(item => (
-          <HourForecast key={item.epochtime} timeStep={item} forceDark={forceDark} />)
+          <HourForecast key={item.epochtime} timeStep={item} />)
         )}
       </ScrollView>
     </View>
@@ -76,8 +74,7 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
-    marginTop: -60,
+    paddingHorizontal: 10,
   },
   row: {
     flexDirection: 'row',
