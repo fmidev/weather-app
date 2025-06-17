@@ -141,7 +141,7 @@
       "dayLowestTemperature": "vuorokauden alin lämpötila (°{{ unit }})",
       "daySumOfPrecipitation": "vuorokauden kokonaissademäärän summa ({{ unit }})",
       "time": "kellonaika",
-      "pastTime": "mennyt aika",
+      "pastTimeOrMissing": "mennyt aika tai puuttuva tieto",
       "lightRainInHour": "heikkoa sadetta tunnin aikana",
       "moderateRainInHour": "kohtalaista sadetta tunnin aikana",
       "heavyRainInHour": "voimakasta sadetta tunnin aikana",

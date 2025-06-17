@@ -141,7 +141,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 <View style={styles.pastTimeBlock} />
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.pastTime')}
+                {t('weatherInfoBottomSheet.pastTimeOrMissing')}
               </Text>
             </View>
 
