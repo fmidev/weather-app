@@ -141,7 +141,7 @@
       "dayLowestTemperature": "minimum temperature of the day (°{{ unit }})",
       "daySumOfPrecipitation": "total daily rainfall (mm)",
       "time": "time",
-      "pastTime": "passed time",
+      "pastTimeOrMissing": "passed time or missing data",
       "lightRainInHour": "light rain per hour",
       "moderateRainInHour": "moderate rain per hour",
       "heavyRainInHour": "heavy rain per hour",

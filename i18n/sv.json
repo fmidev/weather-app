@@ -141,7 +141,7 @@
       "dayLowestTemperature": "dygnets lägsta temperatur (°{{ unit }})",
       "daySumOfPrecipitation": "dygnets totala nederbörd ({{ unit }})",
       "time": "klockslag",
-      "pastTime": "förfluten tid",
+      "pastTimeOrMissing": "förfluten tid eller saknad data",
       "lightRainInHour": "lätt regn under en timme",
       "moderateRainInHour": "måttligt regn under en timme",
       "heavyRainInHour": "kraftigt regn under en timme",
