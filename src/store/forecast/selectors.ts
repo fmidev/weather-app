@@ -121,6 +121,8 @@ export const selectHeaderLevelForecast = createSelector(
         .map((h) => h.precipitation1h || 0)
         .reduce((acc, curr) => acc + curr, 0);
 
+      const precipitationMissing = dayArr.every(item => item.precipitation1h === null);
+
       const roundedTotalPrecipitation =
         Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
       const index = getIndexForDaySmartSymbol(dayArr);
@@ -138,6 +140,7 @@ export const selectHeaderLevelForecast = createSelector(
         maxWindSpeed,
         minWindSpeed,
         totalPrecipitation: roundedTotalPrecipitation,
+        precipitationMissing,
         timeStamp,
         smartSymbol,
         precipitationData: precipitationArr,

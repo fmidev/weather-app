@@ -98,6 +98,7 @@
     "closeModal": "Sulje päiväennuste",
     "today": "Tänään",
     "tomorrow": "Huomenna",
+    "precipitationMissing": "Sademäärä puuttuu",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
