@@ -59,7 +59,7 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
       : precipitationHourArr;
 
   const backgroundStyleGetter = (val: number | undefined): ViewStyle => {
-    if (val === undefined) return { backgroundColor: GRAY_1, opacity: 0.5 };
+    if (val === undefined || val === null) return { backgroundColor: GRAY_1, opacity: 0.5 };
     return { backgroundColor: colors.rain[getPrecipitationLevel(val)] };
   };
 

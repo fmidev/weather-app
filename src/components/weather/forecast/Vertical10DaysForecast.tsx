@@ -40,6 +40,7 @@ type DaySelectorListProps = PropsFromRedux & {
     minWindSpeed: number;
     maxWindSpeed: number;
     totalPrecipitation: number;
+    precipitationMissing: boolean;
     timeStamp: number;
     smartSymbol: number | undefined;
     precipitationData: {
@@ -114,6 +115,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
       minWindSpeed: number;
       maxWindSpeed: number;
       totalPrecipitation: number;
+      precipitationMissing: boolean;
       smartSymbol: number | undefined;
       precipitationData: {
         precipitation: number | undefined;
@@ -122,7 +124,10 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
     };
     index: number;
   }) => {
-    const { timeStamp, maxTemperature, minTemperature, maxWindSpeed, minWindSpeed, smartSymbol, totalPrecipitation } = item;
+    const {
+      timeStamp, maxTemperature, minTemperature, maxWindSpeed, minWindSpeed,
+      smartSymbol, totalPrecipitation, precipitationMissing
+    } = item;
     const stepMoment = moment.unix(timeStamp);
     const daySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
@@ -158,7 +163,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
         converter(windUnit, minWindSpeed)
       );
 
-    const convertedTotalPrecipitation = invalidData
+    const convertedTotalPrecipitation = invalidData || precipitationMissing
     ? '-'
     : toPrecision(
         'precipitation',
@@ -233,16 +238,20 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                   <Icon name="precipitation" color={colors.hourListText} />
                     <Text
                       style={[styles.text, { color: colors.hourListText }]}
-                      accessibilityLabel={`${t('forecast:precipitation')} ${
-                        totalPrecipitation
-                          ?.toString()
-                          .replace('.', decimalSeparator) ||
-                        (0).toFixed(1).replace('.', decimalSeparator)
-                      } ${t(
-                        `forecast:${getForecastParameterUnitTranslationKey(
-                          precipitationUnit
-                        )}`
-                      )}`}>
+                      accessibilityLabel={
+                        precipitationMissing ? t('forecast:precipitationMissing') :
+                          `${t('forecast:precipitation')} ${
+                          totalPrecipitation
+                            ?.toString()
+                            .replace('.', decimalSeparator) ||
+                          (0).toFixed(1).replace('.', decimalSeparator)
+                          } ${t(
+                            `forecast:${getForecastParameterUnitTranslationKey(
+                              precipitationUnit
+                            )}`
+                          )}`
+                        }
+                      >
                       <Text style={styles.text}>{`${
                         convertedTotalPrecipitation?.replace('.', decimalSeparator) ||
                         (0).toFixed(1).replace('.', decimalSeparator)

@@ -98,6 +98,7 @@
     "closeModal": "Close daily forecast",
     "today": "Today",
     "tomorrow": "Tomorrow",
+    "precipitationMissing": "Precipitation amount missing",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",
       "feelsLike": "feels like: {{ value }} {{ unit }}.",
