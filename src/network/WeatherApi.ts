@@ -167,7 +167,7 @@ export const getObservation = async (
     timestep: 'data',
   };
 
-  const [observationData, dailyObservationData, geoMagneticObservationData] = await Promise.all([
+  const results = await Promise.allSettled([
     axiosClient({ url: apiUrl, params: hourlyParams }),
     dailyObservationsEnabled
       ? axiosClient({ url: apiUrl, params: dailyParams })
@@ -177,8 +177,18 @@ export const getObservation = async (
       : Promise.resolve({ data: {} }),
   ]);
 
-  if (geoMagneticObservationsEnabled && nearestGeoMagneticStation && geoMagneticObservationData.data.length > 0) {
-    const { data } = geoMagneticObservationData
+  const observationData = results[0].status === 'fulfilled' ? results[0].value : null;
+  const dailyObservationData = results[1].status === 'fulfilled' ? results[1].value : null;
+  const geoMagneticObservationData = results[2].status === 'fulfilled' ? results[2].value : null;
+
+  // geomagnetic observations can fail silently
+  if (observationData === null || dailyObservationData === null) {
+    throw new Error('Observation data retrieval failed');
+  }
+
+  if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
+    && geoMagneticObservationData !== null && geoMagneticObservationData.data.length > 0) {
+    const { data } = geoMagneticObservationData;
     return [
       observationData.data,
       dailyObservationData.data,
