@@ -93,6 +93,7 @@ export default (
     case FETCH_OBSERVATION_ERROR: {
       return {
         ...state,
+        isAuroraBorealisLikely: false,
         loading: false,
         error: action.error,
       };
