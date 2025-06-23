@@ -183,7 +183,7 @@ export const getObservation = async (
 
   // geomagnetic observations can fail silently
   if (observationData === null || dailyObservationData === null) {
-    Promise.reject(new Error('Observation data retrieval failed'));
+    throw new Error('Observation data retrieval failed');
   }
 
   if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
