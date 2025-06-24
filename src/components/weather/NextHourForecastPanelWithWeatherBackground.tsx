@@ -4,7 +4,7 @@ import {
   ActivityIndicator, View, Text, StyleSheet, ImageBackground, useWindowDimensions, Platform
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { BlurView } from '@react-native-community/blur';
+import LinearGradient from 'react-native-linear-gradient';
 
 import moment from 'moment-timezone';
 import 'moment/locale/fi';
@@ -136,8 +136,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     isWideDisplay(),
   );
   const textColor = WHITE;
-  const blurBackground = 'rgba(0,0,0,0.4)';
-  const iconButtonBackground = 'rgba(0, 0, 0, 0.3)';
+  const overlayColor = 'rgba(0,0,0,0.3)';
 
   return (
     <ImageBackground
@@ -145,6 +144,20 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
       resizeMode="cover"
       style={styles.backgroundImage}
     >
+      { /* Gradient overlay for the background image */ }
+      <LinearGradient
+        colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.2)']}
+        start={{ x: 0.5, y: 1 }}
+        end={{ x: 0.5, y: 0 }}
+        style={StyleSheet.absoluteFill}
+      />
+      <LinearGradient
+        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
+        locations={[0.4024, 1]}
+        start={{ x: 0.5, y: 1 }}
+        end={{ x: 0.5, y: 0 }}
+        style={StyleSheet.absoluteFill}
+      />
       <SafeAreaView style={[styles.container, { paddingTop: paddingTop, paddingBottom: paddingBottom }]} >
         <View style={[styles.row]}>
           <IconButton
@@ -152,7 +165,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             icon="locate"
             accessibilityLabel={t('navigation:locate')}
             iconColor={textColor}
-            backgroundColor={iconButtonBackground}
+            backgroundColor={overlayColor}
             onPress={() => {
               getGeolocation(setCurrentLocation, t);
             }}
@@ -180,7 +193,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             icon="search"
             accessibilityLabel={t('navigation:search')}
             iconColor={textColor}
-            backgroundColor={iconButtonBackground}
+            backgroundColor={overlayColor}
             onPress={() => {
               navigation.navigate('Search')
             }}
@@ -211,22 +224,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
           </View>
         </View>
     </SafeAreaView>
-    { Platform.OS === 'android' ? (
-      <View style={[styles.blur, {backgroundColor: blurBackground}]}>
-        <NextHourForecastBar forecast={nextHourForecast} wide={isWideDisplay()} />
-        <NextHoursForecast currentHour={currentHour} />
-      </View>
-    ) : (
-      <BlurView
-        style={styles.blur}
-        blurType="dark"
-        blurAmount={5}
-        reducedTransparencyFallbackColor={blurBackground}
-      >
-        <NextHourForecastBar forecast={nextHourForecast} wide={isWideDisplay()} />
-        <NextHoursForecast currentHour={currentHour} />
-      </BlurView>
-    )}
+    <View style={[styles.overlay, {backgroundColor: overlayColor}]}>
+      <NextHourForecastBar forecast={nextHourForecast} wide={isWideDisplay()} />
+      <NextHoursForecast currentHour={currentHour} />
+    </View>
   </ImageBackground>
 );
 };
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
   locationText: {
     paddingHorizontal: 16,
   },
-  blur: {
+  overlay: {
     position: "absolute",
     left: 0,
     bottom: 0,

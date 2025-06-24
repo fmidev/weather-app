@@ -36,7 +36,8 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
     }
   };
 
-  const imageWidth = Math.min(width, MAX_IMAGE_WIDTH);
+  // some devices may have float values as width => round value
+  const imageWidth = Math.min(Math.round(width), MAX_IMAGE_WIDTH);
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
