@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AppState } from 'react-native';
+import { MMKV } from 'react-native-mmkv';
 import { ReloaderContext } from '@utils/reloader';
 import { Config } from './DynamicConfig';
 import { ConfigType } from './types';
-import { getItem, VERSION, DYNAMICCONFIG } from '@utils/async_storage';
+import { VERSION, DYNAMICCONFIG } from '@utils/async_storage';
 import packageJSON from '../../package.json';
 
 type ConfigProviderProps = {
@@ -33,8 +34,9 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   const { enabled, interval } = Config.get('dynamicConfig');
 
   const restoreStoredConfiguration = async () => {
-    const storedConfig = await getItem(DYNAMICCONFIG);
-    const storedVersion = await getItem(VERSION);
+    const storage = new MMKV();
+    const storedConfig = storage.getString(DYNAMICCONFIG);
+    const storedVersion = storage.getString(VERSION);
 
     if (storedConfig && storedVersion === packageJSON.version) {
       Config.setDefaultConfig(JSON.parse(storedConfig));

@@ -1,15 +1,22 @@
 import React, { useRef, useState } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
 import { useTheme } from '@react-navigation/native';
+import 'react-native-url-polyfill/auto';
 import { Config } from '@config';
 import PanelHeader from '@components/weather/common/PanelHeader';
 import { CustomTheme } from '@assets/colors';
 
+const ALLOWED_HOSTS = ['cdn.fmi.fi'];
+
 type WarningsWebViewPanelProps = {
   updateInterval: number;
 };
+
+const InvalidURLView = () => (
+  <Text>Invalid webview URL blocked</Text>
+)
 
 const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
   updateInterval
@@ -26,6 +33,20 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
 
   if (!webViewUrl) {
     return null;
+  }
+
+  // Check that hostname is allowed
+
+  let hostname: string | null = null;
+  try {
+    hostname = new URL(webViewUrl).hostname;
+  } catch (error) {
+    console.error("Invalid webview URL:", error);
+    return <InvalidURLView />;
+  }
+
+  if (!hostname || !ALLOWED_HOSTS.includes(hostname)) {
+    return <InvalidURLView />
   }
 
   const html = `<!doctype html>
