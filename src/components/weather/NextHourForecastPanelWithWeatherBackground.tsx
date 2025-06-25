@@ -171,10 +171,11 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             }}
             circular
           />
-          <View style={styles.locationTextContainer} accessible accessibilityRole="header">
+          <View style={styles.locationTextContainer}>
             <AccessibleTouchableOpacity
               onPress={() => { navigation.navigate('Search') }}
-              accessibilityLabel={t('navigation:search')}
+              accessibilityRole="button"
+              accessibilityLabel={`${location.name}${location.area ? `, ${location.area}` : ''}, ${t('navigation:search')}`}
             >
               <Text
                 numberOfLines={1}
