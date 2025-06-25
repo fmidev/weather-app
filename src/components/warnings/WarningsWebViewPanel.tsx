@@ -14,6 +14,10 @@ type WarningsWebViewPanelProps = {
   updateInterval: number;
 };
 
+const InvalidURLView = () => (
+  <Text>Invalid webview URL blocked</Text>
+)
+
 const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
   updateInterval
 ) => {
@@ -33,11 +37,16 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
 
   // Check that hostname is allowed
 
-  const {hostname} = new URL(webViewUrl);
+  let hostname: string | null = null;
+  try {
+    hostname = new URL(webViewUrl).hostname;
+  } catch (error) {
+    console.error("Invalid webview URL:", error);
+    return <InvalidURLView />;
+  }
+
   if (!hostname || !ALLOWED_HOSTS.includes(hostname)) {
-    return (
-      <Text>Invalid webview URL blocked</Text>
-    )
+    return <InvalidURLView />
   }
 
   const html = `<!doctype html>
