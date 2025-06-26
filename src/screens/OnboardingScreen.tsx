@@ -32,7 +32,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const { t, i18n } = useTranslation('onboarding');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const titleRef = useRef() as React.MutableRefObject<Text>;
+  const titleRef = useRef<Text>(null);
   const isLandscape = useOrientation();
 
   const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];

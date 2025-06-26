@@ -104,11 +104,11 @@ const Chart: React.FC<ChartProps> = ({
   useEffect(() => {
     if (currentDayOffset && activeDayIndex !== undefined) {
       const dayIndex = calculateDayIndex(scrollIndex);
-      if (activeDayIndex === 0 && dayIndex !== activeDayIndex) {
+      if (activeDayIndex === 0 && dayIndex !== activeDayIndex && scrollRef.current) {
         scrollRef.current.scrollTo({ x: 0, animated: true });
         setScrollIndex(0);
       }
-      if (activeDayIndex > 0 && dayIndex !== activeDayIndex) {
+      if (activeDayIndex > 0 && dayIndex !== activeDayIndex && scrollRef.current) {
         const off = currentDayOffset * stepLength;
         const offsetX = off + (activeDayIndex - 1) * 24 * stepLength;
         scrollRef.current.scrollTo({ x: offsetX, animated: true });
@@ -224,7 +224,7 @@ const Chart: React.FC<ChartProps> = ({
   };
 
   const onLayout = () => {
-    if (observation) {
+    if (observation && scrollRef.current) {
       scrollRef.current.scrollToEnd();
     }
   };

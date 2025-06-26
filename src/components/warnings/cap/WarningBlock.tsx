@@ -45,7 +45,7 @@ const WarningItem = ({
   areasDescription?: string;
   warning: CapWarning;
   warningCount?: number;
-  scrollViewRef?: React.MutableRefObject<ScrollView>;
+  scrollViewRef?: React.RefObject<ScrollView | null>;
   width: number;
   timespan: string;
   includeSeverityBars: boolean;

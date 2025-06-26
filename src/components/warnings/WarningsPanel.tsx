@@ -118,7 +118,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
             <AccessibleTouchableOpacity
               testID="warnings_info_button"
               accessibilityLabel={t('infoAccessibilityLabel')}
-              onPress={() => infoSheetRef.current.open()}>
+              onPress={() => infoSheetRef.current?.open()}>
               <View style={[styles.iconPadding]}>
                 <Icon
                   name="info"
@@ -237,7 +237,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           },
           draggableIcon: styles.draggableIcon,
         }}>
-        <InfoSheet onClose={() => infoSheetRef.current.close()} />
+        <InfoSheet onClose={() => infoSheetRef.current?.close()} />
       </RBSheet>
     </View>
   );

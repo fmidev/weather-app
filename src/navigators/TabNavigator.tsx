@@ -118,7 +118,7 @@ const Navigator: React.FC<Props> = ({
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
-  const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const searchInfoSheetRef = useRef<RBSheet>(null);
   const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
     ((!currentTheme || currentTheme === 'automatic') &&
@@ -252,7 +252,7 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel="info"
         accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
         icon="info"
-        onPress={() => searchInfoSheetRef.current.open()}
+        onPress={() => searchInfoSheetRef.current?.open()}
       />
     ),
   };
@@ -576,7 +576,7 @@ const Navigator: React.FC<Props> = ({
             draggableIcon: styles.draggableIcon,
           }}>
           <SearchInfoBottomSheet
-            onClose={() => searchInfoSheetRef.current.close()}
+            onClose={() => searchInfoSheetRef.current?.close()}
           />
         </RBSheet>
         <ErrorComponent />

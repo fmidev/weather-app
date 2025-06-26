@@ -25,7 +25,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
 }) => {
   const { t } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef() as React.MutableRefObject<Text>;
+  const titleRef = useRef<Text>(null);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {

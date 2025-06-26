@@ -78,11 +78,11 @@ const SettingsScreen: React.FC<Props> = ({
   const { colors } = useTheme();
   const isAndroid = Platform.OS === 'android';
   const sheetRefs = {
-    temperature: useRef(),
-    precipitation: useRef(),
-    wind: useRef(),
-    pressure: useRef(),
-  } as { [key: string]: React.MutableRefObject<RBSheet> };
+    temperature: useRef<RBSheet>(null),
+    precipitation: useRef<RBSheet>(null),
+    wind: useRef<RBSheet>(null),
+    pressure: useRef<RBSheet>(null),
+  } as { [key: string]: React.RefObject<RBSheet> };
   const { languages, themes, showUnitSettings } = Config.get('settings');
 
   useEffect(() => {

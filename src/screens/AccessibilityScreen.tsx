@@ -23,7 +23,7 @@ const TermsAndConditionsScreen: React.FC = () => {
     i18n: { language },
   } = useTranslation('accessibility');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef() as React.MutableRefObject<Text>;
+  const titleRef = useRef<Text>(null);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {
