@@ -258,9 +258,15 @@ const getWMSLayerUrlsAndBounds = async (
       const steps = Array.isArray(wmsLayer.Dimension)
         ? wmsLayer.Dimension[0].text.split(/[,/]/)
         : wmsLayer.Dimension.text.split(/[,/]/);
+      const lastStep = steps[steps.length - 1];
 
       const layerStart = steps[0];
-      const layerEnd = steps[1]; // Multiple time intervals are not supported
+      // Only supports start/end/interval and time list formats as time dimension
+      // Also the first time interval works if multiple time intervals are provided
+      // A time list format is identified by having more than three elements in the steps array.
+      // This condition ensures that the last step is a valid ISO 8601 date and not time interval.
+      const isTimeList = steps.length > 3 && moment(lastStep, moment.ISO_8601, true).isValid();
+      const layerEnd = isTimeList ? lastStep : steps[1];
 
       const url = sources[layerSrc.source];
 
