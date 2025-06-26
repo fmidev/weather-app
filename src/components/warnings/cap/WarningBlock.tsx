@@ -139,7 +139,7 @@ function WarningBlock({
 }) {
   const [open, setOpen] = useState(false);
   const { colors } = useTheme() as CustomTheme;
-  const scrollViewRef = useRef() as React.MutableRefObject<ScrollView>;
+  const scrollViewRef = useRef<ScrollView>(null);
   const { width } = useWindowDimensions();
   const { i18n } = useTranslation();
   const locale = i18n.language;

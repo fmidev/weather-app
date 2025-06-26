@@ -37,7 +37,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   currentLocation,
   capWarnings,
 }) => {
-  const legendSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const legendSheetRef = useRef<RBSheet>(null);
 
   const { t, i18n } = useTranslation('warnings');
   const locale = i18n.language;

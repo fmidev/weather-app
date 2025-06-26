@@ -63,7 +63,7 @@ const Chart: React.FC<ChartProps> = ({
   const isDaily =
     chartType === 'daily' || preferredDailyParameters.includes(chartType);
 
-  const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
+  const scrollRef = useRef<ScrollView>(null)
   const [scrollIndex, setScrollIndex] = useState<number>(
     observation ? 24 * 20 : 0
   );

@@ -8,7 +8,7 @@ type PanelHeaderProps = {
   title: string;
   justifyCenter?: boolean;
   accessibilityHint?: string;
-  additionalContent?: React.ReactChild;
+  additionalContent?: React.ReactNode;
   thin?: boolean;
   news?: boolean;
   background?: string;

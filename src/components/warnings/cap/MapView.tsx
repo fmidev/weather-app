@@ -86,7 +86,7 @@ const MapView = ({
 
   useEffect(() => setSelectedFilters([]), [date]);
 
-  const mapRef = useRef() as React.MutableRefObject<Map>;
+  const mapRef = useRef<Map>(null);
   const { dark } = useTheme() as CustomTheme;
   const capViewSettings = Config.get('warnings')?.capViewSettings;
 

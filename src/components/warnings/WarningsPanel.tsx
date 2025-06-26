@@ -48,8 +48,8 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
-  const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const headerRef = useRef() as React.MutableRefObject<View>;
+  const infoSheetRef = useRef<RBSheet>(null);
+  const headerRef = useRef<View>(null);
   const colorMode = dark ? 'dark' : 'light';
 
   moment.locale(i18n.language);
