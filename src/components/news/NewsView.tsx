@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Linking, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Linking, useWindowDimensions } from 'react-native';
+import FastImage from '@d11/react-native-fast-image';
 import type { NewsItem } from '@store/news/types';
 import moment from 'moment';
 import SimpleButton from '@components/common/SimpleButton';
@@ -15,6 +16,7 @@ type NewsProps = {
 }
 
 const MAX_IMAGE_WIDTH = 512;
+const DEFAULT_IMAGE = require('@assets/images/press-release-default.webp');
 
 const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout }) => {
   const { colors } = useTheme() as CustomTheme;
@@ -61,17 +63,17 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
         accessibilityHint={t('readMore')}
         onPress={() => { openLink(item.type, item.id) }}
       >
-        { !item.imageUrl ? (
-          <Image
-            source={require('@assets/images/press-release-default.webp')}
-            style={styles.image}
-          />
-        ) : (
-          <Image
-            src={`${item.imageUrl}?w=${imageWidth}`}
-            style={styles.image}
-          />
-        )}
+        <FastImage
+          style={styles.image}
+          source={
+            item.imageUrl
+              ? {
+                  uri: `${item.imageUrl}?w=${imageWidth}`,
+                  cache: FastImage.cacheControl.immutable,
+                }
+              : DEFAULT_IMAGE
+          }
+        />
       </AccessibleTouchableOpacity>
       <SimpleButton
         accessibilityHint={t('readMore')}
