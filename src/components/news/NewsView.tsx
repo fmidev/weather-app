@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, Linking, useWindowDimensions } from 'react-native';
 import FastImage from '@d11/react-native-fast-image';
-import type { NewsItem } from '@store/news/types';
 import moment from 'moment';
 import SimpleButton from '@components/common/SimpleButton';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import type { NewsItem } from '@store/news/types';
 
 type NewsProps = {
   item: NewsItem;
