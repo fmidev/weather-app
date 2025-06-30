@@ -438,7 +438,7 @@ const Navigator: React.FC<Props> = ({
     <>
       <StatusBar
         backgroundColor={useDarkTheme ? HEADER_DARK : WHITE}
-        barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
+        barStyle={useDarkTheme || Platform.OS === 'ios' ? 'light-content' : 'dark-content'}
       />
       <NavigationContainer
         onStateChange={navigationTabChanged}
