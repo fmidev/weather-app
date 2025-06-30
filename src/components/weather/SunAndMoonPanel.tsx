@@ -293,12 +293,12 @@ const styles = StyleSheet.create({
   sunBox: {
     marginLeft: 16,
     marginRight: 8,
-    marginVertical: 16,
+    marginTop: 16,
   },
   moonBox: {
     marginRight: 16,
     marginLeft: 8,
-    marginVertical: 16,
+    marginTop: 16,
   },
   background: {
     borderRadius: 10,
