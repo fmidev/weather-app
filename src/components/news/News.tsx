@@ -32,12 +32,16 @@ const News: React.FC<NewsProps> = ({
   const { width} = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const { t, } = useTranslation('news');
-  const { numberOfNews } = Config.get('news');
+  const { enabled, numberOfNews } = Config.get('news');
   const { dark } = useTheme() as CustomTheme;
   const colorMode = dark ? 'dark' : 'light';
   const isWideDisplay = () => width > 700;
 
-  if (loading) {
+  if (!enabled) {
+    return null;
+  }
+
+  if (loading && (!news || news.length === 0)) {
     return (
       <MotiView style={{
         marginLeft: insets.left + 16,

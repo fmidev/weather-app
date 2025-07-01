@@ -57,5 +57,5 @@ export default (
 
 export const newsPersist: PersistConfig = {
   key: 'news',
-  whitelist: [],
+  whitelist: ['news'],
 };
