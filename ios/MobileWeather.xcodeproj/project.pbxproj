@@ -596,6 +596,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog_privacy.bundle",
 			);
@@ -625,6 +626,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
 			);
@@ -845,7 +847,7 @@
 				CODE_SIGN_ENTITLEMENTS = MobileWeather/MobileWeather.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 278;
+				CURRENT_PROJECT_VERSION = 280;
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
@@ -881,7 +883,7 @@
 				CODE_SIGN_ENTITLEMENTS = MobileWeather/MobileWeather.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 278;
+				CURRENT_PROJECT_VERSION = 280;
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				INFOPLIST_FILE = MobileWeather/Info.plist;
@@ -1066,7 +1068,7 @@
 				CODE_SIGN_ENTITLEMENTS = SettingsIntentExtension/SettingsIntentExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 278;
+				CURRENT_PROJECT_VERSION = 280;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1116,7 +1118,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 278;
+				CURRENT_PROJECT_VERSION = 280;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1160,7 +1162,7 @@
 				CODE_SIGN_ENTITLEMENTS = WidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 278;
+				CURRENT_PROJECT_VERSION = 280;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1212,7 +1214,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 278;
+				CURRENT_PROJECT_VERSION = 280;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DJHT89EW79;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;

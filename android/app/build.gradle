@@ -101,8 +101,8 @@ android {
         applicationId "fi.fmi.mobileweather"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3000080
-        versionName "6.0.1"
+        versionCode 3000083
+        versionName "6.0.4"
         testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         missingDimensionStrategy 'detox', 'full'
@@ -162,6 +162,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
 
     implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.guava:guava:31.1-android'
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

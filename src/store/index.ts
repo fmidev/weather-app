@@ -67,7 +67,7 @@ export default combineReducers({
     MeteorologistReducer
   ),
   news: persistReducer(
-    persistReducerConfig(newsPersist),
+    mmkvReducerConfig(newsPersist),
     NewsReducer
   ),
 });

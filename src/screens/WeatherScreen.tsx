@@ -191,7 +191,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           stickyHeaderIndices={announcements && [0]}>
           <Announcements style={styles.announcements} />
           <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
-          <SunAndMoonPanel />
           <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
           {isWideDisplay() && showLocalWarnings && showMeteorologistSnapshot ? (
             <View style={styles.grid}>
@@ -208,6 +207,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
               { showMeteorologistSnapshot && <MeteorologistSnapshot /> }
             </>
           }
+          <SunAndMoonPanel />
           <ObservationPanel />
           <News />
         </ScrollView>
