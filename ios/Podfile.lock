@@ -2449,7 +2449,7 @@ PODS:
     - Yoga
   - RNDefaultPreference (1.4.4):
     - React-Core
-  - RNFastImage (8.9.2):
+  - RNFastImage (8.10.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3281,7 +3281,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 9fcdc33916cf53976cb08797e32610eeadf2334c
   RNCMaskedView: 7e0ce15656772a939ff0d269100bca3a182163c8
   RNDefaultPreference: ee13d69e6693d193cd223d10e15e5b3c012d31ba
-  RNFastImage: c13e446dc384bbc7aaaeb2ecb8783bb561cac5af
+  RNFastImage: 9b35c0d84cd51c3c486713824e5cc8b49a4f95bf
   RNGestureHandler: eeb622199ef1fb3a076243131095df1c797072f0
   RNLocalize: cdfd3dd801b3bfa41204f3872624965b82d38349
   RNPermissions: 8cd3d56a5a50d8755a829ef37a32482fed97b932
