@@ -37,6 +37,7 @@ export interface NewsItem {
   createdAt: string;
   updatedAt: string;
   language: string;
+  showEditedDateTime: boolean;
 }
 
 export interface NewsState {
