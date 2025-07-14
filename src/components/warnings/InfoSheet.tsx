@@ -16,12 +16,16 @@ import useOrientation from '@utils/hooks';
 import { WarningType } from '@store/warnings/types';
 import { knownWarningTypes } from '@store/warnings/constants';
 import SeverityBar from './SeverityBar';
-import WarningSymbol from './WarningsSymbol';
 import TypeColorRow from './TypeColorRow';
+import WarningIcon from './WarningIcon';
 
 type InfoSheetProps = {
   onClose: () => void;
 };
+
+const showPhysical = (type: WarningType): boolean => {
+  return type.toLowerCase().includes('wind');
+}
 
 const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
@@ -29,6 +33,10 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   const isLandscape = useOrientation();
   const severities = [0, 1, 2, 3];
   const severityColors = [GREEN, YELLOW, ORANGE, RED];
+  const physical = {
+    windIntensity: 21,
+    windDirection: 225,
+  };
 
   const SeverityBarRow = ({ severity }: { severity: number }) => (
     <View style={styles.row}>
@@ -44,7 +52,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   const TypeRow = ({ type }: { type: WarningType }) => (
     <View style={styles.row}>
       <View style={[styles.iconWrapper]}>
-        <WarningSymbol type={type} severity="Moderate" />
+        <WarningIcon type={type} severity={1} physical={ showPhysical(type) ? physical : undefined }/>
       </View>
       <Text style={[styles.text, { color: colors.hourListText }]}>
         {t(`warnings:types:${type}`).toLocaleLowerCase()}
