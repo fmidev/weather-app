@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import { State } from '@store/types';
 
-import { CustomTheme, WHITE } from '@assets/colors';
+import { WHITE } from '@assets/colors';
 import { selectClockType, selectUnits } from '@store/settings/selectors';
 import { TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
@@ -31,7 +30,6 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
   clockType, units, timeStep
 }) => {
   const { t } = useTranslation('forecast');
-  const { dark } = useTheme() as CustomTheme;
 
   const temperatureUnit = units?.temperature.unitAbb ?? Config.get('settings').units.temperature;
   const convertedTemperature =
@@ -48,7 +46,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
     .format(clockType === 12 ? 'h a' : 'HH');
   const smartSymbol = weatherSymbolGetter(
     (timeStep.smartSymbol || 0).toString(),
-    dark
+    true // Always dark symbols because of dark transparent background
   );
 
   const textColor = WHITE;
