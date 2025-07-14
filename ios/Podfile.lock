@@ -1289,7 +1289,7 @@ PODS:
     - React-Core
   - react-native-safe-area-context (5.2.0):
     - React-Core
-  - react-native-webview (13.13.2):
+  - react-native-webview (13.15.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2180,7 +2180,7 @@ SPEC CHECKSUMS:
   react-native-mmkv: a6e08ad1b51b84af075f91798f8a92c878472265
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 3e33e7c43c8b74dba436a5a32651cb8d7064c740
-  react-native-webview: 2cf4fe62b06f9ac42f92d1e2bb1345a407a13a57
+  react-native-webview: 3772c8537fd6d7869791820a7b154fb546bcef7b
   React-nativeconfig: cb207ebba7cafce30657c7ad9f1587a8f32e4564
   React-NativeModulesApple: 8411d548b1ad9d2b3e597beb9348e715c8020e0c
   React-perflogger: c4c3b7c18f8a50cdbe2bcdd2f15705ba029a5a02
