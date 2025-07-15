@@ -29,7 +29,8 @@ const getNews = async (language: string): Promise<NewsItem[]> => {
       imageAlt: imageMissing ? '' : item.fields.thumbnail.fields.image.fields.altText,
       createdAt: item.sys.createdAt,
       updatedAt: item.sys.updatedAt,
-      language: item.fields.site
+      language: item.fields.site,
+      showEditedDateTime: item.fields.showEditedDatetime ?? true,
     };
   });
 
