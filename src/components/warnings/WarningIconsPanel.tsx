@@ -7,6 +7,7 @@ import { CustomTheme } from '@assets/colors';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,
+  selectError,
   selectLoading,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
@@ -21,6 +22,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
   loading: selectLoading(state),
+  error: selectError(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -34,6 +36,7 @@ type WarningIconsPanelProps = PropsFromRedux & {
 const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   dailyWarnings,
   loading,
+  error,
   gridLayout,
 }) => {
   const insets = useSafeAreaInsets();
@@ -53,6 +56,22 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
         <Skeleton colorMode={colorMode} width={'100%'} height={160} radius={10} />
       </MotiView>
     );
+  }
+
+  if (error) {
+    return (
+      <View
+        testID="warnings_panel"
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={[styles.cardWrapper, styles.errorCard, {
+          backgroundColor: colors.warningCard,
+          marginLeft: insets.left + 16,
+          marginRight: gridLayout ? 8 : insets.right + 16,
+        }]}
+      >
+        <Text style={[styles.errorText, { color: colors.primaryText }]}>{t('loadingError')}</Text>
+      </View>
+    )
   }
 
   const openWarnings = () => {
@@ -172,6 +191,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 160,
   },
+  errorCard : {
+    padding: 16,
+  },
   noPadding: {
     paddingHorizontal: 0,
   },
@@ -210,9 +232,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Roboto-Regular',
   },
+  errorText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
+  },
   headerText: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
     marginBottom: 6,
   },
   weekWarningsContainer: {
