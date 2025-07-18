@@ -580,6 +580,7 @@
     "moreAccessibilityHint": "show detailed warning description",
     "lessAccessibilityHint": "hide detailed warning description",
     "infoAccessibilityLabel": "warnings info",
+    "loadingError": "Failed to load local warnings.",
     "types": {
       "thunderstorm": "Severe thunderstorm",
       "wind": "Wind warning for land areas",
