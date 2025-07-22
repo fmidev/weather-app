@@ -580,6 +580,7 @@
     "moreAccessibilityHint": "visa närmare uppgifter om varningen",
     "lessAccessibilityHint": "dölja närmare uppgifter om varningen",
     "infoAccessibilityLabel": "Varningar förklaringar",
+    "loadingError": "Misslyckades att ladda platsbaserade varningar.",
     "types": {
       "thunderstorm": "Varning för våldsamt åskväder",
       "wind": "Vindvarning för landområden",
