@@ -246,6 +246,7 @@
       "km/h": "kilometers per hour",
       "mph": "miles per hour",
       "bft": "beaufort",
+      "kn" : "knots",
       "hPa": "hectopascal",
       "mbar": "millibars",
       "mmHg": "millimeters of mercury",

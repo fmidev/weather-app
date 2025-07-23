@@ -191,13 +191,13 @@
     "sunAndMoon": {
       "dayLength": "Dagens längd",
       "newMoon": "Nymåne",
-      "waxingCrescent": "Växande månskära",
-      "firstQuarter": "Växande halvmåne",
-      "waxingGibbous": "Växande oval måne",
+      "waxingCrescent": "Växande halvmåne",
+      "firstQuarter": "Första kvarteret",
+      "waxingGibbous": "Växande gibbous",
       "fullMoon": "Fullmåne",
-      "waningGibbous": "Avtagande oval måne",
-      "lastQuarter": "Avtagande halvmåne",
-      "waningCrescent": "Avtagande månskära"
+      "waningGibbous": "Avtagande gibbous",
+      "lastQuarter": "Sista kvarteret",
+      "waningCrescent": "Avtagande halvmåne"
     }
   },
   "observation": {
@@ -237,7 +237,7 @@
       "minimumGroundTemperature06": "Markens lägsta temperatur",
       "snowDepth06": "Snödjup på morgonen"
     },
-    "paramsUnits": {
+    "paramUnits": {
       "mm": "millimeter",
       "%": "procent",
       "°C": "celcius grader",
@@ -246,6 +246,7 @@
       "km/h": "kilometer per sekund",
       "mph": "engelska mil per timme",
       "bft": "beaufort",
+      "kn": "knopar",
       "hPa": "hehtopascal",
       "mbar": "millibar",
       "mmHg": "millimeter kvicksilver",
