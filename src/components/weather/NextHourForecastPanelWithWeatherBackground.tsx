@@ -23,7 +23,7 @@ import { selectTimeZone, selectCurrent } from '@store/location/selector';
 import { selectUnits } from '@store/settings/selectors';
 import { weatherBackgroundGetter } from '@assets/images/backgrounds';
 
-import { getGeolocation } from '@utils/helpers';
+import { formatAccessibleTemperature, getGeolocation } from '@utils/helpers';
 import { WHITE } from '@assets/colors';
 
 import { Config } from '@config';
@@ -207,7 +207,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
           </Text>
         </View>
         <View style={styles.row}>
-          <View style={[styles.row, styles.alignStart]} accessible>
+          <View style={[styles.row, styles.alignStart]} accessible
+            accessibilityLabel={`${formatAccessibleTemperature(temperatureValue, t)} ${t(
+              getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
+            )}`}>
             <Text
               style={[
                 styles.temperatureText,
@@ -217,9 +220,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             </Text>
             <Text
               style={[styles.unitText, { color: textColor }]}
-              accessibilityLabel={`${numericOrDash(temperatureValue)} ${t(
-                getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
-              )} `}>
+              >
               °{temperatureUnit}
             </Text>
           </View>

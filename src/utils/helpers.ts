@@ -310,6 +310,17 @@ export const getParameterUnit = (
   }
 };
 
+export function formatAccessibleTemperature(
+  val: string | number | undefined | null,
+  t: (key: string) => string): string {
+  if (val === null || val === undefined || val === '') return '-';
+  const num = typeof val === 'number' ? val : Number(val);
+  if (isNaN(num)) return '-';
+  const valuePart =
+    num < 0 ? `${t('forecast:minus')} ${Math.abs(num)}` : `${num}`;
+  return `${valuePart}`;
+}
+
 // https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
 const getEaster = (year: number): Date => {
   const f = Math.floor;

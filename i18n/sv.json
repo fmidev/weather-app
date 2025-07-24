@@ -99,6 +99,7 @@
     "today": "Idag",
     "tomorrow": "Imorgon",
     "precipitationMissing": "Nederbörd saknas",
+    "minus": "minus",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",
@@ -237,7 +238,7 @@
       "minimumGroundTemperature06": "Markens lägsta temperatur",
       "snowDepth06": "Snödjup på morgonen"
     },
-    "paramsUnits": {
+    "paramUnits": {
       "mm": "millimeter",
       "%": "procent",
       "°C": "celcius grader",
@@ -246,6 +247,7 @@
       "km/h": "kilometer per sekund",
       "mph": "engelska mil per timme",
       "bft": "beaufort",
+      "kn": "knopar",
       "hPa": "hehtopascal",
       "mbar": "millibar",
       "mmHg": "millimeter kvicksilver",
