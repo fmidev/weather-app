@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';
@@ -34,6 +35,10 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const titleRef = useRef<Text>(null);
   const isLandscape = useOrientation();
+  const insets = useSafeAreaInsets();
+
+  const rowBottomPosition = Math.round(insets.bottom) + 16;
+  const skipButtonBottomPosition = Math.round(insets.bottom);
 
   const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];
 
@@ -158,7 +163,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
       </View>
       <View
         testID="onboarding_pagination"
-        style={[styles.row, styles.center, styles.height10]}>
+        style={[styles.row, styles.center, styles.height10, { bottom: rowBottomPosition }]}>
         <View
           testID="onboarding_pagination_0"
           style={[
@@ -197,7 +202,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
       <AccessibleTouchableOpacity
         testID="onboarding_skip_button"
         accessibilityRole="button"
-        style={styles.skipButton}
+        style={[styles.skipButton, { bottom: skipButtonBottomPosition }]}
         onPress={() => navigation.navigate('SetupScreen')}>
         <Text style={[styles.text, { color: colors.text }]}>
           {t('skip')}

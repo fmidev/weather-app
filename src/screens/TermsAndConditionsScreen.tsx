@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -26,6 +27,9 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
   const { t } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
   const titleRef = useRef<Text>(null);
+  const insets = useSafeAreaInsets();
+
+  const closeButtonMarginBottom = Math.round(insets.bottom);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {
@@ -124,7 +128,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
             onPress={onClose}
             accessibilityRole="button"
             accessibilityHint={t('closeButtonAccessibilityHint')}>
-            <View style={[styles.closeButton, { borderColor: colors.text }]}>
+            <View style={[styles.closeButton, { borderColor: colors.text, marginBottom: closeButtonMarginBottom }]}>
               <Text style={[styles.closeText, { color: colors.text }]}>
                 {t('close')}
               </Text>
