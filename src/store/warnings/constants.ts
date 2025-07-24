@@ -2,7 +2,6 @@
 export const knownWarningTypes = [
   'thunderstorm',
   'forestFireWeather',
-  'grassFireWeather',
   'wind',
   'trafficWeather',
   'rain',

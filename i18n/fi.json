@@ -580,6 +580,7 @@
     "moreAccessibilityHint": "näytä varoituksen tarkemmat tiedot",
     "lessAccessibilityHint": "piilota varoituksen tarkemmat tiedot",
     "infoAccessibilityLabel": "varoitusten selitteet",
+    "loadingError": "Paikkakuntakohtaisten varoitusten lataaminen epäonnistui.",
     "types": {
       "thunderstorm": "Raju ukonilma",
       "wind": "Tuulivaroitus maa-alueille",

@@ -87,7 +87,7 @@ const getWarningDataForDays = (
     );
 
     dailyWarnings.sort((a, b) => {
-      const severityDiff = severityList.indexOf(a.severity) - severityList.indexOf(b.severity);
+      const severityDiff = severityList.indexOf(b.severity) - severityList.indexOf(a.severity);
       if (severityDiff !== 0) return severityDiff;
       return knownWarningTypes.indexOf(a.type) - knownWarningTypes.indexOf(b.type);
     });

@@ -15,6 +15,7 @@ import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,
+  selectError,
   selectLoading,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
@@ -31,6 +32,7 @@ const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
   location: selectCurrent(state),
   loading: selectLoading(state),
+  error: selectError(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -43,6 +45,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   dailyWarnings,
   location,
   loading,
+  error,
 }) => {
   const { t, i18n } = useTranslation('warnings');
   const { colors, dark } = useTheme() as CustomTheme;
@@ -81,6 +84,14 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
         </View>
       </MotiView>
     );
+  }
+
+  if (error) {
+    return (
+      <View testID="warnings_panel" style={styles.errorCard}>
+        <Text style={[styles.errorText, { color: colors.primaryText }]}>{t('loadingError')}</Text>
+      </View>
+    )
   }
 
   const locale = i18n.language;
@@ -252,6 +263,14 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOpacity: 1,
     elevation: 3,
+  },
+  errorCard : {
+    padding: 16,
+  },
+  errorText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   activeBorder: {
     height: 3,

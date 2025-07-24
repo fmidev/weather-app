@@ -191,13 +191,13 @@
     "sunAndMoon": {
       "dayLength": "Dagens längd",
       "newMoon": "Nymåne",
-      "waxingCrescent": "Växande halvmåne",
-      "firstQuarter": "Första kvarteret",
-      "waxingGibbous": "Växande gibbous",
+      "waxingCrescent": "Växande månskära",
+      "firstQuarter": "Växande halvmåne",
+      "waxingGibbous": "Växande oval måne",
       "fullMoon": "Fullmåne",
-      "waningGibbous": "Avtagande gibbous",
-      "lastQuarter": "Sista kvarteret",
-      "waningCrescent": "Avtagande halvmåne"
+      "waningGibbous": "Avtagande oval måne",
+      "lastQuarter": "Avtagande halvmåne",
+      "waningCrescent": "Avtagande månskära"
     }
   },
   "observation": {
@@ -580,6 +580,7 @@
     "moreAccessibilityHint": "visa närmare uppgifter om varningen",
     "lessAccessibilityHint": "dölja närmare uppgifter om varningen",
     "infoAccessibilityLabel": "Varningar förklaringar",
+    "loadingError": "Misslyckades att ladda platsbaserade varningar.",
     "types": {
       "thunderstorm": "Varning för våldsamt åskväder",
       "wind": "Vindvarning för landområden",

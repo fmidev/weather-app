@@ -18,6 +18,10 @@ const resolveSeverity = (severity: Severity): number => {
   return 0;
 }
 
+const showPhysical = (type: WarningType): boolean => {
+  return type.toLowerCase().includes('wind');
+}
+
 const WarningIcon: React.FC<WarningIconProps> = (
   { severity, severityDescription, type, physical }
 ) => {
@@ -34,7 +38,7 @@ const WarningIcon: React.FC<WarningIconProps> = (
           transform: [{ rotate: (180 + physical?.windDirection) + 'deg' }]
         } : {}}/>
       )}
-      { severityValue > 0 && physical?.windIntensity && (
+      { severityValue > 0 && physical?.windIntensity && showPhysical(type) && (
         <Text style={styles.text}>{physical?.windIntensity}</Text>
       )}
     </View>

@@ -48,7 +48,7 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
         [styles.meta, {color: colors.primaryText }]
       }>
         {`${t(item.type)} ${moment(item.createdAt).format(dateFormat)}`}
-        { item.createdAt.substring(0, 10) !== item.updatedAt.substring(0,10) &&
+        { item.createdAt.substring(0, 10) !== item.updatedAt.substring(0,10) && item.showEditedDateTime &&
         ` (${t('updated')} ${moment(item.updatedAt).format(dateAndTimeFormat)})`}
       </Text>
       <Text
