@@ -9,9 +9,9 @@ PODS:
   - FBLazyVector (0.80.1)
   - fmt (11.0.2)
   - glog (0.3.5)
-  - hermes-engine (0.80.0):
-    - hermes-engine/Pre-built (= 0.80.0)
-  - hermes-engine/Pre-built (0.80.0)
+  - hermes-engine (0.80.1):
+    - hermes-engine/Pre-built (= 0.80.1)
+  - hermes-engine/Pre-built (0.80.1)
   - libavif/core (0.11.1)
   - libavif/libdav1d (0.11.1):
     - libavif/core
@@ -1704,9 +1704,9 @@ PODS:
     - Yoga
   - react-native-launch-arguments (4.1.0):
     - React
-  - react-native-maps (1.24.3):
-    - react-native-maps/Maps (= 1.24.3)
-  - react-native-maps/Generated (1.24.3):
+  - react-native-maps (1.24.10):
+    - react-native-maps/Maps (= 1.24.10)
+  - react-native-maps/Generated (1.24.10):
     - boost
     - DoubleConversion
     - fast_float
@@ -1735,7 +1735,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-maps/Maps (1.24.3):
+  - react-native-maps/Maps (1.24.10):
     - boost
     - DoubleConversion
     - fast_float
@@ -3202,7 +3202,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 09f03e4b6f42f955734b64a118f86509cc719427
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
-  hermes-engine: 7068e976238b29e97b3bafd09a994542af7d5c0b
+  hermes-engine: 4f07404533b808de66cf48ac4200463068d0e95a
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
@@ -3242,7 +3242,7 @@ SPEC CHECKSUMS:
   react-native-config: 136f9755ccc991cc6438053a44363259ad4c7813
   react-native-geolocation: f01ad4718ad1d015d0c0dd12a6f707354022530e
   react-native-launch-arguments: 165260aba9544f00c66fae3e136b11484d0cb49b
-  react-native-maps: f5a8ba19f84c64f641d2fa745b769dbafdfb9e4e
+  react-native-maps: d46f43f62c0775b72875704d77ae901168427e03
   react-native-mmkv: 7fb4729ad5cb787a4394e6c4bd48e4b8ec30f25c
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 3bae4f8474c13ab141c40ed6c5c33f6177778d71
@@ -3281,7 +3281,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 9fcdc33916cf53976cb08797e32610eeadf2334c
   RNCMaskedView: 7e0ce15656772a939ff0d269100bca3a182163c8
   RNDefaultPreference: ee13d69e6693d193cd223d10e15e5b3c012d31ba
-  RNFastImage: 9b35c0d84cd51c3c486713824e5cc8b49a4f95bf
+  RNFastImage: 7bae5f092dd03f588e48fb3185107ea7a7f232cd
   RNGestureHandler: eeb622199ef1fb3a076243131095df1c797072f0
   RNLocalize: cdfd3dd801b3bfa41204f3872624965b82d38349
   RNPermissions: 8cd3d56a5a50d8755a829ef37a32482fed97b932
