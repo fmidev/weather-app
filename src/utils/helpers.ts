@@ -310,12 +310,14 @@ export const getParameterUnit = (
   }
 };
 
-export function formatAccessibleTemperature(
+export const formatAccessibleTemperature = (
   val: string | number | undefined | null,
-  t: (key: string) => string): string {
+  t: (key: string) => string): string  => {
   if (val === null || val === undefined || val === '') return '-';
-  const num = typeof val === 'number' ? val : Number(val);
+
+  const num = Number(val);
   if (isNaN(num)) return '-';
+
   const valuePart =
     num < 0 ? `${t('forecast:minus')} ${Math.abs(num)}` : `${num}`;
   return `${valuePart}`;
