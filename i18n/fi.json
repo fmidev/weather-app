@@ -99,6 +99,7 @@
     "today": "Tänään",
     "tomorrow": "Huomenna",
     "precipitationMissing": "Sademäärä puuttuu",
+    "minus": "miinus",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",

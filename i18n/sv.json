@@ -99,6 +99,7 @@
     "today": "Idag",
     "tomorrow": "Imorgon",
     "precipitationMissing": "Nederbörd saknas",
+    "minus": "minus",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",
