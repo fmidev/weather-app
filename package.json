@@ -21,7 +21,7 @@
     "server:watch": "cd mockserver && nodemon server.mjs"
   },
   "dependencies": {
-    "@d11/react-native-fast-image": "dream-sports-labs/react-native-fast-image#feat/react-native-80-support",
+    "@d11/react-native-fast-image": "^8.11.0",
     "@react-native-async-storage/async-storage": "^2.1.1",
     "@react-native-community/geolocation": "^3.4.0",
     "@react-native-community/netinfo": "^11.4.1",
@@ -49,7 +49,7 @@
     "react-native-launch-arguments": "^4.1.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-localize": "^3.4.1",
-    "react-native-maps": "^1.24.10",
+    "react-native-maps": "^1.25.0",
     "react-native-mmkv": "^3.3.0",
     "react-native-modal": "^14.0.0-rc.0",
     "react-native-permissions": "^4.1.5",

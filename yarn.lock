@@ -1069,9 +1069,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@d11/react-native-fast-image@dream-sports-labs/react-native-fast-image#feat/react-native-80-support":
-  version "8.10.0"
-  resolved "https://codeload.github.com/dream-sports-labs/react-native-fast-image/tar.gz/c58f59ae61db6f626096fe35bc36482e2cdd8199"
+"@d11/react-native-fast-image@^8.11.0":
+  version "8.11.0"
+  resolved "https://registry.yarnpkg.com/@d11/react-native-fast-image/-/react-native-fast-image-8.11.0.tgz#e865c54393ee16c3f6494548c6364055f5930e16"
+  integrity sha512-GNf3dGvJ79mM0tfyM6e7L601AFBtB13Y3DIDqJ5waBUQvXK6AIOfBGax56EtgixL8Pau5cyceVutcsg8geMSAQ==
 
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
@@ -7437,10 +7438,10 @@ react-native-localize@^3.4.1:
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-3.4.1.tgz#df07c13231b4e8cc949e68513b124105f861229c"
   integrity sha512-NJqJGBUpHtD/MpLCCkrNiqNZ+xFwbHCivxaoN1Oeb8tBAiZr/IqgP3E+MgnqmmdTMOJ33llUfiW3EM6pEIb33w==
 
-react-native-maps@^1.24.10:
-  version "1.24.10"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.24.10.tgz#e5d9b8e15e480bff89c1cb560a274e5f2a821c97"
-  integrity sha512-Gbx1K1+urx1cBT7tew2Xi4pd/hpKdzCZTg2ayeLj9e86Yt/sc8olEHaDOTg2klNuu9uf3qDXc98aml1mYbzy9g==
+react-native-maps@^1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.25.0.tgz#21be7312f6f17e8d1f5105ad90c87c1e46eb7234"
+  integrity sha512-VIOc2gAbRcr+ZArAX7mnY6TF1ouGMSDTDHF85Ibs8nf0BYoOfnwM6lTqNxmPHLRv4gDFTkJ4lUENp/A6iMHc0g==
   dependencies:
     "@types/geojson" "^7946.0.13"
 
