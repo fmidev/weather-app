@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { AutoComplete } from '@store/location/types';
 import { Config } from '@config';
 import i18n from '@i18n';
