@@ -14,7 +14,7 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
     keyword,
     lang: language,
     pattern,
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   // Cancel the previous request to avoid multiple queries running same time

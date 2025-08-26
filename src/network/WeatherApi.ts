@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { ForecastLocation, WeatherData } from '@store/forecast/types';
 import {
   ObservationLocation,
@@ -36,7 +37,7 @@ export const getForecast = async (
     attributes: 'geoid',
     lang: language,
     tz: 'utc',
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   const metaParams = [
@@ -130,7 +131,7 @@ export const getObservation = async (
     precision: 'double',
     lang: language,
     attributes: 'fmisid,stationname,stationtype,distance',
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   const dailyParams = {
@@ -161,7 +162,7 @@ export const getObservation = async (
     param: ['distance','epochtime','fmisid','name','geomagneticRIndex'].join(','),
     fmisid: nearestGeoMagneticStation?.fmisid,
     producer: geoMagneticObservations?.producer,
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
     format: 'json',
     lang: language,
     timestep: 'data',
@@ -213,7 +214,7 @@ const locationQueryParams = {
   timesteps: 1,
   attributes: 'geoid',
   format: 'json',
-  who: packageJSON.name,
+  who: `${packageJSON.name}-${Platform.OS}`,
 };
 
 export const getCurrentPosition = async (

@@ -141,7 +141,7 @@ const getTimeseriesData = async (
     lang: language,
     producer: layer.producer || 'default',
     attributes: 'lonlat,population,name',
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   const url = `${sources[layer.source]}/timeseries`;
@@ -209,7 +209,7 @@ const getWMSLayerUrlsAndBounds = async (
           service: 'WMS',
           request: 'GetCapabilities',
           layout: 'flat',
-          who: packageJSON.name,
+          who: `${packageJSON.name}-${Platform.OS}`,
           ...(src.includes('smartmet')
             ? {
                 namespace: `/${allLayerNames
