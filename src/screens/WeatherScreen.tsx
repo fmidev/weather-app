@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, ScrollView, StyleSheet, Platform, useWindowDimensions, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import {
+  View, ScrollView, StyleSheet, Platform, useWindowDimensions, NativeSyntheticEvent, NativeScrollEvent
+} from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';

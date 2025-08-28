@@ -72,8 +72,8 @@ export const getForecast = async (
     })
   );
 
-  // Aurora borealis is required for the forecast and therefore geomagnetic
-  // observations are fetched here
+  // Aurora borealis information is required for the forecast
+  // and therefore geomagnetic observations are fetched here
 
   let nearestGeoMagneticStation: GeoMagneticStation | undefined;
 
