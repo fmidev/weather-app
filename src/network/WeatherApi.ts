@@ -31,8 +31,10 @@ export const getForecast = async (
     return {forecasts: [], isAuroraBorealisLikely: false};
   }
 
+  const locationParam = location.geoid ? { geoid: location.geoid } : { latlon: location.latlon };
+
   const params = {
-    ...location,
+    ...locationParam,
     endtime: timePeriod,
     format: 'json',
     attributes: 'geoid',
@@ -124,16 +126,18 @@ export const getForecast = async (
     throw new Error('Forecast data retrieval failed');
   }
 
+  const forecasts = forecastData.map(({ data }) => data);
+
   if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
     && geoMagneticObservationData !== null && geoMagneticObservationData.data.length > 0) {
     const { data } = geoMagneticObservationData;
     return {
-      forecasts: forecastData,
+      forecasts,
       isAuroraBorealisLikely: isAuroraBorealisLikely(data[data.length - 1].geomagneticRIndex, nearestGeoMagneticStation),
     };
   }
 
-  return { forecasts: forecastData.map(({ data }) => data), isAuroraBorealisLikely: false };
+  return { forecasts, isAuroraBorealisLikely: false };
 };
 
 export const getObservation = async (

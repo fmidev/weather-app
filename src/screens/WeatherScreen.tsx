@@ -70,6 +70,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const [newsUpdated, setNewsUpdated] = useState<number>(Date.now());
   const [observationVisible, setObservationVisible] = useState(false);
   const observationRef = useRef<View>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
   const { shouldReload } = useReloader();
 
   const { weather: weatherConfig, warnings: warningsConfig, news: newsConfig } = Config.getAll();
@@ -82,9 +83,10 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   const updateForecast = useCallback(() => {
     const geoid = location.id;
-    const forecastLocation = geoid
-      ? { geoid }
-      : { latlon: `${location.lat},${location.lon}` };
+    const forecastLocation = {
+      geoid,
+      latlon: `${location.lat},${location.lon}`
+    }
 
     fetchForecast(forecastLocation, geoid ? [geoid] : [], location.country);
     setForecastUpdated(Date.now());
@@ -192,16 +194,16 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
      updateNews, resetObservations]);
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    console.log('handleScroll');
-    const scrollY = e.nativeEvent.contentOffset.y;
-    const screenHeight = e.nativeEvent.layoutMeasurement.height;
+    const viewportHeight = e.nativeEvent.layoutMeasurement.height;
 
-    observationRef.current?.measure((_x, _y, _width, height, _pageX, pageY) => {
-      const elementTop = pageY;
-      const elementBottom = pageY + height;
-      const inView = elementBottom > scrollY && elementTop < scrollY + screenHeight;
-      console.log(`Observation in view: ${inView}`);
-      setObservationVisible(inView);
+    //@ts-ignore
+    scrollViewRef.current?.measure((_sx, _sy, _sw, _svH, _spx, svPageY) => {
+      observationRef.current?.measure((_x, _y, _w, targetH, _px, targetPageY) => {
+        const elementTopInViewport = targetPageY - svPageY;
+        const elementBottomInViewport = elementTopInViewport + targetH;
+        const visible = elementBottomInViewport > 0 && elementTopInViewport < viewportHeight;
+        setObservationVisible(visible);
+      });
     });
   };
 
@@ -211,6 +213,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       <View testID="weather_view">
         <ScrollView
           testID="weather_scrollview"
+          ref={scrollViewRef}
           onScroll={handleScroll}
           style={[styles.container]}
           contentContainerStyle={styles.contentContainer}
@@ -235,7 +238,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
             </>
           }
           <SunAndMoonPanel />
-          <View ref={observationRef}>
+          <View ref={observationRef} collapsable={false}>
             <ObservationPanel />
           </View>
           <News />

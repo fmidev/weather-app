@@ -124,6 +124,7 @@ export default (
         ...state,
         data: INITIAL_STATE.data,
         dailyData: INITIAL_STATE.dailyData,
+        stations: INITIAL_STATE.stations,
         loading: INITIAL_STATE.loading,
         error: INITIAL_STATE.error,
       }
