@@ -115,8 +115,3 @@ export const selectPreferredDailyParameters = createSelector(
     return result;
   }
 );
-
-export const selectIsAuroraBorealisLikely = createSelector(
-  selectObservationDomain,
-  (observation) => observation.isAuroraBorealisLikely === true
-);

@@ -30,6 +30,11 @@ const selectData = createSelector(
   (forecast) => forecast.data
 );
 
+const selectAuroraBorealisData = createSelector(
+  selectForecastDomain,
+  (forecast) => forecast.auroraBorealisData
+);
+
 export const selectForecastAge = createSelector(
   selectForecastDomain,
   (forecast) => Date.now() - forecast.fetchSuccessTime
@@ -41,6 +46,8 @@ export const selectForecast = createSelector(
     const now = new Date();
     if (items) {
       const locationItems = items[!isNaN(geoid) ? geoid : 0];
+      // Add modtime handling
+
       // filter out outdated items
       const filtered = locationItems?.filter(
         (i) => i.epochtime * 1000 > now.getTime()
@@ -49,6 +56,13 @@ export const selectForecast = createSelector(
       return filtered || [];
     }
     return [];
+  }
+);
+
+export const selectIsAuroraBorealisLikely = createSelector(
+  [selectAuroraBorealisData, selectGeoid],
+  (items, geoid) => {
+    return items?.[geoid] || false
   }
 );
 

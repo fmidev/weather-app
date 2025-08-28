@@ -23,7 +23,10 @@ interface FetchForecast {
 
 interface FetchForecastSuccess {
   type: typeof FETCH_FORECAST_SUCCESS;
-  data: WeatherData[];
+  data: {
+    forecasts: WeatherData[],
+    isAuroraBorealisLikely: boolean
+  };
   favorites: number[];
   timestamp: number;
 }
@@ -104,6 +107,10 @@ export interface WeatherData {
   [geoid: string | number]: TimeStepData[];
 }
 
+export interface AuroraBorealisData {
+  [geoid: string | number]: boolean; // Is Aurora borealis likely
+}
+
 export interface Error {
   code: number;
   message: string;
@@ -111,6 +118,7 @@ export interface Error {
 
 export interface ForecastState {
   data: WeatherData | undefined;
+  auroraBorealisData: AuroraBorealisData | undefined;
   loading: boolean;
   error: boolean | Error | string;
   displayParams: [number, DisplayParameters][];

@@ -11,12 +11,12 @@ import {
   StationInfo,
   UPDATE_OBSERVATION_DISPLAY_FORMAT,
   UPDATE_OBSERVATION_CHART_PARAMETER,
+  RESET_OBSERVATION_STATE
 } from './types';
 
 const INITIAL_STATE: ObservationState = {
   data: {},
   dailyData: {},
-  isAuroraBorealisLikely: false,
   error: false,
   id: 0,
   loading: false,
@@ -93,7 +93,6 @@ export default (
     case FETCH_OBSERVATION_ERROR: {
       return {
         ...state,
-        isAuroraBorealisLikely: false, // If error happens, previous value might be incorrect and false is a safe default.
         loading: false,
         error: action.error,
       };
@@ -118,6 +117,16 @@ export default (
         ...state,
         chartDisplayParam: action.value,
       };
+    }
+
+    case RESET_OBSERVATION_STATE: {
+      return {
+        ...state,
+        data: INITIAL_STATE.data,
+        dailyData: INITIAL_STATE.dailyData,
+        loading: INITIAL_STATE.loading,
+        error: INITIAL_STATE.error,
+      }
     }
 
     default: {
