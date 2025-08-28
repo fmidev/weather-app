@@ -100,8 +100,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   ]);
 
   const updateObservation = useCallback(() => {
-    console.log('Updating observations');
-
     if (weatherConfig.observation.enabled) {
       const observationLocation = {
         geoid: location.id,

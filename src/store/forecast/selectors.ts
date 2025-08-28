@@ -9,6 +9,8 @@ import { State } from '../types';
 import { DisplayParameters, ForecastState, TimeStepData } from './types';
 import constants, { DAY_LENGTH } from './constants';
 
+const FORECAST_MAX_AGE = 24;
+
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
 
@@ -18,11 +20,6 @@ const selectHour: Selector<State> = () => new Date().getHours();
 export const selectLoading = createSelector(
   selectForecastDomain,
   (forecast) => forecast.loading
-);
-
-export const selectError = createSelector(
-  selectForecastDomain,
-  (forecast) => forecast.error
 );
 
 const selectData = createSelector(
@@ -46,7 +43,14 @@ export const selectForecast = createSelector(
     const now = new Date();
     if (items) {
       const locationItems = items[!isNaN(geoid) ? geoid : 0];
-      // Add modtime handling
+
+      if (!locationItems?.[0]?.modtime) return [];
+
+      const modtime = moment(locationItems?.[0]?.modtime+'Z');
+      const duration = moment.duration(moment().diff(modtime));
+      if (duration.asHours() > FORECAST_MAX_AGE) {
+        return [];
+      }
 
       // filter out outdated items
       const filtered = locationItems?.filter(
@@ -57,6 +61,11 @@ export const selectForecast = createSelector(
     }
     return [];
   }
+);
+
+export const selectError = createSelector(
+  [selectForecastDomain, selectForecast],
+  (forecast, data) => forecast.error || (forecast.loading === false && data.length === 0)
 );
 
 export const selectIsAuroraBorealisLikely = createSelector(

@@ -83,7 +83,11 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
 
   const tryUpdateForecast = useCallback(() => {
     const geoid = location.id;
-    fetchForecast({ geoid }, [geoid]);
+    const forecastLocation = {
+      geoid,
+      latlon: `${location.lat},${location.lon}`
+    }
+    fetchForecast(forecastLocation, [geoid], location.country);
   }, [fetchForecast, location]);
 
   const tryUpdateObservation = useCallback(() => {

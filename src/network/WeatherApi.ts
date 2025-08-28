@@ -120,12 +120,11 @@ export const getForecast = async (
     return [];
   });
 
-  const geoMagneticObservationData = geoMagneticObservationsEnabled && results[lastIndex].status === 'fulfilled' ? results[lastIndex].value : null;
-
   if (error) {
     throw new Error('Forecast data retrieval failed');
   }
 
+  const geoMagneticObservationData = geoMagneticObservationsEnabled && results[lastIndex].status === 'fulfilled' ? results[lastIndex].value : null;
   const forecasts = forecastData.map(({ data }) => data);
 
   if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
