@@ -17,6 +17,7 @@ import constants from './constants';
 
 const INITIAL_STATE: ForecastState = {
   data: {},
+  auroraBorealisData: {},
   loading: false,
   error: false,
   displayParams: [],
