@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { AutoComplete } from '@store/location/types';
 import { Config } from '@config';
 import i18n from '@i18n';
@@ -14,7 +15,7 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
     keyword,
     lang: language,
     pattern,
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   // Cancel the previous request to avoid multiple queries running same time
