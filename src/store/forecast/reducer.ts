@@ -77,7 +77,9 @@ export default (
     }
 
     case FETCH_FORECAST_SUCCESS: {
-      const geoid = Object.keys(action.data.forecasts[0])[0];
+      const geoid =
+        action.data?.forecasts?.[0] && Object.keys(action.data.forecasts[0]).length > 0
+          ? Object.keys(action.data.forecasts[0])[0] : 0;
       return {
         ...state,
         data: filterLocations(
