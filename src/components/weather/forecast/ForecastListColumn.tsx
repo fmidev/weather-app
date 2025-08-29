@@ -292,7 +292,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   style={[
                     styles.regularText,
                     { color: colors.hourListText },
-                  ]}>{ formattedValue }</Text>
+                  ]}>{formattedValue}</Text>
               </View>
             );
           }
