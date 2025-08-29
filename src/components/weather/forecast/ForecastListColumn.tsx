@@ -11,7 +11,7 @@ import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
-import { isOdd, getWindDirection } from '@utils/helpers';
+import { isOdd, getWindDirection, roundToNearestTen } from '@utils/helpers';
 import { Config } from '@config';
 import {
   converter,
@@ -262,6 +262,37 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     styles.regularText,
                     { color: colors.hourListText },
                   ]}>{`${convertedDewPoint}°`}</Text>
+              </View>
+            );
+          }
+
+          if (param === constants.PRECIPITATION_PROBABILITY) {
+            let formattedValue = '-';
+            if (data.pop !== null && data.pop !== undefined) {
+              if (data.pop < 10) formattedValue = '<10';
+              else if (data.pop > 90) formattedValue = '>90';
+              else formattedValue = roundToNearestTen(data.pop).toString();
+            }
+            return (
+              <View
+                key={`${param}-${i}`}
+                style={[
+                  styles.hourBlock,
+                  {
+                    backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                  },
+                ]}>
+                <Text
+                  accessibilityLabel={formattedValue === '-'
+                    ? t('forecast:popMissing')
+                    : t('forecast:params:pop', {
+                      value: formattedValue,
+                      unit: '%',
+                    })}
+                  style={[
+                    styles.regularText,
+                    { color: colors.hourListText },
+                  ]}>{ formattedValue }</Text>
               </View>
             );
           }
