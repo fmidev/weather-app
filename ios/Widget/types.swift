@@ -297,7 +297,7 @@ enum WarningType: Int, CustomStringConvertible, Codable {
   
   var description: String {
     switch self {
-      case .thunderstorm: return "thunderstorm"
+      case .thunderstorm: return "thunderStorm"
       case .forestFireWeather: return "forestFireWeather"
       case .grassFireWeather: return "grassFireWeather"
       case .wind: return "wind"
