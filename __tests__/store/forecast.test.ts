@@ -11,6 +11,7 @@ const defaultParameters = [
 
 const defaultState: types.ForecastState = {
   data: {},
+  auroraBorealisData: {},
   loading: false,
   error: false,
   displayParams: [],

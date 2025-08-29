@@ -17,11 +17,11 @@ import {
 } from './types';
 
 export const fetchForecast =
-  (location: ForecastLocation, filterLocations: number[] = []) =>
+  (location: ForecastLocation, filterLocations: number[] = [], country: string) =>
   (dispatch: Dispatch<ForecastActionTypes>) => {
     dispatch({ type: FETCH_FORECAST });
 
-    getForecast(location)
+    getForecast(location, country)
       .then((data) => {
         const geoid = Number(Object.keys(data)[0]);
         const favorites = [...filterLocations, geoid];
