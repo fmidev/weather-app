@@ -105,8 +105,7 @@ export const getForecast = async (
       : Promise.resolve({ data: {} }),
   );
 
-  const results = await Promise.allSettled(queries);
-  const lastIndex = results.length -1;
+  const lastIndex = results.length - 1;
   let error = false;
 
   const forecastData = results.flatMap((result, index) => {
