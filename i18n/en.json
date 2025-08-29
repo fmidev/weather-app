@@ -99,6 +99,7 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "precipitationMissing": "Precipitation amount missing",
+    "popMissing": "Precipitation probability missing",
     "minus": "minus",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",

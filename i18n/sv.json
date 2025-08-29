@@ -99,6 +99,7 @@
     "today": "Idag",
     "tomorrow": "Imorgon",
     "precipitationMissing": "Nederbörd saknas",
+    "popMissing": "Sannolikheten för nederbörd saknas",
     "minus": "minus",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",

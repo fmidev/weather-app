@@ -512,3 +512,8 @@ export const selectCapInfoByLanguage = (infos: Array<CapInfo>, language: string)
   }
   return infos[0];
 }
+
+export function roundToNearestTen(n: number): number {
+  const r = Math.round(n / 10) * 10;
+  return Object.is(r, -0) ? 0 : r; // normalize -0 -> 0
+}
