@@ -99,8 +99,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
-    let step = data[0];
-
+    const step = data[data.length - 1];
     const sunrise = moment(`${step.sunrise}Z`);
     const sunset = moment(`${step.sunset}Z`);
     const sunriseSunsetDiff = Math.abs(sunset.diff(sunrise, 'hours'));
