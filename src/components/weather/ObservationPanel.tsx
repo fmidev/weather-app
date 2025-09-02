@@ -170,6 +170,8 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const title = `${currentStation?.name || ''} – ${t(
     'distance'
   )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} ${t('unitAbbreviations:km')}`;
+  const observationsMissing = data.length === 0 && !loading;
+
   return (
     <View
       style={layout === 'fmi' ? [ styles.extraPadding, {
@@ -312,7 +314,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         </View>
       )}
 
-      {data.length === 0 && (
+      {observationsMissing && (
         <View style={styles.observationContainer}>
           <Text
             style={[styles.observationText, { color: colors.hourListText }]}>

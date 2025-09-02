@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { ForecastLocation, WeatherData } from '@store/forecast/types';
 import {
   ObservationLocation,
@@ -17,26 +18,30 @@ const isLocationValid = (
   location.latlon !== undefined;
 
 export const getForecast = async (
-  location: ForecastLocation
-): Promise<WeatherData[]> => {
+  location: ForecastLocation,
+  country: string
+): Promise<{forecasts: WeatherData[], isAuroraBorealisLikely: boolean}> => {
   const { language } = i18n;
   const {
     apiUrl,
     forecast: { timePeriod, data: dataSettings },
+    observation: { geoMagneticObservations }
   } = Config.get('weather');
 
   if (!isLocationValid(location)) {
-    return [];
+    return {forecasts: [], isAuroraBorealisLikely: false};
   }
 
+  const locationParam = location.geoid ? { geoid: location.geoid } : { latlon: location.latlon };
+
   const params = {
-    ...location,
+    ...locationParam,
     endtime: timePeriod,
     format: 'json',
     attributes: 'geoid',
     lang: language,
     tz: 'utc',
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   const metaParams = [
@@ -68,8 +73,74 @@ export const getForecast = async (
     })
   );
 
-  const promises = await Promise.all(queries);
-  return promises.map(({ data }) => data);
+  // Aurora borealis information is required for the forecast
+  // and therefore geomagnetic observations are fetched here
+
+  let nearestGeoMagneticStation: GeoMagneticStation | undefined;
+
+  const geoMagneticObservationsEnabled = geoMagneticObservations?.countryCodes.includes(country)
+                                          && location.latlon !== undefined
+                                          && geoMagneticObservations?.enabled === true;
+
+  if (geoMagneticObservationsEnabled && location.latlon) {
+    const [lat, lon] = location.latlon.split(',');
+    nearestGeoMagneticStation = findNearestGeoMagneticObservationStation(
+      parseFloat(lat),
+      parseFloat(lon)
+    );
+  }
+  const geoMagneticParams = {
+    starttime: '-1h',
+    param: ['distance','epochtime','fmisid','name','geomagneticRIndex'].join(','),
+    fmisid: nearestGeoMagneticStation?.fmisid,
+    producer: geoMagneticObservations?.producer,
+    who: packageJSON.name,
+    format: 'json',
+    lang: language,
+    timestep: 'data',
+  };
+
+  queries.push(
+    geoMagneticObservationsEnabled
+      ? axiosClient({ url: apiUrl, params: geoMagneticParams })
+      : Promise.resolve({ data: {} }),
+  );
+
+  const results = await Promise.allSettled(queries);
+
+  const lastIndex = results.length - 1;
+  let error = false;
+
+  const forecastData = results.flatMap((result, index) => {
+    if (index === lastIndex && geoMagneticObservationsEnabled) {
+      return [];
+    }
+    if (result.status === 'fulfilled') {
+      return result.value;
+    }
+    error = true;
+    return [];
+  });
+
+  if (error) {
+    throw new Error('Forecast data retrieval failed');
+  }
+
+  const geoMagneticResult = results[lastIndex];
+  const geoMagneticObservationData = geoMagneticObservationsEnabled && geoMagneticResult.status === 'fulfilled' ? geoMagneticResult.value : null;
+
+  const forecasts = forecastData.map(({ data }) => data);
+
+  if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
+    && geoMagneticObservationData !== null && geoMagneticObservationData.data.length > 0) {
+    const { data } = geoMagneticObservationData;
+    return {
+      forecasts,
+      isAuroraBorealisLikely: isAuroraBorealisLikely(data[data.length - 1].geomagneticRIndex, nearestGeoMagneticStation),
+    };
+  }
+
+  return { forecasts, isAuroraBorealisLikely: false };
 };
 
 export const getObservation = async (
@@ -86,7 +157,6 @@ export const getObservation = async (
       timePeriod,
       parameters,
       dailyParameters,
-      geoMagneticObservations,
     },
   } = Config.get('weather');
   const { language } = i18n;
@@ -105,10 +175,6 @@ export const getObservation = async (
   const dailyObservationsEnabled = dailyProducers?.includes(
     observationProducer as string
   );
-
-  const geoMagneticObservationsEnabled = geoMagneticObservations?.countryCodes.includes(country)
-                                          && location.latlon !== undefined
-                                          && geoMagneticObservations?.enabled === true;
 
   const locationParam = location.geoid ? { geoid: location.geoid } : { latlon: location.latlon };
 
@@ -130,7 +196,7 @@ export const getObservation = async (
     precision: 'double',
     lang: language,
     attributes: 'fmisid,stationname,stationtype,distance',
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   const dailyParams = {
@@ -146,54 +212,15 @@ export const getObservation = async (
     ].join(','),
   };
 
-  let nearestGeoMagneticStation: GeoMagneticStation | undefined;
-
-  if (geoMagneticObservationsEnabled && location.latlon) {
-    const [lat, lon] = location.latlon.split(',');
-    nearestGeoMagneticStation = findNearestGeoMagneticObservationStation(
-      parseFloat(lat),
-      parseFloat(lon)
-    );
-  }
-
-  const geoMagneticParams = {
-    starttime: '-1h',
-    param: ['distance','epochtime','fmisid','name','geomagneticRIndex'].join(','),
-    fmisid: nearestGeoMagneticStation?.fmisid,
-    producer: geoMagneticObservations?.producer,
-    who: packageJSON.name,
-    format: 'json',
-    lang: language,
-    timestep: 'data',
-  };
-
-  const results = await Promise.allSettled([
+  const [observationData, dailyObservationData] = await Promise.all([
     axiosClient({ url: apiUrl, params: hourlyParams }),
     dailyObservationsEnabled
       ? axiosClient({ url: apiUrl, params: dailyParams })
       : Promise.resolve({ data: {} }),
-    geoMagneticObservationsEnabled
-      ? axiosClient({ url: apiUrl, params: geoMagneticParams })
-      : Promise.resolve({ data: {} }),
   ]);
 
-  const observationData = results[0].status === 'fulfilled' ? results[0].value : null;
-  const dailyObservationData = results[1].status === 'fulfilled' ? results[1].value : null;
-  const geoMagneticObservationData = results[2].status === 'fulfilled' ? results[2].value : null;
-
-  // geomagnetic observations can fail silently
   if (observationData === null || dailyObservationData === null) {
     throw new Error('Observation data retrieval failed');
-  }
-
-  if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
-    && geoMagneticObservationData !== null && geoMagneticObservationData.data.length > 0) {
-    const { data } = geoMagneticObservationData;
-    return [
-      observationData.data,
-      dailyObservationData.data,
-      isAuroraBorealisLikely(data[data.length - 1].geomagneticRIndex, nearestGeoMagneticStation),
-    ];
   }
 
   return [observationData.data, dailyObservationData.data];
@@ -213,7 +240,7 @@ const locationQueryParams = {
   timesteps: 1,
   attributes: 'geoid',
   format: 'json',
-  who: packageJSON.name,
+  who: `${packageJSON.name}-${Platform.OS}`,
 };
 
 export const getCurrentPosition = async (

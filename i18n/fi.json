@@ -99,6 +99,8 @@
     "today": "Tänään",
     "tomorrow": "Huomenna",
     "precipitationMissing": "Sademäärä puuttuu",
+    "popMissing": "Sateen todennäköisyys puuttuu",
+    "minus": "miinus",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
@@ -246,6 +248,7 @@
       "km/h": "kilometriä tunnissa",
       "mph": "mailia tunnissa",
       "bft": "boforia",
+      "kn": "solmua",
       "hPa": "hehtopascalia",
       "mbar": "millibaaria",
       "mmHg": "elohopeamillimetriä",

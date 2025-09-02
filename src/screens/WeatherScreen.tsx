@@ -1,6 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, ScrollView, StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import {
+  View, ScrollView, StyleSheet, Platform, useWindowDimensions, NativeSyntheticEvent, NativeScrollEvent
+} from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
@@ -9,6 +11,7 @@ import { selectAnnouncements } from '@store/announcements/selectors';
 
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
+import { resetObservations as resetObservationsAction } from '@store/observation/actions';
 import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
 import { fetchMeteorologistSnapshot as fetchMeteorologistSnapshotAction } from '@store/meteorologist/actions';
 import { fetchNews as fetchNewsAction } from '@store/news/actions';
@@ -40,6 +43,7 @@ const mapDispatchToProps = {
   fetchWarnings: fetchWarningsAction,
   fetchMeteorologistSnapshot: fetchMeteorologistSnapshotAction,
   fetchNews: fetchNewsAction,
+  resetObservations: resetObservationsAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -54,6 +58,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   fetchWarnings,
   fetchMeteorologistSnapshot,
   fetchNews,
+  resetObservations,
   location,
   announcements,
 }) => {
@@ -61,10 +66,13 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const isFocused = useIsFocused();
   const { width} = useWindowDimensions();
   const [forecastUpdated, setForecastUpdated] = useState<number>(Date.now());
-  const [observationUpdated, setObservationUpdated] = useState<number>(Date.now());
+  const [observationUpdated, setObservationUpdated] = useState<number>(0);
   const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
   const [meteorologistUpdated, setMeteorologistUpdated] = useState<number>(Date.now());
   const [newsUpdated, setNewsUpdated] = useState<number>(Date.now());
+  const [observationVisible, setObservationVisible] = useState(false);
+  const observationRef = useRef<View>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
   const { shouldReload } = useReloader();
 
   const { weather: weatherConfig, warnings: warningsConfig, news: newsConfig } = Config.getAll();
@@ -77,18 +85,19 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   const updateForecast = useCallback(() => {
     const geoid = location.id;
-    const forecastLocation = geoid
-      ? { geoid }
-      : { latlon: `${location.lat},${location.lon}` };
+    const forecastLocation = {
+      geoid,
+      latlon: `${location.lat},${location.lon}`
+    }
 
-    fetchForecast(forecastLocation, geoid ? [geoid] : []);
+    fetchForecast(forecastLocation, geoid ? [geoid] : [], location.country);
     setForecastUpdated(Date.now());
-    // Using location.lat and location.lon instead of location saves some updates
   }, [
     fetchForecast,
     location.id,
     location.lat,
     location.lon,
+    location.country,
     setForecastUpdated,
   ]);
 
@@ -148,11 +157,16 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     const newsUpdateTime =
       newsUpdated + (newsConfig.updateInterval ?? 30) * 60 * 1000;
 
+    const lazyLoadObservations = weatherConfig.layout === 'fmi'
+                                  && (weatherConfig.observation.lazyLoad === true
+                                    || weatherConfig.observation.lazyLoad === undefined);
+
     if (isFocused) {
       if (now > forecastUpdateTime || shouldReload > forecastUpdateTime) {
         updateForecast();
       }
-      if (now > observationUpdateTime || shouldReload > observationUpdateTime) {
+      if ((!lazyLoadObservations || observationVisible) &&
+        (now > observationUpdateTime || shouldReload > observationUpdateTime)) {
         updateObservation();
       }
       if (now > warningsUpdateTime || shouldReload > warningsUpdateTime) {
@@ -167,17 +181,31 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     }
   }, [isFocused, forecastUpdated, observationUpdated, warningsUpdated, meteorologistUpdated,
     shouldReload, weatherConfig, warningsConfig, updateForecast, updateObservation, updateWarnings,
-    updateMeteorologistSnapshot, newsUpdated, newsConfig.updateInterval, updateNews]);
+    updateMeteorologistSnapshot, newsUpdated, newsConfig.updateInterval, updateNews, observationVisible]);
 
   useEffect(() => {
+    setObservationUpdated(0);
+    resetObservations();
     updateForecast();
-    updateObservation();
     updateWarnings();
     updateMeteorologistSnapshot();
     updateNews();
-  }, [
-    location, updateForecast, updateObservation, updateWarnings, updateMeteorologistSnapshot, updateNews
-  ]);
+  }, [location, updateForecast, updateObservation, updateWarnings, updateMeteorologistSnapshot,
+     updateNews, resetObservations]);
+
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const viewportHeight = e.nativeEvent.layoutMeasurement.height;
+
+    //@ts-ignore
+    scrollViewRef.current?.measure((_sx, _sy, _sw, _svH, _spx, svPageY) => {
+      observationRef.current?.measure((_x, _y, _w, targetH, _px, targetPageY) => {
+        const elementTopInViewport = targetPageY - svPageY;
+        const elementBottomInViewport = elementTopInViewport + targetH;
+        const visible = elementBottomInViewport > 0 && elementTopInViewport < viewportHeight;
+        setObservationVisible(visible);
+      });
+    });
+  };
 
   const currentHour = new Date().getHours();
 
@@ -185,6 +213,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       <View testID="weather_view">
         <ScrollView
           testID="weather_scrollview"
+          ref={scrollViewRef}
+          onScroll={handleScroll}
           style={[styles.container]}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
@@ -208,7 +238,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
             </>
           }
           <SunAndMoonPanel />
-          <ObservationPanel />
+          <View ref={observationRef} collapsable={false}>
+            <ObservationPanel />
+          </View>
           <News />
         </ScrollView>
       </View>

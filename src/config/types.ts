@@ -82,6 +82,7 @@ interface Observation {
   parameters: (keyof ObservationParameters)[];
   dailyParameters?: (keyof DailyObservationParameters)[];
   geoMagneticObservations?: GeoMagneticObservations;
+  lazyLoad?: boolean;
 }
 
 interface ObservationEnabled extends Observation {

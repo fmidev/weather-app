@@ -310,6 +310,19 @@ export const getParameterUnit = (
   }
 };
 
+export const formatAccessibleTemperature = (
+  val: string | number | undefined | null,
+  t: (key: string) => string): string  => {
+  if (val === null || val === undefined || val === '') return '-';
+
+  const num = Number(val);
+  if (isNaN(num)) return '-';
+
+  const valuePart =
+    num < 0 ? `${t('forecast:minus')} ${Math.abs(num)}` : `${num}`;
+  return `${valuePart}`;
+}
+
 // https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
 const getEaster = (year: number): Date => {
   const f = Math.floor;
@@ -498,4 +511,9 @@ export const selectCapInfoByLanguage = (infos: Array<CapInfo>, language: string)
     return info
   }
   return infos[0];
+}
+
+export function roundToNearestTen(n: number): number {
+  const r = Math.round(n / 10) * 10;
+  return Object.is(r, -0) ? 0 : r; // normalize -0 -> 0
 }

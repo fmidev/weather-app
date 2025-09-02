@@ -139,7 +139,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             styles.bold,
             { color: colors.primaryText },
           ]}>{`${t('at')} ${currentTime.format(
-          clockType === 12 ? 'h.mm a' : 'HH.mm'
+          clockType === 12 ? 'h.mm a' : 'HH:mm'
         )}`}</Text>
       </View>
       <View style={styles.row}>

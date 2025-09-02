@@ -99,6 +99,8 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "precipitationMissing": "Precipitation amount missing",
+    "popMissing": "Precipitation probability missing",
+    "minus": "minus",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",
       "feelsLike": "feels like: {{ value }} {{ unit }}.",
@@ -246,6 +248,7 @@
       "km/h": "kilometers per hour",
       "mph": "miles per hour",
       "bft": "beaufort",
+      "kn" : "knots",
       "hPa": "hectopascal",
       "mbar": "millibars",
       "mmHg": "millimeters of mercury",

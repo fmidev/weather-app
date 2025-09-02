@@ -270,6 +270,7 @@ const SettingsScreen: React.FC<Props> = ({
                       </Text>
                       <Text
                         style={[styles.text, { color: colors.text }]}
+                        accessibilityLabel={t(`observation:paramUnits.${key==='temperature' ? '°' : ''}${units[key].unitAbb}`)}
                         testID={`${key}_unitAbb`}>
                         {key === 'temperature' ? '°' : ''}
                         {t(`unitAbbreviations:${units[key].unitAbb}`)}
@@ -319,6 +320,7 @@ const SettingsScreen: React.FC<Props> = ({
                                 testID={`settings_units_${key}_${type.unit}`}>
                                 <View style={styles.row}>
                                   <Text
+                                    accessibilityLabel={t(`observation:paramUnits.${key==='temperature' ? '°' : ''}${type.unitAbb}`)}
                                     style={[
                                       styles.text,
                                       { color: colors.text },

@@ -68,7 +68,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     const theme = dark ? 'dark' : 'light';
     return `${url}&styles=${
       typeof styles === 'string' ? styles : styles[theme]
-    }&time=${timestamp}&who=${packageJSON.name}`;
+    }&time=${timestamp}&who=${packageJSON.name}-${Platform.OS}`;
   };
 
   const borderTimeComparer = (time: string): boolean => {

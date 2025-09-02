@@ -17,6 +17,7 @@ import constants from './constants';
 
 const INITIAL_STATE: ForecastState = {
   data: {},
+  auroraBorealisData: {},
   loading: false,
   error: false,
   displayParams: [],
@@ -76,12 +77,19 @@ export default (
     }
 
     case FETCH_FORECAST_SUCCESS: {
+      const geoid =
+        action.data?.forecasts?.[0] && Object.keys(action.data.forecasts[0]).length > 0
+          ? Object.keys(action.data.forecasts[0])[0] : 0;
       return {
         ...state,
         data: filterLocations(
-          { ...state.data, ...formatData(action.data) },
+          { ...state.data, ...formatData(action.data.forecasts) },
           action.favorites
         ),
+        auroraBorealisData: {
+          ...state.auroraBorealisData,
+          [geoid]: action.data.isAuroraBorealisLikely
+        },
         fetchTimestamp: action.timestamp,
         fetchSuccessTime: action.timestamp,
         loading: false,
