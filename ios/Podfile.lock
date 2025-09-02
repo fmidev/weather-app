@@ -1704,9 +1704,9 @@ PODS:
     - Yoga
   - react-native-launch-arguments (4.1.0):
     - React
-  - react-native-maps (1.25.0):
-    - react-native-maps/Maps (= 1.25.0)
-  - react-native-maps/Generated (1.25.0):
+  - react-native-maps (1.26.0):
+    - react-native-maps/Maps (= 1.26.0)
+  - react-native-maps/Generated (1.26.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -1735,7 +1735,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-maps/Maps (1.25.0):
+  - react-native-maps/Maps (1.26.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2870,9 +2870,9 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - SDWebImage (5.21.1):
-    - SDWebImage/Core (= 5.21.1)
-  - SDWebImage/Core (5.21.1)
+  - SDWebImage (5.21.2):
+    - SDWebImage/Core (= 5.21.2)
+  - SDWebImage/Core (5.21.2)
   - SDWebImageAVIFCoder (0.11.0):
     - libavif/core (>= 0.11.0)
     - SDWebImage (~> 5.10)
@@ -3242,7 +3242,7 @@ SPEC CHECKSUMS:
   react-native-config: 136f9755ccc991cc6438053a44363259ad4c7813
   react-native-geolocation: f01ad4718ad1d015d0c0dd12a6f707354022530e
   react-native-launch-arguments: 165260aba9544f00c66fae3e136b11484d0cb49b
-  react-native-maps: 384c84f5eca41791c49746f1fa62e8213f59c2de
+  react-native-maps: 3abff614dbab65fe1ae5818f079393973dde1b98
   react-native-mmkv: 7fb4729ad5cb787a4394e6c4bd48e4b8ec30f25c
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 68d1363b8354472a961aa6861ba8451beaf9a810
@@ -3290,7 +3290,7 @@ SPEC CHECKSUMS:
   RNScreens: c63849403489bd068ea160f276fbc8416f19f2f7
   RNSVG: 341f555dbcd83a34d1f058e88df387de7bbc3347
   RNVectorIcons: ef9b4b0b786053ebdd63ee2972f48de9633ba166
-  SDWebImage: f29024626962457f3470184232766516dee8dfea
+  SDWebImage: 9f177d83116802728e122410fb25ad88f5c7608a
   SDWebImageAVIFCoder: 00310d246aab3232ce77f1d8f0076f8c4b021d90
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748

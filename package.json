@@ -49,7 +49,7 @@
     "react-native-launch-arguments": "^4.1.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-localize": "^3.4.1",
-    "react-native-maps": "^1.25.0",
+    "react-native-maps": "^1.26.0",
     "react-native-mmkv": "^3.3.0",
     "react-native-modal": "^14.0.0-rc.0",
     "react-native-permissions": "^4.1.5",
