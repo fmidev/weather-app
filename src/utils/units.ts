@@ -53,7 +53,7 @@ export const UNITS: Unit[] = [
   },
   {
     parameterName: 'wind',
-    parameters: ['windSpeedMS', 'hourlymaximumgust'],
+    parameters: ['windSpeedMS', 'hourlymaximumgust', 'windGust'],
     unitTypes: [
       {
         unitId: 1,
