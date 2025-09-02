@@ -128,10 +128,6 @@ platform :ios do
    # Update signing settings and build iOS app for release
    desc "Build the iOS app for release"
     lane :build_release do |options|
-    xcodes(
-      version: '16',
-      select_for_current_build_only: true,
-    )
     app_identifier = ENV["IOS_APP_IDENTIFIER"]
     widget_identifier = ENV["IOS_WIDGET_IDENTIFIER"]
     settings_identifier = ENV["IOS_SETTINGS_IDENTIFIER"]
