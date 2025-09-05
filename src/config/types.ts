@@ -236,7 +236,7 @@ export interface ConfigType {
   };
   weather: {
     apiUrl: string;
-    layout?: 'default' | 'fmi';
+    layout?: 'default' | 'fmi' | 'legacyWithoutBackgroundColor';
     forecast: {
       ageWarning?: number;
       updateInterval: number;
