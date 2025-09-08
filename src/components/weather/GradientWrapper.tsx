@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from '@react-navigation/native';
+import { Config } from '@config';
 
 import { State } from '@store/types';
 import {
@@ -39,6 +40,11 @@ const GradientWrapper: React.FC<GradientWrapperProps> = ({
   nextHourForecast,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
+  const weatherConfig = Config.get('weather');
+
+  if (weatherConfig.layout === 'legacyWithoutBackgroundColor') {
+    return <>{children}</>;
+  }
 
   const colorsDark = [colors.background, colors.background];
 
