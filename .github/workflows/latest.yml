@@ -163,22 +163,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Release to get static url for apk
-      - name: Prepare empty release (allowed to fail)
-        uses: softprops/action-gh-release@v2
+      # Create release to get static url for latest build
+      - name: Upload GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: latest
+          tag: latest
+          name: Latest Release
+          artifacts: android/app/build/outputs/apk/latest/app-latest.apk
           token: ${{ secrets.GITHUB_TOKEN }}
-          draft: false
+          allowUpdates: true
+          replacesArtifacts: true
           prerelease: true
-        continue-on-error: true
-
-      - name: Actual release update
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          files: android/app/build/outputs/apk/latest/app-latest.apk
-          token: ${{ secrets.GITHUB_TOKEN }}
-          draft: false
-          prerelease: true
-          overwrite_files: true
