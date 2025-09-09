@@ -65,7 +65,6 @@ jobs:
     runs-on: ubuntu-latest
     # Node version matrix
     strategy:
-        max-parallel: 1
         matrix:
           node-version: [20.11.1]
     # Steps
@@ -165,11 +164,21 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Release to get static url for apk
-      - name: Update release
+      - name: Prepare empty release (allowed to fail)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          files: ${{ github.workspace }}/android/app/build/outputs/apk/latest/app-latest.apk
           token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: true
           draft: false
+          prerelease: true
+        continue-on-error: true
+
+      - name: Actual release update
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          files: android/app/build/outputs/apk/latest/app-latest.apk
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: true
+          overwrite_files: true
