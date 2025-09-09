@@ -65,6 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     # Node version matrix
     strategy:
+        max-parallel: 1
         matrix:
           node-version: [20.11.1]
     # Steps
