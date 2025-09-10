@@ -1,6 +1,5 @@
 import { Selector, createSelector } from 'reselect';
 import moment from 'moment';
-import 'moment/locale/fi';
 
 import { selectGeoid } from '@store/location/selector';
 import { Config } from '@config';
