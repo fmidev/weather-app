@@ -4,10 +4,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import moment from 'moment';
-import 'moment/locale/fi';
-import 'moment/locale/sv';
-import 'moment/locale/en-gb';
-import 'moment/locale/es';
 import { useTranslation } from 'react-i18next';
 
 import { State } from '@store/types';

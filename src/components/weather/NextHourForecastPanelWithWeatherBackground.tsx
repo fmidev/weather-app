@@ -7,10 +7,6 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import moment from 'moment-timezone';
-import 'moment/locale/fi';
-import 'moment/locale/sv';
-import 'moment/locale/en-gb';
-import 'moment/locale/es';
 import { useTranslation } from 'react-i18next';
 
 import { State } from '@store/types';
