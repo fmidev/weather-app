@@ -219,6 +219,12 @@ interface MeteorologistSnapshotConfig {
   updateInterval: number;
 }
 
+interface Analytics {
+  enabled: boolean;
+  siteId?: Record<string, number>; // string is language. "fi" for example
+  url?: string; // matomo server url
+}
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
@@ -277,4 +283,5 @@ export interface ConfigType {
   unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
   onboardingWizard: OnboardingWizard;
   feedback?: Feedback;
+  analytics?: Analytics;
 }
