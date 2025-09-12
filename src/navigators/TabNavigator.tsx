@@ -225,13 +225,16 @@ const Navigator: React.FC<Props> = ({
         accessibilityHint={t('navigation:locateAccessibilityLabel')}
         icon="locate"
         onPress={() => {
-          trackMatomoEvent('User action', 'Geolocation', 'Header button');
+          trackMatomoEvent('User action', 'Map', 'Geolocation');
           getGeolocation(setCurrentLocation, t);
         }}
       />
     ),
     headerTitle: () => (
-      <CommonHeaderTitle onPress={() => navigation.navigate('Search')} />
+      <CommonHeaderTitle onPress={() => {
+        trackMatomoEvent('User action', 'Map', 'Open search - location');
+        navigation.navigate('Search');
+      }} />
     ),
     headerRight: () => (
       <HeaderButton
@@ -240,7 +243,10 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel={t('navigation:search')}
         accessibilityHint={t('navigation:searchAccessibilityLabel')}
         icon="search"
-        onPress={() => navigation.navigate('Search')}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Map', 'Open search - button');
+          navigation.navigate('Search');
+        }}
         right
       />
     ),

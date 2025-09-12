@@ -168,14 +168,17 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             iconColor={textColor}
             backgroundColor={overlayColor}
             onPress={() => {
-              trackMatomoEvent('User action', 'Geolocation', 'Next hour button');
+              trackMatomoEvent('User action', 'Weather', 'Geolocation');
               getGeolocation(setCurrentLocation, t);
             }}
             circular
           />
           <View style={styles.locationTextContainer}>
             <AccessibleTouchableOpacity
-              onPress={() => { navigation.navigate('Search') }}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Weather', 'Open search - location');
+                navigation.navigate('Search');
+              }}
               accessibilityRole="button"
               accessibilityLabel={`${location.name}${location.area ? `, ${location.area}` : ''}, ${t('navigation:search')}`}
             >
@@ -198,6 +201,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             iconColor={textColor}
             backgroundColor={overlayColor}
             onPress={() => {
+              trackMatomoEvent('User action', 'Weather', 'Open search - button');
               navigation.navigate('Search')
             }}
             circular
