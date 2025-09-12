@@ -29,6 +29,31 @@ PODS:
   - libwebp/sharpyuv (1.5.0)
   - libwebp/webp (1.5.0):
     - libwebp/sharpyuv
+  - logicwind-react-native-matomo-tracker (0.3.12):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - MatomoTracker
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - MatomoTracker (7.7.0):
+    - MatomoTracker/Core (= 7.7.0)
+  - MatomoTracker/Core (7.7.0)
   - MMKV (2.2.3):
     - MMKVCore (~> 2.2.3)
   - MMKVCore (2.2.3)
@@ -1846,6 +1871,7 @@ DEPENDENCIES:
   - fmt (from `../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
+  - "logicwind-react-native-matomo-tracker (from `../node_modules/@logicwind/react-native-matomo-tracker`)"
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -1935,6 +1961,7 @@ SPEC REPOS:
     - libavif
     - libdav1d
     - libwebp
+    - MatomoTracker
     - MMKV
     - MMKVCore
     - SDWebImage
@@ -1964,6 +1991,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2024-11-25-RNv0.77.0-d4f25d534ab744866448b36ca3bf3d97c08e638c
+  logicwind-react-native-matomo-tracker:
+    :path: "../node_modules/@logicwind/react-native-matomo-tracker"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -2142,6 +2171,8 @@ SPEC CHECKSUMS:
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
+  logicwind-react-native-matomo-tracker: 377f08781322c871fe6f6314b0f74d649af27f5c
+  MatomoTracker: 0cba5ef15cfa1fc84b26a8635590cc9d4bfa5494
   MMKV: 941e8774da0e6fdf12c6b3fcc833ca687ae5a42d
   MMKVCore: 6d5cc1bacce539f4c974985dfe646fb65a5d27d2
   RCT-Folly: 36fe2295e44b10d831836cc0d1daec5f8abcf809

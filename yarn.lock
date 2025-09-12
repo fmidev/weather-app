@@ -1432,6 +1432,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@logicwind/react-native-matomo-tracker@^0.3.12":
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/@logicwind/react-native-matomo-tracker/-/react-native-matomo-tracker-0.3.12.tgz#1280d32fc0185d27c92cdd34e760e39fb665fa39"
+  integrity sha512-EtTUqaMmnC8PQp6q+k/Ks/JdI2TUwmOqUeO5mrvQoEg0mDAcdhVkeAzO9jvyyA2wpJkXxOO5qjHnRiEjbNYHTQ==
+
 "@motionone/animation@^10.12.0":
   version "10.18.0"
   resolved "https://registry.yarnpkg.com/@motionone/animation/-/animation-10.18.0.tgz#868d00b447191816d5d5cf24b1cafa144017922b"

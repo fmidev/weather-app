@@ -21,6 +21,7 @@ import { CapInfo, CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from '../assets/colors';
 import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
+import { trackMatomoEvent } from './matomo';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -84,6 +85,7 @@ const alertNoPermission = (t: TFunction<string[] | string>) =>
 export const getGeolocation = async (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>,
+  lang: string,
   failSilently?: boolean
 ) => {
   Geolocation.setRNConfiguration({
@@ -103,9 +105,11 @@ export const getGeolocation = async (
   const values = Object.values(results);
 
   if (values.some((value) => value === RESULTS.GRANTED)) {
+    trackMatomoEvent('Geolocation', 'Click', 'OK', lang);
     return getPosition(callback, t);
   }
   if (!failSilently && values.every((value) => value === RESULTS.DENIED)) {
+    trackMatomoEvent('Geolocation', 'Click', 'Denied', lang);
     const permission =
       Platform.OS === 'ios'
         ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
@@ -122,6 +126,7 @@ export const getGeolocation = async (
       .catch((e) => console.error(e));
   }
   if (!failSilently && values.every((value) => value === RESULTS.BLOCKED)) {
+    trackMatomoEvent('Geolocation', 'Click', 'Blocked', lang);
     alertNoPermission(t);
   }
   return {};

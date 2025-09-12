@@ -225,6 +225,12 @@ interface Analytics {
   url?: string; // matomo server url
 }
 
+// TODO: how to handle errors. Add error categories to "actions" and then name -field can be error message content
+// for example: trackMatomoEvent('Error', 'Error loading forecast data', error.getMessage())
+// Events in Matomo have three dimension (category, action, name).
+export type AnalyticCategories = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Settings' | 'Error' | 'Navigation' | 'Geolocation';
+export type AnalyticActions = 'Click' | 'Swipe' | 'Visible' | 'Dropdown' | 'Graph' | 'Link';
+
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {

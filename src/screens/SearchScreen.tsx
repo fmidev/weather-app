@@ -47,6 +47,7 @@ import IconButton from '@components/common/IconButton';
 
 import { getGeolocation } from '@utils/helpers';
 import { CustomTheme } from '@assets/colors';
+import i18n from '@i18n';
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
@@ -219,7 +220,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             accessible
             accessibilityRole="button"
             onAccessibilityTap={() => {
-              getGeolocation(setCurrentLocation, t);
+              getGeolocation(setCurrentLocation, t, i18n.language);
               navigation.goBack();
             }}>
             <Text style={[styles.title, { color: colors.text }]}>
@@ -231,7 +232,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               iconColor={colors.text}
               backgroundColor={colors.inputBackground}
               onPress={() => {
-                getGeolocation(setCurrentLocation, t);
+                getGeolocation(setCurrentLocation, t, i18n.language);
                 navigation.goBack();
               }}
             />

@@ -79,6 +79,7 @@ import {
   LaunchArgs,
 } from './types';
 import WarningsTabIcon from './WarningsTabIcon';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
@@ -147,7 +148,7 @@ const Navigator: React.FC<Props> = ({
 
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
-      getGeolocation(setCurrentLocation, t, true);
+      getGeolocation(setCurrentLocation, t, i18n.language, true);
       fetchAnnouncements();
     }
   }, [
@@ -156,12 +157,14 @@ const Navigator: React.FC<Props> = ({
     t,
     didChangeLanguage,
     fetchAnnouncements,
+    i18n.language,
   ]);
 
 
   const navigationTabChanged = (state: NavigationState | undefined) => {
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
     if (Number.isInteger(NavigationTabValues[navigationTab])) {
+      trackMatomoEvent('Navigation', 'Click', navigationTab, 'fi');
       setNavigationTab(navigationTab);
     }
   };
@@ -222,7 +225,7 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel={t('navigation:locate')}
         accessibilityHint={t('navigation:locateAccessibilityLabel')}
         icon="locate"
-        onPress={() => getGeolocation(setCurrentLocation, t)}
+        onPress={() => getGeolocation(setCurrentLocation, t, i18n.language)}
       />
     ),
     headerTitle: () => (
