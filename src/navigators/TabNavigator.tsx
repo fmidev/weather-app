@@ -148,7 +148,8 @@ const Navigator: React.FC<Props> = ({
 
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
-      getGeolocation(setCurrentLocation, t, i18n.language, true);
+      trackMatomoEvent('Init', 'Geolocation', 'Launch app');
+      getGeolocation(setCurrentLocation, t, true);
       fetchAnnouncements();
     }
   }, [
@@ -157,14 +158,12 @@ const Navigator: React.FC<Props> = ({
     t,
     didChangeLanguage,
     fetchAnnouncements,
-    i18n.language,
   ]);
 
 
   const navigationTabChanged = (state: NavigationState | undefined) => {
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
     if (Number.isInteger(NavigationTabValues[navigationTab])) {
-      trackMatomoEvent('Navigation', 'Click', navigationTab, 'fi');
       setNavigationTab(navigationTab);
     }
   };
@@ -225,7 +224,10 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel={t('navigation:locate')}
         accessibilityHint={t('navigation:locateAccessibilityLabel')}
         icon="locate"
-        onPress={() => getGeolocation(setCurrentLocation, t, i18n.language)}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Geolocation', 'Header button');
+          getGeolocation(setCurrentLocation, t);
+        }}
       />
     ),
     headerTitle: () => (

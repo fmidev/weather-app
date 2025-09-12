@@ -40,7 +40,7 @@ import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import NextHourForecastBar from './forecast/NextHourForecastBar';
-import i18n from '@i18n';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -168,7 +168,8 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             iconColor={textColor}
             backgroundColor={overlayColor}
             onPress={() => {
-              getGeolocation(setCurrentLocation, t, i18n.language);
+              trackMatomoEvent('User action', 'Geolocation', 'Next hour button');
+              getGeolocation(setCurrentLocation, t);
             }}
             circular
           />

@@ -85,7 +85,6 @@ const alertNoPermission = (t: TFunction<string[] | string>) =>
 export const getGeolocation = async (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>,
-  lang: string,
   failSilently?: boolean
 ) => {
   Geolocation.setRNConfiguration({
@@ -105,11 +104,9 @@ export const getGeolocation = async (
   const values = Object.values(results);
 
   if (values.some((value) => value === RESULTS.GRANTED)) {
-    trackMatomoEvent('Geolocation', 'Click', 'OK', lang);
     return getPosition(callback, t);
   }
   if (!failSilently && values.every((value) => value === RESULTS.DENIED)) {
-    trackMatomoEvent('Geolocation', 'Click', 'Denied', lang);
     const permission =
       Platform.OS === 'ios'
         ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
@@ -117,16 +114,22 @@ export const getGeolocation = async (
     request(permission)
       .then((res) => {
         if (res === RESULTS.GRANTED) {
+          trackMatomoEvent('Notice', 'Geolocation', 'COARSE_LOCATION_OK');
           getPosition(callback, t);
         }
         if (res === RESULTS.BLOCKED) {
+          trackMatomoEvent('Notice', 'Geolocation', 'COARSE_LOCATION_NO_PERMISSION');
           alertNoPermission(t);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        // TODO: is this a good way to handle error message?
+        trackMatomoEvent('Error', 'Geolocation', e.message);
+        console.error(e)
+      });
   }
   if (!failSilently && values.every((value) => value === RESULTS.BLOCKED)) {
-    trackMatomoEvent('Geolocation', 'Click', 'Blocked', lang);
+    trackMatomoEvent('Notice', 'Geolocation', 'NO_PERMISSION');
     alertNoPermission(t);
   }
   return {};
