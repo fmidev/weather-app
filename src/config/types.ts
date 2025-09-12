@@ -227,9 +227,13 @@ interface Analytics {
 
 // TODO: how to handle errors. Add error categories to "actions" and then name -field can be error message content
 // for example: trackMatomoEvent('Error', 'Error loading forecast data', error.getMessage())
-// Events in Matomo have three dimension (category, action, name).
+// Events in Matomo have three dimension (category, action, name)
+// and we'll probably misuse them, but the reason is because
+// this way it's easier to see stuff in Matomo web UI.
+//
+// Category = who, Action = where, Name = what was done.
 export type AnalyticCategories = 'User action' | 'Init' | 'Notice' | 'Warning' | 'Error';
-export type AnalyticActions = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Settings' | 'Navigation' | 'Geolocation';
+export type AnalyticActions = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Search' | 'Settings' | 'Navigation' | 'Geolocation';
 
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;

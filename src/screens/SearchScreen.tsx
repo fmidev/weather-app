@@ -220,7 +220,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             accessible
             accessibilityRole="button"
             onAccessibilityTap={() => {
-              trackMatomoEvent('User action', 'Geolocation', 'Accessibility Tap');
+              trackMatomoEvent('User action', 'Search', 'Geolocation - accessibility tap');
               getGeolocation(setCurrentLocation, t);
               navigation.goBack();
             }}>
@@ -233,7 +233,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               iconColor={colors.text}
               backgroundColor={colors.inputBackground}
               onPress={() => {
-                trackMatomoEvent('User action', 'Geolocation', 'Button');
+                trackMatomoEvent('User action', 'Search', 'Geolocation - button');
                 getGeolocation(setCurrentLocation, t);
                 navigation.goBack();
               }}
