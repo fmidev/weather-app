@@ -510,6 +510,11 @@ const Navigator: React.FC<Props> = ({
                 />
               ),
             }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Weather');
+              },
+            }}
           />
           <Tab.Screen
             name="Map"
@@ -525,6 +530,11 @@ const Navigator: React.FC<Props> = ({
               tabBarIcon: ({ color, size }) => (
                 <Icon name="map" style={{ color }} width={size} height={size} />
               ),
+            }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Map');
+              },
             }}
           />
           {warningsEnabled && (
@@ -550,6 +560,11 @@ const Navigator: React.FC<Props> = ({
                   />
                 ),
               }}
+              listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Warnings');
+              },
+            }}
             />
           )}
           <Tab.Screen
@@ -570,6 +585,11 @@ const Navigator: React.FC<Props> = ({
                   height={size}
                 />
               ),
+            }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Others');
+              },
             }}
           />
         </Tab.Navigator>
