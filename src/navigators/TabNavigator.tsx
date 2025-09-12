@@ -263,7 +263,10 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel="info"
         accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
         icon="info"
-        onPress={() => searchInfoSheetRef.current.open()}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Search', 'Open search info bottomsheet');
+          searchInfoSheetRef.current.open()
+        }}
       />
     ),
   };

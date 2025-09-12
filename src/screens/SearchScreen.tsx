@@ -201,8 +201,13 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               testID="search_results"
               elements={search}
               title={t('searchResults')}
-              onSelect={(location) => handleSelectLocation(location, true)}
+              onSelect={(location) => {
+                trackMatomoEvent('User action', 'Search', 'Select location - search results')
+                handleSelectLocation(location, true)
+              }}
               onIconPress={(location) => {
+                // TODO: remove favourite
+                trackMatomoEvent('User action', 'Search', 'Add favourite - search results');
                 addFavorite(location as Location);
                 setValue('');
                 Keyboard.dismiss();
@@ -243,31 +248,48 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             <AreaList
               elements={favorites}
               title={t('favorites')}
-              onSelect={(location) => handleSelectLocation(location, false)}
+              onSelect={(location) => {
+                trackMatomoEvent('User action', 'Search', 'Select location - favourites');
+                handleSelectLocation(location, false)
+              }}
               onIconPress={(location) => {
+                trackMatomoEvent('User action', 'Search', 'Remove favourite - favourites')
                 deleteFavorite(location.id);
                 updateRecentSearches(location);
               }}
               iconName="star-selected"
               clearTitle={t('clearFavorites')}
-              onClear={() => deleteAllFavorites()}
+              onClear={() => {
+                trackMatomoEvent('User action', 'Search', 'Remove all favourites')
+                deleteAllFavorites()
+              }}
             />
           )}
           {recent.length > 0 && (
             <AreaList
               elements={recent.slice(0).reverse()}
               title={t('recentSearches')}
-              onSelect={(location) => handleSelectLocation(location, false)}
-              onIconPress={(location) =>
-                isFavorite(location)
-                  ? deleteFavorite(location.id)
-                  : addFavorite(location)
-              }
+              onSelect={(location) => {
+                trackMatomoEvent('User action', 'Search', 'Select location - recent searches');
+                handleSelectLocation(location, false)
+              }}
+              onIconPress={(location) => {
+                if (isFavorite(location)) {
+                  trackMatomoEvent('User action', 'Search', 'Remove favourite - recent searches');
+                  deleteFavorite(location.id);
+                } else {
+                  trackMatomoEvent('User action', 'Search', 'Add favourite - recent searches');
+                  addFavorite(location);
+                }
+              }}
               iconNameGetter={(location) =>
                 isFavorite(location) ? 'star-selected' : 'star-unselected'
               }
               clearTitle={t('clearRecentSearches')}
-              onClear={() => deleteAllRecentSearches()}
+              onClear={() => {
+                trackMatomoEvent('User action', 'Search', 'Remove search history');
+                deleteAllRecentSearches()
+              }}
             />
           )}
         </View>
