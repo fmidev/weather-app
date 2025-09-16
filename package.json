@@ -29,6 +29,7 @@
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
+    "@shopify/react-native-skia": "1.12.4",
     "@testing-library/react-native": "^8.0.0",
     "@types/supercluster": "^5.0.3",
     "axios": "^1.8.3",
@@ -68,7 +69,7 @@
     "redux-thunk": "^2.4.0",
     "reselect": "^4.1.4",
     "supercluster": "^7.1.4",
-    "victory-native": "^36.9.2"
+    "victory-native": "^41.20.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

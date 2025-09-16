@@ -161,8 +161,9 @@ export const tickFormat = (
   tick: any,
   locale: string,
   clockType: ClockType,
-  daily?: boolean
-): string | number => {
+  daily?: boolean,
+  victoryNativeXl? : boolean
+): string => {
   const time = moment(tick);
   const hour = time.hour();
   const minutes = time.minutes();
@@ -171,8 +172,8 @@ export const tickFormat = (
     return '';
   }
   if (daily || hour === 0) {
-    return `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))}
-${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
+    return victoryNativeXl ? `${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}` :
+      `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))} ${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
   }
   return time.format(clockType === 12 ? 'h a' : 'HH');
 };
@@ -216,4 +217,15 @@ export const chartYLabelText = (chartType: ChartType, units?: UnitMap, t?: (key:
     default:
       return [''];
   }
+};
+
+export const getWindArrow = (deg: number): string => {
+  if (deg >= 337.5 || deg < 22.5) return '↓';
+  if (deg < 67.5)  return '↙';
+  if (deg < 112.5) return '←';
+  if (deg < 157.5) return '↖';
+  if (deg < 202.5) return '↑';
+  if (deg < 247.5) return '↗';
+  if (deg < 292.5) return '→';
+  return '↘';
 };

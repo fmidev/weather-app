@@ -29,9 +29,9 @@ PODS:
   - libwebp/sharpyuv (1.5.0)
   - libwebp/webp (1.5.0):
     - libwebp/sharpyuv
-  - MMKV (2.2.2):
-    - MMKVCore (~> 2.2.2)
-  - MMKVCore (2.2.2)
+  - MMKV (2.2.3):
+    - MMKVCore (~> 2.2.3)
+  - MMKVCore (2.2.3)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -1289,6 +1289,29 @@ PODS:
     - React-Core
   - react-native-safe-area-context (5.2.0):
     - React-Core
+  - react-native-skia (1.12.4):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - React-callinvoker
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-webview (13.15.0):
     - DoubleConversion
     - glog
@@ -1822,9 +1845,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - SDWebImage (5.21.1):
-    - SDWebImage/Core (= 5.21.1)
-  - SDWebImage/Core (5.21.1)
+  - SDWebImage (5.21.2):
+    - SDWebImage/Core (= 5.21.2)
+  - SDWebImage/Core (5.21.2)
   - SDWebImageAVIFCoder (0.11.0):
     - libavif/core (>= 0.11.0)
     - SDWebImage (~> 5.10)
@@ -1884,6 +1907,7 @@ DEPENDENCIES:
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -2036,6 +2060,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-skia:
+    :path: "../node_modules/@shopify/react-native-skia"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-nativeconfig:
@@ -2137,13 +2163,13 @@ SPEC CHECKSUMS:
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 79c4b7ec726447eec5f8593379466bd9fde1aa14
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
-  glog: eb93e2f488219332457c3c4eafd2738ddc7e80b8
+  glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: ccc24d29d650ea725d582a9a53d57cd417fbdb53
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
-  MMKV: b4802ebd5a7c68fc0c4a5ccb4926fbdfb62d68e0
-  MMKVCore: a255341a3746955f50da2ad9121b18cb2b346e61
+  MMKV: 941e8774da0e6fdf12c6b3fcc833ca687ae5a42d
+  MMKVCore: 6d5cc1bacce539f4c974985dfe646fb65a5d27d2
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: 664055db806cce35c3c1b43c84414dd66e117ae6
   RCTRequired: dc9a83fa1012054f94430d210337ca3a1afe6fc0
@@ -2180,6 +2206,7 @@ SPEC CHECKSUMS:
   react-native-mmkv: a6e08ad1b51b84af075f91798f8a92c878472265
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 3e33e7c43c8b74dba436a5a32651cb8d7064c740
+  react-native-skia: c93bc6f1d2b41622f7481b7d5219225f1a55ed9a
   react-native-webview: 3772c8537fd6d7869791820a7b154fb546bcef7b
   React-nativeconfig: cb207ebba7cafce30657c7ad9f1587a8f32e4564
   React-NativeModulesApple: 8411d548b1ad9d2b3e597beb9348e715c8020e0c
@@ -2222,7 +2249,7 @@ SPEC CHECKSUMS:
   RNScreens: 86e5c168cdd055a8feead28eb756ca7103918b6a
   RNSVG: 4903d466c3a877644d5219dbc1d97f9ef9e4a3cc
   RNVectorIcons: f7a99433a71f4b38891c14c64b21fc521d064392
-  SDWebImage: f29024626962457f3470184232766516dee8dfea
+  SDWebImage: 9f177d83116802728e122410fb25ad88f5c7608a
   SDWebImageAVIFCoder: 00310d246aab3232ce77f1d8f0076f8c4b021d90
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748

@@ -4,6 +4,7 @@ import { TimeStepData as ObsDataStep } from '@store/observation/types';
 import { UnitMap } from '@store/settings/types';
 
 export interface ChartValue {
+  epochtime: number;
   x: number;
   y: number | null;
 }
