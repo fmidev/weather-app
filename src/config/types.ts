@@ -233,7 +233,7 @@ interface Analytics {
 //
 // Category = who, Action = where, Name = what was done.
 export type AnalyticCategories = 'User action' | 'Init' | 'Notice' | 'Warning' | 'Error';
-export type AnalyticActions = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Search' | 'Settings' | 'Navigation' | 'Geolocation';
+export type AnalyticActions = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Search' | 'Settings' | 'Navigation' | 'Geolocation' | 'News';
 
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
