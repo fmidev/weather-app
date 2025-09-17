@@ -33,6 +33,7 @@ import darkMapStyle from '@utils/dark_map_style.json';
 import { GRAY_1 } from '@assets/colors';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -217,11 +218,23 @@ const MapScreen: React.FC<MapScreenProps> = ({
       <Announcements style={styles.announcements} />
       <MapControls
         onLayersPressed={() => mapLayersSheetRef.current.open()}
-        onInfoPressed={() => infoSheetRef.current.open()}
-        onZoomIn={() => handleZoomIn()}
-        onZoomOut={() => handleZoomOut()}
+        onInfoPressed={() => {
+          trackMatomoEvent('User action', 'Map', 'Open info panel');
+          infoSheetRef.current.open()
+        }}
+        onZoomIn={() => {
+          trackMatomoEvent('User action', 'Map', 'Zoom IN');
+          handleZoomIn();
+        }}
+        onZoomOut={() =>{
+          trackMatomoEvent('User action', 'Map', 'Zoom OUT');
+          handleZoomOut();
+        }}
         showRelocateButton={markerOutOfBounds}
-        relocate={() => animateToCurrentLocation()}
+        relocate={() => {
+          trackMatomoEvent('User action', 'Map', 'Relocate');
+          animateToCurrentLocation();
+        }}
       />
 
       <RBSheet
