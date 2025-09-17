@@ -12,6 +12,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
 import WarningIcon from './WarningIcon';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -60,12 +61,15 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
                   : t('moreAccessibilityHint')
               }
               style={styles.row}
-              onPress={() =>
+              onPress={() => {
+                if(!openWarnings[index]) {
+                  trackMatomoEvent('User action', 'Warnings', 'Open warning details');
+                }
                 setOpenWarnings({
                   ...openWarnings,
                   [index]: !openWarnings[index],
                 })
-              }>
+              }}>
               <View style={styles.iconPadding}>
                 <WarningIcon
                   type={type}
