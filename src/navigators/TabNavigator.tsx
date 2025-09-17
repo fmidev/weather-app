@@ -150,7 +150,7 @@ const Navigator: React.FC<Props> = ({
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
       trackMatomoEvent('Init', 'Geolocation', 'Launch app');
-      trackMatomoEvent('Init', 'Settings', 'App version - '+packageJSON.version);
+      trackMatomoEvent('Init', 'Platform', Platform.OS +' - '+packageJSON.version);
       getGeolocation(setCurrentLocation, t, true);
       fetchAnnouncements();
     }
