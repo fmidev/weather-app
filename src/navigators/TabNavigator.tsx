@@ -80,6 +80,7 @@ import {
 } from './types';
 import WarningsTabIcon from './WarningsTabIcon';
 import { trackMatomoEvent } from '@utils/matomo';
+import packageJSON from '../../package.json';
 
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
@@ -149,6 +150,7 @@ const Navigator: React.FC<Props> = ({
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
       trackMatomoEvent('Init', 'Geolocation', 'Launch app');
+      trackMatomoEvent('Init', 'Settings', 'App version - '+packageJSON.version);
       getGeolocation(setCurrentLocation, t, true);
       fetchAnnouncements();
     }
