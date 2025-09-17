@@ -8,6 +8,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import Icon from '@assets/Icon';
 
 import packageJSON from '../../package.json';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const FeedbackScreen: React.FC = () => {
   const { t, i18n } = useTranslation('feedback');
@@ -54,7 +55,10 @@ const FeedbackScreen: React.FC = () => {
         <AccessibleTouchableOpacity
           testID="feedback_button"
           accessibilityRole="button"
-          onPress={() => Linking.openURL(mailToUrl)}
+          onPress={() => {
+            trackMatomoEvent('User action', 'Settings', 'Open URL - '+mailToUrl);
+            Linking.openURL(mailToUrl);
+          }}
           accessibilityHint={t('moveToHint')}>
           <View
             style={[styles.sendFeedbackButton, { borderColor: colors.text }]}>
