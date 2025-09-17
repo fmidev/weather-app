@@ -143,7 +143,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               }`}
               activeOpacity={1}
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Show forecast in TABLE format');
+                trackMatomoEvent('User action', 'Weather', 'Show FORECAST in TABLE format');
                 updateDisplayFormat(TABLE)
               }}
               style={styles.withMarginRight}>
@@ -184,7 +184,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               }`}
               activeOpacity={1}
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Show forecast in CHART format');
+                trackMatomoEvent('User action', 'Weather', 'Show FORECAST in CHART format');
                 updateDisplayFormat(CHART)
               }}>
               <View
