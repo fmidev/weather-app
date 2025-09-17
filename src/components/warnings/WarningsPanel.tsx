@@ -179,7 +179,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                 )}
                 <AccessibleTouchableOpacity
                   onPress={() => {
-                    trackMatomoEvent('User action', 'Warnings', 'Select day '+(index+1));
+                    trackMatomoEvent('User action', 'Warnings', 'Select day '+(index+1)+' / ('+count+' warnings) / '+severity);
                     setSelectedDay(index);
                   }}
                   accessibilityRole="button"
