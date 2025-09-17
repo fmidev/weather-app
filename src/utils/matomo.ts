@@ -1,6 +1,5 @@
 import { AnalyticActions, AnalyticCategories, Config } from '@config';
 import i18n from '@i18n';
-// import { useTranslation } from 'react-i18next';
 
 // import matomo functions
 import { trackEvent, createTracker } from "@logicwind/react-native-matomo-tracker";
@@ -18,11 +17,7 @@ function initMatomo() {
         if(analytics.siteId){
             createTracker(analytics.url, analytics.siteId[i18n.language]);
             isMatomoInitialized = true;
-        }else{
-            console.log('No siteId defined');
         }
-    } else {
-        console.log('Analytics are disabled');
     }
 }
 
@@ -32,9 +27,6 @@ export function trackMatomoEvent(category:AnalyticCategories, action:AnalyticAct
     }
 
     if (isMatomoInitialized) {
-        console.log(category, action, name);
         trackEvent(category, action, name);
-    } else {
-        console.log('matomo not initialized');
     }
 }
