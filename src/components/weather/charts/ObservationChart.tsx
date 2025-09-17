@@ -1,9 +1,12 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
 import { CartesianChart, Line, AreaRange, Bar } from 'victory-native';
-import { DashPathEffect, Text, useFont } from '@shopify/react-native-skia';
-import { getWindArrow, tickFormat } from '@utils/chart';
+import { DashPathEffect, Text, Rect, useFont } from '@shopify/react-native-skia';
+import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
+import { getWindArrow, tickFormat } from '@utils/chart';
+import { Config } from '@config';
+import { getPrecipitationLevel } from '@utils/helpers';
 
 import RobotoRegular from '@assets/fonts/Roboto-Regular.ttf';
 import NotoSansBold from '@assets/fonts/NotoSansSymbols-Bold.ttf';
@@ -36,12 +39,17 @@ const ObservationChart: React.FC<ChartProps> = ({
   isDaily,
   units,
 }) => {
+  const { colors } = useTheme() as CustomTheme;
   const font = useFont(RobotoRegular, 12);
   const symbolFont = useFont(NotoSansBold, 16);
 
   if (!font || !symbolFont) {
     return null;
   }
+
+  const defaultUnits = Config.get('settings').units;
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
 
   console.log('observation chart render', chartType);
 
@@ -122,13 +130,28 @@ const ObservationChart: React.FC<ChartProps> = ({
                 <Line points={points.dewPoint} color="blue" strokeWidth={1}>
                   <DashPathEffect intervals={[1, 2]} />
                 </Line>
-                { chartType === 'weather' && (
-                  <Bar
-                    points={points.ri_10min}
-                    chartBounds={chartBounds}
-                    color="blue"
-                  />
-                )}
+                {
+                  // Bar is not working correctly with two y-axes, so we draw the bars manually
+                  chartType === 'weather'
+                    ? points.ri_10min.map((point) => {
+                        console.log(point);
+                        if (!point.x || !point.yValue) return null;
+
+                        console.log(point);
+
+                        return (
+                          <Rect
+                            key={`ri10min-${point.xValue}`}
+                            x={point.x}
+                            y={chartBounds.bottom}
+                            width={3}
+                            height={point.yValue * ((chartBounds.top - chartBounds.bottom)/20)}
+                            color={colors.rain[getPrecipitationLevel(point.yValue, precipitationUnit)]}
+                          />
+                        );
+                      })
+                    : null
+                }
               </>
             )}
             { chartType === 'wind' && (

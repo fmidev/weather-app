@@ -9,7 +9,7 @@ import RobotoRegular from '@assets/fonts/Roboto-Regular.ttf';
 import NotoSansBold from '@assets/fonts/NotoSansSymbols-Bold.ttf';
 
 import type { TimeStepData as ForecastTimeStepData } from '@store/forecast/types';
-import { ChartDataProps, ChartDomain, ChartType } from './types';
+import { ChartDomain, ChartType } from './types';
 import { ClockType, UnitMap } from '@store/settings/types';
 import AxisLabels from './AxisLabels';
 
@@ -19,7 +19,6 @@ type ChartProps = {
   chartDomain: ChartDomain;
   chartType: ChartType;
   chartValues: Array<ForecastTimeStepData>;
-  Component: React.FC<ChartDataProps>;
   locale: string;
   clockType: ClockType;
   isDaily: boolean;
@@ -42,8 +41,6 @@ const ForecastChart: React.FC<ChartProps> = ({
   if (!font || !symbolFont) {
     return null;
   }
-
-  console.log(chartDimensions);
 
   const chartPadding = 16;
   const data = chartValues.map((item) => ({
