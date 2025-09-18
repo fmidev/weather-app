@@ -36,7 +36,7 @@ import { selectStoredGeoids } from '@store/location/selector';
 import { GRAY_1 } from '@assets/colors';
 
 import { Config } from '@config';
-import { trackMatomoEvent } from '@utils/matomo';
+import { initMatomo, trackMatomoEvent } from '@utils/matomo';
 
 const LOCATION_ALWAYS = 'location_always';
 const LOCATION_WHEN_IN_USE = 'location_when_in_use';
@@ -134,6 +134,7 @@ const SettingsScreen: React.FC<Props> = ({
   const onChangeLanguage = async (lang: string): Promise<void> => {
     i18n.changeLanguage(lang);
     updateLocationsLocales(geoids);
+    initMatomo(); // re-init matomo to use correct siteId
     try {
       await setItem(LOCALE, lang);
     } catch (error) {

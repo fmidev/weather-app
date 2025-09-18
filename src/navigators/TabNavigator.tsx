@@ -8,6 +8,8 @@ import {
   StyleProp,
   ViewStyle,
   View,
+  AppState,
+  AppStateStatus
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
@@ -79,7 +81,7 @@ import {
   LaunchArgs,
 } from './types';
 import WarningsTabIcon from './WarningsTabIcon';
-import { trackMatomoEvent } from '@utils/matomo';
+import { sendMatomoEvents, trackMatomoEvent } from '@utils/matomo';
 import packageJSON from '../../package.json';
 
 const mapStateToProps = (state: State) => ({
@@ -121,6 +123,7 @@ const Navigator: React.FC<Props> = ({
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const appState = useRef<AppStateStatus>(AppState.currentState);
   const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
     ((!currentTheme || currentTheme === 'automatic') &&
@@ -162,6 +165,21 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements,
   ]);
 
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/active/) && nextAppState === 'background') {
+        // Make sure that events are sent before app goes to background
+        sendMatomoEvents();
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const navigationTabChanged = (state: NavigationState | undefined) => {
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
