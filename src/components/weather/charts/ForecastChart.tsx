@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
-import { View } from 'react-native';
-import { CartesianChart, Line, AreaRange, Bar } from 'victory-native';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { CartesianChart, Line, AreaRange, Bar, useChartTransformState } from 'victory-native';
 import { DashPathEffect, Text, useFont } from '@shopify/react-native-skia';
 import { getWindArrow, tickFormat } from '@utils/chart';
 import moment from 'moment';
@@ -12,6 +12,8 @@ import type { TimeStepData as ForecastTimeStepData } from '@store/forecast/types
 import { ChartDomain, ChartType } from './types';
 import { ClockType, UnitMap } from '@store/settings/types';
 import AxisLabels from './AxisLabels';
+import { useTheme } from '@react-navigation/native';
+import type { CustomTheme } from '@assets/colors';
 
 type ChartProps = {
   chartDimensions: { x: number; y: number };
@@ -26,7 +28,6 @@ type ChartProps = {
 };
 const ForecastChart: React.FC<ChartProps> = ({
   chartDimensions,
-  tickValues,
   chartDomain,
   chartType,
   chartValues,
@@ -34,7 +35,10 @@ const ForecastChart: React.FC<ChartProps> = ({
   clockType,
   isDaily,
   units,
+  tickValues
 }) => {
+  const { colors } = useTheme() as CustomTheme;
+  const { state } = useChartTransformState({ scaleX: 4  });
   const font = useFont(RobotoRegular, 12);
   const symbolFont = useFont(NotoSansBold, 16);
 
@@ -77,7 +81,7 @@ const ForecastChart: React.FC<ChartProps> = ({
   const secondLabel = { x: chartDimensions.x - 30, y: 16, label: '%' };
 
   return (
-    <View style={{ width: chartDimensions.x, height: chartDimensions.y }}>
+    <View style={[styles.container, { height: chartDimensions.y }]}>
       <CartesianChart
         data={data}
         // @ts-ignore
@@ -91,24 +95,31 @@ const ForecastChart: React.FC<ChartProps> = ({
         padding={{ left: chartPadding, right: chartPadding, top: chartPadding+10, bottom: chartPadding }}
         xAxis={{
           font,
-          tickCount: chartValues.length/3,
+          tickCount: tickValues.length,
           tickValues,
           formatXLabel: (value) => tickFormat(value, locale, clockType, isDaily, true)
         }}
         //@ts-ignore
         yAxis={yAxis}
         renderOutside={() => <AxisLabels first={firstLabel} second={secondLabel} />}
+        transformState={state}
+        transformConfig={{
+          pan: {
+            dimensions: 'x'
+          },
+          pinch: { dimensions: 'x', enabled: false},
+			  }}
       >
         {({ points, chartBounds }) => (
           <>
             { (chartType === 'temperature' || chartType === 'weather') && (
               <>
-                <Line points={points.temperature} color="blue" strokeWidth={1} />
-                <Line points={points.feelsLike} color="blue" strokeWidth={1}>
-                  <DashPathEffect intervals={[4, 2]} />
+                <Line points={points.temperature} color={colors.chartPrimaryLine} strokeWidth={0.5} />
+                <Line points={points.feelsLike} color={colors.chartSecondaryLine} strokeWidth={0.5}>
+                  <DashPathEffect intervals={[2, 1]} />
                 </Line>
-                <Line points={points.dewPoint} color="blue" strokeWidth={1}>
-                  <DashPathEffect intervals={[1, 2]} />
+                <Line points={points.dewPoint} color={colors.chartPrimaryLine} strokeWidth={0.5}>
+                  <DashPathEffect intervals={[1, 1]} />
                 </Line>
               </>
             )}
@@ -166,4 +177,10 @@ const ForecastChart: React.FC<ChartProps> = ({
   );
 }
 
-export default memo(ForecastChart);
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
+});
+
+export default ForecastChart;

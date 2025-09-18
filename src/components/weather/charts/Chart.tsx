@@ -231,7 +231,6 @@ const Chart: React.FC<ChartProps> = ({
           ? t('charts.observationAccessibilityHint')
           : t('charts.forecastAccessibilityHint')
       }>
-      <ScrollView horizontal>
         { observation && !isDaily && (
           <ObservationChart
             chartDimensions={chartDimensions}
@@ -271,7 +270,6 @@ const Chart: React.FC<ChartProps> = ({
             units={units}
           />
         )}
-      </ScrollView>
       <ChartLegend
         chartType={chartType}
         observation={observation}
