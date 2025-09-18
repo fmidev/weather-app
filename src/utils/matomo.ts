@@ -11,8 +11,7 @@ export const initMatomo = () => {
     // get settings from config
     const analytics = Config.get('analytics');
 
-    // init analytics if enabled or user hasn't opted out
-    // TODO: user opted out?
+    // init analytics if enabled
     if(analytics?.enabled) {
         if(analytics.siteId){
             createTracker(analytics.url, analytics.siteId[i18n.language]);
