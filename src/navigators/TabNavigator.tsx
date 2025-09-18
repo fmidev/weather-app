@@ -60,6 +60,7 @@ import {
 import {
   selectInitialTab,
   selectDidLaunchApp,
+  selectTermsOfUseAccepted,
 } from '@store/navigation/selectors';
 import {
   setNavigationTab as setNavigationTabAction,
@@ -84,6 +85,7 @@ const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
   theme: selectTheme(state),
   didLaunchApp: selectDidLaunchApp(state),
+  termsOfUseAccepted: selectTermsOfUseAccepted(state),
 });
 
 const mapDispatchToProps = {
@@ -112,6 +114,7 @@ const Navigator: React.FC<Props> = ({
   theme,
   initialTab,
   didLaunchApp,
+  termsOfUseAccepted,
   setDidLaunchApp,
   fetchAnnouncements,
 }) => {
@@ -370,7 +373,7 @@ const Navigator: React.FC<Props> = ({
 
   const SetupStackScreen = () => (
     <SetupStack.Navigator
-      initialRouteName="Onboarding"
+      initialRouteName={ didLaunchApp && !termsOfUseAccepted ? 'SetupScreen' : 'Onboarding' }
       screenOptions={{ gestureEnabled: false }}>
       <SetupStack.Screen
         name="Onboarding"
@@ -388,6 +391,7 @@ const Navigator: React.FC<Props> = ({
             setUpDone={() => {
               setDidLaunchApp();
             }}
+            termsOfUseChanged={ !termsOfUseAccepted }
           />
         )}
       </SetupStack.Screen>
@@ -413,7 +417,7 @@ const Navigator: React.FC<Props> = ({
     return null;
   }
 
-  if (!didLaunchApp && onboardingWizardEnabled && launchArgs?.e2e !== true) {
+  if ((!didLaunchApp || !termsOfUseAccepted) && onboardingWizardEnabled && launchArgs?.e2e !== true) {
     return (
       <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
         <SetupStackScreen />

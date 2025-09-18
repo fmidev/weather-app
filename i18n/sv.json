@@ -629,6 +629,7 @@
   },
   "setUp": {
     "termsAndConditions": "Användarvillkor",
+    "termsAndConditionsChanged": "Användarvillkoren har ändrats",
     "termsAndConditionsDescription": "För att använda tjänsten måste du godkänna applikationens användarvillkor. Bekanta dig med användningsvillkoren genom att klicka på länken Användningsvillkor.",
     "accept": "Godkänn",
     "location": "Läge",

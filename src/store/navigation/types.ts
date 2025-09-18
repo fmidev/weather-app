@@ -22,4 +22,5 @@ export type NavigationActionTypes = SetNavigationTab | SetDidLaunchApp;
 export interface NavigationState {
   tab: NavigationTab;
   didLaunchApp: boolean;
+  termsOfUseAccepted: string | false;
 }

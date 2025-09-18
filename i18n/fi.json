@@ -629,6 +629,7 @@
   },
   "setUp": {
     "termsAndConditions": "Käyttöehdot",
+    "termsAndConditionsChanged": "Käyttöehdot on päivitetty",
     "termsAndConditionsDescription": "Käyttääksesi palvelua, sinun tulee hyväksyä käyttöehdot. Tutustu käyttö-\nehtoihin painamalla Käyttöehdot-linkkiä.",
     "accept": "Hyväksy",
     "location": "Sijainti",
