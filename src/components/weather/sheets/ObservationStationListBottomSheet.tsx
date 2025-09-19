@@ -19,6 +19,7 @@ import { setStationId as setStationIdAction } from '@store/observation/actions';
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   dataId: selectDataId(state),
@@ -84,6 +85,7 @@ const ObservationStationListBottomSheet: React.FC<
               key={station.id}
               onPress={() => {
                 if (station.id === stationId) return;
+                trackMatomoEvent('User action', 'Weather', 'Select observation station');
                 setStationId(dataId, station.id);
                 onClose();
               }}>

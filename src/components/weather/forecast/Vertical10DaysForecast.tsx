@@ -23,6 +23,7 @@ import { selectForecastInvalidData, selectDisplayParams } from '@store/forecast/
 import Icon from '@assets/Icon';
 import { uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -183,7 +184,10 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
 
     return (
       <AccessibleTouchableOpacity
-        onPress={() => showModal(timeStamp, index)}
+        onPress={() => {
+          trackMatomoEvent('User action','Weather', 'Show hourly forecast - day '+ (index+1));
+          showModal(timeStamp, index)
+        }}
         key={stepMoment.unix()}>
         <View style={styles.container}>
           <View style={[styles.row, { borderColor: colors.border }]} key={stepMoment.unix()}>

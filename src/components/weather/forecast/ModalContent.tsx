@@ -13,6 +13,7 @@ import ModalForecast from './ModalForecast';
 import { uppercaseFirst } from '@utils/helpers';
 import Icon from '@assets/Icon';
 import CloseButton from '@components/common/CloseButton';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   data: selectForecastByDay(state),
@@ -50,7 +51,10 @@ const DailyModal: React.FC<ModalContentProps> = ({
                 <Icon
                 name="arrow-left"
                 color={colors.primaryText}
-                onPress={ () => onDayChange(false) }
+                onPress={ () => {
+                  trackMatomoEvent('User action', 'Weather', 'Modal PREV day');
+                  onDayChange(false);
+                }}
                 accessibilityLabel={t('previousDay')}
                 />
               </View>)
@@ -66,7 +70,10 @@ const DailyModal: React.FC<ModalContentProps> = ({
             <Icon
               name="arrow-right"
               color={colors.primaryText}
-              onPress={() => onDayChange(true) }
+              onPress={() => {
+                trackMatomoEvent('User action', 'Weather', 'Modal NEXT day');
+                onDayChange(true)
+              }}
               accessibilityLabel={t('nextDay')}
             />
           </View>
@@ -74,7 +81,10 @@ const DailyModal: React.FC<ModalContentProps> = ({
         <View style={styles.closeButtonContainer} accessible>
           <CloseButton
             testID="forecast_modal_close_button"
-            onPress={onClose}
+            onPress={() => {
+              trackMatomoEvent('User action', 'Weather', 'Modal close X');
+              onClose();
+            }}
             accessibilityLabel={t('closeModal')}
           />
         </View>
