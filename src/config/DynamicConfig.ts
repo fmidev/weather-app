@@ -7,7 +7,7 @@ import packageJSON from '../../package.json';
 import type { LaunchArgs } from '@navigators/types';
 
 // Top level features that are not supported in dynamic config
-const BLACKLIST = ['dynamicConfig'] as Array<keyof ConfigType>;
+const BLACKLIST = ['dynamicConfig', 'onboardingWizard'] as Array<keyof ConfigType>;
 
 class DynamicConfig {
   private config!: ConfigType;

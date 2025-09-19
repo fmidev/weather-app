@@ -629,6 +629,7 @@
   },
   "setUp": {
     "termsAndConditions": "Terms of Use",
+    "termsAndConditionsChanged": "The Terms of Use have changed",
     "termsAndConditionsDescription": "You must accept the terms of use to use the service. Learn more about the Terms of Use by tapping the Terms of Use link.",
     "accept": "Accept",
     "location": "Location",
