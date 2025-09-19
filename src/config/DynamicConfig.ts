@@ -117,7 +117,7 @@ class DynamicConfig {
       const { data, headers } = await axiosClient({
         url: this.apiUrl,
         timeout: this.timeout,
-      });
+      }, undefined, 'DynamicConfig');
       // Don't update config if no changes to avoid re-rendering
       if (
         data &&

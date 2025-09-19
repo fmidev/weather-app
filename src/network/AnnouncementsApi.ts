@@ -11,9 +11,9 @@ const getAnnouncements = async (): Promise<Announcement[]> => {
 
   const url = api[language];
 
-  const { data } = await axiosClient({ url });
+  const { data } = await axiosClient({ url }, undefined, 'Announcements');
 
-  return data;
+    return data;
 };
 
 export default getAnnouncements;

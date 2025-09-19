@@ -32,7 +32,8 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
       url: apiUrl,
       params,
     },
-    abortController
+    abortController,
+    'Autocomplete'
   );
 
   return data;

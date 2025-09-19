@@ -145,7 +145,7 @@ const getTimeseriesData = async (
   };
 
   const url = `${sources[layer.source]}/timeseries`;
-  const { data } = await axiosClient({ url, params });
+  const { data } = await axiosClient({ url, params }, undefined, 'Timeseries');
 
   Object.assign(toReturn, {
     data,
@@ -220,7 +220,7 @@ const getWMSLayerUrlsAndBounds = async (
               }
             : {}),
         },
-      });
+      }, undefined, 'WMS');
 
       const parsedResponse = parser.parse(data);
 

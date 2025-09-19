@@ -10,7 +10,7 @@ const getMeteorologistSnapshot = async (): Promise<MeteorologistSnapshot> => {
   }
 
   const url = meteorologist.url;
-  const { data } = await axiosClient({ url });
+  const { data } = await axiosClient({ url }, undefined, 'Snapshot');
   return data;
 };
 
