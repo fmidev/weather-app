@@ -19,6 +19,8 @@ import { updateSelectedCallout as updateSelectedCalloutAction } from '@store/map
 import { Config } from '@config';
 import { selectUnits } from '@store/settings/selectors';
 
+const transparentImage = require('../../../assets/images/transparent.png');
+
 const mapStateToProps = (state: State) => ({
   selectedCallout: selectSelectedCallout(state),
   units: selectUnits(state),
@@ -80,6 +82,7 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
 
   return (
     <Marker
+      image={transparentImage}
       coordinate={coordinate}
       tracksViewChanges={false}
       onPress={() => {
