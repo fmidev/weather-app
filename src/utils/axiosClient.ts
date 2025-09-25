@@ -7,16 +7,9 @@ const instance = Axios.create();
 const axios = setupCache(instance);
 
 const getErrorMessage = (headers: Record<string, string>): string | undefined => {
-  if (headers['x-timeseriesplugin-error']) {
-    return headers['x-timeseriesplugin-error'];
-  } else if(headers['x-wmsplugin-error']) {
-    return headers['x-wmsplugin-error'];
-  } else if(headers['x-autocompleteplugin-error']) {
-    return headers['x-autocompleteplugin-error'];
-  }
-  return undefined;
+  const key = Object.keys(headers).find(k => /^x-(.+)-error$/i.test(k));
+  return key ? headers[key] : undefined;
 };
-
 
 const axiosClient = async (
   options: AxiosRequestConfig,
@@ -44,18 +37,23 @@ const axiosClient = async (
       clearTimeout(timeoutId);
     })
     .catch((error) => {
-      if(analyticsAction) {
+      const action = analyticsAction ?? 'Not specified';
+
+      if (error.code === 'ECONNABORTED') {
+        trackMatomoEvent('Error', action, 'Timeout');
+      } else if (error.response) {
         const errorMsg = getErrorMessage(error.response.headers);
+
         if(errorMsg) {
           // log error message from headers if available
-          trackMatomoEvent('Error', analyticsAction, errorMsg);
+          trackMatomoEvent('Error', action, `${error.response.status}: ${errorMsg}`);
         } else {
           // log error with analyticsAction
-          trackMatomoEvent('Error', analyticsAction, error);
+          trackMatomoEvent('Error', action, error);
         }
       } else {
-        // log error as not specified
-        trackMatomoEvent('Error', 'Not specified', error);
+        // Disable this if causes too much noise
+        trackMatomoEvent('Error', action, `Network error: ${error.message}`);
       }
 
       clearTimeout(timeoutId);
