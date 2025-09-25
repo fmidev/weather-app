@@ -10,7 +10,7 @@ const getNews = async (language: string): Promise<NewsItem[]> => {
   }
 
   const url = apiUrl[language]+`?limit=${numberOfNews}`;
-  const { data } = await axiosClient({ url });
+  const { data } = await axiosClient({ url }, undefined, 'News');
 
   const newsItems = data.items.flatMap((item:any):NewsItem | [] => {
     if (!item.sys?.id || !item.fields?.title || !item.fields?.type

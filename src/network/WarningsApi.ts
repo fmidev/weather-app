@@ -22,7 +22,7 @@ const getWarnings = async ({
     who: `${packageJSON.name}-${Platform.OS}`,
   };
 
-  const { data } = await axiosClient({ url, params });
+  const { data } = await axiosClient({ url, params }, undefined, 'Warnings');
 
   return data;
 };
