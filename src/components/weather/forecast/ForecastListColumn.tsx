@@ -231,7 +231,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           }
 
           if (param === constants.DEW_POINT) {
-            const temperatureUnit = Config.get('settings').units.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ??
+              Config.get('settings').units.temperature;
             const convertedDewPoint =
               data.dewPoint || data.dewPoint === 0
                 ? toPrecision(
