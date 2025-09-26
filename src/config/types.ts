@@ -111,6 +111,7 @@ interface CapViewSettings {
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;
   includeAreaInTitle?: boolean;
+  severityBackgroundInSymbol?: boolean;
 }
 
 interface Warnings {
