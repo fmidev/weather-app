@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import NetInfo from '@react-native-community/netinfo';
-import { useNavigationState } from '@react-navigation/native';
 
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
@@ -23,6 +22,7 @@ import { YELLOW, BLACK } from '@assets/colors';
 import { Config } from '@config';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
+import type { Route } from '@react-navigation/native';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
@@ -59,7 +59,12 @@ type Messages = {
   outOfServiceArea?: Message;
 };
 
-const ErrorComponent: React.FC<PropsFromRedux> = ({
+type ErrorProps = PropsFromRedux & {
+  navReady: boolean;
+  currentRoute: Route<string>| null;
+};
+
+const ErrorComponent: React.FC<ErrorProps> = ({
   location,
   activeOverlay,
   forecastError,
@@ -71,10 +76,10 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
   fetchObservation,
   fetchWarnings,
   updateOverlays,
+  navReady,
+  currentRoute,
 }) => {
-  const activeRoute = useNavigationState(
-    (state) => state?.routes[state.index].name || 'Weather'
-  );
+  const activeRoute = navReady ? (currentRoute?.name ?? '') : '';
 
   const { t, i18n } = useTranslation('error');
   const [errorType, setErrorType] = useState<keyof Messages | undefined>(
@@ -149,7 +154,7 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
         setErrorType('noInternet');
       }
       if (state.isConnected) {
-        if (forecastError && activeRoute === 'Weather') {
+        if (forecastError && activeRoute === 'StackWeather') {
           if (
             typeof forecastError === 'object' &&
             forecastError.message.includes('400') &&
@@ -159,13 +164,13 @@ const ErrorComponent: React.FC<PropsFromRedux> = ({
           } else {
             setErrorType('forecast');
           }
-        } else if (forecastInvalidDataError && activeRoute === 'Weather') {
+        } else if (forecastInvalidDataError && activeRoute === 'StackWeather') {
           setErrorType('forecast');
-        } else if (observationError && activeRoute === 'Weather') {
+        } else if (observationError && activeRoute === 'StackWeather') {
           setErrorType('observation');
-        } else if (warningsError && activeRoute === 'Warnings') {
+        } else if (warningsError && activeRoute === 'StackWarnings') {
           setErrorType('warnings');
-        } else if (overlaysError && activeRoute === 'Map') {
+        } else if (overlaysError && activeRoute === 'StackMap') {
           setErrorType('overlays');
         } else {
           setErrorType(undefined);
