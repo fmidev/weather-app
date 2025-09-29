@@ -29,6 +29,7 @@ import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
 import TimeSelectButtonGroup from './TimeSelectButtonGroup';
+import { MAX_PARAMETERS_WITHOUT_SCROLL } from './constants';
 // import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
@@ -112,9 +113,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
 
   // Large content should have horizontal scrolling,
   // otherwise disable scrolling so that swipe to close works
-  const shouldHorizontalScroll = height < 500 || (height < 900 && displayParams.length >= 12);
+  const shouldHorizontalScroll = height < 500 || (height < 900 && displayParams.length > MAX_PARAMETERS_WITHOUT_SCROLL);
   const isWideDisplay = width > 500;
-  const maxTableHeight = isWideDisplay ? height - 120 : height - 220;
+  const maxTableHeight = isWideDisplay ? height - 130 : height - 150;
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
