@@ -41,6 +41,7 @@ import {
 } from '@assets/colors';
 import { Config } from '@config';
 import { DisplayParameters } from '@store/forecast/types';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
@@ -181,7 +182,13 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         thumbColor={WHITE}
         ios_backgroundColor={GRAYISH_BLUE}
         value={displayParams.some((arr) => arr.includes(param))}
-        onValueChange={() => updateDisplayParams([index, param])}
+        onValueChange={() => {
+          const paramStr = 'Forecast parameter '+param+' - ';
+          const onOffStr = displayParams.some((arr) => arr.includes(param)) ? 'OFF':'ON';
+
+          trackMatomoEvent('User action', 'Weather', paramStr + '' + onOffStr);
+          updateDisplayParams([index, param])
+        }}
         disabled={displayParams.length === 1 && displayParams[0][1] === param}
       />
     </View>
@@ -224,7 +231,10 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                 accessible
                 accessibilityRole="button"
                 accessibilityHint={t('paramsBottomSheet.restoreDefaultHint')}
-                onPress={() => restoreDefaultDisplayParams()}>
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Weather', 'Restore default parameters');
+                  restoreDefaultDisplayParams()
+                }}>
                 <Text
                   style={[
                     styles.restoreText,

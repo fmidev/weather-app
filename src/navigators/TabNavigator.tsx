@@ -8,6 +8,8 @@ import {
   StyleProp,
   ViewStyle,
   View,
+  AppState,
+  AppStateStatus
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
@@ -60,6 +62,7 @@ import {
 import {
   selectInitialTab,
   selectDidLaunchApp,
+  selectTermsOfUseAccepted,
 } from '@store/navigation/selectors';
 import {
   setNavigationTab as setNavigationTabAction,
@@ -79,11 +82,14 @@ import {
   LaunchArgs,
 } from './types';
 import WarningsTabIcon from './WarningsTabIcon';
+import { sendMatomoEvents, trackMatomoEvent } from '@utils/matomo';
+import packageJSON from '../../package.json';
 
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
   theme: selectTheme(state),
   didLaunchApp: selectDidLaunchApp(state),
+  termsOfUseAccepted: selectTermsOfUseAccepted(state),
 });
 
 const mapDispatchToProps = {
@@ -112,6 +118,7 @@ const Navigator: React.FC<Props> = ({
   theme,
   initialTab,
   didLaunchApp,
+  termsOfUseAccepted,
   setDidLaunchApp,
   fetchAnnouncements,
 }) => {
@@ -119,6 +126,7 @@ const Navigator: React.FC<Props> = ({
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const appState = useRef<AppStateStatus>(AppState.currentState);
   const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
     ((!currentTheme || currentTheme === 'automatic') &&
@@ -147,6 +155,8 @@ const Navigator: React.FC<Props> = ({
 
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
+      trackMatomoEvent('Init', 'Geolocation', 'Launch app');
+      trackMatomoEvent('Init', 'Platform', Platform.OS +' - '+packageJSON.version);
       getGeolocation(setCurrentLocation, t, true);
       fetchAnnouncements();
     }
@@ -158,6 +168,21 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements,
   ]);
 
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/active/) && nextAppState === 'background') {
+        // Make sure that events are sent before app goes to background
+        sendMatomoEvents();
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const navigationTabChanged = (state: NavigationState | undefined) => {
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
@@ -222,11 +247,17 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel={t('navigation:locate')}
         accessibilityHint={t('navigation:locateAccessibilityLabel')}
         icon="locate"
-        onPress={() => getGeolocation(setCurrentLocation, t)}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Map', 'Geolocation');
+          getGeolocation(setCurrentLocation, t);
+        }}
       />
     ),
     headerTitle: () => (
-      <CommonHeaderTitle onPress={() => navigation.navigate('Search')} />
+      <CommonHeaderTitle onPress={() => {
+        trackMatomoEvent('User action', 'Map', 'Open search - location');
+        navigation.navigate('Search');
+      }} />
     ),
     headerRight: () => (
       <HeaderButton
@@ -235,7 +266,10 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel={t('navigation:search')}
         accessibilityHint={t('navigation:searchAccessibilityLabel')}
         icon="search"
-        onPress={() => navigation.navigate('Search')}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Map', 'Open search - button');
+          navigation.navigate('Search');
+        }}
         right
       />
     ),
@@ -252,7 +286,10 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel="info"
         accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
         icon="info"
-        onPress={() => searchInfoSheetRef.current.open()}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Search', 'Open search info bottomsheet');
+          searchInfoSheetRef.current.open()
+        }}
       />
     ),
   };
@@ -370,7 +407,7 @@ const Navigator: React.FC<Props> = ({
 
   const SetupStackScreen = () => (
     <SetupStack.Navigator
-      initialRouteName="Onboarding"
+      initialRouteName={ didLaunchApp && !termsOfUseAccepted ? 'SetupScreen' : 'Onboarding' }
       screenOptions={{ gestureEnabled: false }}>
       <SetupStack.Screen
         name="Onboarding"
@@ -388,6 +425,7 @@ const Navigator: React.FC<Props> = ({
             setUpDone={() => {
               setDidLaunchApp();
             }}
+            termsOfUseChanged={ !termsOfUseAccepted }
           />
         )}
       </SetupStack.Screen>
@@ -413,7 +451,7 @@ const Navigator: React.FC<Props> = ({
     return null;
   }
 
-  if (!didLaunchApp && onboardingWizardEnabled && launchArgs?.e2e !== true) {
+  if ((!didLaunchApp || !termsOfUseAccepted) && onboardingWizardEnabled && launchArgs?.e2e !== true) {
     return (
       <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
         <SetupStackScreen />
@@ -499,6 +537,11 @@ const Navigator: React.FC<Props> = ({
                 />
               ),
             }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Weather');
+              },
+            }}
           />
           <Tab.Screen
             name="Map"
@@ -514,6 +557,11 @@ const Navigator: React.FC<Props> = ({
               tabBarIcon: ({ color, size }) => (
                 <Icon name="map" style={{ color }} width={size} height={size} />
               ),
+            }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Map');
+              },
             }}
           />
           {warningsEnabled && (
@@ -539,6 +587,11 @@ const Navigator: React.FC<Props> = ({
                   />
                 ),
               }}
+              listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Warnings');
+              },
+            }}
             />
           )}
           <Tab.Screen
@@ -559,6 +612,11 @@ const Navigator: React.FC<Props> = ({
                   height={size}
                 />
               ),
+            }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Others');
+              },
             }}
           />
         </Tab.Navigator>

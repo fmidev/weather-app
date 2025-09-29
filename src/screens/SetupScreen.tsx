@@ -25,9 +25,14 @@ import { providerLogos } from '@assets/images';
 type SetupScreenProps = {
   setUpDone: () => void;
   navigation: StackNavigationProp<SetupStackParamList, 'SetupScreen'>;
+  termsOfUseChanged: boolean;
 };
 
-const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
+const SetupScreen: React.FC<SetupScreenProps> = ({
+  navigation,
+  setUpDone,
+  termsOfUseChanged
+}) => {
   const { languageSpecificLogo } = Config.get('onboardingWizard');
   const { t, i18n } = useTranslation('setUp');
   const { colors, dark } = useTheme() as CustomTheme;
@@ -47,6 +52,14 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
         setUpDone();
       })
       .catch((e) => console.error(e));
+  };
+
+  const acceptTermsOfUse = () => {
+    if (termsOfUseChanged) {
+      setUpDone()
+    } else {
+      setPageIndex(1);
+    }
   };
 
   const PermissionComponent: React.FC<{
@@ -207,11 +220,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
         ]}>
         {pageIndex === 0 && (
           <PermissionComponent
-            title={t('termsAndConditions')}
+            title={ termsOfUseChanged ? t('termsAndConditionsChanged') : t('termsAndConditions')}
             description={t('termsAndConditionsDescription')}
             primaryButtonText={t('accept')}
             secondaryButtonText={t('termsAndConditions')}
-            onPrimaryButtonPress={() => setPageIndex(1)}
+            onPrimaryButtonPress={acceptTermsOfUse}
             onSecondaryButtonPress={() => {
               if (!didViewTerms) setDidViewTerms(true);
               navigation.navigate('TermsAndConditions');
@@ -234,25 +247,27 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
           />
         )}
       </View>
-      <View
-        testID="setup_pagination"
-        style={[styles.row, styles.center, styles.height10]}>
+      { !termsOfUseChanged && (
         <View
-          testID="setup_pagination_0"
-          style={[
-            styles.pagination,
-            styles.marginRight,
-            { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
-          ]}
-        />
-        <View
-          testID="setup_pagination_1"
-          style={[
-            styles.pagination,
-            { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
-          ]}
-        />
-      </View>
+          testID="setup_pagination"
+          style={[styles.row, styles.center, styles.height10]}>
+          <View
+            testID="setup_pagination_0"
+            style={[
+              styles.pagination,
+              styles.marginRight,
+              { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
+            ]}
+          />
+          <View
+            testID="setup_pagination_1"
+            style={[
+              styles.pagination,
+              { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
+            ]}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

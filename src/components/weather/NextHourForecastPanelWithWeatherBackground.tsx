@@ -36,6 +36,7 @@ import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import NextHourForecastBar from './forecast/NextHourForecastBar';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -163,13 +164,17 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             iconColor={textColor}
             backgroundColor={overlayColor}
             onPress={() => {
+              trackMatomoEvent('User action', 'Weather', 'Geolocation');
               getGeolocation(setCurrentLocation, t);
             }}
             circular
           />
           <View style={styles.locationTextContainer}>
             <AccessibleTouchableOpacity
-              onPress={() => { navigation.navigate('Search') }}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Weather', 'Open search - location');
+                navigation.navigate('Search');
+              }}
               accessibilityRole="button"
               accessibilityLabel={`${location.name}${location.area ? `, ${location.area}` : ''}, ${t('navigation:search')}`}
             >
@@ -192,6 +197,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             iconColor={textColor}
             backgroundColor={overlayColor}
             onPress={() => {
+              trackMatomoEvent('User action', 'Weather', 'Open search - button');
               navigation.navigate('Search')
             }}
             circular

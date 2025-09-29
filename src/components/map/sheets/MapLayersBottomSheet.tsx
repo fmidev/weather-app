@@ -23,6 +23,7 @@ import {
   CustomTheme,
 } from '@assets/colors';
 import { Config } from '@config';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
@@ -101,12 +102,13 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
               thumbColor={WHITE}
               ios_backgroundColor={GRAYISH_BLUE}
               value={mapLayers.location}
-              onValueChange={() =>
+              onValueChange={() => {
+                trackMatomoEvent('User action', 'Map', 'Show own location - '+!mapLayers.location);
                 updateMapLayers({
                   ...mapLayers,
                   location: !mapLayers.location,
-                })
-              }
+                });
+              }}
             />
           </View>
         </View>
@@ -136,6 +138,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
               }
               onPress={() => {
                 if (layer.id === activeOverlay) return;
+                trackMatomoEvent('User action', 'Map', 'Layer selected - '+layer?.name[locale]);
                 onClose();
                 updateActiveOverlay(Number(layer.id));
               }}>

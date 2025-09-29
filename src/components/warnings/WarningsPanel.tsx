@@ -27,6 +27,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
@@ -129,7 +130,10 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
             <AccessibleTouchableOpacity
               testID="warnings_info_button"
               accessibilityLabel={t('infoAccessibilityLabel')}
-              onPress={() => infoSheetRef.current.open()}>
+              onPress={() => {
+                trackMatomoEvent('User action', 'Warnings', 'Open warnings info panel');
+                infoSheetRef.current.open();
+              }}>
               <View style={[styles.iconPadding]}>
                 <Icon
                   name="info"
@@ -174,7 +178,10 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                   </View>
                 )}
                 <AccessibleTouchableOpacity
-                  onPress={() => setSelectedDay(index)}
+                  onPress={() => {
+                    trackMatomoEvent('User action', 'Warnings', 'Select day '+(index+1)+' / ('+count+' warnings) / '+severity);
+                    setSelectedDay(index);
+                  }}
                   accessibilityRole="button"
                   accessibilityState={{ selected: index === selectedDay }}
                   accessibilityLabel={`${moment(date).format(

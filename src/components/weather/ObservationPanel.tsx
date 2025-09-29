@@ -41,6 +41,7 @@ import List from './observation/List';
 import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
 import { observationTypeParameters } from './charts/settings';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -219,7 +220,10 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 accessibilityRole="button"
                 accessibilityState={{ selected: displayFormat === CHART }}
                 activeOpacity={1}
-                onPress={() => updateDisplayFormat(CHART)}
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Weather', 'Show OBSERVATIONS in CHART format');
+                  updateDisplayFormat(CHART);
+                }}
                 style={styles.withMarginRight}>
                 <View
                   style={[
@@ -255,7 +259,10 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 accessibilityRole="button"
                 accessibilityState={{ selected: displayFormat === LIST }}
                 activeOpacity={1}
-                onPress={() => updateDisplayFormat(LIST)}>
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Weather', 'Show OBSERVATIONS in LIST format');
+                  updateDisplayFormat(LIST);
+                }}>
                 <View
                   style={[
                     styles.contentSelectionContainer,
