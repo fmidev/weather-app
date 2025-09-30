@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { CartesianChart, Line, AreaRange, Bar, useChartTransformState } from 'victory-native';
+import { CartesianChart, Line, AreaRange, Bar, useChartTransformState, getTransformComponents } from 'victory-native';
 import { DashPathEffect, Text, useFont } from '@shopify/react-native-skia';
 import { getWindArrow, tickFormat } from '@utils/chart';
 import moment from 'moment';
@@ -14,6 +14,7 @@ import { ClockType, UnitMap } from '@store/settings/types';
 import AxisLabels from './AxisLabels';
 import { useTheme } from '@react-navigation/native';
 import type { CustomTheme } from '@assets/colors';
+import { LINE_WIDTH, SCALE_X } from './constants';
 
 type ChartProps = {
   chartDimensions: { x: number; y: number };
@@ -38,9 +39,10 @@ const ForecastChart: React.FC<ChartProps> = ({
   tickValues
 }) => {
   const { colors } = useTheme() as CustomTheme;
-  const { state } = useChartTransformState({ scaleX: 4  });
+  const { state } = useChartTransformState({ scaleX: SCALE_X });
+  const { scaleX } = getTransformComponents(state.matrix.get())
   const font = useFont(RobotoRegular, 12);
-  const symbolFont = useFont(NotoSansBold, 16);
+  const symbolFont = useFont(NotoSansBold, 12);
 
   if (!font || !symbolFont) {
     return null;
@@ -79,6 +81,7 @@ const ForecastChart: React.FC<ChartProps> = ({
   }
   const firstLabel = { x: 20, y: 16, label: label };
   const secondLabel = { x: chartDimensions.x - 30, y: 16, label: '%' };
+  const strokeWidth = LINE_WIDTH / scaleX;
 
   return (
     <View style={[styles.container, { height: chartDimensions.y }]}>
@@ -114,11 +117,11 @@ const ForecastChart: React.FC<ChartProps> = ({
           <>
             { (chartType === 'temperature' || chartType === 'weather') && (
               <>
-                <Line points={points.temperature} color={colors.chartPrimaryLine} strokeWidth={0.5} />
-                <Line points={points.feelsLike} color={colors.chartSecondaryLine} strokeWidth={0.5}>
+                <Line points={points.temperature} color={colors.chartPrimaryLine} strokeWidth={strokeWidth} />
+                <Line points={points.feelsLike} color={colors.chartSecondaryLine} strokeWidth={strokeWidth}>
                   <DashPathEffect intervals={[2, 1]} />
                 </Line>
-                <Line points={points.dewPoint} color={colors.chartPrimaryLine} strokeWidth={0.5}>
+                <Line points={points.dewPoint} color={colors.chartPrimaryLine} strokeWidth={strokeWidth}>
                   <DashPathEffect intervals={[1, 1]} />
                 </Line>
               </>
@@ -130,8 +133,8 @@ const ForecastChart: React.FC<ChartProps> = ({
                   lowerPoints={points.windSpeedMS}
                   color="lightgray"
                 />
-                <Line points={points.windSpeedMS} color="black" strokeWidth={1} />
-                <Line points={points.hourlymaximumgust} color="blue" strokeWidth={1}>
+                <Line points={points.windSpeedMS} color="black" strokeWidth={strokeWidth} />
+                <Line points={points.hourlymaximumgust} color="blue" strokeWidth={strokeWidth}>
                   <DashPathEffect intervals={[4, 2]} />
                 </Line>
                 {points.windDirection.map((item) => {
@@ -156,19 +159,19 @@ const ForecastChart: React.FC<ChartProps> = ({
                   chartBounds={chartBounds}
                   color="blue"
                 />
-                <Line points={points.pop} color="black"  strokeWidth={2}>
+                <Line points={points.pop} color="black"  strokeWidth={strokeWidth}>
                   <DashPathEffect intervals={[1, 2]} />
                 </Line>
               </>
             )}
             { chartType === 'humidity' && (
-              <Line points={points.relativeHumidity} color="black"  strokeWidth={2} />
+              <Line points={points.relativeHumidity} color="black"  strokeWidth={strokeWidth} />
             )}
             { chartType === 'pressure' && (
-              <Line points={points.pressure} color="black"  strokeWidth={2} />
+              <Line points={points.pressure} color="black"  strokeWidth={strokeWidth} />
             )}
             { chartType === 'uv' && (
-              <Line points={points.uvCumulated} color="black"  strokeWidth={2} />
+              <Line points={points.uvCumulated} color="black"  strokeWidth={strokeWidth} />
             )}
           </>
         )}
@@ -180,6 +183,7 @@ const ForecastChart: React.FC<ChartProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    flex: 1,
   },
 });
 
