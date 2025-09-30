@@ -7438,10 +7438,10 @@ react-native-localize@^3.4.1:
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-3.4.1.tgz#df07c13231b4e8cc949e68513b124105f861229c"
   integrity sha512-NJqJGBUpHtD/MpLCCkrNiqNZ+xFwbHCivxaoN1Oeb8tBAiZr/IqgP3E+MgnqmmdTMOJ33llUfiW3EM6pEIb33w==
 
-react-native-maps@^1.26.9:
-  version "1.26.9"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.26.9.tgz#07e217a3c1cf92452df71ed62cdaa2d5af9d9194"
-  integrity sha512-VHKjI+EMNrFvq2rsOIFMBCyCnmYrTr+IVqduvGRCtLPHmNPJA17rLz3EwsSpTzCm8xSU5Eo1D/ws5ykR0b4waw==
+react-native-maps@^1.26.11:
+  version "1.26.11"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.26.11.tgz#c1d64ab5e08ca531caae8fbc6d9232c64a5a2fd6"
+  integrity sha512-msVwUqguXrPoiRMA30q432StQ9c+dJYwP1p03xDcXp8A96hMYsotbKbJ7xaeqXHyr9LWaFgprn5zEDZ+XdQTRg==
   dependencies:
     "@types/geojson" "^7946.0.13"
 
