@@ -70,7 +70,9 @@ export const getForecast = async (
         producer: producer || 'default',
         param: [...metaParams[index === 0 ? 0 : 1], ...parameters].join(','),
       },
-    })
+    },
+    undefined,
+    'Timeseries')
   );
 
   // Aurora borealis information is required for the forecast
@@ -102,7 +104,7 @@ export const getForecast = async (
 
   queries.push(
     geoMagneticObservationsEnabled
-      ? axiosClient({ url: apiUrl, params: geoMagneticParams })
+      ? axiosClient({ url: apiUrl, params: geoMagneticParams }, undefined, 'Timeseries')
       : Promise.resolve({ data: {} }),
   );
 
@@ -213,9 +215,9 @@ export const getObservation = async (
   };
 
   const [observationData, dailyObservationData] = await Promise.all([
-    axiosClient({ url: apiUrl, params: hourlyParams }),
+    axiosClient({ url: apiUrl, params: hourlyParams }, undefined, 'Timeseries'),
     dailyObservationsEnabled
-      ? axiosClient({ url: apiUrl, params: dailyParams })
+      ? axiosClient({ url: apiUrl, params: dailyParams }, undefined, 'Timeseries')
       : Promise.resolve({ data: {} }),
   ]);
 
@@ -259,7 +261,7 @@ export const getCurrentPosition = async (
   const { data } = await axiosClient({
     url: apiUrl,
     params,
-  });
+  }, undefined, 'Timeseries');
 
   return data;
 };
@@ -276,7 +278,7 @@ export const getLocationsLocales = async (
     lang: language,
   };
 
-  const { data } = await axiosClient({ url: apiUrl, params });
+  const { data } = await axiosClient({ url: apiUrl, params }, undefined, 'Timeseries');
 
   return data;
 };
