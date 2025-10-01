@@ -24,6 +24,7 @@ import Icon from '@assets/Icon';
 import { uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 import { trackMatomoEvent } from '@utils/matomo';
+import { MAX_PARAMETERS_WITHOUT_SCROLL } from './constants';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -81,7 +82,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const [initialPosition, setInitialPosition] = useState<'start' | 'end'>('start');
 
   const shouldHorizontalScroll = dimensions.height < 500 ||
-                                (dimensions.height < 900 && displayParams.length >= 12);
+                                (dimensions.height < 900 && displayParams.length > MAX_PARAMETERS_WITHOUT_SCROLL);
 
   const appState = useRef<AppStateStatus>(AppState.currentState);
 

@@ -12,14 +12,14 @@ import {
   AppStateStatus
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   createStackNavigator,
   StackNavigationOptions,
   StackNavigationProp,
 } from '@react-navigation/stack';
-import type { NavigationState } from '@react-navigation/routers';
+import type { NavigationState, Route } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { useTranslation } from 'react-i18next';
@@ -126,6 +126,9 @@ const Navigator: React.FC<Props> = ({
     useSuspense: false,
   });
   const searchInfoSheetRef = useRef<RBSheet>(null);
+  const navigationRef = useNavigationContainerRef();
+  const [navReady, setNavReady] = React.useState(false);
+  const [currentRoute, setCurrentRoute] = React.useState<Route<string> | null>(null);
   const appState = useRef<AppStateStatus>(AppState.currentState);
   const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
@@ -140,6 +143,11 @@ const Navigator: React.FC<Props> = ({
   const [warningsSeverity, setWarningsSeverity] = useState<number>(0);
 
   const launchArgs = LaunchArguments.value<LaunchArgs>();
+
+  const handleState = React.useCallback(() => {
+    const r = navigationRef.getCurrentRoute();
+    setCurrentRoute(r ?? null);
+  }, [navigationRef]);
 
   const handleLanguageChanged = useCallback(() => {
     setDidChangeLanguage(true);
@@ -185,6 +193,8 @@ const Navigator: React.FC<Props> = ({
   }, []);
 
   const navigationTabChanged = (state: NavigationState | undefined) => {
+    const r = navigationRef.getCurrentRoute();
+    setCurrentRoute(r ?? null);
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
     if (Number.isInteger(NavigationTabValues[navigationTab])) {
       setNavigationTab(navigationTab);
@@ -479,6 +489,8 @@ const Navigator: React.FC<Props> = ({
         barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
       />
       <NavigationContainer
+        ref={navigationRef}
+        onReady={() => { setNavReady(true); handleState(); }}
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}
         /*
@@ -637,7 +649,10 @@ const Navigator: React.FC<Props> = ({
             onClose={() => searchInfoSheetRef.current?.close()}
           />
         </RBSheet>
-        <ErrorComponent />
+        <ErrorComponent
+          navReady={navReady}
+          currentRoute={currentRoute}
+        />
       </NavigationContainer>
     </>
   );
