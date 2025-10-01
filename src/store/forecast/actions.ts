@@ -18,23 +18,22 @@ import {
 
 export const fetchForecast =
   (location: ForecastLocation, filterLocations: number[] = [], country: string) =>
-  (dispatch: Dispatch<ForecastActionTypes>) => {
+  async (dispatch: Dispatch<ForecastActionTypes>) => {
     dispatch({ type: FETCH_FORECAST });
 
-    getForecast(location, country)
-      .then((data) => {
-        const geoid = Number(Object.keys(data)[0]);
-        const favorites = [...filterLocations, geoid];
-        dispatch({
-          type: FETCH_FORECAST_SUCCESS,
-          data,
-          favorites,
-          timestamp: Date.now(),
-        });
-      })
-      .catch((error: Error) => {
-        dispatch({ type: FETCH_FORECAST_ERROR, error, timestamp: Date.now() });
+    try {
+      const data = await getForecast(location, country);
+      const geoid = Number(Object.keys(data)[0]);
+      const favorites = [...filterLocations, geoid];
+      dispatch({
+        type: FETCH_FORECAST_SUCCESS,
+        data,
+        favorites,
+        timestamp: Date.now(),
       });
+    } catch (error) {
+      dispatch({ type: FETCH_FORECAST_ERROR, error: error as Error, timestamp: Date.now() });
+    }
   };
 
 export const updateDisplayParams =

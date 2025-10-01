@@ -19,7 +19,8 @@ const isLocationValid = (
 
 export const getForecast = async (
   location: ForecastLocation,
-  country: string
+  country: string,
+  retry: string | false = false
 ): Promise<{forecasts: WeatherData[], isAuroraBorealisLikely: boolean}> => {
   const { language } = i18n;
   const {
@@ -58,6 +59,7 @@ export const getForecast = async (
       'moonPhase',
       'modtime',
       'dark',
+      'producer',
     ],
     ['geoid', 'epochtime'],
   ];
@@ -82,7 +84,8 @@ export const getForecast = async (
 
   const geoMagneticObservationsEnabled = geoMagneticObservations?.countryCodes.includes(country)
                                           && location.latlon !== undefined
-                                          && geoMagneticObservations?.enabled === true;
+                                          && geoMagneticObservations?.enabled === true
+                                          && retry === false;
 
   if (geoMagneticObservationsEnabled && location.latlon) {
     const [lat, lon] = location.latlon.split(',');
