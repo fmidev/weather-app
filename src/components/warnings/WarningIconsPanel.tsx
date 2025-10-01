@@ -18,6 +18,7 @@ import { TabParamList } from '@navigators/types';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
@@ -75,6 +76,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   }
 
   const openWarnings = () => {
+    trackMatomoEvent('User action', 'Weather', 'Open warnings -page');
     navigation.navigate('Warnings');
   }
 

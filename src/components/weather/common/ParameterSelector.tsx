@@ -21,6 +21,7 @@ import {
   CustomTheme,
 } from '@assets/colors';
 import { ChartType } from '../charts/types';
+import { trackMatomoEvent } from '@utils/matomo';
 
 type ParameterSelectorProps = {
   chartTypes: ChartType[];
@@ -91,6 +92,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
         `weather:charts:${item}`
       )}`}
       onPress={() => {
+        trackMatomoEvent('User action', 'Weather', 'Selected OBSERVATIONS parameter');
         setParameter(item);
       }}
       style={index < chartTypes.length && styles.withMarginRight}>

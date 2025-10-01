@@ -8,6 +8,7 @@ import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import type { NewsItem } from '@store/news/types';
+import { trackMatomoEvent } from '@utils/matomo';
 
 type NewsProps = {
   item: NewsItem;
@@ -61,7 +62,10 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
         accessibilityRole="imagebutton"
         accessibilityLabel={item.imageAlt}
         accessibilityHint={t('readMore')}
-        onPress={() => { openLink(item.type, item.id) }}
+        onPress={() => {
+          trackMatomoEvent('User action', 'News', 'Open news-page in fmi.fi');
+          openLink(item.type, item.id)
+        }}
       >
         <FastImage
           style={styles.image}

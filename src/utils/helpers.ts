@@ -21,6 +21,7 @@ import { CapInfo, CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from '../assets/colors';
 import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
+import { trackMatomoEvent } from './matomo';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -113,15 +114,22 @@ export const getGeolocation = async (
     request(permission)
       .then((res) => {
         if (res === RESULTS.GRANTED) {
+          trackMatomoEvent('Notice', 'Geolocation', 'COARSE_LOCATION_OK');
           getPosition(callback, t);
         }
         if (res === RESULTS.BLOCKED) {
+          trackMatomoEvent('Notice', 'Geolocation', 'COARSE_LOCATION_NO_PERMISSION');
           alertNoPermission(t);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        // TODO: is this a good way to handle error message?
+        trackMatomoEvent('Error', 'Geolocation', e.message);
+        console.error(e)
+      });
   }
   if (!failSilently && values.every((value) => value === RESULTS.BLOCKED)) {
+    trackMatomoEvent('Notice', 'Geolocation', 'NO_PERMISSION');
     alertNoPermission(t);
   }
   return {};

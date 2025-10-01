@@ -313,7 +313,7 @@
     "versionInfo": "Sovelluksen versio",
     "followUs": "Seuraa meitä",
     "title": "Ilmatieteen laitoksen Sää -sovellus",
-    "body": "Sää-sovelluksestamme saat säätietoja lähes kaikille Suomen paikkakunnille ja sallimalla puhelimesi paikannuksen, palvelu näyttää automaattisesti sijaintisi sääennusteen 10 vrk asti. Kiinnostaako sinua vain lämpötila vai haluatko myös tietoja esimerkiksi ilmanpaineesta, tuulen puuskista tai vaikkapa UV-indeksistä? Sekä sääennusteissa että säähavainnoissa voit vapaasti valita mitä säätietoja haluat seurata. Voit myös tallentaa sovellukseen suosikkipaikkakuntasi niin Suomesta kuin ulkomailta ja selata niitä helposti. Haluamasi tiedot ovat tarjolla sekä taulukkoina että graafisena esityksenä. Kartta-osion animaatioista voit seurata mm. sadealueiden liikettä ja tutkakuviin perustuva sade-ennuste kertoo mihin päin sateet liikkuvat tulevien tuntien aikana. Palvelussa näkyvät voimassa olevat säävaroitukset valitsemassasi sijainnissa ja pystyt myös helposti tarkistamaan viralliset säävaroitukset koko Suomen alueelta."
+    "body": "Sää-sovelluksestamme saat säätietoja lähes kaikille Suomen paikkakunnille ja sallimalla laitteesi paikannuksen, palvelu näyttää automaattisesti sijaintisi sääennusteen 10 vrk asti. Kiinnostaako sinua vain lämpötila vai haluatko myös tietoja esimerkiksi ilmanpaineesta, tuulen puuskista tai vaikkapa UV-indeksistä? Sekä sääennusteissa että säähavainnoissa voit vapaasti valita mitä säätietoja haluat seurata. Voit myös tallentaa sovellukseen suosikkipaikkakuntasi niin Suomesta kuin ulkomailta ja selata niitä helposti. Haluamasi tiedot ovat tarjolla sekä taulukkoina että graafisena esityksenä. Kartta-osion animaatioista voit seurata mm. sadealueiden liikettä ja tutkakuviin perustuva sade-ennuste kertoo mihin päin sateet liikkuvat tulevien tuntien aikana. Palvelussa näkyvät voimassa olevat säävaroitukset valitsemassasi sijainnissa ja pystyt myös helposti tarkistamaan viralliset säävaroitukset koko Suomen alueelta."
   },
   "settings": {
     "language": "Kieli",
@@ -629,6 +629,7 @@
   },
   "setUp": {
     "termsAndConditions": "Käyttöehdot",
+    "termsAndConditionsChanged": "Käyttöehdot on päivitetty",
     "termsAndConditionsDescription": "Käyttääksesi palvelua, sinun tulee hyväksyä käyttöehdot. Tutustu käyttö-\nehtoihin painamalla Käyttöehdot-linkkiä.",
     "accept": "Hyväksy",
     "location": "Sijainti",
@@ -654,9 +655,9 @@
     "generalTitle": "Ilmatieteen laitoksen Sää -mobiilisovelluksen käyttöehdot",
     "contentsTitle": "1. Käyttöoikeuden sisältö",
     "contentsDescription": "Sovelluksen käyttäjällä on oikeus käyttää sovellusta näiden käyttöehtojen mukaisesti. Käyttöoikeus ei ole yksinomainen, eikä se ole siirrettävissä kolmannelle osapuolelle. Käyttöoikeus päättyy käyttäjän poistaessa sovelluksen. Sovelluksen käyttäjä vastaa sovelluksen käyttämiseksi tarvittavien laitteiden, ohjelmistojen ja tietoliikenneyhteyksien hankkimisesta sekä niistä aiheutuvista kustannuksista ja laitteiden, ohjelmistojen ja yhteyksien toiminnasta. Käyttäjä huolehtii sovelluksen käytöstä tietoturvallisessa käyttöympäristössä.",
-    "generalDescription": "Käyttöehtoja sovelletaan Ilmatieteen laitoksen ylläpitämän Sää-sovelluksen (”sovellus”) käyttöön. Sovelluksen tarkoituksena on tarjota käyttäjälle säähavaintoja, -ennusteita ja -varoituksia. Nämä käyttöehdot muodostavat sovelluksen käyttöä koskevan sopimuksen Ilmatieteen laitoksen ja sovelluksen käyttäjän välille. Sovelluksen käyttäjän on hyväksyttävä nämä käyttöehdot sovelluksen käyttöönoton yhteydessä, jolloin ne sitovat käyttäjää. Sovelluksen käyttö on vapaaehtoista. Sovellus tarjotaan käyttöön App Storen, Google Play Storen tai Huawei AppGalleryn kautta, jolloin näiden käyttöehtojen lisäksi käyttäjän tulee noudattaa kyseisen palvelutarjoajan omia käyttöehtoja.",
+    "generalDescription": "Käyttöehtoja sovelletaan Ilmatieteen laitoksen ylläpitämän Sää-sovelluksen (”sovellus”) käyttöön. Sovelluksen tarkoituksena on tarjota käyttäjälle säähavaintoja, -ennusteita ja -varoituksia. Nämä käyttöehdot muodostavat sovelluksen käyttöä koskevan sopimuksen Ilmatieteen laitoksen ja sovelluksen käyttäjän välille. Sovelluksen käyttäjän on hyväksyttävä nämä käyttöehdot sovelluksen käyttöönoton yhteydessä, jolloin ne sitovat käyttäjää. Sovelluksen käyttö on vapaaehtoista. Sovellus tarjotaan käyttöön App Storen tai Google Play Storen kautta, jolloin näiden käyttöehtojen lisäksi käyttäjän tulee noudattaa kyseisen palvelutarjoajan omia käyttöehtoja.",
     "personalInfoTitle": "2. Henkilötiedot",
-    "personalInfoDescription": "Sovellus ei kerää henkilötietoja eikä sijaintiin tai liikkumiseen liittyviä tietoja. Käyttäjä voi milloin tahansa muuttaa tai peruuttaa sovelluksen käyttöönoton mukaiset suostumukset sovelluksen asetuksista. Ilmatieteen laitos voi käyttää alihankkijoita sovelluksen kautta tarjottavan palvelun mahdollistamiseksi.",
+    "personalInfoDescription": "Sovellus ei kerää henkilötietoja eikä sijaintiin tai liikkumiseen liittyviä tietoja. Käyttäjä voi milloin tahansa siirtyä sovelluksen asetuksiin ja muuttaa tai peruuttaa suostumuksensa. Ilmatieteen laitos voi käyttää alihankkijoita sovelluksen tarjoaman palvelun mahdollistamiseksi. Sovellus käyttää myös analytiikkaa kerätäkseen anonymisoitua tietoa palvelun parantamiseksi. Näitä tietoja ei voida käyttää yksittäisten käyttäjien tunnistamiseen.",
     "immaterialRightsTitle": "3. Immateriaalioikeudet",
     "immaterialRightsDescription": "Kaikki sovellukseen liittyvät immateriaalioikeudet ja omistusoikeudet kuuluvat Ilmatieteen laitokselle. Sovellus voi sisältää avoimen lähdekoodin ohjelmistoja.",
     "liabilityTitle": "4. Vastuurajoitukset",

@@ -2,9 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
-import 'moment/locale/fi';
-import 'moment/locale/sv';
-import 'moment/locale/en-gb';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -35,6 +32,7 @@ import ForecastByHourList from './forecast/ForecastByHourList';
 import ChartList from './forecast/ChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -141,7 +139,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                 displayFormat === TABLE ? t('active') : t('notActive')
               }`}
               activeOpacity={1}
-              onPress={() => updateDisplayFormat(TABLE)}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Weather', 'Show FORECAST in TABLE format');
+                updateDisplayFormat(TABLE)
+              }}
               style={styles.withMarginRight}>
               <View
                 style={[
@@ -179,7 +180,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                 displayFormat === CHART ? t('active') : t('notActive')
               }`}
               activeOpacity={1}
-              onPress={() => updateDisplayFormat(CHART)}>
+              onPress={() => {
+                trackMatomoEvent('User action', 'Weather', 'Show FORECAST in CHART format');
+                updateDisplayFormat(CHART)
+              }}>
               <View
                 style={[
                   styles.contentSelectionContainer,
@@ -220,7 +224,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               accessibilityLabel={t('paramsAccessibilityLabel')}
               accessibilityHint={t('paramsBottomSheet.subTitle')}
               style={styles.bottomSheetButton}
-              onPress={() => paramSheetRef.current?.open()}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Weather', 'Open forecast parameter settings');
+                paramSheetRef.current?.open();
+              }}
               disabled={displayFormat === CHART}>
               <Icon
                 name="settings"
@@ -239,7 +246,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               accessibilityLabel={t('infoAccessibilityLabel')}
               accessibilityHint={t('infoAccessibilityHint')}
               style={styles.bottomSheetButton}
-              onPress={() => weatherInfoSheetRef.current?.open()}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Weather', 'Open forecast info bottomsheet');
+                weatherInfoSheetRef.current?.open();
+              }}
               disabled={displayFormat === CHART}>
               <Icon
                 name="info"

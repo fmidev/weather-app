@@ -16,6 +16,7 @@ import Icon from '@assets/Icon';
 
 import { CustomTheme } from '@assets/colors';
 import packageJSON from '../../package.json';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const TermsAndConditionsScreen: React.FC = () => {
   const {
@@ -104,7 +105,10 @@ const TermsAndConditionsScreen: React.FC = () => {
           <AccessibleTouchableOpacity
             accessibilityRole="link"
             accessibilityHint={t('feedback:moveToHint')}
-            onPress={() => Linking.openURL(fmiMailToUrl)}>
+            onPress={() => {
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+fmiMailToUrl);
+              Linking.openURL(fmiMailToUrl)
+            }}>
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text
@@ -141,7 +145,10 @@ const TermsAndConditionsScreen: React.FC = () => {
           <AccessibleTouchableOpacity
             accessibilityRole="link"
             accessibilityHint={t('openInBrowser')}
-            onPress={() => Linking.openURL(accessibilityUrl)}>
+            onPress={() => {
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+accessibilityUrl);
+              Linking.openURL(accessibilityUrl)
+            }}>
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text
@@ -165,7 +172,10 @@ const TermsAndConditionsScreen: React.FC = () => {
           <AccessibleTouchableOpacity
             accessibilityRole="link"
             accessibilityHint={t('feedback:moveToHint')}
-            onPress={() => Linking.openURL(`mailto:${t('email2')}`)}>
+            onPress={() => {
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+`mailto:${t('email2')}`);
+              Linking.openURL(`mailto:${t('email2')}`)
+            }}>
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text
@@ -251,11 +261,11 @@ const TermsAndConditionsScreen: React.FC = () => {
           <AccessibleTouchableOpacity
             accessibilityRole="link"
             accessibilityHint={t('openInBrowser')}
-            onPress={() =>
-              language === 'sv'
-                ? Linking.openURL(legalSv)
-                : Linking.openURL(legal)
-            }>
+            onPress={() => {
+              const url = language === 'sv' ? legalSv : legal;
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+url);
+              Linking.openURL(url);
+            }}>
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text
@@ -279,7 +289,10 @@ const TermsAndConditionsScreen: React.FC = () => {
           <AccessibleTouchableOpacity
             accessibilityRole="link"
             accessibilityHint={t('openInBrowser')}
-            onPress={() => Linking.openURL(accessibilityUrl) }>
+            onPress={() => {
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+accessibilityUrl);
+              Linking.openURL(accessibilityUrl)
+            }}>
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text

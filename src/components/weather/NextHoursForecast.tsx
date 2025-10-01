@@ -7,6 +7,7 @@ import { State } from '@store/types';
 import { selectLoading, selectNextHoursForecast } from '@store/forecast/selectors';
 import HourForecast from './forecast/HourForecast';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+// import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -33,6 +34,9 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
+  // keep last tracked timestamp in a ref (doesn’t trigger re-renders)
+//  const lastTracked = useRef(0);
+
   if (loading || !forecast) {
     return (
       <View style={[styles.container]}>
@@ -46,7 +50,16 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   const count = !isWideDisplay() ?
                 TIMESTEP_COUNT_FOR_PHONES
                 : Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
-
+/*
+  const handleScroll = () => {
+    const now = Date.now();
+    // May not be the best way to track...
+    if (now - lastTracked.current > 2000) { // 2 seconds
+      trackMatomoEvent("User action", "Weather", "Swipe next hour forecast");
+      lastTracked.current = now;
+    }
+  };
+*/
   return isWideDisplay() ? (
     <View testID="next_hours_forecast" style={
       [styles.container, styles.row, { paddingLeft: insets.left, paddingRight: insets.right }]
@@ -63,6 +76,8 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
         testID="next_hours_forecast"
         horizontal
         showsHorizontalScrollIndicator={false}
+        // onScroll={handleScroll}
+        // scrollEventThrottle={500} // event check every 0.5 sec is enough
       >
         { forecast.slice(1, count + 1).map(item => (
           <HourForecast key={item.epochtime} timeStep={item} />)
