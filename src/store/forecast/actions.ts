@@ -35,7 +35,9 @@ export const fetchForecast =
 
       // Checks modtime and retry data fetch if data is older than 24 hours
 
-      for (const [index, forecast] of data.forecasts.entries()) {
+      for (const [index, forecast] of data.forecasts.filter(
+        item => Object.entries(item).length > 0 // filter out empty forecasts
+      ).entries()) {
         const id = Object.keys(forecast)[0];
         const modtime = forecast[id][0].modtime;
         const modtimeMoment = modtime ? moment(modtime+'Z') : undefined;

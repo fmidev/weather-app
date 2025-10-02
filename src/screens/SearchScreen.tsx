@@ -206,11 +206,13 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                 handleSelectLocation(location, true)
               }}
               onIconPress={(location) => {
-                // TODO: remove favourite
-                trackMatomoEvent('User action', 'Search', 'Add favourite - search results');
-                addFavorite(location as Location);
-                setValue('');
-                Keyboard.dismiss();
+                if (isFavorite(location)) {
+                  trackMatomoEvent('User action', 'Search', 'Remove favourite - search results');
+                  deleteFavorite(location.id);
+                } else {
+                  trackMatomoEvent('User action', 'Search', 'Add favourite - search results');
+                  addFavorite(location);
+                }
               }}
               iconNameGetter={(location) =>
                 isFavorite(location) ? 'star-selected' : 'star-unselected'
