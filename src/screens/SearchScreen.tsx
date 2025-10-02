@@ -212,7 +212,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                 } else {
                   trackMatomoEvent('User action', 'Search', 'Add favourite - search results');
                   addFavorite(location);
- }
+                }
               }}
               iconNameGetter={(location) =>
                 isFavorite(location) ? 'star-selected' : 'star-unselected'
