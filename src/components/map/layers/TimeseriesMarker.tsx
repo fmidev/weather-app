@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 
@@ -78,70 +78,78 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
 
   const windSpeedValue = convertValue('wind', windUnit, windSpeedMS);
 
-  return (
-    <Marker
-      coordinate={coordinate}
-      tracksViewChanges={false}
-      onPress={() => {
-        updateSelectedCallout(name === selectedCallout ? undefined : name);
-      }}>
-      <View
-        style={[
-          styles.markerContainer,
-          {
-            backgroundColor: colors.mapButtonBackground,
-            borderColor: colors.mapButtonBorder,
-          },
-        ]}>
-        <View style={styles.mainRow}>
-          {weatherSymbolGetter(
-            smartSymbol.toString(),
-            false
-          )?.({
-            width: 40,
-            height: 40,
-          })}
-          <Text
-            accessibilityLabel={`${temperatureValue} ${t(
-              `observation:paramUnits:°${temperatureUnit}`
-            )}`}
-            style={[styles.tempText, { color: colors.text }]}>
-            {`${temperatureValue}°${temperatureUnit}`}
-          </Text>
-        </View>
-        {selectedCallout && selectedCallout === name && (
-          <View style={styles.calloutContainer}>
-            <Text style={[styles.calloutTitle, { color: colors.text }]}>
-              {name}
-            </Text>
-            <Text style={[styles.calloutText, { color: colors.text }]}>
-              {`${t(`symbols:${smartSymbol}`)}`}
-            </Text>
-            <View style={styles.windSpeedRow}>
-              <Icon
-                name={dark ? 'wind-dark' : 'wind-light-map'}
-                width={24}
-                height={24}
-                style={{
-                  transform: [
-                    {
-                      rotate: `${(windDirection || 0) + 45 - 180}deg`,
-                    },
-                  ],
-                }}
-              />
-              <Text
-                style={[styles.calloutText, { color: colors.text }]}
-                accessibilityLabel={`${windSpeedValue} ${t(
-                  `observation:paramUnits:${windUnit}`
-                )}`}>
-                {`${windSpeedValue} ${windUnit}`}
-              </Text>
-            </View>
-          </View>
-        )}
+  const [tracksViewChanges, setTracksViewChanges] = useState(true);
+
+// When marker content changes (temperature, selectedCallout, weather symbol, etc.),
+// force the map to refresh the marker.
+useEffect(() => {
+  setTracksViewChanges(true);
+  const timeout = setTimeout(() => setTracksViewChanges(false), 500);
+  return () => clearTimeout(timeout);
+}, [selectedCallout, temperatureValue, smartSymbol, windSpeedValue, windDirection]);
+
+return (
+  <Marker
+    coordinate={coordinate}
+    tracksViewChanges={tracksViewChanges}
+    onPress={() => {
+      updateSelectedCallout(name === selectedCallout ? undefined : name);
+    }}
+  >
+    <View
+      style={[
+        styles.markerContainer,
+        {
+          backgroundColor: colors.mapButtonBackground,
+          borderColor: colors.mapButtonBorder,
+        },
+      ]}
+    >
+      <View style={styles.mainRow}>
+        {weatherSymbolGetter(smartSymbol.toString(), false)?.({
+          width: 40,
+          height: 40,
+        })}
+        <Text
+          accessibilityLabel={`${temperatureValue} ${t(
+            `observation:paramUnits:°${temperatureUnit}`
+          )}`}
+          style={[styles.tempText, { color: colors.text }]}
+        >
+          {`${temperatureValue}°${temperatureUnit}`}
+        </Text>
       </View>
-    </Marker>
+
+      {selectedCallout === name && (
+        <View style={styles.calloutContainer}>
+          <Text style={[styles.calloutTitle, { color: colors.text }]}>
+            {name}
+          </Text>
+          <Text style={[styles.calloutText, { color: colors.text }]}>
+            {`${t(`symbols:${smartSymbol}`)}`}
+          </Text>
+          <View style={styles.windSpeedRow}>
+            <Icon
+              name={dark ? 'wind-dark' : 'wind-light-map'}
+              width={24}
+              height={24}
+              style={{
+                transform: [{ rotate: `${(windDirection || 0) + 45 - 180}deg` }],
+              }}
+            />
+            <Text
+              style={[styles.calloutText, { color: colors.text }]}
+              accessibilityLabel={`${windSpeedValue} ${t(
+                `observation:paramUnits:${windUnit}`
+              )}`}
+            >
+              {`${windSpeedValue} ${windUnit}`}
+            </Text>
+          </View>
+        </View>
+      )}
+    </View>
+  </Marker>
   );
 };
 
