@@ -102,8 +102,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const [value, setValue] = useState('');
   const [debouncedValue, setDebouncedValue] = React.useState('');
 
-  console.log(favorites);
-
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedValue(value);
