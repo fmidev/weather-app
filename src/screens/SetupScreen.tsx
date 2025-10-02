@@ -11,6 +11,7 @@ import {
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';
@@ -39,7 +40,10 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   const [didViewTerms, setDidViewTerms] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const isLandscape = useOrientation();
+  const insets = useSafeAreaInsets();
   const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];
+
+  const rowBottomPosition = Math.round(insets.bottom) + 16;
 
   const requestLocationPermissions = () => {
     const permission =
@@ -250,7 +254,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       { !termsOfUseChanged && (
         <View
           testID="setup_pagination"
-          style={[styles.row, styles.center, styles.height10]}>
+          style={[styles.row, styles.center, styles.height10, { bottom: rowBottomPosition }]}>
           <View
             testID="setup_pagination_0"
             style={[

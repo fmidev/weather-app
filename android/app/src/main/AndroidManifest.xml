@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="fi.fmi.mobileweather">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -68,7 +67,11 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_forecast_widget_provider_info" />
         </receiver>
-        <activity android:name=".SmallForecastWidgetConfigurationActivity" android:exported="false">
+        <activity 
+            android:name=".SmallForecastWidgetConfigurationActivity" 
+            android:theme="@style/WidgetConfigurationTheme" 
+            android:exported="false"
+        >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -81,7 +84,11 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_forecast_widget_provider_info" />
         </receiver>
-        <activity android:name=".MediumForecastWidgetConfigurationActivity" android:exported="false">
+        <activity 
+            android:name=".MediumForecastWidgetConfigurationActivity" 
+            android:theme="@style/WidgetConfigurationTheme" 
+            android:exported="false"
+        >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -109,7 +116,11 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_warnings_widget_provider_info" />
         </receiver>
-        <activity android:name=".SmallWarningsWidgetConfigurationActivity" android:exported="false">
+        <activity 
+            android:name=".SmallWarningsWidgetConfigurationActivity" 
+            android:theme="@style/WidgetConfigurationTheme" 
+            android:exported="false"
+        >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -122,7 +133,11 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_warnings_widget_provider_info" />
         </receiver>
-        <activity android:name=".MediumWarningsWidgetConfigurationActivity" android:exported="false">
+        <activity 
+            android:name=".MediumWarningsWidgetConfigurationActivity" 
+            android:theme="@style/WidgetConfigurationTheme" 
+            android:exported="false"
+        >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>

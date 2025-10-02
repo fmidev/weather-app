@@ -125,10 +125,10 @@ const Navigator: React.FC<Props> = ({
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
+  const searchInfoSheetRef = useRef<RBSheet>(null);
   const navigationRef = useNavigationContainerRef();
   const [navReady, setNavReady] = React.useState(false);
   const [currentRoute, setCurrentRoute] = React.useState<Route<string> | null>(null);
-  const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
   const appState = useRef<AppStateStatus>(AppState.currentState);
   const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
@@ -298,7 +298,7 @@ const Navigator: React.FC<Props> = ({
         icon="info"
         onPress={() => {
           trackMatomoEvent('User action', 'Search', 'Open search info bottomsheet');
-          searchInfoSheetRef.current.open()
+          searchInfoSheetRef.current?.open();
         }}
       />
     ),
@@ -646,7 +646,7 @@ const Navigator: React.FC<Props> = ({
             draggableIcon: styles.draggableIcon,
           }}>
           <SearchInfoBottomSheet
-            onClose={() => searchInfoSheetRef.current.close()}
+            onClose={() => searchInfoSheetRef.current?.close()}
           />
         </RBSheet>
         <ErrorComponent

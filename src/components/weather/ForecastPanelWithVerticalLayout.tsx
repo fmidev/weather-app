@@ -83,8 +83,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
-  const paramSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const weatherInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const paramSheetRef = useRef<RBSheet>(null);
+  const weatherInfoSheetRef = useRef<RBSheet>(null);
   const { ageWarning, forecastLengthTitle } = Config.get('weather').forecast;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
@@ -226,7 +226,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               style={styles.bottomSheetButton}
               onPress={() => {
                 trackMatomoEvent('User action', 'Weather', 'Open forecast parameter settings');
-                paramSheetRef.current.open()
+                paramSheetRef.current?.open();
               }}
               disabled={displayFormat === CHART}>
               <Icon
@@ -248,7 +248,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               style={styles.bottomSheetButton}
               onPress={() => {
                 trackMatomoEvent('User action', 'Weather', 'Open forecast info bottomsheet');
-                weatherInfoSheetRef.current.open()
+                weatherInfoSheetRef.current?.open();
               }}
               disabled={displayFormat === CHART}>
               <Icon
@@ -280,7 +280,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
             <ChartList
               data={data}
               activeDayIndex={activeDayIndex}
-              setActiveDayIndex={(i) => setActiveDayIndex(i)}
+              setActiveDayIndex={(i:number) => setActiveDayIndex(i)}
               currentDayOffset={sections[0].data.length}
             />
           )}
@@ -296,7 +296,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
           },
           draggableIcon: styles.draggableIcon,
         }}>
-        <ParamsBottomSheet onClose={() => paramSheetRef.current.close()} />
+        <ParamsBottomSheet onClose={() => paramSheetRef.current?.close()} />
       </RBSheet>
       <RBSheet
         ref={weatherInfoSheetRef}
@@ -310,7 +310,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
           draggableIcon: styles.draggableIcon,
         }}>
         <WeatherInfoBottomSheet
-          onClose={() => weatherInfoSheetRef.current.close()}
+          onClose={() => weatherInfoSheetRef.current?.close()}
         />
       </RBSheet>
     </View>

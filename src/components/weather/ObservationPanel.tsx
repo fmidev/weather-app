@@ -95,7 +95,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
-  const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const stationSheetRef = useRef<RBSheet>(null);
   const { enabled, parameters } = Config.get('weather').observation;
   const { layout } = Config.get('weather')
 
@@ -199,7 +199,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             </Text>
             <View style={[styles.observationDropdown]}>
               <CollapsibleHeader
-                onPress={() => stationSheetRef.current.open()}
+                onPress={() => stationSheetRef.current?.open()}
                 open={false}
                 title={title}
                 accessibilityLabel=""
@@ -343,7 +343,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           draggableIcon: styles.draggableIcon,
         }}>
         <ObservationStationListBottomSheet
-          onClose={() => stationSheetRef.current.close()}
+          onClose={() => stationSheetRef.current?.close()}
         />
       </RBSheet>
     </View>

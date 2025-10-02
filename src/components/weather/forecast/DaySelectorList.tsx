@@ -50,7 +50,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
-  const dayStripRef = useRef() as React.MutableRefObject<ScrollView>;
+  const dayStripRef = useRef<ScrollView>(null);
 
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
@@ -61,7 +61,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     units?.temperature.unitAbb ?? defaultUnits.temperature;
 
   useEffect(() => {
-    if (activeDayIndex >= 0 && dayData && dayData.length) {
+    if (activeDayIndex >= 0 && dayData && dayData.length && dayStripRef.current) {
       dayStripRef.current.scrollTo({
         x: activeDayIndex * 100,
         animated: true,

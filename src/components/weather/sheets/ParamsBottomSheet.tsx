@@ -173,14 +173,16 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
 
       <Switch
         testID={`weather_params_switch_${param}`}
-        style={
+        accessibilityRole="switch"
+        style={[
+          Platform.OS === 'ios' && Number(Platform.Version) >= 26 ? styles.wideSwitch : null,
           displayParams.length === 1 && displayParams[0][1] === param
             ? disabledStyle
             : {}
-        }
+        ]}
         trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
         thumbColor={WHITE}
-        ios_backgroundColor={GRAYISH_BLUE}
+        ios_backgroundColor={WHITE}
         value={displayParams.some((arr) => arr.includes(param))}
         onValueChange={() => {
           const paramStr = 'Forecast parameter '+param+' - ';
@@ -314,6 +316,9 @@ const styles = StyleSheet.create({
   },
   landscape: {
     paddingBottom: 200,
+  },
+  wideSwitch: {
+    width: 65, // wider switch for iOS 26
   },
 });
 

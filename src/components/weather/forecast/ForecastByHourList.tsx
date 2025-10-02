@@ -69,9 +69,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { excludeDayLength } = Config.get('weather').forecast;
 
-  const virtualizedList = useRef() as React.MutableRefObject<
-    VirtualizedList<TimeStepData>
-  >;
+  const virtualizedList = useRef<VirtualizedList<TimeStepData>>(null);
 
   useEffect(() => {
     if (activeDayIndex !== currentIndex && data.length > 0) {
@@ -81,7 +79,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
       const index =
         calculatedIndex > data.length ? data.length - 1 : calculatedIndex;
-      if (index >= 0) {
+      if (index >= 0 && virtualizedList.current) {
         virtualizedList.current.scrollToIndex({
           index,
           animated: false,

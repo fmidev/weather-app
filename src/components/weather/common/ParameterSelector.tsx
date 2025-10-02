@@ -38,7 +38,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   const [lastVisible, setLastVisible] = useState<boolean>(true);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation();
-  const buttonList = useRef() as React.MutableRefObject<FlatList<ChartType>>;
+  const buttonList = useRef<FlatList<ChartType>>(null);
 
   useEffect(() => {
     if (chartTypes && parameter && buttonList.current) {

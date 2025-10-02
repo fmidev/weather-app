@@ -92,7 +92,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const multiplier = Math.round(width / 400);
 
-  const sliderRef = useRef() as React.MutableRefObject<ScrollView>;
+  const sliderRef = useRef<ScrollView>(null);
 
   const observationEndUnix =
     (overlay?.observation &&

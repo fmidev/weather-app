@@ -52,8 +52,8 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
-  const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const headerRef = useRef() as React.MutableRefObject<View>;
+  const infoSheetRef = useRef<RBSheet>(null);
+  const headerRef = useRef<View>(null);
   const colorMode = dark ? 'dark' : 'light';
 
   moment.locale(i18n.language);
@@ -132,7 +132,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               accessibilityLabel={t('infoAccessibilityLabel')}
               onPress={() => {
                 trackMatomoEvent('User action', 'Warnings', 'Open warnings info panel');
-                infoSheetRef.current.open();
+                infoSheetRef.current?.open();
               }}>
               <View style={[styles.iconPadding]}>
                 <Icon
@@ -255,7 +255,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           },
           draggableIcon: styles.draggableIcon,
         }}>
-        <InfoSheet onClose={() => infoSheetRef.current.close()} />
+        <InfoSheet onClose={() => infoSheetRef.current?.close()} />
       </RBSheet>
     </View>
   );

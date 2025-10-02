@@ -45,7 +45,7 @@ const WarningItem = ({
   areasDescription?: string;
   warning: CapWarning;
   warningCount?: number;
-  scrollViewRef?: React.MutableRefObject<ScrollView>;
+  scrollViewRef?: React.RefObject<ScrollView | null>;
   width: number;
   timespan: string;
   includeSeverityBars: boolean;
@@ -139,7 +139,7 @@ function WarningBlock({
 }) {
   const [open, setOpen] = useState(false);
   const { colors } = useTheme() as CustomTheme;
-  const scrollViewRef = useRef() as React.MutableRefObject<ScrollView>;
+  const scrollViewRef = useRef<ScrollView>(null);
   const { width } = useWindowDimensions();
   const { i18n } = useTranslation();
   const locale = i18n.language;
