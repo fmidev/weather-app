@@ -20,7 +20,7 @@ const isLocationValid = (
 export const getForecast = async (
   location: ForecastLocation,
   country: string,
-  retry: string | false = false
+  retry: string | false = false // producer name or false if not a retry
 ): Promise<{forecasts: WeatherData[], isAuroraBorealisLikely: boolean}> => {
   const { language } = i18n;
   const {
@@ -42,7 +42,7 @@ export const getForecast = async (
     attributes: 'geoid',
     lang: language,
     tz: 'utc',
-    who: `${packageJSON.name}-${Platform.OS}`,
+    who: `${packageJSON.name}-${Platform.OS}${retry ? '-retry' : ''}`,
   };
 
   const metaParams = [
@@ -64,17 +64,19 @@ export const getForecast = async (
     ['geoid', 'epochtime'],
   ];
 
-  const queries = dataSettings.map(({ parameters, producer }, index) =>
-    axiosClient({
-      url: apiUrl,
-      params: {
-        ...params,
-        producer: producer || 'default',
-        param: [...metaParams[index === 0 ? 0 : 1], ...parameters].join(','),
+  const queries = dataSettings.flatMap(({ parameters, producer }, index) =>
+    !retry || producer === retry ?
+      axiosClient({
+        url: apiUrl,
+        params: {
+          ...params,
+          producer: producer || 'default',
+          param: [...metaParams[index === 0 ? 0 : 1], ...parameters].join(','),
+        },
       },
-    },
-    undefined,
-    'Timeseries')
+      undefined,
+      'Timeseries')
+    : []
   );
 
   // Aurora borealis information is required for the forecast
