@@ -189,6 +189,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const mapMaxZoom = Platform.OS === 'android' ? 10 : 9.5;
   const mapMinZoom = Platform.OS === 'android' ? 4 : 3.5;
 
+  // Fixes crash on Android when navigating away from the screen
+  if (Platform.OS === 'android' && !isFocused) return null;
+
   return (
     <View style={styles.mapContainer}>
       <MapView
