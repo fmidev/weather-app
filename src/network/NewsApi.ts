@@ -9,7 +9,7 @@ const getNews = async (language: string): Promise<NewsItem[]> => {
     return Promise.reject(new Error('News API url is not defined'));
   }
 
-  const url = apiUrl[language]+`?limit=${numberOfNews}`;
+  const url = `${apiUrl[language]}${apiUrl[language].includes('?') ? `&limit=${numberOfNews}` : `?limit=${numberOfNews}`}`;
   const { data } = await axiosClient({ url }, undefined, 'News');
 
   const newsItems = data.items.flatMap((item:any):NewsItem | [] => {

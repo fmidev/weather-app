@@ -31,13 +31,13 @@ const News: React.FC<NewsProps> = ({
 }) => {
   const { width} = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const { t, } = useTranslation('news');
-  const { enabled, numberOfNews } = Config.get('news');
+  const { t, i18n } = useTranslation('news');
+  const { enabled, numberOfNews, apiUrl } = Config.get('news');
   const { dark } = useTheme() as CustomTheme;
   const colorMode = dark ? 'dark' : 'light';
   const isWideDisplay = () => width > 700;
 
-  if (!enabled) {
+  if (!enabled || !apiUrl[i18n.language]) {
     return null;
   }
 
