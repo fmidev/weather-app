@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   day: {
-    width: 55,
+    width: 58,
   },
   centeredView: {
     flex: 1,
