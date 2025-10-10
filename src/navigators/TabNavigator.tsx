@@ -226,6 +226,9 @@ const Navigator: React.FC<Props> = ({
     </View>
   );
 
+  // Enable on every platform when iOS 26 animation issues are fixed
+  const animation = Platform.OS === 'ios' && Number(Platform.Version)>= 26 ? 'none' : 'default';
+
   const CommonHeaderOptions: StackNavigationOptions = {
     headerBackTestID: 'header-back',
     headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
@@ -241,8 +244,9 @@ const Navigator: React.FC<Props> = ({
     headerBackImage: ({ tintColor }: { tintColor: string }) => (
       <HeaderBackImage tintColor={tintColor} />
     ),
-    headerBackTitleVisible: false,
+    headerBackTitle: '',
     headerBackAccessibilityLabel: t('navigation:backAccessibilityLabel'),
+    animation,
   };
 
   const LocationHeaderOptions = ({
@@ -316,7 +320,7 @@ const Navigator: React.FC<Props> = ({
       <MapStack.Screen
         name="StackMap"
         component={MapScreen}
-        options={LocationHeaderOptions}
+        options={LocationHeaderOptions({ navigation: navigationRef as any })}
       />
       <MapStack.Screen
         name="Search"
@@ -332,7 +336,9 @@ const Navigator: React.FC<Props> = ({
       <WeatherStack.Screen
         name="StackWeather"
         component={WeatherScreen}
-        options={ weatherLayout === 'fmi' ? { headerShown: false } : LocationHeaderOptions }
+        options={
+          weatherLayout === 'fmi' ? { headerShown: false } : LocationHeaderOptions({ navigation: navigationRef as any })
+        }
       />
       <WeatherStack.Screen
         name="Search"
@@ -348,7 +354,7 @@ const Navigator: React.FC<Props> = ({
       <WarningsStack.Screen
         name="StackWarnings"
         component={WarningsScreen}
-        options={LocationHeaderOptions}
+        options={LocationHeaderOptions({ navigation: navigationRef as any })}
         initialParams={{ day: 0 }}
       />
       <WeatherStack.Screen
@@ -513,6 +519,7 @@ const Navigator: React.FC<Props> = ({
                 : lightTheme.colors.tabBarActive;
 
               return (
+                // @ts-ignore
                 <AccessibleTouchableOpacity
                   {...rest}
                   accessibilityRole="tab"
@@ -538,7 +545,7 @@ const Navigator: React.FC<Props> = ({
                 'navigation:slash'
               )} 4 `,
               headerShown: false,
-              tabBarTestID: 'navigation_weather',
+              tabBarButtonTestID: 'navigation_weather',
               tabBarLabel: `${t('navigation:weather')}`,
               tabBarIcon: ({ color, size }) => (
                 <Icon
@@ -563,7 +570,7 @@ const Navigator: React.FC<Props> = ({
                 'navigation:slash'
               )} 4`,
               headerShown: false,
-              tabBarTestID: 'navigation_map',
+              tabBarButtonTestID: 'navigation_map',
               tabBarLabel: `${t('navigation:map')}`,
               tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
@@ -589,7 +596,7 @@ const Navigator: React.FC<Props> = ({
                     : 'warnings:noWarnings'
                 )}`,
                 headerShown: false,
-                tabBarTestID: 'navigation_warnings',
+                tabBarButtonTestID: 'navigation_warnings',
                 tabBarLabel: `${t('navigation:warnings')}`,
                 tabBarIcon: ({ color, size }) => (
                   <WarningsTabIcon
@@ -614,7 +621,7 @@ const Navigator: React.FC<Props> = ({
                 'navigation:slash'
               )} 4`,
               headerShown: false,
-              tabBarTestID: 'navigation_others',
+              tabBarButtonTestID: 'navigation_others',
               tabBarLabel: `${t('navigation:others')}`,
               tabBarIcon: ({ color, size }) => (
                 <Icon
