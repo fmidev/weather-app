@@ -174,12 +174,11 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
       <Switch
         testID={`weather_params_switch_${param}`}
         accessibilityRole="switch"
-        style={[
-          Platform.OS === 'ios' && Number(Platform.Version) >= 26 ? styles.wideSwitch : null,
+        style={
           displayParams.length === 1 && displayParams[0][1] === param
             ? disabledStyle
             : {}
-        ]}
+        }
         trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
         thumbColor={WHITE}
         ios_backgroundColor={WHITE}
@@ -316,9 +315,6 @@ const styles = StyleSheet.create({
   },
   landscape: {
     paddingBottom: 200,
-  },
-  wideSwitch: {
-    width: 65, // wider switch for iOS 26
   },
 });
 
