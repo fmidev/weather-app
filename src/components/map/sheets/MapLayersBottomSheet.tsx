@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text, Switch, Platform } from 'react-native';
+import { View, StyleSheet, Text, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -98,7 +98,6 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
               {t('map:layersBottomSheet:locationHint')}
             </Text>
             <Switch
-              style={Platform.OS === 'ios' && Number(Platform.Version) >= 26 ? styles.wideSwitch : null }
               trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
               thumbColor={WHITE}
               ios_backgroundColor={WHITE}
@@ -207,9 +206,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
     flexShrink: 1,
-  },
-  wideSwitch: {
-    width: 65, // wider switch for iOS 26
   },
 });
 
