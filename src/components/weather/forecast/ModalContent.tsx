@@ -39,7 +39,7 @@ const DailyModal: React.FC<ModalContentProps> = ({
   onDayChange,
   initialPosition
 }) => {
-  const { t } = useTranslation('forecast');
+  const { t, i18n } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
 
   return (
@@ -64,7 +64,7 @@ const DailyModal: React.FC<ModalContentProps> = ({
           <Text
             accessibilityRole="header"
             style={[styles.text, styles.bold, styles.headerText, { color: colors.primaryText }]}>
-            {uppercaseFirst(moment(timeStamp).format('dddd, D.M.'))}
+            {uppercaseFirst(moment(timeStamp).locale(i18n.language).format('dddd, D.M.'))}
           </Text>
           <View accessible>
             <Icon
