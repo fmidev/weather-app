@@ -39,8 +39,9 @@ const DailyModal: React.FC<ModalContentProps> = ({
   onDayChange,
   initialPosition
 }) => {
-  const { t } = useTranslation('forecast');
+  const { t, i18n } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
+  moment.locale(i18n.language);
 
   return (
     <View style={styles.container}>
