@@ -59,7 +59,7 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
       <title>SmartMet Alert Client</title>
     </head>
 
-    <body>
+    <body style="padding-bottom: 1px">
       <smartmet-alert-client language="${locale}" theme="${
     dark ? 'dark' : 'light'
   }" gray-scale-selector="true"></smartmet-alert-client>
