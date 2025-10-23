@@ -18,9 +18,9 @@ const InvalidURLView = () => (
   <Text>Invalid webview URL blocked</Text>
 )
 
-const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
+const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
   updateInterval
-) => {
+}) => {
   const [viewHeight, setViewHeight] = useState<number>(2000);
   const { dark } = useTheme() as CustomTheme;
   const webViewRef = useRef(null);
