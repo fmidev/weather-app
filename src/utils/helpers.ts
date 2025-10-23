@@ -17,10 +17,11 @@ import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
 import moment, { MomentObjectOutput } from 'moment';
 import { Config } from '@config';
-import { CapWarning, Severity } from '@store/warnings/types';
+import { CapInfo, CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from '../assets/colors';
 import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
+import { trackMatomoEvent } from './matomo';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -113,15 +114,22 @@ export const getGeolocation = async (
     request(permission)
       .then((res) => {
         if (res === RESULTS.GRANTED) {
+          trackMatomoEvent('Notice', 'Geolocation', 'COARSE_LOCATION_OK');
           getPosition(callback, t);
         }
         if (res === RESULTS.BLOCKED) {
+          trackMatomoEvent('Notice', 'Geolocation', 'COARSE_LOCATION_NO_PERMISSION');
           alertNoPermission(t);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        // TODO: is this a good way to handle error message?
+        trackMatomoEvent('Error', 'Geolocation', e.message);
+        console.error(e)
+      });
   }
   if (!failSilently && values.every((value) => value === RESULTS.BLOCKED)) {
+    trackMatomoEvent('Notice', 'Geolocation', 'NO_PERMISSION');
     alertNoPermission(t);
   }
   return {};
@@ -216,12 +224,14 @@ export const getObservationCellValue = (
   decimals?: number,
   divider?: number,
   showUnit?: boolean,
-  decimalSeparator: ',' | '.' = ','
+  decimalSeparator: ',' | '.' = ',',
+  t?: (key: string) => string,
 ): string => {
   const unitAbb = unit.replace('°', ''); // get rid of ° in temperature units
   const unitParameterObject = UNITS.find((x) =>
     x.unitTypes.find((unitDefinition) => unitDefinition.unitAbb === unitAbb)
   );
+  const translatedUnit = t ? t(unitAbb) : unitAbb;
 
   const divideWith = divider || 1;
   if (!item || !param) return '-';
@@ -244,7 +254,7 @@ export const getObservationCellValue = (
       : Number(value).toFixed(decimals || 0)
     )
       .toString()
-      .replace('.', decimalSeparator)} ${showUnit ? unit : ''}`.trim();
+      .replace('.', decimalSeparator)} ${showUnit ? translatedUnit : ''}`.trim();
   }
   return '-';
 };
@@ -276,24 +286,25 @@ export const getLatestObservationAvoidingMissingValues = (
 
 export const getParameterUnit = (
   param: keyof (ObsTimeStepData | ForTimeStepData),
-  units?: UnitMap
+  units?: UnitMap,
+  t?: (key: string) => string
 ): string => {
   const { wind, temperature, precipitation, pressure } =
     Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
     case 'ri_10min':
-      return units?.precipitation.unitAbb ?? precipitation;
+      return t ? t(units?.precipitation.unitAbb ?? precipitation) : units?.precipitation.unitAbb ?? precipitation;
     case 'humidity':
       return '%';
     case 'temperature':
     case 'dewPoint':
-      return `°${units?.temperature.unitAbb ?? temperature}`;
+      return t ? `°${ t(units?.temperature.unitAbb ?? temperature) }` : `°${ units?.temperature.unitAbb ?? temperature}`;
     case 'windSpeedMS':
     case 'windGust':
-      return units?.wind.unitAbb ?? wind;
+      return t ? t(units?.wind.unitAbb ?? wind) : units?.wind.unitAbb ?? wind;
     case 'pressure':
-      return units?.pressure.unitAbb ?? pressure;
+      return t ? t(units?.pressure.unitAbb ?? pressure) : units?.pressure.unitAbb ?? pressure;
     case 'visibility':
       return 'km';
     case 'snowDepth':
@@ -306,6 +317,19 @@ export const getParameterUnit = (
       return '';
   }
 };
+
+export const formatAccessibleTemperature = (
+  val: string | number | undefined | null,
+  t: (key: string) => string): string  => {
+  if (val === null || val === undefined || val === '') return '-';
+
+  const num = Number(val);
+  if (isNaN(num)) return '-';
+
+  const valuePart =
+    num < 0 ? `${t('forecast:minus')} ${Math.abs(num)}` : `${num}`;
+  return `${valuePart}`;
+}
 
 // https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
 const getEaster = (year: number): Date => {
@@ -482,3 +506,22 @@ export const roundCoordinates = (value: number): number => {
 
   return +(Math.round(parseFloat(value + 'e+4')) + 'e-4');
 };
+
+export const uppercaseFirst = (str: string) => str ? str[0].toUpperCase() + str.slice(1) : '';
+
+export const selectCapInfoByLanguage = (infos: Array<CapInfo>, language: string):CapInfo => {
+  const info = infos.find((item) => {
+    const [l] = item.language.split('-');
+    return l === language;
+  });
+
+  if (info) {
+    return info
+  }
+  return infos[0];
+}
+
+export function roundToNearestTen(n: number): number {
+  const r = Math.round(n / 10) * 10;
+  return Object.is(r, -0) ? 0 : r; // normalize -0 -> 0
+}

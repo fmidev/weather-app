@@ -8,6 +8,7 @@ export const UPDATE_OBSERVATION_DISPLAY_FORMAT =
   'UPDATE_OBSERVATION_DISPLAY_FORMAT';
 export const UPDATE_OBSERVATION_CHART_PARAMETER =
   'UPDATE_OBSERVATION_CHART_PARAMETER';
+export const RESET_OBSERVATION_STATE = 'RESET_OBSERVATION_STATE';
 
 interface FetchObservation {
   type: typeof FETCH_OBSERVATION;
@@ -16,7 +17,7 @@ interface FetchObservation {
 interface FetchObservationSuccess {
   type: typeof FETCH_OBSERVATION_SUCCESS;
   payload: {
-    data: ObservationDataRaw[];
+    data: Array<ObservationDataRaw | boolean>;
     location: ObservationLocation;
   };
 }
@@ -42,13 +43,18 @@ interface UpdateObservationChartParameter {
   value: ChartType;
 }
 
+interface ResetObservationState {
+  type: typeof RESET_OBSERVATION_STATE;
+}
+
 export type ObservationActionTypes =
   | FetchObservation
   | FetchObservationSuccess
   | FetchObservationError
   | SetStationId
   | UpdateDisplayFormat
-  | UpdateObservationChartParameter;
+  | UpdateObservationChartParameter
+  | ResetObservationState;
 
 export interface ObservationParameters {
   cloudHeight: number | null;
@@ -73,6 +79,10 @@ export interface DailyObservationParameters {
   maximumTemperature: number | null;
   minimumGroundTemperature06: number | null;
   snowDepth06: number | null;
+}
+
+export interface GeoMagneticObservationParameters {
+  geomagneticRIndex: number | null;
 }
 
 export interface TimeStepData

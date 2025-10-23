@@ -11,6 +11,7 @@ import {
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';
@@ -19,18 +20,30 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { useOrientation } from '@utils/hooks';
+import { Config } from '@config';
+import { providerLogos } from '@assets/images';
 
 type SetupScreenProps = {
   setUpDone: () => void;
   navigation: StackNavigationProp<SetupStackParamList, 'SetupScreen'>;
+  termsOfUseChanged: boolean;
 };
 
-const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
-  const { t } = useTranslation('setUp');
+const SetupScreen: React.FC<SetupScreenProps> = ({
+  navigation,
+  setUpDone,
+  termsOfUseChanged
+}) => {
+  const { languageSpecificLogo } = Config.get('onboardingWizard');
+  const { t, i18n } = useTranslation('setUp');
   const { colors, dark } = useTheme() as CustomTheme;
   const [didViewTerms, setDidViewTerms] = useState<boolean>(false);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const isLandscape = useOrientation();
+  const insets = useSafeAreaInsets();
+  const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];
+
+  const rowBottomPosition = Math.round(insets.bottom) + 16;
 
   const requestLocationPermissions = () => {
     const permission =
@@ -43,6 +56,14 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
         setUpDone();
       })
       .catch((e) => console.error(e));
+  };
+
+  const acceptTermsOfUse = () => {
+    if (termsOfUseChanged) {
+      setUpDone()
+    } else {
+      setPageIndex(1);
+    }
   };
 
   const PermissionComponent: React.FC<{
@@ -75,7 +96,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
       ]}>
       <Text
         testID="setup_title_text"
-        style={[styles.title, { color: colors.primaryText }]}
+        style={[styles.title, { color: colors.text }]}
         accessibilityRole="header">
         {title}
       </Text>
@@ -98,7 +119,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
                   { borderBottomColor: colors.primary },
                 ]}>
                 <Text
-                  style={[styles.textHighlight, { color: colors.primaryText }]}>
+                  style={[styles.textHighlight, { color: colors.text }]}>
                   {secondaryButtonText}
                 </Text>
               </View>
@@ -117,7 +138,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             <View
               style={[
                 styles.button,
-                { backgroundColor: colors.primaryText },
+                { backgroundColor: colors.text },
                 primaryButtonDisabled && styles.disabled,
               ]}>
               <View style={styles.textContainer}>
@@ -143,7 +164,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
             <View
               style={[
                 styles.button,
-                { backgroundColor: colors.primaryText },
+                { backgroundColor: colors.text },
                 primaryButtonDisabled && styles.disabled,
               ]}>
               <View style={styles.textContainer}>
@@ -165,7 +186,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
                   { borderBottomColor: colors.primary },
                 ]}>
                 <Text
-                  style={[styles.textHighlight, { color: colors.primaryText }]}>
+                  style={[styles.textHighlight, { color: colors.text }]}>
                   {secondaryButtonText}
                 </Text>
               </View>
@@ -189,8 +210,8 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
         <Image
           source={
             dark
-              ? require('../assets/images/provider-logo-dark.png')
-              : require('../assets/images/provider-logo-light.png')
+              ? showLanguageSpecificLogo ? providerLogos[i18n.language].dark : require(`../assets/images/provider-logo-dark.png`)
+              : showLanguageSpecificLogo ? providerLogos[i18n.language].light : require(`../assets/images/provider-logo-light.png`)
           }
           resizeMode="contain"
           style={styles.logo}
@@ -203,11 +224,11 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
         ]}>
         {pageIndex === 0 && (
           <PermissionComponent
-            title={t('termsAndConditions')}
+            title={ termsOfUseChanged ? t('termsAndConditionsChanged') : t('termsAndConditions')}
             description={t('termsAndConditionsDescription')}
             primaryButtonText={t('accept')}
             secondaryButtonText={t('termsAndConditions')}
-            onPrimaryButtonPress={() => setPageIndex(1)}
+            onPrimaryButtonPress={acceptTermsOfUse}
             onSecondaryButtonPress={() => {
               if (!didViewTerms) setDidViewTerms(true);
               navigation.navigate('TermsAndConditions');
@@ -230,25 +251,27 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ navigation, setUpDone }) => {
           />
         )}
       </View>
-      <View
-        testID="setup_pagination"
-        style={[styles.row, styles.center, styles.height10]}>
+      { !termsOfUseChanged && (
         <View
-          testID="setup_pagination_0"
-          style={[
-            styles.pagination,
-            styles.marginRight,
-            { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
-          ]}
-        />
-        <View
-          testID="setup_pagination_1"
-          style={[
-            styles.pagination,
-            { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
-          ]}
-        />
-      </View>
+          testID="setup_pagination"
+          style={[styles.row, styles.center, styles.height10, { bottom: rowBottomPosition }]}>
+          <View
+            testID="setup_pagination_0"
+            style={[
+              styles.pagination,
+              styles.marginRight,
+              { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
+            ]}
+          />
+          <View
+            testID="setup_pagination_1"
+            style={[
+              styles.pagination,
+              { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
+            ]}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

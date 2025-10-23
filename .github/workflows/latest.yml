@@ -24,7 +24,7 @@ jobs:
     strategy:
       # Node version matrix
       matrix:
-        node-version: [20.11.1]
+        node-version: [24.2.0]
     # Steps
     steps:
      - uses: actions/checkout@v4
@@ -66,7 +66,7 @@ jobs:
     # Node version matrix
     strategy:
         matrix:
-          node-version: [20.11.1]
+          node-version: [24.2.0]
     # Steps
     steps:
       - name: Checkout to git repository
@@ -163,12 +163,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Release to get static url for apk
-      - name: Update release
-        uses: softprops/action-gh-release@v2
+      # Create release to get static url for latest build
+      - name: Upload GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: latest
-          files: ${{ github.workspace }}/android/app/build/outputs/apk/latest/app-latest.apk
+          tag: latest
+          name: Latest Release
+          artifacts: android/app/build/outputs/apk/latest/app-latest.apk
           token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          replacesArtifacts: true
           prerelease: true
-          draft: false

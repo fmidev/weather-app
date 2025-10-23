@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';
@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
-import WarningSymbol from './WarningsSymbol';
+import WarningIcon from './WarningIcon';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -33,7 +34,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
   }>([]);
 
   const locale = i18n.language;
-  const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
+  const timeFormat = clockType === 12 ? 'h.mm a' : 'H:mm';
 
   useEffect(() => {
     setOpenWarnings([]);
@@ -48,7 +49,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
           </Text>
         </View>
       )}
-      {warnings.map(({ description, type, severity, duration }, index) => (
+      {warnings.map(({ description, type, severity, duration, physical }, index) => (
         <View
           key={`${type}-${duration.startTime}-${duration.endTime}-${severity}`}>
           <View style={styles.flex}>
@@ -60,14 +61,21 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
                   : t('moreAccessibilityHint')
               }
               style={styles.row}
-              onPress={() =>
+              onPress={() => {
+                if(!openWarnings[index]) {
+                  trackMatomoEvent('User action', 'Warnings', 'Open warning details');
+                }
                 setOpenWarnings({
                   ...openWarnings,
                   [index]: !openWarnings[index],
                 })
-              }>
+              }}>
               <View style={styles.iconPadding}>
-                <WarningSymbol type={type} severity={severity} />
+                <WarningIcon
+                  type={type}
+                  severityDescription={severity}
+                  physical={physical}
+                />
               </View>
               <View style={styles.flex}>
                 <Text
@@ -124,7 +132,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   iconPadding: {
-    padding: 5,
+    paddingTop: 5,
+    paddingRight: 5,
   },
   flex: {
     flex: 1,

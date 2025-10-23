@@ -8,27 +8,32 @@ import {
 } from 'react-native';
 import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { MotiView } from 'moti';
+import { Skeleton } from 'moti/skeleton';
 
 import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,
-  selectWarningsAge,
+  selectError,
+  selectLoading,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
   location: selectCurrent(state),
-  warningsAge: selectWarningsAge(state),
+  loading: selectLoading(state),
+  error: selectError(state),
 });
 
 const connector = connect(mapStateToProps);
@@ -40,14 +45,16 @@ type WarningsPanelProps = PropsFromRedux & {};
 const WarningsPanel: React.FC<WarningsPanelProps> = ({
   dailyWarnings,
   location,
-  warningsAge,
+  loading,
+  error,
 }) => {
   const { t, i18n } = useTranslation('warnings');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
-  const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const headerRef = useRef() as React.MutableRefObject<View>;
+  const infoSheetRef = useRef<RBSheet>(null);
+  const headerRef = useRef<View>(null);
+  const colorMode = dark ? 'dark' : 'light';
 
   moment.locale(i18n.language);
 
@@ -64,8 +71,28 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
     }
   });
 
-  if (!warningsAge) {
-    return null;
+  if (loading) {
+    return (
+      <MotiView style={{backgroundColor: colors.background}}>
+        <View style={[styles.loading, styles.loadingFirst]}>
+          <Skeleton colorMode={colorMode} width={'100%'} height={40} radius={10} />
+        </View>
+        <View style={styles.loading}>
+          <Skeleton colorMode={colorMode} width={'100%'} height={65} radius={10} />
+        </View>
+        <View style={[styles.loading, styles.loadingLast, { borderColor: colors.border}]}>
+          <Skeleton colorMode={colorMode} width={'100%'} height={20} radius={10} />
+        </View>
+      </MotiView>
+    );
+  }
+
+  if (error) {
+    return (
+      <View testID="warnings_panel" style={styles.errorCard}>
+        <Text style={[styles.errorText, { color: colors.primaryText }]}>{t('loadingError')}</Text>
+      </View>
+    )
   }
 
   const locale = i18n.language;
@@ -93,26 +120,20 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               accessibilityRole="header">
               <Text
                 style={[
-                  styles.headerText,
-                  {
-                    color: colors.primaryText,
-                  },
-                ]}>
-                {t('panelTitle')}
-              </Text>
-              <Text
-                style={[
                   styles.bold,
                   styles.headerText,
                   { color: colors.primaryText },
                 ]}>
-                {location.name}
+                {`${t('panelTitle')}, ${location.name}`}
               </Text>
             </View>
             <AccessibleTouchableOpacity
               testID="warnings_info_button"
               accessibilityLabel={t('infoAccessibilityLabel')}
-              onPress={() => infoSheetRef.current.open()}>
+              onPress={() => {
+                trackMatomoEvent('User action', 'Warnings', 'Open warnings info panel');
+                infoSheetRef.current?.open();
+              }}>
               <View style={[styles.iconPadding]}>
                 <Icon
                   name="info"
@@ -157,7 +178,10 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                   </View>
                 )}
                 <AccessibleTouchableOpacity
-                  onPress={() => setSelectedDay(index)}
+                  onPress={() => {
+                    trackMatomoEvent('User action', 'Warnings', 'Select day '+(index+1)+' / ('+count+' warnings) / '+severity);
+                    setSelectedDay(index);
+                  }}
                   accessibilityRole="button"
                   accessibilityState={{ selected: index === selectedDay }}
                   accessibilityLabel={`${moment(date).format(
@@ -231,7 +255,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           },
           draggableIcon: styles.draggableIcon,
         }}>
-        <InfoSheet onClose={() => infoSheetRef.current.close()} />
+        <InfoSheet onClose={() => infoSheetRef.current?.close()} />
       </RBSheet>
     </View>
   );
@@ -246,6 +270,14 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     shadowOpacity: 1,
     elevation: 3,
+  },
+  errorCard : {
+    padding: 16,
+  },
+  errorText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   activeBorder: {
     height: 3,
@@ -271,18 +303,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold'
   },
   flex: {
     flex: 1,
   },
   iconPadding: {
-    padding: 15,
+    paddingHorizontal: 15,
   },
   filler: {
     width: 24,
   },
   bold: {
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   medium: {
     fontFamily: 'Roboto-Medium',
@@ -346,6 +380,18 @@ const styles = StyleSheet.create({
   draggableIcon: {
     backgroundColor: GRAY_1,
     width: 65,
+  },
+  loading: {
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+  },
+  loadingFirst: {
+    paddingTop: 24,
+  },
+  loadingLast: {
+    paddingBottom: 18,
+    borderBottomWidth: 1,
+    marginBottom: 26,
   },
 });
 

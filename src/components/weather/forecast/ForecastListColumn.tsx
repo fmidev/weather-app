@@ -4,14 +4,14 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 
 import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
-import { isOdd, getWindDirection } from '@utils/helpers';
+import { isOdd, getWindDirection, roundToNearestTen } from '@utils/helpers';
 import { Config } from '@config';
 import {
   converter,
@@ -25,6 +25,7 @@ type ForecastListColumnProps = {
   data: TimeStepData;
   displayParams: [number, DisplayParameters][];
   units?: UnitMap;
+  modal?: boolean;
 };
 
 const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
@@ -32,6 +33,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   data,
   displayParams,
   units,
+  modal, // Different styling for modal
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
@@ -54,8 +56,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
       accessible
       key={data.epochtime}
       style={[
-        styles.hourColumn,
-        ...(time === '00' || time === '12 am'
+        modal ? styles.modalHourColumn : styles.hourColumn,
+        ...(!modal===true && (time === '00' || time === '12 am')
           ? [
               styles.dayChangeBorder,
               {
@@ -65,7 +67,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             ]
           : [{ borderColor: colors.border }]),
       ]}>
-      <View style={[styles.hourBlock, { backgroundColor: colors.listTint }]}>
+      <View style={[styles.hourBlock, modal !== true && { backgroundColor: colors.listTint }]}>
         <Text
           accessibilityLabel={`${t('forecast:at')} ${time}.`}
           style={[styles.hourText, { color: colors.hourListText }]}>
@@ -229,7 +231,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           }
 
           if (param === constants.DEW_POINT) {
-            const temperatureUnit = Config.get('settings').units.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ??
+              Config.get('settings').units.temperature;
             const convertedDewPoint =
               data.dewPoint || data.dewPoint === 0
                 ? toPrecision(
@@ -260,6 +264,37 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     styles.regularText,
                     { color: colors.hourListText },
                   ]}>{`${convertedDewPoint}°`}</Text>
+              </View>
+            );
+          }
+
+          if (param === constants.PRECIPITATION_PROBABILITY) {
+            let formattedValue = '-';
+            if (data.pop !== null && data.pop !== undefined) {
+              if (data.pop < 10) formattedValue = '<10';
+              else if (data.pop > 90) formattedValue = '>90';
+              else formattedValue = roundToNearestTen(data.pop).toString();
+            }
+            return (
+              <View
+                key={`${param}-${i}`}
+                style={[
+                  styles.hourBlock,
+                  {
+                    backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                  },
+                ]}>
+                <Text
+                  accessibilityLabel={formattedValue === '-'
+                    ? t('forecast:popMissing')
+                    : t('forecast:params:pop', {
+                      value: formattedValue,
+                      unit: '%',
+                    })}
+                  style={[
+                    styles.regularText,
+                    { color: colors.hourListText },
+                  ]}>{formattedValue}</Text>
               </View>
             );
           }
@@ -384,6 +419,12 @@ const styles = StyleSheet.create({
     width: 52,
     borderRightWidth: 1,
     borderTopWidth: 1,
+    alignItems: 'center',
+  },
+  modalHourColumn: {
+    width: 48,
+    borderRightWidth: 0,
+    borderTopWidth: 0,
     alignItems: 'center',
   },
   dayChangeBorder: {

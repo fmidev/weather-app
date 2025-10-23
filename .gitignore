@@ -33,6 +33,7 @@ keystore.properties
 *.aab
 *.hprof
 .cxx/
+.kotlin/
 
 # node.js
 #

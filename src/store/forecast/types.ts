@@ -23,7 +23,10 @@ interface FetchForecast {
 
 interface FetchForecastSuccess {
   type: typeof FETCH_FORECAST_SUCCESS;
-  data: WeatherData[];
+  data: {
+    forecasts: WeatherData[],
+    isAuroraBorealisLikely: boolean
+  };
   favorites: number[];
   timestamp: number;
 }
@@ -77,6 +80,7 @@ export interface ForecastParameters {
   dewPoint: number;
   uvCumulated: number;
   pressure: number;
+  totalCloudCover: number;
 }
 
 // copied almost as is from https://github.com/fmidev/mobileweather/blob/2b15990947985506a7b0711eef6df5c5826078b5/www/js/main.js#L554
@@ -89,6 +93,7 @@ export interface TimeStepData extends Partial<ForecastParameters> {
   sunriseToday: number;
   sunsetToday: number;
   dayLength: number;
+  moonphase: number;
   modtime: string;
   dark: number;
   [key: string]: string | number | undefined;
@@ -102,6 +107,10 @@ export interface WeatherData {
   [geoid: string | number]: TimeStepData[];
 }
 
+export interface AuroraBorealisData {
+  [geoid: string | number]: boolean; // Is Aurora borealis likely
+}
+
 export interface Error {
   code: number;
   message: string;
@@ -109,6 +118,7 @@ export interface Error {
 
 export interface ForecastState {
   data: WeatherData | undefined;
+  auroraBorealisData: AuroraBorealisData | undefined;
   loading: boolean;
   error: boolean | Error | string;
   displayParams: [number, DisplayParameters][];

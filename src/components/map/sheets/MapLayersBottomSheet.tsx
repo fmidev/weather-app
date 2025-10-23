@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
@@ -23,6 +23,7 @@ import {
   CustomTheme,
 } from '@assets/colors';
 import { Config } from '@config';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
@@ -99,14 +100,15 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
             <Switch
               trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
               thumbColor={WHITE}
-              ios_backgroundColor={GRAYISH_BLUE}
+              ios_backgroundColor={WHITE}
               value={mapLayers.location}
-              onValueChange={() =>
+              onValueChange={() => {
+                trackMatomoEvent('User action', 'Map', 'Show own location - '+!mapLayers.location);
                 updateMapLayers({
                   ...mapLayers,
                   location: !mapLayers.location,
-                })
-              }
+                });
+              }}
             />
           </View>
         </View>
@@ -136,6 +138,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
               }
               onPress={() => {
                 if (layer.id === activeOverlay) return;
+                trackMatomoEvent('User action', 'Map', 'Layer selected - '+layer?.name[locale]);
                 onClose();
                 updateActiveOverlay(Number(layer.id));
               }}>

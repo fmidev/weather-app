@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Appearance,
@@ -7,16 +8,18 @@ import {
   StyleProp,
   ViewStyle,
   View,
+  AppState,
+  AppStateStatus
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   createStackNavigator,
   StackNavigationOptions,
   StackNavigationProp,
 } from '@react-navigation/stack';
-import type { NavigationState } from '@react-navigation/routers';
+import type { NavigationState, Route } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { useTranslation } from 'react-i18next';
@@ -36,7 +39,7 @@ import OnboardingScreen from '@screens/OnboardingScreen';
 
 import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
@@ -59,6 +62,7 @@ import {
 import {
   selectInitialTab,
   selectDidLaunchApp,
+  selectTermsOfUseAccepted,
 } from '@store/navigation/selectors';
 import {
   setNavigationTab as setNavigationTabAction,
@@ -69,7 +73,7 @@ import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import ErrorComponent from '@components/common/ErrorComponent';
 
 import { Config } from '@config';
-import { lightTheme, darkTheme } from './themes';
+import { lightTheme, darkTheme } from '../assets/themes';
 import {
   TabParamList,
   OthersStackParamList,
@@ -78,11 +82,14 @@ import {
   LaunchArgs,
 } from './types';
 import WarningsTabIcon from './WarningsTabIcon';
+import { sendMatomoEvents, trackMatomoEvent } from '@utils/matomo';
+import packageJSON from '../../package.json';
 
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
   theme: selectTheme(state),
   didLaunchApp: selectDidLaunchApp(state),
+  termsOfUseAccepted: selectTermsOfUseAccepted(state),
 });
 
 const mapDispatchToProps = {
@@ -111,13 +118,18 @@ const Navigator: React.FC<Props> = ({
   theme,
   initialTab,
   didLaunchApp,
+  termsOfUseAccepted,
   setDidLaunchApp,
   fetchAnnouncements,
 }) => {
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
-  const searchInfoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const searchInfoSheetRef = useRef<RBSheet>(null);
+  const navigationRef = useNavigationContainerRef();
+  const [navReady, setNavReady] = React.useState(false);
+  const [currentRoute, setCurrentRoute] = React.useState<Route<string> | null>(null);
+  const appState = useRef<AppStateStatus>(AppState.currentState);
   const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
     ((!currentTheme || currentTheme === 'automatic') &&
@@ -125,11 +137,17 @@ const Navigator: React.FC<Props> = ({
 
   const warningsEnabled = Config.get('warnings').enabled;
   const onboardingWizardEnabled = Config.get('onboardingWizard').enabled;
+  const weatherLayout = Config.get('weather').layout;
   const [useDarkTheme, setUseDarkTheme] = useState<boolean>(isDark(theme));
   const [didChangeLanguage, setDidChangeLanguage] = useState<boolean>(false);
   const [warningsSeverity, setWarningsSeverity] = useState<number>(0);
 
   const launchArgs = LaunchArguments.value<LaunchArgs>();
+
+  const handleState = React.useCallback(() => {
+    const r = navigationRef.getCurrentRoute();
+    setCurrentRoute(r ?? null);
+  }, [navigationRef]);
 
   const handleLanguageChanged = useCallback(() => {
     setDidChangeLanguage(true);
@@ -145,6 +163,8 @@ const Navigator: React.FC<Props> = ({
 
   useEffect(() => {
     if (didLaunchApp && !didChangeLanguage) {
+      trackMatomoEvent('Init', 'Geolocation', 'Launch app');
+      trackMatomoEvent('Init', 'Platform', Platform.OS +' - '+packageJSON.version);
       getGeolocation(setCurrentLocation, t, true);
       fetchAnnouncements();
     }
@@ -157,7 +177,24 @@ const Navigator: React.FC<Props> = ({
   ]);
 
 
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/active/) && nextAppState === 'background') {
+        // Make sure that events are sent before app goes to background
+        sendMatomoEvents();
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   const navigationTabChanged = (state: NavigationState | undefined) => {
+    const r = navigationRef.getCurrentRoute();
+    setCurrentRoute(r ?? null);
     const navigationTab = state?.routeNames[state?.index] as NavigationTab;
     if (Number.isInteger(NavigationTabValues[navigationTab])) {
       setNavigationTab(navigationTab);
@@ -172,6 +209,11 @@ const Navigator: React.FC<Props> = ({
     return () => subscription.remove();
   }, []);
 
+  useEffect(() => {
+    if (theme !== 'automatic') {
+      setUseDarkTheme(isDark(theme));
+    }
+  }, [theme]);
 
   const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
     <View style={styles.headerBackImage}>
@@ -199,7 +241,7 @@ const Navigator: React.FC<Props> = ({
     headerBackImage: ({ tintColor }: { tintColor: string }) => (
       <HeaderBackImage tintColor={tintColor} />
     ),
-    headerBackTitleVisible: false,
+    headerBackTitle: '',
     headerBackAccessibilityLabel: t('navigation:backAccessibilityLabel'),
   };
 
@@ -215,11 +257,17 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel={t('navigation:locate')}
         accessibilityHint={t('navigation:locateAccessibilityLabel')}
         icon="locate"
-        onPress={() => getGeolocation(setCurrentLocation, t)}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Map', 'Geolocation');
+          getGeolocation(setCurrentLocation, t);
+        }}
       />
     ),
     headerTitle: () => (
-      <CommonHeaderTitle onPress={() => navigation.navigate('Search')} />
+      <CommonHeaderTitle onPress={() => {
+        trackMatomoEvent('User action', 'Map', 'Open search - location');
+        navigation.navigate('Search');
+      }} />
     ),
     headerRight: () => (
       <HeaderButton
@@ -228,7 +276,10 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel={t('navigation:search')}
         accessibilityHint={t('navigation:searchAccessibilityLabel')}
         icon="search"
-        onPress={() => navigation.navigate('Search')}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Map', 'Open search - button');
+          navigation.navigate('Search');
+        }}
         right
       />
     ),
@@ -245,7 +296,10 @@ const Navigator: React.FC<Props> = ({
         accessibilityLabel="info"
         accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
         icon="info"
-        onPress={() => searchInfoSheetRef.current.open()}
+        onPress={() => {
+          trackMatomoEvent('User action', 'Search', 'Open search info bottomsheet');
+          searchInfoSheetRef.current?.open();
+        }}
       />
     ),
   };
@@ -262,7 +316,7 @@ const Navigator: React.FC<Props> = ({
       <MapStack.Screen
         name="StackMap"
         component={MapScreen}
-        options={LocationHeaderOptions}
+        options={LocationHeaderOptions({ navigation: navigationRef as any })}
       />
       <MapStack.Screen
         name="Search"
@@ -278,7 +332,9 @@ const Navigator: React.FC<Props> = ({
       <WeatherStack.Screen
         name="StackWeather"
         component={WeatherScreen}
-        options={LocationHeaderOptions}
+        options={
+          weatherLayout === 'fmi' ? { headerShown: false } : LocationHeaderOptions({ navigation: navigationRef as any })
+        }
       />
       <WeatherStack.Screen
         name="Search"
@@ -294,7 +350,7 @@ const Navigator: React.FC<Props> = ({
       <WarningsStack.Screen
         name="StackWarnings"
         component={WarningsScreen}
-        options={LocationHeaderOptions}
+        options={LocationHeaderOptions({ navigation: navigationRef as any })}
         initialParams={{ day: 0 }}
       />
       <WeatherStack.Screen
@@ -363,7 +419,7 @@ const Navigator: React.FC<Props> = ({
 
   const SetupStackScreen = () => (
     <SetupStack.Navigator
-      initialRouteName="Onboarding"
+      initialRouteName={ didLaunchApp && !termsOfUseAccepted ? 'SetupScreen' : 'Onboarding' }
       screenOptions={{ gestureEnabled: false }}>
       <SetupStack.Screen
         name="Onboarding"
@@ -381,6 +437,7 @@ const Navigator: React.FC<Props> = ({
             setUpDone={() => {
               setDidLaunchApp();
             }}
+            termsOfUseChanged={ !termsOfUseAccepted }
           />
         )}
       </SetupStack.Screen>
@@ -406,7 +463,7 @@ const Navigator: React.FC<Props> = ({
     return null;
   }
 
-  if (!didLaunchApp && onboardingWizardEnabled && launchArgs?.e2e !== true) {
+  if ((!didLaunchApp || !termsOfUseAccepted) && onboardingWizardEnabled && launchArgs?.e2e !== true) {
     return (
       <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
         <SetupStackScreen />
@@ -434,6 +491,8 @@ const Navigator: React.FC<Props> = ({
         barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
       />
       <NavigationContainer
+        ref={navigationRef}
+        onReady={() => { setNavReady(true); handleState(); }}
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}
         /*
@@ -456,6 +515,7 @@ const Navigator: React.FC<Props> = ({
                 : lightTheme.colors.tabBarActive;
 
               return (
+                // @ts-ignore
                 <AccessibleTouchableOpacity
                   {...rest}
                   accessibilityRole="tab"
@@ -481,7 +541,7 @@ const Navigator: React.FC<Props> = ({
                 'navigation:slash'
               )} 4 `,
               headerShown: false,
-              tabBarTestID: 'navigation_weather',
+              tabBarButtonTestID: 'navigation_weather',
               tabBarLabel: `${t('navigation:weather')}`,
               tabBarIcon: ({ color, size }) => (
                 <Icon
@@ -492,6 +552,11 @@ const Navigator: React.FC<Props> = ({
                 />
               ),
             }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Weather');
+              },
+            }}
           />
           <Tab.Screen
             name="Map"
@@ -501,12 +566,17 @@ const Navigator: React.FC<Props> = ({
                 'navigation:slash'
               )} 4`,
               headerShown: false,
-              tabBarTestID: 'navigation_map',
+              tabBarButtonTestID: 'navigation_map',
               tabBarLabel: `${t('navigation:map')}`,
               tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
                 <Icon name="map" style={{ color }} width={size} height={size} />
               ),
+            }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Map');
+              },
             }}
           />
           {warningsEnabled && (
@@ -522,7 +592,7 @@ const Navigator: React.FC<Props> = ({
                     : 'warnings:noWarnings'
                 )}`,
                 headerShown: false,
-                tabBarTestID: 'navigation_warnings',
+                tabBarButtonTestID: 'navigation_warnings',
                 tabBarLabel: `${t('navigation:warnings')}`,
                 tabBarIcon: ({ color, size }) => (
                   <WarningsTabIcon
@@ -532,6 +602,11 @@ const Navigator: React.FC<Props> = ({
                   />
                 ),
               }}
+              listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Warnings');
+              },
+            }}
             />
           )}
           <Tab.Screen
@@ -542,7 +617,7 @@ const Navigator: React.FC<Props> = ({
                 'navigation:slash'
               )} 4`,
               headerShown: false,
-              tabBarTestID: 'navigation_others',
+              tabBarButtonTestID: 'navigation_others',
               tabBarLabel: `${t('navigation:others')}`,
               tabBarIcon: ({ color, size }) => (
                 <Icon
@@ -552,6 +627,11 @@ const Navigator: React.FC<Props> = ({
                   height={size}
                 />
               ),
+            }}
+            listeners={{
+              tabPress: () => {
+                trackMatomoEvent('User action', 'Navigation', 'Others');
+              },
             }}
           />
         </Tab.Navigator>
@@ -569,10 +649,13 @@ const Navigator: React.FC<Props> = ({
             draggableIcon: styles.draggableIcon,
           }}>
           <SearchInfoBottomSheet
-            onClose={() => searchInfoSheetRef.current.close()}
+            onClose={() => searchInfoSheetRef.current?.close()}
           />
         </RBSheet>
-        <ErrorComponent />
+        <ErrorComponent
+          navReady={navReady}
+          currentRoute={currentRoute}
+        />
       </NavigationContainer>
     </>
   );

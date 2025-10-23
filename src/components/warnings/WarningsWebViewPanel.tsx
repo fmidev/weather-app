@@ -1,15 +1,22 @@
 import React, { useRef, useState } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
 import { useTheme } from '@react-navigation/native';
+import 'react-native-url-polyfill/auto';
 import { Config } from '@config';
 import PanelHeader from '@components/weather/common/PanelHeader';
 import { CustomTheme } from '@assets/colors';
 
+const ALLOWED_HOSTS = ['cdn.fmi.fi'];
+
 type WarningsWebViewPanelProps = {
   updateInterval: number;
 };
+
+const InvalidURLView = () => (
+  <Text>Invalid webview URL blocked</Text>
+)
 
 const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
   updateInterval
@@ -28,6 +35,20 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
     return null;
   }
 
+  // Check that hostname is allowed
+
+  let hostname: string | null = null;
+  try {
+    hostname = new URL(webViewUrl).hostname;
+  } catch (error) {
+    console.error("Invalid webview URL:", error);
+    return <InvalidURLView />;
+  }
+
+  if (!hostname || !ALLOWED_HOSTS.includes(hostname)) {
+    return <InvalidURLView />
+  }
+
   const html = `<!doctype html>
   <html lang="${locale}">
     <head>
@@ -44,7 +65,10 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
   }" gray-scale-selector="true"></smartmet-alert-client>
       <script type="module" src="${webViewUrl}/index.js" refresh-interval="${updateInterval}"></script>
       <script>
-        const resizeObserver = new ResizeObserver(entries => window.ReactNativeWebView.postMessage(entries[0].target.clientHeight));
+        const resizeObserver = new ResizeObserver(entries => {
+          const height = entries[0].target.clientHeight;
+          window.ReactNativeWebView.postMessage(height.toString());
+        });
         resizeObserver.observe(document.body);
       </script>
     </body>

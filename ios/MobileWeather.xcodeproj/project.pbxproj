@@ -3,12 +3,41 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		610CF3EB365EB96FE3FBADA5 /* libPods-SettingsIntentExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83B7FB42C76BC882D2A2E9F6 /* libPods-SettingsIntentExtension.a */; };
+		78B5BEAA54F6CAC3B9F10A72 /* libPods-WidgetExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E635203A5C2F9B8574FD76C3 /* libPods-WidgetExtension.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A2042C6E2CFF2EEF00C41A9E /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2042C6D2CFF2EEE00C41A9E /* Intents.framework */; };
+		A20CB3152CCFCE0B005C4D66 /* typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20CB3142CCFCE01005C4D66 /* typography.swift */; };
+		A2239EB12CD22056007FE840 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB02CD22056007FE840 /* Localizable.xcstrings */; };
+		A2239EB42CD39885007FE840 /* widgetConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = A2239EB32CD39885007FE840 /* widgetConfig.json */; };
+		A2239EB62CD399DC007FE840 /* config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2239EB52CD399D9007FE840 /* config.swift */; };
+		A22C0A3A2CDCFD0300F64B66 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22C0A392CDCFCFD00F64B66 /* utils.swift */; };
+		A24709F12CCA83B3008CC8EA /* geolocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24709F02CCA83B0008CC8EA /* geolocation.swift */; };
+		A24E08C72CCBBAB100848BEB /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08C62CCBBAAD00848BEB /* extensions.swift */; };
+		A24E08C82CCBBB3900848BEB /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91826B41657000BF75C /* Roboto-Bold.ttf */; };
+		A24E08C92CCBBB4200848BEB /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91926B41657000BF75C /* Roboto-Light.ttf */; };
+		A24E08CA2CCBBB4A00848BEB /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91A26B41657000BF75C /* Roboto-Medium.ttf */; };
+		A24E08CB2CCBBB6400848BEB /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91B26B41657000BF75C /* Roboto-Regular.ttf */; };
+		A24E08CC2CCBBB6D00848BEB /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91C26B41657000BF75C /* Roboto-Thin.ttf */; };
+		A24E08CE2CCBC22A00848BEB /* modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E08CD2CCBC22700848BEB /* modifiers.swift */; };
+		A273C5CD2CF74136002C95C2 /* WarningsTodayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A273C5CC2CF74136002C95C2 /* WarningsTodayWidget.swift */; };
 		A292E7562D5F16C000DC288E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A292E7552D5F16C000DC288E /* AppDelegate.swift */; };
+		A2B3FF982CC7D1DA00EC1293 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2B3FF972CC7D1DA00EC1293 /* WidgetKit.framework */; };
+		A2B3FF9A2CC7D1DA00EC1293 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2B3FF992CC7D1DA00EC1293 /* SwiftUI.framework */; };
+		A2B3FFB32CC8E6AE00EC1293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2B3FFAD2CC8E6AE00EC1293 /* Assets.xcassets */; };
+		A2B3FFB52CC8E6AE00EC1293 /* types.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFAF2CC8E6AE00EC1293 /* types.swift */; };
+		A2B3FFB62CC8E6AE00EC1293 /* ForecastWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB02CC8E6AE00EC1293 /* ForecastWidget.swift */; };
+		A2B3FFB72CC8E6AE00EC1293 /* WeatherWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB12CC8E6AE00EC1293 /* WeatherWidgetBundle.swift */; };
+		A2B3FFB92CC9138E00EC1293 /* defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB82CC9138800EC1293 /* defaults.swift */; };
+		A2B3FFBB2CC9175000EC1293 /* network.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFBA2CC9174D00EC1293 /* network.swift */; };
+		A2E2E99E2CFDF6070096E794 /* WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2B3FF962CC7D1DA00EC1293 /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A2E488092D002CA100A66016 /* SettingsIntentExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2042C6C2CFF2EEE00C41A9E /* SettingsIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A2E4880C2D00319300A66016 /* WidgetIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A2F695BC2CFEE1520064BAFE /* WidgetIntents.intentdefinition */; };
+		A2F695BD2CFEE1520064BAFE /* WidgetIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A2F695BC2CFEE1520064BAFE /* WidgetIntents.intentdefinition */; };
 		A41FA36F27FD733200B08157 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		A454032C25E66E860005997E /* SwiftEnabler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A454032B25E66E860005997E /* SwiftEnabler.swift */; };
 		A45BF91D26B41657000BF75C /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91826B41657000BF75C /* Roboto-Bold.ttf */; };
@@ -291,6 +320,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MobileWeather/Pods-MobileWeather-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/MatomoTracker/MatomoTracker_Privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/RCT-Folly_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVGFilters.bundle",
@@ -315,12 +345,13 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog_privacy.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/react-native-maps/ReactNativeMapsPrivacy.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MatomoTracker_Privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RCT-Folly_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNSVGFilters.bundle",
@@ -345,9 +376,9 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ReactNativeMapsPrivacy.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -643,6 +674,194 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A2042C762CFF2EEF00C41A9E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42805CC06145D9C5A7155E1D /* Pods-SettingsIntentExtension.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = SettingsIntentExtension/SettingsIntentExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 288;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = DJHT89EW79;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SettingsIntentExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SettingsIntentExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INTENTS_CODEGEN_LANGUAGE = Swift;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather.SettingsIntentExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A2042C772CFF2EEF00C41A9E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 44D8CDDE1DBE0F040C1E551E /* Pods-SettingsIntentExtension.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = SettingsIntentExtension/SettingsIntentExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 288;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = DJHT89EW79;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SettingsIntentExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SettingsIntentExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INTENTS_CODEGEN_LANGUAGE = Swift;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather.SettingsIntentExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A2B3FFA82CC7D1DC00EC1293 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A591DFB7F360D390A6A79074 /* Pods-WidgetExtension.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = WidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 288;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = DJHT89EW79;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INTENTS_CODEGEN_LANGUAGE = Swift;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A2B3FFA92CC7D1DC00EC1293 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4A98B2A2495A0543BE9BC033 /* Pods-WidgetExtension.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = WidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 288;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = DJHT89EW79;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = widget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INTENTS_CODEGEN_LANGUAGE = Swift;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = fi.fmi.mobileweather.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

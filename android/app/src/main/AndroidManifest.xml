@@ -19,6 +19,10 @@
         <action android:name="android.intent.action.VIEW"/>
         <data android:scheme="youtube" android:host="com.google.android.youtube" />
       </intent>
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="https"/>
+      </intent>
     </queries>
 
     <application
@@ -41,13 +45,18 @@
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
 
+        <!-- Launcher intent -->
         <intent-filter>
-          <action android:name="android.intent.action.MAIN" />
-          <category android:name="android.intent.category.LAUNCHER" />
-          <action android:name="android.intent.action.VIEW" />
-          <category android:name="android.intent.category.DEFAULT" />
-          <category android:name="android.intent.category.BROWSABLE" />
-          <data android:scheme="fmiweather" />
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+
+        <!-- Deep link intent -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="fmiweather" />
         </intent-filter>
 
       </activity>

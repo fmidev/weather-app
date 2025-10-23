@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -25,7 +26,10 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
 }) => {
   const { t } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef() as React.MutableRefObject<Text>;
+  const titleRef = useRef<Text>(null);
+  const insets = useSafeAreaInsets();
+
+  const closeButtonMarginBottom = Math.round(insets.bottom);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {
@@ -46,7 +50,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
         showsVerticalScrollIndicator={false}>
         <Text
           ref={titleRef}
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('generalTitle')}
         </Text>
@@ -54,7 +58,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('generalDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('contentsTitle')}
         </Text>
@@ -62,7 +66,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('contentsDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('personalInfoTitle')}
         </Text>
@@ -70,7 +74,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('personalInfoDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('immaterialRightsTitle')}
         </Text>
@@ -78,7 +82,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('immaterialRightsDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('liabilityTitle')}
         </Text>
@@ -86,7 +90,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('liabilityDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('rightToChangesTitle')}
         </Text>
@@ -94,7 +98,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('rightToChangesDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('applicableLawTitle')}
         </Text>
@@ -102,7 +106,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
           {t('applicableLawDescription')}
         </Text>
         <Text
-          style={[styles.title, { color: colors.primaryText }]}
+          style={[styles.title, { color: colors.text }]}
           accessibilityRole="header">
           {t('contactDetailsTitle')}
         </Text>
@@ -124,7 +128,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
             onPress={onClose}
             accessibilityRole="button"
             accessibilityHint={t('closeButtonAccessibilityHint')}>
-            <View style={[styles.closeButton, { borderColor: colors.text }]}>
+            <View style={[styles.closeButton, { borderColor: colors.text, marginBottom: closeButtonMarginBottom }]}>
               <Text style={[styles.closeText, { color: colors.text }]}>
                 {t('close')}
               </Text>

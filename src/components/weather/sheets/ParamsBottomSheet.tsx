@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
@@ -40,6 +41,7 @@ import {
 } from '@assets/colors';
 import { Config } from '@config';
 import { DisplayParameters } from '@store/forecast/types';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
@@ -68,6 +70,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   onClose,
   units,
 }) => {
+  const insets = useSafeAreaInsets();
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
@@ -147,7 +150,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               styles.withMarginRight,
               { color: colors.hourListText },
             ]}>
-            {getUnitForParameter(param)}
+            {t(`unitAbbreviations:${getUnitForParameter(param)}`)}
           </Text>
         )}
         {param === UV_CUMULATED && (
@@ -163,13 +166,14 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         )}
         <Text style={[styles.text, { color: colors.hourListText }]}>
           {t(`paramsBottomSheet.${param}`, {
-            unit: getUnitForParameter(param),
+            unit: t(`unitAbbreviations:${getUnitForParameter(param)}`),
           })}
         </Text>
       </View>
 
       <Switch
         testID={`weather_params_switch_${param}`}
+        accessibilityRole="switch"
         style={
           displayParams.length === 1 && displayParams[0][1] === param
             ? disabledStyle
@@ -177,16 +181,25 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         }
         trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
         thumbColor={WHITE}
-        ios_backgroundColor={GRAYISH_BLUE}
+        ios_backgroundColor={WHITE}
         value={displayParams.some((arr) => arr.includes(param))}
-        onValueChange={() => updateDisplayParams([index, param])}
+        onValueChange={() => {
+          const paramStr = 'Forecast parameter '+param+' - ';
+          const onOffStr = displayParams.some((arr) => arr.includes(param)) ? 'OFF':'ON';
+
+          trackMatomoEvent('User action', 'Weather', paramStr + '' + onOffStr);
+          updateDisplayParams([index, param])
+        }}
         disabled={displayParams.length === 1 && displayParams[0][1] === param}
       />
     </View>
   );
 
   return (
-    <View testID="weather_params_bottom_sheet" style={styles.wrapper}>
+    <View
+      testID="weather_params_bottom_sheet"
+      style={[styles.wrapper, { paddingLeft: insets.left, paddingRight: insets.right }]}
+    >
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -219,7 +232,10 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                 accessible
                 accessibilityRole="button"
                 accessibilityHint={t('paramsBottomSheet.restoreDefaultHint')}
-                onPress={() => restoreDefaultDisplayParams()}>
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Weather', 'Restore default parameters');
+                  restoreDefaultDisplayParams()
+                }}>
                 <Text
                   style={[
                     styles.restoreText,

@@ -23,7 +23,7 @@ import { useTheme, useIsFocused } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { State } from '@store/types';
@@ -50,6 +50,7 @@ import {
 } from '@assets/colors';
 import { selectClockType } from '@store/settings/selectors';
 import SliderStep from './SliderStep';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const QUARTER_WIDTH = 15;
 
@@ -91,7 +92,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const multiplier = Math.round(width / 400);
 
-  const sliderRef = useRef() as React.MutableRefObject<ScrollView>;
+  const sliderRef = useRef<ScrollView>(null);
 
   const observationEndUnix =
     (overlay?.observation &&
@@ -258,7 +259,16 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       <View style={styles.container}>
         <AccessibleTouchableOpacity
           accessibilityRole="button"
-          onPress={() => (isAnimating ? clear() : animate())}
+          onPress={() => {
+            const action = isAnimating ? 'STOP' : 'START';
+            trackMatomoEvent('User action', 'Map', `Animation - ${action}`);
+
+            if (isAnimating) {
+              clear();
+            } else {
+              animate();
+            }
+          }}
           accessibilityLabel={
             !isAnimating ? t('map:playButton') : t('map:pauseButton')
           }

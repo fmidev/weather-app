@@ -2,13 +2,16 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
-import { CustomTheme, WHITE } from '@assets/colors';
+import { CustomTheme } from '@assets/colors';
 
 type PanelHeaderProps = {
   title: string;
   justifyCenter?: boolean;
   accessibilityHint?: string;
-  additionalContent?: React.ReactChild;
+  additionalContent?: React.ReactNode;
+  thin?: boolean;
+  news?: boolean;
+  background?: string;
 };
 
 const PanelHeader: React.FC<PanelHeaderProps> = ({
@@ -16,6 +19,9 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
   justifyCenter,
   accessibilityHint,
   additionalContent,
+  thin,
+  news,
+  background
 }) => {
   const { colors } = useTheme() as CustomTheme;
   return (
@@ -27,12 +33,14 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
       style={[
         styles.cardHeader,
         justifyCenter && styles.justifyCenter,
+        thin === true && styles.thin,
+        news === true && styles.news,
         {
-          backgroundColor: colors.cardHeader,
+          backgroundColor: background ? background : colors.cardHeader,
           borderBottomColor: colors.border,
         },
       ]}>
-      <Text style={[styles.headerTitle, { color: WHITE }]}>{title}</Text>
+      <Text style={[styles.headerTitle, { color: colors.primaryText }]}>{title}</Text>
       {additionalContent}
     </View>
   );
@@ -47,6 +55,17 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  thin : {
+    paddingVertical: 6,
+    marginHorizontal: 16,
+    marginVertical: 16,
+    borderBottomWidth: 0,
+  },
+  news: {
+    paddingVertical: 6,
+    marginVertical: 16,
+    borderBottomWidth: 0,
   },
   justifyCenter: {
     justifyContent: 'center',

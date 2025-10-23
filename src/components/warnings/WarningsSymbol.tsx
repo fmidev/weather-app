@@ -1,4 +1,4 @@
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { Severity, WarningType } from '@store/warnings/types';
 import React from 'react';
 
@@ -29,6 +29,12 @@ const WarningSymbol: React.FC<WarningSymbolProps> = ({
     coldWeather: 'hot-weather',
     uvNote: 'uv-note',
     flooding: 'flooding',
+    seaWind: 'sea-wind',
+    seaThunderStorm: 'sea-thunder-storm',
+    seaWaveHeight: 'sea-wave-height',
+    seaWaterHeightHighWater: 'sea-water-height-high-water',
+    seaWaterHeightShallowWater: 'sea-water-height-shallow-water',
+    seaIcing: 'sea-icing',
   };
 
   let name = 'warnings';

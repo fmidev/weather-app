@@ -141,11 +141,11 @@ const getTimeseriesData = async (
     lang: language,
     producer: layer.producer || 'default',
     attributes: 'lonlat,population,name',
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   const url = `${sources[layer.source]}/timeseries`;
-  const { data } = await axiosClient({ url, params });
+  const { data } = await axiosClient({ url, params }, undefined, 'Timeseries');
 
   Object.assign(toReturn, {
     data,
@@ -209,7 +209,7 @@ const getWMSLayerUrlsAndBounds = async (
           service: 'WMS',
           request: 'GetCapabilities',
           layout: 'flat',
-          who: packageJSON.name,
+          who: `${packageJSON.name}-${Platform.OS}`,
           ...(src.includes('smartmet')
             ? {
                 namespace: `/${allLayerNames
@@ -220,7 +220,7 @@ const getWMSLayerUrlsAndBounds = async (
               }
             : {}),
         },
-      });
+      }, undefined, 'WMS');
 
       const parsedResponse = parser.parse(data);
 
@@ -258,9 +258,15 @@ const getWMSLayerUrlsAndBounds = async (
       const steps = Array.isArray(wmsLayer.Dimension)
         ? wmsLayer.Dimension[0].text.split(/[,/]/)
         : wmsLayer.Dimension.text.split(/[,/]/);
+      const lastStep = steps[steps.length - 1];
 
       const layerStart = steps[0];
-      const layerEnd = steps.length > 3 ? steps[steps.length - 1] : steps[1];
+      // Only supports start/end/interval and time list formats as time dimension
+      // Also the first time interval works if multiple time intervals are provided
+      // A time list format is identified by having more than three elements in the steps array.
+      // This condition ensures that the last step is a valid ISO 8601 date and not time interval.
+      const isTimeList = steps.length > 3 && moment(lastStep, moment.ISO_8601, true).isValid();
+      const layerEnd = isTimeList ? lastStep : steps[1];
 
       const url = sources[layerSrc.source];
 

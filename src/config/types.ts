@@ -67,6 +67,12 @@ export interface MapLayer {
   tileFormat?: string;
 }
 
+interface GeoMagneticObservations {
+  enabled: boolean;
+  producer: string;
+  countryCodes: string[];
+}
+
 interface Observation {
   updateInterval: number;
   numberOfStations: number;
@@ -75,6 +81,8 @@ interface Observation {
   timePeriod: number;
   parameters: (keyof ObservationParameters)[];
   dailyParameters?: (keyof DailyObservationParameters)[];
+  geoMagneticObservations?: GeoMagneticObservations;
+  lazyLoad?: boolean;
 }
 
 interface ObservationEnabled extends Observation {
@@ -103,6 +111,7 @@ interface CapViewSettings {
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;
   includeAreaInTitle?: boolean;
+  severityBackgroundInSymbol?: boolean;
 }
 
 interface Warnings {
@@ -178,6 +187,8 @@ type Themes = LightThemeEnabled | DarkThemeEnabled;
 
 interface OnboardingWizard {
   enabled: boolean;
+  languageSpecificLogo?: boolean;
+  termsOfUseChanged?: boolean;
 }
 
 interface Feedback {
@@ -187,6 +198,44 @@ interface Feedback {
     [locale: string]: string;
   };
 }
+
+interface News {
+  apiUrl: {
+    [language: string]: string;
+  };
+  numberOfNews: number;
+  updateInterval: number;
+  outdated: number;
+}
+
+interface NewsEnabled extends News {
+  enabled: true;
+}
+
+interface NewsDisabled extends Partial<News> {
+  enabled: false;
+}
+
+interface MeteorologistSnapshotConfig {
+  url: string;
+  updateInterval: number;
+}
+
+interface Analytics {
+  enabled: boolean;
+  siteId?: Record<string, number>; // string is language. "fi" for example
+  url?: string; // matomo server url
+}
+
+// TODO: how to handle errors. Add error categories to "actions" and then name -field can be error message content
+// for example: trackMatomoEvent('Error', 'Error loading forecast data', error.getMessage())
+// Events in Matomo have three dimension (category, action, name)
+// and we'll probably misuse them, but the reason is because
+// this way it's easier to see stuff in Matomo web UI.
+//
+// Category = who, Action = where, Name = what was done.
+export type AnalyticCategories = 'User action' | 'Init' | 'Notice' | 'Warning' | 'Error';
+export type AnalyticActions = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Search' | 'Settings' | 'Navigation' | 'Geolocation' | 'News' | 'Platform' | 'Announcements' | 'Autocomplete' | 'Timeseries' | 'WMS' | 'DynamicConfig' | 'Snapshot' | 'Not specified';
 
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
@@ -205,6 +254,7 @@ export interface ConfigType {
   };
   weather: {
     apiUrl: string;
+    layout?: 'default' | 'fmi' | 'legacyWithoutBackgroundColor';
     forecast: {
       ageWarning?: number;
       updateInterval: number;
@@ -223,9 +273,11 @@ export interface ConfigType {
       };
     };
     observation: ObservationEnabled | ObservationDisabled;
+    meteorologist?: MeteorologistSnapshotConfig;
     useCardinalsForWindDirection?: boolean;
   };
   warnings: WarningsEnabled | WarningsDisabled;
+  news: NewsEnabled | NewsDisabled;
   settings: {
     languages: string[];
     fallbackLanguage?: 'fi' | 'en' | 'sv' | 'es';
@@ -244,4 +296,5 @@ export interface ConfigType {
   unresolvedGeoIdErrorMessage?: UnresolvedGeoIdErrorMessage;
   onboardingWizard: OnboardingWizard;
   feedback?: Feedback;
+  analytics?: Analytics;
 }

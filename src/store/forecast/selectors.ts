@@ -1,6 +1,5 @@
 import { Selector, createSelector } from 'reselect';
 import moment from 'moment';
-import 'moment/locale/fi';
 
 import { selectGeoid } from '@store/location/selector';
 import { Config } from '@config';
@@ -8,6 +7,8 @@ import { getIndexForDaySmartSymbol } from '@utils/helpers';
 import { State } from '../types';
 import { DisplayParameters, ForecastState, TimeStepData } from './types';
 import constants, { DAY_LENGTH } from './constants';
+
+const FORECAST_MAX_AGE = 24;
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
@@ -20,14 +21,14 @@ export const selectLoading = createSelector(
   (forecast) => forecast.loading
 );
 
-export const selectError = createSelector(
-  selectForecastDomain,
-  (forecast) => forecast.error
-);
-
 const selectData = createSelector(
   selectForecastDomain,
   (forecast) => forecast.data
+);
+
+const selectAuroraBorealisData = createSelector(
+  selectForecastDomain,
+  (forecast) => forecast.auroraBorealisData
 );
 
 export const selectForecastAge = createSelector(
@@ -41,6 +42,15 @@ export const selectForecast = createSelector(
     const now = new Date();
     if (items) {
       const locationItems = items[!isNaN(geoid) ? geoid : 0];
+
+      if (!locationItems?.[0]?.modtime) return [];
+
+      const modtime = moment(locationItems?.[0]?.modtime+'Z');
+      const duration = moment.duration(moment().diff(modtime));
+      if (duration.asHours() > FORECAST_MAX_AGE) {
+        return [];
+      }
+
       // filter out outdated items
       const filtered = locationItems?.filter(
         (i) => i.epochtime * 1000 > now.getTime()
@@ -52,9 +62,26 @@ export const selectForecast = createSelector(
   }
 );
 
+export const selectError = createSelector(
+  [selectForecastDomain, selectForecast],
+  (forecast, data) => forecast.error || (forecast.loading === false && data.length === 0)
+);
+
+export const selectIsAuroraBorealisLikely = createSelector(
+  [selectAuroraBorealisData, selectGeoid],
+  (items, geoid) => {
+    return items?.[geoid] || false
+  }
+);
+
 export const selectNextHourForecast = createSelector(
   selectForecast,
   (forecast) => forecast && forecast[0]
+);
+
+export const selectNextHoursForecast = createSelector(
+  selectForecast,
+  (forecast) => forecast && forecast.slice(0, 12)
 );
 
 export const selectForecastInvalidData = createSelector(
@@ -87,6 +114,15 @@ export const selectForecastByDay = createSelector(
     )
 );
 
+export const selectIsWaningMoonPhase = createSelector(
+  [selectForecast],
+  (forecast) =>
+    forecast &&
+    forecast[23]?.moonPhase !== undefined &&
+    forecast[0]?.moonPhase !== undefined &&
+    forecast[23].moonPhase < forecast[0].moonPhase
+)
+
 export const selectHeaderLevelForecast = createSelector(
   selectForecastByDay,
   (forecastByDay) =>
@@ -94,13 +130,20 @@ export const selectHeaderLevelForecast = createSelector(
     Object.keys(forecastByDay).map((key: string) => {
       const dayArr = forecastByDay[key];
       const tempArray = dayArr.map((h) => h.temperature || 0);
+      const windArray = dayArr.map((h) => h.windSpeedMS || 0);
+
       // get forecasted min and max temps for current day
       const maxTemperature = Math.max(...tempArray);
       const minTemperature = Math.min(...tempArray);
+      const maxWindSpeed = Math.max(...windArray);
+      const minWindSpeed = Math.min(...windArray);
+
       // calculate total precipitation
       const sumPrecipitation = dayArr
         .map((h) => h.precipitation1h || 0)
         .reduce((acc, curr) => acc + curr, 0);
+
+      const precipitationMissing = dayArr.every(item => item.precipitation1h === null);
 
       const roundedTotalPrecipitation =
         Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
@@ -116,7 +159,10 @@ export const selectHeaderLevelForecast = createSelector(
       return {
         maxTemperature,
         minTemperature,
+        maxWindSpeed,
+        minWindSpeed,
         totalPrecipitation: roundedTotalPrecipitation,
+        precipitationMissing,
         timeStamp,
         smartSymbol,
         precipitationData: precipitationArr,

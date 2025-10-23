@@ -1,15 +1,13 @@
 import { LaunchArguments } from 'react-native-launch-arguments';
+import { MMKV } from 'react-native-mmkv';
 import axiosClient from '@utils/axiosClient';
-import {
-  getItem,
-  setItem,
-  VERSION,
-  DYNAMICCONFIG,
-  DYNAMICCONFIG_ETAG,
-} from '@utils/async_storage';
+import { VERSION, DYNAMICCONFIG, DYNAMICCONFIG_ETAG } from '@utils/async_storage';
 import { ConfigType } from './types';
 import packageJSON from '../../package.json';
 import type { LaunchArgs } from '@navigators/types';
+
+// Top level features that are not supported in dynamic config
+const BLACKLIST = ['dynamicConfig', 'onboardingWizard'] as Array<keyof ConfigType>;
 
 class DynamicConfig {
   private config!: ConfigType;
@@ -21,6 +19,8 @@ class DynamicConfig {
   private updating: boolean;
 
   private updated: number;
+
+  private readonly storage = new MMKV();
 
   public hasBeenSet = false;
 
@@ -109,14 +109,15 @@ class DynamicConfig {
 
     this.updating = true;
 
-    const previousVersion = await getItem(VERSION);
-    const previousEtag = await getItem(DYNAMICCONFIG_ETAG);
+    const previousVersion = this.storage.getString(VERSION);
+    const previousEtag = this.storage.getString(DYNAMICCONFIG_ETAG);
 
     try {
+      // Fetch the dynamic config from the API
       const { data, headers } = await axiosClient({
         url: this.apiUrl,
         timeout: this.timeout,
-      });
+      }, undefined, 'DynamicConfig');
       // Don't update config if no changes to avoid re-rendering
       if (
         data &&
@@ -125,16 +126,16 @@ class DynamicConfig {
           previousEtag !== headers.etag)
       ) {
         this.config = DynamicConfig.mergeObject(this.config, data);
-        await setItem(DYNAMICCONFIG, JSON.stringify(this.config));
-        await setItem(VERSION, packageJSON.version);
+        this.storage.set(DYNAMICCONFIG, JSON.stringify(this.config));
+        this.storage.set(VERSION, packageJSON.version);
         if (headers.etag) {
-          await setItem(DYNAMICCONFIG_ETAG, headers.etag);
+          this.storage.set(DYNAMICCONFIG_ETAG, headers.etag);
         }
 
         this.setUpdated(Date.now());
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
     this.updating = false;
@@ -148,6 +149,10 @@ class DynamicConfig {
 
     if (isObject(target) && isObject(source)) {
       Object.keys(source).forEach((key) => {
+        if (BLACKLIST.includes(key as keyof ConfigType)) {
+          return;
+        }
+
         if (isObject(target[key])) {
           if (isObject(source[key])) {
             if (target[key]) {

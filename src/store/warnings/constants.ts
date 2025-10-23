@@ -1,14 +1,21 @@
+// The order defines priority, the thunderstorm most important - seaicing least important
 export const knownWarningTypes = [
   'thunderstorm',
-  'wind',
-  'rain',
-  'trafficWeather',
-  'pedestrianSafety',
   'forestFireWeather',
+  'wind',
+  'trafficWeather',
+  'rain',
+  'pedestrianSafety',
   'hotWeather',
   'coldWeather',
   'uvNote',
   'flooding',
+  'seaWind',
+  'seaThunderStorm',
+  'seaWaveHeight',
+  'seaWaterHeightHighWater',
+  'seaWaterHeightShallowWater',
+  'seaIcing'
 ] as const;
 
 export const severityList = ['', 'Moderate', 'Severe', 'Extreme'] as const;

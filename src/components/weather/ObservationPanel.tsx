@@ -3,6 +3,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { selectCurrent } from '@store/location/selector';
 import {
@@ -40,6 +41,7 @@ import List from './observation/List';
 import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
 import { observationTypeParameters } from './charts/settings';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -88,12 +90,14 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const isDaily =
     chartParameter === 'daily' ||
     (chartParameter && preferredDailyParameters.includes(chartParameter));
+  const insets = useSafeAreaInsets();
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
-  const stationSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const stationSheetRef = useRef<RBSheet>(null);
   const { enabled, parameters } = Config.get('weather').observation;
+  const { layout } = Config.get('weather')
 
   useEffect(() => {
     const sid = stationList[0]?.id;
@@ -166,17 +170,22 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   );
   const title = `${currentStation?.name || ''} – ${t(
     'distance'
-  )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} km`;
+  )} ${toStringWithDecimal(currentStation?.distance, decimalSeparator)} ${t('unitAbbreviations:km')}`;
+  const observationsMissing = data.length === 0 && !loading;
+
   return (
     <View
-      style={[
+      style={layout === 'fmi' ? [ styles.extraPadding, {
+        marginLeft: insets.left,
+        marginRight: insets.right,
+      }] : [
         styles.panelWrapper,
         {
           backgroundColor: colors.background,
           shadowColor: colors.shadow,
-        },
+        }
       ]}>
-      <PanelHeader title={t('panelHeader')} />
+      <PanelHeader title={t('panelHeader')} thin={layout === 'fmi'} />
       <View style={styles.panelContainer}>
         {loading && <ActivityIndicator />}
         {stationList.length > 0 && (
@@ -190,11 +199,12 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
             </Text>
             <View style={[styles.observationDropdown]}>
               <CollapsibleHeader
-                onPress={() => stationSheetRef.current.open()}
+                onPress={() => stationSheetRef.current?.open()}
                 open={false}
                 title={title}
                 accessibilityLabel=""
                 iconStart="map-marker"
+                rounded={layout === 'fmi'}
               />
             </View>
           </View>
@@ -210,7 +220,10 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 accessibilityRole="button"
                 accessibilityState={{ selected: displayFormat === CHART }}
                 activeOpacity={1}
-                onPress={() => updateDisplayFormat(CHART)}
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Weather', 'Show OBSERVATIONS in CHART format');
+                  updateDisplayFormat(CHART);
+                }}
                 style={styles.withMarginRight}>
                 <View
                   style={[
@@ -246,7 +259,10 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 accessibilityRole="button"
                 accessibilityState={{ selected: displayFormat === LIST }}
                 activeOpacity={1}
-                onPress={() => updateDisplayFormat(LIST)}>
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Weather', 'Show OBSERVATIONS in LIST format');
+                  updateDisplayFormat(LIST);
+                }}>
                 <View
                   style={[
                     styles.contentSelectionContainer,
@@ -305,7 +321,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         </View>
       )}
 
-      {data.length === 0 && (
+      {observationsMissing && (
         <View style={styles.observationContainer}>
           <Text
             style={[styles.observationText, { color: colors.hourListText }]}>
@@ -327,7 +343,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           draggableIcon: styles.draggableIcon,
         }}>
         <ObservationStationListBottomSheet
-          onClose={() => stationSheetRef.current.close()}
+          onClose={() => stationSheetRef.current?.close()}
         />
       </RBSheet>
     </View>
@@ -355,6 +371,9 @@ const styles = StyleSheet.create({
     marginLeft: -6,
     marginRight: -6,
     marginTop: 2,
+  },
+  extraPadding: {
+    paddingTop: 16
   },
   observationText: {
     fontSize: 14,

@@ -13,7 +13,7 @@ import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { State } from '@store/types';
 import { TimeStepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
@@ -66,11 +66,10 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
+  const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { excludeDayLength } = Config.get('weather').forecast;
 
-  const virtualizedList = useRef() as React.MutableRefObject<
-    VirtualizedList<TimeStepData>
-  >;
+  const virtualizedList = useRef<VirtualizedList<TimeStepData>>(null);
 
   useEffect(() => {
     if (activeDayIndex !== currentIndex && data.length > 0) {
@@ -80,7 +79,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
       const index =
         calculatedIndex > data.length ? data.length - 1 : calculatedIndex;
-      if (index >= 0) {
+      if (index >= 0 && virtualizedList.current) {
         virtualizedList.current.scrollToIndex({
           index,
           animated: false,
@@ -114,6 +113,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
 
     const sunrise = moment(`${step.sunrise}Z`);
     const sunset = moment(`${step.sunset}Z`);
+    const sunriseSunsetDiff = Math.abs(sunset.diff(sunrise, 'hours'));
     const dayHours = Math.floor(step.dayLength / 60);
     const dayMinutes = step.dayLength % 60;
 
@@ -135,14 +135,15 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
       (excludePolarNightAndMidnightSun === undefined ||
         !excludePolarNightAndMidnightSun) &&
       !isSunriseAndDayInSameDay &&
-      sunrise.isBefore(sunset);
+      sunrise.isBefore(sunset) &&
+      sunriseSunsetDiff >= 36;
 
     const dateFormat =
       clockType === 12
         ? `D.M.YYYY [${t('at')}] h.mm a`
-        : `D.M.YYYY [${t('at')}] HH.mm`;
+        : `D.M.YYYY [${t('at')}] HH:mm`;
 
-    const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
+    const timeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
 
     return (
       <View
@@ -358,7 +359,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                         styles.bold,
                         { color: colors.hourListText },
                       ]}>
-                      {`${dayHours} h ${dayMinutes} min`}
+                      {`${dayHours} ${unitTranslate('h')} ${dayMinutes} ${unitTranslate('min')}`}
                     </Text>
                   </View>
                 </>

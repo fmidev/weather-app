@@ -17,6 +17,12 @@ Follow this [guide](https://reactnative.dev/docs/0.74/environment-setup) for set
 
 `yarn install`
 
+If you forget to clone with `--recurse-submodules`, you can fix assets by running
+
+`
+git submodule update --init --recursive
+`
+
 ### **Android**
 
 1. Obtain Google Maps API key and place it in `.env` as depicted in `.env.default`. Guides and troubleshooting from [react-native-maps documentation](https://github.com/react-native-maps/react-native-maps/blob/master/docs/installation.md#the-map-background-is-blank-google-maps)

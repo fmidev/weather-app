@@ -11,6 +11,7 @@ import {
   Error,
   UPDATE_OBSERVATION_DISPLAY_FORMAT,
   UPDATE_OBSERVATION_CHART_PARAMETER,
+  RESET_OBSERVATION_STATE,
 } from './types';
 
 export const fetchObservation =
@@ -45,4 +46,9 @@ export const updateDisplayFormat =
 export const updateChartParameter =
   (value: ChartType) => (dispatch: Dispatch<ObservationActionTypes>) => {
     dispatch({ type: UPDATE_OBSERVATION_CHART_PARAMETER, value });
+  };
+
+export const resetObservations =  () =>
+  (dispatch: Dispatch<ObservationActionTypes>) => {
+    dispatch({ type: RESET_OBSERVATION_STATE });
   };

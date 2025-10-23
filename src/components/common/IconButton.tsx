@@ -9,7 +9,7 @@ import {
 
 import { LIGHT_BLUE, PRIMARY_BLUE } from '@assets/colors';
 
-import Icon from './Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 type ButtonProps = { onPress: () => void; accessibilityLabel: string };
@@ -20,6 +20,8 @@ type IconButtonProps = ButtonProps & {
   iconSize?: number;
   iconColor?: string;
   backgroundColor: ColorValue;
+  circular?: boolean;
+  testID?: string;
 };
 
 const IconButton: React.FC<IconButtonProps> = ({
@@ -30,6 +32,8 @@ const IconButton: React.FC<IconButtonProps> = ({
   iconSize,
   iconColor,
   backgroundColor,
+  circular,
+  testID,
 }) =>
   onPress ? (
     <View
@@ -37,11 +41,15 @@ const IconButton: React.FC<IconButtonProps> = ({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       style={[
-        styles.button,
+        circular ? styles.circularButton : styles.button,
         style,
         { backgroundColor: backgroundColor || undefined },
       ]}>
-      <AccessibleTouchableOpacity onPress={onPress}>
+      <AccessibleTouchableOpacity
+        testID={testID}
+        onPress={onPress}
+        hitSlop={ circular ? { top: 6, bottom: 6, left: 6, right: 6 } : undefined}
+      >
         <View>
           <Icon
             name={icon}
@@ -75,6 +83,15 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: LIGHT_BLUE,
+  },
+  circularButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 24,
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',

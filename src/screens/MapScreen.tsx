@@ -33,6 +33,7 @@ import darkMapStyle from '@utils/dark_map_style.json';
 import { GRAY_1 } from '@assets/colors';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -80,9 +81,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const { shouldReload } = useReloader();
   const { updateInterval } = Config.get('map');
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
-  const mapRef = useRef() as React.MutableRefObject<MapView>;
-  const mapLayersSheetRef = useRef() as React.MutableRefObject<RBSheet>;
-  const infoSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const mapRef = useRef<MapView>(null);
+  const mapLayersSheetRef = useRef<RBSheet>(null);
+  const infoSheetRef = useRef<RBSheet>(null);
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
 
   const location = currentLocation ?? Config.get('location').default;
@@ -127,30 +128,34 @@ const MapScreen: React.FC<MapScreenProps> = ({
   ]);
 
   useEffect(() => {
-    if (location) {
+    if (location && mapRef.current) {
       const { lat: latitude, lon: longitude } = location;
       mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
     }
   }, [location]);
 
   const handleZoomIn = () => {
-    mapRef.current.getCamera().then((cam: Camera) => {
-      if (Platform.OS === 'ios' && cam.altitude !== undefined) {
-        mapRef.current.animateCamera({ altitude: cam.altitude - 50000 });
-      } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
-        mapRef.current.animateCamera({ zoom: cam.zoom + 1 });
-      }
-    });
+    if (mapRef.current) {
+      mapRef.current.getCamera().then((cam: Camera) => {
+        if (Platform.OS === 'ios' && cam.altitude !== undefined) {
+          mapRef.current?.animateCamera({ altitude: cam.altitude - 50000 });
+        } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
+          mapRef.current?.animateCamera({ zoom: cam.zoom + 1 });
+        }
+      });
+    }
   };
 
   const handleZoomOut = () => {
-    mapRef.current.getCamera().then((cam: Camera) => {
-      if (Platform.OS === 'ios' && cam.altitude !== undefined) {
-        mapRef.current.animateCamera({ altitude: cam.altitude + 50000 });
-      } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
-        mapRef.current.animateCamera({ zoom: cam.zoom - 1 });
-      }
-    });
+    if (mapRef.current) {
+      mapRef.current.getCamera().then((cam: Camera) => {
+        if (Platform.OS === 'ios' && cam.altitude !== undefined) {
+          mapRef.current?.animateCamera({ altitude: cam.altitude + 50000 });
+        } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
+          mapRef.current?.animateCamera({ zoom: cam.zoom - 1 });
+        }
+      });
+    }
   };
 
   const onRegionChangeComplete = (region: Region) => {
@@ -172,7 +177,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   };
 
   const animateToCurrentLocation = () => {
-    if (location) {
+    if (location && mapRef.current) {
       const { lat: latitude, lon: longitude } = location;
       mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
     }
@@ -183,6 +188,9 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   const mapMaxZoom = Platform.OS === 'android' ? 10 : 9.5;
   const mapMinZoom = Platform.OS === 'android' ? 4 : 3.5;
+
+  // Fixes crash on Android when navigating away from the screen
+  if (Platform.OS === 'android' && !isFocused) return null;
 
   return (
     <View style={styles.mapContainer}>
@@ -216,12 +224,24 @@ const MapScreen: React.FC<MapScreenProps> = ({
       </MapView>
       <Announcements style={styles.announcements} />
       <MapControls
-        onLayersPressed={() => mapLayersSheetRef.current.open()}
-        onInfoPressed={() => infoSheetRef.current.open()}
-        onZoomIn={() => handleZoomIn()}
-        onZoomOut={() => handleZoomOut()}
+        onLayersPressed={() => mapLayersSheetRef.current?.open()}
+        onInfoPressed={() => {
+          trackMatomoEvent('User action', 'Map', 'Open info panel');
+          infoSheetRef.current?.open()
+        }}
+        onZoomIn={() => {
+          trackMatomoEvent('User action', 'Map', 'Zoom IN');
+          handleZoomIn();
+        }}
+        onZoomOut={() =>{
+          trackMatomoEvent('User action', 'Map', 'Zoom OUT');
+          handleZoomOut();
+        }}
         showRelocateButton={markerOutOfBounds}
-        relocate={() => animateToCurrentLocation()}
+        relocate={() => {
+          trackMatomoEvent('User action', 'Map', 'Relocate');
+          animateToCurrentLocation();
+        }}
       />
 
       <RBSheet
@@ -236,7 +256,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
           },
           draggableIcon: styles.draggableIcon,
         }}>
-        <InfoBottomSheet onClose={() => infoSheetRef.current.close()} />
+        <InfoBottomSheet onClose={() => infoSheetRef.current?.close()} />
       </RBSheet>
 
       <RBSheet
@@ -251,7 +271,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
           draggableIcon: styles.draggableIcon,
         }}>
         <MapLayersBottomSheet
-          onClose={() => mapLayersSheetRef.current.close()}
+          onClose={() => mapLayersSheetRef.current?.close()}
         />
       </RBSheet>
     </View>

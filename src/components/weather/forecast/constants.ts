@@ -1,0 +1,1 @@
+export const MAX_PARAMETERS_WITHOUT_SCROLL = 9;

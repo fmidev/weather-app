@@ -21,6 +21,7 @@ import {
   CustomTheme,
 } from '@assets/colors';
 import { ChartType } from '../charts/types';
+import { trackMatomoEvent } from '@utils/matomo';
 
 type ParameterSelectorProps = {
   chartTypes: ChartType[];
@@ -37,7 +38,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
   const [lastVisible, setLastVisible] = useState<boolean>(true);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation();
-  const buttonList = useRef() as React.MutableRefObject<FlatList<ChartType>>;
+  const buttonList = useRef<FlatList<ChartType>>(null);
 
   useEffect(() => {
     if (chartTypes && parameter && buttonList.current) {
@@ -91,6 +92,7 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
         `weather:charts:${item}`
       )}`}
       onPress={() => {
+        trackMatomoEvent('User action', 'Weather', 'Selected OBSERVATIONS parameter');
         setParameter(item);
       }}
       style={index < chartTypes.length && styles.withMarginRight}>
@@ -168,7 +170,6 @@ const ParameterSelector: React.FC<ParameterSelectorProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginHorizontal: -8,
     flexDirection: 'row',
     alignItems: 'center',
   },

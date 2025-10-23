@@ -5,10 +5,12 @@ import {
   SET_NAVIGATION_TAB,
   SET_DID_LAUNCH_APP,
 } from './types';
+import packageJSON from '../../../package.json';
 
 const INITIAL_STATE: NavigationState = {
   tab: 'Weather',
   didLaunchApp: false,
+  termsOfUseAccepted: false,
 };
 
 export default (
@@ -27,6 +29,7 @@ export default (
       return {
         ...state,
         didLaunchApp: true,
+        termsOfUseAccepted: packageJSON.version,
       };
     }
 
@@ -38,5 +41,5 @@ export default (
 
 export const navigationPersist: PersistConfig = {
   key: 'navigation',
-  whitelist: ['tab', 'didLaunchApp'],
+  whitelist: ['tab', 'didLaunchApp', 'termsOfUseAccepted'],
 };

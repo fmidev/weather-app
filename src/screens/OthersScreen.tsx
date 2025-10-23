@@ -4,10 +4,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { OthersStackParamList } from '@navigators/types';
 import { Config } from '@config';
+import { trackMatomoEvent } from '@utils/matomo';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'StackOthers'>;
@@ -40,7 +41,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('Settings')}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Settings', 'Navigate to SETTINGS');
+                navigation.navigate('Settings')
+              }}
               testID="navigation_settings"
               accessibilityRole="menuitem"
               accessibilityHint={`${t('navigateTo')} ${t('settings')}`}>
@@ -79,7 +83,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('About')}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Settings', 'Navigate to ABOUT');
+                navigation.navigate('About')
+              }}
               testID="navigation_about"
               accessibilityRole="menuitem"
               accessibilityHint={`${t('navigateTo')} ${t('general')}`}>
@@ -105,7 +112,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('TermsAndConditions')}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Settings', 'Navigate to TOC');
+                navigation.navigate('TermsAndConditions')
+              }}
               testID="navigation_terms_and_conditions"
               accessibilityRole="menuitem"
               accessibilityHint={`${t('navigateTo')} ${t(
@@ -160,7 +170,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             ]}>
             <AccessibleTouchableOpacity
               delayPressIn={100}
-              onPress={() => navigation.navigate('Accessibility')}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Settings', 'Navigate to ACCESSIBILITY');
+                navigation.navigate('Accessibility')
+              }}
               testID="navigation_accessibility"
               accessibilityRole="menuitem"
               accessibilityHint={`${t('navigateTo')} ${t('accessibility')}`}>
@@ -187,7 +200,10 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
               ]}>
               <AccessibleTouchableOpacity
                 delayPressIn={100}
-                onPress={() => navigation.navigate('GiveFeedback')}
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Settings', 'Navigate to FEEDBACK');
+                  navigation.navigate('GiveFeedback')
+                }}
                 testID="navigation_feedback"
                 accessibilityRole="menuitem"
                 accessibilityHint={`${t('navigateTo')} ${t('feedback')}`}>
@@ -220,12 +236,13 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                   accessibilityLabel={socialMediaLink.name}
                   accessibilityRole="link"
                   accessibilityHint={`${t('open')} ${socialMediaLink.name}`}
-                  onPress={() =>
+                  onPress={() => {
+                    trackMatomoEvent('User action', 'Settings', 'Follow us - '+socialMediaLink.name);
                     handleSocialPress(
                       socialMediaLink.appUrl,
                       socialMediaLink.url
-                    )
-                  }
+                    );
+                  }}
                   style={styles.withMarginRight}>
                   <Icon
                     name={socialMediaLink.icon + (dark ? '-dark' : '-light')}

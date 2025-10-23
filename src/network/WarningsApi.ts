@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { Config } from '@config';
 import i18n from '@i18n';
 import { Location } from '@store/location/types';
@@ -18,10 +19,10 @@ const getWarnings = async ({
   const params = {
     latlon: `${lat},${lon}`,
     lang: language,
-    who: packageJSON.name,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
-  const { data } = await axiosClient({ url, params });
+  const { data } = await axiosClient({ url, params }, undefined, 'Warnings');
 
   return data;
 };

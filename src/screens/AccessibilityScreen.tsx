@@ -12,10 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 
 import { CustomTheme } from '@assets/colors';
 import packageJSON from '../../package.json';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const TermsAndConditionsScreen: React.FC = () => {
   const {
@@ -23,7 +24,7 @@ const TermsAndConditionsScreen: React.FC = () => {
     i18n: { language },
   } = useTranslation('accessibility');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef() as React.MutableRefObject<Text>;
+  const titleRef = useRef<Text>(null);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {
@@ -36,8 +37,9 @@ const TermsAndConditionsScreen: React.FC = () => {
 
   const fmiMailToUrl = `mailto:kirjaamo@fmi.fi?subject=Ilmatieteen laitoksen sää saavutettavuus [versio: ${packageJSON.version}]`;
 
-  const accessibility = 'https://www.saavutettavuusvaatimukset.fi';
-  const accessibilitySv = 'https://www.tillgänglighetskrav.fi';
+  let accessibilityUrl = 'https://www.saavutettavuusvaatimukset.fi';
+  if (language === 'sv') accessibilityUrl = 'https://www.tillgänglighetskrav.fi';
+  if (language === 'en') accessibilityUrl = 'https://www.webaccessibility.fi';
 
   const legal = 'https://www.finlex.fi/fi/laki/alkup/2019/20190306';
   const legalSv = 'https://www.finlex.fi/sv/laki/ajantasa/2019/20190306';
@@ -51,33 +53,27 @@ const TermsAndConditionsScreen: React.FC = () => {
         contentContainerStyle={styles.withPaddingBottom}
         showsVerticalScrollIndicator={false}>
         {t('generalTitle') !== 'generalTitle' && (
-          <>
-            <Text
-              ref={titleRef}
-              style={[styles.title, { color: colors.primaryText }]}
-              accessibilityRole="header">
-              {t('generalTitle')}
-            </Text>
-          </>
+          <Text
+            ref={titleRef}
+            style={[styles.title, { color: colors.primaryText }]}
+            accessibilityRole="header">
+            {t('generalTitle')}
+          </Text>
         )}
         {t('generalAbout') !== 'generalAbout' && (
-          <>
-            <Text
-              style={[
-                styles.body,
-                styles.bold,
-                { color: colors.hourListText },
-              ]}>
-              {t('generalAbout')}
-            </Text>
-          </>
+          <Text
+            style={[
+              styles.body,
+              styles.bold,
+              { color: colors.hourListText },
+            ]}>
+            {t('generalAbout')}
+          </Text>
         )}
         {t('generalDescription') !== 'generalDescription' && (
-          <>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('generalDescription')}
-            </Text>
-          </>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('generalDescription')}
+          </Text>
         )}
         {t('subTitle1') !== 'subTitle1' &&
           t('description1') !== 'description1' && (
@@ -106,25 +102,26 @@ const TermsAndConditionsScreen: React.FC = () => {
             </>
           )}
         {t('email') !== 'email' && (
-          <>
-            <AccessibleTouchableOpacity
-              accessibilityRole="link"
-              accessibilityHint={t('feedback:moveToHint')}
-              onPress={() => Linking.openURL(fmiMailToUrl)}>
-              <View
-                style={[styles.link, { borderBottomColor: colors.primary }]}>
-                <Text
-                  style={[
-                    styles.linkText,
-                    {
-                      color: colors.primaryText,
-                    },
-                  ]}>
-                  {t('email')}
-                </Text>
-              </View>
-            </AccessibleTouchableOpacity>
-          </>
+          <AccessibleTouchableOpacity
+            accessibilityRole="link"
+            accessibilityHint={t('feedback:moveToHint')}
+            onPress={() => {
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+fmiMailToUrl);
+              Linking.openURL(fmiMailToUrl)
+            }}>
+            <View
+              style={[styles.link, { borderBottomColor: colors.primary }]}>
+              <Text
+                style={[
+                  styles.linkText,
+                  {
+                    color: colors.primaryText,
+                  },
+                ]}>
+                {t('email')}
+              </Text>
+            </View>
+          </AccessibleTouchableOpacity>
         )}
         {t('subTitle3') !== 'subTitle3' &&
           t('description3') !== 'description3' && (
@@ -139,63 +136,59 @@ const TermsAndConditionsScreen: React.FC = () => {
               </Text>
             </>
           )}
-        {t('aviContact') !== 'aviContact' && (
-          <>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('aviContact')}
-            </Text>
-          </>
+        {t('trafiContact') !== 'trafiContact' && (
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('trafiContact')}
+          </Text>
         )}
         {t('website') !== 'website' && (
-          <>
-            <AccessibleTouchableOpacity
-              accessibilityRole="link"
-              accessibilityHint={t('openInBrowser')}
-              onPress={() =>
-                language === 'sv'
-                  ? Linking.openURL(accessibilitySv)
-                  : Linking.openURL(accessibility)
-              }>
-              <View
-                style={[styles.link, { borderBottomColor: colors.primary }]}>
-                <Text
-                  style={[
-                    styles.linkText,
-                    {
-                      color: colors.primaryText,
-                    },
-                  ]}>
-                  {t('website')}
-                </Text>
-                <Icon
-                  name="open-in-new"
-                  color={colors.primaryText}
-                  height={18}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          </>
+          <AccessibleTouchableOpacity
+            accessibilityRole="link"
+            accessibilityHint={t('openInBrowser')}
+            onPress={() => {
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+accessibilityUrl);
+              Linking.openURL(accessibilityUrl)
+            }}>
+            <View
+              style={[styles.link, { borderBottomColor: colors.primary }]}>
+              <Text
+                style={[
+                  styles.linkText,
+                  {
+                    color: colors.primaryText,
+                  },
+                ]}>
+                {t('website')}
+              </Text>
+              <Icon
+                name="open-in-new"
+                color={colors.primaryText}
+                height={18}
+              />
+            </View>
+          </AccessibleTouchableOpacity>
         )}
         {t('email2') !== 'email2' && (
-          <>
-            <AccessibleTouchableOpacity
-              accessibilityRole="link"
-              accessibilityHint={t('feedback:moveToHint')}
-              onPress={() => Linking.openURL(`mailto:${t('email2')}`)}>
-              <View
-                style={[styles.link, { borderBottomColor: colors.primary }]}>
-                <Text
-                  style={[
-                    styles.linkText,
-                    {
-                      color: colors.primaryText,
-                    },
-                  ]}>
-                  {t('email2')}
-                </Text>
-              </View>
-            </AccessibleTouchableOpacity>
-          </>
+          <AccessibleTouchableOpacity
+            accessibilityRole="link"
+            accessibilityHint={t('feedback:moveToHint')}
+            onPress={() => {
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+`mailto:${t('email2')}`);
+              Linking.openURL(`mailto:${t('email2')}`)
+            }}>
+            <View
+              style={[styles.link, { borderBottomColor: colors.primary }]}>
+              <Text
+                style={[
+                  styles.linkText,
+                  {
+                    color: colors.primaryText,
+                  },
+                ]}>
+                {t('email2')}
+              </Text>
+            </View>
+          </AccessibleTouchableOpacity>
         )}
         {t('subTitle4') !== 'subTitle4' &&
           t('description4') !== 'description4' && (
@@ -227,11 +220,9 @@ const TermsAndConditionsScreen: React.FC = () => {
                 {t('description5')}
               </Text>
               {t('description5.1') !== 'description5.1' && (
-                <>
-                  <Text style={[styles.body, { color: colors.hourListText }]}>
-                    {t('description5.1')}
-                  </Text>
-                </>
+                <Text style={[styles.body, { color: colors.hourListText }]}>
+                  {t('description5.1')}
+                </Text>
               )}
             </>
           )}
@@ -267,64 +258,59 @@ const TermsAndConditionsScreen: React.FC = () => {
             </>
           )}
         {t('link1') !== 'link1' && (
-          <>
-            <AccessibleTouchableOpacity
-              accessibilityRole="link"
-              accessibilityHint={t('openInBrowser')}
-              onPress={() =>
-                language === 'sv'
-                  ? Linking.openURL(legalSv)
-                  : Linking.openURL(legal)
-              }>
-              <View
-                style={[styles.link, { borderBottomColor: colors.primary }]}>
-                <Text
-                  style={[
-                    styles.linkText,
-                    {
-                      color: colors.primaryText,
-                    },
-                  ]}>
-                  {t('link1')}
-                </Text>
-                <Icon
-                  name="open-in-new"
-                  color={colors.primaryText}
-                  height={18}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          </>
+          <AccessibleTouchableOpacity
+            accessibilityRole="link"
+            accessibilityHint={t('openInBrowser')}
+            onPress={() => {
+              const url = language === 'sv' ? legalSv : legal;
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+url);
+              Linking.openURL(url);
+            }}>
+            <View
+              style={[styles.link, { borderBottomColor: colors.primary }]}>
+              <Text
+                style={[
+                  styles.linkText,
+                  {
+                    color: colors.primaryText,
+                  },
+                ]}>
+                {t('link1')}
+              </Text>
+              <Icon
+                name="open-in-new"
+                color={colors.primaryText}
+                height={18}
+              />
+            </View>
+          </AccessibleTouchableOpacity>
         )}
         {t('link2') !== 'link2' && (
-          <>
-            <AccessibleTouchableOpacity
-              accessibilityRole="link"
-              accessibilityHint={t('openInBrowser')}
-              onPress={() =>
-                language === 'sv'
-                  ? Linking.openURL(accessibilitySv)
-                  : Linking.openURL(accessibility)
-              }>
-              <View
-                style={[styles.link, { borderBottomColor: colors.primary }]}>
-                <Text
-                  style={[
-                    styles.linkText,
-                    {
-                      color: colors.primaryText,
-                    },
-                  ]}>
-                  {t('link2')}
-                </Text>
-                <Icon
-                  name="open-in-new"
-                  color={colors.primaryText}
-                  height={18}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          </>
+          <AccessibleTouchableOpacity
+            accessibilityRole="link"
+            accessibilityHint={t('openInBrowser')}
+            onPress={() => {
+              trackMatomoEvent('User action', 'Settings', 'Open URL - '+accessibilityUrl);
+              Linking.openURL(accessibilityUrl)
+            }}>
+            <View
+              style={[styles.link, { borderBottomColor: colors.primary }]}>
+              <Text
+                style={[
+                  styles.linkText,
+                  {
+                    color: colors.primaryText,
+                  },
+                ]}>
+                {t('link2')}
+              </Text>
+              <Icon
+                name="open-in-new"
+                color={colors.primaryText}
+                height={18}
+              />
+            </View>
+          </AccessibleTouchableOpacity>
         )}
       </ScrollView>
     </View>

@@ -22,7 +22,7 @@ import { weatherSymbolGetter } from '@assets/images';
 import { getFeelsLikeIconName, getWindDirection } from '@utils/helpers';
 import { CustomTheme, GRAY_1 } from '@assets/colors';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { Config } from '@config';
 import {
   converter,
@@ -139,7 +139,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             styles.bold,
             { color: colors.primaryText },
           ]}>{`${t('at')} ${currentTime.format(
-          clockType === 12 ? 'h.mm a' : 'HH.mm'
+          clockType === 12 ? 'h.mm a' : 'HH:mm'
         )}`}</Text>
       </View>
       <View style={styles.row}>
@@ -164,7 +164,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
               accessibilityLabel={`${numericOrDash(temperatureValue)} ${t(
                 getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
               )} `}>
-              °{temperatureUnit}
+              °{t(`unitAbbreviations:${temperatureUnit}`)}
             </Text>
           </View>
         )}
@@ -190,7 +190,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                   <Text style={[styles.bold, styles.feelsLikeText]}>
                     {numericOrDash(feelsLikeValue)}
                   </Text>
-                  <Text style={styles.feelsLikeText}>°{temperatureUnit}</Text>
+                  <Text style={styles.feelsLikeText}>°{t(`unitAbbreviations:${temperatureUnit}`)}</Text>
                 </Text>
               </View>
               <Icon
@@ -252,7 +252,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                   {numericOrDash(windSpeedValue)}
                 </Text>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
-                  {` ${windUnit}`}
+                  {` ${t(`unitAbbreviations:${windUnit}`)}`}
                 </Text>
               </View>
             </View>
@@ -278,7 +278,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                   precipitationValue?.replace('.', decimalSeparator) ||
                   (0).toFixed(1).replace('.', decimalSeparator)
                 }`}</Text>
-                {` ${precipitationUnit}`}
+                {` ${t(`unitAbbreviations:${precipitationUnit}`)}`}
               </Text>
             </>
           )}

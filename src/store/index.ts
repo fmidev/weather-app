@@ -9,12 +9,13 @@ import MapReducer, { mapPersist } from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
 import NavigationReducer, { navigationPersist } from './navigation/reducer';
 import WarningsReducer, { warningsPersist } from './warnings/reducer';
-import AnnouncementsReducer, {
-  announcementsPersist,
-} from './announcements/reducer';
+import AnnouncementsReducer, { announcementsPersist } from './announcements/reducer';
+import MeteorologistReducer, { meteorologistPersist } from './meteorologist/reducer';
+import NewsReducer, { newsPersist } from './news/reducer';
 
 import { PersistConfig } from './types';
 import { SharedReduxStorage } from '@store/SharedReduxStorage';
+import { reduxMMKVStorage } from '@store/mmkvStorage';
 
 const persistReducerConfig = (config: PersistConfig) => ({
   ...config,
@@ -24,6 +25,11 @@ const persistReducerConfig = (config: PersistConfig) => ({
 const sharedReducerConfig = (config: PersistConfig) => ({
   ...config,
   storage: SharedReduxStorage,
+});
+
+const mmkvReducerConfig = (config: PersistConfig) => ({
+  ...config,
+  storage: reduxMMKVStorage,
 });
 
 export default combineReducers({
@@ -36,7 +42,7 @@ export default combineReducers({
     ForecastReducer
   ),
   observation: persistReducer(
-    persistReducerConfig(observationPersist),
+    mmkvReducerConfig(observationPersist),
     ObservationReducer
   ),
   location: persistReducer(
@@ -55,5 +61,13 @@ export default combineReducers({
   announcements: persistReducer(
     persistReducerConfig(announcementsPersist),
     AnnouncementsReducer
+  ),
+  meteorologist: persistReducer(
+    persistReducerConfig(meteorologistPersist),
+    MeteorologistReducer
+  ),
+  news: persistReducer(
+    mmkvReducerConfig(newsPersist),
+    NewsReducer
   ),
 });

@@ -53,7 +53,7 @@ export const UNITS: Unit[] = [
   },
   {
     parameterName: 'wind',
-    parameters: ['windSpeedMS', 'hourlymaximumgust'],
+    parameters: ['windSpeedMS', 'hourlymaximumgust', 'windGust'],
     unitTypes: [
       {
         unitId: 1,
@@ -164,6 +164,8 @@ export const toPrecision = (
 
 // converts given numeric value to corresponding unit abbreviation
 export const converter = (unitAbb: string, value: number): number => {
+  if (value === null || value === undefined) return value;
+
   switch (unitAbb) {
     // temperature
     case 'F':

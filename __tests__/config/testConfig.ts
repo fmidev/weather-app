@@ -120,6 +120,17 @@ const defaultConfig: ConfigType = {
   onboardingWizard: {
     enabled: true,
   },
+  news: {
+    enabled: true,
+    apiUrl: {
+      fi: 'apiUrl',
+      sv: 'apiUrl',
+      en: 'apiUrl',
+    },
+    numberOfNews: 3,
+    updateInterval: 30,
+    outdated: 0,
+  },
 };
 
 export default defaultConfig;

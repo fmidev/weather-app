@@ -29,7 +29,7 @@ import constants, {
 } from '@store/forecast/constants';
 import { DisplayParameters } from '@store/forecast/types';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
@@ -141,7 +141,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 <View style={styles.pastTimeBlock} />
               </View>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t('weatherInfoBottomSheet.pastTime')}
+                {t('weatherInfoBottomSheet.pastTimeOrMissing')}
               </Text>
             </View>
 
@@ -256,7 +256,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.hourlyForecastedTemperature', {
                     unit:
-                      units?.temperature.unitAbb ?? defaultUnits.temperature,
+                      t(`unitAbbreviations:${units?.temperature.unitAbb ?? defaultUnits.temperature}`),
                   })}
                 </Text>
               </View>
@@ -275,7 +275,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.feelsLikeTemperature', {
-                    unit: temperatureUnit,
+                    unit: t(`unitAbbreviations:${temperatureUnit}`)
                   })}
                 </Text>
               </View>
@@ -295,7 +295,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   </View>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('weatherInfoBottomSheet.windSpeedAndDirection', {
-                      unit: windUnit,
+                      unit: t(`unitAbbreviations:${windUnit}`)
                     })}
                   </Text>
                 </View>
@@ -343,7 +343,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
-                    {`${windSpeedMap[windUnit][0]} ${windUnit}`}
+                    {`${windSpeedMap[windUnit][0]} ${t(`unitAbbreviations:${windUnit}`)}`}
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('weatherInfoBottomSheet.light')}
@@ -356,7 +356,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
-                    {`${windSpeedMap[windUnit][1]} ${windUnit}`}
+                    {`${windSpeedMap[windUnit][1]} ${t(`unitAbbreviations:${windUnit}`)}`}
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('weatherInfoBottomSheet.moderate')}
@@ -369,7 +369,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
-                    {`${windSpeedMap[windUnit][2]} ${windUnit}`}
+                    {`${windSpeedMap[windUnit][2]} ${t(`unitAbbreviations:${windUnit}`)}`}
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('weatherInfoBottomSheet.strongBreeze')}
@@ -382,7 +382,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
-                    {`${windSpeedMap[windUnit][3]} ${windUnit}`}
+                    {`${windSpeedMap[windUnit][3]} ${t(`unitAbbreviations:${windUnit}`)}`}
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('weatherInfoBottomSheet.gale')}
@@ -395,7 +395,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
-                    {`${windSpeedMap[windUnit][4]} ${windUnit}`}
+                    {`${windSpeedMap[windUnit][4]} ${t(`unitAbbreviations:${windUnit}`)}`}
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('weatherInfoBottomSheet.storm')}
@@ -408,7 +408,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
-                    {`${windSpeedMap[windUnit][5]} ${windUnit}`}
+                    {`${windSpeedMap[windUnit][5]} ${t(`unitAbbreviations:${windUnit}`)}`}
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('weatherInfoBottomSheet.hurricane')}
@@ -430,7 +430,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.precipitation', {
-                    unit: precipitationUnit,
+                    unit: t(`unitAbbreviations:${precipitationUnit}`),
                   })}
                 </Text>
               </View>
@@ -500,7 +500,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.dewPoint', {
-                    unit: temperatureUnit,
+                    unit: t(`unitAbbreviations:${temperatureUnit}`),
                   })}
                 </Text>
               </View>
@@ -542,7 +542,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.pressure', {
-                    unit: pressureUnit,
+                    unit: t(`unitAbbreviations:${pressureUnit}`),
                   })}
                 </Text>
               </View>

@@ -4,7 +4,7 @@ import { View, StyleSheet, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
@@ -18,6 +18,8 @@ import { setStationId as setStationIdAction } from '@store/observation/actions';
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/helpers';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   dataId: selectDataId(state),
@@ -40,6 +42,7 @@ type ObservationStationListBottomSheetProps = PropsFromRedux & {
 const ObservationStationListBottomSheet: React.FC<
   ObservationStationListBottomSheetProps
 > = ({ onClose, dataId, stationId, setStationId, stationList }) => {
+  const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const { colors } = useTheme() as CustomTheme;
@@ -47,7 +50,10 @@ const ObservationStationListBottomSheet: React.FC<
   const decimalSeparator = locale === 'en' ? '.' : ',';
 
   return (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, {
+      paddingLeft: insets.left,
+      paddingRight: insets.right
+    }]}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -79,6 +85,7 @@ const ObservationStationListBottomSheet: React.FC<
               key={station.id}
               onPress={() => {
                 if (station.id === stationId) return;
+                trackMatomoEvent('User action', 'Weather', 'Select observation station');
                 setStationId(dataId, station.id);
                 onClose();
               }}>

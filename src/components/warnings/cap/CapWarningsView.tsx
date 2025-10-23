@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { connect, ConnectedProps } from 'react-redux';
@@ -37,7 +37,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   currentLocation,
   capWarnings,
 }) => {
-  const legendSheetRef = useRef() as React.MutableRefObject<RBSheet>;
+  const legendSheetRef = useRef<RBSheet>(null);
 
   const { t, i18n } = useTranslation('warnings');
   const locale = i18n.language;

@@ -13,7 +13,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
@@ -36,6 +36,7 @@ import { selectStoredGeoids } from '@store/location/selector';
 import { GRAY_1 } from '@assets/colors';
 
 import { Config } from '@config';
+import { initMatomo, trackMatomoEvent } from '@utils/matomo';
 
 const LOCATION_ALWAYS = 'location_always';
 const LOCATION_WHEN_IN_USE = 'location_when_in_use';
@@ -78,11 +79,11 @@ const SettingsScreen: React.FC<Props> = ({
   const { colors } = useTheme();
   const isAndroid = Platform.OS === 'android';
   const sheetRefs = {
-    temperature: useRef(),
-    precipitation: useRef(),
-    wind: useRef(),
-    pressure: useRef(),
-  } as { [key: string]: React.MutableRefObject<RBSheet> };
+    temperature: useRef<RBSheet>(null),
+    precipitation: useRef<RBSheet>(null),
+    wind: useRef<RBSheet>(null),
+    pressure: useRef<RBSheet>(null),
+  } as { [key: string]: React.RefObject<RBSheet> };
   const { languages, themes, showUnitSettings } = Config.get('settings');
 
   useEffect(() => {
@@ -133,6 +134,7 @@ const SettingsScreen: React.FC<Props> = ({
   const onChangeLanguage = async (lang: string): Promise<void> => {
     i18n.changeLanguage(lang);
     updateLocationsLocales(geoids);
+    initMatomo(); // re-init matomo to use correct siteId
     try {
       await setItem(LOCALE, lang);
     } catch (error) {
@@ -205,7 +207,10 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={goToSettings}
+              onPress={ ()=> {
+                trackMatomoEvent('User action', 'Settings', 'Open location settings');
+                goToSettings();
+              }}
               delayPressIn={100}
               accessibilityRole="link"
               accessibilityHint={t('settings:locationSettingHint')}>
@@ -262,7 +267,9 @@ const SettingsScreen: React.FC<Props> = ({
                       : null,
                   ]}>
                   <AccessibleTouchableOpacity
-                    onPress={() => sheetRefs[key].current.open()}
+                    onPress={() => {
+                      sheetRefs[key].current.open()
+                    }}
                     testID={`settings_set_${key}`}>
                     <View style={styles.row}>
                       <Text style={[styles.text, { color: colors.text }]}>
@@ -270,9 +277,10 @@ const SettingsScreen: React.FC<Props> = ({
                       </Text>
                       <Text
                         style={[styles.text, { color: colors.text }]}
+                        accessibilityLabel={t(`observation:paramUnits.${key==='temperature' ? '°' : ''}${units[key].unitAbb}`)}
                         testID={`${key}_unitAbb`}>
                         {key === 'temperature' ? '°' : ''}
-                        {units[key].unitAbb}
+                        {t(`unitAbbreviations:${units[key].unitAbb}`)}
                       </Text>
                     </View>
                     {unitTypesByKey(key) && (
@@ -315,10 +323,14 @@ const SettingsScreen: React.FC<Props> = ({
                                 { borderBottomColor: colors.border },
                               ]}>
                               <AccessibleTouchableOpacity
-                                onPress={() => onChangeUnits(key, type)}
+                                onPress={() => {
+                                  trackMatomoEvent('User action', 'Settings', 'Select unit - '+key+' ('+type.unitAbb+')');
+                                  onChangeUnits(key, type)
+                                }}
                                 testID={`settings_units_${key}_${type.unit}`}>
                                 <View style={styles.row}>
                                   <Text
+                                    accessibilityLabel={t(`observation:paramUnits.${key==='temperature' ? '°' : ''}${type.unitAbb}`)}
                                     style={[
                                       styles.text,
                                       { color: colors.text },
@@ -376,10 +388,13 @@ const SettingsScreen: React.FC<Props> = ({
                       { borderBottomColor: colors.border },
                     ]}>
                     <AccessibleTouchableOpacity
-                      onPress={() =>
+                      onPress={
                         i18n.language === language
-                          ? {}
-                          : onChangeLanguage(language)
+                          ? () => {}
+                          : () => {
+                              trackMatomoEvent('User action', 'Settings', `Select language - ${language}`);
+                              onChangeLanguage(language);
+                            }
                       }
                       testID={`settings_set_language_${language}`}
                       delayPressIn={100}
@@ -438,9 +453,16 @@ const SettingsScreen: React.FC<Props> = ({
                   { borderBottomColor: colors.border },
                 ]}>
                 <AccessibleTouchableOpacity
-                  onPress={() =>
-                    theme === 'light' ? {} : updateTheme('light')
-                  }
+                  onPress={() => {
+                    if (theme !== 'light') {
+                      trackMatomoEvent(
+                        'User action',
+                        'Settings',
+                        'Select theme - light'
+                      );
+                      updateTheme('light');
+                    }
+                  }}
                   delayPressIn={100}
                   testID="settings_set_theme_light"
                   accessibilityState={{ selected: theme === 'light' }}
@@ -471,7 +493,12 @@ const SettingsScreen: React.FC<Props> = ({
                   { borderBottomColor: colors.border },
                 ]}>
                 <AccessibleTouchableOpacity
-                  onPress={() => (theme === 'dark' ? {} : updateTheme('dark'))}
+                 onPress={() => {
+                    if (theme !== 'dark') {
+                      trackMatomoEvent('User action', 'Settings', 'Select theme - dark');
+                      updateTheme('dark');
+                    }
+                  }}
                   delayPressIn={100}
                   testID="settings_set_theme_dark"
                   accessibilityState={{ selected: theme === 'dark' }}
@@ -502,9 +529,12 @@ const SettingsScreen: React.FC<Props> = ({
                   { borderBottomColor: colors.border },
                 ]}>
                 <AccessibleTouchableOpacity
-                  onPress={() =>
-                    theme === 'automatic' ? {} : updateTheme('automatic')
-                  }
+                  onPress={() => {
+                    if (theme !== 'automatic') {
+                      trackMatomoEvent('User action', 'Settings', 'Select theme - automatic');
+                      updateTheme('automatic');
+                    }
+                  }}
                   delayPressIn={100}
                   testID="settings_set_theme_automatic"
                   accessibilityState={{ selected: theme === 'automatic' }}
@@ -556,7 +586,10 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={() => updateClockType(12)}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Settings', 'Select clock type - 12');
+                updateClockType(12);
+              }}
               delayPressIn={100}
               accessibilityState={{
                 selected: clockType === 12,
@@ -587,7 +620,10 @@ const SettingsScreen: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={() => updateClockType(24)}
+              onPress={() => {
+                trackMatomoEvent('User action', 'Settings', 'Select clock type - 24');
+                updateClockType(24);
+              }}
               delayPressIn={100}
               accessibilityState={{
                 selected: clockType === 24,

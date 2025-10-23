@@ -1,7 +1,7 @@
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { useTheme } from '@react-navigation/native';
 import { Severity, CapWarning, WarningType } from '@store/warnings/types';
-import { CustomTheme, GRAYISH_BLUE, GRAY_4 } from '@assets/colors';
+import { CustomTheme, GRAYISH_BLUE } from '@assets/colors';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import {
   Text,
@@ -10,10 +10,10 @@ import {
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
-import Icon from '@components/common/Icon';
+import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import { getSeveritiesForDays } from '@utils/helpers';
+import { getSeveritiesForDays, selectCapInfoByLanguage } from '@utils/helpers';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
 import { connect } from 'react-redux';
@@ -45,7 +45,7 @@ const WarningItem = ({
   areasDescription?: string;
   warning: CapWarning;
   warningCount?: number;
-  scrollViewRef?: React.MutableRefObject<ScrollView>;
+  scrollViewRef?: React.RefObject<ScrollView | null>;
   width: number;
   timespan: string;
   includeSeverityBars: boolean;
@@ -54,8 +54,9 @@ const WarningItem = ({
   includeArrow: boolean | undefined;
   showDescription?: boolean;
 }) => {
+  const { i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
-  const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
+  const info = Array.isArray(warning.info) ? selectCapInfoByLanguage(warning.info, i18n.language): warning.info;
   const areaDesc = info.area.areaDesc
     .charAt(0)
     .toUpperCase()
@@ -68,7 +69,7 @@ const WarningItem = ({
           styles.headingContainer,
           showDescription && styles.noBorderBottom,
           {
-            backgroundColor: !showDescription ? colors.background : undefined,
+            backgroundColor: colors.background
           },
         ]}>
         <WarningSymbol
@@ -100,7 +101,7 @@ const WarningItem = ({
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
           </Text>
-          <Text style={[styles.headingText]}>
+          <Text style={[styles.headingText, { color: colors.hourListText}] }>
             {areasDescription || areaDesc}
           </Text>
         </View>
@@ -117,8 +118,8 @@ const WarningItem = ({
       </View>
 
       {showDescription && (
-        <View style={styles.warningDescription}>
-          <Text style={{ color: GRAY_4 }}>{info.description}</Text>
+        <View style={[styles.warningDescription, { backgroundColor: colors.background}]}>
+          <Text style={{ color: colors.hourListText }}>{info.description}</Text>
         </View>
       )}
     </View>
@@ -138,7 +139,7 @@ function WarningBlock({
 }) {
   const [open, setOpen] = useState(false);
   const { colors } = useTheme() as CustomTheme;
-  const scrollViewRef = useRef() as React.MutableRefObject<ScrollView>;
+  const scrollViewRef = useRef<ScrollView>(null);
   const { width } = useWindowDimensions();
   const { i18n } = useTranslation();
   const locale = i18n.language;
@@ -175,7 +176,8 @@ function WarningBlock({
   const headerWarningAreas = [
     ...new Set(
       warnings
-        .map((warning) => Array.isArray(warning.info) ? warning.info[0].area.areaDesc : warning.info.area.areaDesc)
+        .map((warning) => Array.isArray(warning.info) ?
+          selectCapInfoByLanguage(warning.info, locale).area.areaDesc : warning.info.area.areaDesc)
         .map((area) => area.charAt(0).toUpperCase().concat(area.substring(1)))
     ),
   ].join(', ');
@@ -347,7 +349,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   warningDescription: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: GRAYISH_BLUE,

@@ -1,5 +1,4 @@
-# react-native-maps doesn't support new arch yet
-ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+ENV['RCT_NEW_ARCH_ENABLED'] = '1'
 
 # Transform this into a `node_require` generic function:
 def node_require(script)
