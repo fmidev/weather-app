@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text } from 'react-native';
+import { PixelRatio, View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
 import { useTheme } from '@react-navigation/native';
@@ -18,10 +18,11 @@ const InvalidURLView = () => (
   <Text>Invalid webview URL blocked</Text>
 )
 
-const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
+const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
   updateInterval
-) => {
+}) => {
   const [viewHeight, setViewHeight] = useState<number>(2000);
+  const fontScale: number = PixelRatio.getFontScale() ?? 1;
   const { dark } = useTheme() as CustomTheme;
   const webViewRef = useRef(null);
   const { i18n, t } = useTranslation('warnings');
@@ -59,10 +60,13 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
       <title>SmartMet Alert Client</title>
     </head>
 
-    <body>
-      <smartmet-alert-client language="${locale}" theme="${
-    dark ? 'dark' : 'light'
-  }" gray-scale-selector="true"></smartmet-alert-client>
+    <body style="padding-bottom: 1px">
+      <smartmet-alert-client
+        language="${locale}"
+        theme="${dark ? 'dark' : 'light'}"
+        font-scale="${fontScale}"
+        gray-scale-selector="true"
+      ></smartmet-alert-client>
       <script type="module" src="${webViewUrl}/index.js" refresh-interval="${updateInterval}"></script>
       <script>
         const resizeObserver = new ResizeObserver(entries => {
@@ -81,6 +85,7 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = (
         testID="warnings_webview"
         ref={webViewRef}
         style={{ height: viewHeight, backgroundColor: `transparent` }}
+        textZoom={100}
         source={{ html }}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}
