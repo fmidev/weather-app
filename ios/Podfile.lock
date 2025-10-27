@@ -1737,9 +1737,9 @@ PODS:
     - Yoga
   - react-native-launch-arguments (4.1.0):
     - React
-  - react-native-maps (1.26.11):
-    - react-native-maps/Maps (= 1.26.11)
-  - react-native-maps/Generated (1.26.11):
+  - react-native-maps (1.26.18):
+    - react-native-maps/Maps (= 1.26.18)
+  - react-native-maps/Generated (1.26.18):
     - boost
     - DoubleConversion
     - fast_float
@@ -1768,7 +1768,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-maps/Maps (1.26.11):
+  - react-native-maps/Maps (1.26.18):
     - boost
     - DoubleConversion
     - fast_float
@@ -3316,7 +3316,7 @@ SPEC CHECKSUMS:
   react-native-config: 136f9755ccc991cc6438053a44363259ad4c7813
   react-native-geolocation: f01ad4718ad1d015d0c0dd12a6f707354022530e
   react-native-launch-arguments: 165260aba9544f00c66fae3e136b11484d0cb49b
-  react-native-maps: 696d9ad2d3b7bbbb52e9c2d808d61edb5d2e135a
+  react-native-maps: 8ef00f6a74d6c1f4e325a824ce106ff70872b3f3
   react-native-mmkv: b189248d0ad153f44ef126270c201a1828a056fd
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 8ed800930eb7d0b6651218f69656e823d37b6ef7
