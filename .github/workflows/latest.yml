@@ -24,7 +24,7 @@ jobs:
     strategy:
       # Node version matrix
       matrix:
-        node-version: [20.11.1]
+        node-version: [24.2.0]
     # Steps
     steps:
      - uses: actions/checkout@v4
@@ -66,7 +66,7 @@ jobs:
     # Node version matrix
     strategy:
         matrix:
-          node-version: [20.11.1]
+          node-version: [24.2.0]
     # Steps
     steps:
       - name: Checkout to git repository

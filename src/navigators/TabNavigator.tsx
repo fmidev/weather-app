@@ -226,9 +226,6 @@ const Navigator: React.FC<Props> = ({
     </View>
   );
 
-  // Enable on every platform when iOS 26 animation issues are fixed
-  const animation = Platform.OS === 'ios' && Number(Platform.Version)>= 26 ? 'none' : 'default';
-
   const CommonHeaderOptions: StackNavigationOptions = {
     headerBackTestID: 'header-back',
     headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
@@ -246,7 +243,6 @@ const Navigator: React.FC<Props> = ({
     ),
     headerBackTitle: '',
     headerBackAccessibilityLabel: t('navigation:backAccessibilityLabel'),
-    animation,
   };
 
   const LocationHeaderOptions = ({

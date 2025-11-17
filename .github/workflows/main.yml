@@ -40,7 +40,7 @@ jobs:
     strategy:
       # Node version matrix
       matrix:
-        node-version: [20.11.1]
+        node-version: [24.2.0]
     # Steps
     steps:
      - uses: actions/checkout@v4
@@ -82,7 +82,7 @@ jobs:
     # Node version matrix
     strategy:
         matrix:
-          node-version: [20.11.1]
+          node-version: [24.2.0]
     # Steps
     steps:
       - name: Checkout to git repository
@@ -196,7 +196,7 @@ jobs:
    # Node version matrix
    strategy:
         matrix:
-          node-version: [20.11.1]
+          node-version: [24.2.0]
    # Steps
    steps:
       - name: Checkout to git repository
@@ -205,7 +205,7 @@ jobs:
           submodules: true
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.4'
+          xcode-version: 'latest-stable'
        # Setup Node
       - uses: actions/setup-node@v4
         with:

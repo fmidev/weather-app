@@ -1737,9 +1737,9 @@ PODS:
     - Yoga
   - react-native-launch-arguments (4.1.0):
     - React
-  - react-native-maps (1.26.11):
-    - react-native-maps/Maps (= 1.26.11)
-  - react-native-maps/Generated (1.26.11):
+  - react-native-maps (1.26.18):
+    - react-native-maps/Maps (= 1.26.18)
+  - react-native-maps/Generated (1.26.18):
     - boost
     - DoubleConversion
     - fast_float
@@ -1768,7 +1768,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-maps/Maps (1.26.11):
+  - react-native-maps/Maps (1.26.18):
     - boost
     - DoubleConversion
     - fast_float
@@ -2697,7 +2697,7 @@ PODS:
     - RNWorklets
     - SocketRocket
     - Yoga
-  - RNScreens (4.16.0):
+  - RNScreens (4.17.1):
     - boost
     - DoubleConversion
     - fast_float
@@ -2725,10 +2725,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNScreens/common (= 4.16.0)
+    - RNScreens/common (= 4.17.1)
     - SocketRocket
     - Yoga
-  - RNScreens/common (4.16.0):
+  - RNScreens/common (4.17.1):
     - boost
     - DoubleConversion
     - fast_float
@@ -2935,9 +2935,9 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - SDWebImage (5.21.2):
-    - SDWebImage/Core (= 5.21.2)
-  - SDWebImage/Core (5.21.2)
+  - SDWebImage (5.21.3):
+    - SDWebImage/Core (= 5.21.3)
+  - SDWebImage/Core (5.21.3)
   - SDWebImageAVIFCoder (0.11.1):
     - libavif/core (>= 0.11.0)
     - SDWebImage (~> 5.10)
@@ -3316,7 +3316,7 @@ SPEC CHECKSUMS:
   react-native-config: 136f9755ccc991cc6438053a44363259ad4c7813
   react-native-geolocation: f01ad4718ad1d015d0c0dd12a6f707354022530e
   react-native-launch-arguments: 165260aba9544f00c66fae3e136b11484d0cb49b
-  react-native-maps: 696d9ad2d3b7bbbb52e9c2d808d61edb5d2e135a
+  react-native-maps: 8ef00f6a74d6c1f4e325a824ce106ff70872b3f3
   react-native-mmkv: b189248d0ad153f44ef126270c201a1828a056fd
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 8ed800930eb7d0b6651218f69656e823d37b6ef7
@@ -3361,11 +3361,11 @@ SPEC CHECKSUMS:
   RNPermissions: 8cd3d56a5a50d8755a829ef37a32482fed97b932
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
   RNReanimated: 22026967e9f3eda630767a11ddb7a1dc45e079f1
-  RNScreens: 3fc29af06302e1f1c18a7829fe57cbc2c0259912
+  RNScreens: 7ab5a342b48757987b6f58a680afb5e7ec4e213e
   RNSVG: c015c3736ca7176521d82b7c433dc69c8133d1ab
   RNVectorIcons: be4d047a76ad307ffe54732208fb0498fcb8477f
   RNWorklets: 4fdb5474f2117fa53d2000c5c6a7f68e4f4f6e95
-  SDWebImage: 9f177d83116802728e122410fb25ad88f5c7608a
+  SDWebImage: 16309af6d214ba3f77a7c6f6fdda888cb313a50a
   SDWebImageAVIFCoder: afe194a084e851f70228e4be35ef651df0fc5c57
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748

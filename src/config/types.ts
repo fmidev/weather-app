@@ -201,7 +201,7 @@ interface Feedback {
 
 interface News {
   apiUrl: {
-    [country: string]: string;
+    [language: string]: string;
   };
   numberOfNews: number;
   updateInterval: number;

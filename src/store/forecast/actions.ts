@@ -44,7 +44,7 @@ export const fetchForecast =
 
         if (modtimeMoment && moment().diff(modtimeMoment, 'hours') >= MAX_FORECAST_AGE) {
           const producer = dataSettings[index].producer;
-          trackMatomoEvent('Error', 'Weather', `Old modtime ${modtime} with producer ${producer} for geoid ${geoid}`);
+          trackMatomoEvent('Error', 'Weather', `Old modtime ${modtime} with producer ${producer} for geoid ${id}`);
           const retryData = await getForecast(location, country, producer);
           fixedForecasts.push(retryData.forecasts[0]);
         } else {

@@ -1944,10 +1944,10 @@
   dependencies:
     nanoid "^3.3.11"
 
-"@react-navigation/stack@^7.4.9":
-  version "7.4.9"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-7.4.9.tgz#a561e9e36ce1e92a70075e74b1caa7c396e6c146"
-  integrity sha512-uQBiHt52yIyZm59dofCoLrvGvfPSfnzAmCstT+skRw4bBporka2ZZYzFJZakjsUeb6cK/5QcQPSM3poHkGp2nA==
+"@react-navigation/stack@^7.4.10":
+  version "7.4.10"
+  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-7.4.10.tgz#777adf11c15e91cf586c706002f1cf1ae0225c70"
+  integrity sha512-sA00ag632RRwnXPibjvHBE5sxf8xVBztyQ7HfgmcGZ4vaVUjRWG7XEhwdrf/jrsnnqU5nK1qz9NslRAOvpWPVA==
   dependencies:
     "@react-navigation/elements" "^2.6.5"
     color "^4.2.3"
@@ -7540,10 +7540,10 @@ react-native-localize@^3.4.1:
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-3.5.2.tgz#7fcf3e1086ff3c6389359ffed28f6d0947d076f4"
   integrity sha512-HfQdwv5sRjh4AQ8a97OTjXYcxPNRlBxiQb861c7Ob6mRuNYCPtaJ45QTcZxZr31vAM3THvtOBp1soqWlQFxjnA==
 
-react-native-maps@^1.26.11:
-  version "1.26.11"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.26.11.tgz#c1d64ab5e08ca531caae8fbc6d9232c64a5a2fd6"
-  integrity sha512-msVwUqguXrPoiRMA30q432StQ9c+dJYwP1p03xDcXp8A96hMYsotbKbJ7xaeqXHyr9LWaFgprn5zEDZ+XdQTRg==
+react-native-maps@^1.26.18:
+  version "1.26.18"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.26.18.tgz#1bb412d236a1a187c93f5e63a8d912d8d5beca6d"
+  integrity sha512-aJeczgR2Y5AeAazod3QAIkpAqNteYjKlZUH8YRKueaORsjdDbGryD/4aPL8UR4J6bjsSJK8lgzoMCvCky6FRpA==
   dependencies:
     "@types/geojson" "^7946.0.13"
 
@@ -7582,13 +7582,12 @@ react-native-safe-area-context@^5.5.2:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.6.1.tgz#cb4d249ef1a6f7e8fd0cfdfa9764838dffda26b6"
   integrity sha512-/wJE58HLEAkATzhhX1xSr+fostLsK8Q97EfpfMDKo8jlOc1QKESSX/FQrhk7HhQH/2uSaox4Y86sNaI02kteiA==
 
-react-native-screens@^4.16.0:
-  version "4.16.0"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.16.0.tgz#efa42e77a092aa0b5277c9ae41391ea0240e0870"
-  integrity sha512-yIAyh7F/9uWkOzCi1/2FqvNvK6Wb9Y1+Kzn16SuGfN9YFJDTbwlzGRvePCNTOX0recpLQF3kc2FmvMUhyTCH1Q==
+react-native-screens@^4.17.1:
+  version "4.17.1"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.17.1.tgz#fad2588c73b063d3156543cfa673ca60ed5b8008"
+  integrity sha512-hGArs1kzsokvwxq98vluGlprUw3Q95zEjvZ3U2q28FmvLy25e6jxMclEkgxNtJ0GVJ2gWcFRTXON0EIVvUEd+A==
   dependencies:
     react-freeze "^1.0.0"
-    react-native-is-edge-to-edge "^1.2.1"
     warn-once "^0.1.0"
 
 react-native-svg-transformer@^1.5.0:
