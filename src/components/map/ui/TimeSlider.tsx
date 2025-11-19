@@ -51,11 +51,13 @@ import {
 import { selectClockType } from '@store/settings/selectors';
 import SliderStep from './SliderStep';
 import { trackMatomoEvent } from '@utils/matomo';
+import { Config } from '@config';
 
 const QUARTER_WIDTH = 15;
 
 const STEP_60 = 3600;
 let interval: NodeJS.Timeout;
+const { layers } = Config.get('map');
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
@@ -227,11 +229,23 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const handleSetScrollIndex = () =>
     setScrollIndex((prev) => prev + stepWidth / 12.5);
 
+  const getLayerAnimationSpeed = () => {
+    if(layers) {
+      const layer = layers.find((l) => l.id === activeOverlayId);
+      if(layer?.times?.animationSpeed) {
+        // return custom value
+        return layer.times.animationSpeed;
+      }
+    }
+    // return default value
+    return 80;
+  }
+
   const animate = () => {
     setIsAnimating(true);
     interval = setInterval(() => {
       handleSetScrollIndex();
-    }, 80);
+    }, getLayerAnimationSpeed());
   };
 
   const clear = () => {

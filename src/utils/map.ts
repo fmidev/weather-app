@@ -97,7 +97,7 @@ export const getSliderMaxUnix = (
 };
 
 export const getSliderStepSeconds = (sliderStep: number): number =>
-  ([15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
+  ([5, 15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
 
 export const getOverlayData = async (activeOverlay: number) => {
   const { sources, layers } = Config.get('map');
