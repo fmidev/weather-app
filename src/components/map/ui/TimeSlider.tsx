@@ -57,7 +57,6 @@ const QUARTER_WIDTH = 15;
 
 const STEP_60 = 3600;
 let interval: NodeJS.Timeout;
-const { layers } = Config.get('map');
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
@@ -91,6 +90,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const { width } = useWindowDimensions();
   const [sliderWidth, setSliderWidth] = useState<number>(width - 24);
+  const { layers } = Config.get('map');
 
   const multiplier = Math.round(width / 400);
 
@@ -229,7 +229,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const handleSetScrollIndex = () =>
     setScrollIndex((prev) => prev + stepWidth / 12.5);
 
-  const getLayerAnimationSpeed = () => {
+const getLayerAnimationSpeed = () => {
     if(layers) {
       const layer = layers.find((l) => l.id === activeOverlayId);
       if(layer?.times?.animationSpeed) {
