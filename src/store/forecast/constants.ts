@@ -9,6 +9,7 @@ export const PRECIPITATION_PROBABILITY = 'pop';
 export const THUNDER_PROBABILITY = 'probabilityThunderstorm';
 export const DEW_POINT = 'dewPoint';
 export const RELATIVE_HUMIDITY = 'relativeHumidity';
+export const HUMIDITY = "humidity";
 export const PRESSURE = 'pressure';
 export const UV_CUMULATED = 'uvCumulated';
 export const DAY_LENGTH = 'dayLength';
@@ -35,6 +36,7 @@ export default [
   PRECIPITATION_PROBABILITY,
   DEW_POINT,
   RELATIVE_HUMIDITY,
+  HUMIDITY,
   PRESSURE,
   UV_CUMULATED,
   DAY_LENGTH,
