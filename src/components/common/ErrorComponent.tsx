@@ -203,7 +203,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
         </AccessibleTouchableOpacity>
       </View>
       { verboseErrorMessages && messages[errorType]?.message && (
-        <Text>{messages[errorType].message}</Text>
+        <Text>{messages[errorType]?.message}</Text>
       )}
       {['noInternet', 'outOfServiceArea'].includes(errorType) &&
       messages[errorType]?.additionalInfo ? (
