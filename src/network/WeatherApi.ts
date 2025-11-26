@@ -117,7 +117,7 @@ export const getForecast = async (
   const results = await Promise.allSettled(queries);
 
   const lastIndex = results.length - 1;
-  let error = false;
+  let error: boolean | string = false;
 
   const forecastData = results.flatMap((result, index) => {
     if (index === lastIndex && geoMagneticObservationsEnabled) {
@@ -126,12 +126,19 @@ export const getForecast = async (
     if (result.status === 'fulfilled') {
       return result.value;
     }
-    error = true;
+    if (result.status === 'rejected') {
+      const { reason } = result; // AxiosError
+      error = "\n" + 'Message: ' + reason.message + "\n";
+      error += 'Code: ' + reason.code + "\n";
+      error += 'Url: ' + reason.config?.url +"\n";
+      error += 'Status: ' + reason.response?.status + "\n";
+      error += 'Data: ' + reason.response?.data.subString(0, 100) + "\n"
+    }
     return [];
   });
 
   if (error) {
-    throw new Error('Forecast data retrieval failed');
+    throw new Error(error);
   }
 
   const geoMagneticResult = results[lastIndex];
