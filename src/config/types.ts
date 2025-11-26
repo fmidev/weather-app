@@ -289,6 +289,7 @@ export interface ConfigType {
     showUnitSettings?: boolean;
     clockType: 12 | 24;
     themes: Themes;
+    verboseErrorMessages?: boolean;
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
