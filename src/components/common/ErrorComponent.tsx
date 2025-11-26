@@ -48,6 +48,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Message = {
   title: string;
   additionalInfo?: string;
+  message?: string;
 };
 
 type Messages = {
@@ -125,9 +126,11 @@ const ErrorComponent: React.FC<ErrorProps> = ({
   const messages: Messages = {
     forecast: {
       title: t('forecastErrorTitle'),
+      message: forecastError ? forecastError.toString() : '',
     },
     observation: {
       title: t('observationErrorTitle'),
+      message: observationError ? observationError.toString() : '',
     },
     warnings: {
       title: t('warningsErrorTitle'),
@@ -147,6 +150,8 @@ const ErrorComponent: React.FC<ErrorProps> = ({
       return undefined;
     })(),
   };
+
+  const { verboseErrorMessages } = Config.get('settings');
 
   useEffect(() => {
     NetInfo.fetch().then((state) => {
@@ -197,6 +202,9 @@ const ErrorComponent: React.FC<ErrorProps> = ({
           <Icon name="close-outline" size={24} color={BLACK} />
         </AccessibleTouchableOpacity>
       </View>
+      { verboseErrorMessages && messages[errorType]?.message && (
+        <Text>{messages[errorType]?.message}</Text>
+      )}
       {['noInternet', 'outOfServiceArea'].includes(errorType) &&
       messages[errorType]?.additionalInfo ? (
         <Text style={styles.text}>{messages[errorType]?.additionalInfo}</Text>
