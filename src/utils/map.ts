@@ -17,6 +17,23 @@ type BoundingBox = {
   maxy: string;
 };
 
+type WmsDimension = {
+  text: string;
+  name: string;
+  default: string;
+  units: string;
+};
+
+type RawWmsLayer = {
+  Name?: string;
+  Title?: string;
+  Abstract?: string;
+  CRS?: string | string[];
+  BoundingBox?: BoundingBox | BoundingBox[];
+  Dimension?: WmsDimension | WmsDimension[];
+  Layer?: RawWmsLayer | RawWmsLayer[];
+};
+
 type WmsLayer = {
   Name: string;
   Title: string;
@@ -171,6 +188,36 @@ const getTimeseriesData = async (
   return overlayMap;
 };
 
+const normalizeToArray = <T>(value?: T | T[]): T[] =>
+  value === undefined ? [] : Array.isArray(value) ? value : [value];
+
+const flattenLayers = (root: RawWmsLayer): WmsLayer[] => {
+  const result: WmsLayer[] = [];
+
+  const visit = (layer: RawWmsLayer) => {
+    if (layer.Name && layer.Title && layer.Abstract && layer.Dimension) {
+      result.push({
+        Name: layer.Name,
+        Title: layer.Title,
+        Abstract: layer.Abstract,
+        CRS: normalizeToArray(layer.CRS),
+        BoundingBox: normalizeToArray(layer.BoundingBox),
+        Dimension: layer.Dimension,
+      });
+    }
+
+    const children = layer.Layer;
+    if (Array.isArray(children)) {
+      children.forEach(visit);
+    } else if (children) {
+      visit(children);
+    }
+  };
+
+  visit(root);
+  return result;
+};
+
 const getWMSLayerUrlsAndBounds = async (
   sources: { [name: string]: string },
   overlay: MapLayer
@@ -208,15 +255,18 @@ const getWMSLayerUrlsAndBounds = async (
         params: {
           service: 'WMS',
           request: 'GetCapabilities',
-          layout: 'flat',
+          layout: 'recursive',
+          enableintervals: '1',
           who: `${packageJSON.name}-${Platform.OS}`,
           ...(src.includes('smartmet')
             ? {
-                namespace: `/${allLayerNames
-                  .map((layerName) =>
-                    layerName.substring(0, layerName.lastIndexOf(':'))
-                  )
-                  .join('|')}/`,
+                namespace: `/${[
+                  ...new Set(
+                    allLayerNames.map((layerName) =>
+                      layerName.substring(0, layerName.lastIndexOf(':'))
+                    )
+                  ),
+                ].join('|')}/`
               }
             : {}),
         },
@@ -224,25 +274,11 @@ const getWMSLayerUrlsAndBounds = async (
 
       const parsedResponse = parser.parse(data);
 
-      const {
-        WMS_Capabilities: {
-          Capability: {
-            Layer: { Layer },
-          },
-        },
-      } = parsedResponse;
-
-      let filteredLayers = [];
-      if (Array.isArray(Layer)) {
-        // there is a list of layers
-        filteredLayers = Layer.filter((L: WmsLayer) =>
-          allLayerNames.includes(L.Name)
-        );
-      } else if (allLayerNames.includes(Layer.Name)) {
-        // layer is the only layer returned
-        filteredLayers.push(Layer);
-      }
-
+      const rootLayer: WmsLayer = parsedResponse.WMS_Capabilities.Capability.Layer;
+      const allLayers = flattenLayers(rootLayer);
+      const filteredLayers = allLayers.filter((L: WmsLayer) =>
+        allLayerNames.includes(L.Name)
+      );
       capabilitiesData.set(src, filteredLayers);
     })
   );
@@ -255,9 +291,12 @@ const getWMSLayerUrlsAndBounds = async (
         .get(layerSrc.source)
         .find((src: WmsLayer) => src.Name === layerSrc.layer);
 
-      const steps = Array.isArray(wmsLayer.Dimension)
-        ? wmsLayer.Dimension[0].text.split(/[,/]/)
-        : wmsLayer.Dimension.text.split(/[,/]/);
+      const dimensionArray: WmsDimension[] = Array.isArray(wmsLayer.Dimension)
+        ? wmsLayer.Dimension : wmsLayer.Dimension
+        ? [wmsLayer.Dimension as WmsDimension] : [];
+
+      const timeDimension = dimensionArray.find((dim) => dim.name === 'time') ?? dimensionArray[0];
+      const steps = timeDimension.text.split(/[,/]/);
       const lastStep = steps[steps.length - 1];
 
       const layerStart = steps[0];
@@ -267,6 +306,15 @@ const getWMSLayerUrlsAndBounds = async (
       // This condition ensures that the last step is a valid ISO 8601 date and not time interval.
       const isTimeList = steps.length > 3 && moment(lastStep, moment.ISO_8601, true).isValid();
       const layerEnd = isTimeList ? lastStep : steps[1];
+
+      const referenceTimeDimension = dimensionArray.find(
+        (dim) => dim.name === 'reference_time'
+      );
+
+      let referenceTime: string | undefined;
+      if (referenceTimeDimension) {
+        referenceTime = referenceTimeDimension.default;
+      }
 
       const url = sources[layerSrc.source];
 
@@ -288,6 +336,7 @@ const getWMSLayerUrlsAndBounds = async (
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
         ...customParameters,
+        ...(referenceTime ? { reference_time: referenceTime } : {}),
       });
 
       const overlayUrl = decodeURIComponent(`${url}/wms?${query.toString()}`);

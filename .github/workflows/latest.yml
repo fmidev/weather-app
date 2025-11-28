@@ -38,7 +38,7 @@ jobs:
           cache: 'yarn'
      # Install dependencies
      - name: Install dependencies
-       run: yarn install
+       run: yarn install --frozen-lockfile
      # Get defaultConfig
      - name: Get defaultConfig
        env:
@@ -80,8 +80,8 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: |
-          yarn install
-
+          yarn install --frozen-lockfile
+  
       # Get defaultConfig
       - name: Get defaultConfig
         env:
@@ -142,6 +142,7 @@ jobs:
         run: |
           echo "GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}" > .env
           chmod +x ./gradlew
+          bundle update fastlane
           bundle exec fastlane android build_test_apk
         working-directory: android
 

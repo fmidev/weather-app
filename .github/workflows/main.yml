@@ -54,7 +54,7 @@ jobs:
           cache: 'yarn'
      # Install dependencies
      - name: Install dependencies
-       run: yarn install
+       run: yarn install --frozen-lockfile
      # Get defaultConfig
      - name: Get defaultConfig
        env:
@@ -96,7 +96,7 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: |
-          yarn install
+          yarn install --frozen-lockfile
 
       # Get defaultConfig
       - name: Get defaultConfig
@@ -243,7 +243,7 @@ jobs:
 
       # Yarn install
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       # Gem install bundler + bundle install
       - name: Install Ruby Dependencies
