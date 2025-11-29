@@ -222,6 +222,7 @@
       "dewPoint": "Daggpunkt",
       "precipitation1h": "Regn",
       "precipitation": "Nederbörd",
+      "precipitationIntensity": "Nederbördsintensitet",
       "windSpeedMS": "Vind",
       "windSpeed": "Vindhastighet",
       "windDirection": "Vindriktning",

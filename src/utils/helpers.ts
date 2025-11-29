@@ -293,8 +293,10 @@ export const getParameterUnit = (
     Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
-    case 'ri_10min':
       return t ? t(units?.precipitation.unitAbb ?? precipitation) : units?.precipitation.unitAbb ?? precipitation;
+    case 'precipitationIntensity':
+    case 'ri_10min':
+      return `${t ? t(units?.precipitation.unitAbb ?? precipitation) : units?.precipitation.unitAbb ?? precipitation}/h`
     case 'humidity':
       return '%';
     case 'temperature':

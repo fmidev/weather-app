@@ -222,6 +222,7 @@
       "dewPoint": "Kastepiste",
       "precipitation1h": "Sade",
       "precipitation": "Sademäärä",
+      "precipitationIntensity": "Sateen intensiteetti",
       "windSpeedMS": "Tuuli",
       "windSpeed": "Tuulen nopeus",
       "windDirection": "Tuulen suunta",

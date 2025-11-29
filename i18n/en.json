@@ -222,6 +222,7 @@
       "dewPoint": "Dew point",
       "precipitation1h": "Precipitation",
       "precipitation": "Precipitation",
+      "precipitationIntensity": "Precipitation intensity",
       "windSpeedMS": "Wind",
       "windSpeed": "Wind speed",
       "windDirection": "Wind direction",
