@@ -1,5 +1,6 @@
 import Config from 'react-native-config';
 import { UnitType, UnitMap } from '@store/settings/types';
+import { msToBeaufort } from './helpers';
 
 export type Unit = {
   parameterName: string;
@@ -179,7 +180,7 @@ export const converter = (unitAbb: string, value: number): number => {
     case 'mph':
       return value * 2.24;
     case 'bft':
-      return value * 1.27; // 1 [m/s] = 1.126 840 655 625 3 [Bft]
+      return msToBeaufort(value);
     case 'kn':
       return value * 1.94;
     // pressure
