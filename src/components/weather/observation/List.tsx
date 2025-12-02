@@ -153,7 +153,7 @@ const List: React.FC<ListProps> = ({
               styles.bold,
               { color: colors.hourListText },
             ]}>
-            {`${t(`measurements.${param}`)} ${getParameterUnit(param, units, unitTranslate)}`}
+            {`${t(`measurements.${param === 'precipitation1h' ? 'precipitation' : param}`)} ${getParameterUnit(param, units, unitTranslate)}`}
           </Text>
         );
       })}
