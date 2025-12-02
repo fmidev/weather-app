@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import moment from 'moment';
@@ -48,6 +48,8 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
   units,
 }) => {
   const { t, i18n } = useTranslation('forecast');
+  const { fontScale } = useWindowDimensions();
+
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
   const { dark } = useTheme() as CustomTheme;
@@ -158,7 +160,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
       <View accessible style={styles.row}>
         { (wide || !showUv) && activeParameters.includes('precipitation1h') && (
           <>
-            <Icon name="precipitation" color={textColor} />
+            <Icon name="precipitation" height={fontScale * 28} color={textColor} />
             <Text
               style={[styles.text, { color: textColor }]}
               accessibilityLabel={`${t('forecast:precipitation')} ${
@@ -204,6 +206,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
               getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
             )}`}>
             <Text
+              maxFontSizeMultiplier={2}
               style={[
                 styles.text,
                 styles.withMarginRight,
@@ -242,9 +245,9 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     flexGrow: 1,
     width: '100%',
-    maxHeight: 45,
     maxWidth: 440,
     flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   row: {
     flexDirection: 'row',

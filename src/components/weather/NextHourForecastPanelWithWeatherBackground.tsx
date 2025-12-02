@@ -76,7 +76,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   const navigation = useNavigation<NavigationProp<WeatherStackParamList>>()
   const insets = useSafeAreaInsets();
-  const { width} = useWindowDimensions();
+  const { width, fontScale } = useWindowDimensions();
 
   if (loading || !nextHourForecast) {
     return (
@@ -134,6 +134,9 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   );
   const textColor = WHITE;
   const overlayColor = 'rgba(0,0,0,0.3)';
+  console.log('fontScale', fontScale);
+  const largeFonts = fontScale >= 1.5;
+  const contentHeight = largeFonts ? 460 : 420;
 
   return (
     <ImageBackground
@@ -155,8 +158,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
         end={{ x: 0.5, y: 0 }}
         style={StyleSheet.absoluteFill}
       />
-      <SafeAreaView style={[styles.container, { paddingTop: paddingTop, paddingBottom: paddingBottom }]} >
-        <View style={[styles.row]}>
+      <SafeAreaView style={[
+        styles.container, { paddingTop: paddingTop, paddingBottom: paddingBottom, height: contentHeight }
+        ]} >
+        <View style={[styles.row, styles.largeWeather]}>
           <IconButton
             testID="locate_button"
             icon="locate"
@@ -297,8 +302,12 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     width: '100%',
-    paddingVertical: 16
+    paddingVertical: 16,
+    flexDirection: 'column'
   },
+  largeWeather: {
+
+  }
 });
 
 export default connector(NextHourForecastPanelWithWeatherBackground);
