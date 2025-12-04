@@ -9,7 +9,7 @@ const AppText: React.FC<AppTextProps> = ({ children, ...rest }) => {
   return (
     <Text
       allowFontScaling
-      maxFontSizeMultiplier={2}  // tai mitä haluat käyttää
+      maxFontSizeMultiplier={2}
       {...rest}
     >
       {children}
