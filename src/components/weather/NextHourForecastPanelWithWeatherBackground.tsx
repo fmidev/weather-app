@@ -162,7 +162,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
       <SafeAreaView style={[
         styles.container, { paddingTop: paddingTop, paddingBottom: paddingBottom, height: contentHeight }
         ]} >
-        <View style={[styles.row, styles.largeWeather]}>
+        <View style={[styles.row]}>
           <IconButton
             testID="locate_button"
             icon="locate"
