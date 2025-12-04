@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
@@ -18,6 +18,7 @@ import { selectClockType, selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import InfoMessage from '../InfoMessage';
+import Text from '@components/common/AppText';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -220,7 +221,6 @@ const styles = StyleSheet.create({
   },
   latestObservation: {
     flexDirection: 'column',
-    height: 40,
     marginBottom: 16,
   },
   observationRow: {

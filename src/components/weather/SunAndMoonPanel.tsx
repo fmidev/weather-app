@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, StyleSheet, ImageBackground, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
@@ -14,6 +14,7 @@ import { sunBackground, sunBackgroundDark, moonPhaseImages } from '@assets/image
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme, WHITE, BLACK } from '@assets/colors';
 import { resolveMoonPhase } from '@utils/moon';
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import { Config } from '@config';
 
@@ -37,19 +38,24 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
   clockType
 }) => {
   const ICON_SIZE = 16;
+  const { fontScale } = useWindowDimensions();
+  const largeFonts = fontScale >= 1.5;
+  const scaleFactor = Math.min(fontScale, 2);
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
 
   const colorMode = dark ? 'dark' : 'light';
+  const boxWidth = largeFonts ? scaleFactor * 175 : 175;
+  const boxHeight = largeFonts ? scaleFactor * 100 : 100;
 
   if (loading || !forecast) {
     return (
       <MotiView style={[styles.flex, styles.row, styles.center, { backgroundColor: colors.background }]}>
         <View style={styles.sunBox}>
-          <Skeleton colorMode={colorMode} width={175} height={100} radius={10} />
+          <Skeleton colorMode={colorMode} width={boxWidth} height={boxHeight} radius={10} />
         </View>
         <View style={styles.moonBox}>
-          <Skeleton colorMode={colorMode} width={175} height={100} radius={10} />
+          <Skeleton colorMode={colorMode} width={boxWidth} height={boxHeight} radius={10} />
         </View>
       </MotiView>
     );
@@ -83,11 +89,13 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 
   const moonPhase = resolveMoonPhase(forecast.moonPhase as number, waningMoonPhase);
   const moonBackground = moonPhaseImages[moonPhase];
+  const iconSize = Math.min(ICON_SIZE * fontScale, 32);
+  const moonPhaseWidth = Math.min(fontScale * 80, boxWidth/1.8);
 
   return (
-    <View style={[styles.flex, styles.row, styles.center, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, styles.flex, styles.center, { backgroundColor: colors.background }]}>
       <View
-        style={[styles.box, styles.sunBox]}
+        style={[styles.box, styles.sunBox, { width: boxWidth, height: boxHeight }]}
         accessible
       >
         <ImageBackground source={dark ? sunBackgroundDark : sunBackground}
@@ -104,8 +112,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
               <View accessible>
                 <View accessible style={styles.sunInfo}>
                   <Icon
-                    width={ICON_SIZE}
-                    height={ICON_SIZE}
+                    width={iconSize}
+                    height={iconSize}
                     name="polar-night"
                     style={[styles.sunIcon, { color: colors.primaryText}]}
                   />
@@ -115,8 +123,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                 </View>
                 <View style={[styles.sunInfo]} accessible>
                   <Icon
-                    width={ICON_SIZE}
-                    height={ICON_SIZE}
+                    width={iconSize}
+                    height={iconSize}
                     name="sun-arrow-up"
                     style={[styles.sunIcon, { color: colors.primaryText}]}
                   />
@@ -133,8 +141,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
               <View accessible>
                 <View accessible style={styles.sunInfo}>
                   <Icon
-                    width={ICON_SIZE}
-                    height={ICON_SIZE}
+                    width={iconSize}
+                    height={iconSize}
                     name="midnight-sun"
                     style={[styles.sunIcon, { color: colors.primaryText}]}
                   />
@@ -144,8 +152,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                 </View>
                 <View style={[styles.sunInfo]} accessible>
                   <Icon
-                    width={14}
-                    height={14}
+                    width={iconSize}
+                    height={iconSize}
                     name="sun-arrow-down"
                     style={[styles.sunIcon, { color: colors.primaryText}]}
                   />
@@ -163,8 +171,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                 <View style={[styles.row]}>
                   <View style={[styles.sunInfo]} accessible>
                     <Icon
-                      width={ICON_SIZE}
-                      height={ICON_SIZE}
+                      width={iconSize}
+                      height={iconSize}
                       name="sun-arrow-up"
                       style={[styles.sunIcon, { color: colors.primaryText}]}
                     />
@@ -188,8 +196,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                   </View>
                   <View style={[styles.sunInfo]} accessible>
                     <Icon
-                      width={14}
-                      height={14}
+                      width={iconSize}
+                      height={iconSize}
                       name="sun-arrow-down"
                       style={[styles.sunIcon, { color: colors.primaryText}]}
                     />
@@ -215,8 +223,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                 {(excludeDayDuration === undefined || !excludeDayDuration) && (
                   <View style={styles.sunInfo} accessible>
                     <Icon
-                      width={ICON_SIZE}
-                      height={ICON_SIZE}
+                    width={iconSize}
+                    height={iconSize}
                       name="time"
                       style={[styles.sunIcon, { color: colors.primaryText}]}
                     />
@@ -233,7 +241,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
           )}
         </ImageBackground>
       </View>
-      <View style={[styles.box, styles.moonBox]}>
+      <View style={[styles.box, styles.moonBox, { width: boxWidth, height: boxHeight }]} >
         <ImageBackground source={moonBackground} resizeMode="cover" style={styles.flex} imageStyle={styles.background}>
           <View style={styles.info} accessible>
             <Text style={[styles.text, { color: WHITE }]}>
@@ -241,7 +249,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
             </Text>
             <Text
               accessibilityLabel={t(`sunAndMoon.${moonPhase}`)}
-              style={[styles.text, styles.moonPhase]}>
+              style={[styles.text, styles.moonPhase, { width: moonPhaseWidth }]}>
                 {t(`sunAndMoon.${moonPhase}`)}</Text>
           </View>
         </ImageBackground>
@@ -266,6 +274,12 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
   },
+  container: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    columnGap: 8,
+    marginHorizontal: 8,
+  },
   row: {
     flexDirection: 'row',
   },
@@ -284,20 +298,12 @@ const styles = StyleSheet.create({
     color: BLACK,
   },
   box: {
-    flex: 1,
-    width: 175,
-    maxWidth: 175,
-    height: 100,
     borderRadius: 10,
   },
   sunBox: {
-    marginLeft: 16,
-    marginRight: 8,
     marginTop: 16,
   },
   moonBox: {
-    marginRight: 16,
-    marginLeft: 8,
     marginTop: 16,
   },
   background: {

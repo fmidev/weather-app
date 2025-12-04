@@ -50,16 +50,7 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   const count = !isWideDisplay() ?
                 TIMESTEP_COUNT_FOR_PHONES
                 : Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
-/*
-  const handleScroll = () => {
-    const now = Date.now();
-    // May not be the best way to track...
-    if (now - lastTracked.current > 2000) { // 2 seconds
-      trackMatomoEvent("User action", "Weather", "Swipe next hour forecast");
-      lastTracked.current = now;
-    }
-  };
-*/
+
   return isWideDisplay() ? (
     <View testID="next_hours_forecast" style={
       [styles.container, styles.row, { paddingLeft: insets.left, paddingRight: insets.right }]

@@ -2,7 +2,6 @@ import React, { memo, useState, useRef, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
-  Text,
   StyleSheet,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -16,7 +15,8 @@ import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import { State } from '@store/types';
 import { TimeStepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
@@ -54,6 +54,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
   units,
   initialPosition,
 }) => {
+  const { fontScale } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
@@ -166,6 +167,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
       'rgba(40, 40, 40, 0.80)'
     ];
 
+    const iconSize = 14;
+    const headerWidth = Math.min(fontScale * 38, 64);
+
     return (
       <View
         testID="day_duration"
@@ -173,14 +177,20 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
           styles.dayLengthContainer,
           styles.forecastHeader,
         ]}>
-          <View style={[styles.symbolBlock]}>
+          <View style={[styles.symbolBlock, { width: headerWidth }]}>
             <LinearGradient
               colors={ dark ? darkGradient : lightGradient }
               start={{ x: 1, y: 0 }}
               end={{ x: 0, y: 0 }}
-              style={styles.gradient}
+              style={[styles.gradient, { width: headerWidth }]}
             >
-              <Icon name="sun" color={colors.hourListText} />
+              <Icon
+                name="sun"
+                color={colors.hourListText}
+                width={24}
+                height={24}
+                maxScaleFactor={1.5}
+              />
             </LinearGradient>
           </View>
           <View
@@ -191,8 +201,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                   accessible
                   style={[styles.row, styles.alignCenter, styles.listContainer]}>
                   <Icon
-                    width={24}
-                    height={24}
+                    width={iconSize}
+                    height={iconSize}
+                    maxScaleFactor={1.5}
                     name="polar-night"
                     style={[
                       styles.withMarginRight,
@@ -202,6 +213,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                     ]}
                   />
                   <Text
+                    maxFontSizeMultiplier={1.5}
                     style={[
                       styles.panelText,
                       styles.bold,
@@ -212,8 +224,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                 </View>
                 <View style={[styles.row, styles.alignCenter]} accessible>
                   <Icon
-                    width={14}
-                    height={14}
+                    width={iconSize}
+                    height={iconSize}
+                    maxScaleFactor={1.5}
                     name="sun-arrow-up"
                     style={[
                       styles.withMarginRight,
@@ -223,6 +236,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                     ]}
                   />
                   <Text
+                    maxFontSizeMultiplier={1.5}
                     accessibilityLabel={`${t('sunrise')} ${t(
                       'at'
                     )} ${sunrise.format(dateFormat)}`}
@@ -242,8 +256,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                   accessible
                   style={[styles.row, styles.alignCenter, styles.listContainer]}>
                   <Icon
-                    width={24}
-                    height={24}
+                    width={iconSize}
+                    height={iconSize}
+                    maxScaleFactor={1.5}
                     name="midnight-sun"
                     style={[
                       styles.withMarginRight,
@@ -253,6 +268,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                     ]}
                   />
                   <Text
+                    maxFontSizeMultiplier={1.5}
                     style={[
                       styles.panelText,
                       styles.bold,
@@ -263,8 +279,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                 </View>
                 <View style={[styles.row, styles.alignCenter]} accessible>
                   <Icon
-                    width={14}
-                    height={14}
+                    width={iconSize}
+                    height={iconSize}
+                    maxScaleFactor={1.5}
                     name="sun-arrow-down"
                     style={[
                       styles.withMarginRight,
@@ -274,6 +291,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                     ]}
                   />
                   <Text
+                    maxFontSizeMultiplier={1.5}
                     accessibilityLabel={`${t('sunset')} ${t(
                       'at'
                     )} ${sunset.format(dateFormat)}`}
@@ -294,17 +312,19 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                   styles.listContainer,
                   styles.maxWidth,
                   styles.justifyContentCenter,
+                  styles.wrap,
                 ]}>
                 <View
                   style={[
                     styles.row,
                     styles.alignCenter,
-                    styles.withMarginRight20,
+                    styles.withMarginRight10,
                   ]}
                   accessible>
                   <Icon
-                    width={14}
-                    height={14}
+                    width={iconSize}
+                    height={iconSize}
+                    maxScaleFactor={1.5}
                     name="sun-arrow-up"
                     style={[
                       styles.withMarginRight,
@@ -314,6 +334,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                     ]}
                   />
                   <Text
+                    maxFontSizeMultiplier={1.5}
                     accessibilityLabel={`${t('sunrise')} ${t(
                       'at'
                     )} ${sunrise.format(timeFormat)}`}
@@ -327,8 +348,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                 </View>
                 <View style={[styles.row, styles.alignCenter]} accessible>
                   <Icon
-                    width={14}
-                    height={14}
+                    width={iconSize}
+                    height={iconSize}
+                    maxScaleFactor={1.5}
                     name="sun-arrow-down"
                     style={[
                       styles.withMarginRight,
@@ -336,6 +358,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                     ]}
                   />
                   <Text
+                    maxFontSizeMultiplier={1.5}
                     accessibilityLabel={`${t('sunset')} ${t(
                       'at'
                     )} ${sunset.format(timeFormat)}`}
@@ -353,12 +376,13 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                       style={[
                         styles.row,
                         styles.alignCenter,
-                        styles.withMarginLeft20,
+                        styles.withMarginLeft10,
                       ]}
                       accessible>
                       <Icon
-                        width={24}
-                        height={24}
+                        width={iconSize}
+                        height={iconSize}
+                        maxScaleFactor={1.5}
                         name="time"
                         style={[
                           styles.alignCenter,
@@ -367,6 +391,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
                         ]}
                       />
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
                           'hours'
                         )} ${dayMinutes} ${t('minutes')}`}
@@ -469,6 +494,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+  wrap: {
+    flexWrap: 'wrap',
+  },
   dayLengthContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -486,14 +514,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Roboto-Medium',
   },
-  withMarginRight20: {
-    marginRight: 20,
+  withMarginRight10: {
+    marginRight: 10,
   },
-  withMarginLeft20: {
-    marginLeft: 20,
+  withMarginLeft10: {
+    marginLeft: 10,
   },
   withMarginRight: {
-    marginRight: 6,
+    marginRight: 2,
   },
   forecastHeader: {
     height: 52,
