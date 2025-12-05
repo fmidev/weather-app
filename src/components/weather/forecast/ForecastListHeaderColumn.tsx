@@ -150,7 +150,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
             );
           }
 
-          if (param === constants.RELATIVE_HUMIDITY) {
+          if (param === constants.RELATIVE_HUMIDITY || param === constants.HUMIDITY) {
             return (
               <View
                 key={`${param}-${i}`}
