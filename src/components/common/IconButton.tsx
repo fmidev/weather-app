@@ -34,21 +34,29 @@ const IconButton: React.FC<IconButtonProps> = ({
   backgroundColor,
   circular,
   testID,
-}) =>
-  onPress ? (
+}) => {
+  const backgroundSize = circular && iconSize ? iconSize/22 * 36 : 36;
+  const hitSlop = circular && iconSize ? iconSize/22 * 6 : 6;
+
+  return onPress ? (
     <View
       accessible
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       style={[
         circular ? styles.circularButton : styles.button,
+        circular && iconSize ? {
+          width: backgroundSize,
+          height: backgroundSize,
+          borderRadius: backgroundSize/2
+        } : {},
         style,
         { backgroundColor: backgroundColor || undefined },
       ]}>
       <AccessibleTouchableOpacity
         testID={testID}
         onPress={onPress}
-        hitSlop={ circular ? { top: 6, bottom: 6, left: 6, right: 6 } : undefined}
+        hitSlop={ circular ? { top: hitSlop, bottom: hitSlop, left: hitSlop, right: hitSlop } : undefined}
       >
         <View>
           <Icon
@@ -77,6 +85,7 @@ const IconButton: React.FC<IconButtonProps> = ({
       </View>
     </View>
   );
+}
 
 const styles = StyleSheet.create({
   button: {

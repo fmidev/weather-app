@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 
 import {
@@ -50,6 +51,7 @@ const List: React.FC<ListProps> = ({
   preferredDailyParameters,
   units,
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { t, i18n } = useTranslation('observation');
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { colors } = useTheme() as CustomTheme;
@@ -118,8 +120,10 @@ const List: React.FC<ListProps> = ({
       dailyParameters?.includes(param as keyof DailyObservationParameters)
   );
 
+  const timeWidth = Math.min(fontScale * 60, 80);
+
   const getHeaderLabels = () => (
-    <View style={styles.row}>
+    <View style={styles.headerRow}>
       {activeParameters.map((param) => {
         if (EXCLUDED_HEADER_PARAMETERS.includes(param)) {
           return null;
@@ -128,10 +132,12 @@ const List: React.FC<ListProps> = ({
         if (param === 'maximumTemperature') {
           return (
             <Text
+              maxFontSizeMultiplier={1.2}
               key={param}
               style={[
                 styles.rowItem,
                 styles.listText,
+                styles.headerText,
                 styles.bold,
                 { color: colors.hourListText },
               ]}>
@@ -146,9 +152,11 @@ const List: React.FC<ListProps> = ({
 
         return (
           <Text
+            maxFontSizeMultiplier={1.2}
             key={param}
             style={[
               styles.rowItem,
+              styles.headerText,
               styles.listText,
               styles.bold,
               { color: colors.hourListText },
@@ -317,6 +325,7 @@ const List: React.FC<ListProps> = ({
                 }`;
           return (
             <Text
+              maxFontSizeMultiplier={1.5}
               key={`${param}-${timeStep.epochtime}`}
               style={[
                 styles.listText,
@@ -344,6 +353,7 @@ const List: React.FC<ListProps> = ({
       <View>
         {data && data.length > 0 && (
           <Text
+            numberOfLines={1}
             style={[
               styles.currentDay,
               styles.bold,
@@ -362,7 +372,6 @@ const List: React.FC<ListProps> = ({
         style={[
           styles.row,
           styles.observationRow,
-          styles.headerRow,
           {
             borderBottomColor: colors.border,
           },
@@ -370,12 +379,13 @@ const List: React.FC<ListProps> = ({
         {!isDaily && (
           <View style={styles.time}>
             <Text
+              maxFontSizeMultiplier={1.2}
               style={[
                 styles.rowItem,
                 styles.time,
                 styles.listText,
                 styles.bold,
-                { color: colors.hourListText },
+                { color: colors.hourListText, width: timeWidth },
               ]}>
               {t('time')}
             </Text>
@@ -384,93 +394,91 @@ const List: React.FC<ListProps> = ({
         {getHeaderLabels()}
       </View>
 
-      {data &&
-        data
-          .filter((ob) => ob.epochtime % 3600 === 0)
-          .flatMap((timeStep, i, arr) => {
-            if (
-              isDaily &&
-              i > 0 &&
-              moment(timeStep.epochtime * 1000).day() ===
-                moment(arr[i - 1].epochtime * 1000).day()
-            ) {
-              return [];
-            }
+      {data?.filter((ob) => ob.epochtime % 3600 === 0).flatMap((timeStep, i, arr) => {
+        if (
+          isDaily &&
+          i > 0 &&
+          moment(timeStep.epochtime * 1000).day() ===
+            moment(arr[i - 1].epochtime * 1000).day()
+        ) {
+          return [];
+        }
 
-            const time = moment(timeStep.epochtime * 1000).locale(locale);
-            const previousTime = moment(arr?.[i - 1]?.epochtime * 1000);
+        const time = moment(timeStep.epochtime * 1000).locale(locale);
+        const previousTime = moment(arr?.[i - 1]?.epochtime * 1000);
 
-            const timeToDisplay = time.format(
-              clockType === 12 ? 'h.mm a' : 'HH.mm'
-            );
+        const timeToDisplay = time.format(
+          clockType === 12 ? 'h.mm a' : 'HH.mm'
+        );
 
-            return (
-              <View key={timeStep.epochtime}>
-                {i > 0 && time.day() !== previousTime.day() && (
-                  <View
-                    style={[
-                      styles.row,
-                      styles.observationRow,
-                      { backgroundColor: colors.timeStepBackground },
-                    ]}>
-                    <Text
-                      style={[
-                        styles.listText,
-                        styles.rowItem,
-                        styles.time,
-                        styles.bold,
-                        styles.capitalize,
-                        { color: colors.hourListText },
-                      ]}>
-                      {time.format(
-                        locale === 'en' ? 'dddd D MMM' : `dddd D.M.`
-                      )}
-                    </Text>
-                  </View>
-                )}
-                <View style={[styles.row]} accessible>
-                  <View
-                    style={[
-                      styles.row,
-                      styles.observationRow,
-                      {
-                        backgroundColor:
-                          !isDaily && i % 2 !== 0 ? GRAY_1_OPACITY : undefined,
-                      },
-                    ]}>
-                    {!isDaily && (
-                      <>
-                        <View style={styles.time}>
-                          <Text
-                            style={[
-                              styles.rowItem,
-                              styles.time,
-                              styles.listText,
-                              styles.bold,
-                              { color: colors.hourListText },
-                            ]}
-                            accessibilityLabel={`${t(
-                              'forecast:at'
-                            )} ${timeToDisplay}`}>
-                            {capitalize(timeToDisplay)}
-                          </Text>
-                        </View>
-                        {getRowValues(timeStep)}
-                      </>
-                    )}
-                    {isDaily && (
-                      <DailyObservationRow
-                        // @ts-ignore
-                        parameter={parameter}
-                        epochtime={timeStep.epochtime}
-                        data={data}
-                      />
-                    )}
-                  </View>
-                </View>
+        return (
+          <View key={timeStep.epochtime}>
+            {i > 0 && time.day() !== previousTime.day() && (
+              <View
+                style={[
+                  styles.row,
+                  styles.observationRow,
+                  { backgroundColor: colors.timeStepBackground },
+                ]}>
+                <Text
+                  style={[
+                    styles.listText,
+                    styles.rowItem,
+                    styles.time,
+                    styles.bold,
+                    styles.capitalize,
+                    { color: colors.hourListText },
+                  ]}>
+                  {time.format(
+                    locale === 'en' ? 'dddd D MMM' : `dddd D.M.`
+                  )}
+                </Text>
               </View>
-            );
-          })}
+            )}
+            <View style={[styles.row]} accessible>
+              <View
+                style={[
+                  styles.row,
+                  styles.observationRow,
+                  {
+                    backgroundColor:
+                      !isDaily && i % 2 !== 0 ? GRAY_1_OPACITY : undefined,
+                  },
+                ]}>
+                {!isDaily && (
+                  <>
+                    <View style={styles.time}>
+                      <Text
+                        maxFontSizeMultiplier={1.5}
+                        style={[
+                          styles.rowItem,
+                          styles.time,
+                          styles.listText,
+                          styles.bold,
+                          { color: colors.hourListText, width: timeWidth },
+                        ]}
+                        accessibilityLabel={`${t(
+                          'forecast:at'
+                        )} ${timeToDisplay}`}>
+                        {capitalize(timeToDisplay)}
+                      </Text>
+                    </View>
+                    {getRowValues(timeStep)}
+                  </>
+                )}
+                {isDaily && (
+                  <DailyObservationRow
+                    // @ts-ignore
+                    parameter={parameter}
+                    epochtime={timeStep.epochtime}
+                    data={data}
+                  />
+                )}
+              </View>
+            </View>
+          </View>
+        );
+      })}
     </View>
   );
 };
@@ -481,6 +489,9 @@ const styles = StyleSheet.create({
   currentDay: {
     paddingLeft: 8,
     fontSize: 16,
+  },
+  headerText: {
+    height: 50,
   },
   listText: {
     fontSize: 16,
@@ -497,12 +508,13 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   headerRow: {
-    paddingBottom: 12,
-    borderBottomWidth: 1,
+    flex: 1,
+    flexDirection: 'row',
   },
   row: {
-    flex: 2,
+    flex: 1,
     flexDirection: 'row',
+    maxHeight: 50,
   },
   windColumn: {
     flex: 1,
@@ -524,7 +536,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   time: {
-    flexShrink: 1,
     minWidth: 60,
   },
 });

@@ -8,6 +8,7 @@ import { tickFormat } from '@utils/chart';
 import { ClockType, UnitMap } from '@store/settings/types';
 import { ChartDataProps, ChartDomain, ChartType, ChartValues } from './types';
 import { Config } from '@config';
+import { useWindowDimensions } from 'react-native';
 
 type ChartDataRendererProps = {
   chartDimensions: { x: number; y: number };
@@ -33,6 +34,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   isDaily,
   units,
 }) => {
+  const { fontScale } = useWindowDimensions()
   const { colors } = useTheme() as CustomTheme;
   const defaultUnits = Config.get('settings').units;
 
@@ -74,6 +76,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
           },
           tickLabels: {
             fill: colors.hourListText,
+            fontSize: Math.min(fontScale * 14, 18),
             fontWeight: ({ tick }) =>
               isDaily || moment(tick).hour() === 0 ? 'bold' : 'normal',
           },

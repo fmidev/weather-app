@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
@@ -12,6 +12,7 @@ import { TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, getForecastParameterUnitTranslationKey, toPrecision } from '@utils/units';
+import Text from '@components/common/AppText';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -29,6 +30,7 @@ type NextHoursForecastProps = PropsFromRedux & {
 const HourForecast: React.FC<NextHoursForecastProps> = ({
   clockType, units, timeStep
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { t } = useTranslation('forecast');
 
   const temperatureUnit = units?.temperature.unitAbb ?? Config.get('settings').units.temperature;
@@ -58,6 +60,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
           )}`
         ),
       })}`
+  const symbolSize = Math.min(fontScale * 36, 62);
 
   return (
     <View
@@ -70,8 +73,8 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
       </Text>
       <View>
         {smartSymbol?.({
-          width: 36,
-          height: 36,
+          width: symbolSize,
+          height: symbolSize,
         })}
       </View>
       <View>
@@ -86,8 +89,9 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: 60,
+    minWidth: 60,
     alignItems: 'center',
+    paddingHorizontal: 8,
   },
   timeText: {
     fontFamily: 'Roboto-SemiBold',

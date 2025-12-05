@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   StyleSheet,
-  Text,
   NativeSyntheticEvent,
   NativeScrollEvent,
   View,
@@ -12,6 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from '@react-navigation/native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import Text from '@components/common/AppText';
 
 import {
   WHITE,

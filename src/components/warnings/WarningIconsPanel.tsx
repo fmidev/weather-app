@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme, useNavigation, NavigationProp } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +12,8 @@ import {
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
+
+import Text from '@components/common/AppText';
 import WarningIcon from './WarningIcon';
 import DayDetailsDescription from './DayDetailsDescription';
 import { TabParamList } from '@navigators/types';
@@ -141,6 +143,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                         },
                       ]}>
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         style={[styles.badgeText, { color: colors.primaryText }]}>
                         {count}
                       </Text>
@@ -170,6 +173,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                     </Text>
                     <View style={styles.iconContainer}>
                       <WarningIcon
+                        maxScaleFactor={1.5}
                         type={type}
                         severity={severity}
                         {...(type === 'wind' || type === 'seaWind' ? { physical: warnings[0].physical } : {})}
@@ -191,7 +195,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 16,
     paddingHorizontal: 16,
-    height: 160,
+    paddingVertical: 8,
+    minHeight: 160,
   },
   errorCard : {
     padding: 16,
@@ -222,13 +227,14 @@ const styles = StyleSheet.create({
   badgeText: {
     textAlign: 'center',
     fontSize: 14,
+    lineHeight: 14,
     fontFamily: 'Roboto-Bold',
   },
   medium: {
     fontFamily: 'Roboto-Medium',
   },
   cardContainer: {
-    paddingVertical: 12,
+    paddingVertical: 8,
   },
   cardText: {
     fontSize: 14,
@@ -250,21 +256,18 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 0,
     marginVertical: 12,
-    height: 60,
   },
   warningDaysContainer: {
     borderBottomWidth: 0,
-    flex: 1,
     flexDirection: 'row',
   },
   warningsSingleDayContainer: {
-    flex: 1,
     minWidth: '20%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingVertical: 8,
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 65,
+    minHeight: 65,
   },
   startBorderRadius: {
     borderTopLeftRadius: 4,
