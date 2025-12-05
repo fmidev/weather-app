@@ -26,6 +26,7 @@ import {
 } from '@store/forecast/actions';
 import constants, {
   RELATIVE_HUMIDITY,
+  HUMIDITY,
   PRESSURE,
   UV_CUMULATED,
   PARAMS_TO_ICONS,
@@ -131,7 +132,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
               color={colors.hourListText}
             />
           )}
-        {param === RELATIVE_HUMIDITY && (
+        {(param === RELATIVE_HUMIDITY || param === HUMIDITY) && (
           <Text
             accessibilityLabel=""
             style={[
