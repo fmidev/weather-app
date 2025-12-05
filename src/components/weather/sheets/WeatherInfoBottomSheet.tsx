@@ -20,6 +20,7 @@ import constants, {
   THUNDER_PROBABILITY,
   DEW_POINT,
   RELATIVE_HUMIDITY,
+  HUMIDITY,
   PRESSURE,
   UV_CUMULATED,
 } from '@store/forecast/constants';
@@ -508,7 +509,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               </View>
             )}
 
-            {activeConstants.includes(RELATIVE_HUMIDITY) && (
+            {(activeConstants.includes(RELATIVE_HUMIDITY)
+              || activeConstants.includes(HUMIDITY)) &&  (
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Text
