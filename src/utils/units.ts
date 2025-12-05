@@ -5,6 +5,7 @@ import { msToBeaufort } from './helpers';
 export type Unit = {
   parameterName: string;
   parameters: string[];
+  ignoreInSettings?: boolean;
   unitTypes: UnitType[];
 };
 
@@ -48,6 +49,25 @@ export const UNITS: Unit[] = [
         unitId: 2,
         unitAbb: 'in',
         unit: 'inch',
+        unitPrecision: 2,
+      },
+    ],
+  },
+  {
+    parameterName: 'precipitationIntensity',
+    parameters: ['ri_10min'],
+    ignoreInSettings: true,
+    unitTypes: [
+      {
+        unitId: 1,
+        unitAbb: 'mm/h',
+        unit: 'millimeters per hour',
+        unitPrecision: 1,
+      },
+      {
+        unitId: 2,
+        unitAbb: 'in/h',
+        unit: 'inches per hour',
         unitPrecision: 2,
       },
     ],
@@ -173,6 +193,7 @@ export const converter = (unitAbb: string, value: number): number => {
       return value * 1.8 + 32;
     // precipitation
     case 'in':
+    case 'in/h':
       return value / 25.4;
     // wind
     case 'km/h':
@@ -237,3 +258,7 @@ export const resolveUnitParameterName = (param: string): string | undefined => {
   const unit = UNITS.find((u) => u.parameters.includes(param));
   return unit?.parameterName;
 };
+
+export const getUnitsHiddenInSettings = () => {
+  return UNITS.filter(unit => unit.ignoreInSettings === true).map(unit => unit.parameterName)
+}
