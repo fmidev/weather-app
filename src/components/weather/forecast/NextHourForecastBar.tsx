@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import moment from 'moment';
@@ -14,7 +14,8 @@ import { selectUnits } from '@store/settings/selectors';
 import { getFeelsLikeIconName, getWindDirection } from '@utils/helpers';
 import { CustomTheme, WHITE } from '@assets/colors';
 
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import { Config } from '@config';
 import {
   converter,
@@ -48,6 +49,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
   units,
 }) => {
   const { t, i18n } = useTranslation('forecast');
+
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
   const { dark } = useTheme() as CustomTheme;
@@ -123,6 +125,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
               name="wind-next-hour"
               width={28}
               height={28}
+              maxScaleFactor={1.5}
               style={[
                 styles.withMarginRight,
                 {
@@ -158,7 +161,12 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
       <View accessible style={styles.row}>
         { (wide || !showUv) && activeParameters.includes('precipitation1h') && (
           <>
-            <Icon name="precipitation" color={textColor} />
+            <Icon
+              name="precipitation"
+              height={28}
+              width={20}
+              color={textColor}
+            />
             <Text
               style={[styles.text, { color: textColor }]}
               accessibilityLabel={`${t('forecast:precipitation')} ${
@@ -219,8 +227,8 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
           <Icon
             name={getFeelsLikeIconName(forecast, currentTime.toObject())}
             style={styles.feelsLikeIcon}
-            height={40}
-            width={40}
+            height={28}
+            width={28}
             color={textColor}
           />
         </View>
@@ -242,9 +250,9 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     flexGrow: 1,
     width: '100%',
-    maxHeight: 45,
-    maxWidth: 440,
+    maxWidth: 720,
     flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   row: {
     flexDirection: 'row',

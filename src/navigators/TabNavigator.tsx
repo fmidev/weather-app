@@ -509,6 +509,7 @@ const Navigator: React.FC<Props> = ({
               ? darkTheme.colors.tabBarInactive
               : lightTheme.colors.tabBarInactive,
             tabBarLabelStyle: styles.tabText,
+            tabBarStyle: Platform.OS === 'android' && Platform.Version < 35 ? { height: 70 } : {},
             tabBarButton: ({ style, accessibilityState, ...rest }) => {
               const activeColor = useDarkTheme
                 ? darkTheme.colors.tabBarActive

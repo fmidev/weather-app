@@ -293,8 +293,10 @@ export const getParameterUnit = (
     Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
-    case 'ri_10min':
       return t ? t(units?.precipitation.unitAbb ?? precipitation) : units?.precipitation.unitAbb ?? precipitation;
+    case 'precipitationIntensity':
+    case 'ri_10min':
+      return `${t ? t(units?.precipitation.unitAbb ?? precipitation) : units?.precipitation.unitAbb ?? precipitation}/h`
     case 'humidity':
       return '%';
     case 'temperature':
@@ -525,3 +527,13 @@ export function roundToNearestTen(n: number): number {
   const r = Math.round(n / 10) * 10;
   return Object.is(r, -0) ? 0 : r; // normalize -0 -> 0
 }
+
+export const msToBeaufort = (speed: number): number => {
+  const thresholds = [
+    0.3, 1.6, 3.4, 5.5, 8, 10.8,
+    13.9, 17.2, 20.8, 24.5, 28.5,
+    32.7, Infinity,
+  ];
+
+  return thresholds.findIndex((limit) => speed < limit);
+};

@@ -1,9 +1,11 @@
 import { TimeStepData } from '@store/observation/types';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
+
+import Text from '@components/common/AppText';
 import { getObservationCellValue } from '@utils/helpers';
 import { CustomTheme } from '@assets/colors';
 
@@ -82,6 +84,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
 
     return (
       <Text
+        maxFontSizeMultiplier={1.5}
         style={[
           styles.listText,
           styles.rowItem,
@@ -123,7 +126,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
 
 const styles = StyleSheet.create({
   row: {
-    flex: 2,
+    flex: 1,
     flexDirection: 'row',
   },
   listText: {

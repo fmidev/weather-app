@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
@@ -11,6 +11,7 @@ import { State } from '@store/types';
 import { selectLoading, selectError, selectMeteorologistSnapshot } from '@store/meteorologist/selector';
 import { selectClockType } from '@store/settings/selectors';
 import { CustomTheme } from '@assets/colors';
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
@@ -9,6 +9,7 @@ import { Config } from '@config';
 import { State } from '@store/types';
 import { selectLoading, selectError, selectNews } from '@store/news/selector';
 import { CustomTheme } from '@assets/colors';
+import Text from '@components/common/AppText';
 import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
 import NewsView from './NewsView';

@@ -1,17 +1,17 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import { State } from '@store/types';
-
 import { CustomTheme } from '@assets/colors';
 import { selectForecastByDay } from '@store/forecast/selectors';
 import ModalForecast from './ModalForecast';
 import { uppercaseFirst } from '@utils/helpers';
 import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
 import { trackMatomoEvent } from '@utils/matomo';
 
@@ -39,8 +39,12 @@ const DailyModal: React.FC<ModalContentProps> = ({
   onDayChange,
   initialPosition
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { t, i18n } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
+  const largeFonts = fontScale >= 1.5;
+  const iconSize = Math.min(fontScale * 22, 44);
+  const dateFormat = largeFonts ? 'dd D.M.' : 'dddd, D.M.';
 
   return (
     <View style={styles.container}>
@@ -49,13 +53,14 @@ const DailyModal: React.FC<ModalContentProps> = ({
           { activeDayIndex > 0 ?
             (<View accessible>
                 <Icon
-                name="arrow-left"
-                color={colors.primaryText}
-                onPress={ () => {
-                  trackMatomoEvent('User action', 'Weather', 'Modal PREV day');
-                  onDayChange(false);
-                }}
-                accessibilityLabel={t('previousDay')}
+                  name="arrow-left"
+                  color={colors.primaryText}
+                  onPress={ () => {
+                    trackMatomoEvent('User action', 'Weather', 'Modal PREV day');
+                    onDayChange(false);
+                  }}
+                  size={iconSize}
+                  accessibilityLabel={t('previousDay')}
                 />
               </View>)
             :
@@ -63,8 +68,9 @@ const DailyModal: React.FC<ModalContentProps> = ({
           }
           <Text
             accessibilityRole="header"
+            numberOfLines={1}
             style={[styles.text, styles.bold, styles.headerText, { color: colors.primaryText }]}>
-            {uppercaseFirst(moment(timeStamp).locale(i18n.language).format('dddd, D.M.'))}
+            {uppercaseFirst(moment(timeStamp).locale(i18n.language).format(dateFormat))}
           </Text>
           <View accessible>
             <Icon
@@ -74,6 +80,7 @@ const DailyModal: React.FC<ModalContentProps> = ({
                 trackMatomoEvent('User action', 'Weather', 'Modal NEXT day');
                 onDayChange(true)
               }}
+              size={iconSize}
               accessibilityLabel={t('nextDay')}
             />
           </View>
@@ -81,6 +88,7 @@ const DailyModal: React.FC<ModalContentProps> = ({
         <View style={styles.closeButtonContainer} accessible>
           <CloseButton
             testID="forecast_modal_close_button"
+            maxScaleFactor={1.5}
             onPress={() => {
               trackMatomoEvent('User action', 'Weather', 'Modal close X');
               onClose();
@@ -96,13 +104,14 @@ const DailyModal: React.FC<ModalContentProps> = ({
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
   header: {
     width: '100%',
-    height: 50,
+    minHeight: 70,
     alignItems: 'center',
     paddingVertical: 16,
   },
@@ -129,8 +138,8 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginHorizontal: 16,
-    width: 130,
-    height: 22,
+    width: 150,
+    minHeight: 20,
     textAlign: 'center',
   },
   spacer: {
