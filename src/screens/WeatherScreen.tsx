@@ -246,7 +246,10 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       </View>
     ) : (
     <GradientWrapper>
-      <View testID="weather_view">
+      <View
+        testID="weather_view"
+        style={ Platform.OS === 'android' ? styles.android : null }
+      >
         <ScrollView
           testID="weather_scrollview"
           style={[styles.container]}
@@ -266,6 +269,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     minHeight: '100%',
+  },
+  android: {
+    marginBottom: 70,
   },
   contentContainer: {
     ...Platform.select({
