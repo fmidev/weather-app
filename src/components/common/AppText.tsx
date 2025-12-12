@@ -1,20 +1,16 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Text, TextProps } from 'react-native';
 
-type AppTextProps = TextProps & {
-  children?: React.ReactNode;
-};
-
-const AppText: React.FC<AppTextProps> = ({ children, ...rest }) => {
+const AppText = forwardRef<Text, TextProps>(({ children, ...rest }, ref) => {
   return (
     <Text
       allowFontScaling
       maxFontSizeMultiplier={2}
-      {...rest}
-    >
+      ref={ref}
+      {...rest}>
       {children}
     </Text>
   );
-};
+});
 
 export default AppText;

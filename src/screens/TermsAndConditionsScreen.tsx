@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import {
   ScrollView,
-  Text,
   View,
   StyleSheet,
   AccessibilityInfo,
@@ -10,7 +9,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { Text as RNText } from 'react-native';
 
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';
@@ -26,7 +27,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
 }) => {
   const { t } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef<Text>(null);
+  const titleRef = useRef<RNText>(null);
   const insets = useSafeAreaInsets();
 
   const closeButtonMarginBottom = Math.round(insets.bottom);
