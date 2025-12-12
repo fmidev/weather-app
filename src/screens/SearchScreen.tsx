@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 
-import Text from '@components/common/AppText'
+import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
 
@@ -171,6 +171,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         />
         <TextInput
           testID="search_input"
+          maxFontSizeMultiplier={2}
           accessibilityRole="search"
           style={[
             styles.input,
@@ -333,6 +334,7 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
     paddingVertical: 0,
+    paddingHorizontal: 8,
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
   },

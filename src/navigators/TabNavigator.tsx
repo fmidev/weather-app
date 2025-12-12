@@ -39,6 +39,7 @@ import OnboardingScreen from '@screens/OnboardingScreen';
 
 import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
@@ -289,7 +290,14 @@ const Navigator: React.FC<Props> = ({
     ...CommonHeaderOptions,
     path: 'search',
     headerBackTitleVisible: false,
-    headerTitle: t('navigation:search'),
+    headerTitle: () => (
+      <Text
+        style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
+        maxFontSizeMultiplier={1.5}
+      >
+        {t('navigation:search')}
+      </Text>
+    ),
     headerRight: () => (
       <HeaderButton
         testID="search_header_info_button"
@@ -696,6 +704,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     elevation: 8,
   },
+  headerTitle: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 16,
+  }
 });
 
 export default connector(Navigator);
