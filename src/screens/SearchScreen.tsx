@@ -8,7 +8,6 @@ import {
   Keyboard,
   ScrollView,
   ActivityIndicator,
-  useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -98,13 +97,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   setLoading,
   navigation,
 }) => {
-  const { fontScale } = useWindowDimensions();
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
   const [debouncedValue, setDebouncedValue] = React.useState('');
-
-  console.log('fontScale', fontScale);
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
