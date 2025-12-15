@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import {
   ScrollView,
-  Text,
   View,
   StyleSheet,
   AccessibilityInfo,
@@ -11,7 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Markdown from "react-native-marked";
+import type { Text as RNText } from 'react-native';
 
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { CustomTheme } from '@assets/colors';
 import { Config } from '@config';
@@ -32,7 +33,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
 }) => {
   const { t, i18n } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef<Text>(null);
+  const titleRef = useRef<RNText>(null);
   const insets = useSafeAreaInsets();
   const { termsOfUseFormat } = Config.get('onboardingWizard');
 

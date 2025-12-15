@@ -3,7 +3,6 @@ import {
   ImageBackground,
   Image,
   StyleSheet,
-  Text,
   View,
   Platform,
   SafeAreaView,
@@ -15,7 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';
-
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { GRAY_1, CustomTheme } from '@assets/colors';

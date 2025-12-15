@@ -403,7 +403,14 @@ const Navigator: React.FC<Props> = ({
         component={TermsAndConditionsScreen}
         options={{
           ...CommonHeaderOptions,
-          headerTitle: `${t('navigation:termsAndConditions')}`,
+          headerTitle: () => (
+            <Text
+              style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
+              maxFontSizeMultiplier={1.5}
+            >
+              {t('navigation:termsAndConditions')}
+            </Text>
+          ),
         }}
       />
       <OthersStack.Screen
@@ -453,7 +460,14 @@ const Navigator: React.FC<Props> = ({
         name="TermsAndConditions"
         options={{
           ...CommonHeaderOptions,
-          headerTitle: t('setUp:termsAndConditions'),
+          headerTitle: () => (
+            <Text
+              style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
+              maxFontSizeMultiplier={1.5}
+            >
+              {t('setUp:termsAndConditions')}
+            </Text>
+          )
         }}>
         {({ navigation }) => (
           <TermsAndConditionsScreen
