@@ -127,6 +127,7 @@
       "pop": "Sannolikheten för nederbörd (%)",
       "dewPoint": "Daggunkt (°{{ unit }})",
       "relativeHumidity": "Relativ fuktighet (%)",
+      "humidity": "Relativ fuktighet (%)",
       "pressure": "Lufttryck ({{ unit }})",
       "uvCumulated": "UV index",
       "dayLength": "Dagens längd",
@@ -220,8 +221,9 @@
     "measurements": {
       "temperature": "Temperatur",
       "dewPoint": "Daggpunkt",
-      "precipitation1h": "Regn",
       "precipitation": "Nederbörd",
+      "precipitation1h": "Timnederbörd",
+      "precipitationIntensity": "Nederbörd nu",
       "windSpeedMS": "Vind",
       "windSpeed": "Vindhastighet",
       "windDirection": "Vindriktning",

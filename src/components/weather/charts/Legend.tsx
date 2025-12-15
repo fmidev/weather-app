@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { CustomTheme, TRANSPARENT } from '@assets/colors';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import { Config } from '@config';
 import { ChartType } from './types';
@@ -178,13 +179,11 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               </View>
             )}
           </View>
-          <View style={styles.marginLeft}>
-            <View style={styles.legendRow}>
-              <Line color={colors.secondaryBorder} height={1} />
-              <Text style={[styles.legendText, { color: colors.hourListText }]}>
-                {t(`weather:charts:zeroLine`).toLocaleLowerCase()}
-              </Text>
-            </View>
+          <View style={styles.legendRow}>
+            <Line color={colors.secondaryBorder} height={1} />
+            <Text style={[styles.legendText, { color: colors.hourListText }]}>
+              {t(`weather:charts:zeroLine`).toLocaleLowerCase()}
+            </Text>
           </View>
         </View>
       )}
@@ -449,17 +448,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'flex-start',
     marginLeft: 16,
+    width: '90%',
   },
   legendRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 5,
   },
   rowFirstHalf: {
-    width: 80,
+    width: 120,
   },
   rowFirstHalfText: {
-    width: 85,
+    width: 120,
   },
   legendRowNoMargin: {
     flexDirection: 'row',
@@ -503,9 +502,9 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-  },
-  marginLeft: {
-    marginLeft: 20,
+    flexWrap: 'wrap',
+    alignItems: 'baseline',
+    columnGap: 20,
   },
   paddingLeft: {
     paddingLeft: 13,

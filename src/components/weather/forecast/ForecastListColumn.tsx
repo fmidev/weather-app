@@ -1,9 +1,10 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 
 import { DisplayParameters, TimeStepData } from '@store/forecast/types';
@@ -35,6 +36,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   units,
   modal, // Different styling for modal
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
@@ -51,6 +53,12 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
     dark
   );
 
+  const height = Math.min(fontScale * 52, 78);
+  const width = Math.min(fontScale * 52, 62);
+  const modalWidth = Math.min(fontScale * 48, 62);
+  const windIconSize = Math.min(fontScale * 20, 30);
+  const symbolSize = Math.min(fontScale * 40, 50);
+
   return (
     <View
       accessible
@@ -66,8 +74,13 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               },
             ]
           : [{ borderColor: colors.border }]),
+        { width: modal ? modalWidth : width }
       ]}>
-      <View style={[styles.hourBlock, modal !== true && { backgroundColor: colors.listTint }]}>
+      <View style={[
+        styles.hourBlock,
+        { height },
+        modal !== true && { backgroundColor: colors.listTint },
+      ]}>
         <Text
           accessibilityLabel={`${t('forecast:at')} ${time}.`}
           style={[styles.hourText, { color: colors.hourListText }]}>
@@ -86,11 +99,12 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 {smartSymbol?.({
-                  width: 40,
-                  height: 40,
+                  width: symbolSize,
+                  height: symbolSize,
                 })}
               </View>
             );
@@ -127,13 +141,14 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 {activeParameters.includes('windDirection') && (
                   <Icon
                     name={dark ? 'wind-dark' : 'wind-light'}
-                    width={20}
-                    height={20}
+                    width={windIconSize}
+                    height={windIconSize}
                     style={{
                       transform: [
                         {
@@ -183,6 +198,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                    height
                   },
                 ]}>
                 <Text
@@ -219,6 +235,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                    height
                   },
                 ]}>
                 <Text
@@ -249,6 +266,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                    height
                   },
                 ]}>
                 <Text
@@ -282,6 +300,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                    height
                   },
                 ]}>
                 <Text
@@ -323,9 +342,11 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                    height
                   },
                 ]}>
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   accessibilityLabel={t('forecast:params:pressure', {
                     value: convertedPressure,
                     unit: t(
@@ -393,7 +414,10 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
-                { backgroundColor: isOdd(index) ? colors.listTint : undefined },
+                {
+                  backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                  height,
+                },
               ]}>
               <Text
                 accessibilityLabel={getAccessibilityLabel()}

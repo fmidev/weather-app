@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import { CustomTheme } from '@assets/colors';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
-import Icon from '@assets/Icon';
+import Icon from '@components/common/ScalableIcon';
 
 type CloseButtonProps = {
   onPress: () => void;
@@ -13,6 +13,8 @@ type CloseButtonProps = {
   style?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   testID?: string;
+  size?: number;
+  maxScaleFactor?: number;
 };
 
 const CloseButton: React.FC<CloseButtonProps> = ({
@@ -21,8 +23,14 @@ const CloseButton: React.FC<CloseButtonProps> = ({
   backgroundColor,
   style,
   testID,
+  size,
+  maxScaleFactor = 2,
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { colors } = useTheme() as CustomTheme;
+  const scaleFactor = Math.min(fontScale, maxScaleFactor);
+  const iconSize = scaleFactor * (size ?? 24);
+  const borderRadius = iconSize/2;
 
   return (
     <AccessibleTouchableOpacity
@@ -35,10 +43,20 @@ const CloseButton: React.FC<CloseButtonProps> = ({
         style={[
           style,
           styles.button,
-          { backgroundColor: backgroundColor || colors.inputBackground },
+          {
+            backgroundColor: backgroundColor || colors.inputBackground,
+            borderRadius,
+            width: iconSize,
+            height: iconSize,
+          },
         ]}>
         <View>
-          <Icon name="close-outline" style={{ color: colors.text }} size={24} />
+          <Icon
+            maxScaleFactor={maxScaleFactor}
+            name="close-outline"
+            style={{ color: colors.text }}
+            size={size ?? 24}
+          />
         </View>
       </View>
     </AccessibleTouchableOpacity>

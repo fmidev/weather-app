@@ -3,12 +3,12 @@ import {
   ImageBackground,
   Image,
   StyleSheet,
-  Text,
   View,
   SafeAreaView,
   findNodeHandle,
   AccessibilityInfo,
 } from 'react-native';
+import type { Text as RNText } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,6 +16,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -33,7 +34,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const { t, i18n } = useTranslation('onboarding');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const titleRef = useRef<Text>(null);
+  const titleRef = useRef<RNText>(null);
   const isLandscape = useOrientation();
   const insets = useSafeAreaInsets();
 
@@ -95,7 +96,13 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           styles.iconContainer,
           { backgroundColor: colors.background, shadowColor: colors.shadow },
         ]}>
-        <Icon name={icon} width={32} height={32} color={colors.text} />
+        <Icon
+          name={icon}
+          width={32}
+          height={32}
+          maxFontSizeMultiplier={1.5}
+          color={colors.text}
+        />
       </View>
       <Text
         testID="onboarding_title_text"

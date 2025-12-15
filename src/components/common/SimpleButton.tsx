@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 function SimpleButton({

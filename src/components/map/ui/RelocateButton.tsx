@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle, Text } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';
@@ -32,7 +33,9 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
         accessibilityRole="button"
         accessibilityLabel={t('map:relocateButtonAccessibilityLabel')}>
         <View style={styles.textContainer}>
-          <Text style={[styles.text, { color: colors.primaryText }]}>
+          <Text
+            maxFontSizeMultiplier={1.5}
+            style={[styles.text, { color: colors.primaryText }]}>
             {t('map:relocateButtonText')}
           </Text>
         </View>
@@ -43,7 +46,7 @@ const RelocateButton: React.FC<RelocateButtonProps> = ({ onPress, style }) => {
 
 const styles = StyleSheet.create({
   button: {
-    width: 142,
+    width: 180,
     height: 44,
     borderRadius: 25,
     borderWidth: 2,

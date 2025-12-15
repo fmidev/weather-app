@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, useWindowDimensions } from 'react-native';
+
 import { GREEN, ORANGE, RED, YELLOW, WHITE } from '@assets/colors';
-import Icon from '@assets/Icon';
+import Icon from '@components/common/ScalableIcon';
 import type { Severity, WarningPhysical, WarningType } from '@store/warnings/types';
 
 type WarningIconProps = {
@@ -9,6 +10,7 @@ type WarningIconProps = {
   severityDescription?: Severity;
   type: WarningType;
   physical?: WarningPhysical
+  maxScaleFactor?: number;
 };
 
 const resolveSeverity = (severity: Severity): number => {
@@ -23,23 +25,37 @@ const showPhysical = (type: WarningType): boolean => {
 }
 
 const WarningIcon: React.FC<WarningIconProps> = (
-  { severity, severityDescription, type, physical }
+  { severity, severityDescription, type, physical, maxScaleFactor = 2 }
 ) => {
+  const { fontScale } = useWindowDimensions();
+  const scaleFactor = Math.min(fontScale, maxScaleFactor);
+
   if (severity === undefined && !severityDescription) return null;
 
   const colors = [GREEN, YELLOW, ORANGE, RED];
   const severityValue = severity !== undefined ? severity : resolveSeverity(severityDescription!);
   const color = colors[severityValue];
+  const size = scaleFactor * 30;
 
   return (
-    <View style={[styles.icon, { backgroundColor: color }]}>
+    <View style={[styles.icon, {
+       backgroundColor: color,
+      width: size,
+      height: size,
+      borderRadius: size/2,
+    }]}>
       { severityValue > 0 && (
-        <Icon name={`fmi-warnings-${type}`} size={30} style={ physical?.windDirection ? {
+        <Icon
+        name={`fmi-warnings-${type}`}
+        size={size}
+        style={ physical?.windDirection ? {
           transform: [{ rotate: (180 + physical?.windDirection) + 'deg' }]
         } : {}}/>
       )}
       { severityValue > 0 && physical?.windIntensity && showPhysical(type) && (
-        <Text style={styles.text}>{physical?.windIntensity}</Text>
+        <Text maxFontSizeMultiplier={1.5} style={[styles.text, { width: size }]}>
+          {physical?.windIntensity}
+        </Text>
       )}
     </View>
   );

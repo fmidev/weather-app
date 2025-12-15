@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import Text from '@components/common/AppText';
 import { CustomTheme, RED } from '@assets/colors';
 import CommonPanelHeader from '@components/common/PanelHeader';
 import { useTheme } from '@react-navigation/native';

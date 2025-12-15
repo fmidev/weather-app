@@ -1,8 +1,9 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import { CustomTheme } from '@assets/colors';
 import { ClockType } from '@store/settings/types';
 
@@ -44,6 +45,7 @@ const SliderStep: React.FC<SliderStepProps> = ({
         ]}>
         {hour && (
           <Text
+            maxFontSizeMultiplier={1.5}
             style={[
               styles.text,
               styles.lastBlockText,
@@ -75,6 +77,7 @@ const SliderStep: React.FC<SliderStepProps> = ({
       ]}>
       {hour && (
         <Text
+          maxFontSizeMultiplier={1.5}
           style={[
             styles.text,
             styles.textBlock,
@@ -116,6 +119,7 @@ const styles = StyleSheet.create({
     marginRight: '25%',
     marginLeft: '-75%',
     textAlign: 'center',
+    maxHeight: 22,
   },
   lastQuarterContainer: {
     minHeight: 32,

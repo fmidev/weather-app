@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  View,
-  StyleSheet,
-  Text,
-  ScrollView,
-  TouchableOpacity,
+  View, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -24,11 +20,13 @@ import constants, {
   THUNDER_PROBABILITY,
   DEW_POINT,
   RELATIVE_HUMIDITY,
+  HUMIDITY,
   PRESSURE,
   UV_CUMULATED,
 } from '@store/forecast/constants';
 import { DisplayParameters } from '@store/forecast/types';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
@@ -67,6 +65,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
+  const { fontScale } = useWindowDimensions();
   const uniqueSymbolKeys = [
     ...new Set(
       uniqueSmartSymbols.map((s) => weatherSymbolKeyParser((s || 0).toString()))
@@ -113,6 +112,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
     units?.precipitation.unitAbb ?? defaultUnits.precipitation;
   const pressureUnit = units?.pressure.unitAbb ?? defaultUnits.pressure;
 
+  const iconSize = Math.min(fontScale * 22, 36);
+  const symbolSize = Math.min(fontScale * 40, 64);
+
   return (
     <View testID="weather_info_bottom_sheet" style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
@@ -123,6 +125,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             accessibilityLabel={t(
               'weatherInfoBottomSheet.closeAccessibilityLabel'
             )}
+            size={22}
           />
         </View>
 
@@ -246,8 +249,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Icon
-                    width={22}
-                    height={22}
+                    width={iconSize}
+                    height={iconSize}
                     name="temperature"
                     color={colors.hourListText}
                     style={styles.withMarginRight}
@@ -266,8 +269,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Icon
-                    width={22}
-                    height={22}
+                    width={iconSize}
+                    height={iconSize}
                     name="feels-like"
                     color={colors.hourListText}
                     style={styles.withMarginRight}
@@ -286,8 +289,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 <View style={styles.row}>
                   <View style={styles.iconWrapper}>
                     <Icon
-                      width={22}
-                      height={22}
+                      width={iconSize}
+                      height={iconSize}
                       name="wind"
                       color={colors.hourListText}
                       style={styles.withMarginRight}
@@ -421,8 +424,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Icon
-                    width={22}
-                    height={22}
+                    width={iconSize}
+                    height={iconSize}
                     name="precipitation"
                     style={styles.withMarginRight}
                     color={colors.hourListText}
@@ -440,8 +443,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Icon
-                    width={22}
-                    height={22}
+                    width={iconSize}
+                    height={iconSize}
                     name="snow"
                     style={styles.withMarginRight}
                     color={colors.hourListText}
@@ -457,8 +460,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Icon
-                    width={22}
-                    height={22}
+                    width={iconSize}
+                    height={iconSize}
                     name="precipitation"
                     style={styles.withMarginRight}
                     color={colors.hourListText}
@@ -474,8 +477,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Icon
-                    width={22}
-                    height={22}
+                    width={iconSize}
+                    height={iconSize}
                     name="thunder"
                     style={styles.withMarginRight}
                     color={colors.hourListText}
@@ -491,8 +494,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Icon
-                    width={22}
-                    height={22}
+                    width={iconSize}
+                    height={iconSize}
                     name="dew-point"
                     style={styles.withMarginRight}
                     color={colors.hourListText}
@@ -506,7 +509,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               </View>
             )}
 
-            {activeConstants.includes(RELATIVE_HUMIDITY) && (
+            {(activeConstants.includes(RELATIVE_HUMIDITY)
+              || activeConstants.includes(HUMIDITY)) &&  (
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Text
@@ -567,10 +571,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     {t('weatherInfoBottomSheet.uvIndex')}
                   </Text>
                 </View>
-                <View style={[styles.row, styles.withMarginLeft]}>
+                <View style={[styles.row]}>
                   <Text
                     style={[
-                      styles.withMarginRight,
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
@@ -580,10 +583,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     {t('weatherInfoBottomSheet.uvLight')}
                   </Text>
                 </View>
-                <View style={[styles.row, styles.withMarginLeft]}>
+                <View style={[styles.row]}>
                   <Text
                     style={[
-                      styles.withMarginRight,
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
@@ -593,10 +595,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     {t('weatherInfoBottomSheet.uvModerate')}
                   </Text>
                 </View>
-                <View style={[styles.row, styles.withMarginLeft]}>
+                <View style={[styles.row]}>
                   <Text
                     style={[
-                      styles.withMarginRight,
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
@@ -606,10 +607,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     {t('weatherInfoBottomSheet.strong')}
                   </Text>
                 </View>
-                <View style={[styles.row, styles.withMarginLeft]}>
+                <View style={[styles.row]}>
                   <Text
                     style={[
-                      styles.withMarginRight,
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
@@ -619,10 +619,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     {t('weatherInfoBottomSheet.veryStrong')}
                   </Text>
                 </View>
-                <View style={[styles.row, styles.withMarginLeft]}>
+                <View style={[styles.row]}>
                   <Text
                     style={[
-                      styles.withMarginRight,
                       styles.unitText,
                       { color: colors.hourListText },
                     ]}>
@@ -640,8 +639,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   <View style={styles.iconWrapper}>
                     <Icon
                       name="sun"
-                      width={22}
-                      height={22}
+                      width={iconSize}
+                      height={iconSize}
                       style={[
                         styles.withMarginRight,
                         { color: colors.hourListText },
@@ -688,8 +687,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     <View style={[styles.row, styles.withMarginLeft]}>
                       <View style={styles.iconWrapper}>
                         <Icon
-                          width={22}
-                          height={22}
+                          width={iconSize}
+                          height={iconSize}
                           name="polar-night"
                           style={styles.withMarginRight}
                           color={colors.hourListText}
@@ -703,8 +702,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     <View style={[styles.row, styles.withMarginLeft]}>
                       <View style={styles.iconWrapper}>
                         <Icon
-                          width={22}
-                          height={22}
+                          width={iconSize}
+                          height={iconSize}
                           name="midnight-sun"
                           style={styles.withMarginRight}
                           color={colors.hourListText}
@@ -723,8 +722,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                       <View style={styles.iconWrapper}>
                         <Icon
                           name="time"
-                          width={22}
-                          height={22}
+                          width={iconSize}
+                          height={iconSize}
                           style={[
                             styles.withMarginRight,
                             {
@@ -769,8 +768,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               </Text>
             </View>
 
-            <View style={[styles.row]}>
+            <View style={[styles.headerRow]}>
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.unitText,
                   {
@@ -781,6 +781,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               </Text>
 
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.unitText,
                   {
@@ -790,6 +791,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 {t('weatherInfoBottomSheet.nightTime')}
               </Text>
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.unitText,
                   {
@@ -808,14 +810,15 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     day: React.FC<SvgProps>;
                     night: React.FC<SvgProps>;
                   }) => (
-                    <View key={item.key} style={styles.row}>
+                    <View key={item.key} style={[styles.row, styles.symbolRow]}>
                       <View style={styles.flex1}>
-                        {item.day({ width: 40, height: 40 })}
+                        {item.day({ width: symbolSize, height: symbolSize })}
                       </View>
                       <View style={styles.flex1}>
-                        {item.night({ width: 40, height: 40 })}
+                        {item.night({ width: symbolSize, height: symbolSize })}
                       </View>
                       <Text
+                        maxFontSizeMultiplier={1.5}
                         style={[
                           styles.text,
                           styles.flex1,
@@ -886,8 +889,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
   },
+  headerRow: {
+    flexDirection: 'row',
+    height: 30,
+  },
+  symbolRow: {
+    maxHeight: 120,
+  },
   iconWrapper: {
-    minWidth: 28,
+    width: 70,
   },
   title: {
     fontSize: 16,

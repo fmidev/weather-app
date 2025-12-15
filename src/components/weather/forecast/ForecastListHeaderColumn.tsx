@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import Icon from '@assets/Icon';
 
+import Text from '@components/common/AppText';
+import Icon from '@assets/Icon';
 import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
-
 import { isOdd } from '@utils/helpers';
 import { DisplayParameters } from '@store/forecast/types';
 import { Config } from '@config';
@@ -24,6 +24,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   units,
   modal,
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
   const defaultUnits = Config.get('settings').units;
   const { t } = useTranslation('unitAbbreviations');
@@ -40,6 +41,10 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
     'rgba(40, 40, 40, 0.80)'
   ];
 
+  const height = Math.min(fontScale * 52, 78);
+  const width = Math.min(fontScale * 52, 78);
+  const modalWidth = Math.min(fontScale * 38, 64);
+
   return (
     <View
       accessible={false}
@@ -48,15 +53,16 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
         modal ? styles.modalColumn : styles.iconColumn,
         {
           borderColor: colors.border,
+          width: modal ? modalWidth : width,
         },
       ]}>
       <LinearGradient
         colors={ dark ? darkGradient : lightGradient }
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 0 }}
-        style={styles.gradient}
+        style={[styles.gradient, { width: modal ? modalWidth : width }]}
       >
-      <View style={[styles.hourBlock, modal !== true && { backgroundColor: colors.listTint }]}>
+      <View style={[styles.hourBlock, { height }, modal !== true && { backgroundColor: colors.listTint }]}>
         <Icon name="clock" color={colors.hourListText} />
       </View>
       {displayParams
@@ -70,10 +76,12 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 <Icon name="wind" color={colors.hourListText} />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   style={[styles.panelText, { color: colors.hourListText }]}>
                   {t(units?.wind.unitAbb ?? defaultUnits.wind)}
                 </Text>
@@ -88,10 +96,12 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 <Icon name="gust" color={colors.hourListText} />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   style={[styles.panelText, { color: colors.hourListText }]}>
                   {t(units?.wind.unitAbb ?? defaultUnits.wind)}
                 </Text>
@@ -106,10 +116,12 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 <Icon name="precipitation" color={colors.hourListText} />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   style={[styles.panelText, { color: colors.hourListText }]}>
                   {t(units?.precipitation.unitAbb ?? defaultUnits.precipitation)}
                 </Text>
@@ -126,6 +138,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                   styles.row,
                   {
                     backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 <Icon name="precipitation" color={colors.hourListText} />
@@ -137,7 +150,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
             );
           }
 
-          if (param === constants.RELATIVE_HUMIDITY) {
+          if (param === constants.RELATIVE_HUMIDITY || param === constants.HUMIDITY) {
             return (
               <View
                 key={`${param}-${i}`}
@@ -145,6 +158,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 <Text
@@ -163,6 +177,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 <Text
@@ -181,6 +196,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    height,
                   },
                 ]}>
                 <Text
@@ -196,7 +212,10 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
               key={`${param}-${i}`}
               style={[
                 styles.hourBlock,
-                { backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined },
+                {
+                  backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                  height,
+                },
               ]}>
               <Icon
                 name={constants.PARAMS_TO_ICONS[String(param)]}

@@ -18,7 +18,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import CloseButton from '@components/common/CloseButton';
 
 import { setItem, LOCALE } from '@utils/async_storage';
-import { UNITS } from '@utils/units';
+import { getUnitsHiddenInSettings, UNITS } from '@utils/units';
 import { State } from '@store/types';
 import {
   selectUnits,
@@ -85,6 +85,7 @@ const SettingsScreen: React.FC<Props> = ({
     pressure: useRef<RBSheet>(null),
   } as { [key: string]: React.RefObject<RBSheet> };
   const { languages, themes, showUnitSettings } = Config.get('settings');
+  const hiddenUnits = getUnitsHiddenInSettings();
 
   useEffect(() => {
     const subscriber = AppState.addEventListener(
@@ -254,7 +255,7 @@ const SettingsScreen: React.FC<Props> = ({
               </View>
             </View>
             <View>
-              {Object.keys(units).map((key, i) => (
+              {Object.keys(units).map((key, i) => hiddenUnits.includes(key) ? null : (
                 <View
                   key={key}
                   style={[

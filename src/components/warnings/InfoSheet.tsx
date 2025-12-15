@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
 
 import { CustomTheme, GREEN, ORANGE, RED, YELLOW } from '@assets/colors';
@@ -52,7 +47,12 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   const TypeRow = ({ type }: { type: WarningType }) => (
     <View style={styles.row}>
       <View style={[styles.iconWrapper]}>
-        <WarningIcon type={type} severity={1} physical={ showPhysical(type) ? physical : undefined }/>
+        <WarningIcon
+          maxScaleFactor={1.5}
+          type={type}
+          severity={1}
+          physical={ showPhysical(type) ? physical : undefined }
+        />
       </View>
       <Text style={[styles.text, { color: colors.hourListText }]}>
         {t(`warnings:types:${type}`).toLocaleLowerCase()}
@@ -66,6 +66,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
         <View style={styles.closeButtonContainer}>
           <CloseButton
             testID="warnings_info_bottom_sheet_close_button"
+            maxScaleFactor={1.5}
             onPress={onClose}
             accessibilityLabel={t(
               'map:infoBottomSheet:closeAccessibilityLabel'
@@ -100,6 +101,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
                       },
                     ]}>
                     <Text
+                      maxFontSizeMultiplier={1.5}
                       style={[styles.badgeText, { color: colors.primaryText }]}>
                       2
                     </Text>
@@ -197,6 +199,7 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     minWidth: 40,
+    marginRight: 8,
   },
   severity: {
     paddingRight: 16,

@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -24,7 +25,9 @@ const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   iconStart,
   rounded,
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { colors } = useTheme() as CustomTheme;
+  const iconSize = Math.min(fontScale * 12, 24);
 
   return (
     <AccessibleTouchableOpacity
@@ -43,8 +46,8 @@ const CollapsibleHeader: React.FC<CollapsiblePanelHeaderProps> = ({
         {iconStart && (
           <View style={styles.iconStartContainer}>
             <Icon
-              width={12}
-              height={12}
+              width={iconSize}
+              height={iconSize}
               name={iconStart}
               style={{ color: colors.primaryText }}
             />

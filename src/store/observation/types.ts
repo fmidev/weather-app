@@ -62,6 +62,7 @@ export interface ObservationParameters {
   humidity: number | null;
   precipitation1h: number | null;
   pressure: number | null;
+  precipitationIntensity: number | null;
   ri_10min: number | null;
   snowDepth: number | null;
   temperature: number | null;

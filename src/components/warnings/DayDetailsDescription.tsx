@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+
+import Text from '@components/common/AppText';
 import { CustomTheme } from '@assets/colors';
 import { Warning } from '@store/warnings/types';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +44,6 @@ const DayDetailsDescription: React.FC<DayDetailsDescriptionProps> = ({ warnings 
 const styles = StyleSheet.create({
   container: {
     minHeight: 18,
-    maxHeight: 50,
   },
   flex: {
     flex: 1,

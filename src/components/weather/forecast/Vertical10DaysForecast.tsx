@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  View, Text, StyleSheet, useWindowDimensions, GestureResponderEvent, PanResponderGestureState,
+  View, StyleSheet, useWindowDimensions, GestureResponderEvent, PanResponderGestureState,
   AppState, AppStateStatus
 } from 'react-native';
 import Modal from 'react-native-modal';
@@ -9,6 +9,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
 
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme, BLACK } from '@assets/colors';
@@ -20,7 +21,7 @@ import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { selectForecastInvalidData, selectDisplayParams } from '@store/forecast/selectors';
 
-import Icon from '@assets/Icon';
+import Icon from '@components/common/ScalableIcon';
 import { uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 import { trackMatomoEvent } from '@utils/matomo';
@@ -58,14 +59,13 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   invalidData,
   displayParams,
 }) => {
-  const dimensions = useWindowDimensions();
+  const { width, height, fontScale} = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
-
-  const { width} = useWindowDimensions();
   const isWideDisplay = () => width > 500;
+  const largeFonts = fontScale >= 1.5;
 
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
@@ -81,8 +81,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const [modalActiveDayIndex, setModalActiveDayIndex] = useState(0);
   const [initialPosition, setInitialPosition] = useState<'start' | 'end'>('start');
 
-  const shouldHorizontalScroll = dimensions.height < 500 ||
-                                (dimensions.height < 900 && displayParams.length > MAX_PARAMETERS_WITHOUT_SCROLL);
+  const shouldHorizontalScroll = height < 500 ||
+                                (height < 900 && displayParams.length > MAX_PARAMETERS_WITHOUT_SCROLL);
 
   const appState = useRef<AppStateStatus>(AppState.currentState);
 
@@ -175,6 +175,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
 
     const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
     const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
+    const symbolSize = Math.min(64, fontScale * 44);
+    const rowHeight = fontScale ? 80 : 70;
 
     const showModal = (epochtime: number, activeDayIndex: number) => {
       setModalTimeStamp(epochtime*1000);
@@ -190,20 +192,20 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
           showModal(timeStamp, index)
         }}
         key={stepMoment.unix()}>
-        <View style={styles.container}>
+        <View style={[styles.container, { height: rowHeight }]}>
           <View style={[styles.row, { borderColor: colors.border }]} key={stepMoment.unix()}>
             <View style={styles.day}>
               <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
                 { uppercaseFirst(stepMoment.locale(locale).format(weekdayAbbreviationFormat)) }
               </Text>
-              <Text style={[styles.text, { color: colors.primaryText }]}>
+              <Text maxFontSizeMultiplier={1.3} style={[styles.text, { color: colors.primaryText }]}>
                 {stepMoment.locale(locale).format(dateFormat)}
               </Text>
             </View>
             <View accessibilityLabel={t(`symbols:${smartSymbol}`)}>
               {daySmartSymbol?.({
-                width: 44,
-                height: 44,
+                width: symbolSize,
+                height: symbolSize,
               })}
             </View>
             {activeParameters.includes('temperature') && (
@@ -217,11 +219,16 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                       ? 'forecast:celsius'
                       : 'forecast:fahrenheit'
                   ),
-                })}`}>{`${convertedMinTemperature}° ... ${convertedMaxTemperature}°`}</Text>
+                })}`}>{`${convertedMinTemperature}°`}<Text maxFontSizeMultiplier={1.5}> ... </Text>{`${convertedMaxTemperature}°`}</Text>
             )}
             {isWideDisplay() && activeParameters.includes('windSpeedMS') && (
               <View style={styles.flexRow}>
-                <Icon name="wind" color={colors.hourListText} />
+                <Icon
+                  name="wind"
+                  height={28}
+                  width={20}
+                  color={colors.hourListText}
+                />
                 <Text
                 style={[styles.text, styles.windWidth, { color: colors.primaryText }]}
                 accessibilityLabel={`${t('forecast:windSpeed')} ${t('forecast:fromTo', {
@@ -233,36 +240,37 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                       : 'forecast:kilometersPerHour'
                   ),
                 })}`}>
-                  {`${convertedMinWindSpeed} ... ${convertedMaxWindSpeed} ${windUnit}`}
+                  {`${convertedMinWindSpeed}`}<Text maxFontSizeMultiplier={1.5}> ... </Text>{`${convertedMaxWindSpeed} ${windUnit}`}
                 </Text>
               </View>
             )}
             {activeParameters.includes('precipitation1h') && (
               <View style={styles.precipitationContainer}>
                 <View style={[styles.flex, styles.flexRow, styles.center]}>
-                  <Icon name="precipitation" color={colors.hourListText} />
-                    <Text
-                      style={[styles.text, { color: colors.hourListText }]}
-                      accessibilityLabel={
-                        precipitationMissing ? t('forecast:precipitationMissing') :
-                          `${t('forecast:precipitation')} ${
-                          totalPrecipitation
-                            ?.toString()
-                            .replace('.', decimalSeparator) ||
-                          (0).toFixed(1).replace('.', decimalSeparator)
-                          } ${t(
-                            `forecast:${getForecastParameterUnitTranslationKey(
-                              precipitationUnit
-                            )}`
-                          )}`
-                        }
-                      >
-                      <Text style={styles.text}>{`${
-                        convertedTotalPrecipitation?.replace('.', decimalSeparator) ||
+                  { !largeFonts && <Icon width={18} height={18} name="precipitation" color={colors.hourListText} /> }
+                  <Text
+                    style={[styles.text, { color: colors.hourListText }]}
+                    maxFontSizeMultiplier={1.2}
+                    accessibilityLabel={
+                      precipitationMissing ? t('forecast:precipitationMissing') :
+                        `${t('forecast:precipitation')} ${
+                        totalPrecipitation
+                          ?.toString()
+                          .replace('.', decimalSeparator) ||
                         (0).toFixed(1).replace('.', decimalSeparator)
-                      }`}</Text>
-                      {` ${precipitationUnit}`}
-                    </Text>
+                        } ${t(
+                          `forecast:${getForecastParameterUnitTranslationKey(
+                            precipitationUnit
+                          )}`
+                        )}`
+                      }
+                    >
+                    <Text style={styles.text}>{`${
+                      convertedTotalPrecipitation?.replace('.', decimalSeparator) ||
+                      (0).toFixed(1).replace('.', decimalSeparator)
+                    }`}</Text>
+                    {` ${precipitationUnit}`}
+                  </Text>
                 </View>
                 <PrecipitationStrip
                   precipitationData={item.precipitationData}
@@ -334,6 +342,7 @@ const styles = StyleSheet.create({
   },
   flexRow: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   center: {
     alignItems: 'center',
@@ -381,11 +390,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   temperatureWidth: {
-    width: 100,
+    width: 130,
     textAlign: 'center',
   },
   windWidth: {
-    width: 100,
+    width: 150,
   }
 });
 

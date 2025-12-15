@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Linking, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, Linking, useWindowDimensions } from 'react-native';
 import FastImage from '@d11/react-native-fast-image';
 import moment from 'moment';
 import SimpleButton from '@components/common/SimpleButton';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import type { NewsItem } from '@store/news/types';
 import { trackMatomoEvent } from '@utils/matomo';
