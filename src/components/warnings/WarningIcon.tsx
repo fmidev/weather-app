@@ -53,7 +53,7 @@ const WarningIcon: React.FC<WarningIconProps> = (
         } : {}}/>
       )}
       { severityValue > 0 && physical?.windIntensity && showPhysical(type) && (
-        <Text maxFontSizeMultiplier={1.5} style={styles.text}>
+        <Text maxFontSizeMultiplier={1.5} style={[styles.text, { width: size }]}>
           {physical?.windIntensity}
         </Text>
       )}

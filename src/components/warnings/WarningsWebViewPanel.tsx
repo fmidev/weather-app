@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { PixelRatio, View, Text } from 'react-native';
+import { View, Text, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
 import { useTheme } from '@react-navigation/native';
@@ -21,8 +21,8 @@ const InvalidURLView = () => (
 const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
   updateInterval
 }) => {
+  const { fontScale } = useWindowDimensions()
   const [viewHeight, setViewHeight] = useState<number>(2000);
-  const fontScale: number = PixelRatio.getFontScale() ?? 1;
   const { dark } = useTheme() as CustomTheme;
   const webViewRef = useRef(null);
   const { i18n, t } = useTranslation('warnings');
@@ -64,7 +64,7 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
       <smartmet-alert-client
         language="${locale}"
         theme="${dark ? 'dark' : 'light'}"
-        font-scale="${fontScale}"
+        font-scale="${Math.min(fontScale, 2)}"
         gray-scale-selector="true"
       ></smartmet-alert-client>
       <script type="module" src="${webViewUrl}/index.js" refresh-interval="${updateInterval}"></script>
