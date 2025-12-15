@@ -1,12 +1,12 @@
 import React from 'react';
 import Icon from '@assets/Icon';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 
 import { Config } from '@config';
-
+import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
 
 import { CustomTheme } from '@assets/colors';
@@ -66,6 +66,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
         <View style={styles.closeButtonContainer}>
           <CloseButton
             testID="info_bottom_sheet_close_button"
+            maxScaleFactor={1.5}
             onPress={onClose}
             accessibilityLabel={t('infoBottomSheet.closeAccessibilityLabel')}
           />
@@ -199,13 +200,22 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
                   />
                 </View>
                 <View style={styles.sheetTitle}>
-                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                  <Text
+                    maxFontSizeMultiplier={1.5}
+                    style={[styles.text, { color: colors.hourListText }]}
+                  >
                     {t('map:infoBottomSheet:precipitation:light')}
                   </Text>
-                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                  <Text
+                    maxFontSizeMultiplier={1.5}
+                    style={[styles.text, { color: colors.hourListText }]}
+                  >
                     {t('map:infoBottomSheet:precipitation:moderate')}
                   </Text>
-                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                  <Text
+                    maxFontSizeMultiplier={1.5}
+                    style={[styles.text, { color: colors.hourListText }]}
+                  >
                     {t('map:infoBottomSheet:precipitation:strong')}
                   </Text>
                 </View>

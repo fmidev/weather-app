@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text, Switch } from 'react-native';
+import { View, StyleSheet, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
@@ -60,6 +61,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
+            maxScaleFactor={1.5}
             testID="layers_bottom_sheet_close_button"
             onPress={onClose}
             accessibilityLabel={t(
@@ -69,7 +71,10 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
         </View>
 
         <View style={styles.sheetTitle}>
-          <Text style={[styles.title, { color: colors.text }]}>
+          <Text
+            maxFontSizeMultiplier={1.5}
+            style={[styles.title, { color: colors.text }]}
+          >
             {t('map:layersBottomSheet:locationTitle')}
           </Text>
         </View>
@@ -94,7 +99,10 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 location: !mapLayers.location,
               })
             }>
-            <Text style={[styles.text, { color: colors.hourListText }]}>
+            <Text
+              maxFontSizeMultiplier={1.5}
+              style={[styles.text, { color: colors.hourListText }]}
+            >
               {t('map:layersBottomSheet:locationHint')}
             </Text>
             <Switch
@@ -114,7 +122,10 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
         </View>
 
         <View style={styles.sheetTitle}>
-          <Text style={[styles.title, { color: colors.text }]}>
+          <Text
+            maxFontSizeMultiplier={1.5}
+            style={[styles.title, { color: colors.text }]}
+          >
             {t('map:layersBottomSheet:mapLayersTitle')}
           </Text>
         </View>
@@ -143,7 +154,10 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 updateActiveOverlay(Number(layer.id));
               }}>
               <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.hourListText }]}>
+                <Text
+                  maxFontSizeMultiplier={1.5}
+                  style={[styles.text, { color: colors.hourListText }]}
+                >
                   {(layer?.name && layer?.name[locale]) || ''}
                 </Text>
                 <Icon
@@ -172,6 +186,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: -10,
     paddingHorizontal: 20,
+    paddingBottom: 8,
   },
   closeButtonContainer: {
     flexDirection: 'row',
@@ -179,13 +194,11 @@ const styles = StyleSheet.create({
   },
   sheetTitle: {
     flexDirection: 'row',
-    paddingBottom: 10,
+    paddingBottom: 8,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
   rowWrapper: {
-    paddingBottom: 28,
-    paddingTop: 15,
     marginBottom: 14,
   },
   withBorderBottom: {
@@ -195,7 +208,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 8,
     width: '100%',
   },
   title: {

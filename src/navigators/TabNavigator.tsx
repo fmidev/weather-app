@@ -290,7 +290,14 @@ const Navigator: React.FC<Props> = ({
     ...CommonHeaderOptions,
     path: 'search',
     headerBackTitleVisible: false,
-    headerTitle: t('navigation:search'),
+    headerTitle: () => (
+      <Text
+        style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
+        maxFontSizeMultiplier={1.5}
+      >
+        {t('navigation:search')}
+      </Text>
+    ),
     headerRight: () => (
       <HeaderButton
         testID="search_header_info_button"

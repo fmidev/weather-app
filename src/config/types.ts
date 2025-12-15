@@ -189,6 +189,7 @@ interface OnboardingWizard {
   enabled: boolean;
   languageSpecificLogo?: boolean;
   termsOfUseChanged?: boolean;
+  termsOfUseFormat?: 'jsx' | 'markdown';
 }
 
 interface Feedback {
