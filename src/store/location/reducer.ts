@@ -87,7 +87,8 @@ export default (
         location.area = '';
       } else if (
         location.id === state.current?.id &&
-        location.name === state.current?.name // App language may have changed
+        location.name === state.current?.name && // App language may have changed
+        action.isGeolocation === state.isGeolocation
       ) {
         return state; // No change
       }

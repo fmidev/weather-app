@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Text, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +8,8 @@ import { State } from '@store/types';
 import { selectCurrent, selectIsGeolocation } from '@store/location/selector';
 
 import { useOrientation } from '@utils/hooks';
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 const mapStateToProps = (state: State) => ({
@@ -51,9 +52,11 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
         <View style={styles.row}>
           {isGeolocation && (
             <Icon
+              maxScaleFactor={2}
               name="map-marker"
               style={{ color: colors.text }}
-              height={12}
+              width={14}
+              height={14}
             />
           )}
           <Text
