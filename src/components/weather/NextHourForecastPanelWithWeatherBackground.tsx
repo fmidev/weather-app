@@ -119,9 +119,11 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   // Don't show night weather background before sunset
 
+  const sunrise = moment(`${nextHourForecast.sunrise}Z`);
   const sunset = moment(`${nextHourForecast.sunset}Z`);
 
-  if (moment().isBefore(sunset) && nextHourForecast?.sunsetToday === 1 && smartSymbol > 100) {
+  if (moment().isAfter(sunrise) && moment().isBefore(sunset)
+    && nextHourForecast?.sunsetToday === 1 && smartSymbol > 100) {
     smartSymbol = smartSymbol - 100; // Convert to day variant
   }
 

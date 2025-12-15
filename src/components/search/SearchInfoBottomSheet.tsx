@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText'
+import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
 import { GRAY_1, CustomTheme } from '@assets/colors';
 

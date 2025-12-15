@@ -1454,6 +1454,16 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@jsamr/counter-style@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@jsamr/counter-style/-/counter-style-2.0.2.tgz#6f08cfa98e1f0416dc1d7f2d8ac38a8cdb004c5d"
+  integrity sha512-2mXudGVtSzVxWEA7B9jZLKjoXUeUFYDDtFrQoC0IFX9/Dszz4t1vZOmafi3JSw/FxD+udMQ+4TAFR8Qs0J3URQ==
+
+"@jsamr/react-native-li@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@jsamr/react-native-li/-/react-native-li-2.3.1.tgz#12a5b5f6e3971cec77b96bee58104eed0ae9314a"
+  integrity sha512-Qbo4NEj48SQ4k8FZJHFE2fgZDKTWaUGmVxcIQh3msg5JezLdTMMHuRRDYctfdHI6L0FZGObmEv3haWbIvmol8w==
+
 "@logicwind/react-native-matomo-tracker@^0.3.12":
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/@logicwind/react-native-matomo-tracker/-/react-native-matomo-tracker-0.3.12.tgz#1280d32fc0185d27c92cdd34e760e39fb665fa39"
@@ -4953,6 +4963,11 @@ get-symbol-description@^1.1.0:
     es-errors "^1.3.0"
     get-intrinsic "^1.2.6"
 
+github-slugger@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/github-slugger/-/github-slugger-2.0.0.tgz#52cf2f9279a21eb6c59dd385b410f0c0adda8f1a"
+  integrity sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw==
+
 glob-parent@^5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
@@ -5131,6 +5146,11 @@ hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
   dependencies:
     react-is "^16.7.0"
+
+html-entities@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.6.0.tgz#7c64f1ea3b36818ccae3d3fb48b6974208e984f8"
+  integrity sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==
 
 html-escaper@^2.0.0:
   version "2.0.2"
@@ -6408,6 +6428,11 @@ makeerror@1.0.12:
   dependencies:
     tmpl "1.0.5"
 
+marked@17.0.1:
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-17.0.1.tgz#9db34197ac145e5929572ee49ef701e37ee9b2e6"
+  integrity sha512-boeBdiS0ghpWcSwoNm/jJBwdpFaMnZWRzjA6SkUMYb40SVaN1x7mmfGKp0jvexGcx+7y2La5zRZsYFZI6Qpypg==
+
 marky@^1.2.2:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/marky/-/marky-1.3.0.tgz#422b63b0baf65022f02eda61a238eccdbbc14997"
@@ -7547,6 +7572,19 @@ react-native-maps@^1.26.18:
   dependencies:
     "@types/geojson" "^7946.0.13"
 
+react-native-marked@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-marked/-/react-native-marked-7.1.0.tgz#dcb84d4954e71c081e54d9036f3319f6ec253e2b"
+  integrity sha512-wc7DkINC89JuZBp15v3Jcpd+B7YqbytkbMbQb/ui+tacmguZ5HB7421PSO2PSKJCP2eK0pokjRwi3KZ2UxH5CQ==
+  dependencies:
+    "@jsamr/counter-style" "2.0.2"
+    "@jsamr/react-native-li" "2.3.1"
+    github-slugger "2.0.0"
+    html-entities "2.6.0"
+    marked "17.0.1"
+    react-native-reanimated-table "0.0.2"
+    svg-parser "2.0.4"
+
 react-native-mmkv@^3.3.0:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-3.3.3.tgz#1f0326f6314e23725af8145964343224d074e6cd"
@@ -7568,6 +7606,11 @@ react-native-raw-bottom-sheet@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.2.1.tgz#20151ee421895b9b06614f3114841fdc55bd8070"
   integrity sha512-9MkumyiXEmtSx01cTYOzauUXPRckLSQP1DrRc9zq7TMqtcKk0n67tMyzy8qsrgEPLs63+Kjr/eJc6PlaSgpZ5g==
+
+react-native-reanimated-table@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated-table/-/react-native-reanimated-table-0.0.2.tgz#015392dbc12fb03fd872d5a7eea9bc84c4f3a685"
+  integrity sha512-OeuqfU1AFEmHNTJlEOLWrV78JgAXnM0/ZrCm0Ab+9e5nwYJ+xab/UFXkNKz3Gyf08ZfLSNzwMQRjt3eZWPWoGA==
 
 react-native-reanimated@^4.1.2:
   version "4.1.2"
@@ -7600,10 +7643,10 @@ react-native-svg-transformer@^1.5.0:
     "@svgr/plugin-svgo" "^8.1.0"
     path-dirname "^1.0.2"
 
-react-native-svg@^15.12.0:
-  version "15.13.0"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-15.13.0.tgz#5244b03ff6fa4c8ac7c8586d73cf8d1f4f665236"
-  integrity sha512-/YPK+PAAXg4T0x2d2vYPvqqAhOYid2bRKxUVT7STIyd1p2JxWmsGQkfZxXCkEFN7TwLfIyVlT5RimT91Pj/qXw==
+react-native-svg@^15.15.1:
+  version "15.15.1"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-15.15.1.tgz#0b08716f5c389ef8550a73492c985c7b23849d65"
+  integrity sha512-ZUD1xwc3Hwo4cOmOLumjJVoc7lEf9oQFlHnLmgccLC19fNm6LVEdtB+Cnip6gEi0PG3wfvVzskViEtrySQP8Fw==
   dependencies:
     css-select "^5.1.0"
     css-tree "^1.1.3"
@@ -8553,7 +8596,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-svg-parser@^2.0.4:
+svg-parser@2.0.4, svg-parser@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.4.tgz#fdc2e29e13951736140b76cb122c8ee6630eb6b5"
   integrity sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==
