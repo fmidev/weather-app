@@ -2,7 +2,9 @@ import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+
+import Text from '@components/common/AppText'
 
 const TypeColorRow = ({
   severity,
@@ -51,7 +53,6 @@ const styles = StyleSheet.create({
   iconWrapper: {
     minWidth: 40,
   },
-
   row: {
     flexDirection: 'row',
     alignItems: 'center',

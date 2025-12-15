@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
+
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -72,6 +74,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
               }}>
               <View style={styles.iconPadding}>
                 <WarningIcon
+                  maxScaleFactor={1.5}
                   type={type}
                   severityDescription={severity}
                   physical={physical}
