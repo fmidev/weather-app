@@ -127,6 +127,7 @@
       "pop": "Sannolikheten för nederbörd (%)",
       "dewPoint": "Daggunkt (°{{ unit }})",
       "relativeHumidity": "Relativ fuktighet (%)",
+      "humidity": "Relativ fuktighet (%)",
       "pressure": "Lufttryck ({{ unit }})",
       "uvCumulated": "UV index",
       "dayLength": "Dagens längd",

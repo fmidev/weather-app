@@ -127,6 +127,7 @@
       "pop": "Sateen todennäköisyys (%)",
       "dewPoint": "Kastepiste (°{{ unit }})",
       "relativeHumidity": "Suhteellinen kosteus (%)",
+      "humidity": "Suhteellinen kosteus (%)",
       "pressure": "Ilmanpaine ({{ unit }})",
       "uvCumulated": "UV indeksi",
       "dayLength": "Päivän pituus",
