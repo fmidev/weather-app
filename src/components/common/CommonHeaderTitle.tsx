@@ -60,6 +60,7 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
             />
           )}
           <Text
+            numberOfLines={1}
             accessibilityRole="header"
             accessibilityLabel={
               isGeolocation ? `${title()}, ${t('currentLocation')}` : title()
@@ -68,14 +69,6 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
             {title()}
           </Text>
         </View>
-        {currentLocation.country !== 'FI' && (
-          <Text
-            style={[
-              styles.timezone,
-              !isLandscape && styles.timeZoneMarginBottom,
-              { color: colors.text },
-            ]}>{`${t('timezone')}: ${currentLocation.timezone}`}</Text>
-        )}
       </AccessibleTouchableOpacity>
     </View>
   );
@@ -94,16 +87,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
     textAlign: 'center',
   },
-  timezone: {
-    fontFamily: 'Roboto-Regular',
-    fontSize: 12,
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  timeZoneMarginBottom: {
-    marginBottom: 10,
   },
   portraitWidth: {
     maxWidth: '97%',
