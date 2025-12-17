@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
+import type { Text as RNText } from 'react-native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Text from '@components/common/AppText';
@@ -24,7 +25,7 @@ const TermsAndConditionsScreen: React.FC = () => {
     i18n: { language },
   } = useTranslation('accessibility');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef<Text>(null);
+  const titleRef = useRef<RNText>(null);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {
@@ -285,7 +286,6 @@ const TermsAndConditionsScreen: React.FC = () => {
                 name="open-in-new"
                 color={colors.primaryText}
                 height={18}
-                maxScaleFactor={1.5}
               />
             </View>
           </AccessibleTouchableOpacity>
@@ -314,7 +314,6 @@ const TermsAndConditionsScreen: React.FC = () => {
                 name="open-in-new"
                 color={colors.primaryText}
                 height={18}
-                maxScaleFactor={1.5}
               />
             </View>
           </AccessibleTouchableOpacity>
