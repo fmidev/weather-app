@@ -185,11 +185,17 @@ interface DarkThemeEnabled {
 
 type Themes = LightThemeEnabled | DarkThemeEnabled;
 
+interface BackgroundImageProperties {
+  top: number;
+  height: number;
+}
+
 interface OnboardingWizard {
   enabled: boolean;
   languageSpecificLogo?: boolean;
   termsOfUseChanged?: boolean;
   termsOfUseFormat?: 'jsx' | 'markdown';
+  backgroundImageProperties?: BackgroundImageProperties;
 }
 
 interface Feedback {
