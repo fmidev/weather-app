@@ -30,7 +30,7 @@ type OnboardingScreenProps = {
 };
 
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
-  const { languageSpecificLogo } = Config.get('onboardingWizard');
+  const { languageSpecificLogo, backgroundImageProperties } = Config.get('onboardingWizard');
   const { t, i18n } = useTranslation('onboarding');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
@@ -142,10 +142,26 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         style={styles.imageBackground}
         resizeMode="contain"
         source={
-          dark
-            ? require(`../assets/images/weather-background-dark.png`)
-            : require(`../assets/images/weather-background-light.png`)
+          backgroundImageProperties ? undefined :
+            dark ? require(`../assets/images/weather-background-dark.png`) : require(`../assets/images/weather-background-light.png`)
         }>
+        { backgroundImageProperties &&
+          <Image
+            style={[
+              styles.customBackgroundImage,
+              {
+                top: backgroundImageProperties?.top ?? 0,
+                height: backgroundImageProperties?.height ?? '100%'
+              }
+            ]}
+            resizeMode="contain"
+            source={
+              dark
+                ? require(`../assets/images/weather-background-dark.png`)
+                : require(`../assets/images/weather-background-light.png`)
+            }
+          />
+        }
         <Image
           testID="onboarding_logo_image"
           source={
@@ -336,6 +352,12 @@ const styles = StyleSheet.create({
     right: 40,
     bottom: 16,
   },
+  customBackgroundImage: {
+    position: 'absolute',
+    top: 120,
+    width: '100%',
+    height: 200
+  }
 });
 
 export default OnboardingScreen;

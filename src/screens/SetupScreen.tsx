@@ -33,7 +33,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   setUpDone,
   termsOfUseChanged
 }) => {
-  const { languageSpecificLogo } = Config.get('onboardingWizard');
+  const { languageSpecificLogo, backgroundImageProperties } = Config.get('onboardingWizard');
   const { t, i18n } = useTranslation('setUp');
   const { colors, dark } = useTheme() as CustomTheme;
   const [didViewTerms, setDidViewTerms] = useState<boolean>(false);
@@ -202,10 +202,26 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
         style={styles.imageBackground}
         resizeMode="contain"
         source={
-          dark
-            ? require('../assets/images/weather-background-dark.png')
-            : require('../assets/images/weather-background-light.png')
+          backgroundImageProperties ? undefined :
+            dark ? require(`../assets/images/weather-background-dark.png`) : require(`../assets/images/weather-background-light.png`)
         }>
+        { backgroundImageProperties &&
+          <Image
+            style={[
+              styles.customBackgroundImage,
+              {
+                top: backgroundImageProperties?.top ?? 0,
+                height: backgroundImageProperties?.height ?? '100%'
+              }
+            ]}
+            resizeMode="contain"
+            source={
+              dark
+                ? require(`../assets/images/weather-background-dark.png`)
+                : require(`../assets/images/weather-background-light.png`)
+            }
+          />
+        }
         <Image
           source={
             dark
@@ -383,6 +399,12 @@ const styles = StyleSheet.create({
   marginBottom40: {
     marginBottom: 40,
   },
+  customBackgroundImage: {
+    position: 'absolute',
+    top: 120,
+    width: '100%',
+    height: 200
+  }
 });
 
 export default SetupScreen;
