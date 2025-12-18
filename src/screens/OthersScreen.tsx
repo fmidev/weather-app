@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, SafeAreaView, Text, StyleSheet, Linking } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Linking } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { OthersStackParamList } from '@navigators/types';
 import { Config } from '@config';
@@ -285,6 +286,7 @@ const styles = StyleSheet.create({
   },
   socialRow: {
     flexDirection: 'row',
+    height: 50,
   },
   withMarginRight: {
     marginRight: 12,

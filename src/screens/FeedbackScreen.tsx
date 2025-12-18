@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Linking, Platform } from 'react-native';
+import { View, StyleSheet, Linking, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Config } from '@config';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 
 import packageJSON from '../../package.json';
