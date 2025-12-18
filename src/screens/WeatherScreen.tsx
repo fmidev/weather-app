@@ -248,7 +248,10 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     <GradientWrapper>
       <View
         testID="weather_view"
-        style={ Platform.OS === 'android' ? styles.android : null }
+        style={
+          Platform.OS === 'android' && weatherConfig.layout !== 'legacyWithoutBackgroundColor'
+            ? styles.legacyAndroid : null
+        }
       >
         <ScrollView
           testID="weather_scrollview"
@@ -270,7 +273,7 @@ const styles = StyleSheet.create({
   container: {
     minHeight: '100%',
   },
-  android: {
+  legacyAndroid: {
     marginBottom: 70,
   },
   contentContainer: {

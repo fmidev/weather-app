@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { BLACK, GRAYISH_BLUE, CustomTheme } from '@assets/colors';
 import { CapWarning } from '@store/warnings/types';
 import WarningBlock from './WarningBlock';
+import { severityList } from '@store/warnings/constants';
 
 const DateIndicator = ({
   weekDay,
@@ -41,6 +42,7 @@ const TextList = ({
   const { width } = useWindowDimensions();
   const [xOffset, setXOffset] = useState<number>(0);
   const { t } = useTranslation('warnings');
+  const severities = [...severityList].reverse();
 
   const groupAlerts = useCallback((data?: CapWarning[]) => {
     const alerts: { [key: string]: CapWarning[] } = {};
@@ -55,6 +57,17 @@ const TextList = ({
     () => groupAlerts(capData),
     [capData, groupAlerts]
   );
+
+  const sortedGroupNames = useMemo<string[]>(
+    () => severities.flatMap(severity => {
+        return Object.keys(groupedWarnings)?.flatMap((warningGroup) => {
+          const infoMaybeArray = groupedWarnings[warningGroup][0].info;
+          const info = Array.isArray(infoMaybeArray) ? infoMaybeArray[0] : infoMaybeArray;
+          return severity == info.severity ? warningGroup : [];
+      })}),
+    [groupedWarnings, severities]
+  );
+
   return (
     <>
       <View
@@ -76,7 +89,7 @@ const TextList = ({
           ))}
         </ScrollView>
       </View>
-      {Object.keys(groupedWarnings)?.map((warningGroup) => (
+      {sortedGroupNames.map((warningGroup) => (
         <WarningBlock
           dates={dates}
           warnings={groupedWarnings[warningGroup]}
