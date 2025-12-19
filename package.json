@@ -1,6 +1,7 @@
 {
   "name": "MobileWeather",
   "version": "6.0.7",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

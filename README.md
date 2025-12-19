@@ -9,6 +9,10 @@
 
 Follow this [guide](https://reactnative.dev/docs/0.74/environment-setup) for setting up React Native development environment.
 
+## **Licence**
+This project is licensed under the MIT Licence - see the [LICENSE](LICENSE) file for details.
+
+
 ## **Installation**
 
 `git clone --recurse-submodules https://github.com/fmidev/weather-app.git `
