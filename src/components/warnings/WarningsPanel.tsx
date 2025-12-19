@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   AccessibilityInfo,
   findNodeHandle,
 } from 'react-native';
@@ -20,7 +19,9 @@ import {
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
-import Icon from '@assets/Icon';
+
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -140,6 +141,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                   color={colors.primaryText}
                   height={24}
                   width={24}
+                  maxScaleFactor={1.5}
                 />
               </View>
             </AccessibleTouchableOpacity>
@@ -172,6 +174,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                       },
                     ]}>
                     <Text
+                      maxFontSizeMultiplier={1.5}
                       style={[styles.badgeText, { color: colors.primaryText }]}>
                       {count}
                     </Text>
@@ -225,6 +228,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                       {moment(date).format(weekdayAbbreviationFormat)}
                     </Text>
                     <Text
+                      maxFontSizeMultiplier={1.5}
                       style={[
                         styles.cardText,
                         index === selectedDay ? styles.bold : styles.medium,
@@ -358,7 +362,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 65,
+    minHeight: 65,
   },
   startBorderRadius: {
     borderTopLeftRadius: 4,

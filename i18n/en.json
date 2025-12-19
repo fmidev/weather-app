@@ -127,6 +127,7 @@
       "pop": "Probability of precipitation (%)",
       "dewPoint": "Dew point (°{{ unit }})",
       "relativeHumidity": "Relative humidity (%)",
+      "humidity": "Relative humidity (%)",
       "pressure": "Pressure ({{ unit }})",
       "uvCumulated": "UV index",
       "dayLength": "Day length",
@@ -220,8 +221,9 @@
     "measurements": {
       "temperature": "Temperature",
       "dewPoint": "Dew point",
-      "precipitation1h": "Precipitation",
       "precipitation": "Precipitation",
+      "precipitation1h": "Hourly precipitation",
+      "precipitationIntensity": "Precipitation now",
       "windSpeedMS": "Wind",
       "windSpeed": "Wind speed",
       "windDirection": "Wind direction",

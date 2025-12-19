@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
   Platform,
@@ -13,12 +12,13 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme } from '@react-navigation/native';
 import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
 
 import { setItem, LOCALE } from '@utils/async_storage';
-import { UNITS } from '@utils/units';
+import { getUnitsHiddenInSettings, UNITS } from '@utils/units';
 import { State } from '@store/types';
 import {
   selectUnits,
@@ -85,6 +85,7 @@ const SettingsScreen: React.FC<Props> = ({
     pressure: useRef<RBSheet>(null),
   } as { [key: string]: React.RefObject<RBSheet> };
   const { languages, themes, showUnitSettings } = Config.get('settings');
+  const hiddenUnits = getUnitsHiddenInSettings();
 
   useEffect(() => {
     const subscriber = AppState.addEventListener(
@@ -215,7 +216,7 @@ const SettingsScreen: React.FC<Props> = ({
               accessibilityRole="link"
               accessibilityHint={t('settings:locationSettingHint')}>
               <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
+                <Text style={[styles.text, styles.settingName, { color: colors.text }]}>
                   {locationPermission
                     ? locationPermissionsDisplayString[locationPermission]
                     : '-'}
@@ -254,7 +255,7 @@ const SettingsScreen: React.FC<Props> = ({
               </View>
             </View>
             <View>
-              {Object.keys(units).map((key, i) => (
+              {Object.keys(units).map((key, i) => hiddenUnits.includes(key) ? null : (
                 <View
                   key={key}
                   style={[
@@ -675,7 +676,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     width: '100%',
-    height: 48,
+    minHeight: 48,
   },
   text: {
     fontSize: 16,
@@ -692,6 +693,8 @@ const styles = StyleSheet.create({
   editRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    maxWidth: '40%',
   },
   sheetContainer: {
     borderTopLeftRadius: 10,
@@ -714,6 +717,9 @@ const styles = StyleSheet.create({
   draggableIcon: {
     width: 65,
     backgroundColor: GRAY_1,
+  },
+  settingName: {
+    maxWidth: '60%',
   },
 });
 

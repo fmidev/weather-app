@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import { CustomTheme } from '@assets/colors';
 
 type PanelHeaderProps = {

@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
@@ -20,6 +21,7 @@ import { GRAY_1, CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackMatomoEvent } from '@utils/matomo';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const mapStateToProps = (state: State) => ({
   dataId: selectDataId(state),
@@ -69,8 +71,8 @@ const ObservationStationListBottomSheet: React.FC<
             {t('observation:observationStation')}
           </Text>
         </View>
-        {stationList.length > 0 &&
-          stationList.map((station) => (
+        <ScrollView>
+          {stationList.length > 0 && stationList.map((station) => (
             <AccessibleTouchableOpacity
               accessible
               accessibilityState={{ selected: station.id === stationId }}
@@ -90,7 +92,8 @@ const ObservationStationListBottomSheet: React.FC<
                 onClose();
               }}>
               <View style={styles.row}>
-                <Text style={[styles.text, { color: colors.text }]}>
+                <Text
+                  style={[styles.text, { color: colors.text }]}>
                   {`${station.name} – ${t(
                     'observation:distance'
                   )} ${toStringWithDecimal(
@@ -111,6 +114,7 @@ const ObservationStationListBottomSheet: React.FC<
               </View>
             </AccessibleTouchableOpacity>
           ))}
+        </ScrollView>
       </View>
     </View>
   );
@@ -133,6 +137,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'flex-start',
+    maxHeight: 100,
   },
   row: {
     width: '100%',
@@ -140,8 +145,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: 10,
-    paddingLeft: 12,
     minHeight: 44,
+    maxHeight: 150,
   },
   title: {
     fontSize: 16,

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  ActivityIndicator, View, Text, StyleSheet, ImageBackground, useWindowDimensions, Platform
+  ActivityIndicator, View, StyleSheet, ImageBackground, useWindowDimensions, Platform
 } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -36,6 +36,7 @@ import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import NextHourForecastBar from './forecast/NextHourForecastBar';
+import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
@@ -76,7 +77,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   const navigation = useNavigation<NavigationProp<WeatherStackParamList>>()
   const insets = useSafeAreaInsets();
-  const { width} = useWindowDimensions();
+  const { width, fontScale } = useWindowDimensions();
 
   if (loading || !nextHourForecast) {
     return (
@@ -118,9 +119,11 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   // Don't show night weather background before sunset
 
+  const sunrise = moment(`${nextHourForecast.sunrise}Z`);
   const sunset = moment(`${nextHourForecast.sunset}Z`);
 
-  if (moment().isBefore(sunset) && nextHourForecast?.sunsetToday === 1 && smartSymbol > 100) {
+  if (moment().isAfter(sunrise) && moment().isBefore(sunset)
+    && nextHourForecast?.sunsetToday === 1 && smartSymbol > 100) {
     smartSymbol = smartSymbol - 100; // Convert to day variant
   }
 
@@ -134,6 +137,9 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   );
   const textColor = WHITE;
   const overlayColor = 'rgba(0,0,0,0.3)';
+  const largeFonts = fontScale >= 1.5;
+  const contentHeight = largeFonts ? 600 : 420;
+  const iconSize = Math.min(fontScale * 22, 44);
 
   return (
     <ImageBackground
@@ -155,7 +161,9 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
         end={{ x: 0.5, y: 0 }}
         style={StyleSheet.absoluteFill}
       />
-      <SafeAreaView style={[styles.container, { paddingTop: paddingTop, paddingBottom: paddingBottom }]} >
+      <SafeAreaView style={[
+        styles.container, { paddingTop: paddingTop, paddingBottom: paddingBottom, height: contentHeight }
+        ]} >
         <View style={[styles.row]}>
           <IconButton
             testID="locate_button"
@@ -167,6 +175,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               trackMatomoEvent('User action', 'Weather', 'Geolocation');
               getGeolocation(setCurrentLocation, t);
             }}
+            iconSize={iconSize}
             circular
           />
           <View style={styles.locationTextContainer}>
@@ -200,11 +209,15 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               trackMatomoEvent('User action', 'Weather', 'Open search - button');
               navigation.navigate('Search')
             }}
+            iconSize={iconSize}
             circular
           />
         </View>
         <View style={[styles.alignCenter, styles.forecastVerticalSpace]}>
-          <Text style={[styles.largeText, styles.centeredText, { color: textColor }]}>
+          <Text
+            numberOfLines={1}
+            maxFontSizeMultiplier={1.5}
+            style={[styles.largeText, styles.centeredText, { color: textColor }]}>
             {t(`symbols:${smartSymbol.toString() }`)}
           </Text>
         </View>
@@ -214,6 +227,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
             )}`}>
             <Text
+              maxFontSizeMultiplier={1.5}
               style={[
                 styles.temperatureText,
                 { color: textColor }
@@ -221,6 +235,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
               {numericOrDash(temperatureValue)}
             </Text>
             <Text
+              maxFontSizeMultiplier={1.5}
               style={[styles.unitText, { color: textColor }]}
               >
               °{temperatureUnit}
@@ -297,7 +312,8 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     width: '100%',
-    paddingVertical: 16
+    paddingVertical: 16,
+    flexDirection: 'column'
   },
 });
 

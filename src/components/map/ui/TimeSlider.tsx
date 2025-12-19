@@ -9,7 +9,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   StyleSheet,
-  Text,
   useWindowDimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -23,6 +22,7 @@ import { useTheme, useIsFocused } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -340,6 +340,7 @@ const getLayerAnimationSpeed = () => {
           {sliderTime > 0 && (
             <>
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.currentTimeText,
                   {
@@ -349,6 +350,7 @@ const getLayerAnimationSpeed = () => {
                 {currentSliderTimeCapitalized}
               </Text>
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.currentTimeText,
                   styles.textRight,

@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   AccessibilityInfo,
   View,
-  Text,
   TextInput,
   StyleSheet,
   Keyboard,
@@ -14,7 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
 
 import { MapStackParamList, WeatherStackParamList } from '@navigators/types';
@@ -160,12 +160,14 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         ]}>
         <Icon
           name="search"
+          maxScaleFactor={1.5}
           width={22}
           height={22}
           style={[styles.searchIcon, { color: colors.text }]}
         />
         <TextInput
           testID="search_input"
+          maxFontSizeMultiplier={2}
           accessibilityRole="search"
           style={[
             styles.input,
@@ -328,6 +330,7 @@ const styles = StyleSheet.create({
   input: {
     flexGrow: 1,
     paddingVertical: 0,
+    paddingHorizontal: 8,
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
   },

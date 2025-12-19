@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -54,12 +55,18 @@ const AreaList: React.FC<AreaListProps> = ({
           styles.listItem,
           { borderBottomColor: colors.border },
         ]}>
-        <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
-        <Text
-          accessibilityLabel=""
-          style={[styles.regular, { color: colors.hourListText }]}>
-          {t('remember')}
-        </Text>
+          <View style={styles.shrink}>
+            <Text style={[styles.title, { color: colors.text }]}>
+              {title}
+            </Text>
+          </View>
+          <View style={styles.remember}>
+            <Text
+              accessibilityLabel=""
+              style={[styles.regular, { color: colors.hourListText }]}>
+              {t('remember')}
+            </Text>
+          </View>
       </View>
 
       <View>
@@ -156,6 +163,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 2,
     fontFamily: 'Roboto-Bold',
+    flex: 1,
+    flexDirection: 'row',
   },
   title: {
     fontSize: 16,
@@ -164,6 +173,7 @@ const styles = StyleSheet.create({
   regular: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
+    textAlign: 'right',
   },
   listHeader: {
     justifyContent: 'space-between',
@@ -199,6 +209,12 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: 24,
     height: 24,
+  },
+  shrink: {
+    flexShrink: 1
+  },
+  remember: {
+    flexGrow: 1,
   },
   clearRow: { flexDirection: 'row', justifyContent: 'flex-end' },
 });

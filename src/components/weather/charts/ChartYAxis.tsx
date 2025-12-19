@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { ChartDomain, ChartMinMax, ChartType } from './types';
 import { UnitMap } from '@store/settings/types';
 import { Config } from '@config';
+import { useWindowDimensions } from 'react-native';
 
 type ChartYAxisProps = {
   chartType: ChartType;
@@ -32,6 +33,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
   units,
   secondaryParameterMissing,
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
@@ -86,7 +88,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
     textAnchor: right ? 'start' : 'end',
     angle: 0,
     fill: colors.hourListText,
-    fontSize: 12,
+    fontSize: Math.min(fontScale * 12, 20),
     fontFamily: 'Roboto',
   };
 
@@ -130,7 +132,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
       label={labelText}
       style={{
         tickLabels: {
-          fontSize: 14,
+          fontSize: Math.min(14 * fontScale, 20),
           fontFamily: 'Roboto',
           fill: colors.hourListText,
         },

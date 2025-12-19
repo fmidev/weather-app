@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import {
   ScrollView,
-  Text,
   View,
   StyleSheet,
   AccessibilityInfo,
@@ -10,8 +9,10 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
+import type { Text as RNText } from 'react-native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 
 import { CustomTheme } from '@assets/colors';
@@ -24,7 +25,7 @@ const TermsAndConditionsScreen: React.FC = () => {
     i18n: { language },
   } = useTranslation('accessibility');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef<Text>(null);
+  const titleRef = useRef<RNText>(null);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {
@@ -152,6 +153,7 @@ const TermsAndConditionsScreen: React.FC = () => {
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.linkText,
                   {
@@ -164,6 +166,7 @@ const TermsAndConditionsScreen: React.FC = () => {
                 name="open-in-new"
                 color={colors.primaryText}
                 height={18}
+                maxFontSizeMultiplier={1.5}
               />
             </View>
           </AccessibleTouchableOpacity>
@@ -179,6 +182,7 @@ const TermsAndConditionsScreen: React.FC = () => {
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.linkText,
                   {
@@ -269,6 +273,7 @@ const TermsAndConditionsScreen: React.FC = () => {
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.linkText,
                   {
@@ -296,6 +301,7 @@ const TermsAndConditionsScreen: React.FC = () => {
             <View
               style={[styles.link, { borderBottomColor: colors.primary }]}>
               <Text
+                maxFontSizeMultiplier={1.5}
                 style={[
                   styles.linkText,
                   {
@@ -347,6 +353,7 @@ const styles = StyleSheet.create({
   linkText: {
     fontFamily: 'Roboto-Bold',
     fontSize: 16,
+    maxWidth: '90%',
   },
   bold: {
     fontFamily: 'Roboto-Bold',

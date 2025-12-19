@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
 import { useOrientation } from '@utils/hooks';
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
 type HeaderButtonProps = {
@@ -46,12 +47,14 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
         ]}>
         <Icon
           name={icon}
+          maxScaleFactor={1}
           style={{ color: colors.text }}
           width={24}
           height={24}
         />
         {!!title && (
           <Text
+            maxFontSizeMultiplier={1.2}
             style={[
               styles.text,
               isLandscape && right ? styles.marginRight : undefined,
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    minWidth: 100,
+    minWidth: 105,
     justifyContent: 'center',
   },
   row: {

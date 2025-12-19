@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import {
   ScrollView,
-  Text,
   View,
   StyleSheet,
   AccessibilityInfo,
@@ -10,10 +9,18 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Markdown from "react-native-marked";
+import type { Text as RNText } from 'react-native';
 
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-
 import { CustomTheme } from '@assets/colors';
+import { Config } from '@config';
+
+import termsFi from '@assets/markdown/TermsOfUseFi';
+import termsSv from '@assets/markdown/TermsOfUseSv';
+import termsEn from '@assets/markdown/TermsOfUseEn';
+import termsEs from '@assets/markdown/TermsOfUseEs';
 
 type TermsAndConditionsScreenProps = {
   showCloseButton?: boolean;
@@ -24,10 +31,11 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
   showCloseButton,
   onClose,
 }) => {
-  const { t } = useTranslation('termsAndConditions');
+  const { t, i18n } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef<Text>(null);
+  const titleRef = useRef<RNText>(null);
   const insets = useSafeAreaInsets();
+  const { termsOfUseFormat } = Config.get('onboardingWizard');
 
   const closeButtonMarginBottom = Math.round(insets.bottom);
 
@@ -40,80 +48,101 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
     }
   });
 
+  const getMarkdown = ():string => {
+    switch (i18n.language) {
+      case 'fi': return termsFi;
+      case 'sv': return termsSv;
+      case 'es': return termsEs;
+      default: return termsEn;
+    }
+  }
+
   return (
     <View
       testID="terms_and_conditions_view"
       style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView
-        style={styles.scrollContainer}
-        contentContainerStyle={styles.withPaddingBottom}
-        showsVerticalScrollIndicator={false}>
-        <Text
-          ref={titleRef}
-          style={[styles.title, { color: colors.text }]}
-          accessibilityRole="header">
-          {t('generalTitle')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('generalDescription')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.text }]}
-          accessibilityRole="header">
-          {t('contentsTitle')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('contentsDescription')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.text }]}
-          accessibilityRole="header">
-          {t('personalInfoTitle')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('personalInfoDescription')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.text }]}
-          accessibilityRole="header">
-          {t('immaterialRightsTitle')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('immaterialRightsDescription')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.text }]}
-          accessibilityRole="header">
-          {t('liabilityTitle')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('liabilityDescription')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.text }]}
-          accessibilityRole="header">
-          {t('rightToChangesTitle')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('rightToChangesDescription')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.text }]}
-          accessibilityRole="header">
-          {t('applicableLawTitle')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('applicableLawDescription')}
-        </Text>
-        <Text
-          style={[styles.title, { color: colors.text }]}
-          accessibilityRole="header">
-          {t('contactDetailsTitle')}
-        </Text>
-        <Text style={[styles.body, { color: colors.hourListText }]}>
-          {t('contactDetailsDescription')}
-        </Text>
-      </ScrollView>
+      { termsOfUseFormat === 'markdown' ?
+          <View style={styles.markdown}>
+            <Markdown
+              value={getMarkdown()}
+              flatListProps={{
+                initialNumToRender: 8,
+              }}
+            />
+          </View>
+        : (
+          <ScrollView
+            style={styles.scrollContainer}
+            contentContainerStyle={styles.withPaddingBottom}
+            showsVerticalScrollIndicator={false}>
+            <Text
+              ref={titleRef}
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('generalTitle')}
+            </Text>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('generalDescription')}
+            </Text>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('contentsTitle')}
+            </Text>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('contentsDescription')}
+            </Text>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('personalInfoTitle')}
+            </Text>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('personalInfoDescription')}
+            </Text>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('immaterialRightsTitle')}
+            </Text>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('immaterialRightsDescription')}
+            </Text>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('liabilityTitle')}
+            </Text>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('liabilityDescription')}
+            </Text>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('rightToChangesTitle')}
+            </Text>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('rightToChangesDescription')}
+            </Text>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('applicableLawTitle')}
+            </Text>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('applicableLawDescription')}
+            </Text>
+            <Text
+              style={[styles.title, { color: colors.text }]}
+              accessibilityRole="header">
+              {t('contactDetailsTitle')}
+            </Text>
+            <Text style={[styles.body, { color: colors.hourListText }]}>
+              {t('contactDetailsDescription')}
+            </Text>
+          </ScrollView>
+        )
+      }
       {showCloseButton && (
         <View
           style={[
@@ -184,6 +213,10 @@ const styles = StyleSheet.create({
   },
   withPaddingBottom: {
     paddingBottom: 24,
+  },
+  markdown: {
+    padding: 16,
+    flexShrink: 1,
   },
 });
 

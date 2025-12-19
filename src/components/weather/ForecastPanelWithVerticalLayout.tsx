@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +20,8 @@ import {
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
 
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectTimeZone } from '@store/location/selector';
 import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecast/actions';
@@ -163,6 +164,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                   },
                 ]}>
                 <Text
+                  maxFontSizeMultiplier={1.6}
                   style={[
                     styles.forecastText,
                     displayFormat === TABLE && styles.selectedText,
@@ -202,6 +204,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                   },
                 ]}>
                 <Text
+                  maxFontSizeMultiplier={1.6}
                   style={[
                     styles.forecastText,
                     displayFormat === CHART && styles.selectedText,
@@ -238,6 +241,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 }
                 width={24}
                 height={24}
+                maxScaleFactor={1.5}
               />
             </AccessibleTouchableOpacity>
             <AccessibleTouchableOpacity
@@ -260,6 +264,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                 }
                 height={24}
                 width={24}
+                maxScaleFactor={1.5}
               />
             </AccessibleTouchableOpacity>
           </View>
@@ -358,7 +363,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   bottomSheetButton: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 6,
   },
   sheetContainer: {
     borderTopLeftRadius: 10,

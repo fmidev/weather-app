@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+
+import Text from '@components/common/AppText';
 import { CustomTheme, WHITE, BLACK } from '@assets/colors';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
@@ -39,6 +41,7 @@ function HourSelectorButton({
           active && { backgroundColor: colors.selectedButton },
         ]}>
         <Text
+          maxFontSizeMultiplier={1.5}
           style={[
             styles.forecastText,
             active && styles.selectedText,

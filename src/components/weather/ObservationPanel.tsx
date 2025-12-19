@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -36,6 +36,7 @@ import { ChartType } from './charts/types';
 import ParameterSelector from './common/ParameterSelector';
 import CollapsibleHeader from './common/CollapsibleHeader';
 import PanelHeader from './common/PanelHeader';
+import Text from '@components/common/AppText';
 
 import List from './observation/List';
 import Latest from './observation/Latest';
