@@ -103,20 +103,22 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const [debouncedValue, setDebouncedValue] = React.useState('');
 
   React.useEffect(() => {
+    if (value) {
+      setLoading(true);
+    }
     const timeout = setTimeout(() => {
       setDebouncedValue(value);
     }, 250); // 250 ms delay
     return () => clearTimeout(timeout);
-  }, [value]);
+  }, [setLoading, value]);
 
   useEffect(() => {
     if (debouncedValue) {
-      setLoading(true);
       searchLocation(debouncedValue);
     } else {
       resetSearch();
     }
-  }, [debouncedValue, searchLocation, resetSearch, setLoading]);
+  }, [debouncedValue, searchLocation, resetSearch]);
 
   const handleSelectLocation = (location: Location, update: boolean) => {
     const name =
