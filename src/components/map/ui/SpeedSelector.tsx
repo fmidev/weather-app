@@ -35,7 +35,7 @@ const animationSpeedOptions  = [
   { label: 'Slow', value: 80 },
   { label: 'Normal', value: 50 },
   { label: 'Fast', value: 30 },
-]
+];
 
 const SpeedSelector: React.FC<SpeedSelectorProps> = ({
   animationSpeed,
