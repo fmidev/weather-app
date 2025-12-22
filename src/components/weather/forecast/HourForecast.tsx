@@ -13,6 +13,7 @@ import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, getForecastParameterUnitTranslationKey, toPrecision } from '@utils/units';
 import Text from '@components/common/AppText';
+import { formatAccessibleTemperature} from '@utils/helpers';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -53,7 +54,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
 
   const textColor = WHITE;
   const accessibilityLabel = `${t('forecast:at')} ${time}, ${t(`symbols:${timeStep.smartSymbol}`)}, ${t('forecast:params:temperature', {
-        value: convertedTemperature,
+        value: formatAccessibleTemperature(convertedTemperature, t),
         unit: t(
           `forecast:${getForecastParameterUnitTranslationKey(
             temperatureUnit
