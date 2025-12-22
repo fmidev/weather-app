@@ -368,6 +368,10 @@
       "closeAccessibilityLabel": "Stäng valet av kartnivå",
       "locationTitle": "Egen position",
       "locationHint": "Visa din egen position på kartan",
+      "animationSpeedTitle": "Animationshastighet",
+      "Slow": "Långsam",
+      "Normal": "Normal",
+      "Fast": "Snabb",
       "showLocationAccessibilityHint": "välj för att visa den valda positionen på kartan",
       "hideLocationAccessibilityHint": "välj för att dölja den valda positionen på kartan",
       "localWeatherTitle": "Lokalväder",
@@ -377,7 +381,8 @@
       "mapLayersTitle": "Kartnivåer",
       "rainRadar": "Regnradar",
       "notSelected": "ej vald",
-      "selectLayerAccessibilityHint": "klicka för att välja kartnivå"
+      "selectLayerAccessibilityHint": "Klicka för att välja kartnivå",
+      "selectSpeedAccessibilityHint": "Klicka för att välja animationshastighet"
     },
     "infoBottomSheet": {
       "closeAccessibilityLabel": "stäng kartans förklaringar",

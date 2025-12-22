@@ -368,6 +368,10 @@
       "closeAccessibilityLabel": "Close map layers selection",
       "locationTitle": "My location",
       "locationHint": "Show my location on map",
+      "animationSpeedTitle": "Animation speed",
+      "Slow": "Slow",
+      "Normal": "Normal",
+      "Fast": "Fast",
       "showLocationAccessibilityHint": "double tap to show current location on map",
       "hideLocationAccessibilityHint": "double tap to hide current location on map",
       "localWeatherTitle": "Local weather",
@@ -377,7 +381,8 @@
       "mapLayersTitle": "Map layers",
       "rainRadar": "Rain radar",
       "notSelected": "not selected",
-      "selectLayerAccessibilityHint": "double tap to select map layer"
+      "selectLayerAccessibilityHint": "Tap to select map layer",
+      "selectSpeedAccessibilityHint": "Tap to select animation speed"
     },
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Close map info",

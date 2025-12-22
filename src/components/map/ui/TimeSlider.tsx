@@ -31,6 +31,7 @@ import {
   selectSliderTime,
   selectActiveOverlay,
   selectOverlay,
+  selectAnimationSpeed
 } from '@store/map/selectors';
 import { updateSliderTime as updateSliderTimeAction } from '@store/map/actions';
 
@@ -51,18 +52,17 @@ import {
 import { selectClockType } from '@store/settings/selectors';
 import SliderStep from './SliderStep';
 import { trackMatomoEvent } from '@utils/matomo';
-import { Config } from '@config';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const QUARTER_WIDTH = 15;
-
 const STEP_60 = 3600;
-let interval: NodeJS.Timeout;
 
 const mapStateToProps = (state: State) => ({
   activeOverlayId: selectActiveOverlay(state),
   sliderTime: selectSliderTime(state),
   overlay: selectOverlay(state),
   clockType: selectClockType(state),
+  animationSpeed: selectAnimationSpeed(state)
 });
 
 const mapDispatchToProps = {
@@ -81,7 +81,9 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   updateSliderTime,
   overlay,
   clockType,
+  animationSpeed
 }) => {
+  const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
   const locale = i18n.language;
@@ -90,7 +92,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const { width } = useWindowDimensions();
   const [sliderWidth, setSliderWidth] = useState<number>(width - 24);
-  const { layers } = Config.get('map');
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const multiplier = Math.round(width / 400);
 
@@ -226,31 +228,29 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     }
   }, [scrollIndex, isAnimating, resolveAndSetCurrentIndex]);
 
-  const handleSetScrollIndex = () =>
-    setScrollIndex((prev) => prev + stepWidth / 12.5);
+  useEffect(() => {
+    const handleSetScrollIndex = () => setScrollIndex((prev) => prev + stepWidth / 12.5);
 
-const getLayerAnimationSpeed = () => {
-    if(layers) {
-      const layer = layers.find((l) => l.id === activeOverlayId);
-      if(layer?.times?.animationSpeed) {
-        // return custom value
-        return layer.times.animationSpeed;
-      }
-    }
-    // return default value
-    return 80;
-  }
+    if (!isAnimating) return;
 
-  const animate = () => {
-    setIsAnimating(true);
-    interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       handleSetScrollIndex();
-    }, getLayerAnimationSpeed());
-  };
+    }, animationSpeed);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isAnimating, animationSpeed, stepWidth]);
 
   const clear = () => {
     setIsAnimating(false);
-    clearInterval(interval);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
   };
 
   return (
@@ -262,6 +262,8 @@ const getLayerAnimationSpeed = () => {
           backgroundColor: colors.mapButtonBackground,
           borderColor: colors.mapButtonBorder,
           shadowColor: colors.shadow,
+          left: insets.left + 12,
+          right: insets.right + 12,
         },
       ]}
       onLayout={({ nativeEvent }) => {
@@ -280,7 +282,7 @@ const getLayerAnimationSpeed = () => {
             if (isAnimating) {
               clear();
             } else {
-              animate();
+              setIsAnimating(true);
             }
           }}
           accessibilityLabel={
