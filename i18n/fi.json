@@ -368,6 +368,10 @@
       "closeAccessibilityLabel": "Sulje karttatasojen valinnat",
       "locationTitle": "Oma sijainti",
       "locationHint": "Näytä oma sijainti kartalla",
+      "animationSpeedTitle": "Animaation nopeus",
+      "Slow": "Hidas",
+      "Normal": "Normaali",
+      "Fast": "Nopea",
       "showLocationAccessibilityHint": "valitse näyttääksesi valittu sijainti kartalla",
       "hideLocationAccessibilityHint": "valitse piilottaaksesi valittu sijanti kartalla",
       "localWeatherTitle": "Paikkakuntasää",
@@ -377,7 +381,8 @@
       "mapLayersTitle": "Karttatasot",
       "rainRadar": "Sadetutka",
       "notSelected": "ei valittu",
-      "selectLayerAccessibilityHint": "paina valitaksesi karttataso"
+      "selectLayerAccessibilityHint": "Paina valitaksesi karttataso",
+      "selectSpeedAccessibilityHint": "Paina valitaksesi animaation nopeus"
     },
     "infoBottomSheet": {
       "closeAccessibilityLabel": "Sulje kartan selitteet",

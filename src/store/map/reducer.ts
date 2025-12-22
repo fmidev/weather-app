@@ -11,6 +11,7 @@ import {
   UPDATE_ACTIVE_OVERLAY,
   UPDATE_REGION,
   UPDATE_SELECTED_CALLOUT,
+  UPDATE_ANIMATION_SPEED,
 } from './types';
 
 const INITIAL_STATE: MapState = {
@@ -19,6 +20,7 @@ const INITIAL_STATE: MapState = {
     weather: true,
     radar: false,
   },
+  animationSpeed: 80,
   sliderTime: 0,
   animateToArea: false,
   overlays: undefined,
@@ -97,6 +99,13 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       };
     }
 
+    case UPDATE_ANIMATION_SPEED: {
+      return {
+        ...state,
+        animationSpeed: action.speed,
+      };
+    }
+
     default: {
       return state;
     }
@@ -104,5 +113,5 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
 };
 export const mapPersist: PersistConfig = {
   key: 'map',
-  whitelist: ['activeOverlay', 'mapLayers'],
+  whitelist: ['activeOverlay', 'mapLayers', 'animationSpeed'],
 };

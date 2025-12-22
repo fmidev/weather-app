@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useOrientation } from '@utils/hooks';
 
@@ -24,6 +25,7 @@ const MapControls: React.FC<MapControlsProps> = ({
   showRelocateButton,
   relocate,
 }) => {
+  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const isLandscape = useOrientation();
   return (
@@ -40,6 +42,7 @@ const MapControls: React.FC<MapControlsProps> = ({
           styles.right,
           styles.topFirst,
           isLandscape && styles.left,
+          isLandscape ? { left: insets.left + 12 } : { right: insets.right + 12 }
         ]}
         accessibilityLabel={t('map:plusButtonAccessibilityLabel')}
         onPress={onZoomIn}
@@ -52,6 +55,7 @@ const MapControls: React.FC<MapControlsProps> = ({
           styles.right,
           styles.topSecond,
           isLandscape && styles.left,
+          isLandscape ? { left: insets.left + 12 } : { right: insets.right + 12 }
         ]}
         accessibilityLabel={t('map:minusButtonAccessibilityLabel')}
         onPress={onZoomOut}
@@ -64,6 +68,7 @@ const MapControls: React.FC<MapControlsProps> = ({
           styles.mapButton,
           styles.right,
           isLandscape ? styles.topFirst : styles.bottomSecond,
+          { right: insets.right + 12}
         ]}
         accessibilityLabel={t('map:infoButtonAccessibilityLabel')}
         onPress={onInfoPressed}
@@ -76,6 +81,7 @@ const MapControls: React.FC<MapControlsProps> = ({
           styles.mapButton,
           styles.right,
           isLandscape ? styles.topSecond : styles.bottomFirst,
+          { right: insets.right + 12}
         ]}
         accessibilityLabel={t('map:layersButtonAccessibilityLabel')}
         onPress={onLayersPressed}
@@ -98,6 +104,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: 44,
     width: 44,
+  },
+  // eslint-disable-next-line react-native/no-unused-styles
+  labelMapButton: {
+    minWidth: 230,
   },
   center: {
     alignSelf: 'center',
