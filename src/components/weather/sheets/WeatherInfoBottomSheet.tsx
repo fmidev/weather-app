@@ -812,10 +812,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   }) => (
                     <View key={item.key} style={[styles.row, styles.symbolRow]}>
                       <View style={styles.flex1}>
-                        {item.day({ width: symbolSize, height: symbolSize })}
+                        <item.day width={symbolSize} height={symbolSize} />
                       </View>
                       <View style={styles.flex1}>
-                        {item.night({ width: symbolSize, height: symbolSize })}
+                        <item.night width={symbolSize} height={symbolSize} />
                       </View>
                       <Text
                         maxFontSizeMultiplier={1.5}

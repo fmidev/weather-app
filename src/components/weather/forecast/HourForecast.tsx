@@ -47,7 +47,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
   const time = moment
     .unix(timeStep.epochtime)
     .format(clockType === 12 ? 'h a' : 'HH');
-  const smartSymbol = weatherSymbolGetter(
+  const SmartSymbol = weatherSymbolGetter(
     (timeStep.smartSymbol || 0).toString(),
     true // Always dark symbols because of dark transparent background
   );
@@ -73,10 +73,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
         { time }
       </Text>
       <View>
-        {smartSymbol?.({
-          width: symbolSize,
-          height: symbolSize,
-        })}
+        {SmartSymbol ? <SmartSymbol width={symbolSize} height={symbolSize} /> : null}
       </View>
       <View>
         <Text

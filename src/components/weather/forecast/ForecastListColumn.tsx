@@ -48,7 +48,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   const time = moment
     .unix(data.epochtime)
     .format(clockType === 12 ? 'h a' : 'HH');
-  const smartSymbol = weatherSymbolGetter(
+  const SmartSymbol = weatherSymbolGetter(
     (data.smartSymbol || 0).toString(),
     dark
   );
@@ -104,10 +104,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     height,
                   },
                 ]}>
-                {smartSymbol?.({
-                  width: symbolSize,
-                  height: symbolSize,
-                })}
+                {SmartSymbol ? <SmartSymbol width={symbolSize} height={symbolSize} /> : null}
               </View>
             );
           }
