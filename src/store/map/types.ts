@@ -125,4 +125,5 @@ export interface MapState {
   activeOverlay: number | undefined;
   region: Region;
   selectedCallout: string | undefined;
+  animationSpeed: number;
 }
