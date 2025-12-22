@@ -13,6 +13,7 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "strict": true,
+    "types": ["jest"],
     "baseUrl": ".",
     "paths": {
       "react": [ "./node_modules/@types/react" ],
@@ -30,5 +31,6 @@
   "exclude": [
     "node_modules",
     "e2e",
+    "**/Pods"
   ]
 }
