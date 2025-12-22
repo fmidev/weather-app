@@ -5,12 +5,11 @@ import {
   StyleSheet,
   View,
   Platform,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';

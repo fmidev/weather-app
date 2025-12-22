@@ -61,7 +61,7 @@ const axiosClient = async (
     });
 
   timeoutId = setTimeout(
-    () => controller.abort(`Timeout of ${timeout}ms exceeded`),
+    () => controller.abort(),
     timeout
   );
 

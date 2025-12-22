@@ -131,7 +131,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
       smartSymbol, totalPrecipitation, precipitationMissing
     } = item;
     const stepMoment = moment.unix(timeStamp);
-    const daySmartSymbol = weatherSymbolGetter(
+    const DaySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
       dark
     );
@@ -203,10 +203,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               </Text>
             </View>
             <View accessibilityLabel={t(`symbols:${smartSymbol}`)}>
-              {daySmartSymbol?.({
-                width: symbolSize,
-                height: symbolSize,
-              })}
+              {DaySmartSymbol ? <DaySmartSymbol width={symbolSize} height={symbolSize} /> : null}
             </View>
             {activeParameters.includes('temperature') && (
               <Text

@@ -4,14 +4,13 @@ import {
   Image,
   StyleSheet,
   View,
-  SafeAreaView,
   findNodeHandle,
   AccessibilityInfo,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Text as RNText } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { SetupStackParamList } from '@navigators/types';

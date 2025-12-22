@@ -2,7 +2,7 @@
  * @format
  */
 
-import { AppRegistry, Text, TextInput } from 'react-native';
+import { AppRegistry, LogBox } from 'react-native';
 // eslint-disable-next-line import/extensions
 import App from './App';
 import { name as appName } from './app.json';
@@ -23,9 +23,11 @@ if (defaultConfig.settings.languages.includes('es')) {
   require('moment/locale/es');
 }
 
-Text.defaultProps = Text.defaultProps || {};
-Text.defaultProps.maxFontSizeMultiplier = 1.35;
-TextInput.defaultProps = TextInput.defaultProps || {};
-TextInput.defaultProps.maxFontSizeMultiplier = 1.35;
+// External libraries use these and warnings are not important for us
+
+LogBox.ignoreLogs([
+  /SafeAreaView has been deprecated.*/,
+  /InteractionManager has been deprecated.*/
+])
 
 AppRegistry.registerComponent(appName, () => App);
