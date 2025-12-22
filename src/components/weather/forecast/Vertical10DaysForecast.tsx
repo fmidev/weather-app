@@ -22,7 +22,7 @@ import { State } from '@store/types';
 import { selectForecastInvalidData, selectDisplayParams } from '@store/forecast/selectors';
 
 import Icon from '@components/common/ScalableIcon';
-import { uppercaseFirst } from '@utils/helpers';
+import { formatAccessibleTemperature, uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 import { trackMatomoEvent } from '@utils/matomo';
 import { MAX_PARAMETERS_WITHOUT_SCROLL } from './constants';
@@ -212,8 +212,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               <Text
                 style={[styles.text, styles.temperatureWidth, { color: colors.primaryText }]}
                 accessibilityLabel={`${t('forecast:temperature')} ${t('forecast:fromTo', {
-                  min: convertedMinTemperature,
-                  max: convertedMaxTemperature,
+                  min: formatAccessibleTemperature(convertedMinTemperature, t),
+                  max: formatAccessibleTemperature(convertedMaxTemperature, t),
                   unit: t(
                     temperatureUnit === 'C'
                       ? 'forecast:celsius'
