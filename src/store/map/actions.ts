@@ -15,7 +15,7 @@ import {
   UPDATE_ACTIVE_OVERLAY,
   UPDATE_REGION,
   UPDATE_SELECTED_CALLOUT,
-  UPDATE_ANIMATION_SPEED
+  UPDATE_ANIMATION_SPEED,
 } from './types';
 
 export const updateSliderTime =
