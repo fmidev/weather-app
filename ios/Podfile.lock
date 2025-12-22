@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.10.2)
+  - Alamofire (5.11.0)
   - AsyncLocationKit (1.6.3)
   - boost (1.84.0)
   - BVLinearGradient (2.8.3):
@@ -58,9 +58,9 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - MatomoTracker (7.7.0):
-    - MatomoTracker/Core (= 7.7.0)
-  - MatomoTracker/Core (7.7.0)
+  - MatomoTracker (7.8.0):
+    - MatomoTracker/Core (= 7.8.0)
+  - MatomoTracker/Core (7.8.0)
   - RCT-Folly (2024.11.18.00):
     - boost
     - DoubleConversion
@@ -3447,7 +3447,7 @@ CHECKOUT OPTIONS:
     :tag: 1.6.4
 
 SPEC CHECKSUMS:
-  Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
+  Alamofire: bd5e7b23a1a750975288482c1831d71e74415f86
   AsyncLocationKit: b34a2ee37910405a98401021b6aedeb37440a1a2
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
@@ -3461,7 +3461,7 @@ SPEC CHECKSUMS:
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   logicwind-react-native-matomo-tracker: 4a8a1f4b0a2ea2628370f3c87ade3fb79ac93182
-  MatomoTracker: 0cba5ef15cfa1fc84b26a8635590cc9d4bfa5494
+  MatomoTracker: dbf4093d2c36b78244ce481d7a10086fad825c7f
   RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: f17e2ebc07876ca9ab8eb6e4b0a4e4647497ae3a
   RCTRequired: e2c574c1b45231f7efb0834936bd609d75072b63
