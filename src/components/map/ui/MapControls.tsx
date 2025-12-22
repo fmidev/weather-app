@@ -68,7 +68,7 @@ const MapControls: React.FC<MapControlsProps> = ({
           styles.mapButton,
           styles.right,
           isLandscape ? styles.topFirst : styles.bottomSecond,
-          { right: insets.right + 12}
+          { right: insets.right + 12 }
         ]}
         accessibilityLabel={t('map:infoButtonAccessibilityLabel')}
         onPress={onInfoPressed}
@@ -81,7 +81,7 @@ const MapControls: React.FC<MapControlsProps> = ({
           styles.mapButton,
           styles.right,
           isLandscape ? styles.topSecond : styles.bottomFirst,
-          { right: insets.right + 12}
+          { right: insets.right + 12 }
         ]}
         accessibilityLabel={t('map:layersButtonAccessibilityLabel')}
         onPress={onLayersPressed}
