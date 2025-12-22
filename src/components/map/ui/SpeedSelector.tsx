@@ -56,7 +56,7 @@ const SpeedSelector: React.FC<SpeedSelectorProps> = ({
         <AccessibleTouchableOpacity
           key={option.label}
           accessibilityRole="button"
-          accessibilityLabel=""
+          accessibilityLabel={t(`map:layersBottomSheet:${option.label}`)}
           accessibilityState={{ selected: option.value === animationSpeed }}
           accessibilityHint={
             option.value === animationSpeed
