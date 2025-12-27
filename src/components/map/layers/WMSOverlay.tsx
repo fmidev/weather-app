@@ -39,6 +39,9 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const forecast = overlay.forecast as Layer;
   const isFocused = useIsFocused();
 
+  console.log('forecast', forecast);
+  console.log('observation', observation);
+
   const [borderTime, setBorderTime] = useState<{
     time?: string;
     type: 'observation' | 'forecast';

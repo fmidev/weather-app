@@ -222,6 +222,7 @@ const getWMSLayerUrlsAndBounds = async (
   sources: { [name: string]: string },
   overlay: MapLayer
 ): Promise<Map<number, MapOverlay> | undefined> => {
+  const { library } = Config.get('map');
   const capabilitiesData = new Map();
   const overlayMap = new Map();
 
@@ -329,9 +330,9 @@ const getWMSLayerUrlsAndBounds = async (
         request: 'GetMap',
         transparent: 'true',
         layers: layerSrc.layer,
-        bbox: '{minX},{minY},{maxX},{maxY}',
-        width: '{width}',
-        height: '{height}',
+        bbox: library === 'maplibre' ? '{bbox-epsg-3857}' : '{minX},{minY},{maxX},{maxY}',
+        width: library === 'maplibre' ? '256' : '{width}',
+        height: library === 'maplibre' ? '256' : '{height}',
         format: `image/${layer.tileFormat ?? 'png'}`,
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',

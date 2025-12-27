@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Platform, useWindowDimensions } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
 import type { MapPressEvent } from 'react-native-maps';
+import { Camera as MlCamera, MapView as MlMapView } from "@maplibre/maplibre-react-native";
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
@@ -80,7 +81,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const { colors, dark } = useTheme();
   const isFocused = useIsFocused();
   const { shouldReload } = useReloader();
-  const { updateInterval } = Config.get('map');
+  const { library, updateInterval } = Config.get('map');
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const mapRef = useRef<MapView>(null);
   const mapLayersSheetRef = useRef<RBSheet>(null);
@@ -193,34 +194,50 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
   return (
     <View style={styles.mapContainer}>
-      <MapView
-        accessibilityElementsHidden
-        ref={mapRef}
-        testID="map"
-        style={styles.map}
-        userInterfaceStyle={dark ? 'dark' : 'light'}
-        maxZoomLevel={mapMaxZoom}
-        minZoomLevel={mapMinZoom}
-        customMapStyle={darkGoogleMapsStyle}
-        initialRegion={initialRegion}
-        rotateEnabled={false}
-        toolbarEnabled={false}
-        onRegionChangeComplete={onRegionChangeComplete}
-        onPress={onPress}
-        moveOnMarkerPress={false}>
-        {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} />}
-        {overlay && overlay.type === 'Timeseries' && (
-          <TimeseriesOverlay overlay={overlay} />
-        )}
-        {displayLocation && currentLocation && (
-          <MapMarker
-            coordinates={{
-              latitude: location?.lat,
-              longitude: location?.lon,
-            }}
+      { library === 'maplibre' ? (
+        <MlMapView
+          testID="maplibre_map"
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={{ flex: 1, width: '100%', height: '100%' }}
+          mapStyle="https://fmi-protomaps.s3.eu-north-1.amazonaws.com/styles/white_fi.json"
+         >
+          <MlCamera
+            center={[location?.lon, location?.lat]} // [longitude, latitude]
+            zoom={8}
+            duration={0}
           />
-        )}
-      </MapView>
+          {overlay?.type === 'WMS' && <WMSOverlay overlay={overlay} library="maplibre" />}
+        </MlMapView>
+      ) : (
+        <MapView
+          accessibilityElementsHidden
+          ref={mapRef}
+          testID="map"
+          style={styles.map}
+          userInterfaceStyle={dark ? 'dark' : 'light'}
+          maxZoomLevel={mapMaxZoom}
+          minZoomLevel={mapMinZoom}
+          customMapStyle={darkGoogleMapsStyle}
+          initialRegion={initialRegion}
+          rotateEnabled={false}
+          toolbarEnabled={false}
+          onRegionChangeComplete={onRegionChangeComplete}
+          onPress={onPress}
+          moveOnMarkerPress={false}>
+          {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} />}
+          {overlay && overlay.type === 'Timeseries' && (
+            <TimeseriesOverlay overlay={overlay} />
+          )}
+          {displayLocation && currentLocation && (
+            <MapMarker
+              coordinates={{
+                latitude: location?.lat,
+                longitude: location?.lon,
+              }}
+            />
+          )}
+        </MapView>
+      )}
       <Announcements style={styles.announcements} />
       <MapControls
         onLayersPressed={() => mapLayersSheetRef.current?.open()}

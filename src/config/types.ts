@@ -254,10 +254,10 @@ export interface ConfigType {
     maxFavorite: number;
   };
   map: {
-    // latitudeDelta: number;
     updateInterval: number;
     sources: { [name: string]: string };
     layers: MapLayer[];
+    library?: 'react-native-maps' | 'maplibre';
   };
   weather: {
     apiUrl: string;
