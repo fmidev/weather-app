@@ -17,6 +17,7 @@ type BaseTimes = {
   timeStep: number;
   observation?: number;
   forecast?: number;
+  animationSpeed?: number;
 };
 
 export type WMSSource = {

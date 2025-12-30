@@ -15,6 +15,7 @@ import {
   UPDATE_ACTIVE_OVERLAY,
   UPDATE_REGION,
   UPDATE_SELECTED_CALLOUT,
+  UPDATE_ANIMATION_SPEED,
 } from './types';
 
 export const updateSliderTime =
@@ -60,3 +61,8 @@ export const updateSelectedCallout =
   (selectedCallout: string | undefined) =>
   (dispatch: Dispatch<MapActionTypes>) =>
     dispatch({ type: UPDATE_SELECTED_CALLOUT, selectedCallout });
+
+export const updateAnimationSpeed =
+  (speed: number) => (dispatch: Dispatch<MapActionTypes>) => {
+    dispatch({ type: UPDATE_ANIMATION_SPEED, speed });
+  };

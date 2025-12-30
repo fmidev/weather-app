@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, SafeAreaView, StyleSheet, Linking } from 'react-native';
+import { View, StyleSheet, Linking } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +33,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView edges={['right', 'bottom', 'left']}>
       <View testID="others_view" style={styles.container}>
         <View>
           <View

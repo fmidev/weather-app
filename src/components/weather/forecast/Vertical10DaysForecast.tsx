@@ -22,7 +22,7 @@ import { State } from '@store/types';
 import { selectForecastInvalidData, selectDisplayParams } from '@store/forecast/selectors';
 
 import Icon from '@components/common/ScalableIcon';
-import { uppercaseFirst } from '@utils/helpers';
+import { formatAccessibleTemperature, uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 import { trackMatomoEvent } from '@utils/matomo';
 import { MAX_PARAMETERS_WITHOUT_SCROLL } from './constants';
@@ -131,7 +131,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
       smartSymbol, totalPrecipitation, precipitationMissing
     } = item;
     const stepMoment = moment.unix(timeStamp);
-    const daySmartSymbol = weatherSymbolGetter(
+    const DaySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
       dark
     );
@@ -203,17 +203,14 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               </Text>
             </View>
             <View accessibilityLabel={t(`symbols:${smartSymbol}`)}>
-              {daySmartSymbol?.({
-                width: symbolSize,
-                height: symbolSize,
-              })}
+              {DaySmartSymbol ? <DaySmartSymbol width={symbolSize} height={symbolSize} /> : null}
             </View>
             {activeParameters.includes('temperature') && (
               <Text
                 style={[styles.text, styles.temperatureWidth, { color: colors.primaryText }]}
                 accessibilityLabel={`${t('forecast:temperature')} ${t('forecast:fromTo', {
-                  min: convertedMinTemperature,
-                  max: convertedMaxTemperature,
+                  min: formatAccessibleTemperature(convertedMinTemperature, t),
+                  max: formatAccessibleTemperature(convertedMaxTemperature, t),
                   unit: t(
                     temperatureUnit === 'C'
                       ? 'forecast:celsius'

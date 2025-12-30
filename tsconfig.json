@@ -6,13 +6,14 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "jsx": "react",
-    "lib": ["ES6", "DOM", "ES2019"],
+    "lib": ["DOM", "ES2022"],
     "moduleResolution": "node",
     "noEmit": true,
-    "target": "ES6",
+    "target": "ES2022",
     "noImplicitAny": true,
     "skipLibCheck": true,
     "strict": true,
+    "types": ["jest"],
     "baseUrl": ".",
     "paths": {
       "react": [ "./node_modules/@types/react" ],
@@ -30,5 +31,6 @@
   "exclude": [
     "node_modules",
     "e2e",
+    "**/Pods"
   ]
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, useWindowDimensions } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
 import type { MapPressEvent } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -76,6 +76,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   updateRegion,
   updateSelectedCallout,
 }) => {
+  const { fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme();
   const isFocused = useIsFocused();
   const { shouldReload } = useReloader();
@@ -87,6 +88,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
 
   const location = currentLocation ?? Config.get('location').default;
+  const largeFonts = fontScale > 1.5;
 
   const initialRegion = {
     latitude: location.lat ?? INITIAL_REGION.latitude,
@@ -258,7 +260,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
 
       <RBSheet
         ref={mapLayersSheetRef}
-        height={600}
+        height={largeFonts ? 650 : 620}
         closeOnDragDown
         customStyles={{
           container: {

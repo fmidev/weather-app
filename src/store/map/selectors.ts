@@ -53,3 +53,9 @@ export const selectSelectedCallout = createSelector(
   selectMapDomain,
   (map) => map.selectedCallout
 );
+
+export const selectAnimationSpeed = createSelector(
+  selectMapDomain,
+  (map) => map.animationSpeed
+);
+

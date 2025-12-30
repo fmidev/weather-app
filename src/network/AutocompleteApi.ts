@@ -20,9 +20,7 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
 
   // Cancel the previous request to avoid multiple queries running same time
   if (abortController) {
-    abortController.abort(
-      `New autocomplete request is sent with pattern ${pattern}`
-    );
+    abortController.abort();
   }
 
   abortController = new AbortController();

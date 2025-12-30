@@ -88,6 +88,8 @@ useEffect(() => {
   return () => clearTimeout(timeout);
 }, [selectedCallout, temperatureValue, smartSymbol, windSpeedValue, windDirection]);
 
+const WeatherSymbol = weatherSymbolGetter(smartSymbol.toString(), false)
+
 return (
   <Marker
     coordinate={coordinate}
@@ -106,10 +108,7 @@ return (
       ]}
     >
       <View style={styles.mainRow}>
-        {weatherSymbolGetter(smartSymbol.toString(), false)?.({
-          width: 40,
-          height: 40,
-        })}
+          {WeatherSymbol ? <WeatherSymbol width={40} height={40} /> : null}
         <Text
           accessibilityLabel={`${temperatureValue} ${t(
             `observation:paramUnits:°${temperatureUnit}`

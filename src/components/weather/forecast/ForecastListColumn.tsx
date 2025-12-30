@@ -12,7 +12,7 @@ import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
-import { isOdd, getWindDirection, roundToNearestTen } from '@utils/helpers';
+import { isOdd, getWindDirection, roundToNearestTen, formatAccessibleTemperature } from '@utils/helpers';
 import { Config } from '@config';
 import {
   converter,
@@ -48,7 +48,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   const time = moment
     .unix(data.epochtime)
     .format(clockType === 12 ? 'h a' : 'HH');
-  const smartSymbol = weatherSymbolGetter(
+  const SmartSymbol = weatherSymbolGetter(
     (data.smartSymbol || 0).toString(),
     dark
   );
@@ -94,6 +94,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             return (
               <View
                 key={`${param}-${i}`}
+                accessible
+                accessibilityRole="image"
                 accessibilityLabel={`${t(`symbols:${data.smartSymbol}`)}.`}
                 style={[
                   styles.hourBlock,
@@ -102,10 +104,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     height,
                   },
                 ]}>
-                {smartSymbol?.({
-                  width: symbolSize,
-                  height: symbolSize,
-                })}
+                {SmartSymbol ? <SmartSymbol width={symbolSize} height={symbolSize} /> : null}
               </View>
             );
           }
@@ -186,8 +185,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             return (
               <View
                 key={`${param}-${i}`}
+                accessible
                 accessibilityLabel={t('forecast:params:temperature', {
-                  value: convertedTemperature,
+                  value: formatAccessibleTemperature(convertedTemperature, t),
                   unit: t(
                     `forecast:${getForecastParameterUnitTranslationKey(
                       temperatureUnit
@@ -223,8 +223,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             return (
               <View
                 key={`${param}-${i}`}
+                accessible
                 accessibilityLabel={t('forecast:params:feelsLike', {
-                  value: convertedFeelsLike,
+                  value: formatAccessibleTemperature(convertedFeelsLike, t),
                   unit: t(
                     `forecast:${getForecastParameterUnitTranslationKey(
                       temperatureUnit
@@ -262,6 +263,15 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             return (
               <View
                 key={`${param}-${i}`}
+                accessible
+                accessibilityLabel={t('forecast:params:dewpoint', {
+                    value: formatAccessibleTemperature(convertedDewPoint, t),
+                    unit: t(
+                      `forecast:${getForecastParameterUnitTranslationKey(
+                        temperatureUnit
+                      )}`
+                    ),
+                  })}
                 style={[
                   styles.hourBlock,
                   {
@@ -270,14 +280,6 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   },
                 ]}>
                 <Text
-                  accessibilityLabel={t('forecast:params:dewpoint', {
-                    value: convertedDewPoint,
-                    unit: t(
-                      `forecast:${getForecastParameterUnitTranslationKey(
-                        temperatureUnit
-                      )}`
-                    ),
-                  })}
                   style={[
                     styles.regularText,
                     { color: colors.hourListText },
