@@ -362,3 +362,22 @@ const getWMSLayerUrlsAndBounds = async (
 
   return overlayMap;
 };
+
+const R = 6378137;
+
+export const lonLatToWebMercator = (
+  lon: number,
+  lat: number
+): { x: number; y: number } => {
+  const maxLat = 85.05112878;
+  const clampedLat = Math.max(Math.min(lat, maxLat), -maxLat);
+
+  const x = (R * lon * Math.PI) / 180;
+  const y =
+    R *
+    Math.log(
+      Math.tan(Math.PI / 4 + (clampedLat * Math.PI) / 360)
+    );
+
+  return { x, y };
+};

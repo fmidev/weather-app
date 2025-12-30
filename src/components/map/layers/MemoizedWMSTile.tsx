@@ -15,18 +15,17 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   opacity,
   library = 'react-native-maps',
 }) => {
-  console.log('Rendering MemoizedWMSTile with urlTemplate:', urlTemplate);
   return library === 'maplibre' ? (
-    <RasterSource id="wms" tileUrlTemplates={[urlTemplate]} tileSize={256}>
+    <RasterSource id="wms-source" tileUrlTemplates={[urlTemplate]} tileSize={256}>
       <RasterLayer
         id="wms-layer"
-        sourceID="wms"
+        sourceID="wms-source"
         style={{
           rasterOpacity: opacity ?? 0,
         }}
       />
     </RasterSource>
-  ) : (
+) : (
     <WMSTile
       key={urlTemplate}
       urlTemplate={urlTemplate}

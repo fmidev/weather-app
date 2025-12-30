@@ -27,12 +27,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type WMSOverlayProps = PropsFromRedux & {
   overlay: MapOverlay;
+  library?: 'maplibre' | 'react-native-maps';
 };
 
 const WMSOverlay: React.FC<WMSOverlayProps> = ({
   activeOverlayId,
   sliderTime,
   overlay,
+  library = 'react-native-maps',
 }) => {
   const { dark } = useTheme();
   const observation = overlay.observation as Layer;
@@ -152,6 +154,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
           urlTemplate={urlMap.get(k) as string}
           opacity={k === current ? 1 : 0}
           tileSize={overlay.tileSize}
+          library={library}
         />
       ))}
     </>

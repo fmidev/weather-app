@@ -1458,15 +1458,16 @@
   resolved "https://registry.yarnpkg.com/@logicwind/react-native-matomo-tracker/-/react-native-matomo-tracker-0.3.12.tgz#1280d32fc0185d27c92cdd34e760e39fb665fa39"
   integrity sha512-EtTUqaMmnC8PQp6q+k/Ks/JdI2TUwmOqUeO5mrvQoEg0mDAcdhVkeAzO9jvyyA2wpJkXxOO5qjHnRiEjbNYHTQ==
 
-"@maplibre/maplibre-react-native@11.0.0-alpha.23":
-  version "11.0.0-alpha.23"
-  resolved "https://registry.yarnpkg.com/@maplibre/maplibre-react-native/-/maplibre-react-native-11.0.0-alpha.23.tgz#f0ef11040af0347a51b8edcab38a2aa533b90a27"
-  integrity sha512-llKr6kTLt2Ay6gE36Fso3wAcgFpC3Fk8YNlyQOfTP8try2QdMXOEGjrUeYn8kllMm57UlLt8xqY6ZJNgrkVQOg==
+"@maplibre/maplibre-react-native@10.4.2":
+  version "10.4.2"
+  resolved "https://registry.yarnpkg.com/@maplibre/maplibre-react-native/-/maplibre-react-native-10.4.2.tgz#e3e9dab47c002014219eb0d28b2484dadef70d9f"
+  integrity sha512-5qAfaEe66eMXyILklm2DMHwyaXwXxsZWVop4BqfU7AyTg13LHAcaMmLJNJ3jPkMtiJvjH2m8ywGnobdIg2I0lg==
   dependencies:
     "@turf/distance" "^7.1.0"
     "@turf/helpers" "^7.1.0"
     "@turf/length" "^7.1.0"
     "@turf/nearest-point-on-line" "^7.1.0"
+    debounce "^2.2.0"
 
 "@motionone/animation@^10.12.0":
   version "10.18.0"
@@ -3874,6 +3875,11 @@ dayjs@^1.8.15:
   version "1.11.18"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.18.tgz#835fa712aac52ab9dec8b1494098774ed7070a11"
   integrity sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==
+
+debounce@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-2.2.0.tgz#f895fa2fbdb579a0f0d3dcf5dde19657e50eaad5"
+  integrity sha512-Xks6RUDLZFdz8LIdR6q0MTH44k7FikOmnh5xkSjMig6ch45afc8sjTjRQf3P6ax8dMgcQrYO/AR2RGWURrruqw==
 
 debug@2.6.9, debug@^2.6.9:
   version "2.6.9"

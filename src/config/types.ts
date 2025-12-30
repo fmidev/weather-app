@@ -67,6 +67,12 @@ export interface MapLayer {
   tileFormat?: string;
 }
 
+export interface BaseMap {
+  url: string;
+  lightStyle: string;
+  darkStyle: string;
+}
+
 interface GeoMagneticObservations {
   enabled: boolean;
   producer: string;
@@ -258,6 +264,7 @@ export interface ConfigType {
     sources: { [name: string]: string };
     layers: MapLayer[];
     library?: 'react-native-maps' | 'maplibre';
+    baseMap?: BaseMap;
   };
   weather: {
     apiUrl: string;

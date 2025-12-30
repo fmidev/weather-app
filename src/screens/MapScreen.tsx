@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, Platform, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, Platform, useWindowDimensions, Text } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
 import type { MapPressEvent } from 'react-native-maps';
-import { Camera as MlCamera, MapView as MlMapView } from "@maplibre/maplibre-react-native";
+import { Camera as MlCamera, MapView as MlMapView, PointAnnotation } from '@maplibre/maplibre-react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
@@ -35,6 +35,9 @@ import { GRAY_1 } from '@assets/colors';
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import { trackMatomoEvent } from '@utils/matomo';
+import Icon from '@assets/Icon';
+import { useTranslation } from 'react-i18next';
+import type { Position } from "geojson";
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -47,6 +50,9 @@ const ANIMATE_ZOOM = {
   latitudeDelta: 1.3447962255539707,
   longitudeDelta: 1.4189536248254342,
 };
+
+const MIN_ZOOM_LEVEL = 1;
+const MAX_ZOOM_LEVEL = 10;
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
@@ -77,6 +83,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
   updateRegion,
   updateSelectedCallout,
 }) => {
+  const { i18n } = useTranslation();
   const { fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme();
   const isFocused = useIsFocused();
@@ -87,8 +94,12 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const mapLayersSheetRef = useRef<RBSheet>(null);
   const infoSheetRef = useRef<RBSheet>(null);
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
+  const [zoomLevel, setZoomLevel] = useState<number>(8);
+  const [mapBounds, setMapBounds] = useState<[northEast: Position, southWest: Position] | undefined>(undefined);
+  const [styleReady, setStyleReady] = useState(false);
 
   const location = currentLocation ?? Config.get('location').default;
+  const { baseMap } = Config.get('map');
   const largeFonts = fontScale > 1.5;
 
   const initialRegion = {
@@ -138,26 +149,34 @@ const MapScreen: React.FC<MapScreenProps> = ({
   }, [location]);
 
   const handleZoomIn = () => {
-    if (mapRef.current) {
-      mapRef.current.getCamera().then((cam: Camera) => {
-        if (Platform.OS === 'ios' && cam.altitude !== undefined) {
-          mapRef.current?.animateCamera({ altitude: cam.altitude - 50000 });
-        } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
-          mapRef.current?.animateCamera({ zoom: cam.zoom + 1 });
-        }
-      });
+    if (library === 'maplibre') {
+      setZoomLevel(Math.min(zoomLevel + 1, MAX_ZOOM_LEVEL));
+    } else {
+      if (mapRef.current) {
+        mapRef.current.getCamera().then((cam: Camera) => {
+          if (Platform.OS === 'ios' && cam.altitude !== undefined) {
+            mapRef.current?.animateCamera({ altitude: cam.altitude - 50000 });
+          } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
+            mapRef.current?.animateCamera({ zoom: cam.zoom + 1 });
+          }
+        });
+      }
     }
   };
 
   const handleZoomOut = () => {
-    if (mapRef.current) {
-      mapRef.current.getCamera().then((cam: Camera) => {
-        if (Platform.OS === 'ios' && cam.altitude !== undefined) {
-          mapRef.current?.animateCamera({ altitude: cam.altitude + 50000 });
-        } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
-          mapRef.current?.animateCamera({ zoom: cam.zoom - 1 });
-        }
-      });
+    if (library === 'maplibre') {
+      setZoomLevel(Math.max(zoomLevel - 1, MIN_ZOOM_LEVEL));
+    } else {
+      if (mapRef.current) {
+        mapRef.current.getCamera().then((cam: Camera) => {
+          if (Platform.OS === 'ios' && cam.altitude !== undefined) {
+            mapRef.current?.animateCamera({ altitude: cam.altitude + 50000 });
+          } else if (Platform.OS === 'android' && cam.zoom !== undefined) {
+            mapRef.current?.animateCamera({ zoom: cam.zoom - 1 });
+          }
+        });
+      }
     }
   };
 
@@ -192,6 +211,13 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const mapMaxZoom = Platform.OS === 'android' ? 10 : 9.5;
   const mapMinZoom = Platform.OS === 'android' ? 4 : 3.5;
 
+  if (library === 'maplibre' && !baseMap) {
+    return <Text>MapLibre requires baseMap configuration</Text>
+  }
+
+  const mapStyle = baseMap!.url+(dark ? baseMap!.darkStyle : baseMap!.lightStyle)
+                    .replace('{lang}', i18n.language);
+
   return (
     <View style={styles.mapContainer}>
       { library === 'maplibre' ? (
@@ -199,14 +225,34 @@ const MapScreen: React.FC<MapScreenProps> = ({
           testID="maplibre_map"
           // eslint-disable-next-line react-native/no-inline-styles
           style={{ flex: 1, width: '100%', height: '100%' }}
-          mapStyle="https://fmi-protomaps.s3.eu-north-1.amazonaws.com/styles/white_fi.json"
+          mapStyle={mapStyle}
+          onDidFinishLoadingStyle={() => setStyleReady(true)}
+          onRegionDidChange={(region) => {
+            console.log('Maplibre onRegionDidChange', region.properties.visibleBounds);
+            setMapBounds(region.properties.visibleBounds);
+          }}
          >
           <MlCamera
-            center={[location?.lon, location?.lat]} // [longitude, latitude]
-            zoom={8}
-            duration={0}
+            centerCoordinate={[location?.lon, location?.lat]} // [longitude, latitude]
+            zoomLevel={zoomLevel}
+            maxZoomLevel={mapMaxZoom}
+            minZoomLevel={mapMinZoom}
+            animationDuration={0}
           />
-          {overlay?.type === 'WMS' && <WMSOverlay overlay={overlay} library="maplibre" />}
+
+          {styleReady && overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} library={library} />}
+          {styleReady && overlay && overlay.type === 'Timeseries' && (
+            <TimeseriesOverlay overlay={overlay} library={library} mapBounds={mapBounds} />
+          )}
+          {displayLocation && currentLocation && (
+            <PointAnnotation
+              id="location-marker"
+              coordinate={[initialRegion.longitude, initialRegion.latitude]}
+              anchor={{ x: 0.5, y: 1 }}
+            >
+              <Icon name="map-marker" size={22} />
+            </PointAnnotation>
+          )}
         </MlMapView>
       ) : (
         <MapView
@@ -224,7 +270,7 @@ const MapScreen: React.FC<MapScreenProps> = ({
           onRegionChangeComplete={onRegionChangeComplete}
           onPress={onPress}
           moveOnMarkerPress={false}>
-          {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} />}
+          {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} library={library} />}
           {overlay && overlay.type === 'Timeseries' && (
             <TimeseriesOverlay overlay={overlay} />
           )}

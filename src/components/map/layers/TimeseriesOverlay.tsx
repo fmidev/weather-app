@@ -3,12 +3,14 @@ import { connect, ConnectedProps } from 'react-redux';
 // import { Dimensions } from 'react-native';
 import Supercluster, { AnyProps, PointFeature } from 'supercluster';
 import { Region } from 'react-native-maps';
+import type { Position } from "geojson";
 
 import { State } from '@store/types';
 import { MapOverlay } from '@store/map/types';
 import { selectSliderTime, selectRegion } from '@store/map/selectors';
 
 import TimeseriesMarker from './TimeseriesMarker';
+import MlTimeseriesMarker from './MlTimeseriesMarker';
 
 const mapStateToProps = (state: State) => ({
   region: selectRegion(state),
@@ -21,13 +23,18 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type TimeseriesOverlayProps = PropsFromRedux & {
   overlay: MapOverlay;
+  library?: 'maplibre' | 'react-native-maps';
+  mapBounds?: [northEast: Position, southWest: Position];
 };
 
 const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   region,
   sliderTime,
   overlay,
+  library = 'react-native-maps',
+  mapBounds,
 }) => {
+  console.log('TimeseriesOverlay render', library, mapBounds);
   const { data } = overlay;
 
   const getZoomLevel = (longitudeDelta: number) => {
@@ -37,7 +44,13 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
   const getBBox = (r: Region): [number, number, number, number] => {
     const padding = 0.2;
-    return [
+    console.log('TimeseriesOverlay getBBox mapBounds', mapBounds);
+    return mapBounds ? [
+      mapBounds[1][0],
+      mapBounds[1][1],
+      mapBounds[0][0],
+      mapBounds[0][1],
+    ] : [
       r.longitude - r.longitudeDelta * (0.5 + padding),
       r.latitude - r.latitudeDelta * (0.5 + padding),
       r.longitude + r.longitudeDelta * (0.5 + padding),
@@ -99,7 +112,8 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
       return { cluster, markers };
     },
-    []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mapBounds]
   );
 
   const points = useMemo(
@@ -135,6 +149,8 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
     [points, region, getCluster]
   );
 
+  console.log('TimeseriesOverlay markers count', markers.length);
+
   const renderCluster = () =>
     markers.map(({ geometry, properties }) => {
       const [longitude, latitude] = geometry.coordinates;
@@ -148,16 +164,28 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
         return null;
       }
 
-      return (
-        <TimeseriesMarker
-          key={`${name}-${longitude}-${latitude}`}
-          name={name}
-          coordinate={{ latitude, longitude }}
-          smartSymbol={smartSymbol}
-          temperature={temperature}
-          windDirection={windDirection}
-          windSpeedMS={windSpeedMS}
-        />
+      return library === 'maplibre' ?
+        (
+          <MlTimeseriesMarker
+            key={`${name}-${longitude}-${latitude}`}
+            name={name}
+            coordinate={{ latitude, longitude }}
+            smartSymbol={smartSymbol}
+            temperature={temperature}
+            windDirection={windDirection}
+            windSpeedMS={windSpeedMS}
+          />
+        )
+        : (
+          <TimeseriesMarker
+            key={`${name}-${longitude}-${latitude}`}
+            name={name}
+            coordinate={{ latitude, longitude }}
+            smartSymbol={smartSymbol}
+            temperature={temperature}
+            windDirection={windDirection}
+            windSpeedMS={windSpeedMS}
+          />
       );
     });
 
