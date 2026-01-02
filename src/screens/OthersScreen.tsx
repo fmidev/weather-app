@@ -33,7 +33,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView edges={['right', 'bottom', 'left']}>
+    <SafeAreaView edges={['right', 'left']}>
       <View testID="others_view" style={styles.container}>
         <View>
           <View

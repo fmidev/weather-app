@@ -203,15 +203,22 @@ const Navigator: React.FC<Props> = ({
   };
 
   useEffect(() => {
+    // Listen to system theme changes
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setUseDarkTheme(isDark(colorScheme || undefined));
+      if (theme === 'automatic') {
+        setUseDarkTheme(isDark(colorScheme || undefined));
+      }
     });
 
     return () => subscription.remove();
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
-    if (theme !== 'automatic') {
+    // Update theme when changed in settings
+    const colorScheme = Appearance.getColorScheme();
+    if (theme === 'automatic') {
+        setUseDarkTheme(isDark(colorScheme || undefined));
+    } else {
       setUseDarkTheme(isDark(theme));
     }
   }, [theme]);
