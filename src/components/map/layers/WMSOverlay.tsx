@@ -133,6 +133,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   const tiles = [...urlMap.keys()];
 
+  /*
   const iosTiles = () => {
     const currentTileIndex = tiles.indexOf(current);
     return [
@@ -143,18 +144,20 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       ]),
     ];
   };
+  */
 
-  const renderTiles = Platform.OS === 'ios' ? iosTiles() : tiles;
+  const renderTiles = tiles;
 
   return (
     <>
-      {renderTiles.map((k) => (
+      {renderTiles.map((k, i) => (
         <MemoizedWMSTile
           key={k}
           urlTemplate={urlMap.get(k) as string}
           opacity={k === current ? 1 : 0}
           tileSize={overlay.tileSize}
           library={library}
+          index={i}
         />
       ))}
     </>
