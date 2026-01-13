@@ -3,7 +3,8 @@ import { connect, ConnectedProps } from 'react-redux';
 // import { Dimensions } from 'react-native';
 import Supercluster, { AnyProps, PointFeature } from 'supercluster';
 import { Region } from 'react-native-maps';
-import type { Position } from "geojson";
+import { ShapeSource, SymbolLayer, CircleLayer } from '@maplibre/maplibre-react-native';
+import type { Position, FeatureCollection, Point } from "geojson";
 
 import { State } from '@store/types';
 import { MapOverlay } from '@store/map/types';
@@ -12,6 +13,8 @@ import { selectSliderTime, selectRegion } from '@store/map/selectors';
 import TimeseriesMarker from './TimeseriesMarker';
 import MlTimeseriesMarker from './MlTimeseriesMarker';
 
+const MAPLIBRE_SYMBOL_LAYER = false;
+
 const mapStateToProps = (state: State) => ({
   region: selectRegion(state),
   sliderTime: selectSliderTime(state),
@@ -19,12 +22,26 @@ const mapStateToProps = (state: State) => ({
 
 const connector = connect(mapStateToProps, {});
 
+type TimeseriesProps = {
+  label: string;
+  iconKey: string;
+  smartSymbol: number;
+  temperature: number;
+  windSpeedMS: number;
+  windDirection: number;
+  epochtime: number;
+};
+
+type TimeseriesFeatureCollection =
+  FeatureCollection<Point, TimeseriesProps>;
+
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type TimeseriesOverlayProps = PropsFromRedux & {
   overlay: MapOverlay;
   library?: 'maplibre' | 'react-native-maps';
   mapBounds?: [northEast: Position, southWest: Position];
+  zoom?: number;
 };
 
 const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
@@ -33,8 +50,9 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   overlay,
   library = 'react-native-maps',
   mapBounds,
+  zoom
 }) => {
-  console.log('TimeseriesOverlay render', library, mapBounds);
+  console.log('TimeseriesOverlay render', library, mapBounds, region);
   const { data } = overlay;
 
   const getZoomLevel = (longitudeDelta: number) => {
@@ -74,7 +92,8 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
   const getCluster = useCallback(
     (points: PointFeature<AnyProps>[] | undefined, clusterRegion: Region) => {
-      const zoom = getZoomLevel(clusterRegion.longitudeDelta);
+      const zoomLevel = zoom ?? getZoomLevel(clusterRegion.longitudeDelta);
+      console.log('zoomLevel', zoomLevel);
       const bbox = getBBox(clusterRegion);
       const radius = 260;
 
@@ -92,7 +111,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
       try {
         cluster.load(points);
-        const clusters = cluster.getClusters(bbox, zoom);
+        const clusters = cluster.getClusters(bbox, zoomLevel);
 
         markers.push(
           ...clusters.flatMap((clusterPoint) =>
@@ -113,7 +132,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
       return { cluster, markers };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [mapBounds]
+    [mapBounds, zoom]
   );
 
   const points = useMemo(
@@ -131,6 +150,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
               population: Number(population),
               name,
               weatherData,
+              label: name
             },
             geometry: {
               type: 'Point',
@@ -149,7 +169,28 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
     [points, region, getCluster]
   );
 
-  console.log('TimeseriesOverlay markers count', markers.length);
+  const markersToFeatureCollection = (m: Supercluster.PointFeature<Supercluster.AnyProps>[]): TimeseriesFeatureCollection => {
+    return {
+      type: "FeatureCollection",
+      features: m.map((r) => {
+        const { temperature } = r.properties.weatherData.find(
+          ({ epochtime }: { epochtime: number }) => sliderTime === epochtime
+        ) || {};
+
+        return {
+          type: "Feature",
+          id: r.properties.name,
+          properties: {
+            ...r.properties as TimeseriesProps,
+            label: temperature +" °C"
+          },
+          geometry: r.geometry
+        }
+      })
+    }
+  };
+
+  const features = markersToFeatureCollection(markers);
 
   const renderCluster = () =>
     markers.map(({ geometry, properties }) => {
@@ -167,9 +208,10 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
       return library === 'maplibre' ?
         (
           <MlTimeseriesMarker
-            key={`${name}-${longitude}-${latitude}`}
+            key={`${name}-${longitude}-${latitude}-${zoom}`}
             name={name}
-            coordinate={{ latitude, longitude }}
+            coordinate={[longitude, latitude]}
+            zoom={zoom}
             smartSymbol={smartSymbol}
             temperature={temperature}
             windDirection={windDirection}
@@ -189,7 +231,40 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
       );
     });
 
-  return <>{renderCluster()}</>;
+  console.log('features', features.features.length);
+
+  return library === 'maplibre' && MAPLIBRE_SYMBOL_LAYER ? (
+    <ShapeSource
+      key={`marker-${zoom}`}
+      id={`marker-source`}
+      shape={features}
+    >
+      <CircleLayer
+        id={`marker-circle`}
+        // eslint-disable-next-line react-native/no-inline-styles, react-native/no-color-literals
+        style={{
+          // ympyrän säde (pisteinä)
+          circleRadius: 40,
+          // valkoinen tausta
+          circleColor: "#ffffff",
+          circleStrokeColor: "#000000",
+          circleStrokeWidth: 2,
+          circlePitchAlignment: "map",
+        }}
+      />
+      <SymbolLayer
+        id={`marker-layer`}
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{
+          textField: ["get", "label"],
+          textAllowOverlap: true,
+          textFont: ["Noto Sans Regular"],
+        }}
+      />
+    </ShapeSource>
+    )
+  :
+    <>{renderCluster()}</>;
 };
 
 export default connector(TimeseriesOverlay);

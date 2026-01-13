@@ -1,7 +1,9 @@
-import React from 'react';
+/* eslint-disable react-native/no-color-literals */
+
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
-
+import { MarkerView } from '@maplibre/maplibre-react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +19,7 @@ import { updateSelectedCallout as updateSelectedCalloutAction } from '@store/map
 
 import { Config } from '@config';
 import { selectUnits } from '@store/settings/selectors';
-import { PointAnnotation } from '@maplibre/maplibre-react-native';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 const mapStateToProps = (state: State) => ({
   selectedCallout: selectSelectedCallout(state),
@@ -33,6 +35,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type TimeseriesMarkerProps = PropsFromRedux & {
   name: string;
   coordinate: [number, number];
+  zoom: number;
   smartSymbol: number;
   temperature: number;
   windDirection: number;
@@ -42,10 +45,12 @@ type TimeseriesMarkerProps = PropsFromRedux & {
 const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   name,
   coordinate,
+  zoom,
   smartSymbol,
   temperature,
   windDirection,
   windSpeedMS,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   selectedCallout,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateSelectedCallout,
@@ -53,6 +58,8 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
 }) => {
   const { t } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
+
+  const [open, setOpen] = useState(false);
 
   const defaultUnits = Config.get('settings').units;
   const temperatureUnit =
@@ -79,66 +86,65 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
 
   const windSpeedValue = convertValue('wind', windUnit, windSpeedMS);
   const WeatherSymbol = weatherSymbolGetter(smartSymbol.toString(), false)
+  const key= `marker-${coordinate[0]}-${coordinate[1]}-${zoom}`
 
-  console.log('MlTimeseriesMarker render', coordinate);
+  //console.log('MlTimeseriesMarker render', coordinate, name, temperatureValue);
 
   return (
-    <PointAnnotation
-      id={name}
-      coordinate={[coordinate.longitude, coordinate.latitude]}
-      anchor={{ x: 0.5, y: 1 }}
-    >
-      <View
-        style={[
-          styles.markerContainer,
-          {
-            backgroundColor: colors.mapButtonBackground,
-            borderColor: colors.mapButtonBorder,
-          },
-        ]}
-      >
-        <View style={styles.mainRow}>
-            {WeatherSymbol ? <WeatherSymbol width={40} height={40} /> : null}
-          <Text
-            accessibilityLabel={`${temperatureValue} ${t(
-              `observation:paramUnits:°${temperatureUnit}`
-            )}`}
-            style={[styles.tempText, { color: colors.text }]}
+      <MarkerView key={key} coordinate={coordinate} anchor={{ x: 0.5, y: 1 }}>
+        <AccessibleTouchableOpacity
+          onPress={() => setOpen((v) => !v)}
+        >
+          <View
+            collapsable={false}
+            style={[
+              styles.markerContainer,
+              {
+                backgroundColor: colors.mapButtonBackground,
+                borderColor: colors.mapButtonBorder,
+              },
+            ]}
           >
-            {`${temperatureValue}°${temperatureUnit}`}
-          </Text>
-        </View>
-
-        {selectedCallout === name && (
-          <View style={styles.calloutContainer}>
-            <Text style={[styles.calloutTitle, { color: colors.text }]}>
-              {name}
-            </Text>
-            <Text style={[styles.calloutText, { color: colors.text }]}>
-              {`${t(`symbols:${smartSymbol}`)}`}
-            </Text>
-            <View style={styles.windSpeedRow}>
-              <Icon
-                name={dark ? 'wind-dark' : 'wind-light-map'}
-                width={24}
-                height={24}
-                style={{
-                  transform: [{ rotate: `${(windDirection || 0) + 45 - 180}deg` }],
-                }}
-              />
+            <View style={styles.mainRow}>
+              {WeatherSymbol ? <WeatherSymbol width={40} height={40} /> : null}
               <Text
-                style={[styles.calloutText, { color: colors.text }]}
-                accessibilityLabel={`${windSpeedValue} ${t(
-                  `observation:paramUnits:${windUnit}`
-                )}`}
+                style={[styles.tempText, { color: colors.text }]}
+                accessibilityLabel={`${temperatureValue} ${t(`observation:paramUnits:°${temperatureUnit}`)}`}
               >
-                {`${windSpeedValue} ${windUnit}`}
+                {`${temperatureValue}°${temperatureUnit}`}
               </Text>
             </View>
+            { open && (
+              <View style={styles.calloutContainer}>
+                <Text style={[styles.calloutTitle, { color: colors.text }]}>
+                  {name}
+                </Text>
+                <Text style={[styles.calloutText, { color: colors.text }]}>
+                  {`${t(`symbols:${smartSymbol}`)}`}
+                </Text>
+                <View style={styles.windSpeedRow}>
+                  <Icon
+                    name={dark ? 'wind-dark' : 'wind-light-map'}
+                    width={24}
+                    height={24}
+                    style={{
+                      transform: [{ rotate: `${(windDirection || 0) + 45 - 180}deg` }],
+                    }}
+                  />
+                  <Text
+                    style={[styles.calloutText, { color: colors.text }]}
+                    accessibilityLabel={`${windSpeedValue} ${t(
+                      `observation:paramUnits:${windUnit}`
+                    )}`}
+                  >
+                    {`${windSpeedValue} ${windUnit}`}
+                  </Text>
+                </View>
+              </View>
+            )}
           </View>
-        )}
-      </View>
-    </PointAnnotation>
+        </AccessibleTouchableOpacity>
+      </MarkerView>
   );
 };
 
@@ -147,6 +153,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderWidth: 1,
     borderRadius: 4,
+    minWidth: 80,
+    minHeight: 50,
+    backgroundColor: 'white',
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    fontSize: 14,
+    fontFamily: 'Roboto-Medium',
   },
   mainRow: {
     flexDirection: 'row',

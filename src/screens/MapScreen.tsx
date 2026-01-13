@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Platform, useWindowDimensions, Text } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
 import type { MapPressEvent } from 'react-native-maps';
-import { Camera as MlCamera, MapView as MlMapView, PointAnnotation } from '@maplibre/maplibre-react-native';
+import { Camera as MlCamera, MapView as MlMapView, PointAnnotation, type MapViewRef } from '@maplibre/maplibre-react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
@@ -91,12 +91,14 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const { library, updateInterval } = Config.get('map');
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const mapRef = useRef<MapView>(null);
+  const mlMapRef = useRef<MapViewRef>(null);
   const mapLayersSheetRef = useRef<RBSheet>(null);
   const infoSheetRef = useRef<RBSheet>(null);
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
   const [zoomLevel, setZoomLevel] = useState<number>(8);
   const [mapBounds, setMapBounds] = useState<[northEast: Position, southWest: Position] | undefined>(undefined);
   const [styleReady, setStyleReady] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
 
   const location = currentLocation ?? Config.get('location').default;
   const { baseMap } = Config.get('map');
@@ -192,6 +194,37 @@ const MapScreen: React.FC<MapScreenProps> = ({
       }
     }
   };
+
+  const updateBoundsFromRef = useCallback(async () => {
+    const bounds = await mlMapRef.current?.getVisibleBounds();
+    if (!bounds) return;
+
+    setMapBounds(bounds);
+  }, []);
+
+  const onDidFinishRenderingFrame = useCallback(() => {
+    if (!mapReady) {
+      setMapReady(true);
+      updateBoundsFromRef();
+    }
+  }, [mapReady, updateBoundsFromRef]);
+
+  const onRegionDidChange = useCallback((region: any) => {
+    if (!styleReady || !mapReady) return;
+
+    const vb = region?.properties?.visibleBounds;
+    if (!vb) return;
+
+    console.log('MapScreen onRegionDidChange visibleBounds', vb);
+    setMapBounds(vb);
+
+    const zoom = region?.properties?.zoomLevel;
+    if (!zoom) return;
+
+    console.log('MapScreen onRegionDidChange zoom', zoom);
+    setZoomLevel(zoom);
+  }, [styleReady, mapReady]);
+
   const onPress = (e: MapPressEvent) => {
     if (e.nativeEvent.action !== 'marker-press') {
       updateSelectedCallout(undefined);
@@ -218,31 +251,39 @@ const MapScreen: React.FC<MapScreenProps> = ({
   const mapStyle = baseMap!.url+(dark ? baseMap!.darkStyle : baseMap!.lightStyle)
                     .replace('{lang}', i18n.language);
 
+  console.log('MapScreen render', zoomLevel);
+
   return (
     <View style={styles.mapContainer}>
       { library === 'maplibre' ? (
         <MlMapView
           testID="maplibre_map"
+          ref={mlMapRef}
           // eslint-disable-next-line react-native/no-inline-styles
           style={{ flex: 1, width: '100%', height: '100%' }}
           mapStyle={mapStyle}
           onDidFinishLoadingStyle={() => setStyleReady(true)}
-          onRegionDidChange={(region) => {
-            console.log('Maplibre onRegionDidChange', region.properties.visibleBounds);
-            setMapBounds(region.properties.visibleBounds);
-          }}
+          onDidFinishRenderingFrameFully={onDidFinishRenderingFrame}
+          onRegionDidChange={onRegionDidChange}
          >
           <MlCamera
-            centerCoordinate={[location?.lon, location?.lat]} // [longitude, latitude]
-            zoomLevel={zoomLevel}
+            defaultSettings={{
+              centerCoordinate: [location?.lon, location?.lat],
+              zoomLevel: zoomLevel
+            }}
             maxZoomLevel={mapMaxZoom}
             minZoomLevel={mapMinZoom}
             animationDuration={0}
           />
 
-          {styleReady && overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} library={library} />}
-          {styleReady && overlay && overlay.type === 'Timeseries' && (
-            <TimeseriesOverlay overlay={overlay} library={library} mapBounds={mapBounds} />
+          {styleReady && overlay?.type === 'WMS' && <WMSOverlay overlay={overlay} library={library} />}
+          {styleReady && overlay?.type === 'Timeseries' && mapBounds && (
+            <TimeseriesOverlay
+              overlay={overlay}
+              library={library}
+              mapBounds={mapBounds}
+              zoom={zoomLevel}
+            />
           )}
           {displayLocation && currentLocation && (
             <PointAnnotation

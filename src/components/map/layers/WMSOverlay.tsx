@@ -41,9 +41,6 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   const forecast = overlay.forecast as Layer;
   const isFocused = useIsFocused();
 
-  console.log('forecast', forecast);
-  console.log('observation', observation);
-
   const [borderTime, setBorderTime] = useState<{
     time?: string;
     type: 'observation' | 'forecast';
@@ -133,7 +130,6 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   const tiles = [...urlMap.keys()];
 
-  /*
   const iosTiles = () => {
     const currentTileIndex = tiles.indexOf(current);
     return [
@@ -144,9 +140,8 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       ]),
     ];
   };
-  */
 
-  const renderTiles = tiles;
+  const renderTiles = Platform.OS === 'ios' && library !== 'maplibre' ? iosTiles() : tiles;
 
   return (
     <>
