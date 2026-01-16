@@ -129,11 +129,11 @@ const styles = StyleSheet.create({
   },
   bottomSecond: {
     right: 12,
-    bottom: 30 + 150,
+    bottom: 8 + 150,
   },
   bottomFirst: {
     right: 12,
-    bottom: 30 + 90,
+    bottom: 8 + 90,
   },
 });
 

@@ -343,7 +343,12 @@
     "clock": "Klockan",
     "12-hour-clock": "12-timmarsklocka",
     "24-hour-clock": "24-timmarsklocka",
-    "closeUnitBottomSheetAccessibilityLabel": "Stäng enhetens inställningar"
+    "closeUnitBottomSheetAccessibilityLabel": "Stäng enhetens inställningar",
+    "mapLibrary": "Kartbibliotek",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "maplibre": "MapLibre",
+    "mapLibrarySettingHint": "Byt kartbibliotek till:"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Sök plats",

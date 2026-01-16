@@ -263,7 +263,6 @@ export interface ConfigType {
     updateInterval: number;
     sources: { [name: string]: string };
     layers: MapLayer[];
-    library?: 'react-native-maps' | 'maplibre';
     baseMap?: BaseMap;
   };
   weather: {

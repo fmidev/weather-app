@@ -3,8 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 // import { Dimensions } from 'react-native';
 import Supercluster, { AnyProps, PointFeature } from 'supercluster';
 import { Region } from 'react-native-maps';
-import { ShapeSource, SymbolLayer, CircleLayer } from '@maplibre/maplibre-react-native';
-import type { Position, FeatureCollection, Point } from "geojson";
+import type { Position } from "geojson";
 
 import { State } from '@store/types';
 import { MapOverlay } from '@store/map/types';
@@ -12,8 +11,7 @@ import { selectSliderTime, selectRegion } from '@store/map/selectors';
 
 import TimeseriesMarker from './TimeseriesMarker';
 import MlTimeseriesMarker from './MlTimeseriesMarker';
-
-const MAPLIBRE_SYMBOL_LAYER = false;
+import { MapLibrary } from '@store/settings/types';
 
 const mapStateToProps = (state: State) => ({
   region: selectRegion(state),
@@ -22,24 +20,11 @@ const mapStateToProps = (state: State) => ({
 
 const connector = connect(mapStateToProps, {});
 
-type TimeseriesProps = {
-  label: string;
-  iconKey: string;
-  smartSymbol: number;
-  temperature: number;
-  windSpeedMS: number;
-  windDirection: number;
-  epochtime: number;
-};
-
-type TimeseriesFeatureCollection =
-  FeatureCollection<Point, TimeseriesProps>;
-
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type TimeseriesOverlayProps = PropsFromRedux & {
   overlay: MapOverlay;
-  library?: 'maplibre' | 'react-native-maps';
+  library?: MapLibrary;
   mapBounds?: [northEast: Position, southWest: Position];
   zoom?: number;
 };
@@ -52,7 +37,6 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   mapBounds,
   zoom
 }) => {
-  console.log('TimeseriesOverlay render', library, mapBounds, region);
   const { data } = overlay;
 
   const getZoomLevel = (longitudeDelta: number) => {
@@ -62,7 +46,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
   const getBBox = (r: Region): [number, number, number, number] => {
     const padding = 0.2;
-    console.log('TimeseriesOverlay getBBox mapBounds', mapBounds);
+
     return mapBounds ? [
       mapBounds[1][0],
       mapBounds[1][1],
@@ -93,7 +77,6 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   const getCluster = useCallback(
     (points: PointFeature<AnyProps>[] | undefined, clusterRegion: Region) => {
       const zoomLevel = zoom ?? getZoomLevel(clusterRegion.longitudeDelta);
-      console.log('zoomLevel', zoomLevel);
       const bbox = getBBox(clusterRegion);
       const radius = 260;
 
@@ -169,29 +152,6 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
     [points, region, getCluster]
   );
 
-  const markersToFeatureCollection = (m: Supercluster.PointFeature<Supercluster.AnyProps>[]): TimeseriesFeatureCollection => {
-    return {
-      type: "FeatureCollection",
-      features: m.map((r) => {
-        const { temperature } = r.properties.weatherData.find(
-          ({ epochtime }: { epochtime: number }) => sliderTime === epochtime
-        ) || {};
-
-        return {
-          type: "Feature",
-          id: r.properties.name,
-          properties: {
-            ...r.properties as TimeseriesProps,
-            label: temperature +" °C"
-          },
-          geometry: r.geometry
-        }
-      })
-    }
-  };
-
-  const features = markersToFeatureCollection(markers);
-
   const renderCluster = () =>
     markers.map(({ geometry, properties }) => {
       const [longitude, latitude] = geometry.coordinates;
@@ -231,40 +191,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
       );
     });
 
-  console.log('features', features.features.length);
-
-  return library === 'maplibre' && MAPLIBRE_SYMBOL_LAYER ? (
-    <ShapeSource
-      key={`marker-${zoom}`}
-      id={`marker-source`}
-      shape={features}
-    >
-      <CircleLayer
-        id={`marker-circle`}
-        // eslint-disable-next-line react-native/no-inline-styles, react-native/no-color-literals
-        style={{
-          // ympyrän säde (pisteinä)
-          circleRadius: 40,
-          // valkoinen tausta
-          circleColor: "#ffffff",
-          circleStrokeColor: "#000000",
-          circleStrokeWidth: 2,
-          circlePitchAlignment: "map",
-        }}
-      />
-      <SymbolLayer
-        id={`marker-layer`}
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          textField: ["get", "label"],
-          textAllowOverlap: true,
-          textFont: ["Noto Sans Regular"],
-        }}
-      />
-    </ShapeSource>
-    )
-  :
-    <>{renderCluster()}</>;
+  return <>{renderCluster()}</>;
 };
 
 export default connector(TimeseriesOverlay);

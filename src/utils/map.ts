@@ -5,6 +5,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
 import i18n from '@i18n';
+import type { MapLibrary } from '@store/settings/types';
 
 import axiosClient from './axiosClient';
 import packageJSON from '../../package.json';
@@ -116,7 +117,7 @@ export const getSliderMaxUnix = (
 export const getSliderStepSeconds = (sliderStep: number): number =>
   ([5, 15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
 
-export const getOverlayData = async (activeOverlay: number) => {
+export const getOverlayData = async (activeOverlay: number, library: MapLibrary) => {
   const { sources, layers } = Config.get('map');
   const [overlay] = layers.filter(
     ({ id }) => !activeOverlay || activeOverlay === id
@@ -125,7 +126,7 @@ export const getOverlayData = async (activeOverlay: number) => {
   if (overlay.type === 'Timeseries') {
     return getTimeseriesData(sources, overlay);
   }
-  return getWMSLayerUrlsAndBounds(sources, overlay);
+  return getWMSLayerUrlsAndBounds(sources, overlay, library);
 };
 
 const getTimeseriesData = async (
@@ -220,9 +221,9 @@ const flattenLayers = (root: RawWmsLayer): WmsLayer[] => {
 
 const getWMSLayerUrlsAndBounds = async (
   sources: { [name: string]: string },
-  overlay: MapLayer
+  overlay: MapLayer,
+  library: MapLibrary
 ): Promise<Map<number, MapOverlay> | undefined> => {
-  const { library } = Config.get('map');
   const capabilitiesData = new Map();
   const overlayMap = new Map();
 
@@ -361,23 +362,4 @@ const getWMSLayerUrlsAndBounds = async (
   });
 
   return overlayMap;
-};
-
-const R = 6378137;
-
-export const lonLatToWebMercator = (
-  lon: number,
-  lat: number
-): { x: number; y: number } => {
-  const maxLat = 85.05112878;
-  const clampedLat = Math.max(Math.min(lat, maxLat), -maxLat);
-
-  const x = (R * lon * Math.PI) / 180;
-  const y =
-    R *
-    Math.log(
-      Math.tan(Math.PI / 4 + (clampedLat * Math.PI) / 360)
-    );
-
-  return { x, y };
 };

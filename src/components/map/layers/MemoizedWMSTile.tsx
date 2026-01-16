@@ -17,13 +17,13 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   library = 'react-native-maps',
   index
 }) => {
-  console.log('MemoizedWMSTile render', index);
   return library === 'maplibre' ? (
     <RasterSource id={`wms-source-${index}`} tileUrlTemplates={[urlTemplate]} tileSize={256}>
       <RasterLayer
         id={`wms-layer-${index}`}
         key={`wms-layer-${index}`}
         sourceID={`wms-source-${index}`}
+        belowLayerID="places_region"
         // eslint-disable-next-line react-native/no-inline-styles
         style={{
           rasterOpacity: opacity ?? 0,

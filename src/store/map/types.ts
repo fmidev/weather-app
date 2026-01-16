@@ -10,6 +10,7 @@ export const UPDATE_ACTIVE_OVERLAY = 'UPDATE_ACTIVE_OVERLAY';
 export const UPDATE_REGION = 'UPDATE_REGION';
 export const UPDATE_SELECTED_CALLOUT = 'UPDATE_SELECTED_CALLOUT';
 export const UPDATE_ANIMATION_SPEED = 'UPDATE_ANIMATION_SPEED';
+export const UPDATE_ZOOM_LEVEL = 'UPDATE_ZOOM_LEVEL';
 
 interface UpdateSliderTime {
   type: typeof UPDATE_SLIDER_TIME;
@@ -59,6 +60,11 @@ interface UpdateAnimationSpeed {
   speed: number;
 }
 
+interface UpdateZoomLevel {
+  type: typeof UPDATE_ZOOM_LEVEL;
+  level: number;
+}
+
 export type MapActionTypes =
   | UpdateSliderTime
   | AnimateToArea
@@ -69,7 +75,8 @@ export type MapActionTypes =
   | UpdateActiveOverlay
   | UpdateRegion
   | UpdateSelectedCallout
-  | UpdateAnimationSpeed;
+  | UpdateAnimationSpeed
+  | UpdateZoomLevel;
 
 export interface MapLayers {
   location: boolean;
@@ -124,6 +131,7 @@ export interface MapState {
   overlaysError: boolean | Error | string;
   activeOverlay: number | undefined;
   region: Region;
+  zoomLevel: number;
   selectedCallout: string | undefined;
   animationSpeed: number;
 }

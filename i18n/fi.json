@@ -343,7 +343,12 @@
     "clock": "Kello",
     "12-hour-clock": "12 tunnin kello",
     "24-hour-clock": "24 tunnin kello",
-    "closeUnitBottomSheetAccessibilityLabel": "Sulje yksikön valinta"
+    "closeUnitBottomSheetAccessibilityLabel": "Sulje yksikön valinta",
+    "mapLibrary": "Karttakirjasto",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "maplibre": "MapLibre",
+    "mapLibrarySettingHint": "Vaihda sovelluksen karttakirjastoksi:"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",

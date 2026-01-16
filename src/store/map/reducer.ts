@@ -12,6 +12,7 @@ import {
   UPDATE_REGION,
   UPDATE_SELECTED_CALLOUT,
   UPDATE_ANIMATION_SPEED,
+  UPDATE_ZOOM_LEVEL,
 } from './types';
 
 const INITIAL_STATE: MapState = {
@@ -27,6 +28,7 @@ const INITIAL_STATE: MapState = {
   overlaysError: false,
   activeOverlay: undefined,
   region: { latitude: 0, longitude: 0, longitudeDelta: 0, latitudeDelta: 0 },
+  zoomLevel: 8,
   selectedCallout: undefined,
 };
 
@@ -103,6 +105,13 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
       return {
         ...state,
         animationSpeed: action.speed,
+      };
+    }
+
+    case UPDATE_ZOOM_LEVEL: {
+      return {
+        ...state,
+        zoomLevel: action.level,
       };
     }
 
