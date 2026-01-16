@@ -14,23 +14,16 @@ import { converter, toPrecision } from '@utils/units';
 import { State } from '@store/types';
 
 import Icon from '@assets/Icon';
-import { selectSelectedCallout } from '@store/map/selectors';
-import { updateSelectedCallout as updateSelectedCalloutAction } from '@store/map/actions';
 
 import { Config } from '@config';
 import { selectUnits } from '@store/settings/selectors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 const mapStateToProps = (state: State) => ({
-  selectedCallout: selectSelectedCallout(state),
   units: selectUnits(state),
 });
 
-const mapDispatchToProps = {
-  updateSelectedCallout: updateSelectedCalloutAction,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type TimeseriesMarkerProps = PropsFromRedux & {
   name: string;
@@ -42,6 +35,8 @@ type TimeseriesMarkerProps = PropsFromRedux & {
   windSpeedMS: number;
 };
 
+// Marker for Maplibre map
+
 const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   name,
   coordinate,
@@ -50,10 +45,6 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   temperature,
   windDirection,
   windSpeedMS,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  selectedCallout,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateSelectedCallout,
   units,
 }) => {
   const { t } = useTranslation();
@@ -87,8 +78,6 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   const windSpeedValue = convertValue('wind', windUnit, windSpeedMS);
   const WeatherSymbol = weatherSymbolGetter(smartSymbol.toString(), false)
   const key= `marker-${coordinate[0]}-${coordinate[1]}-${zoom}`
-
-  //console.log('MlTimeseriesMarker render', coordinate, name, temperatureValue);
 
   return (
       <MarkerView key={key} coordinate={coordinate} anchor={{ x: 0.5, y: 1 }}>
