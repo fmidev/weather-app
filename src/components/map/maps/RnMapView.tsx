@@ -19,7 +19,6 @@ import {
   selectActiveOverlay,
   selectDisplayLocation,
   selectOverlay,
-  selectZoomLevel,
 } from '@store/map/selectors';
 import {
   updateOverlays as updateOverlaysAction,
@@ -50,7 +49,6 @@ const mapStateToProps = (state: State) => ({
   overlay: selectOverlay(state),
   activeOverlay: selectActiveOverlay(state),
   timezone: selectTimeZone(state),
-  zoomLevel: selectZoomLevel,
 });
 
 const mapDispatchToProps = {
