@@ -58,9 +58,3 @@ export const selectAnimationSpeed = createSelector(
   selectMapDomain,
   (map) => map.animationSpeed
 );
-
-export const selectZoomLevel = createSelector(
-  selectMapDomain,
-  (map) => map.zoomLevel
-);
-
