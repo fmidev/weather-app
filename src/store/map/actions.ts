@@ -16,7 +16,6 @@ import {
   UPDATE_REGION,
   UPDATE_SELECTED_CALLOUT,
   UPDATE_ANIMATION_SPEED,
-  UPDATE_ZOOM_LEVEL,
 } from './types';
 import type { MapLibrary } from '@store/settings/types';
 
@@ -67,9 +66,4 @@ export const updateSelectedCallout =
 export const updateAnimationSpeed =
   (speed: number) => (dispatch: Dispatch<MapActionTypes>) => {
     dispatch({ type: UPDATE_ANIMATION_SPEED, speed });
-  };
-
-export const updateZoomLevel =
-  (level: number) => (dispatch: Dispatch<MapActionTypes>) => {
-    dispatch({ type: UPDATE_ZOOM_LEVEL, level });
   };
