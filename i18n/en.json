@@ -182,7 +182,7 @@
       "dayDuration": "day length in hours (h) and minutes (min)",
       "polarNight": "Polar night",
       "nightlessNight": "Midnight sun",
-      "currentWeatherSymbolsTitle": "Weather symbols currently in effect",
+      "currentWeatherSymbolsTitle": "Weather symbols in the current forecast",
       "dayTime": "daylight",
       "nightTime": "night time",
       "description": "description",

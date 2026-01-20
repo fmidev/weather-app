@@ -182,7 +182,7 @@
       "dayDuration": "päivän pituus tunteina (h) ja minuutteina (min)",
       "polarNight": "Kaamos",
       "nightlessNight": "Yötön yö",
-      "currentWeatherSymbolsTitle": "Tällä hetkellä voimassa olevat säämerkit",
+      "currentWeatherSymbolsTitle": "Tällä hetkellä ennusteessa olevat säämerkit",
       "dayTime": "valoisalla",
       "nightTime": "pimeällä",
       "description": "kuvaus",
