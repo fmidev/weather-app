@@ -265,6 +265,8 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    width: '100%',
+    padding: 16,
   },
   sheetListContainer: {
     flex: 1,

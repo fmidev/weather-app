@@ -9,8 +9,9 @@ import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
+import { TrueSheet } from '@lodev09/react-native-true-sheet';
 
-import { CustomTheme, GRAY_1 } from '@assets/colors';
+import { CustomTheme } from '@assets/colors';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,
@@ -24,10 +25,9 @@ import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
-import RBSheet from 'react-native-raw-bottom-sheet';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
-import InfoSheet from './InfoSheet';
+import InfoSheet from './sheets/InfoSheet';
 import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
@@ -53,7 +53,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
-  const infoSheetRef = useRef<RBSheet>(null);
+  const infoSheetRef = useRef<TrueSheet>(null);
   const headerRef = useRef<View>(null);
   const colorMode = dark ? 'dark' : 'light';
 
@@ -131,9 +131,9 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
             <AccessibleTouchableOpacity
               testID="warnings_info_button"
               accessibilityLabel={t('infoAccessibilityLabel')}
-              onPress={() => {
+              onPress={async () => {
                 trackMatomoEvent('User action', 'Warnings', 'Open warnings info panel');
-                infoSheetRef.current?.open();
+                await infoSheetRef.current?.present();
               }}>
               <View style={[styles.iconPadding]}>
                 <Icon
@@ -248,19 +248,15 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           <DayDetails warnings={dailyWarnings[selectedDay].warnings} />
         </View>
       </View>
-      <RBSheet
-        ref={infoSheetRef}
-        height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
-        <InfoSheet onClose={() => infoSheetRef.current?.close()} />
-      </RBSheet>
+        <TrueSheet
+          ref={infoSheetRef}
+          detents={[0.75]}
+          maxHeight={600}
+          backgroundColor={colors.background}
+          scrollable
+        >
+          <InfoSheet onClose={() => infoSheetRef.current?.dismiss()} />
+        </TrueSheet>
     </View>
   );
 };
@@ -376,14 +372,6 @@ const styles = StyleSheet.create({
   dayWarningHeaderText: {
     textTransform: 'capitalize',
     textAlign: 'center',
-  },
-  sheetContainer: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  draggableIcon: {
-    backgroundColor: GRAY_1,
-    width: 65,
   },
   loading: {
     paddingHorizontal: 18,

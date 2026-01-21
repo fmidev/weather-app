@@ -4,7 +4,7 @@ import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import { TrueSheet } from "@lodev09/react-native-true-sheet"
 
 import { State } from '@store/types';
 
@@ -17,8 +17,6 @@ import {
   selectDisplayFormat,
   selectForecastAge,
 } from '@store/forecast/selectors';
-
-import { GRAY_1, CustomTheme } from '@assets/colors';
 
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
@@ -84,8 +82,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
-  const paramSheetRef = useRef<RBSheet>(null);
-  const weatherInfoSheetRef = useRef<RBSheet>(null);
+  const paramSheetRef = useRef<TrueSheet>(null);
+  const weatherInfoSheetRef = useRef<TrueSheet>(null);
   const { ageWarning, forecastLengthTitle } = Config.get('weather').forecast;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
@@ -227,9 +225,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               accessibilityLabel={t('paramsAccessibilityLabel')}
               accessibilityHint={t('paramsBottomSheet.subTitle')}
               style={styles.bottomSheetButton}
-              onPress={() => {
+              onPress={async() => {
                 trackMatomoEvent('User action', 'Weather', 'Open forecast parameter settings');
-                paramSheetRef.current?.open();
+                await paramSheetRef.current?.present();
               }}
               disabled={displayFormat === CHART}>
               <Icon
@@ -250,9 +248,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               accessibilityLabel={t('infoAccessibilityLabel')}
               accessibilityHint={t('infoAccessibilityHint')}
               style={styles.bottomSheetButton}
-              onPress={() => {
+              onPress={async() => {
                 trackMatomoEvent('User action', 'Weather', 'Open forecast info bottomsheet');
-                weatherInfoSheetRef.current?.open();
+                await weatherInfoSheetRef.current?.present();
               }}
               disabled={displayFormat === CHART}>
               <Icon
@@ -290,34 +288,24 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
             />
           )}
       </View>
-      <RBSheet
+      <TrueSheet
         ref={paramSheetRef}
-        height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
-        <ParamsBottomSheet onClose={() => paramSheetRef.current?.close()} />
-      </RBSheet>
-      <RBSheet
+        detents={[0.75]}
+        maxHeight={600}
+        backgroundColor={colors.background}
+        scrollable
+      >
+        <ParamsBottomSheet onClose={() => paramSheetRef.current?.dismiss()} />
+      </TrueSheet>
+      <TrueSheet
         ref={weatherInfoSheetRef}
-        height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
-        <WeatherInfoBottomSheet
-          onClose={() => weatherInfoSheetRef.current?.close()}
-        />
-      </RBSheet>
+        detents={[0.75]}
+        maxHeight={600}
+        backgroundColor={colors.background}
+        scrollable
+      >
+        <WeatherInfoBottomSheet onClose={() => weatherInfoSheetRef.current?.dismiss()} />
+      </TrueSheet>
     </View>
   );
 };
@@ -364,14 +352,6 @@ const styles = StyleSheet.create({
   },
   bottomSheetButton: {
     paddingHorizontal: 6,
-  },
-  sheetContainer: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  draggableIcon: {
-    backgroundColor: GRAY_1,
-    width: 65,
   },
 });
 

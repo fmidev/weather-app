@@ -1453,6 +1453,11 @@
   resolved "https://registry.yarnpkg.com/@jsamr/react-native-li/-/react-native-li-2.3.1.tgz#12a5b5f6e3971cec77b96bee58104eed0ae9314a"
   integrity sha512-Qbo4NEj48SQ4k8FZJHFE2fgZDKTWaUGmVxcIQh3msg5JezLdTMMHuRRDYctfdHI6L0FZGObmEv3haWbIvmol8w==
 
+"@lodev09/react-native-true-sheet@3.8.0-beta.2":
+  version "3.8.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@lodev09/react-native-true-sheet/-/react-native-true-sheet-3.8.0-beta.2.tgz#7356f442779aeae95de0f8bdefd6defd49f802cf"
+  integrity sha512-DG7zhAfTAyTb3XdGH2YsnJifvYfgfNkI+KzrQkFCHNTNbHXmhhTTN0RJoXDncJZcqYhQmzGjdVq983wbtUkICQ==
+
 "@logicwind/react-native-matomo-tracker@^0.3.12":
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/@logicwind/react-native-matomo-tracker/-/react-native-matomo-tracker-0.3.12.tgz#1280d32fc0185d27c92cdd34e760e39fb665fa39"

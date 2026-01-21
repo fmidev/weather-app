@@ -8,19 +8,14 @@ import CloseButton from '@components/common/CloseButton';
 
 import { CustomTheme, GREEN, ORANGE, RED, YELLOW } from '@assets/colors';
 import useOrientation from '@utils/hooks';
-import { WarningType } from '@store/warnings/types';
 import { knownWarningTypes } from '@store/warnings/constants';
-import SeverityBar from './SeverityBar';
-import TypeColorRow from './TypeColorRow';
-import WarningIcon from './WarningIcon';
+import TypeColorRow from '../TypeColorRow';
+import SeverityBarRow from './SeverityBarRow';
+import TypeRow from './TypeRow';
 
 type InfoSheetProps = {
   onClose: () => void;
 };
-
-const showPhysical = (type: WarningType): boolean => {
-  return type.toLowerCase().includes('wind');
-}
 
 const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
@@ -28,37 +23,6 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   const isLandscape = useOrientation();
   const severities = [0, 1, 2, 3];
   const severityColors = [GREEN, YELLOW, ORANGE, RED];
-  const physical = {
-    windIntensity: 21,
-    windDirection: 225,
-  };
-
-  const SeverityBarRow = ({ severity }: { severity: number }) => (
-    <View style={styles.row}>
-      <View style={[styles.iconWrapper, styles.severity]}>
-        <SeverityBar severity={severity} />
-      </View>
-      <Text style={[styles.text, { color: colors.hourListText }]}>
-        {t(`warnings:severities:${severity}`).toLocaleLowerCase()}
-      </Text>
-    </View>
-  );
-
-  const TypeRow = ({ type }: { type: WarningType }) => (
-    <View style={styles.row}>
-      <View style={[styles.iconWrapper]}>
-        <WarningIcon
-          maxScaleFactor={1.5}
-          type={type}
-          severity={1}
-          physical={ showPhysical(type) ? physical : undefined }
-        />
-      </View>
-      <Text style={[styles.text, { color: colors.hourListText }]}>
-        {t(`warnings:types:${type}`).toLocaleLowerCase()}
-      </Text>
-    </View>
-  );
 
   return (
     <View testID="warnings_info_bottom_sheet" style={styles.wrapper}>
@@ -161,6 +125,8 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    width: '100%',
+    paddingVertical: 16,
   },
   sheetListContainer: {
     flex: 1,
@@ -200,9 +166,6 @@ const styles = StyleSheet.create({
   iconWrapper: {
     minWidth: 40,
     marginRight: 8,
-  },
-  severity: {
-    paddingRight: 16,
   },
   text: {
     fontSize: 16,

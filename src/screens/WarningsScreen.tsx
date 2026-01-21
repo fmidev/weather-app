@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused, useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@assets/colors';
 
 import {
   fetchWarnings as fetchWarningsAction,
@@ -17,6 +16,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrent } from '@store/location/selector';
 import { selectAnnouncements } from '@store/announcements/selectors';
 import CapWarningsView from '@components/warnings/cap/CapWarningsView';
+import { CustomTheme } from '@assets/colors';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),

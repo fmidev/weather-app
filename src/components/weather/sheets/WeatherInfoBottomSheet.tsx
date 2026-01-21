@@ -867,6 +867,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    width: '100%',
+    paddingVertical: 16,
   },
   sheetListContainer: {
     flex: 1,
