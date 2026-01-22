@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -65,7 +65,11 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
             accessibilityLabel={
               isGeolocation ? `${title()}, ${t('currentLocation')}` : title()
             }
-            style={[styles.title, { color: colors.text }]}>
+            style={[
+              styles.title,
+              { color: colors.text },
+              Platform.OS === 'android' && styles.titleAndroid]
+            }>
             {title()}
           </Text>
         </View>
@@ -86,6 +90,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
     textAlign: 'center',
+  },
+  titleAndroid: {
+    maxWidth: '75%',
   },
   row: {
     flexDirection: 'row',
