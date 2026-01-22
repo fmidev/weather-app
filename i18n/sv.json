@@ -182,7 +182,7 @@
       "dayDuration": "dagens längd i timmar (h) och minuter (min)",
       "polarNight": "Polarnatt",
       "nightlessNight": "Midnattssol",
-      "currentWeatherSymbolsTitle": "Vädersymboler som gäller för närvarande",
+      "currentWeatherSymbolsTitle": "Vädersymboler i den aktuella prognosen",
       "dayTime": "när det är ljust",
       "nightTime": "när det är mörkt",
       "description": "beskrivning",
