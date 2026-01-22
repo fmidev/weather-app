@@ -40,7 +40,7 @@ import OnboardingScreen from '@screens/OnboardingScreen';
 import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
 import Text from '@components/common/AppText';
-import Icon from '@assets/Icon';
+import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
@@ -261,7 +261,6 @@ const Navigator: React.FC<Props> = ({
     ...CommonHeaderOptions,
     headerLeft: () => (
       <HeaderButton
-        title={t('navigation:locate')}
         accessibilityLabel={t('navigation:locate')}
         accessibilityHint={t('navigation:locateAccessibilityLabel')}
         icon="locate"
@@ -280,7 +279,6 @@ const Navigator: React.FC<Props> = ({
     headerRight: () => (
       <HeaderButton
         testID="search_header_button"
-        title={t('navigation:search')}
         accessibilityLabel={t('navigation:search')}
         accessibilityHint={t('navigation:searchAccessibilityLabel')}
         icon="search"
@@ -607,6 +605,7 @@ const Navigator: React.FC<Props> = ({
                   style={{ color }}
                   width={size}
                   height={size}
+                  maxScaleFactor={1.2}
                 />
               ),
             }}
@@ -628,7 +627,13 @@ const Navigator: React.FC<Props> = ({
               tabBarLabel: `${t('navigation:map')}`,
               tabBarLabelStyle: styles.tabText,
               tabBarIcon: ({ color, size }) => (
-                <Icon name="map" style={{ color }} width={size} height={size} />
+                <Icon
+                  name="map"
+                  maxScaleFactor={1.2}
+                  style={{ color }}
+                  width={size}
+                  height={size}
+                />
               ),
             }}
             listeners={{
@@ -657,6 +662,7 @@ const Navigator: React.FC<Props> = ({
                     color={color}
                     size={size}
                     updateWarningsSeverity={setWarningsSeverity}
+                    maxScaleFactor={1.2}
                   />
                 ),
               }}
@@ -683,6 +689,7 @@ const Navigator: React.FC<Props> = ({
                   style={{ color }}
                   width={size}
                   height={size}
+                  maxScaleFactor={1.2}
                 />
               ),
             }}
