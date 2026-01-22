@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Appearance,
@@ -7,7 +6,6 @@ import {
   StatusBar,
   StyleProp,
   ViewStyle,
-  View,
   AppState,
   AppStateStatus
 } from 'react-native';
@@ -85,6 +83,7 @@ import {
 import WarningsTabIcon from './WarningsTabIcon';
 import { sendMatomoEvents, trackMatomoEvent } from '@utils/matomo';
 import packageJSON from '../../package.json';
+import HeaderBackImage from '@components/common/HeaderBackImage';
 
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
@@ -223,17 +222,6 @@ const Navigator: React.FC<Props> = ({
     }
   }, [theme]);
 
-  const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
-    <View style={styles.headerBackImage}>
-      <Icon
-        name="arrow-back"
-        style={[{ color: tintColor }]}
-        width={26}
-        height={26}
-      />
-    </View>
-  );
-
   const CommonHeaderOptions: StackNavigationOptions = {
     headerBackTestID: 'header-back',
     headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
@@ -246,9 +234,7 @@ const Navigator: React.FC<Props> = ({
         useDarkTheme || Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
     },
     headerTitleAlign: 'center',
-    headerBackImage: ({ tintColor }: { tintColor: string }) => (
-      <HeaderBackImage tintColor={tintColor} />
-    ),
+    headerBackImage: HeaderBackImage,
     headerBackTitle: '',
     headerBackAccessibilityLabel: t('navigation:backAccessibilityLabel'),
   };
@@ -259,6 +245,7 @@ const Navigator: React.FC<Props> = ({
     navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
   }) => ({
     ...CommonHeaderOptions,
+    // eslint-disable-next-line react/no-unstable-nested-components
     headerLeft: () => (
       <HeaderButton
         title={t('navigation:locate')}
@@ -271,12 +258,14 @@ const Navigator: React.FC<Props> = ({
         }}
       />
     ),
+    // eslint-disable-next-line react/no-unstable-nested-components
     headerTitle: () => (
       <CommonHeaderTitle onPress={() => {
         trackMatomoEvent('User action', 'Map', 'Open search - location');
         navigation.navigate('Search');
       }} />
     ),
+    // eslint-disable-next-line react/no-unstable-nested-components
     headerRight: () => (
       <HeaderButton
         testID="search_header_button"
@@ -297,6 +286,7 @@ const Navigator: React.FC<Props> = ({
     ...CommonHeaderOptions,
     path: 'search',
     headerBackTitleVisible: false,
+    // eslint-disable-next-line react/no-unstable-nested-components
     headerTitle: () => (
       <Text
         style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
@@ -305,6 +295,7 @@ const Navigator: React.FC<Props> = ({
         {t('navigation:search')}
       </Text>
     ),
+    // eslint-disable-next-line react/no-unstable-nested-components
     headerRight: () => (
       <HeaderButton
         testID="search_header_info_button"
@@ -723,15 +714,6 @@ const styles = StyleSheet.create({
   tabText: {
     fontFamily: 'Roboto-Medium',
     fontSize: 14,
-  },
-  headerBackImage: {
-    flex: 1,
-    paddingVertical: 10,
-    ...Platform.select({
-      ios: {
-        marginLeft: 22,
-      },
-    }),
   },
   sheetContainer: {
     borderTopLeftRadius: 10,
