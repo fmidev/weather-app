@@ -790,14 +790,14 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                         </Text>
                       </View>
                       <View key={item.key} style={[styles.row, styles.symbolRow]}>
-                        <View style={[styles.row, styles.flex1]}>
-                          <Text style={[styles.symbolText, styles.withMarginRight, { color: colors.hourListText }]}>
+                        <View style={styles.symbolContainer}>
+                          <Text style={[styles.symbolText, styles.symbolGap, { color: colors.hourListText }]}>
                             {t('weatherInfoBottomSheet.dayTime')}
                           </Text>
                           <item.day width={symbolSize} height={symbolSize} />
                         </View>
-                        <View style={[styles.row, styles.flex1]}>
-                          <Text style={[styles.symbolText, styles.withMarginRight, { color: colors.hourListText }]}>
+                        <View style={styles.symbolContainer}>
+                          <Text style={[styles.symbolText, styles.symbolGap, { color: colors.hourListText }]}>
                             {t('weatherInfoBottomSheet.nightTime')}
                           </Text>
                           <item.night width={symbolSize} height={symbolSize} />
@@ -869,8 +869,22 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   symbolRow: {
-    maxHeight: 120,
+    width: '100%',
     maxWidth: 450,
+    flexWrap: 'wrap',
+    columnGap: 16,
+    alignItems: 'flex-start',
+    paddingTop: 0,
+    paddingBottom: 16,
+  },
+  symbolGap: {
+    marginRight: 8,
+  },
+  symbolContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexGrow: 0,
+    flexShrink: 1,
   },
   iconWrapper: {
     width: 70,
@@ -949,6 +963,7 @@ const styles = StyleSheet.create({
   symbolText: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
+    paddingVertical: 0,
   },
   bold: {
     fontFamily: 'Roboto-Bold',
