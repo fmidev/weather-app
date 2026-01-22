@@ -629,10 +629,10 @@ const Navigator: React.FC<Props> = ({
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="map"
-                  maxScaleFactor={1.2}
                   style={{ color }}
                   width={size}
                   height={size}
+                  maxScaleFactor={1.2}
                 />
               ),
             }}
