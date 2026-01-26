@@ -18,7 +18,7 @@ import constants from './constants';
 const INITIAL_STATE: ForecastState = {
   data: {},
   auroraBorealisData: {},
-  loading: false,
+  loading: true,
   error: false,
   displayParams: [],
   displayFormat: 'table',
@@ -53,14 +53,12 @@ const formatData = (dataSets: WeatherData[]): WeatherData => {
   return weatherData;
 };
 
-const filterLocations = (data: WeatherData, favorites: number[]): WeatherData =>
-  Object.keys(data)
-    .map((geoid) => (geoid === 'nan' ? 0 : Number(geoid)))
-    .filter((geoid) => favorites.includes(Number(geoid)))
-    .reduce(
-      (obj, key) => ({ ...obj, [key]: data[key === 0 ? 'nan' : key] }),
-      {}
-    );
+const fixLocationsWithoutGeoId = (data: WeatherData): WeatherData =>
+  Object.keys(data).reduce((result, key) => {
+    const normalizedKey = key === 'nan' ? '0' : key;
+    result[normalizedKey] = data[key];
+    return result;
+  }, {} as WeatherData);
 
 export default (
   // eslint-disable-next-line @typescript-eslint/default-param-last
@@ -82,9 +80,8 @@ export default (
           ? Object.keys(action.data.forecasts[0])[0] : 0;
       return {
         ...state,
-        data: filterLocations(
+        data: fixLocationsWithoutGeoId(
           { ...state.data, ...formatData(action.data.forecasts) },
-          action.favorites
         ),
         auroraBorealisData: {
           ...state.auroraBorealisData,

@@ -27,7 +27,6 @@ interface FetchForecastSuccess {
     forecasts: WeatherData[],
     isAuroraBorealisLikely: boolean
   };
-  favorites: number[];
   timestamp: number;
 }
 
