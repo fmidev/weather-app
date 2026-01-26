@@ -14,7 +14,8 @@ const getErrorMessage = (headers: Record<string, string>): string | undefined =>
 const axiosClient = async (
   options: AxiosRequestConfig,
   abortController?: AbortController,
-  analyticsAction?: AnalyticActions
+  analyticsAction?: AnalyticActions,
+  ignoreError400: boolean = false
 ) => {
   const { timeout = 20000 } = options;
   const controller = abortController || new AbortController();
@@ -52,8 +53,10 @@ const axiosClient = async (
           trackMatomoEvent('Error', action, error);
         }
       } else {
-        // Disable this if causes too much noise
-        trackMatomoEvent('Error', action, `Network error: ${error.message}`);
+        if(!ignoreError400) {
+          // Disable this if causes too much noise
+          trackMatomoEvent('Error', action, `Network error: ${error.message}`);
+        }
       }
 
       clearTimeout(timeoutId);

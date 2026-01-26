@@ -110,7 +110,7 @@ export const getForecast = async (
 
   queries.push(
     geoMagneticObservationsEnabled
-      ? axiosClient({ url: apiUrl, params: geoMagneticParams }, undefined, 'Timeseries')
+      ? axiosClient({ url: apiUrl, params: geoMagneticParams }, undefined, 'Timeseries', true)
       : Promise.resolve({ data: {} }),
   );
 
