@@ -52,8 +52,10 @@ const axiosClient = async (
           trackMatomoEvent('Error', action, error);
         }
       } else {
-        // Disable this if causes too much noise
-        trackMatomoEvent('Error', action, `Network error: ${error.message}`);
+        if(!options.params?.ignoreError400) {
+          // Disable this if causes too much noise
+          trackMatomoEvent('Error', action, `Network error: ${error.message}`);
+        }
       }
 
       clearTimeout(timeoutId);
