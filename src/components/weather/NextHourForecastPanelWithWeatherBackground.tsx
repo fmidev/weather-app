@@ -141,6 +141,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   const contentHeight = largeFonts ? 600 : 420;
   const iconSize = Math.min(fontScale * 22, 44);
 
+  const locationName = location.name === location.area || !location.area
+    ? location.name
+    : `${location.name}, ${location.area}`;
+
   return (
     <ImageBackground
       source={weatherBackground}
@@ -185,7 +189,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                 navigation.navigate('Search');
               }}
               accessibilityRole="button"
-              accessibilityLabel={`${location.name}${location.area ? `, ${location.area}` : ''}, ${t('navigation:search')}`}
+              accessibilityLabel={`${locationName}, ${t('navigation:search')}`}
             >
               <Text
                 numberOfLines={1}
@@ -195,7 +199,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                   styles.bold,
                   { color: textColor },
                 ]}>
-                {`${location.name}${location.area ? `, ${location.area}` : ''}`}
+                {locationName}
               </Text>
             </AccessibleTouchableOpacity>
           </View>
