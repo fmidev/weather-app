@@ -21,6 +21,7 @@ type ChartDataRendererProps = {
   clockType: ClockType;
   isDaily: boolean;
   units?: UnitMap;
+  observation?: boolean;
 };
 const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   chartDimensions,
@@ -33,6 +34,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   clockType,
   isDaily,
   units,
+  observation,
 }) => {
   const { fontScale } = useWindowDimensions()
   const { colors } = useTheme() as CustomTheme;
@@ -54,7 +56,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   const tickLabels = tickValues.map((value, index, arr) => {
     // Hide first and last tick label from daily chart
     if (isDaily && (index === 0 || index === arr.length - 1)) return '';
-    return tickFormat(value, locale, clockType, isDaily);
+    return tickFormat(value, locale, clockType, isDaily, observation);
   });
 
   return (

@@ -161,18 +161,23 @@ export const tickFormat = (
   tick: any,
   locale: string,
   clockType: ClockType,
-  daily?: boolean
+  daily?: boolean,
+  observation = false,
 ): string | number => {
   const time = moment(tick);
   const hour = time.hour();
   const minutes = time.minutes();
+  const divider = clockType === 12 && !observation ? 6 : 3;
 
-  if (!daily && (hour % 3 !== 0 || minutes !== 0)) {
+  if (!daily && (hour % divider !== 0 || minutes !== 0)) {
     return '';
   }
   if (daily || hour === 0) {
-    return `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))}
-${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
+    return `${capitalize(
+      time.format(locale === 'en' ? 'ddd' : 'dd')
+    )}\n${time.format(
+      locale === 'en' ? 'D MMM' : 'D.M.'
+    )}`;
   }
   return time.format(clockType === 12 ? 'h a' : 'HH');
 };
