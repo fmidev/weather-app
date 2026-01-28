@@ -6,21 +6,23 @@ import Text from '@components/common/AppText';
 import { CustomTheme, WHITE, BLACK } from '@assets/colors';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 
-function HourSelectorButton({
-  accessibilityHint,
-  onPress,
-  active,
-  disabled,
-  separator,
-  text,
-}: {
+type HourSelectorButtonProps = {
   accessibilityHint?: string;
   onPress?: () => void;
   active?: boolean;
   disabled?: boolean;
   separator?: boolean;
   text: string;
-}) {
+}
+
+const HourSelectorButton: React.FC<HourSelectorButtonProps> = ({
+  accessibilityHint,
+  onPress,
+  active,
+  disabled,
+  separator,
+  text,
+}) => {
   const { colors } = useTheme() as CustomTheme;
 
   return (
@@ -28,6 +30,7 @@ function HourSelectorButton({
       accessibilityRole="button"
       accessibilityLabel={accessibilityHint}
       accessibilityHint={accessibilityHint}
+      accessibilityState={{ disabled }}
       activeOpacity={1}
       onPress={onPress}
       style={styles.smallButton}

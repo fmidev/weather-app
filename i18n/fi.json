@@ -56,6 +56,7 @@
   },
   "forecast": {
     "nextHourForecast": "Ennuste",
+    "nextHourForecastDescription": "Sää tällä hetkellä",
     "precipitation": "sadetta",
     "celsius": "Celsius-astetta",
     "fahrenheit": "Fahrenheit-astetta",
@@ -71,6 +72,7 @@
     "millimetersOfMercury": "elohopeamillimetriä",
     "inchesOfMercury": "elohopeatuumaa",
     "panelHeader": "{{ forecastLength }} vrk ennuste",
+    "accessiblePanelHeader": "{{ forecastLength }} vuorokauden ennuste",
     "updated": "Päivitetty",
     "sunrise": "Aurinko nousee",
     "sunset": "Aurinko laskee",
@@ -101,6 +103,7 @@
     "precipitationMissing": "Sademäärä puuttuu",
     "popMissing": "Sateen todennäköisyys puuttuu",
     "minus": "miinus",
+    "showHourlyForecast": "Näytä päiväkohtainen tuntiennuste",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
@@ -218,6 +221,8 @@
     "at": "klo",
     "tooOld": "Aseman viimeisimmät säähavainnot ovat liian vanhoja.",
     "onlyDailyValues": "Tältä havaintoasemalta on saatavilla vain vuorokausiarvoja.",
+    "showObservationChart": "Näytä havainnot graafina",
+    "showObservationList": "Näytä havainnot listana",
     "measurements": {
       "temperature": "Lämpötila",
       "dewPoint": "Kastepiste",
@@ -243,6 +248,7 @@
     },
     "paramUnits": {
       "mm": "millimetriä",
+      "mm/h": "millimetriä tunnissa",
       "%": "prosenttia",
       "°C": "celcius astetta",
       "°F": "Fahrenheit-astetta",
@@ -733,6 +739,13 @@
     "artikkeli": "Artikkeli",
     "puheenvuoro": "Puheenvuoro",
     "updated": "Päivitetty:"
+  },
+  "time": {
+    "amSpoken": "aamulla",
+    "pmSpoken": "iltapäivällä",
+    "atSpoken": "kello",
+    "hoursSpoken": "tuntia",
+    "minutesSpoken": "minuuttia"
   },
   "unitAbbreviations": {
   }

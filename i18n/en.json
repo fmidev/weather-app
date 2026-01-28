@@ -56,6 +56,7 @@
   },
   "forecast": {
     "nextHourForecast": "Forecast",
+    "nextHourForecastDescription": "Current weather",
     "precipitation": "precipitation",
     "celsius": "degrees Celsius",
     "fahrenheit": "degrees Fahrenheit",
@@ -71,6 +72,7 @@
     "millimetersOfMercury": "millimeters of mercury",
     "inchesOfMercury": "inches of mercury",
     "panelHeader": "{{ forecastLength }}-day forecast",
+    "accessiblePanelHeader": "{{ forecastLength }} day forecast",
     "updated": "Updated",
     "sunrise": "Sunrise",
     "sunset": "Sunset",
@@ -101,6 +103,7 @@
     "precipitationMissing": "Precipitation amount missing",
     "popMissing": "Precipitation probability missing",
     "minus": "minus",
+    "showHourlyForecast": "Show hourly forecast for the day",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",
       "feelsLike": "feels like: {{ value }} {{ unit }}.",
@@ -218,6 +221,8 @@
     "at": "at",
     "tooOld": "Observations found, but they are too old.",
     "onlyDailyValues": "Only daily values are available from this observation station.",
+    "showObservationChart": "Show observations as a graph",
+    "showObservationList": "Show observations as a list",
     "measurements": {
       "temperature": "Temperature",
       "dewPoint": "Dew point",
@@ -243,6 +248,7 @@
     },
     "paramUnits": {
       "mm": "millimeters",
+      "mm/h": "millimeters per hour",
       "%": "percent",
       "°C": "degrees celsius",
       "°F": "degrees Fahrenheit",
@@ -733,6 +739,13 @@
     "artikkeli": "Article",
     "puheenvuoro": "Comment",
     "updated": "Updated at: "
+  },
+  "time": {
+    "amSpoken": "in the morning",
+    "pmSpoken": "in the afternoon",
+    "atSpoken": "at",
+    "hoursSpoken": "hours",
+    "minutesSpoken": "minutes"
   },
   "unitAbbreviations": {
   }

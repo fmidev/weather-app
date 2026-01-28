@@ -3,6 +3,7 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
 import moment from 'moment';
@@ -14,6 +15,7 @@ import { CustomTheme } from '@assets/colors';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { formatAccessibleDateTime } from '@utils/helpers';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -39,6 +41,7 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   clockType,
   gridLayout,
 }) => {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { dark, colors } = useTheme() as CustomTheme;
   const colorMode = dark ? 'dark' : 'light';
@@ -71,6 +74,8 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   }
 
   if (snapshot) {
+    const updatedMoment = moment(snapshot.date);
+
     return (
       <View style={[styles.box, styles.content, {
         backgroundColor: colors.meteorologistSnapshotCard,
@@ -94,8 +99,10 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
             color={colors.primaryText}
           />
         )}
-        <Text style={[styles.updated, { color: colors.primaryText }]}>
-          { moment(snapshot.date).format(timeFormat) }
+        <Text
+          accessibilityLabel={formatAccessibleDateTime(updatedMoment, t, clockType === 24)}
+          style={[styles.updated, { color: colors.primaryText }]}>
+          { updatedMoment.format(timeFormat) }
         </Text>
         <Text style={[styles.text, { color: colors.primaryText }]}>{snapshot.text}</Text>
       </View>
