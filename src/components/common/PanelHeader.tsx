@@ -8,6 +8,7 @@ import { CustomTheme } from '@assets/colors';
 type PanelHeaderProps = {
   title: string;
   justifyCenter?: boolean;
+  accessibilityLabel?: string;
   accessibilityHint?: string;
   additionalContent?: React.ReactNode;
   thin?: boolean;
@@ -18,6 +19,7 @@ type PanelHeaderProps = {
 const PanelHeader: React.FC<PanelHeaderProps> = ({
   title,
   justifyCenter,
+  accessibilityLabel,
   accessibilityHint,
   additionalContent,
   thin,
@@ -29,7 +31,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
     <View
       accessible
       accessibilityRole="header"
-      accessibilityLabel={title}
+      accessibilityLabel={accessibilityLabel || title}
       accessibilityHint={accessibilityHint || ''}
       style={[
         styles.cardHeader,

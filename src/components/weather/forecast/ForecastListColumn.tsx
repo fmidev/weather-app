@@ -82,7 +82,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         modal !== true && { backgroundColor: colors.listTint },
       ]}>
         <Text
-          accessibilityLabel={`${t('forecast:at')} ${time}.`}
+          accessibilityLabel={`${t('forecast:at')} ${time}`}
           style={[styles.hourText, { color: colors.hourListText }]}>
           {time}
         </Text>
@@ -127,6 +127,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
 
             return (
               <View
+                accessible
                 accessibilityLabel={
                   data.windCompass8
                     ? `${t(
