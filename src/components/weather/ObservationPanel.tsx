@@ -220,6 +220,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 testID="observation_chart_button"
                 accessibilityRole="button"
                 accessibilityState={{ selected: displayFormat === CHART }}
+                accessibilityLabel={t('showObservationChart')}
                 activeOpacity={1}
                 onPress={() => {
                   trackMatomoEvent('User action', 'Weather', 'Show OBSERVATIONS in CHART format');
@@ -259,6 +260,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 testID="observation_list_button"
                 accessibilityRole="button"
                 accessibilityState={{ selected: displayFormat === LIST }}
+                accessibilityLabel={t('showObservationList')}
                 activeOpacity={1}
                 onPress={() => {
                   trackMatomoEvent('User action', 'Weather', 'Show OBSERVATIONS in LIST format');
