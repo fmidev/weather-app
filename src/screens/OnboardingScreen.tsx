@@ -191,8 +191,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           style={[
             styles.pagination,
             styles.marginRight,
-
-            { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
+            { backgroundColor: pageIndex === 0 ? colors.text : GRAY_1 },
           ]}
         />
         <View
@@ -200,8 +199,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           style={[
             styles.pagination,
             styles.marginRight,
-
-            { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
+            { backgroundColor: pageIndex === 1 ? colors.text : GRAY_1 },
           ]}
         />
         <View
@@ -209,15 +207,14 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           style={[
             styles.pagination,
             styles.marginRight,
-
-            { backgroundColor: pageIndex === 2 ? colors.primary : GRAY_1 },
+            { backgroundColor: pageIndex === 2 ? colors.text : GRAY_1 },
           ]}
         />
         <View
           testID="onboarding_pagination_3"
           style={[
             styles.pagination,
-            { backgroundColor: pageIndex === 3 ? colors.primary : GRAY_1 },
+            { backgroundColor: pageIndex === 3 ? colors.text : GRAY_1 },
           ]}
         />
       </View>
