@@ -48,6 +48,12 @@ type PlatformSpecificNumber = {
   web?: number;
 };
 
+type TemperatureUnit = 'C' | 'F';
+type PrecipitationUnit = 'mm' | 'in';
+type WindUnit = 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
+type PressureUnit = 'hPa' | 'inHg' | 'mmHg' | 'mbar';
+export type MeasurementUnit = TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
+
 export interface MapLayer {
   id: number;
   type: 'WMS' | 'GeoJSON' | 'Timeseries';
@@ -289,12 +295,13 @@ export interface ConfigType {
   settings: {
     languages: string[];
     units: {
-      temperature: 'C' | 'F';
-      precipitation: 'mm' | 'in';
-      wind: 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
-      pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
+      temperature: TemperatureUnit;
+      precipitation: PrecipitationUnit;
+      wind: WindUnit;
+      pressure: PressureUnit;
     };
     showUnitSettings?: boolean;
+    excludeUnits?: MeasurementUnit[];
     clockType: 12 | 24;
     themes: Themes;
     verboseErrorMessages?: boolean;
