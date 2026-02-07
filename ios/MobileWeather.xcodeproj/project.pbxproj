@@ -388,6 +388,9 @@
 				A2E4880B2D002CA100A66016 /* PBXTargetDependency */,
 			);
 			name = MobileWeather;
+			packageProductDependencies = (
+				18C5A51F13AF682172F66E0A /* MapLibre */,
+			);
 			productName = MobileWeather;
 			productReference = 13B07F961A680F5B00A75B9A /* MobileWeather.app */;
 			productType = "com.apple.product-type.application";
@@ -411,6 +414,9 @@
 				A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */,
 			);
 			name = SettingsIntentExtension;
+			packageProductDependencies = (
+				B831EC0D927213B0471F4D94 /* MapLibre */,
+			);
 			productName = SettingsIntentExtension;
 			productReference = A2042C6C2CFF2EEE00C41A9E /* SettingsIntentExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -435,6 +441,9 @@
 				A299E3022CDB746F003502F5 /* views */,
 			);
 			name = WidgetExtension;
+			packageProductDependencies = (
+				E1DE195D687114145F5197E9 /* MapLibre */,
+			);
 			productName = widgetExtension;
 			productReference = A2B3FF962CC7D1DA00EC1293 /* WidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -474,6 +483,9 @@
 				fi,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				518D50ADEBD8890687058542 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1290,6 +1302,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		518D50ADEBD8890687058542 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution";
+			requirement = {
+				kind = exactVersion;
+				version = 6.17.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		18C5A51F13AF682172F66E0A /* MapLibre */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 518D50ADEBD8890687058542 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			productName = MapLibre;
+		};
+		B831EC0D927213B0471F4D94 /* MapLibre */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 518D50ADEBD8890687058542 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			productName = MapLibre;
+		};
+		E1DE195D687114145F5197E9 /* MapLibre */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 518D50ADEBD8890687058542 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			productName = MapLibre;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

@@ -34,3 +34,8 @@ export const selectClockType = createSelector(
     return settings.clockType ?? configClockType;
   }
 );
+
+export const selectMapLibrary = createSelector(
+  selectSettingsDomain,
+  (settings) => settings.mapLibrary
+);
