@@ -127,13 +127,13 @@ export const chartTickValues = (
     let i = 0;
     while (i < timePeriod) {
       time.subtract(tickInterval, 'hour');
-      if (time.hour() % tickInterval === 0) {
+      if (time.hour() % tickInterval === 0 && !tickValues.includes(time.valueOf())) {
         tickValues.push(time.valueOf());
       }
       i += tickInterval;
     }
   }
-  return tickValues;
+  return tickValues.sort((a, b) => a - b);
 };
 
 export const dailyChartTickValues = (days: number) => {
@@ -151,7 +151,7 @@ export const dailyChartTickValues = (days: number) => {
       .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
       .valueOf()
   );
-  return tickValues.sort();
+  return tickValues.sort((a, b) => a - b);
 };
 
 export const capitalize = ([first, ...rest]: string) =>
