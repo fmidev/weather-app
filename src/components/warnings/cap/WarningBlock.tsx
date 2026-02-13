@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { ClockType } from '@store/settings/types';
 import WarningSymbol from '../WarningsSymbol';
 import CapSeverityBar from './CapSeverityBar';
+import { Config } from '@config';
 
 const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
 
@@ -54,6 +55,7 @@ const WarningItem = ({
   includeArrow: boolean | undefined;
   showDescription?: boolean;
 }) => {
+  const { capViewSettings } = Config.get('warnings');
   const { i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
   const info = Array.isArray(warning.info) ? selectCapInfoByLanguage(warning.info, i18n.language): warning.info;
@@ -96,7 +98,8 @@ const WarningItem = ({
           )}
           <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
             {(info.event as WarningType) ? info.event : ''}
-            {warningCount && warningCount > 1 ? ` (${warningCount} pcs)` : ''}
+            {capViewSettings?.warningBlockWarningCountEnabled !== false
+              && warningCount &&warningCount > 1 ? ` (${warningCount} pcs)` : ''}
           </Text>
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
