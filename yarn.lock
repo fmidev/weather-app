@@ -7628,10 +7628,10 @@ react-native-maps@^1.26.18:
   dependencies:
     "@types/geojson" "^7946.0.13"
 
-react-native-marked@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-marked/-/react-native-marked-7.1.0.tgz#dcb84d4954e71c081e54d9036f3319f6ec253e2b"
-  integrity sha512-wc7DkINC89JuZBp15v3Jcpd+B7YqbytkbMbQb/ui+tacmguZ5HB7421PSO2PSKJCP2eK0pokjRwi3KZ2UxH5CQ==
+react-native-marked@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-marked/-/react-native-marked-8.0.0.tgz#bd3e2999ad88bd95596ffdf52bdbb2a175cca6ec"
+  integrity sha512-EH2E1k+1JMj9Ftnaf/td7RdBYfhI8EHSpWSkOgt0QNbrljpjnY3dTqBaiTZlyVUaDpiw4N3mv+k0BFsNaHm6YQ==
   dependencies:
     "@jsamr/counter-style" "2.0.2"
     "@jsamr/react-native-li" "2.3.1"
