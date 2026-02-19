@@ -61,7 +61,7 @@ const ObservationStationListBottomSheet: React.FC<
           <CloseButton
             onPress={onClose}
             accessibilityLabel={t(
-              'forecast:paramsBottomSheet:closeAccessibilityLabel'
+              'observation:closeSelectStationAcessibilityLabel'
             )}
           />
         </View>
@@ -75,6 +75,7 @@ const ObservationStationListBottomSheet: React.FC<
           {stationList.length > 0 && stationList.map((station) => (
             <AccessibleTouchableOpacity
               accessible
+              accessibilityRole="checkbox"
               accessibilityState={{ selected: station.id === stationId }}
               accessibilityLabel={`${station.name} – ${t(
                 'observation:distance'

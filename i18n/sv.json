@@ -56,6 +56,7 @@
   },
   "forecast": {
     "nextHourForecast": "Prognos",
+    "nextHourForecastDescription": "Vädret just nu",
     "precipitation": "regn",
     "celsius": "Celsius grader",
     "fahrenheit": "Fahrenheit grader",
@@ -71,6 +72,7 @@
     "millimetersOfMercury": "millimeter kvicksilver",
     "inchesOfMercury": "tum kvicksilver",
     "panelHeader": "{{ forecastLength }} dygnsprognos",
+    "accessiblePanelHeader": "{{ forecastLength }} dygnsprognos",
     "updated": "Uppdaterad",
     "sunrise": "Solen stiger",
     "sunset": "Solen går ner",
@@ -101,6 +103,7 @@
     "precipitationMissing": "Nederbörd saknas",
     "popMissing": "Sannolikheten för nederbörd saknas",
     "minus": "minus",
+    "showHourlyForecast": "Visa timprognos för dagen",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",
@@ -182,7 +185,7 @@
       "dayDuration": "dagens längd i timmar (h) och minuter (min)",
       "polarNight": "Polarnatt",
       "nightlessNight": "Midnattssol",
-      "currentWeatherSymbolsTitle": "Vädersymboler som gäller för närvarande",
+      "currentWeatherSymbolsTitle": "Vädersymboler i den aktuella prognosen",
       "dayTime": "när det är ljust",
       "nightTime": "när det är mörkt",
       "description": "beskrivning",
@@ -207,6 +210,7 @@
     "observationStation": "Observationsstation",
     "stationAccessibilityHint": "välj för att byta observationsstation",
     "selectStationAccessibilityHint": "välj observationsstation",
+    "closeSelectStationAcessibilityLabel": "Close observation station selection",
     "latestObservation": "Senaste väderobservation",
     "distance": "avstånd",
     "distanceFromStation": "km från prognosplatsen",
@@ -218,6 +222,8 @@
     "at": "kl.",
     "tooOld": "Stationens väderobservationer är föråldrade.",
     "onlyDailyValues": "Bara dygnsvärden är tillgängliga från denna väderstation.",
+    "showObservationChart": "Visa observationer som en graf",
+    "showObservationList": "Visa observationer som en lista",
     "measurements": {
       "temperature": "Temperatur",
       "dewPoint": "Daggpunkt",
@@ -243,6 +249,7 @@
     },
     "paramUnits": {
       "mm": "millimeter",
+      "mm/h": "millimeter per timme",
       "%": "procent",
       "°C": "celcius grader",
       "°F": "Fahrenheit grader",
@@ -300,6 +307,7 @@
     "symbols": "Vädersymboler",
     "locate": "Lokalisera",
     "search": "Sökning",
+    "openSearch": "Öppna sökning",
     "currentLocation": "Lokaliserad position",
     "backAccessibilityLabel": "Navigera tillbaka",
     "locateAccessibilityLabel": "Använd din nuvarande position",
@@ -705,7 +713,7 @@
     "description1": "Applikationen uppfyller delvis A- och AA-nivåns tillgänglighetskriterier som nämns i lagen (WCAG-kriterierna 2.1). Brister i tillgänglighet som förekommer i applikationen är beskrivna nedan.",
     "subTitle2": "Noterade du brister i tillgängligheten?",
     "description2": "Vi strävar till att fortgående förbättra applikationens tillgänglighet. Om du upptäcker brister som inte beskrivs på den här sidan, meddela oss så gör vi vårt bästa för att åtgärda bristerna. Vi svarar så snart som möjligt eller senast inom två veckor. Du kan kontakta oss per e-post på adressen:",
-    "email": "kirjaamo@fmi.fi",
+    "email": "tillganglighet@fmi.fi",
     "subTitle3": "Tillsyn",
     "description3": "Transport- och kommunikationsverket Traficom är den myndighet som övervakar att lagens tillgänglighetskrav följs i Finland. Om du inte är nöjd med det svar du har fått eller om du inte alls har fått något svar inom två veckor, kan du kontakta Traficom.",
     "website": "www.tillgänglighetskrav.fi",
@@ -738,6 +746,13 @@
     "artikkeli": "Artikel",
     "puheenvuoro": "Kommentar",
     "updated": "Uppdaterad:"
+  },
+  "time": {
+    "amSpoken": "på morgonen",
+    "pmSpoken": "på eftermiddagen",
+    "atSpoken": "klockan",
+    "hoursSpoken": "timmar",
+    "minutesSpoken": "minuter"
   },
   "unitAbbreviations": {
   }

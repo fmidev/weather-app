@@ -1935,7 +1935,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-mmkv (3.3.3):
+  - react-native-mmkv (3.3.1):
     - boost
     - DoubleConversion
     - fast_float
@@ -3510,7 +3510,7 @@ SPEC CHECKSUMS:
   react-native-geolocation: 95e48fe2687e5a8280103085372fa62c2297c5d6
   react-native-launch-arguments: eab68037b01ea7c78a0b3b55da3a5e967e9aaf92
   react-native-maps: 92f417ffa2c6598b783f133df25e60ce62aede0f
-  react-native-mmkv: ac7507625cd74bac0eb5333604a7cd7b08fe9e3e
+  react-native-mmkv: a46b0a6df32c179997628085b3a5e0f3386d4053
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: c6e2edd1c1da07bdce287fa9d9e60c5f7b514616
   react-native-webview: 654f794a7686b47491cf43aa67f7f428bea00eed

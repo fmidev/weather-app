@@ -274,14 +274,14 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             style={[
               styles.pagination,
               styles.marginRight,
-              { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
+              { backgroundColor: pageIndex === 0 ? colors.text : GRAY_1 },
             ]}
           />
           <View
             testID="setup_pagination_1"
             style={[
               styles.pagination,
-              { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
+              { backgroundColor: pageIndex === 1 ? colors.text : GRAY_1 },
             ]}
           />
         </View>
