@@ -454,7 +454,8 @@
           "long": "The layer displays temperature on a 3-hour time step from the next hour onward for three days."
         }
       },
-      "timeseriesLayerInfo": "The weather forecast on the map shows the weather symbol and temperature for numerous locations around the world. Tap the symbol to display more weather information."
+      "timeseriesLayerInfo": "The weather forecast on the map shows the weather symbol and temperature for numerous locations around the world. Tap the symbol to display more weather information.",
+      "markdownLoadingFailed": "Loading map layer description failed"
     }
   },
   "searchScreen": {

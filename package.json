@@ -52,7 +52,7 @@
     "react-native-linear-gradient": "^2.8.3",
     "react-native-localize": "^3.4.1",
     "react-native-maps": "^1.26.18",
-    "react-native-marked": "^7.1.0",
+    "react-native-marked": "^8.0.0",
     "react-native-mmkv": "3.3.1",
     "react-native-modal": "^14.0.0-rc.0",
     "react-native-permissions": "^5.4.4",

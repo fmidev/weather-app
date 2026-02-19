@@ -14,35 +14,7 @@ import { State } from '@store/types';
 import { selectActiveOverlay } from '@store/map/selectors';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { getTemperatureIndexColor } from '@assets/colors';
-
-const generateTemperatureLegend = () => {
-  const views = [];
-  let i = 1;
-  while (i <= 50) {
-    views.push(
-      <View
-        key={i}
-        style={[
-          i === 1 ||
-          i === 7 ||
-          i === 12 ||
-          i === 17 ||
-          i === 22 ||
-          i === 30 ||
-          i === 36 ||
-          i === 41 ||
-          i === 46
-            ? styles.rainBlockTen
-            : styles.rainBlock,
-          { backgroundColor: getTemperatureIndexColor(i) },
-        ]}
-      />
-    );
-    i++;
-  }
-  return views;
-};
+import TemperatureLegend from './TemperatureLegend';
 
 const LegacyInfo: React.FC = () => {
   const { t } = useTranslation('map');
@@ -321,7 +293,7 @@ const LegacyInfo: React.FC = () => {
               <View style={styles.column}>
                 <View style={[styles.row, styles.windArrowContainer]}>
                   <Icon
-                    name={dark ? 'wind-arrow-0' : 'wind-arrow-0'}
+                    name="wind-arrow-0"
                     style={styles.windArrowIcon}
                   />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -330,7 +302,7 @@ const LegacyInfo: React.FC = () => {
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
                   <Icon
-                    name={dark ? 'wind-arrow-1' : 'wind-arrow-1'}
+                    name="wind-arrow-1"
                     style={styles.windArrowIcon}
                   />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -339,7 +311,7 @@ const LegacyInfo: React.FC = () => {
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
                   <Icon
-                    name={dark ? 'wind-arrow-2' : 'wind-arrow-2'}
+                    name="wind-arrow-2"
                     style={styles.windArrowIcon}
                   />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -348,7 +320,7 @@ const LegacyInfo: React.FC = () => {
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
                   <Icon
-                    name={dark ? 'wind-arrow-3' : 'wind-arrow-3'}
+                    name="wind-arrow-3"
                     style={styles.windArrowIcon}
                   />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -357,7 +329,7 @@ const LegacyInfo: React.FC = () => {
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
                   <Icon
-                    name={dark ? 'wind-arrow-4' : 'wind-arrow-4'}
+                    name="wind-arrow-4"
                     style={styles.windArrowIcon}
                   />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -366,7 +338,7 @@ const LegacyInfo: React.FC = () => {
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
                   <Icon
-                    name={dark ? 'wind-arrow-5' : 'wind-arrow-5'}
+                    name="wind-arrow-5"
                     style={styles.windArrowIcon}
                   />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -375,7 +347,7 @@ const LegacyInfo: React.FC = () => {
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
                   <Icon
-                    name={dark ? 'wind-arrow-6' : 'wind-arrow-6'}
+                    name="wind-arrow-6"
                     style={styles.windArrowIcon}
                   />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -419,43 +391,7 @@ const LegacyInfo: React.FC = () => {
               </Text>
             </View>
             <View style={styles.rowWrapper}>
-              <View style={[styles.row, styles.temperatureContainer]}>
-                {generateTemperatureLegend()}
-              </View>
-              <View style={styles.sheetTitle}>
-                <Text
-                  style={[
-                    styles.text,
-                    styles.temperatureMinus30,
-                    { color: colors.hourListText },
-                  ]}>
-                  {t('map:infoBottomSheet:temperature:temperatureMinus30')}
-                </Text>
-                <Text
-                  style={[
-                    styles.text,
-                    styles.temperatureMinus20,
-                    { color: colors.hourListText },
-                  ]}>
-                  {t('map:infoBottomSheet:temperature:temperatureMinus20')}
-                </Text>
-                <Text
-                  style={[
-                    styles.text,
-                    styles.temperature0,
-                    { color: colors.hourListText },
-                  ]}>
-                  {t('map:infoBottomSheet:temperature:temperature0')}
-                </Text>
-                <Text
-                  style={[
-                    styles.text,
-                    styles.temperature20,
-                    { color: colors.hourListText },
-                  ]}>
-                  {t('map:infoBottomSheet:temperature:temperature20')}
-                </Text>
-              </View>
+              <TemperatureLegend />
             </View>
           </View>
         )}
@@ -519,33 +455,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
     minWidth: 30,
   },
-  temperatureContainer: {
-    marginBottom: 5,
-  },
-  temperatureMinus30: {
-    position: 'absolute',
-    left: '19%',
-  },
-  temperatureMinus20: {
-    position: 'absolute',
-    left: '39%',
-  },
-  temperature0: {
-    position: 'absolute',
-    left: '58%',
-  },
-  temperature20: {
-    position: 'absolute',
-    left: '78%',
-  },
   rainBlock: {
     flexGrow: 1,
     height: 8,
-    margin: 1,
-  },
-  rainBlockTen: {
-    flexGrow: 1,
-    height: 16,
     margin: 1,
   },
   withMarginBottom: {

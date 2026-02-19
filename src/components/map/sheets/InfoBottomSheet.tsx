@@ -2,10 +2,10 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import Text from '@components/common/AppText';
 import { Config } from '@config';
 import CloseButton from '@components/common/CloseButton';
 import LegacyLayerInfo from '../ui/LegacyLayerInfo';
+import MarkdownLayerInfo from '../ui/MarkdownLayerInfo';
 
 type InfoBottomSheetProps = {
   onClose: () => void;
@@ -28,7 +28,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
           />
         </View>
         {markdownUrl ? (
-          <Text>Markdown</Text>
+          <MarkdownLayerInfo />
         ) : (
           <LegacyLayerInfo />
         )}
