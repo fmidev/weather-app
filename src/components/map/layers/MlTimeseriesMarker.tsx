@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
-import { MarkerView } from '@maplibre/maplibre-react-native';
+import { Marker } from '@maplibre/maplibre-react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -80,7 +80,7 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   const key= `marker-${coordinate[0]}-${coordinate[1]}-${zoom}`
 
   return (
-      <MarkerView key={key} coordinate={coordinate} anchor={{ x: 0.5, y: 1 }}>
+      <Marker key={key} lngLat={coordinate} anchor="bottom">
         <AccessibleTouchableOpacity
           onPress={() => setOpen((v) => !v)}
         >
@@ -98,7 +98,9 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
               {WeatherSymbol ? <WeatherSymbol width={40} height={40} /> : null}
               <Text
                 style={[styles.tempText, { color: colors.text }]}
-                accessibilityLabel={`${temperatureValue} ${t(`observation:paramUnits:°${temperatureUnit}`)}`}
+                accessibilityLabel={
+                  `${temperatureValue} ${t(`observation:paramUnits:°${temperatureUnit}`)}`
+                }
               >
                 {`${temperatureValue}°${temperatureUnit}`}
               </Text>
@@ -133,7 +135,7 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
             )}
           </View>
         </AccessibleTouchableOpacity>
-      </MarkerView>
+      </Marker>
   );
 };
 

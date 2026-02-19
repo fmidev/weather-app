@@ -1,6 +1,6 @@
 import React from 'react';
 import { WMSTile } from 'react-native-maps';
-import { RasterLayer, RasterSource } from '@maplibre/maplibre-react-native';
+import { Layer, RasterSource } from '@maplibre/maplibre-react-native';
 
 type MemoizedWMSTileProps = {
   urlTemplate: string;
@@ -18,12 +18,13 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   index
 }) => {
   return library === 'maplibre' ? (
-    <RasterSource id={`wms-source-${index}`} tileUrlTemplates={[urlTemplate]} tileSize={256}>
-      <RasterLayer
+    <RasterSource id={`wms-source-${index}`} tiles={[urlTemplate]} tileSize={256}>
+      <Layer
+        type="raster"
         id={`wms-layer-${index}`}
         key={`wms-layer-${index}`}
-        sourceID={`wms-source-${index}`}
-        belowLayerID="places_region"
+        source={`wms-source-${index}`}
+        beforeId="places_region"
         // eslint-disable-next-line react-native/no-inline-styles
         style={{
           rasterOpacity: opacity ?? 0,
@@ -40,6 +41,5 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
     />
   )
 };
-
 
 export default React.memo(MemoizedWMSTile);

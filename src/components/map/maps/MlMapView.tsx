@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text } from 'react-native';
-import { Camera, MapView, PointAnnotation, type MapViewRef, type CameraRef } from '@maplibre/maplibre-react-native';
+import { Camera, Map, ViewAnnotation, type MapRef, type CameraRef, InitialViewState } from '@maplibre/maplibre-react-native';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { getDistance } from 'geolib';
@@ -89,7 +89,7 @@ const MlMapView: React.FC<MapViewProps> = ({
   const { updateInterval } = Config.get('map');
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM_LEVEL);
-  const mapRef = useRef<MapViewRef>(null);
+  const mapRef = useRef<MapRef>(null);
   const cameraRef = useRef<CameraRef>(null);
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
   const [mapBounds, setMapBounds] = useState<[northEast: Position, southWest: Position] | undefined>(undefined);
@@ -139,10 +139,12 @@ const MlMapView: React.FC<MapViewProps> = ({
   ]);
 
   const updateBoundsFromRef = useCallback(async () => {
-    const bounds = await mapRef.current?.getVisibleBounds();
+    const bounds = await mapRef.current?.getBounds();
     if (!bounds) return;
 
-    setMapBounds(bounds);
+    const northEast: Position = [bounds[2], bounds[3]];
+    const southWest: Position = [bounds[0], bounds[1]];
+    setMapBounds([northEast, southWest]);
   }, []);
 
   const onDidFinishRenderingFrame = useCallback(() => {
@@ -155,12 +157,14 @@ const MlMapView: React.FC<MapViewProps> = ({
   const onRegionDidChange = useCallback((event: any) => {
     if (!styleReady || !mapReady) return;
 
-    const { zoomLevel: zoom, visibleBounds } = event.properties;
+    const { zoom, bounds } = event.nativeEvent;
 
-    if (!visibleBounds) return;
-    setMapBounds(visibleBounds);
+    if (!bounds) return;
+    const northEast: Position = [bounds[2], bounds[3]];
+    const southWest: Position = [bounds[0], bounds[1]];
+    setMapBounds([northEast, southWest]);
 
-    const [lon, lat] = event.geometry.coordinates;
+    const [lon, lat] = event.nativeEvent.center;
     const distance = getDistance(initialRegion, {latitude: lat, longitude: lon});
     if (distance >= 10000) {
       setMarkerOutOfBounds(true);
@@ -173,11 +177,10 @@ const MlMapView: React.FC<MapViewProps> = ({
   }, [styleReady, mapReady, initialRegion]);
 
   const animateToCurrentLocation = () => {
-    cameraRef.current?.setCamera({
-      centerCoordinate: [initialRegion.longitude, initialRegion.latitude],
-      zoomLevel: DEFAULT_ZOOM_LEVEL,
-      animationMode: "flyTo",
-      animationDuration: 1000,
+    cameraRef.current?.flyTo({
+      center: [initialRegion.longitude, initialRegion.latitude],
+      zoom: DEFAULT_ZOOM_LEVEL,
+      duration: 1000,
     });
   };
 
@@ -185,7 +188,7 @@ const MlMapView: React.FC<MapViewProps> = ({
     const currentZoom = await mapRef.current?.getZoom();
     if (currentZoom) {
       const zoom = Math.min(currentZoom + 1, MAX_ZOOM_LEVEL);
-      cameraRef.current?.zoomTo(zoom, 0);
+      cameraRef.current?.zoomTo(zoom);
     }
   };
 
@@ -193,16 +196,16 @@ const MlMapView: React.FC<MapViewProps> = ({
     const currentZoom = await mapRef.current?.getZoom();
     if (currentZoom) {
       const zoom = Math.max(currentZoom - 1, MIN_ZOOM_LEVEL);
-      cameraRef.current?.zoomTo(zoom, 0);
+      cameraRef.current?.zoomTo(zoom);
     }
   };
 
   const cameraDefaults = useMemo(() => {
     if (!location) return undefined;
     return {
-      centerCoordinate: [location.lon, location.lat],
-      zoomLevel: DEFAULT_ZOOM_LEVEL,
-    };
+      center: [location.lon, location.lat],
+      zoom: DEFAULT_ZOOM_LEVEL,
+    } as InitialViewState;
   }, [location]);
 
   if (!baseMap) {
@@ -214,7 +217,7 @@ const MlMapView: React.FC<MapViewProps> = ({
 
   return (
     <View style={styles.mapContainer}>
-      <MapView
+      <Map
         testID="maplibre_map"
         ref={mapRef}
         // eslint-disable-next-line react-native/no-inline-styles
@@ -226,10 +229,10 @@ const MlMapView: React.FC<MapViewProps> = ({
         >
         <Camera
           ref={cameraRef}
-          defaultSettings={cameraDefaults}
-          maxZoomLevel={MAX_ZOOM_LEVEL}
-          minZoomLevel={MIN_ZOOM_LEVEL}
-          animationDuration={0}
+          initialViewState={cameraDefaults}
+          maxZoom={MAX_ZOOM_LEVEL}
+          minZoom={MIN_ZOOM_LEVEL}
+          duration={0}
         />
 
         {styleReady && overlay?.type === 'WMS' && <WMSOverlay overlay={overlay} library="maplibre" />}
@@ -242,15 +245,15 @@ const MlMapView: React.FC<MapViewProps> = ({
           />
         )}
         {displayLocation && currentLocation && (
-          <PointAnnotation
+          <ViewAnnotation
             id="location-marker"
-            coordinate={[initialRegion.longitude, initialRegion.latitude]}
-            anchor={{ x: 0.5, y: 1 }}
+            lngLat={[initialRegion.longitude, initialRegion.latitude]}
+            anchor="bottom"
           >
             <Icon name="map-marker" size={22} />
-          </PointAnnotation>
+          </ViewAnnotation>
         )}
-      </MapView>
+      </Map>
       <MapControls
         onLayersPressed={() => mapLayersSheetRef.current?.open()}
         onInfoPressed={() => {
