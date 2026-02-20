@@ -37,7 +37,6 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   mapBounds,
   zoom
 }) => {
-  console.log('bounds', mapBounds);
   const { data } = overlay;
 
   const getZoomLevel = (longitudeDelta: number) => {
