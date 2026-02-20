@@ -25,10 +25,12 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
         key={`wms-layer-${index}`}
         source={`wms-source-${index}`}
         beforeId="places_region"
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          rasterOpacity: opacity ?? 0,
-          rasterFadeDuration: 0,
+        paint={{
+          "raster-opacity": opacity ?? 0,
+          "raster-fade-duration": 0,
+        }}
+        layout={{
+          visibility: opacity === 0 ? 'none' : 'visible',
         }}
       />
     </RasterSource>
