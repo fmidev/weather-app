@@ -351,7 +351,12 @@
     "clock": "Clock",
     "12-hour-clock": "12-hour clock",
     "24-hour-clock": "24-hour clock",
-    "closeUnitBottomSheetAccessibilityLabel": "Close unit selection"
+    "closeUnitBottomSheetAccessibilityLabel": "Close unit selection",
+    "mapLibrary": "Map library",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "maplibre": "MapLibre",
+    "mapLibrarySettingHint": "Change map library to:"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search for a location",

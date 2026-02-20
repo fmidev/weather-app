@@ -24,11 +24,13 @@ import {
   selectUnits,
   selectTheme,
   selectClockType,
+  selectMapLibrary,
 } from '@store/settings/selectors';
 import {
   updateUnits as updateUnitsAction,
   updateTheme as updateThemeAction,
   updateClockType as updateClockTypeAction,
+  updateMapLibrary as updateMapLibraryAction,
 } from '@store/settings/actions';
 import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
 import { UnitType } from '@store/settings/types';
@@ -47,6 +49,7 @@ const mapStateToProps = (state: State) => ({
   theme: selectTheme(state),
   geoids: selectStoredGeoids(state),
   clockType: selectClockType(state),
+  mapLibrary: selectMapLibrary(state),
 });
 
 const mapDispatchToProps = {
@@ -54,6 +57,7 @@ const mapDispatchToProps = {
   updateTheme: updateThemeAction,
   updateLocationsLocales: updateLocationsLocalesAction,
   updateClockType: updateClockTypeAction,
+  updateMapLibrary: updateMapLibraryAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -67,10 +71,12 @@ const SettingsScreen: React.FC<Props> = ({
   theme,
   geoids,
   units,
+  mapLibrary,
   updateUnits,
   updateClockType,
   updateTheme,
   updateLocationsLocales,
+  updateMapLibrary
 }) => {
   const [locationPermission, setLocationPermission] = useState<
     string | undefined
@@ -618,7 +624,6 @@ const SettingsScreen: React.FC<Props> = ({
             style={[
               styles.rowWrapper,
               styles.withBorderBottom,
-              styles.withMarginTop,
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
@@ -639,6 +644,87 @@ const SettingsScreen: React.FC<Props> = ({
                   {t('settings:24-hour-clock')}
                 </Text>
                 {clockType === 24 && (
+                  <Icon
+                    name="checkmark"
+                    size={22}
+                    style={{ color: colors.text }}
+                  />
+                )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              styles.withMarginTop,
+              { borderBottomColor: colors.border },
+            ]}>
+            <View style={styles.row}>
+              <Text
+                style={[styles.title, { color: colors.text }]}
+                accessibilityRole="header">
+                {t('settings:mapLibrary')}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              onPress={() => {
+                trackMatomoEvent('User action', 'Settings', 'Select map library - react-native-maps');
+                updateMapLibrary('react-native-maps');
+              }}
+              delayPressIn={100}
+              accessibilityState={{
+                selected: mapLibrary === 'react-native-maps',
+              }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:mapLibrarySettingHint')} ${Platform.OS === 'ios' ? t(
+                'settings:appleMaps') : t('settings:googleMaps')}`
+              }>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  { Platform.OS === 'ios' ? t('settings:appleMaps') : t('settings:googleMaps')}
+                </Text>
+                {mapLibrary === 'react-native-maps' && (
+                  <Icon
+                    name="checkmark"
+                    size={22}
+                    style={{ color: colors.text }}
+                  />
+                )}
+              </View>
+            </AccessibleTouchableOpacity>
+          </View>
+          <View
+            style={[
+              styles.rowWrapper,
+              styles.withBorderBottom,
+              { borderBottomColor: colors.border },
+            ]}>
+            <AccessibleTouchableOpacity
+              onPress={() => {
+                trackMatomoEvent('User action', 'Settings', 'Select map library - Maplibre');
+                updateMapLibrary('maplibre');
+              }}
+              delayPressIn={100}
+              accessibilityState={{
+                selected: mapLibrary === 'maplibre',
+              }}
+              accessibilityRole="button"
+              accessibilityHint={`${t('settings:mapLibrarySettingHint')} ${t(
+                'settings:maplibre'
+              )}`}>
+              <View style={styles.row}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {t('settings:maplibre')}
+                </Text>
+                {mapLibrary === 'maplibre' && (
                   <Icon
                     name="checkmark"
                     size={22}

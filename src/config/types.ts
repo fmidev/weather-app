@@ -68,6 +68,12 @@ export interface MapLayer {
   tileFormat?: string;
 }
 
+export interface BaseMap {
+  url: string;
+  lightStyle: string;
+  darkStyle: string;
+}
+
 interface GeoMagneticObservations {
   enabled: boolean;
   producer: string;
@@ -255,10 +261,10 @@ export interface ConfigType {
     maxFavorite: number;
   };
   map: {
-    // latitudeDelta: number;
     updateInterval: number;
     sources: { [name: string]: string };
     layers: MapLayer[];
+    baseMap?: BaseMap;
   };
   weather: {
     apiUrl: string;

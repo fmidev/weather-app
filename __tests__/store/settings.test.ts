@@ -19,7 +19,7 @@ describe('settings reducer', () => {
     };
     expect(
       reducer(
-        { units, theme: 'automatic', clockType: 24 },
+        { units, theme: 'automatic', clockType: 24, mapLibrary: 'react-native-maps' },
         {
           type: types.UPDATE_UNITS,
           units: {

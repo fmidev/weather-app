@@ -7,6 +7,8 @@ import {
   Theme,
   ClockType,
   UPDATE_CLOCK_TYPE,
+  UPDATE_MAP_LIBRARY,
+  MapLibrary,
 } from './types';
 
 export const updateClockType =
@@ -23,3 +25,10 @@ export const updateTheme =
   (theme: Theme) => (dispatch: Dispatch<SettingsActionTypes>) => {
     dispatch({ type: UPDATE_THEME, theme });
   };
+
+export const updateMapLibrary =
+  (library: MapLibrary) => (dispatch: Dispatch<SettingsActionTypes>) => {
+    dispatch({ type: UPDATE_MAP_LIBRARY, library });
+  };
+
+

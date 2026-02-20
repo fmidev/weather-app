@@ -3,12 +3,15 @@ import { connect, ConnectedProps } from 'react-redux';
 // import { Dimensions } from 'react-native';
 import Supercluster, { AnyProps, PointFeature } from 'supercluster';
 import { Region } from 'react-native-maps';
+import type { Position } from "geojson";
 
 import { State } from '@store/types';
 import { MapOverlay } from '@store/map/types';
 import { selectSliderTime, selectRegion } from '@store/map/selectors';
 
 import TimeseriesMarker from './TimeseriesMarker';
+import MlTimeseriesMarker from './MlTimeseriesMarker';
+import { MapLibrary } from '@store/settings/types';
 
 const mapStateToProps = (state: State) => ({
   region: selectRegion(state),
@@ -21,12 +24,18 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type TimeseriesOverlayProps = PropsFromRedux & {
   overlay: MapOverlay;
+  library?: MapLibrary;
+  mapBounds?: [northEast: Position, southWest: Position];
+  zoom?: number;
 };
 
 const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
   region,
   sliderTime,
   overlay,
+  library = 'react-native-maps',
+  mapBounds,
+  zoom
 }) => {
   const { data } = overlay;
 
@@ -37,7 +46,13 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
   const getBBox = (r: Region): [number, number, number, number] => {
     const padding = 0.2;
-    return [
+
+    return mapBounds ? [
+      mapBounds[1][0],
+      mapBounds[1][1],
+      mapBounds[0][0],
+      mapBounds[0][1],
+    ] : [
       r.longitude - r.longitudeDelta * (0.5 + padding),
       r.latitude - r.latitudeDelta * (0.5 + padding),
       r.longitude + r.longitudeDelta * (0.5 + padding),
@@ -61,7 +76,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
   const getCluster = useCallback(
     (points: PointFeature<AnyProps>[] | undefined, clusterRegion: Region) => {
-      const zoom = getZoomLevel(clusterRegion.longitudeDelta);
+      const zoomLevel = zoom ?? getZoomLevel(clusterRegion.longitudeDelta);
       const bbox = getBBox(clusterRegion);
       const radius = 260;
 
@@ -79,7 +94,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
       try {
         cluster.load(points);
-        const clusters = cluster.getClusters(bbox, zoom);
+        const clusters = cluster.getClusters(bbox, zoomLevel);
 
         markers.push(
           ...clusters.flatMap((clusterPoint) =>
@@ -99,7 +114,8 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
 
       return { cluster, markers };
     },
-    []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mapBounds, zoom]
   );
 
   const points = useMemo(
@@ -117,6 +133,7 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
               population: Number(population),
               name,
               weatherData,
+              label: name
             },
             geometry: {
               type: 'Point',
@@ -148,16 +165,29 @@ const TimeseriesOverlay: React.FC<TimeseriesOverlayProps> = ({
         return null;
       }
 
-      return (
-        <TimeseriesMarker
-          key={`${name}-${longitude}-${latitude}`}
-          name={name}
-          coordinate={{ latitude, longitude }}
-          smartSymbol={smartSymbol}
-          temperature={temperature}
-          windDirection={windDirection}
-          windSpeedMS={windSpeedMS}
-        />
+      return library === 'maplibre' ?
+        (
+          <MlTimeseriesMarker
+            key={`${name}-${longitude}-${latitude}-${zoom}`}
+            name={name}
+            coordinate={[longitude, latitude]}
+            zoom={zoom}
+            smartSymbol={smartSymbol}
+            temperature={temperature}
+            windDirection={windDirection}
+            windSpeedMS={windSpeedMS}
+          />
+        )
+        : (
+          <TimeseriesMarker
+            key={`${name}-${longitude}-${latitude}`}
+            name={name}
+            coordinate={{ latitude, longitude }}
+            smartSymbol={smartSymbol}
+            temperature={temperature}
+            windDirection={windDirection}
+            windSpeedMS={windSpeedMS}
+          />
       );
     });
 
