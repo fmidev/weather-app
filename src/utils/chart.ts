@@ -127,13 +127,13 @@ export const chartTickValues = (
     let i = 0;
     while (i < timePeriod) {
       time.subtract(tickInterval, 'hour');
-      if (time.hour() % tickInterval === 0) {
+      if (time.hour() % tickInterval === 0 && !tickValues.includes(time.valueOf())) {
         tickValues.push(time.valueOf());
       }
       i += tickInterval;
     }
   }
-  return tickValues;
+  return tickValues.sort((a, b) => a - b);
 };
 
 export const dailyChartTickValues = (days: number) => {
@@ -151,7 +151,7 @@ export const dailyChartTickValues = (days: number) => {
       .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
       .valueOf()
   );
-  return tickValues.sort();
+  return tickValues.sort((a, b) => a - b);
 };
 
 export const capitalize = ([first, ...rest]: string) =>
@@ -161,18 +161,23 @@ export const tickFormat = (
   tick: any,
   locale: string,
   clockType: ClockType,
-  daily?: boolean
+  daily?: boolean,
+  observation = false,
 ): string | number => {
   const time = moment(tick);
   const hour = time.hour();
   const minutes = time.minutes();
+  const divider = clockType === 12 && !observation ? 6 : 3;
 
-  if (!daily && (hour % 3 !== 0 || minutes !== 0)) {
+  if (!daily && (hour % divider !== 0 || minutes !== 0)) {
     return '';
   }
   if (daily || hour === 0) {
-    return `${capitalize(time.format(locale === 'en' ? 'ddd' : 'dd'))}
-${time.format(locale === 'en' ? 'D MMM' : 'D.M.')}`;
+    return `${capitalize(
+      time.format(locale === 'en' ? 'ddd' : 'dd')
+    )}\n${time.format(
+      locale === 'en' ? 'D MMM' : 'D.M.'
+    )}`;
   }
   return time.format(clockType === 12 ? 'h a' : 'HH');
 };

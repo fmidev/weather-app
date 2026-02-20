@@ -134,7 +134,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
           contentContainerStyle={isLandscape && styles.landscape}>
           <TouchableOpacity activeOpacity={1} accessible={false}>
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.primaryText }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}
+              >
                 {t('weatherInfoBottomSheet.precipitationStripTitle')}
               </Text>
             </View>
@@ -240,7 +243,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             />
 
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.primaryText }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}
+              >
                 {t('weatherInfoBottomSheet.hourlyForecastInfoTitle')}
               </Text>
             </View>
@@ -747,7 +753,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             />
 
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.primaryText }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}
+              >
                 {t('weatherInfoBottomSheet.timezone')}
               </Text>
             </View>
@@ -763,7 +772,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             />
 
             <View style={[styles.sheetTitle, styles.withMarginBottom]}>
-              <Text style={[styles.title, { color: colors.primaryText }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}
+              >
                 {t('weatherInfoBottomSheet.currentWeatherSymbolsTitle')}
               </Text>
             </View>

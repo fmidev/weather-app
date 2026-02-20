@@ -48,7 +48,11 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
     <View
       style={[styles.container, !isLandscape && styles.portraitWidth]}
       pointerEvents="box-none">
-      <AccessibleTouchableOpacity onPress={onPress}>
+      <AccessibleTouchableOpacity
+        accessibilityRole="button"
+        accessibilityHint={t('openSearch')}
+        onPress={onPress}
+      >
         <View style={styles.row}>
           {isGeolocation && (
             <Icon

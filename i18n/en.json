@@ -56,6 +56,7 @@
   },
   "forecast": {
     "nextHourForecast": "Forecast",
+    "nextHourForecastDescription": "Current weather",
     "precipitation": "precipitation",
     "celsius": "degrees Celsius",
     "fahrenheit": "degrees Fahrenheit",
@@ -71,6 +72,7 @@
     "millimetersOfMercury": "millimeters of mercury",
     "inchesOfMercury": "inches of mercury",
     "panelHeader": "{{ forecastLength }}-day forecast",
+    "accessiblePanelHeader": "{{ forecastLength }} day forecast",
     "updated": "Updated",
     "sunrise": "Sunrise",
     "sunset": "Sunset",
@@ -101,6 +103,7 @@
     "precipitationMissing": "Precipitation amount missing",
     "popMissing": "Precipitation probability missing",
     "minus": "minus",
+    "showHourlyForecast": "Show hourly forecast for the day",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",
       "feelsLike": "feels like: {{ value }} {{ unit }}.",
@@ -207,6 +210,7 @@
     "observationStation": "Observation station",
     "stationAccessibilityHint": "select to change the observation station",
     "selectStationAccessibilityHint": "double tap to select observation station",
+    "closeSelectStationAcessibilityLabel": "Close observation station selection",
     "latestObservation": "Latest weather observation",
     "distance": "distance",
     "distanceFromStation": "km from forecast location",
@@ -218,6 +222,8 @@
     "at": "at",
     "tooOld": "Observations found, but they are too old.",
     "onlyDailyValues": "Only daily values are available from this observation station.",
+    "showObservationChart": "Show observations as a graph",
+    "showObservationList": "Show observations as a list",
     "measurements": {
       "temperature": "Temperature",
       "dewPoint": "Dew point",
@@ -243,6 +249,7 @@
     },
     "paramUnits": {
       "mm": "millimeters",
+      "mm/h": "millimeters per hour",
       "%": "percent",
       "°C": "degrees celsius",
       "°F": "degrees Fahrenheit",
@@ -300,6 +307,7 @@
     "symbols": "Weather symbols",
     "locate": "Locate",
     "search": "Search",
+    "openSearch": "Open search",
     "currentLocation": "Current user location",
     "backAccessibilityLabel": "Navigate back",
     "locateAccessibilityLabel": "Use your current location",
@@ -700,7 +708,7 @@
     "description1": "This application partly meets the accessibility criteria required by law at level A and AA (WCAG 2.1). The application has some shortcomings in accessibility, which are described in more detail below.",
     "subTitle2": "Did you notice shortcomings in accessibility?",
     "description2": "We are constantly working to improve the accessibility of the application. If you discover any issues that are not described on this page, please let us know and we will do our best to remedy them. We will respond as soon as possible or within two weeks at the latest. You can contact us by email at:",
-    "email": "kirjaamo@fmi.fi",
+    "email": "accessibility@fmi.fi",
     "subTitle3": "Accessibility monitoring",
     "description3": "Finnish Transport and Communications Agency Traficom monitors the implementation of accessibility requirements. If you are not satisfied with the response you have received or you do not receive a response at all within two weeks, you can give feedback to Traficom. The website provides detailed information on how to file a complaint and how the matter will be processed.",
     "website": "www.webaccessibility.fi",
@@ -733,6 +741,13 @@
     "artikkeli": "Article",
     "puheenvuoro": "Comment",
     "updated": "Updated at: "
+  },
+  "time": {
+    "amSpoken": "in the morning",
+    "pmSpoken": "in the afternoon",
+    "atSpoken": "at",
+    "hoursSpoken": "hours",
+    "minutesSpoken": "minutes"
   },
   "unitAbbreviations": {
   }

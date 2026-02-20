@@ -56,6 +56,7 @@
   },
   "forecast": {
     "nextHourForecast": "Ennuste",
+    "nextHourForecastDescription": "Sää tällä hetkellä",
     "precipitation": "sadetta",
     "celsius": "Celsius-astetta",
     "fahrenheit": "Fahrenheit-astetta",
@@ -71,6 +72,7 @@
     "millimetersOfMercury": "elohopeamillimetriä",
     "inchesOfMercury": "elohopeatuumaa",
     "panelHeader": "{{ forecastLength }} vrk ennuste",
+    "accessiblePanelHeader": "{{ forecastLength }} vuorokauden ennuste",
     "updated": "Päivitetty",
     "sunrise": "Aurinko nousee",
     "sunset": "Aurinko laskee",
@@ -101,6 +103,7 @@
     "precipitationMissing": "Sademäärä puuttuu",
     "popMissing": "Sateen todennäköisyys puuttuu",
     "minus": "miinus",
+    "showHourlyForecast": "Näytä päiväkohtainen tuntiennuste",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
@@ -207,6 +210,7 @@
     "observationStation": "Havaintoasema",
     "stationAccessibilityHint": "valitse vaihtaaksesi havaintoasemaa",
     "selectStationAccessibilityHint": "valitse havaintoasema",
+    "closeSelectStationAcessibilityLabel": "Sulje havaintoaseman valinta",
     "latestObservation": "Viimeisin säähavainto",
     "distance": "etäisyys",
     "distanceFromStation": "km ennustepaikasta",
@@ -218,6 +222,8 @@
     "at": "klo",
     "tooOld": "Aseman viimeisimmät säähavainnot ovat liian vanhoja.",
     "onlyDailyValues": "Tältä havaintoasemalta on saatavilla vain vuorokausiarvoja.",
+    "showObservationChart": "Näytä havainnot graafina",
+    "showObservationList": "Näytä havainnot listana",
     "measurements": {
       "temperature": "Lämpötila",
       "dewPoint": "Kastepiste",
@@ -243,6 +249,7 @@
     },
     "paramUnits": {
       "mm": "millimetriä",
+      "mm/h": "millimetriä tunnissa",
       "%": "prosenttia",
       "°C": "celcius astetta",
       "°F": "Fahrenheit-astetta",
@@ -300,6 +307,7 @@
     "symbols": "Sääsymbolit",
     "locate": "Paikanna",
     "search": "Haku",
+    "openSearch": "Avaa haku",
     "currentLocation": "Paikannettu sijainti",
     "backAccessibilityLabel": "Navigoi takaisin",
     "locateAccessibilityLabel": "Käytä nykyistä sijaintiasi",
@@ -700,7 +708,7 @@
     "description1": "Tämä sovellus täyttää osittain lain vaatimat A- ja AA-tason saavutettavuuskriteerit (WCAG-kriteeristö 2.1). Sovelluksessa on saavutettavuuspuutteita, jotka on kuvattu tarkemmin alempana.",
     "subTitle2": "Huomasitko puutteita saavutettavuudessa?",
     "description2": "Pyrimme jatkuvasti parantamaan sovelluksen saavutettavuutta. Jos löydät ongelmia, joita ei ole kuvattu tällä sivulla, ilmoita niistä meille ja teemme parhaamme puutteiden korjaamiseksi. Vastaamme mahdollisimman pian tai viimeistään kahden viikon sisällä. Voit ottaa yhteyttä sähköpostitse osoitteella:",
-    "email": "kirjaamo@fmi.fi",
+    "email": "saavutettavuus@fmi.fi",
     "subTitle3": "Saavutettavuuden valvonta",
     "description3": "Traficom valvoo saavutettavuusvaatimusten toteutumista vuoden 2025 alusta alkaen. Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta lainkaan kahden viikon aikana, voit antaa palautteen Traficomiin.",
     "website": "www.saavutettavuusvaatimukset.fi",
@@ -733,6 +741,13 @@
     "artikkeli": "Artikkeli",
     "puheenvuoro": "Puheenvuoro",
     "updated": "Päivitetty:"
+  },
+  "time": {
+    "amSpoken": "aamulla",
+    "pmSpoken": "iltapäivällä",
+    "atSpoken": "kello",
+    "hoursSpoken": "tuntia",
+    "minutesSpoken": "minuuttia"
   },
   "unitAbbreviations": {
   }

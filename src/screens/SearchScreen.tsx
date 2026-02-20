@@ -141,12 +141,14 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     navigation.goBack();
   };
 
-  const isFavorite = (location: Location) =>
-    favorites.length > 0 && favorites.some(({ id }) => id === location.id);
+  const isFavorite = (location: Location) => favorites.some(
+    ({ id }) => id === location.id
+  );
 
   return (
     <View testID="search_view" style={styles.container}>
       <Text
+        accessible={false}
         style={[
           styles.placeholderText,
           {
@@ -171,6 +173,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           testID="search_input"
           maxFontSizeMultiplier={2}
           accessibilityRole="search"
+          accessibilityLabel={t('label')}
           style={[
             styles.input,
             {

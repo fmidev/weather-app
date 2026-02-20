@@ -211,8 +211,8 @@ struct SmallWidgetView : View {
       ForecastErrorView(error: entry.error!, size: .small)
     } else {
       VStack(spacing: 0) {
-        Text(entry.formatLocation()).style(.boldLocation).padding(.top, 8)
-        Text(entry.formatArea()).style(.location)
+        Text(entry.location.name).style(.boldLocation)
+        Text(entry.location.area).style(.location)
         Spacer()
         NextHourForecast(timeStep: entry.timeSteps[0])
         Spacer()

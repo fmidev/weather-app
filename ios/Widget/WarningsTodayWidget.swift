@@ -193,7 +193,7 @@ struct SmallWarningsTodayView : View {
         .modifier(TextModifier())
     } else {
       VStack {
-        Text("**\(entry.location.name),**").style(.location)
+        Text(entry.location.name).style(.boldLocation)
         Text(entry.location.area).style(.location)
         if (entry.warnings.isEmpty) {
           Spacer()
