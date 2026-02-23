@@ -29,9 +29,6 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
           "raster-opacity": opacity ?? 0,
           "raster-fade-duration": 0,
         }}
-        layout={{
-          visibility: opacity === 0 ? 'none' : 'visible',
-        }}
       />
     </RasterSource>
 ) : (
