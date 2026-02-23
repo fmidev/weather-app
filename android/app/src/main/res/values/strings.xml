@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MobileWeather</string>
+    <string name="app_name">FMI Weather</string>
     <string name="launcher_name">@string/app_name</string>
     <string name="activity_name">@string/launcher_name</string>
     <string name="widget_1x1">Weather 1x1</string>
