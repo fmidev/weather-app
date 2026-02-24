@@ -1,5 +1,4 @@
-/* eslint-disable react/no-unstable-nested-components */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   Appearance,
   Platform,
@@ -7,44 +6,32 @@ import {
   StatusBar,
   StyleProp,
   ViewStyle,
-  View,
   AppState,
   AppStateStatus
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {
-  createStackNavigator,
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack';
+import { StackNavigationOptions, StackNavigationProp } from '@react-navigation/stack';
 import type { NavigationState, Route } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import { useTranslation } from 'react-i18next';
 import { LaunchArguments } from 'react-native-launch-arguments';
 
-import OthersScreen from '@screens/OthersScreen';
-import MapScreen from '@screens/MapScreen';
-import WeatherScreen from '@screens/WeatherScreen';
-import FeedbackScreen from '@screens/FeedbackScreen';
-import SettingsScreen from '@screens/SettingsScreen';
-import SearchScreen from '@screens/SearchScreen';
-import AboutScreen from '@screens/AboutScreen';
-import AccessibilityScreen from '@screens/AccessibilityScreen';
-import WarningsScreen from '@screens/WarningsScreen';
-import SetupScreen from '@screens/SetupScreen';
-import OnboardingScreen from '@screens/OnboardingScreen';
+import MapStackScreen from './stacks/MapStackScreen';
+import WeatherStackScreen from './stacks/WeatherStackScreen';
+import WarningsStackScreen from './stacks/WarningsStackScreen';
+import OthersStackScreen from './stacks/OthersStackScreen';
+import SetupStackScreen from './stacks/SetupStackScreen';
+import type { MapStackParamList, WeatherStackParamList } from './stacks/types';
 
 import SearchInfoBottomSheet from '@components/search/SearchInfoBottomSheet';
 
-import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
-import HeaderIcon from '@components/common/HeaderIcon';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
@@ -67,23 +54,17 @@ import {
 } from '@store/navigation/selectors';
 import {
   setNavigationTab as setNavigationTabAction,
-  setDidLaunchApp as setDidLaunchAppAction,
 } from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
-import TermsAndConditionsScreen from '@screens/TermsAndConditionsScreen';
 import ErrorComponent from '@components/common/ErrorComponent';
 
 import { Config } from '@config';
 import { lightTheme, darkTheme } from '../assets/themes';
-import {
-  TabParamList,
-  OthersStackParamList,
-  MapStackParamList,
-  WeatherStackParamList,
-  LaunchArgs,
-} from './types';
+import { TabParamList, LaunchArgs } from './types';
 import WarningsTabIcon from './WarningsTabIcon';
 import { sendMatomoEvents, trackMatomoEvent } from '@utils/matomo';
+import HeaderBackImage from '@components/common/HeaderBackImage';
+import HeaderTitle from '@components/common/HeaderTitle';
 import packageJSON from '../../package.json';
 
 const mapStateToProps = (state: State) => ({
@@ -96,7 +77,6 @@ const mapStateToProps = (state: State) => ({
 const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
   setNavigationTab: setNavigationTabAction,
-  setDidLaunchApp: setDidLaunchAppAction,
   fetchAnnouncements: fetchAnnouncementsAction,
 };
 
@@ -107,11 +87,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const Tab = createBottomTabNavigator<TabParamList>();
-const MapStack = createStackNavigator();
-const WeatherStack = createStackNavigator();
-const OthersStack = createStackNavigator<OthersStackParamList>();
-const WarningsStack = createStackNavigator();
-const SetupStack = createStackNavigator();
 
 const Navigator: React.FC<Props> = ({
   setCurrentLocation,
@@ -120,7 +95,6 @@ const Navigator: React.FC<Props> = ({
   initialTab,
   didLaunchApp,
   termsOfUseAccepted,
-  setDidLaunchApp,
   fetchAnnouncements,
 }) => {
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
@@ -155,6 +129,19 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements();
   }, [fetchAnnouncements]);
 
+  const navigationTabChanged = useCallback((state: NavigationState | undefined) => {
+    const r = navigationRef.getCurrentRoute();
+    setCurrentRoute(r ?? null);
+    const navigationTab = state?.routeNames[state?.index] as NavigationTab;
+    if (Number.isInteger(NavigationTabValues[navigationTab])) {
+      setNavigationTab(navigationTab);
+    }
+  }, [navigationRef, setNavigationTab]);
+
+  const closeSearchInfoSheet = useCallback(() => {
+    searchInfoSheetRef.current?.close();
+  }, []);
+
   useEffect(() => {
     i18n.on('languageChanged', handleLanguageChanged);
     return () => {
@@ -177,7 +164,6 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements,
   ]);
 
-
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (appState.current.match(/active/) && nextAppState === 'background') {
@@ -192,15 +178,6 @@ const Navigator: React.FC<Props> = ({
       subscription.remove();
     };
   }, []);
-
-  const navigationTabChanged = (state: NavigationState | undefined) => {
-    const r = navigationRef.getCurrentRoute();
-    setCurrentRoute(r ?? null);
-    const navigationTab = state?.routeNames[state?.index] as NavigationTab;
-    if (Number.isInteger(NavigationTabValues[navigationTab])) {
-      setNavigationTab(navigationTab);
-    }
-  };
 
   useEffect(() => {
     // Listen to system theme changes
@@ -223,297 +200,120 @@ const Navigator: React.FC<Props> = ({
     }
   }, [theme]);
 
-  const HeaderBackImage = ({ tintColor }: { tintColor: string }) => (
-    <View style={styles.headerBackImage}>
-      <Icon
-        name="arrow-back"
-        style={[{ color: tintColor }]}
-        width={26}
-        height={26}
-      />
-    </View>
+  const CommonHeaderOptions: StackNavigationOptions = useMemo(
+    () => ({
+      headerBackTestID: 'header-back',
+      headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+      headerTitleStyle: {
+        fontFamily: 'Roboto-Bold',
+      },
+      headerStyle: {
+        ...styles.header,
+        shadowColor:
+          useDarkTheme || Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
+      },
+      headerTitleAlign: 'center',
+      headerBackImage: HeaderBackImage,
+      headerBackTitle: '',
+      headerBackAccessibilityLabel: t('navigation:backAccessibilityLabel'),
+    }),
+    [useDarkTheme, t]
   );
 
-  const CommonHeaderOptions: StackNavigationOptions = {
-    headerBackTestID: 'header-back',
-    headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
-    headerTitleStyle: {
-      fontFamily: 'Roboto-Bold',
-    },
-    headerStyle: {
-      ...styles.header,
-      shadowColor:
-        useDarkTheme || Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
-    },
-    headerTitleAlign: 'center',
-    headerBackImage: ({ tintColor }: { tintColor: string }) => (
-      <HeaderBackImage tintColor={tintColor} />
-    ),
-    headerBackTitle: '',
-    headerBackAccessibilityLabel: t('navigation:backAccessibilityLabel'),
-  };
+  const LocationHeaderOptions = useMemo(
+    () =>
+      ({
+        navigation,
+      }: {
+        navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
+      }) => ({
+        ...CommonHeaderOptions,
+        // eslint-disable-next-line react/no-unstable-nested-components
+        headerLeft: () => (
+          <HeaderButton
+            accessibilityLabel={t('navigation:locate')}
+            accessibilityHint={t('navigation:locateAccessibilityLabel')}
+            icon="locate"
+            onPress={() => {
+              trackMatomoEvent('User action', 'Map', 'Geolocation');
+              getGeolocation(setCurrentLocation, t);
+            }}
+          />
+        ),
+        // eslint-disable-next-line react/no-unstable-nested-components
+        headerTitle: () => (
+          <CommonHeaderTitle onPress={() => {
+            trackMatomoEvent('User action', 'Map', 'Open search - location');
+            navigation.navigate('Search');
+          }} />
+        ),
+        // eslint-disable-next-line react/no-unstable-nested-components
+        headerRight: () => (
+          <HeaderButton
+            testID="search_header_button"
+            accessibilityLabel={t('navigation:search')}
+            accessibilityHint={t('navigation:searchAccessibilityLabel')}
+            icon="search"
+            onPress={() => {
+              trackMatomoEvent('User action', 'Map', 'Open search - button');
+              navigation.navigate('Search');
+            }}
+            right
+          />
+        ),
+      }),
+    [CommonHeaderOptions, setCurrentLocation, t]
+  );
 
-  const LocationHeaderOptions = ({
-    navigation,
-  }: {
-    navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
-  }) => ({
-    ...CommonHeaderOptions,
-    headerLeft: () => (
-      <HeaderButton
-        accessibilityLabel={t('navigation:locate')}
-        accessibilityHint={t('navigation:locateAccessibilityLabel')}
-        icon="locate"
-        onPress={() => {
-          trackMatomoEvent('User action', 'Map', 'Geolocation');
-          getGeolocation(setCurrentLocation, t);
-        }}
-      />
-    ),
-    headerTitle: () => (
-      <CommonHeaderTitle onPress={() => {
-        trackMatomoEvent('User action', 'Map', 'Open search - location');
-        navigation.navigate('Search');
-      }} />
-    ),
-    headerRight: () => (
-      <HeaderButton
-        testID="search_header_button"
-        accessibilityLabel={t('navigation:search')}
-        accessibilityHint={t('navigation:searchAccessibilityLabel')}
-        icon="search"
-        onPress={() => {
-          trackMatomoEvent('User action', 'Map', 'Open search - button');
-          navigation.navigate('Search');
-        }}
-        right
-      />
-    ),
-  });
-
-  const SearchScreenOptions = {
-    ...CommonHeaderOptions,
-    path: 'search',
-    headerBackTitleVisible: false,
-    headerTitle: () => (
-      <Text
-        style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
-        maxFontSizeMultiplier={1.5}
-      >
-        {t('navigation:search')}
-      </Text>
-    ),
-    headerRight: () => (
-      <HeaderButton
-        testID="search_header_info_button"
-        accessibilityLabel="info"
-        accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
-        icon="info"
-        onPress={() => {
-          trackMatomoEvent('User action', 'Search', 'Open search info bottomsheet');
-          searchInfoSheetRef.current?.open();
-        }}
-      />
-    ),
-  };
+  const SearchScreenOptions = useMemo(
+    () => ({
+      ...CommonHeaderOptions,
+      path: 'search',
+      headerBackTitleVisible: false,
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerTitle: () => <HeaderTitle title={t('navigation:search')} isDark={useDarkTheme} />,
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerRight: () => (
+        <HeaderButton
+          testID="search_header_info_button"
+          accessibilityLabel="info"
+          accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
+          icon="info"
+          onPress={() => {
+            trackMatomoEvent('User action', 'Search', 'Open search info bottomsheet');
+            searchInfoSheetRef.current?.open();
+          }}
+        />
+      ),
+    }),
+    [CommonHeaderOptions, t, useDarkTheme]
+  );
 
   /** Navigates back to initial route on blur */
-  const stackScreenListener = ({ navigation }: { navigation: any }) => ({
-    blur: () => {
-      navigation.popToTop();
-    },
-  });
-
-  const MapStackScreen = () => (
-    <MapStack.Navigator>
-      <MapStack.Screen
-        name="StackMap"
-        component={MapScreen}
-        options={LocationHeaderOptions({ navigation: navigationRef as any })}
-      />
-      <MapStack.Screen
-        name="Search"
-        component={SearchScreen}
-        options={SearchScreenOptions}
-        listeners={stackScreenListener}
-      />
-    </MapStack.Navigator>
+  const stackScreenListener = useMemo(
+    () =>
+      ({ navigation }: { navigation: any }) => ({
+        blur: () => {
+          navigation.popToTop();
+        },
+      }),
+    []
   );
 
-  const WeatherStackScreen = () => (
-    <WeatherStack.Navigator>
-      <WeatherStack.Screen
-        name="StackWeather"
-        component={WeatherScreen}
-        options={
-          weatherLayout === 'fmi' ? { headerShown: false } : LocationHeaderOptions({ navigation: navigationRef as any })
-        }
-      />
-      <WeatherStack.Screen
-        name="Search"
-        component={SearchScreen}
-        options={SearchScreenOptions}
-        listeners={stackScreenListener}
-      />
-    </WeatherStack.Navigator>
-  );
+  const mapScreenOptions = useMemo(
+    () => LocationHeaderOptions({ navigation: navigationRef as any })
+    , [LocationHeaderOptions, navigationRef]);
 
-  const WarningsStackScreen = () => (
-    <WarningsStack.Navigator>
-      <WarningsStack.Screen
-        name="StackWarnings"
-        component={WarningsScreen}
-        options={LocationHeaderOptions({ navigation: navigationRef as any })}
-        initialParams={{ day: 0 }}
-      />
-      <WeatherStack.Screen
-        name="Search"
-        component={SearchScreen}
-        options={SearchScreenOptions}
-        listeners={stackScreenListener}
-      />
-    </WarningsStack.Navigator>
-  );
+  const weatherScreenOptions = useMemo(() =>
+    weatherLayout === 'fmi'
+      ? { headerShown: false }
+      : LocationHeaderOptions({ navigation: navigationRef as any }),
+    [LocationHeaderOptions, navigationRef, weatherLayout]);
 
-  const OthersStackScreen = () => (
-    <OthersStack.Navigator initialRouteName="StackOthers">
-      <OthersStack.Screen
-        name="StackOthers"
-        component={OthersScreen}
-        options={{
-          ...CommonHeaderOptions,
-          headerTitle: () => <HeaderIcon />,
-        }}
-      />
-      <OthersStack.Screen
-        name="About"
-        component={AboutScreen}
-        options={{
-          ...CommonHeaderOptions,
-          headerTitle: () => (
-            <Text
-              style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
-              maxFontSizeMultiplier={1.5}
-            >
-              {t('navigation:about')}
-            </Text>
-          )
-        }}
-        listeners={stackScreenListener}
-      />
-      <OthersStack.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          ...CommonHeaderOptions,
-          headerTitle: () => (
-            <Text
-              style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
-              maxFontSizeMultiplier={1.5}
-            >
-              {t('navigation:settings')}
-            </Text>
-          )
-        }}
-        listeners={stackScreenListener}
-      />
-      <OthersStack.Screen
-        name="TermsAndConditions"
-        component={TermsAndConditionsScreen}
-        options={{
-          ...CommonHeaderOptions,
-          headerTitle: () => (
-            <Text
-              style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
-              maxFontSizeMultiplier={1.5}
-            >
-              {t('navigation:termsAndConditions')}
-            </Text>
-          ),
-        }}
-      />
-      <OthersStack.Screen
-        name="Accessibility"
-        component={AccessibilityScreen}
-        options={{
-          ...CommonHeaderOptions,
-          headerTitle: () => (
-            <Text
-              style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
-              maxFontSizeMultiplier={1.5}
-            >
-              {t('navigation:accessibility')}
-            </Text>
-          )
-        }}
-      />
-      <OthersStack.Screen
-        name="GiveFeedback"
-        component={FeedbackScreen}
-        options={{
-          ...CommonHeaderOptions,
-          headerTitle: () => (
-            <Text
-              style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
-              maxFontSizeMultiplier={1.5}
-            >
-              {t('navigation:feedback')}
-            </Text>
-          )
-        }}
-      />
-    </OthersStack.Navigator>
-  );
+  const warningsScreenOptions = useMemo(
+    () => LocationHeaderOptions({ navigation: navigationRef as any }),
+    [LocationHeaderOptions, navigationRef] );
 
-  const SetupStackScreen = () => (
-    <SetupStack.Navigator
-      initialRouteName={ didLaunchApp && !termsOfUseAccepted ? 'SetupScreen' : 'Onboarding' }
-      screenOptions={{ gestureEnabled: false }}>
-      <SetupStack.Screen
-        name="Onboarding"
-        options={{ headerShown: false }}
-        component={OnboardingScreen}
-      />
-      <SetupStack.Screen
-        name="SetupScreen"
-        options={{
-          headerShown: false,
-        }}>
-        {(props) => (
-          <SetupScreen
-            {...props}
-            setUpDone={() => {
-              setDidLaunchApp();
-            }}
-            termsOfUseChanged={ !termsOfUseAccepted }
-          />
-        )}
-      </SetupStack.Screen>
-      <SetupStack.Screen
-        name="TermsAndConditions"
-        options={{
-          ...CommonHeaderOptions,
-          headerTitle: () => (
-            <Text
-              style={[styles.headerTitle, { color:  useDarkTheme ? WHITE : PRIMARY_BLUE}]}
-              maxFontSizeMultiplier={1.5}
-            >
-              {t('setUp:termsAndConditions')}
-            </Text>
-          )
-        }}>
-        {({ navigation }) => (
-          <TermsAndConditionsScreen
-            showCloseButton
-            onClose={() => navigation.goBack()}
-          />
-        )}
-      </SetupStack.Screen>
-    </SetupStack.Navigator>
-  );
-
-  // this is never shown as SplashScreen is visible with the condition
-  // however, this prevents unnecessary child component rendering
   if (!ready || !theme) {
     return null;
   }
@@ -521,7 +321,10 @@ const Navigator: React.FC<Props> = ({
   if ((!didLaunchApp || !termsOfUseAccepted) && onboardingWizardEnabled && launchArgs?.e2e !== true) {
     return (
       <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
-        <SetupStackScreen />
+        <SetupStackScreen
+          commonHeaderOptions={CommonHeaderOptions}
+          useDarkTheme={useDarkTheme}
+        />
       </NavigationContainer>
     );
   }
@@ -550,8 +353,7 @@ const Navigator: React.FC<Props> = ({
         onReady={() => { setNavReady(true); handleState(); }}
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}
-        /*
-        // @ts-ignore */
+        /* @ts-ignore */
         linking={linking}>
         <Tab.Navigator
           initialRouteName={initialTab}
@@ -565,6 +367,7 @@ const Navigator: React.FC<Props> = ({
               : lightTheme.colors.tabBarInactive,
             tabBarLabelStyle: styles.tabText,
             tabBarStyle: Platform.OS === 'android' && Platform.Version < 35 ? { height: 70 } : {},
+            // eslint-disable-next-line react/no-unstable-nested-components
             tabBarButton: ({ style, accessibilityState, ...rest }) => {
               const activeColor = useDarkTheme
                 ? darkTheme.colors.tabBarActive
@@ -591,7 +394,6 @@ const Navigator: React.FC<Props> = ({
           }}>
           <Tab.Screen
             name="Weather"
-            component={WeatherStackScreen}
             options={{
               tabBarAccessibilityLabel: `${t('navigation:weather')}, 1 ${t(
                 'navigation:slash'
@@ -599,6 +401,7 @@ const Navigator: React.FC<Props> = ({
               headerShown: false,
               tabBarButtonTestID: 'navigation_weather',
               tabBarLabel: `${t('navigation:weather')}`,
+              // eslint-disable-next-line react/no-unstable-nested-components
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="weather"
@@ -614,10 +417,17 @@ const Navigator: React.FC<Props> = ({
                 trackMatomoEvent('User action', 'Navigation', 'Weather');
               },
             }}
-          />
+          >
+            {() => (
+              <WeatherStackScreen
+                weatherOptions={weatherScreenOptions}
+                searchOptions={SearchScreenOptions}
+                stackScreenListener={stackScreenListener}
+              />
+            )}
+          </Tab.Screen>
           <Tab.Screen
             name="Map"
-            component={MapStackScreen}
             options={{
               tabBarAccessibilityLabel: `${t('navigation:map')}, 2 ${t(
                 'navigation:slash'
@@ -626,6 +436,7 @@ const Navigator: React.FC<Props> = ({
               tabBarButtonTestID: 'navigation_map',
               tabBarLabel: `${t('navigation:map')}`,
               tabBarLabelStyle: styles.tabText,
+              // eslint-disable-next-line react/no-unstable-nested-components
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="map"
@@ -641,11 +452,18 @@ const Navigator: React.FC<Props> = ({
                 trackMatomoEvent('User action', 'Navigation', 'Map');
               },
             }}
-          />
+          >
+            {() => (
+              <MapStackScreen
+                mapOptions={mapScreenOptions}
+                searchOptions={SearchScreenOptions}
+                stackScreenListener={stackScreenListener}
+              />
+            )}
+          </Tab.Screen>
           {warningsEnabled && (
             <Tab.Screen
               name="Warnings"
-              component={WarningsStackScreen}
               options={{
                 tabBarAccessibilityLabel: `${t('navigation:warnings')}, 3 ${t(
                   'navigation:slash'
@@ -657,6 +475,7 @@ const Navigator: React.FC<Props> = ({
                 headerShown: false,
                 tabBarButtonTestID: 'navigation_warnings',
                 tabBarLabel: `${t('navigation:warnings')}`,
+                // eslint-disable-next-line react/no-unstable-nested-components
                 tabBarIcon: ({ color, size }) => (
                   <WarningsTabIcon
                     color={color}
@@ -671,11 +490,18 @@ const Navigator: React.FC<Props> = ({
                 trackMatomoEvent('User action', 'Navigation', 'Warnings');
               },
             }}
-            />
+            >
+              {() => (
+                <WarningsStackScreen
+                  warningsOptions={warningsScreenOptions}
+                  searchOptions={SearchScreenOptions}
+                  stackScreenListener={stackScreenListener}
+                />
+              )}
+            </Tab.Screen>
           )}
           <Tab.Screen
             name="Others"
-            component={OthersStackScreen}
             options={{
               tabBarAccessibilityLabel: `${t('navigation:others')}, 4 ${t(
                 'navigation:slash'
@@ -683,6 +509,7 @@ const Navigator: React.FC<Props> = ({
               headerShown: false,
               tabBarButtonTestID: 'navigation_others',
               tabBarLabel: `${t('navigation:others')}`,
+              // eslint-disable-next-line react/no-unstable-nested-components
               tabBarIcon: ({ color, size }) => (
                 <Icon
                   name="menu"
@@ -698,7 +525,15 @@ const Navigator: React.FC<Props> = ({
                 trackMatomoEvent('User action', 'Navigation', 'Others');
               },
             }}
-          />
+          >
+            {() => (
+              <OthersStackScreen
+                commonHeaderOptions={CommonHeaderOptions}
+                useDarkTheme={useDarkTheme}
+                stackScreenListener={stackScreenListener}
+              />
+            )}
+          </Tab.Screen>
         </Tab.Navigator>
         <RBSheet
           ref={searchInfoSheetRef}
@@ -714,7 +549,7 @@ const Navigator: React.FC<Props> = ({
             draggableIcon: styles.draggableIcon,
           }}>
           <SearchInfoBottomSheet
-            onClose={() => searchInfoSheetRef.current?.close()}
+            onClose={closeSearchInfoSheet}
           />
         </RBSheet>
         <ErrorComponent
@@ -730,15 +565,6 @@ const styles = StyleSheet.create({
   tabText: {
     fontFamily: 'Roboto-Medium',
     fontSize: 14,
-  },
-  headerBackImage: {
-    flex: 1,
-    paddingVertical: 10,
-    ...Platform.select({
-      ios: {
-        marginLeft: 22,
-      },
-    }),
   },
   sheetContainer: {
     borderTopLeftRadius: 10,
@@ -759,10 +585,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 1,
     elevation: 8,
-  },
-  headerTitle: {
-    fontFamily: 'Roboto-Bold',
-    fontSize: 16,
   }
 });
 

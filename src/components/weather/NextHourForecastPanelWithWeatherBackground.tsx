@@ -32,12 +32,12 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import IconButton from '@components/common/IconButton';
-import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import NextHourForecastBar from './forecast/NextHourForecastBar';
 import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
+import type { WeatherStackParamList } from '@navigators/stacks/types';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),

@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { SetupStackParamList } from '@navigators/types';
 import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -20,6 +19,7 @@ import { GRAY_1, CustomTheme } from '@assets/colors';
 import { useOrientation } from '@utils/hooks';
 import { Config } from '@config';
 import { providerLogos } from '@assets/images';
+import type { SetupStackParamList } from '@navigators/stacks/types';
 
 type SetupScreenProps = {
   setUpDone: () => void;
