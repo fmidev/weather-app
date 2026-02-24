@@ -241,7 +241,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                   onPress={() => {
                     trackMatomoEvent('User action', 'Settings', 'Follow us - '+socialMediaLink.name);
                     handleSocialPress(
-                      socialMediaLink.appUrl,
+                      socialMediaLink.appUrl || socialMediaLink.url,
                       socialMediaLink.url
                     );
                   }}

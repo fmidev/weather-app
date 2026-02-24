@@ -165,7 +165,7 @@ interface DynamicConfigDisabled extends Partial<DynamicConfig> {
 interface SocialMediaLink {
   name: string;
   icon: string;
-  appUrl: string;
+  appUrl?: string;
   url: string;
 }
 
