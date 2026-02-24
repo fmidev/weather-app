@@ -83,7 +83,15 @@ const MarkdownLayerInfo: React.FC<MarkdownLayerInfoProps> = ({activeOverlay}) =>
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.container}>
       { markdown ? (
-        <Markdown value={markdown} renderer={renderer} />
+        <Markdown
+          value={markdown}
+          renderer={renderer}
+          flatListProps={{
+            style: {
+              backgroundColor: colors.background,
+            },
+          }}
+        />
       ) : (
         <Text>{t('infoBottomSheet.markdownLoadingFailed')}</Text>
       )}
