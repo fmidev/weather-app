@@ -17,7 +17,7 @@ import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
 
-import { MapStackParamList, WeatherStackParamList } from '@navigators/types';
+import type { MapStackParamList, WeatherStackParamList } from '@navigators/stacks/types';
 
 import { State } from '@store/types';
 

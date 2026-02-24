@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next';
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-import { OthersStackParamList } from '@navigators/types';
 import { Config } from '@config';
 import { trackMatomoEvent } from '@utils/matomo';
+import type { OthersStackParamList } from '@navigators/stacks/types';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'StackOthers'>;
