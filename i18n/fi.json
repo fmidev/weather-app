@@ -454,7 +454,8 @@
           "long": "Tasolla esitetään lämpötila 3h aika-askeleella seuraavasta alkavasta tunnista kolme päivää eteenpäin."
         }
       },
-      "timeseriesLayerInfo": "Sääennuste kartalla näyttää sääsymbolin ja lämpötilan lukuisille paikkakunnille ympäri maailman. Symbolia painamalla saa esille lisää säätietoa."
+      "timeseriesLayerInfo": "Sääennuste kartalla näyttää sääsymbolin ja lämpötilan lukuisille paikkakunnille ympäri maailman. Symbolia painamalla saa esille lisää säätietoa.",
+      "markdownLoadingFailed": "Karttatason kuvauksen lataaminen epäonnistui."
     }
   },
   "searchScreen": {

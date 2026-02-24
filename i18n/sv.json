@@ -454,7 +454,8 @@
           "long": "Lagret visar temperatur med 3 timmars tidssteg från nästa timme och tre dagar framåt."
         }
       },
-      "timeseriesLayerInfo": "Vädersymbolen och temperaturen på kartan visar väderprognosen på många orter runt om i världen. Genom att trycka på symbolen får man fram mer väderinformation."
+      "timeseriesLayerInfo": "Vädersymbolen och temperaturen på kartan visar väderprognosen på många orter runt om i världen. Genom att trycka på symbolen får man fram mer väderinformation.",
+      "markdownLoadingFailed": "Laddning av kartlagrets beskrivning misslyckades."
     }
   },
   "searchScreen": {

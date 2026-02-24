@@ -235,6 +235,11 @@ interface Analytics {
   url?: string; // matomo server url
 }
 
+interface MapInfoBottomSheet {
+  url: string;
+}
+
+
 // TODO: how to handle errors. Add error categories to "actions" and then name -field can be error message content
 // for example: trackMatomoEvent('Error', 'Error loading forecast data', error.getMessage())
 // Events in Matomo have three dimension (category, action, name)
@@ -259,6 +264,7 @@ export interface ConfigType {
     updateInterval: number;
     sources: { [name: string]: string };
     layers: MapLayer[];
+    infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {
     apiUrl: string;
