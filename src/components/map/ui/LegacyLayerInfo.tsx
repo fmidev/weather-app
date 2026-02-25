@@ -14,7 +14,7 @@ import { State } from '@store/types';
 import { selectActiveOverlay } from '@store/map/selectors';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import TemperatureLegend from './TemperatureLegend';
+import TemperatureLegend from '../../markdown/TemperatureLegend';
 
 const LegacyInfo: React.FC = () => {
   const { t } = useTranslation('map');
