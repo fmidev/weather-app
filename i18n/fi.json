@@ -751,5 +751,8 @@
     "minutesSpoken": "minuuttia"
   },
   "unitAbbreviations": {
+  },
+  "markdownRenderer": {
+    "radarLegendDescription": "Sateen voimakkuuden asteikko"
   }
 }

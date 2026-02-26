@@ -40,6 +40,7 @@ const MarkdownLayerInfo: React.FC<MarkdownLayerInfoProps> = ({activeOverlay}) =>
 
   renderer.setHeadingColor(colors.text);
   renderer.setTextColor(colors.primaryText);
+  renderer.setTranslationFunction(t);
 
   useEffect(() => {
     const fetchMarkdown = async (layer: string) => {

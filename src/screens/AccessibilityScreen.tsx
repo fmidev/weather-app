@@ -13,12 +13,13 @@ import { accessibilityDocuments } from '@assets/markdown';
 const renderer = new MarkdownRenderer();
 
 const AccessibilityScreen: React.FC = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
   const { markdown } = Config.get('settings');
 
   renderer.setHeadingColor(colors.text);
   renderer.setTextColor(colors.primaryText);
+  renderer.setTranslationFunction(t);
 
   return (
     <View

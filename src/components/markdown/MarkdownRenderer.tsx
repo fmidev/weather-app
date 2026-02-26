@@ -1,14 +1,24 @@
 import React, { ReactNode } from 'react';
-import { View, StyleSheet, type TextStyle } from 'react-native';
+import { View, StyleSheet, type TextStyle, Linking } from 'react-native';
 import { Renderer, type RendererInterface } from 'react-native-marked';
 
 import Icon from '@components/common/ScalableIcon';
 import Text from '@components/common/AppText';
+import { trackMatomoEvent } from '@utils/matomo';
 import TemperatureLegend from './TemperatureLegend';
+import type { AnalyticActions } from '@config';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import packageJSON from '../../../package.json';
 
 const HEX_RE = /^#[0-9a-fA-F]{6}$/;
 const ICON_TOKEN_RE = /\[icon:([a-z0-9-]+)(?:\|(\d+)(?:\|(\d+))?)?\]/g;
 const TEMPERATURE_LEGEND_TOKEN = '[temperature-legend]';
+const URL_WITH_SCHEME_RE = /^(https?:\/\/|mailto:|tel:)/i;
+
+type ParsedTrackedLink = {
+  url: string;
+  action?: string;
+};
 
 function parseColors(raw: string): string[] {
   return raw
@@ -24,12 +34,30 @@ const parseLabels = (raw: string) =>
     .map((s) => s.trim())
     .filter(Boolean);
 
+const parseTrackedLink = (rawHref: string): ParsedTrackedLink | null => {
+  if (!rawHref) return null;
+
+  const parts = rawHref.split('|').map((s) => s.trim());
+  const [rawUrl, ...actionParts] = parts;
+  if (!rawUrl) return null;
+
+  const normalizedUrl = rawUrl.startsWith('/') && URL_WITH_SCHEME_RE.test(rawUrl.slice(1))
+    ? rawUrl.slice(1)
+    : rawUrl;
+
+  return {
+    url: normalizedUrl,
+    action: actionParts.join('|') || undefined,
+  };
+};
+
 function RadarScaleLegend(props: Readonly<{
   colors: string[];
   labels: string[];
+  accessibilityLabel: string;
   textStyle?: TextStyle;
 }>) {
-  const { colors, labels, textStyle } = props;
+  const { colors, labels, accessibilityLabel, textStyle } = props;
 
   const left = labels[0] ?? '';
   const center =
@@ -42,7 +70,7 @@ function RadarScaleLegend(props: Readonly<{
     <View style={styles.legendRoot} accessible accessibilityRole="text">
       <View
         style={styles.scaleRow}
-        accessibilityLabel="Sateen voimakkuuden asteikko"
+        accessibilityLabel={accessibilityLabel}
       >
         {colors.map((c, i) => (
           <View
@@ -86,7 +114,7 @@ function IconInline(props: Readonly<{
 
   return (
     <View style={styles.iconInlineRow} accessible accessibilityRole="text">
-      <View style={styles.iconWrap} accessibilityLabel={`Ikoni: ${name}`}>
+      <View style={styles.iconWrap}>
         <Icon name={name} width={width} height={height} />
       </View>
     </View>
@@ -101,6 +129,8 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
   private headingColor?: string;
 
   private keyCounter = 0;
+
+  private t?: (text: string) => string;
 
   constructor(options?: { textStyle?: TextStyle }) {
     super();
@@ -118,6 +148,10 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
 
   setHeadingColor(color: string) {
     this.headingColor = color;
+  }
+
+  setTranslationFunction(t: (text: string) => string) {
+    this.t = t;
   }
 
   heading = (children: string | ReactNode[], stylesOverride?: TextStyle, level?: number) => {
@@ -223,7 +257,7 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     return <View key={this.nextKey()} style={styles.inlineContainer}>{nodes}</View>;
   };
 
-  link = (children: string | ReactNode[], href: string, stylesOverride?: TextStyle) => {
+  link = (children: string | ReactNode[], href: string) => {
     const contentText =
       typeof children === 'string' ? children : undefined;
 
@@ -231,7 +265,10 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
       const colors = parseColors(contentText);
       const labels = parseLabels(href);
 
-      const textStyle = this.textColor ? { ...this.textStyle, color: this.textColor } : this.textStyle;
+      const textStyle = this.textColor ? {
+        ...this.textStyle,
+        color: this.textColor,
+      } : this.textStyle;
 
       if (colors.length >= 2) {
         return (
@@ -239,24 +276,70 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
             key={this.nextKey()}
             colors={colors}
             labels={labels}
+            accessibilityLabel={this.t ? this.t('markdownRenderer.radarLegendDescription') : ''}
             textStyle={textStyle}
           />
         );
       }
     }
 
-    // Fallback: keep normal "link" appearance
-    const mergedStyle: TextStyle | undefined = stylesOverride;
+    const trackedLink = parseTrackedLink(href);
+    const linkChildren = React.Children.toArray(children);
 
-    const fallbackText =
-      typeof children === 'string'
-        ? children
-        : ''; // If children is ReactNode[], you can render it differently if needed.
+    const onPress = () => {
+      if (!trackedLink?.url) {
+        return;
+      }
+
+      let { url } = trackedLink;
+
+      if (url.startsWith('mailto:')) {
+        url = url.replace('{version}', packageJSON.version);
+      }
+
+      if (trackedLink.action) {
+        trackMatomoEvent(
+          'User action',
+          trackedLink.action as AnalyticActions,
+          `Open URL - ${url}`
+        );
+      }
+
+      console.log(`Opening URL: ${url}`);
+
+      Linking.openURL(url).catch(() => {});
+    };
 
     return (
-      <Text key={this.nextKey()} style={[styles.text, this.textStyle, mergedStyle]}>
-        {fallbackText}
-      </Text>
+      <AccessibleTouchableOpacity
+        key={trackedLink?.url || this.nextKey()}
+        accessibilityRole="link"
+        accessibilityHint={this.t ? this.t('markdonwRenderer.openInBrowser') : undefined}
+        onPress={onPress}
+      >
+        <View
+          style={[styles.link, { borderBottomColor: this.headingColor }]}>
+          <Text
+            maxFontSizeMultiplier={1.5}
+            style={[
+              styles.linkText,
+              {
+                color: this.textColor,
+              },
+            ]}>
+            {linkChildren}
+          </Text>
+          { !trackedLink?.url.startsWith('mailto:') && (
+            <Icon
+              name="open-in-new"
+              color={this.textColor}
+              width={18}
+              height={18}
+              maxFontSizeMultiplier={1.5}
+            />
+          )}
+        </View>
+      </AccessibleTouchableOpacity>
     );
   };
 }
@@ -310,5 +393,17 @@ const styles = StyleSheet.create({
   },
   blockToken: {
     width: '100%',
+  },
+  link: {
+    padding: 4,
+    borderBottomWidth: 2,
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  linkText: {
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
