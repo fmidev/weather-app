@@ -305,8 +305,6 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
         );
       }
 
-      console.log(`Opening URL: ${url}`);
-
       Linking.openURL(url).catch(() => {});
     };
 
