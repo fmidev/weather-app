@@ -90,7 +90,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       latlon: `${location.lat},${location.lon}`
     }
 
-    fetchForecast(forecastLocation, geoid ? [geoid] : [], location.country);
+    fetchForecast(forecastLocation, location.country);
     setForecastUpdated(Date.now());
   }, [
     fetchForecast,

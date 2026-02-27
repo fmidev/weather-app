@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next';
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-import { OthersStackParamList } from '@navigators/types';
 import { Config } from '@config';
 import { trackMatomoEvent } from '@utils/matomo';
+import type { OthersStackParamList } from '@navigators/stacks/types';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'StackOthers'>;
@@ -33,7 +33,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView edges={['right', 'bottom', 'left']}>
+    <SafeAreaView edges={['right', 'left']}>
       <View testID="others_view" style={styles.container}>
         <View>
           <View
@@ -241,7 +241,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
                   onPress={() => {
                     trackMatomoEvent('User action', 'Settings', 'Follow us - '+socialMediaLink.name);
                     handleSocialPress(
-                      socialMediaLink.appUrl,
+                      socialMediaLink.appUrl || socialMediaLink.url,
                       socialMediaLink.url
                     );
                   }}

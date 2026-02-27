@@ -41,13 +41,14 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
           styles.container,
           right && styles.right,
           !title && styles.right,
+          !title && styles.iconOnly,
           !isLandscape && styles.marginBottom,
           isLandscape ? styles.row : undefined,
           isLandscape && right ? styles.rowReverse : undefined,
         ]}>
         <Icon
           name={icon}
-          maxScaleFactor={1}
+          maxScaleFactor={title ? 1 : 2}
           style={{ color: colors.text }}
           width={24}
           height={24}
@@ -74,6 +75,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     minWidth: 105,
     justifyContent: 'center',
+  },
+  iconOnly: {
+    minWidth: 32,
   },
   row: {
     flexDirection: 'row',

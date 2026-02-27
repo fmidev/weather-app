@@ -32,12 +32,12 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import IconButton from '@components/common/IconButton';
-import { WeatherStackParamList } from '@navigators/types';
 import NextHoursForecast from './NextHoursForecast';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import NextHourForecastBar from './forecast/NextHourForecastBar';
 import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
+import type { WeatherStackParamList } from '@navigators/stacks/types';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -140,6 +140,14 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   const largeFonts = fontScale >= 1.5;
   const contentHeight = largeFonts ? 600 : 420;
   const iconSize = Math.min(fontScale * 22, 44);
+  const accessibleHeaderLabel =
+    `${t('nextHourForecastDescription')} ${t(`symbols:${smartSymbol.toString()}`)} 
+      ${formatAccessibleTemperature(temperatureValue, t)} 
+      ${t(getForecastParameterUnitTranslationKey(`°${temperatureUnit}`))}`;
+
+  const locationName = location.name === location.area || !location.area
+    ? location.name
+    : `${location.name}, ${location.area}`;
 
   return (
     <ImageBackground
@@ -185,7 +193,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                 navigation.navigate('Search');
               }}
               accessibilityRole="button"
-              accessibilityLabel={`${location.name}${location.area ? `, ${location.area}` : ''}, ${t('navigation:search')}`}
+              accessibilityLabel={`${locationName}, ${t('navigation:search')}`}
             >
               <Text
                 numberOfLines={1}
@@ -195,7 +203,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                   styles.bold,
                   { color: textColor },
                 ]}>
-                {`${location.name}${location.area ? `, ${location.area}` : ''}`}
+                {locationName}
               </Text>
             </AccessibleTouchableOpacity>
           </View>
@@ -213,33 +221,36 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             circular
           />
         </View>
-        <View style={[styles.alignCenter, styles.forecastVerticalSpace]}>
-          <Text
-            numberOfLines={1}
-            maxFontSizeMultiplier={1.5}
-            style={[styles.largeText, styles.centeredText, { color: textColor }]}>
-            {t(`symbols:${smartSymbol.toString() }`)}
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <View style={[styles.row, styles.alignStart]} accessible
-            accessibilityLabel={`${formatAccessibleTemperature(temperatureValue, t)} ${t(
-              getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
-            )}`}>
+        <View
+          accessible
+          accessibilityRole="header"
+          accessibilityLabel={accessibleHeaderLabel}
+        >
+          <View style={[styles.alignCenter, styles.forecastVerticalSpace]}>
             <Text
+              numberOfLines={1}
               maxFontSizeMultiplier={1.5}
-              style={[
-                styles.temperatureText,
-                { color: textColor }
-              ]}>
-              {numericOrDash(temperatureValue)}
+              style={[styles.largeText, styles.centeredText, { color: textColor }]}>
+              {t(`symbols:${smartSymbol.toString() }`)}
             </Text>
-            <Text
-              maxFontSizeMultiplier={1.5}
-              style={[styles.unitText, { color: textColor }]}
-              >
-              °{temperatureUnit}
-            </Text>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.row, styles.alignStart]}>
+              <Text
+                maxFontSizeMultiplier={1.5}
+                style={[
+                  styles.temperatureText,
+                  { color: textColor }
+                ]}>
+                {numericOrDash(temperatureValue)}
+              </Text>
+              <Text
+                maxFontSizeMultiplier={1.5}
+                style={[styles.unitText, { color: textColor }]}
+                >
+                °{temperatureUnit}
+              </Text>
+            </View>
           </View>
         </View>
     </SafeAreaView>

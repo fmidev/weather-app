@@ -10,6 +10,7 @@ import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import type { NewsItem } from '@store/news/types';
 import { trackMatomoEvent } from '@utils/matomo';
+import { formatAccessibleDate } from '@utils/helpers';
 
 type NewsProps = {
   item: NewsItem;
@@ -40,18 +41,35 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
     }
   };
 
-  // some devices may have float values as width => round value
+  // Some devices may have float values as width => round value
   const imageWidth = Math.min(Math.round(width), MAX_IMAGE_WIDTH);
+
+  const createdMoment = moment(item.createdAt);
+  const title =
+    `${t(item.type)} ${createdMoment.format(dateFormat)}` +
+    (
+      item.createdAt.substring(0, 10) !== item.updatedAt.substring(0, 10) &&
+      item.showEditedDateTime
+        ? ` (${t('updated')} ${moment(item.updatedAt).format(dateAndTimeFormat)})`
+        : ''
+    );
+  const accessibleTitle =
+    `${t(item.type)} ${formatAccessibleDate(createdMoment)}` +
+    (
+      item.createdAt.substring(0, 10) !== item.updatedAt.substring(0, 10) &&
+      item.showEditedDateTime
+        ? ` (${t('updated')} ${formatAccessibleDate(moment(item.updatedAt))})`
+        : ''
+    );
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles
     <View style={[styles.container, gridLayout ? { paddingHorizontal: 4 } : {}]}>
-      <Text style={
-        [styles.meta, {color: colors.primaryText }]
+      <Text
+        accessibilityLabel={accessibleTitle}
+        style={[styles.meta, {color: colors.primaryText }]
       }>
-        {`${t(item.type)} ${moment(item.createdAt).format(dateFormat)}`}
-        { item.createdAt.substring(0, 10) !== item.updatedAt.substring(0,10) && item.showEditedDateTime &&
-        ` (${t('updated')} ${moment(item.updatedAt).format(dateAndTimeFormat)})`}
+        {title}
       </Text>
       <Text
         numberOfLines={titleNumberOfLines}
@@ -60,9 +78,8 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
         {item.title}
       </Text>
       <AccessibleTouchableOpacity
-        accessibilityRole="imagebutton"
-        accessibilityLabel={item.imageAlt}
-        accessibilityHint={t('readMore')}
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
         onPress={() => {
           trackMatomoEvent('User action', 'News', 'Open news-page in fmi.fi');
           openLink(item.type, item.id)
