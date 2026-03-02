@@ -35,7 +35,7 @@ import { UnitType } from '@store/settings/types';
 import { selectStoredGeoids } from '@store/location/selector';
 import { GRAY_1 } from '@assets/colors';
 
-import { Config } from '@config';
+import { Config, type MeasurementUnit } from '@config';
 import { initMatomo, trackMatomoEvent } from '@utils/matomo';
 
 const LOCATION_ALWAYS = 'location_always';
@@ -84,7 +84,7 @@ const SettingsScreen: React.FC<Props> = ({
     wind: useRef<RBSheet>(null),
     pressure: useRef<RBSheet>(null),
   } as { [key: string]: React.RefObject<RBSheet> };
-  const { languages, themes, showUnitSettings } = Config.get('settings');
+  const { languages, themes, showUnitSettings, excludeUnits } = Config.get('settings');
   const hiddenUnits = getUnitsHiddenInSettings();
 
   useEffect(() => {
@@ -134,7 +134,8 @@ const SettingsScreen: React.FC<Props> = ({
 
   const onChangeLanguage = async (lang: string): Promise<void> => {
     i18n.changeLanguage(lang);
-    updateLocationsLocales(geoids);
+    // geoid = 0 is non location database location and without name
+    updateLocationsLocales(geoids.filter(id => id !== 0));
     initMatomo(); // re-init matomo to use correct siteId
     try {
       await setItem(LOCALE, lang);
@@ -315,41 +316,43 @@ const SettingsScreen: React.FC<Props> = ({
                               {t(`settings:${key}`)}
                             </Text>
                           </View>
-                          {unitTypesByKey(key)?.map((type) => (
-                            <View
-                              key={type.unitId}
-                              style={[
-                                styles.rowWrapper,
-                                styles.withBorderBottom,
-                                { borderBottomColor: colors.border },
-                              ]}>
-                              <AccessibleTouchableOpacity
-                                onPress={() => {
-                                  trackMatomoEvent('User action', 'Settings', 'Select unit - '+key+' ('+type.unitAbb+')');
-                                  onChangeUnits(key, type)
-                                }}
-                                testID={`settings_units_${key}_${type.unit}`}>
-                                <View style={styles.row}>
-                                  <Text
-                                    accessibilityLabel={t(`observation:paramUnits.${key==='temperature' ? '°' : ''}${type.unitAbb}`)}
-                                    style={[
-                                      styles.text,
-                                      { color: colors.text },
-                                    ]}>
-                                    {key === 'temperature' ? '°' : ''}
-                                    {type.unitAbb}
-                                  </Text>
-                                  {units[key].unitId === type.unitId && (
-                                    <Icon
-                                      name="checkmark"
-                                      size={22}
-                                      style={{ color: colors.text }}
-                                    />
-                                  )}
-                                </View>
-                              </AccessibleTouchableOpacity>
-                            </View>
-                          ))}
+                          {unitTypesByKey(key)?.map((type) =>
+                            excludeUnits?.includes(type.unitAbb as MeasurementUnit) ? null : (
+                              <View
+                                key={type.unitId}
+                                style={[
+                                  styles.rowWrapper,
+                                  styles.withBorderBottom,
+                                  { borderBottomColor: colors.border },
+                                ]}>
+                                <AccessibleTouchableOpacity
+                                  onPress={() => {
+                                    trackMatomoEvent('User action', 'Settings', 'Select unit - '+key+' ('+type.unitAbb+')');
+                                    onChangeUnits(key, type)
+                                  }}
+                                  testID={`settings_units_${key}_${type.unit}`}>
+                                  <View style={styles.row}>
+                                    <Text
+                                      accessibilityLabel={t(`observation:paramUnits.${key==='temperature' ? '°' : ''}${type.unitAbb}`)}
+                                      style={[
+                                        styles.text,
+                                        { color: colors.text },
+                                      ]}>
+                                      {key === 'temperature' ? '°' : ''}
+                                      {type.unitAbb}
+                                    </Text>
+                                    {units[key].unitId === type.unitId && (
+                                      <Icon
+                                        name="checkmark"
+                                        size={22}
+                                        style={{ color: colors.text }}
+                                      />
+                                    )}
+                                  </View>
+                                </AccessibleTouchableOpacity>
+                              </View>
+                            )
+                          )}
                         </View>
                       </RBSheet>
                     )}

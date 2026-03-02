@@ -22,7 +22,7 @@ import { State } from '@store/types';
 import { selectForecastInvalidData, selectDisplayParams } from '@store/forecast/selectors';
 
 import Icon from '@components/common/ScalableIcon';
-import { formatAccessibleTemperature, uppercaseFirst } from '@utils/helpers';
+import { formatAccessibleDate, formatAccessibleTemperature, uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 import { trackMatomoEvent } from '@utils/matomo';
 import { MAX_PARAMETERS_WITHOUT_SCROLL } from './constants';
@@ -130,7 +130,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
       timeStamp, maxTemperature, minTemperature, maxWindSpeed, minWindSpeed,
       smartSymbol, totalPrecipitation, precipitationMissing
     } = item;
-    const stepMoment = moment.unix(timeStamp);
+    const stepMoment = moment.unix(timeStamp).locale(locale);
     const DaySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
       dark
@@ -187,6 +187,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
 
     return (
       <AccessibleTouchableOpacity
+        accessibilityRole="button"
+        accessibilityHint={t('forecast:showHourlyForecast')}
         onPress={() => {
           trackMatomoEvent('User action','Weather', 'Show hourly forecast - day '+ (index+1));
           showModal(timeStamp, index)
@@ -194,15 +196,18 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
         key={stepMoment.unix()}>
         <View style={[styles.container, { height: rowHeight }]}>
           <View style={[styles.row, { borderColor: colors.border }]} key={stepMoment.unix()}>
-            <View style={styles.day}>
+            <View
+              accessible
+              accessibilityLabel={formatAccessibleDate(stepMoment, false)}
+              style={styles.day}>
               <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
-                { uppercaseFirst(stepMoment.locale(locale).format(weekdayAbbreviationFormat)) }
+                { uppercaseFirst(stepMoment.format(weekdayAbbreviationFormat)) }
               </Text>
               <Text maxFontSizeMultiplier={1.3} style={[styles.text, { color: colors.primaryText }]}>
-                {stepMoment.locale(locale).format(dateFormat)}
+                {stepMoment.format(dateFormat)}
               </Text>
             </View>
-            <View accessibilityLabel={t(`symbols:${smartSymbol}`)}>
+            <View accessible accessibilityLabel={t(`symbols:${smartSymbol}`)}>
               {DaySmartSymbol ? <DaySmartSymbol width={symbolSize} height={symbolSize} /> : null}
             </View>
             {activeParameters.includes('temperature') && (
