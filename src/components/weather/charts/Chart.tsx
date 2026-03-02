@@ -278,6 +278,7 @@ const Chart: React.FC<ChartProps> = ({
             clockType={clockType}
             isDaily={isDaily}
             units={units}
+            observation={observation}
           />
         </ScrollView>
         <ChartYAxis

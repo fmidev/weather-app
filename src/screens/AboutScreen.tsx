@@ -14,7 +14,10 @@ const AboutScreen: React.FC = () => {
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
-        <Text style={[styles.title, { color: colors.text }]}>
+        <Text
+          accessibilityRole="header"
+          style={[styles.title, { color: colors.text }]}
+        >
           {t('about:title')}
         </Text>
         <Text style={[styles.text, { color: colors.text }]}>

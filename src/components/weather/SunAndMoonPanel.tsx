@@ -17,6 +17,7 @@ import { resolveMoonPhase } from '@utils/moon';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import { Config } from '@config';
+import { formatAccessibleDateTime } from '@utils/helpers';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -80,9 +81,6 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                         && !isSunriseAndDayInSameDay && sunrise.isBefore(sunset) && sunriseSunsetDiff >= 36;
 
   const dateFormat = clockType === 12 ? `D.M.YYYY h:mm a` : `D.M.YYYY HH:mm`;
-  const accessibleDateFormat = clockType === 12
-      ? `D.M.YYYY [${t('at')}] h:mm a`
-      : `D.M.YYYY [${t('at')}] HH:mm`;
 
   const timeFormat = clockType === 12 ? 'h.mm' : 'HH:mm';
   const accessibleTimeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
@@ -129,7 +127,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.sunIcon, { color: colors.primaryText}]}
                   />
                   <Text
-                    accessibilityLabel={`${t('sunrise')} ${sunrise.format(accessibleDateFormat)}`}
+                    accessibilityLabel={`${t('sunrise')} ${formatAccessibleDateTime(sunrise, t, clockType === 24)}`}
                     style={[styles.text, { color: colors.primaryText}]}>
                     {sunrise.format(dateFormat)}
                   </Text>
@@ -158,7 +156,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.sunIcon, { color: colors.primaryText}]}
                   />
                   <Text
-                    accessibilityLabel={`${t('sunset')} ${sunset.format(accessibleDateFormat)}`}
+                    accessibilityLabel={`${t('sunset')} ${formatAccessibleDateTime(sunset, t, clockType === 24)}`}
                     style={[styles.text, { color: colors.primaryText}]}>
                     {sunset.format(dateFormat)}
                   </Text>
@@ -178,7 +176,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     />
                     <Text
                       accessibilityLabel={`${t('sunrise')} ${t(
-                        'at'
+                        'time:atSpoken'
                       )} ${sunrise.format(accessibleTimeFormat)}`}
                       style={[styles.text, { color: colors.primaryText}]}>
                       {sunrise.format(timeFormat)}
@@ -203,7 +201,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     />
                     <Text
                       accessibilityLabel={`${t('sunset')} ${t(
-                        'at'
+                        'time:atSpoken'
                       )} ${sunset.format(accessibleTimeFormat)}`}
                       style={[styles.text, { color: colors.primaryText}]}>
                       {sunset.format(timeFormat)}
@@ -230,8 +228,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     />
                     <Text
                       accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
-                        'hours'
-                      )} ${dayMinutes} ${t('minutes')}`}
+                        'time:hoursSpoken'
+                      )} ${dayMinutes} ${t('time:minutesSpoken')}`}
                       style={[styles.text, { color: colors.primaryText}]}>
                       {`${dayHours} h ${dayMinutes} min`}
                     </Text>

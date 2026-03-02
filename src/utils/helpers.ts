@@ -537,3 +537,21 @@ export const msToBeaufort = (speed: number): number => {
 
   return thresholds.findIndex((limit) => speed < limit);
 };
+
+export const formatAccessibleDate = (m: moment.Moment, includeYear = true): string => {
+  return m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
+};
+
+export const formatAccessibleDateTime = (
+  m: moment.Moment,
+  t: (key: string) => string,
+  is24Hour = true,
+  includeYear = true
+): string => {
+  const datePart = m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
+
+  if (is24Hour) return datePart+' '+m.format('H:mm');
+
+  return datePart+' '+m.format('h:mm ')+' '
+          +(m.hours() >= 12 ? t('time:pmSpoken') : t('time:amSpoken'));
+};

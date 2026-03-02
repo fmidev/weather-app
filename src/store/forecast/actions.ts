@@ -20,7 +20,7 @@ import {
 } from './types';
 
 export const fetchForecast =
-  (location: ForecastLocation, filterLocations: number[] = [], country: string) =>
+  (location: ForecastLocation, country: string) =>
   async (dispatch: Dispatch<ForecastActionTypes>) => {
     dispatch({ type: FETCH_FORECAST });
 
@@ -29,8 +29,6 @@ export const fetchForecast =
 
     try {
       const data = await getForecast(location, country);
-      const geoid = Number(Object.keys(data)[0]);
-
       let fixedForecasts = [] as WeatherData[];
 
       // Checks modtime and retry data fetch if data is older than 24 hours
@@ -54,11 +52,9 @@ export const fetchForecast =
 
       data.forecasts = fixedForecasts;
 
-      const favorites = [...filterLocations, geoid];
       dispatch({
         type: FETCH_FORECAST_SUCCESS,
         data,
-        favorites,
         timestamp: Date.now(),
       });
     } catch (error) {

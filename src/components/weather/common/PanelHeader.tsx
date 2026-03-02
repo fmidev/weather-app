@@ -9,7 +9,9 @@ import { useTheme } from '@react-navigation/native';
 
 type PanelHeaderProps = {
   title: string;
+  accessibleTitle?: string;
   lastUpdated?: { time?: string; ageCheck?: boolean };
+  accessibleLastUpdated?: string;
   justifyCenter?: boolean;
   thin?: boolean;
   background?: string;
@@ -17,16 +19,22 @@ type PanelHeaderProps = {
 
 const PanelHeader: React.FC<PanelHeaderProps> = ({
   title,
+  accessibleTitle,
   lastUpdated,
+  accessibleLastUpdated,
   justifyCenter,
   thin,
   background,
 }) => {
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
+  const accessibilityLabel = accessibleLastUpdated || lastUpdated?.time
+    ? `${accessibleTitle || title}, ${t('updated')} ${accessibleLastUpdated || lastUpdated?.time}`
+    : title;
 
   const lastUpdatedComponent = lastUpdated?.time && (
     <Text
+      accessibilityLabel={accessibilityLabel}
       style={[
         styles.updatedText,
         { color: lastUpdated.ageCheck ? RED : colors.primaryText },
@@ -38,6 +46,7 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
   return (
     <CommonPanelHeader
       title={title}
+      accessibilityLabel={accessibilityLabel}
       additionalContent={lastUpdatedComponent}
       justifyCenter={justifyCenter}
       thin={thin}

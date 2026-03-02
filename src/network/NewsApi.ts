@@ -30,7 +30,7 @@ const getNews = async (language: string): Promise<NewsItem[]> => {
       createdAt: item.sys.createdAt,
       updatedAt: item.sys.updatedAt,
       language: item.fields.site,
-      showEditedDateTime: item.fields.showEditedDatetime ?? true,
+      showEditedDateTime: item.fields.showEditedDatetime === true,
     };
   });
 

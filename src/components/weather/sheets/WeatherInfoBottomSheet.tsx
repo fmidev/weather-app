@@ -66,22 +66,22 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
   const { fontScale } = useWindowDimensions();
-  const uniqueSymbolKeys = [
-    ...new Set(
-      uniqueSmartSymbols.map((s) => weatherSymbolKeyParser((s || 0).toString()))
-    ),
-  ];
+  const uniqueSymbolKeys = new Set(
+    uniqueSmartSymbols.map((s) => weatherSymbolKeyParser((s || 0).toString()))
+  );
   const symbols = dark ? symbolsDark : symbolsLight;
   const symbolsArr = Object.entries(symbols).map(([key, value]) => ({
     key,
     ...value,
   }));
-  const filteredSymbolsArr = symbolsArr.sort((el) =>
-    uniqueSymbolKeys.includes(el.key) ? 1 : 0
+  const filteredSymbolsArr = symbolsArr.sort(
+    (a, b) =>
+      Number(!uniqueSymbolKeys.has(a.key)) -
+      Number(!uniqueSymbolKeys.has(b.key))
   );
 
   const currentSymbols = symbolsArr.filter((el) =>
-    uniqueSymbolKeys.includes(el.key)
+    uniqueSymbolKeys.has(el.key)
   ).length;
 
   const defaultUnits = Config.get('settings').units;
@@ -134,7 +134,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
           contentContainerStyle={isLandscape && styles.landscape}>
           <TouchableOpacity activeOpacity={1} accessible={false}>
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.primaryText }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}
+              >
                 {t('weatherInfoBottomSheet.precipitationStripTitle')}
               </Text>
             </View>
@@ -240,7 +243,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             />
 
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.primaryText }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}
+              >
                 {t('weatherInfoBottomSheet.hourlyForecastInfoTitle')}
               </Text>
             </View>
@@ -747,7 +753,10 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             />
 
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.primaryText }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}
+              >
                 {t('weatherInfoBottomSheet.timezone')}
               </Text>
             </View>
@@ -762,45 +771,15 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               style={[styles.separator, { backgroundColor: colors.border }]}
             />
 
-            <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.primaryText }]}>
+            <View style={[styles.sheetTitle, styles.withMarginBottom]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.primaryText }]}
+              >
                 {t('weatherInfoBottomSheet.currentWeatherSymbolsTitle')}
               </Text>
             </View>
 
-            <View style={[styles.headerRow]}>
-              <Text
-                maxFontSizeMultiplier={1.5}
-                style={[
-                  styles.unitText,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}>
-                {t('weatherInfoBottomSheet.dayTime')}
-              </Text>
-
-              <Text
-                maxFontSizeMultiplier={1.5}
-                style={[
-                  styles.unitText,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}>
-                {t('weatherInfoBottomSheet.nightTime')}
-              </Text>
-              <Text
-                maxFontSizeMultiplier={1.5}
-                style={[
-                  styles.unitText,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}>
-                {t('weatherInfoBottomSheet.description')}
-              </Text>
-            </View>
             <View>
               {filteredSymbolsArr
                 .slice(0, symbolsOpen ? undefined : currentSymbols)
@@ -810,20 +789,32 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                     day: React.FC<SvgProps>;
                     night: React.FC<SvgProps>;
                   }) => (
-                    <View key={item.key} style={[styles.row, styles.symbolRow]}>
-                      <View style={styles.flex1}>
-                        <item.day width={symbolSize} height={symbolSize} />
+                    <View key={item.key}>
+                      <View>
+                        <Text
+                          style={[
+                            styles.text,
+                            styles.symbolText,
+                            styles.bold,
+                            styles.flex1,
+                            { color: colors.hourListText },
+                          ]}>{`${t(`symbols:${item.key}`)}`}
+                        </Text>
                       </View>
-                      <View style={styles.flex1}>
-                        <item.night width={symbolSize} height={symbolSize} />
+                      <View key={item.key} style={[styles.row, styles.symbolRow]}>
+                        <View style={styles.symbolContainer}>
+                          <Text style={[styles.symbolText, styles.symbolGap, { color: colors.hourListText }]}>
+                            {t('weatherInfoBottomSheet.dayTime')}
+                          </Text>
+                          <item.day width={symbolSize} height={symbolSize} />
+                        </View>
+                        <View style={styles.symbolContainer}>
+                          <Text style={[styles.symbolText, styles.symbolGap, { color: colors.hourListText }]}>
+                            {t('weatherInfoBottomSheet.nightTime')}
+                          </Text>
+                          <item.night width={symbolSize} height={symbolSize} />
+                        </View>
                       </View>
-                      <Text
-                        maxFontSizeMultiplier={1.5}
-                        style={[
-                          styles.text,
-                          styles.flex1,
-                          { color: colors.hourListText },
-                        ]}>{`${t(`symbols:${item.key}`)}`}</Text>
                     </View>
                   )
                 )}
@@ -889,12 +880,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
   },
-  headerRow: {
-    flexDirection: 'row',
-    height: 30,
-  },
   symbolRow: {
-    maxHeight: 120,
+    width: '100%',
+    maxWidth: 450,
+    flexWrap: 'wrap',
+    columnGap: 16,
+    alignItems: 'flex-start',
+    paddingTop: 0,
+    paddingBottom: 16,
+  },
+  symbolGap: {
+    marginRight: 8,
+  },
+  symbolContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexGrow: 0,
+    flexShrink: 1,
   },
   iconWrapper: {
     width: 70,
@@ -902,6 +904,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   text: {
     fontSize: 16,
@@ -927,6 +930,9 @@ const styles = StyleSheet.create({
   },
   withSmallMarginLeft: {
     marginLeft: 2,
+  },
+  withMarginBottom: {
+    marginBottom: 16,
   },
   rainIntensityBlock: {
     width: 8,
@@ -966,6 +972,15 @@ const styles = StyleSheet.create({
   landscape: {
     paddingBottom: 200,
   },
+  symbolText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+    paddingVertical: 0,
+  },
+  bold: {
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
+  }
 });
 
 export default connector(WeatherInfoBottomSheet);
