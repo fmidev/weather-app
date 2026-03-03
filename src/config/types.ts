@@ -202,7 +202,6 @@ interface OnboardingWizard {
   enabled: boolean;
   languageSpecificLogo?: boolean;
   termsOfUseChanged?: boolean;
-  termsOfUseFormat?: 'jsx' | 'markdown';
   backgroundImageProperties?: BackgroundImageProperties;
 }
 
@@ -246,6 +245,11 @@ interface MapInfoBottomSheet {
   url: string;
 }
 
+interface MarkdownSettings {
+  termsOfUse: boolean;
+  aboutTheApplication: boolean;
+  accessibility: boolean;
+}
 
 // TODO: how to handle errors. Add error categories to "actions" and then name -field can be error message content
 // for example: trackMatomoEvent('Error', 'Error loading forecast data', error.getMessage())
@@ -312,6 +316,7 @@ export interface ConfigType {
     clockType: 12 | 24;
     themes: Themes;
     verboseErrorMessages?: boolean;
+    markdown?: MarkdownSettings;
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];
