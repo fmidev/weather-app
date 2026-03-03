@@ -9,12 +9,12 @@ function SelectorButton({
   onPress,
   active,
   text,
-}: {
+}: Readonly<{
   accessibilityHint?: string;
   onPress?: () => void;
   active?: boolean;
   text: string;
-}) {
+}>) {
   const { colors } = useTheme() as CustomTheme;
 
   return (
