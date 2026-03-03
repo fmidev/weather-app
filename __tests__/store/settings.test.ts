@@ -1,5 +1,6 @@
 import reducer from '../../src/store/settings/reducer';
 import * as types from '../../src/store/settings/types';
+import { getDefaultUnits } from '../../src/utils/units';
 
 describe('settings reducer', () => {
   it('should handle UPDATE_UNITS', () => {
@@ -49,20 +50,22 @@ describe('settings reducer', () => {
   });
 
   it('should handle UPDATE_THEME', () => {
+    const defaultUnits = getDefaultUnits();
     expect(
       reducer(undefined, { type: types.UPDATE_THEME, theme: 'light' })
     ).toEqual({
-      units: undefined,
+      units: defaultUnits,
       theme: 'light',
       clockType: undefined,
     });
   });
 
   it('should handle UPDATE_CLOCK_TYPE', () => {
+    const defaultUnits = getDefaultUnits();
     expect(
       reducer(undefined, { type: types.UPDATE_CLOCK_TYPE, clockType: 24 })
     ).toEqual({
-      units: undefined,
+      units: defaultUnits,
       theme: undefined,
       clockType: 24,
     });
