@@ -128,7 +128,7 @@ export const getOverlayData = async (activeOverlay: number) => {
   return getWMSLayerUrlsAndBounds(sources, overlay);
 };
 
-const getTimeseriesData = async (
+export const getTimeseriesData = async (
   sources: { [name: string]: string },
   overlay: MapLayer
 ): Promise<Map<number, MapOverlay> | undefined> => {
@@ -251,7 +251,7 @@ const parseWmsTimeBounds = (dimText: string): TimeBounds => {
   return { layerStart: first.start, layerEnd: last.end };
 };
 
-const getWMSLayerUrlsAndBounds = async (
+export const getWMSLayerUrlsAndBounds = async (
   sources: { [name: string]: string },
   overlay: MapLayer
 ): Promise<Map<number, MapOverlay> | undefined> => {
