@@ -751,5 +751,8 @@
     "minutesSpoken": "minuter"
   },
   "unitAbbreviations": {
+  },
+  "markdownRenderer": {
+    "radarLegendDescription": "Nederbördsintensitetsskala"
   }
 }

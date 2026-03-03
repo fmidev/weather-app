@@ -4,17 +4,15 @@ import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { Config } from '@config';
 import Text from '@components/common/AppText';
-
+import TemperatureLegend from '@components/markdown/TemperatureLegend';
 import { CustomTheme } from '@assets/colors';
 
 import { State } from '@store/types';
 import { selectActiveOverlay } from '@store/map/selectors';
-import { ScrollView } from 'react-native-gesture-handler';
-
-import TemperatureLegend from './TemperatureLegend';
 
 const LegacyInfo: React.FC = () => {
   const { t } = useTranslation('map');
