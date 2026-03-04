@@ -752,5 +752,8 @@
     "minutesSpoken": "minutes"
   },
   "unitAbbreviations": {
+  },
+  "markdownRenderer": {
+    "radarLegendDescription": "Precipitation intensity scale"
   }
 }

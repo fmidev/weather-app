@@ -13,7 +13,7 @@ import { selectActiveOverlay } from '@store/map/selectors';
 import { getLayerDocumentation } from '@network/MarkdownApi';
 import { useTranslation } from 'react-i18next';
 import { Config } from '@config';
-import { MarkdownRenderer } from './MarkdownRenderer';
+import { MarkdownRenderer } from '@components/markdown/MarkdownRenderer';
 import type { WMSSource } from '@config';
 import type { CustomTheme } from '@assets/colors';
 
@@ -40,6 +40,7 @@ const MarkdownLayerInfo: React.FC<MarkdownLayerInfoProps> = ({activeOverlay}) =>
 
   renderer.setHeadingColor(colors.text);
   renderer.setTextColor(colors.primaryText);
+  renderer.setTranslationFunction(t);
 
   useEffect(() => {
     const fetchMarkdown = async (layer: string) => {
