@@ -193,28 +193,32 @@ const normalizeToArray = <T>(value?: T | T[]): T[] =>
 
 const flattenLayers = (root: RawWmsLayer): WmsLayer[] => {
   const result: WmsLayer[] = [];
+  const visit = (
+    layer: RawWmsLayer,
+    inheritedDimension?: WmsDimension | WmsDimension[]
+  ) => {
+    const effectiveDimension = layer.Dimension ?? inheritedDimension;
 
-  const visit = (layer: RawWmsLayer) => {
-    if (layer.Name && layer.Title && layer.Dimension) {
+    if (layer.Name && layer.Title && effectiveDimension) {
       result.push({
         Name: layer.Name,
         Title: layer.Title,
         Abstract: layer.Abstract ?? '',
         CRS: normalizeToArray(layer.CRS),
         BoundingBox: normalizeToArray(layer.BoundingBox),
-        Dimension: layer.Dimension,
+        Dimension: effectiveDimension,
       });
     }
 
     const children = layer.Layer;
     if (Array.isArray(children)) {
-      children.forEach(visit);
+      children.forEach((child) => visit(child, effectiveDimension));
     } else if (children) {
-      visit(children);
+      visit(children, effectiveDimension);
     }
   };
 
-  visit(root);
+  visit(root, root.Dimension);
   return result;
 };
 
@@ -307,7 +311,7 @@ const getWMSLayerUrlsAndBounds = async (
 
       const parsedResponse = parser.parse(data);
 
-      const rootLayer: WmsLayer = parsedResponse.WMS_Capabilities.Capability.Layer;
+      const rootLayer: RawWmsLayer = parsedResponse.WMS_Capabilities.Capability.Layer;
       const allLayers = flattenLayers(rootLayer);
       const filteredLayers = allLayers.filter((L: WmsLayer) =>
         allLayerNames.includes(L.Name)

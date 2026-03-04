@@ -14,13 +14,12 @@ import type { Text as RNText } from 'react-native';
 
 import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import { MarkdownRenderer } from '@components/markdown/MarkdownRenderer';
 import { CustomTheme } from '@assets/colors';
 import { Config } from '@config';
+import { termsOfUseDocuments } from '@assets/markdown';
 
-import termsFi from '@assets/markdown/TermsOfUseFi';
-import termsSv from '@assets/markdown/TermsOfUseSv';
-import termsEn from '@assets/markdown/TermsOfUseEn';
-import termsEs from '@assets/markdown/TermsOfUseEs';
+const renderer = new MarkdownRenderer();
 
 type TermsAndConditionsScreenProps = {
   showCloseButton?: boolean;
@@ -35,9 +34,12 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const titleRef = useRef<RNText>(null);
   const insets = useSafeAreaInsets();
-  const { termsOfUseFormat } = Config.get('onboardingWizard');
+  const { markdown } = Config.get('settings');
 
   const closeButtonMarginBottom = Math.round(insets.bottom);
+
+  renderer.setHeadingColor(colors.text);
+  renderer.setTextColor(colors.primaryText);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {
@@ -48,25 +50,19 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
     }
   });
 
-  const getMarkdown = ():string => {
-    switch (i18n.language) {
-      case 'fi': return termsFi;
-      case 'sv': return termsSv;
-      case 'es': return termsEs;
-      default: return termsEn;
-    }
-  }
-
   return (
     <View
       testID="terms_and_conditions_view"
       style={[styles.container, { backgroundColor: colors.background }]}>
-      { termsOfUseFormat === 'markdown' ?
+      { markdown?.termsOfUse ?
           <View style={styles.markdown}>
             <Markdown
-              value={getMarkdown()}
+              value={termsOfUseDocuments[i18n.language as keyof typeof termsOfUseDocuments] || termsOfUseDocuments.en}
+              renderer={renderer}
               flatListProps={{
-                initialNumToRender: 8,
+                style: {
+                  backgroundColor: colors.background,
+                },
               }}
             />
           </View>
