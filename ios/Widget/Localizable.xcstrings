@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "**%@,**" : {
-
-    },
     "**%@**" : {
 
     },
@@ -84,7 +81,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Positionering misslyckades"
+            "value" : "Kunde inte hämta platsinformation"
           }
         }
       }
@@ -123,7 +120,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Östlig wind"
+            "value" : "Ostlig vind"
           }
         }
       }
@@ -337,7 +334,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Platstjänster är inte tillåtna. Aktivera dem i inställningarna."
+            "value" : "Platstjänsterna är inte tillåtna. Aktivera dem i inställningarna."
           }
         }
       }
@@ -1395,7 +1392,7 @@
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enimmäkseen pilvistä ja ajoittain voimakasta lumisadetta tai lumikuuroja\""
+            "value" : "Enimmäkseen pilvistä ja ajoittain voimakasta lumisadetta tai lumikuuroja"
           }
         },
         "sv" : {
@@ -1803,7 +1800,7 @@
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Varoitus korkeasta merivedest"
+            "value" : "Varoitus korkeasta merivedestä"
           }
         },
         "sv" : {
@@ -1923,7 +1920,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vädredata uppdateras när internet är tillbaka"
+            "value" : "Väderdata uppdateras när internet är tillbaka"
           }
         }
       }
