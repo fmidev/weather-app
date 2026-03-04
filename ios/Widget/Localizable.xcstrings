@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "**%@,**" : {
-
-    },
     "**%@**" : {
 
     },
@@ -123,7 +120,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Östlig wind"
+            "value" : "Ostlig wind"
           }
         }
       }
