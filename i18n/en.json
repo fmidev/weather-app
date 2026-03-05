@@ -640,7 +640,8 @@
       "warningExplanationsAtSea": "Explanations of warnings for sea areas",
       "warningColorsExplanation": "Explanations of warning colors",
       "timezone": "Time zone",
-      "timezoneText": "All times on the application are displayed according to the selected time zone."
+      "timezoneText": "All times on the application are displayed according to the selected time zone.",
+      "areas": "{{ count }} municipalities"
     }
   },
   "setUp": {
