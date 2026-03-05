@@ -120,6 +120,7 @@ interface CapViewSettings {
   warningBlockWarningCountEnabled?: boolean;
   includeAreaInTitle?: boolean;
   severityBackgroundInSymbol?: boolean;
+  hideLongArealist?: boolean;
 }
 
 interface Warnings {

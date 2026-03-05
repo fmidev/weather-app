@@ -640,7 +640,8 @@
       "warningExplanationsAtSea": "Förklaringar till varningarna för havsområden",
       "warningColorsExplanation": "Förklaringar till varningsfärger",
       "timezone": "Tidszon",
-      "timezoneText": "Alla klockslag för applikationen anges enligt den valda tidszonens placering."
+      "timezoneText": "Alla klockslag för applikationen anges enligt den valda tidszonens placering.",
+      "areas": "{{ count }} kommuner"
     }
   },
   "setUp": {
