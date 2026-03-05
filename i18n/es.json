@@ -597,7 +597,8 @@
       "warningExplanationsAtSea": "Explicaciones de alertas para zonas para zonas marítimas",
       "warningColorsExplanation": "Explicaciones de las alertas por colores",
       "timezone": "Huso horario",
-      "timezoneText": "Todos los horarios en la aplicación se muestran según el huso horario seleccionado."
+      "timezoneText": "Todos los horarios en la aplicación se muestran según el huso horario seleccionado.",
+      "areas": "{{ count }} municipios"
     }
   },
   "setUp": {
