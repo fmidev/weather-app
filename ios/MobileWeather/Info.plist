@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MobileWeather</string>
+	<string>IDEAM</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleGetInfoString</key>
@@ -25,7 +25,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>6</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -58,11 +58,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Laitteen sijaintia käytetään sijaintipohjaisten säätietojen esittämiseen.</string>
+	<string>Location service is used to deliver weather data for your current location. Location information is not passed to any 3rd parties.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Laitteen sijaintia käytetään sijaintipohjaisten säätietojen esittämiseen.</string>
+	<string>Location service is used to deliver weather data for your current location. Location information is not passed to any 3rd parties.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Laitteen sijaintia käytetään sijaintipohjaisten säätietojen esittämiseen.</string>
+	<string>Location service is used to deliver weather data for your current location. Location information is not passed to any 3rd parties.</string>
 	<key>NSNotificationsUsageDescription</key>
 	<string>Sovellus käyttää ilmoituksia varoitusten lähettämiseen.</string>
 	<key>RCTNewArchEnabled</key>
