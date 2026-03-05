@@ -30,6 +30,8 @@ const mapStateToProps = (state: State) => ({
 
 const connector = connect(mapStateToProps);
 
+const MAX_AREA_COUNT_FOR_HIDE_LONG_AREA_LIST = 5;
+
 const WarningItem = ({
   areasDescription,
   warning,
@@ -56,13 +58,16 @@ const WarningItem = ({
   showDescription?: boolean;
 }) => {
   const { capViewSettings } = Config.get('warnings');
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
   const info = Array.isArray(warning.info) ? selectCapInfoByLanguage(warning.info, i18n.language): warning.info;
   const areaDesc = info.area.areaDesc
     .charAt(0)
     .toUpperCase()
     .concat(info.area.areaDesc.substring(1));
+
+  const areaList = areasDescription || areaDesc;
+  const areaCount = areaList.split(',').length;
 
   return (
     <View>
@@ -105,7 +110,12 @@ const WarningItem = ({
             {timespan}
           </Text>
           <Text style={[styles.headingText, { color: colors.hourListText}] }>
-            {areasDescription || areaDesc}
+            {
+              capViewSettings?.hideLongArealist && areaCount > MAX_AREA_COUNT_FOR_HIDE_LONG_AREA_LIST ?
+                t('warnings:capInfo:areas', { count: areaCount })
+              :
+                areaList
+            }
           </Text>
         </View>
         {includeArrow && (
@@ -134,12 +144,12 @@ function WarningBlock({
   dates,
   warnings,
   xOffset,
-}: {
+}: Readonly<{
   clockType: ClockType;
   dates: { time: number; date: string; weekday: string }[];
   warnings: CapWarning[];
   xOffset?: number;
-}) {
+}>) {
   const [open, setOpen] = useState(false);
   const { colors } = useTheme() as CustomTheme;
   const scrollViewRef = useRef<ScrollView>(null);

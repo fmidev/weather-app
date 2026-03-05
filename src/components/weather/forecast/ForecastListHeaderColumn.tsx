@@ -42,7 +42,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   ];
 
   const height = Math.min(fontScale * 52, 78);
-  const width = Math.min(fontScale * 52, 78);
+  const width = 52;
   const modalWidth = Math.min(fontScale * 38, 64);
 
   return (

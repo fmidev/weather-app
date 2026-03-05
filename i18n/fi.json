@@ -640,7 +640,8 @@
       "warningExplanationsAtSea": "Varoitusten selitykset merialueilla",
       "warningColorsExplanation": "Varoitusvärien selitykset",
       "timezone": "Aikavyöhyke",
-      "timezoneText": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan."
+      "timezoneText": "Kaikki sovelluksen kellonajat esitetään valitun aikavyöhykkeen sijainnin ajan mukaan.",
+      "areas": "{{ count }} kunnassa"
     }
   },
   "setUp": {
