@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Icon from '@assets/Icon';
+import Icon from '@components/common/ScalableIcon';
 
 import { selectCurrentDayWarningData } from '@store/warnings/selectors';
 import { selectTheme } from '@store/settings/selectors';
@@ -60,6 +60,7 @@ const WarningsTabIcon: React.FC<Props> = ({
       style={{ color }}
       width={size}
       height={size}
+      maxScaleFactor={1.2}
     />
   );
 };

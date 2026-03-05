@@ -4,17 +4,16 @@ import {
   Image,
   StyleSheet,
   View,
-  SafeAreaView,
   findNodeHandle,
   AccessibilityInfo,
 } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Text as RNText } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-import { SetupStackParamList } from '@navigators/types';
+import { SetupStackParamList } from '@navigators/stacks/types';
 
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
@@ -192,8 +191,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           style={[
             styles.pagination,
             styles.marginRight,
-
-            { backgroundColor: pageIndex === 0 ? colors.primary : GRAY_1 },
+            { backgroundColor: pageIndex === 0 ? colors.text : GRAY_1 },
           ]}
         />
         <View
@@ -201,8 +199,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           style={[
             styles.pagination,
             styles.marginRight,
-
-            { backgroundColor: pageIndex === 1 ? colors.primary : GRAY_1 },
+            { backgroundColor: pageIndex === 1 ? colors.text : GRAY_1 },
           ]}
         />
         <View
@@ -210,15 +207,14 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           style={[
             styles.pagination,
             styles.marginRight,
-
-            { backgroundColor: pageIndex === 2 ? colors.primary : GRAY_1 },
+            { backgroundColor: pageIndex === 2 ? colors.text : GRAY_1 },
           ]}
         />
         <View
           testID="onboarding_pagination_3"
           style={[
             styles.pagination,
-            { backgroundColor: pageIndex === 3 ? colors.primary : GRAY_1 },
+            { backgroundColor: pageIndex === 3 ? colors.text : GRAY_1 },
           ]}
         />
       </View>

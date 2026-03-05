@@ -15,12 +15,14 @@ import moment from 'moment';
 import {
   selectCapWarningData,
   selectFetchSuccessTime,
+  selectLoading,
 } from '@store/warnings/selectors';
 import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
 import TextList from './TextList';
 
 const mapStateToProps = (state: State) => ({
+  loading: selectLoading(state),
   currentLocation: selectCurrent(state),
   capWarnings: selectCapWarningData(state),
   updated: selectFetchSuccessTime(state),
@@ -36,6 +38,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   updated,
   currentLocation,
   capWarnings,
+  loading,
 }) => {
   const legendSheetRef = useRef<RBSheet>(null);
 
@@ -103,26 +106,30 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                 styles.centeredContent,
                 styles.dataSourcePanelUpdatedRow,
               ]}>
-              <Text
-                style={[
-                  styles.regularFont,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}>
-                {`${t('capUpdated')} `}
-              </Text>
-              <Text
-                style={[
-                  styles.boldFont,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}>
-                {moment(updated)
-                  .locale(locale)
-                  .format(locale === 'en' ? 'DD MMM' : 'D.M. HH.mm')}
-              </Text>
+              { !loading && (
+                <>
+                  <Text
+                    style={[
+                      styles.regularFont,
+                      {
+                        color: colors.hourListText,
+                      },
+                    ]}>
+                    {`${t('capUpdated')} `}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.boldFont,
+                      {
+                        color: colors.hourListText,
+                      },
+                    ]}>
+                    {moment(updated)
+                      .locale(locale)
+                      .format(locale === 'en' ? 'DD MMM' : 'D.M. HH.mm')}
+                  </Text>
+                </>
+              )}
             </View>
             <AccessibleTouchableOpacity
               accessibilityRole="button"
@@ -181,6 +188,7 @@ const styles = StyleSheet.create({
   },
   dataSourcePanelContainer: {
     paddingTop: 18,
+    height: 100,
   },
   dataSourcePanelUpdatedRow: {
     marginLeft: 12,

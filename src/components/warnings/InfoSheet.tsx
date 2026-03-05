@@ -79,7 +79,10 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
           contentContainerStyle={isLandscape && styles.landscape}>
           <TouchableOpacity activeOpacity={1} accessible={false}>
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.text }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.text }]}
+              >
                 {t('warnings:info:dailyTitle')}
               </Text>
             </View>
@@ -118,7 +121,10 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
             </View>
 
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.text }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.text }]}
+              >
                 {t('warnings:info:mapTitle')}
               </Text>
             </View>
@@ -141,7 +147,10 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
             </View>
 
             <View style={styles.sheetTitle}>
-              <Text style={[styles.title, { color: colors.text }]}>
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: colors.text }]}
+              >
                 {t('warnings:info:timezone')}
               </Text>
             </View>

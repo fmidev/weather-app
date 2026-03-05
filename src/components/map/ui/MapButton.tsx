@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleProp, View, ViewStyle, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
+import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -14,6 +15,8 @@ type MapButtonProps = {
   iconSize?: number;
   style: StyleProp<ViewStyle>;
   testID?: string;
+  label?: string;
+  labelPosition?: 'left' | 'right';
 };
 
 const MapButton: React.FC<MapButtonProps> = ({
@@ -23,6 +26,8 @@ const MapButton: React.FC<MapButtonProps> = ({
   iconSize,
   style,
   testID,
+  label,
+  labelPosition = 'left',
 }) => {
   const { colors } = useTheme() as CustomTheme;
 
@@ -44,14 +49,29 @@ const MapButton: React.FC<MapButtonProps> = ({
         onPress={onPress}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button">
-        <View style={styles.iconWrapper}>
-          <Icon
-            name={icon}
-            width={iconSize}
-            height={iconSize}
-            style={{ color: colors.text }}
-          />
-        </View>
+        { label ? (
+          <View style={styles.row}>
+            { labelPosition === 'left' &&
+              <Text style={[styles.label, { color: colors.text }]}>{label}</Text> }
+            <Icon
+              name={icon}
+              width={iconSize}
+              height={iconSize}
+              style={{ color: colors.text }}
+            />
+            { labelPosition === 'right' &&
+              <Text style={[styles.label, { color: colors.text }]}>{label}</Text> }
+          </View>
+        ) : (
+          <View style={styles.iconWrapper}>
+            <Icon
+              name={icon}
+              width={iconSize}
+              height={iconSize}
+              style={{ color: colors.text }}
+            />
+          </View>
+        )}
       </AccessibleTouchableOpacity>
     </View>
   );
@@ -75,8 +95,19 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 10,
     shadowOpacity: 1,
-
     elevation: 5,
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 12,
+  },
+  label: {
+    flexGrow: 1,
+    textAlign: 'right',
+    paddingHorizontal: 8,
+    lineHeight: 20,
+    fontSize: 16,
   },
 });
 

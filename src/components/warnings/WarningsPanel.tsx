@@ -130,6 +130,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
             </View>
             <AccessibleTouchableOpacity
               testID="warnings_info_button"
+              accessibilityRole="button"
               accessibilityLabel={t('infoAccessibilityLabel')}
               onPress={() => {
                 trackMatomoEvent('User action', 'Warnings', 'Open warnings info panel');
@@ -189,7 +190,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                   accessibilityState={{ selected: index === selectedDay }}
                   accessibilityLabel={`${moment(date).format(
                     'dddd DD MMMM'
-                  )}, ${t('hasWarnings')}: ${count}`}
+                  )}, ${t('hasWarnings')}: ${count}, ${t('warnings:severities:'+severity)}`}
                   accessibilityHint={
                     index === selectedDay ? '' : t('dateOpenHint')
                   }>

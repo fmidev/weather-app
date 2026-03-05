@@ -10,6 +10,7 @@ import {
   getObservationCellValue,
   getParameterUnit,
   getLatestObservationAvoidingMissingValues,
+  formatAccessibleDateTime,
 } from '@utils/helpers';
 
 import { capitalize } from '@utils/chart';
@@ -56,11 +57,9 @@ const Latest: React.FC<LatestProps> = ({
 
   if (!latestObservation) return null;
 
-  const latestObservationTime =
-    latestObservation &&
-    moment(latestObservation.epochtime * 1000)
-      .locale(locale)
-      .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+  const observationMoment = moment(latestObservation.epochtime * 1000).locale(locale);
+  const latestObservationTime = observationMoment.format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+  const accessibleObservationTime = formatAccessibleDateTime(observationMoment, t, clockType === 24, false);
 
   const hoursSinceLatestObservation =
     latestObservation?.epochtime &&
@@ -196,6 +195,7 @@ const Latest: React.FC<LatestProps> = ({
                 {t('latestObservation')}
               </Text>
               <Text
+                accessibilityLabel={accessibleObservationTime}
                 style={[
                   styles.bold,
                   styles.justifyStart,

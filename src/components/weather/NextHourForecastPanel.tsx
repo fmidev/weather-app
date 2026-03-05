@@ -83,7 +83,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     units?.precipitation.unitAbb ?? defaultUnits.precipitation;
 
   const currentTime = moment.unix(nextHourForecast.epochtime);
-  const smartSymbol = weatherSymbolGetter(
+  const SmartSymbol = weatherSymbolGetter(
     nextHourForecast?.smartSymbol?.toString() || '0',
     dark
   );
@@ -148,10 +148,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
           accessibilityLabel={`${t(
             `symbols:${nextHourForecast.smartSymbol}`
           )}`}>
-          {smartSymbol?.({
-            width: 100,
-            height: 100,
-          })}
+          {SmartSymbol ? <SmartSymbol width={100} height={100} /> : null}
         </View>
         {activeParameters.includes('temperature') && (
           <View style={[styles.row, styles.alignStart]} accessible>

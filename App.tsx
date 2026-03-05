@@ -15,8 +15,7 @@ import TabNavigator from './src/navigators/TabNavigator';
 import defaultConfig from './defaultConfig';
 
 const App: React.FC = () => {
-  const composeEnhancers =
-    (window && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+  const composeEnhancers = compose;
 
   const store = createStore(
     reducers,

@@ -104,6 +104,7 @@ export const getForecast = async (
     format: 'json',
     lang: language,
     timestep: 'data',
+    ignoreError400: true,
   };
 
   queries.push(

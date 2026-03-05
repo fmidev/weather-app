@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { ClockType } from '@store/settings/types';
 import WarningSymbol from '../WarningsSymbol';
 import CapSeverityBar from './CapSeverityBar';
+import { Config } from '@config';
 
 const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
 
@@ -28,6 +29,8 @@ const mapStateToProps = (state: State) => ({
 });
 
 const connector = connect(mapStateToProps);
+
+const MAX_AREA_COUNT_FOR_HIDE_LONG_AREA_LIST = 5;
 
 const WarningItem = ({
   areasDescription,
@@ -54,13 +57,17 @@ const WarningItem = ({
   includeArrow: boolean | undefined;
   showDescription?: boolean;
 }) => {
-  const { i18n } = useTranslation();
+  const { capViewSettings } = Config.get('warnings');
+  const { t, i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
   const info = Array.isArray(warning.info) ? selectCapInfoByLanguage(warning.info, i18n.language): warning.info;
   const areaDesc = info.area.areaDesc
     .charAt(0)
     .toUpperCase()
     .concat(info.area.areaDesc.substring(1));
+
+  const areaList = areasDescription || areaDesc;
+  const areaCount = areaList.split(',').length;
 
   return (
     <View>
@@ -96,13 +103,19 @@ const WarningItem = ({
           )}
           <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
             {(info.event as WarningType) ? info.event : ''}
-            {warningCount && warningCount > 1 ? ` (${warningCount} pcs)` : ''}
+            {capViewSettings?.warningBlockWarningCountEnabled !== false
+              && warningCount &&warningCount > 1 ? ` (${warningCount} pcs)` : ''}
           </Text>
           <Text style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
           </Text>
           <Text style={[styles.headingText, { color: colors.hourListText}] }>
-            {areasDescription || areaDesc}
+            {
+              capViewSettings?.hideLongArealist && areaCount > MAX_AREA_COUNT_FOR_HIDE_LONG_AREA_LIST ?
+                t('warnings:capInfo:areas', { count: areaCount })
+              :
+                areaList
+            }
           </Text>
         </View>
         {includeArrow && (
@@ -131,12 +144,12 @@ function WarningBlock({
   dates,
   warnings,
   xOffset,
-}: {
+}: Readonly<{
   clockType: ClockType;
   dates: { time: number; date: string; weekday: string }[];
   warnings: CapWarning[];
   xOffset?: number;
-}) {
+}>) {
   const [open, setOpen] = useState(false);
   const { colors } = useTheme() as CustomTheme;
   const scrollViewRef = useRef<ScrollView>(null);

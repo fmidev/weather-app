@@ -15,6 +15,7 @@ describe('map reducer', () => {
     activeOverlay: undefined,
     region: { latitude: 0, longitude: 0, longitudeDelta: 0, latitudeDelta: 0 },
     selectedCallout: undefined,
+    animationSpeed: 80,
   };
 
   it('should handle ANIMATE_TO_AREA', () => {

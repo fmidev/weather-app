@@ -1,3 +1,4 @@
+import axios from 'axios';
 import getAutocomplete from '@network/AutocompleteApi';
 import { Dispatch } from 'react';
 import { Config } from '@config';
@@ -48,8 +49,10 @@ export const searchLocation =
           data,
         });
       })
-      .catch(() => {
-        dispatch({ type: RESET_AUTOCOMPLETE });
+      .catch((error) => {
+        if (!axios.isCancel(error)) {
+          dispatch({ type: RESET_AUTOCOMPLETE });
+        }
       });
   };
 

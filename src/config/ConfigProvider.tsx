@@ -22,7 +22,7 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   const [restored, setRestored] = useState<boolean>(false);
   const [updated, setUpdated] = useState<number>(0);
   const [shouldReload, setShouldReload] = useState<number>(0);
-  const reloadIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const reloadIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   if (!Config.hasBeenSet) {
     Config.setDefaultConfig(defaultConfig);

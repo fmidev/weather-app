@@ -89,18 +89,6 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
   const startHour = parseInt(data[0].localtime.substring(9, 11), 10);
   const endHour = parseInt(data[data.length-1].localtime.substring(9, 11), 10);
 
-  /*
-  const trackScroll = () => {
-      const now = Date.now();
-      // May not be the best way to track...
-      if (now - lastTracked.current > 2000) { // 2 seconds
-        // TODO: fires from swipe AND button presses. Should track them separately?
-        trackMatomoEvent("User action", "Weather", "Swipe or select hours in forecast modal");
-        lastTracked.current = now;
-      }
-    };
-*/
-
   const handleOnScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {

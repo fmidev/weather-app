@@ -87,7 +87,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   }) => {
     const { timeStamp, maxTemperature, minTemperature, smartSymbol } = item;
     const stepMoment = moment.unix(timeStamp);
-    const daySmartSymbol = weatherSymbolGetter(
+    const DaySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
       dark
     );
@@ -150,10 +150,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
           <View
             style={styles.alignCenter}
             accessibilityLabel={`${t(`symbols:${smartSymbol}`)}`}>
-            {daySmartSymbol?.({
-              width: 40,
-              height: 40,
-            })}
+            {DaySmartSymbol ? <DaySmartSymbol width={40} height={40} /> : null}
           </View>
           {activeParameters.includes('temperature') && (
             <Text

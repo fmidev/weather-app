@@ -62,6 +62,12 @@ platform :android do
   lane :build_apk do
   # Gradle clean
         gradle(task: 'clean', project_dir: './')
+
+  # This can be removed when react native codegen is fixed
+  Dir.chdir("..") do
+    sh "./gradlew generateCodegenArtifactsFromSchema --rerun-tasks"
+  end
+
   # Gradle sign aab -file
   gradle(task: 'assemble', build_type: "Release", project_dir: './',properties: {
             "android.injected.signing.store.file" => ENV["KEYSTORE"],
@@ -76,6 +82,12 @@ platform :android do
   lane :build_test_apk do
   # Gradle clean
         gradle(task: 'clean', project_dir: './')
+
+  # This can be removed when react native codegen is fixed
+  Dir.chdir("..") do
+    sh "./gradlew generateCodegenArtifactsFromSchema --rerun-tasks"
+  end
+
   # Gradle sign aab -file
   gradle(task: 'assemble', build_type: "Latest", project_dir: './',properties: {
             "android.injected.signing.store.file" => ENV["KEYSTORE"],

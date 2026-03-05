@@ -13,6 +13,7 @@ import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, getForecastParameterUnitTranslationKey, toPrecision } from '@utils/units';
 import Text from '@components/common/AppText';
+import { formatAccessibleTemperature } from '@utils/helpers';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -46,14 +47,14 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
   const time = moment
     .unix(timeStep.epochtime)
     .format(clockType === 12 ? 'h a' : 'HH');
-  const smartSymbol = weatherSymbolGetter(
+  const SmartSymbol = weatherSymbolGetter(
     (timeStep.smartSymbol || 0).toString(),
     true // Always dark symbols because of dark transparent background
   );
 
   const textColor = WHITE;
   const accessibilityLabel = `${t('forecast:at')} ${time}, ${t(`symbols:${timeStep.smartSymbol}`)}, ${t('forecast:params:temperature', {
-        value: convertedTemperature,
+        value: formatAccessibleTemperature(convertedTemperature, t),
         unit: t(
           `forecast:${getForecastParameterUnitTranslationKey(
             temperatureUnit
@@ -72,10 +73,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
         { time }
       </Text>
       <View>
-        {smartSymbol?.({
-          width: symbolSize,
-          height: symbolSize,
-        })}
+        {SmartSymbol ? <SmartSymbol width={symbolSize} height={symbolSize} /> : null}
       </View>
       <View>
         <Text

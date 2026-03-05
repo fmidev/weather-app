@@ -17,7 +17,7 @@ import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
 
-import { MapStackParamList, WeatherStackParamList } from '@navigators/types';
+import type { MapStackParamList, WeatherStackParamList } from '@navigators/stacks/types';
 
 import { State } from '@store/types';
 
@@ -103,20 +103,22 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const [debouncedValue, setDebouncedValue] = React.useState('');
 
   React.useEffect(() => {
+    if (value) {
+      setLoading(true);
+    }
     const timeout = setTimeout(() => {
       setDebouncedValue(value);
     }, 250); // 250 ms delay
     return () => clearTimeout(timeout);
-  }, [value]);
+  }, [setLoading, value]);
 
   useEffect(() => {
     if (debouncedValue) {
-      setLoading(true);
       searchLocation(debouncedValue);
     } else {
       resetSearch();
     }
-  }, [debouncedValue, searchLocation, resetSearch, setLoading]);
+  }, [debouncedValue, searchLocation, resetSearch]);
 
   const handleSelectLocation = (location: Location, update: boolean) => {
     const name =
@@ -139,12 +141,14 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     navigation.goBack();
   };
 
-  const isFavorite = (location: Location) =>
-    favorites.length > 0 && favorites.some(({ id }) => id === location.id);
+  const isFavorite = (location: Location) => favorites.some(
+    ({ id }) => id === location.id
+  );
 
   return (
     <View testID="search_view" style={styles.container}>
       <Text
+        accessible={false}
         style={[
           styles.placeholderText,
           {
@@ -169,6 +173,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           testID="search_input"
           maxFontSizeMultiplier={2}
           accessibilityRole="search"
+          accessibilityLabel={t('label')}
           style={[
             styles.input,
             {
