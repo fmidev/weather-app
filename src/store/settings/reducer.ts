@@ -6,12 +6,14 @@ import {
   SettingsState,
   SettingsActionTypes,
   UPDATE_CLOCK_TYPE,
+  UPDATE_MAP_LIBRARY,
 } from './types';
 
 const INITIAL_STATE: SettingsState = {
   units: getDefaultUnits(),
   theme: undefined,
   clockType: undefined,
+  mapLibrary: 'react-native-maps',
 };
 
 export default (
@@ -41,6 +43,13 @@ export default (
       };
     }
 
+    case UPDATE_MAP_LIBRARY: {
+      return {
+        ...state,
+        mapLibrary: action.library
+      };
+    }
+
     default: {
       return state;
     }
@@ -49,5 +58,5 @@ export default (
 
 export const settingsPersist: PersistConfig = {
   key: 'settings',
-  whitelist: ['theme', 'clockType', 'units'],
+  whitelist: ['theme', 'clockType', 'units', 'mapLibrary'],
 };

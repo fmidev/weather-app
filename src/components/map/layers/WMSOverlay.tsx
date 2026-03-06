@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Platform } from 'react-native';
-import moment from 'moment';
 
 import {
   getSliderMaxUnix,
@@ -27,25 +26,39 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type WMSOverlayProps = PropsFromRedux & {
   overlay: MapOverlay;
+  library?: 'maplibre' | 'react-native-maps';
 };
 
 const WMSOverlay: React.FC<WMSOverlayProps> = ({
   activeOverlayId,
   sliderTime,
   overlay,
+  library = 'react-native-maps',
 }) => {
   const { dark } = useTheme();
   const observation = overlay.observation as Layer;
   const forecast = overlay.forecast as Layer;
   const isFocused = useIsFocused();
 
-  const [borderTime, setBorderTime] = useState<{
+  const borderTime = useMemo<{
     time?: string;
     type: 'observation' | 'forecast';
-  }>({ type: 'observation' });
-  const [urlMap, setUrlMap] = useState<Map<string, string>>(new Map());
+  }>(() => {
+    if (forecast && forecast.start) {
+      if (observation && observation.end) {
+        return { time: observation.end, type: 'observation' };
+      }
+      return { time: forecast.start, type: 'forecast' };
+    }
 
-  const current = moment.unix(sliderTime).toISOString();
+    if (observation && observation.end) {
+      return { time: observation.end, type: 'observation' };
+    }
+
+    return { type: 'observation' };
+  }, [forecast, observation]);
+
+  const current = useMemo(() => new Date(sliderTime * 1000).toISOString(), [sliderTime]);
 
   const currentStep = getSliderStepSeconds(overlay.step);
 
@@ -58,68 +71,42 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     [activeOverlayId, overlay]
   );
 
-  const formatUrlWithStyles = (timestamp: string): string | false => {
-    const isForecast = borderTimeComparer(timestamp);
-
-    const { url, styles } = (isForecast ? forecast : observation) || {};
-    if (!url) {
-      return false;
+  const urlMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if ((!observation?.url && !forecast?.url) || !borderTime.time) {
+      return map;
     }
+
     const theme = dark ? 'dark' : 'light';
-    return `${url}&styles=${
-      typeof styles === 'string' ? styles : styles[theme]
-    }&time=${timestamp}&who=${packageJSON.name}-${Platform.OS}`;
-  };
 
-  const borderTimeComparer = (time: string): boolean => {
-    if (!borderTime.time) return true;
-    return borderTime.type === 'forecast'
-      ? time >= borderTime.time
-      : time > borderTime.time;
-  };
+    for (let curr = memoizedMinUnix; curr <= memoizedMaxUnix; curr += currentStep) {
+      const stamp = new Date(curr * 1000).toISOString();
 
-  useEffect(() => {
-    if (forecast && forecast.start) {
-      if (observation && observation.end) {
-        setBorderTime({ time: observation.end, type: 'observation' });
-      } else {
-        setBorderTime({ time: forecast.start, type: 'forecast' });
-      }
-    }
-    if (!forecast && observation && observation.end) {
-      setBorderTime({ time: observation.end, type: 'observation' });
-    }
-  }, [forecast, observation]);
+      const isForecast = borderTime.type === 'forecast'
+        ? stamp >= borderTime.time
+        : stamp > borderTime.time;
 
-  useEffect(() => {
-    if ((!!observation?.url || !!forecast?.url) && borderTime.time) {
-      let allDatesUnix: number[] = [];
-      let curr = memoizedMinUnix;
-      while (curr <= memoizedMaxUnix) {
-        allDatesUnix = allDatesUnix.concat(curr);
-        curr += currentStep;
-      }
-      const timeStamps = allDatesUnix.map((unix) =>
-        moment.unix(unix).toISOString()
-      );
-
-      const map = timeStamps
-        .map((stamp) => {
-          const formatted = formatUrlWithStyles(stamp);
-          if (formatted) {
-            return [stamp, formatted];
-          }
-          return undefined;
-        })
-        .filter((x) => !!x) as [string, string][];
-
-      if (map && map.length > 0) {
-        setUrlMap(new Map(map));
+      const layer = (isForecast ? forecast : observation) || {};
+      if (layer.url) {
+        map.set(
+          stamp,
+          `${layer.url}&styles=${
+            typeof layer.styles === 'string' ? layer.styles : layer.styles?.[theme]
+          }&time=${stamp}&who=${packageJSON.name}-${Platform.OS}`
+        );
       }
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [observation, forecast, borderTime]);
+    return map;
+  }, [
+    observation,
+    forecast,
+    borderTime,
+    memoizedMinUnix,
+    memoizedMaxUnix,
+    currentStep,
+    dark,
+  ]);
 
   if (!overlay.observation && !overlay.forecast) return null;
 
@@ -130,6 +117,9 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   const iosTiles = () => {
     const currentTileIndex = tiles.indexOf(current);
+    if (currentTileIndex < 0) {
+      return [];
+    }
     return [
       ...new Set([
         tiles[currentTileIndex],
@@ -139,16 +129,18 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     ];
   };
 
-  const renderTiles = Platform.OS === 'ios' ? iosTiles() : tiles;
+  const renderTiles = Platform.OS === 'ios' && library !== 'maplibre' ? iosTiles() : tiles;
 
   return (
     <>
-      {renderTiles.map((k) => (
+      {renderTiles.map((k, i) => (
         <MemoizedWMSTile
           key={k}
           urlTemplate={urlMap.get(k) as string}
           opacity={k === current ? 1 : 0}
           tileSize={overlay.tileSize}
+          library={library}
+          index={i}
         />
       ))}
     </>
