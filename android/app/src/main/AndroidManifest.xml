@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <queries>
+      <!-- TikTok (official + region variants per TikTok docs) -->
+      <package android:name="com.zhiliaoapp.musically" />
+      <package android:name="com.ss.android.ugc.trill" />    
+
       <intent>
         <action android:name="android.intent.action.VIEW" />
         <data android:scheme="twitter://" android:host="com.twitter.android" />
@@ -21,6 +25,18 @@
       <intent>
         <action android:name="android.intent.action.VIEW" />
         <data android:scheme="https"/>
+      </intent>
+      <intent>
+        <action android:name="android.intent.action.VIEW"/>
+        <data android:scheme="fb" android:host="com.facebook.katana" />
+      </intent>
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="tiktok" />
+      </intent>
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="linkedin" />
       </intent>
     </queries>
 
