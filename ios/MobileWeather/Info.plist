@@ -34,6 +34,8 @@
 		<string>instagram</string>
 		<string>youtube</string>
 		<string>facebook</string>
+		<string>tiktok</string>
+		<string>linkedin</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
