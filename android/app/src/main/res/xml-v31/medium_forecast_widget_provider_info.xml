@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="fi.fmi.mobileweather.MediumForecastWidgetConfigurationActivity"
+    android:configure="fi.fmi.mobileweather.widgets.MediumForecastWidgetConfigurationActivity"
     android:initialLayout="@layout/medium_forecast_widget_layout"
     android:targetCellWidth="4"
     android:targetCellHeight="1"

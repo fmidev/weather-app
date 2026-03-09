@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="fi.fmi.mobileweather.SmallWarningsWidgetConfigurationActivity"
+    android:configure=".widgets.SmallWarningsWidgetConfigurationActivity"
     android:initialLayout="@layout/small_warnings_widget_layout"
     android:previewImage="@drawable/small_warning_widget_review"
     android:resizeMode="none"

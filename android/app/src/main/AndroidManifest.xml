@@ -68,7 +68,7 @@
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_forecast_widget_provider_info" />
         </receiver>
         <activity 
-            android:name=".SmallForecastWidgetConfigurationActivity" 
+            android:name=".widgets.SmallForecastWidgetConfigurationActivity"
             android:theme="@style/WidgetConfigurationTheme" 
             android:exported="false"
         >
@@ -85,7 +85,7 @@
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_forecast_widget_provider_info" />
         </receiver>
         <activity 
-            android:name=".MediumForecastWidgetConfigurationActivity" 
+            android:name=".widgets.MediumForecastWidgetConfigurationActivity"
             android:theme="@style/WidgetConfigurationTheme" 
             android:exported="false"
         >
@@ -117,7 +117,7 @@
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/small_warnings_widget_provider_info" />
         </receiver>
         <activity 
-            android:name=".SmallWarningsWidgetConfigurationActivity" 
+            android:name=".widgets.SmallWarningsWidgetConfigurationActivity"
             android:theme="@style/WidgetConfigurationTheme" 
             android:exported="false"
         >
@@ -134,7 +134,7 @@
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/medium_warnings_widget_provider_info" />
         </receiver>
         <activity 
-            android:name=".MediumWarningsWidgetConfigurationActivity" 
+            android:name=".widgets.MediumWarningsWidgetConfigurationActivity"
             android:theme="@style/WidgetConfigurationTheme" 
             android:exported="false"
         >
