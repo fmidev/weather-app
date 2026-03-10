@@ -4,6 +4,3 @@
 [submodule "ios/Widget"]
 	path = ios/Widget
 	url = https://github.com/fmidev/weather-app-ios-widgets.git
-[submodule "android/app/src/main/java/fi/fmi/mobileweather/widgets"]
-	path = android/app/src/main/java/fi/fmi/mobileweather/widgets
-	url = https://github.com/fmidev/weather-app-android-widgets
