@@ -61,9 +61,15 @@ const TextList = ({
   const sortedGroupNames = useMemo<string[]>(
     () => severities.flatMap(severity => {
         return Object.keys(groupedWarnings)?.flatMap((warningGroup) => {
-          const infoMaybeArray = groupedWarnings[warningGroup][0].info;
-          const info = Array.isArray(infoMaybeArray) ? infoMaybeArray[0] : infoMaybeArray;
-          return severity == info.severity ? warningGroup : [];
+          const infos = groupedWarnings[warningGroup].map(
+            warning => Array.isArray(warning.info) ? warning.info[0] : warning.info
+          );
+          const info = infos.reduce((highest, current) =>
+            severityList.indexOf(current.severity) > severityList.indexOf(highest.severity)
+              ? current
+              : highest
+          );
+          return severity === info.severity ? warningGroup : [];
       })}),
     [groupedWarnings, severities]
   );
