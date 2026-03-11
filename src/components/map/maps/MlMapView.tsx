@@ -138,6 +138,16 @@ const MlMapView: React.FC<MapViewProps> = ({
     activeOverlay,
   ]);
 
+  useEffect(() => {
+    if (!location || !cameraRef.current || !mapReady) return;
+
+    cameraRef.current.flyTo({
+      center: [location.lon, location.lat],
+      zoom: DEFAULT_ZOOM_LEVEL,
+      duration: 1000,
+    });
+  }, [location, mapReady]);
+
   const updateBoundsFromRef = useCallback(async () => {
     const bounds = await mapRef.current?.getBounds();
     if (!bounds) return;

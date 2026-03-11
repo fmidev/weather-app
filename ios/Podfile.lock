@@ -58,7 +58,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - MapLibreReactNative (11.0.0-beta.6):
+  - MapLibreReactNative (11.0.0-beta.10):
     - boost
     - DoubleConversion
     - fast_float
@@ -3492,7 +3492,7 @@ SPEC CHECKSUMS:
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   logicwind-react-native-matomo-tracker: 4a8a1f4b0a2ea2628370f3c87ade3fb79ac93182
-  MapLibreReactNative: ff9ce8aa446f00a87d6cdfc42488ce99ab57a7e1
+  MapLibreReactNative: e7703d8c96f56e58e278d4af934098e1bdfd027c
   MatomoTracker: dbf4093d2c36b78244ce481d7a10086fad825c7f
   RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: f17e2ebc07876ca9ab8eb6e4b0a4e4647497ae3a
