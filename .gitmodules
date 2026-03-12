@@ -1,9 +1,3 @@
 [submodule "src/assets"]
 	path = src/assets
 	url = https://github.com/fmidev/weather-app-assets
-[submodule "ios/Widget"]
-	path = ios/Widget
-	url = https://github.com/fmidev/weather-app-ios-widgets.git
-[submodule "android/widgets"]
-	path = android/widgets
-	url = https://github.com/fmidev/weather-app-android-widgets
