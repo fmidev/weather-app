@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FMI Väder</string>
+    <string name="app_name">Väder</string>
     <string name="launcher_name">@string/app_name</string>
     <string name="activity_name">@string/launcher_name</string>
 </resources>
