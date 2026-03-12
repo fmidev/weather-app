@@ -405,7 +405,7 @@
         "moderate": "måttlig",
         "strong": "kraftig",
         "precipitationFin": {
-          "description": "Finländsk radar-kombination med 15 minuters tidssteg.",
+          "description": "Finländsk radar-kombination med 5 minuters tidssteg.",
           "observation": "Den regnobservation som presenteras på kartan har mätts med väderadar i Finland.",
           "forecast": "Det förutspådda regnet är en korttidsprognos för nederbörd, baserad på radarbilder och väderprognosmodeller."
         },

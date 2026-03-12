@@ -405,7 +405,7 @@
         "moderate": "moderate",
         "strong": "heavy",
         "precipitationFin": {
-          "description": "Finnish radar combination with a 15-minute time step.",
+          "description": "Finnish radar combination with a 5-minute time step.",
           "observation": "The precipitation observation presented on the map has been measured with weather radars in Finland.",
           "forecast": "The predicted precipitation is a short-term rainfall forecast based on radar images and weather forecast models."
         },

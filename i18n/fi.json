@@ -405,7 +405,7 @@
         "moderate": "kohtalaista",
         "strong": "voimakasta",
         "precipitationFin": {
-          "description": "Suomen tutkayhdistelmä sekä havaitut salamat 15 min aika-askeleella.",
+          "description": "Suomen tutkayhdistelmä sekä havaitut salamat 5 min aika-askeleella.",
           "observation": "Kartalla esitettävä sadehavainto on mitattu Suomen alueen säätutkilla.",
           "forecast": "Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkakuviin ja sääennustemalleihin."
         },
