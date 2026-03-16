@@ -405,9 +405,9 @@
         "moderate": "kohtalaista",
         "strong": "voimakasta",
         "precipitationFin": {
-          "description": "Suomen tutkayhdistelmä sekä havaitut salamat 15 min aika-askeleella.",
+          "description": "Suomen tutkayhdistelmä sekä havaitut salamat 5 min aika-askeleella.",
           "observation": "Kartalla esitettävä sadehavainto on mitattu Suomen alueen säätutkilla.",
-          "forecast": "Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkakuviin ja sääennustemalleihin."
+          "forecast": "Ennustettu sade on lyhyen ajan sade-ennuste, joka perustuu tutkahavaintoihin."
         },
         "precipitationScan": {
           "description": "Skandinavian tutkayhdistelmä sekä havaitut salamat 1 h aika-askeleella.",
@@ -418,8 +418,8 @@
       "lightnings15": {
         "title": "Salamat",
         "description": "Salamakartta näyttää havaitut salamat alueella. Visualisointi perustuu salaman ikään.",
-        "age1": "0-15 minuuttia vanha salama",
-        "age2": "15-30 minuuttia vanha salama"
+        "age1": "0-5 minuuttia vanha salama",
+        "age2": "5-10 minuuttia vanha salama"
       },
       "lightnings60": {
         "title": "Salamat",
