@@ -1,0 +1,3 @@
+"CFBundleDisplayName" = "NEA Weather";
+"CFBundleName" = "NEA Weather";
+"NSLocationWhenInUseUsageDescription" = "ლოკაციის სერვისი გამოიყენება თქვენი მიმდინარე მდებარეობისთვის ამინდის მონაცემების მოსაწოდებლად. მდებარეობის ინფორმაცია არ გადაეცემა არცერთ მესამე მხარეს.";

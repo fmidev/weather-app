@@ -22,6 +22,9 @@ if (defaultConfig.settings.languages.includes('en')) {
 if (defaultConfig.settings.languages.includes('es')) {
   require('moment/locale/es');
 }
+if (defaultConfig.settings.languages.includes('ka')) {
+  require('moment/locale/ka');
+}
 
 // External libraries use these and warnings are not important for us
 

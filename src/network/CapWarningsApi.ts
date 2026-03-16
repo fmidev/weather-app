@@ -40,6 +40,9 @@ const getCapWarnings = async () => {
   const { capViewSettings } = Config.get('warnings');
 
   const url = capViewSettings?.datasources[0]?.url;
+
+  console.log('Fetching CAP warnings from URL:', url);
+
   const { data: feedData } = await axiosClient({ url });
   const { feed } = parser.parse(feedData);
   const entriesList = Array.isArray(feed.entry) ? feed.entry : [feed.entry];
@@ -48,10 +51,10 @@ const getCapWarnings = async () => {
     if (Array.isArray(entry.link)) {
       // Meteoalarm feed may contain multiple links
       const links = entry.link.filter((link) => link['@_type'] && link['@_type'] === CAP_MIME_TYPE);
-      return links[0]['@_href'].replace('http://', 'https://');
+      return links[0]['@_href'];
     } else {
       // Smartmet feed contains only one link
-      return (entry.link['@_href'] as string).replace('http://', 'https://');
+      return (entry.link['@_href'] as string);
     }
   });
   const uniqueUrls = [...new Set(urls)];

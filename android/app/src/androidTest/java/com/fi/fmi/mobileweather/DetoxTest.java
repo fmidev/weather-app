@@ -1,4 +1,4 @@
-package fi.fmi.mobileweather;
+package ge.gov.nea.mobileweather;
 
 import com.wix.detox.Detox;
 import com.wix.detox.config.DetoxConfig;

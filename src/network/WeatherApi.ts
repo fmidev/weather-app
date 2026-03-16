@@ -60,7 +60,7 @@ export const getForecast = async (
       'modtime',
       'dark',
       // Remove producer if it causes problems with Smartmet Server
-      'producer',
+      //'producer',
     ],
     ['geoid', 'epochtime'],
   ];
