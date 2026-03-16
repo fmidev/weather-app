@@ -600,6 +600,9 @@
     "lessAccessibilityHint": "hide detailed warning description",
     "infoAccessibilityLabel": "warnings info",
     "loadingError": "Failed to load local warnings.",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "dayAfterTomorrow": "In 2 days",
     "types": {
       "thunderstorm": "Severe thunderstorm",
       "wind": "Wind warning for land areas",
