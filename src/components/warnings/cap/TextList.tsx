@@ -12,19 +12,24 @@ import { BLACK, GRAYISH_BLUE, CustomTheme } from '@assets/colors';
 import { CapWarning } from '@store/warnings/types';
 import WarningBlock from './WarningBlock';
 import { severityList } from '@store/warnings/constants';
+import { Config } from '@config';
 
 const DateIndicator = ({
   weekDay,
   date,
+  relativeDay,
 }: {
   weekDay: string;
   date: string;
+  relativeDay: string;
 }) => {
+  const { capViewSettings } = Config.get('warnings');
   const { colors } = useTheme() as CustomTheme;
+  const width = capViewSettings?.useRelativeDays ? null : 45;
   return (
-    <View style={styles.dateIndicatorEntry}>
+    <View style={[styles.dateIndicatorEntry, { width }]}>
       <Text style={[styles.capitalized, { color: colors.hourListText }]}>
-        {weekDay}
+        {capViewSettings?.useRelativeDays ? relativeDay : weekDay}
       </Text>
       <Text style={{ color: colors.hourListText }}>{date}</Text>
     </View>
@@ -36,7 +41,7 @@ const TextList = ({
   dates,
 }: {
   capData?: CapWarning[];
-  dates: { time: number; date: string; weekday: string }[];
+  dates: { time: number; date: string; weekday: string, relativeDay: string }[];
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { width } = useWindowDimensions();
@@ -86,11 +91,12 @@ const TextList = ({
           showsHorizontalScrollIndicator={false}
           style={[styles.dateIndicatorRow, { width: width - 136 }]}
           onScroll={(e) => setXOffset(e.nativeEvent.contentOffset.x)}>
-          {dates.map(({ time, weekday, date }) => (
+          {dates.map(({ time, weekday, date, relativeDay }) => (
             <DateIndicator
               key={`indicator-${time}`}
               weekDay={weekday}
               date={date}
+              relativeDay={relativeDay}
             />
           ))}
         </ScrollView>
@@ -139,7 +145,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     marginRight: 7,
-    width: 45,
   },
   noActiveWarningsPanel: {
     display: 'flex',

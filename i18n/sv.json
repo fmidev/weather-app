@@ -600,6 +600,9 @@
     "lessAccessibilityHint": "dölja närmare uppgifter om varningen",
     "infoAccessibilityLabel": "Varningar förklaringar",
     "loadingError": "Misslyckades att ladda platsbaserade varningar.",
+    "today": "Idag",
+    "tomorrow": "Imorgon",
+    "dayAfterTomorrow": "I övermorgon",
     "types": {
       "thunderstorm": "Varning för våldsamt åskväder",
       "wind": "Vindvarning för landområden",
