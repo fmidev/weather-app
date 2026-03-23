@@ -87,18 +87,18 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   return (
     <View>
       <View>
-        <PanelHeader title={t('panelTitleCap')} justifyCenter />
+        <PanelHeader title={t('panelTitleCap')} background={colors.background} justifyCenter />
         <View
           style={[
             styles.dataSourcePanelContainer,
-            { backgroundColor: colors.background },
+            { backgroundColor: colors.cardHeader },
           ]}>
           <View
             style={[
               styles.flex,
               styles.row,
               styles.spaceBetween,
-              { backgroundColor: colors.background },
+              { backgroundColor: colors.cardHeader },
             ]}>
             <View
               style={[
@@ -147,7 +147,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
           </View>
         </View>
         <MapView dates={dates} capData={capWarnings} />
-        <PanelHeader title={textViewTitle} justifyCenter />
+        <PanelHeader title={textViewTitle} background={colors.background} justifyCenter />
         <TextList capData={capWarnings} dates={dates} />
       </View>
       <RBSheet
@@ -187,8 +187,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Regular',
   },
   dataSourcePanelContainer: {
-    paddingTop: 18,
-    height: 100,
+    paddingTop: 10,
+    height: 90,
   },
   dataSourcePanelUpdatedRow: {
     marginLeft: 12,

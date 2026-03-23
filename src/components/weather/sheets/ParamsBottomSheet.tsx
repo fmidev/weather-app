@@ -32,8 +32,6 @@ import constants, {
 import { useOrientation } from '@utils/hooks';
 import {
   WHITE,
-  SECONDARY_BLUE,
-  GRAYISH_BLUE,
   CustomTheme,
 } from '@assets/colors';
 import { Config } from '@config';
@@ -70,7 +68,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   const { fontScale } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation('forecast');
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
   const { data, excludeDayLength } = Config.get('weather').forecast;
   const activeParameters = data.flatMap(({ parameters }) => parameters);
@@ -186,9 +184,9 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
             ? disabledStyle
             : {}
         }
-        trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-        thumbColor={WHITE}
-        ios_backgroundColor={WHITE}
+        trackColor={{ false: colors.inputBackground, true: dark ? WHITE : colors.inputBackground }}
+        thumbColor={colors.primary}
+        ios_backgroundColor={colors.inputBackground}
         value={displayParams.some((arr) => arr.includes(param))}
         onValueChange={() => {
           const paramStr = 'Forecast parameter '+param+' - ';
