@@ -93,7 +93,7 @@ const WarningItem = ({
               style={[
                 styles.row,
                 styles.severityBarContainer,
-                { width: width - 136 },
+                { width: width - 100 },
               ]}
               ref={scrollViewRef}>
               {dailySeverities?.map((daySeverities, index) => (

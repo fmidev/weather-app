@@ -32,6 +32,18 @@ import { Config } from '@config';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
+  const lightGradient = [
+    'rgba(177, 221, 255, 0.64)',
+    'rgba(177, 221, 255, 0.48)',
+    'rgba(177, 221, 255, 0.25)'
+  ];
+
+  const darkGradient = [
+    'rgba(25, 25, 25, 0.64)',
+    'rgba(32, 32, 32, 0.48)',
+    'rgba(40, 40, 40, 0.80)'
+  ];
+
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
   displayParams: selectDisplayParams(state),
@@ -144,6 +156,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
         : `D.M.YYYY [${t('at')}] HH:mm`;
 
     const timeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
+    const width = 52;
 
     return (
       <View
@@ -158,11 +171,20 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               : undefined,
           },
         ]}>
+        <LinearGradient
+          colors={ dark ? darkGradient : lightGradient }
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 0 }}
+          style={[styles.gradient, { width }]}
+         />
         <View
           style={[
             styles.symbolBlock,
             {
               borderColor: colors.border,
+              backgroundColor: !isOdd(displayParams.length)
+                ? colors.listTint
+                : undefined,
             },
           ]}>
           <Icon name="sun" color={colors.hourListText} />

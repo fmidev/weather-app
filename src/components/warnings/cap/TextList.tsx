@@ -63,7 +63,7 @@ const TextList = ({
         return Object.keys(groupedWarnings)?.flatMap((warningGroup) => {
           const infoMaybeArray = groupedWarnings[warningGroup][0].info;
           const info = Array.isArray(infoMaybeArray) ? infoMaybeArray[0] : infoMaybeArray;
-          return severity == info.severity ? warningGroup : [];
+          return severity === info.severity ? warningGroup : [];
       })}),
     [groupedWarnings, severities]
   );
@@ -73,12 +73,12 @@ const TextList = ({
       <View
         style={[
           styles.dateIndicatorPanel,
-          { backgroundColor: colors.background },
+          { backgroundColor: colors.cardHeader },
         ]}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={[styles.dateIndicatorRow, { width: width - 136 }]}
+          style={[styles.dateIndicatorRow, { width: width - 100 }]}
           onScroll={(e) => setXOffset(e.nativeEvent.contentOffset.x)}>
           {dates.map(({ time, weekday, date }) => (
             <DateIndicator

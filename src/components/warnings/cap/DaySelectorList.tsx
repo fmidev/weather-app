@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme, GRAYISH_BLUE } from '@assets/colors';
+import { CustomTheme, TERTIARY_LIGHT, TERTIARY_DARK } from '@assets/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CapSeverityBar from './CapSeverityBar';
 
@@ -22,7 +22,7 @@ const DaySelector = ({
   date: string;
   last?: boolean;
 }) => {
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   return (
     <AccessibleTouchableOpacity
       onPress={() => onSelect(index)}
@@ -33,11 +33,11 @@ const DaySelector = ({
           index === 0 && styles.roundedLeftCorners,
           last && styles.roundedRightCorners,
           {
-            borderTopColor: active ? colors.tabBarActive : colors.background,
-            borderRightColor: GRAYISH_BLUE,
+            borderTopColor: active ? colors.tabBarActive : colors.cardHeader,
+            borderRightColor: dark ? TERTIARY_DARK : TERTIARY_LIGHT,
             backgroundColor: active
               ? colors.screenBackground
-              : colors.background,
+              : colors.cardHeader,
           },
         ]}>
         <Text

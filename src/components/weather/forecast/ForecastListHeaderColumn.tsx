@@ -30,15 +30,15 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   const { t } = useTranslation('unitAbbreviations');
 
   const lightGradient = [
-    'rgba(238, 239, 241, 0.64)',
-    'rgba(244, 245, 247, 0.48)',
-    'rgba(255, 255, 255, 0.80)'
+    'rgba(177, 221, 255, 0.64)',
+    'rgba(177, 221, 255, 0.48)',
+    'rgba(177, 221, 255, 0.25)'
   ];
 
   const darkGradient = [
-    'rgba(25, 25, 25, 0.64)',
-    'rgba(32, 32, 32, 0.48)',
-    'rgba(40, 40, 40, 0.80)'
+    'rgba(1, 21, 38, 0.64)',
+    'rgba(1, 21, 38, 0.48)',
+    'rgba(1, 21, 38, 0.25)'
   ];
 
   const height = Math.min(fontScale * 52, 78);

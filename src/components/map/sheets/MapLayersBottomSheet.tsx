@@ -17,12 +17,7 @@ import {
   updateAnimationSpeed as updateAnimationSpeedAction,
 } from '@store/map/actions';
 
-import {
-  WHITE,
-  SECONDARY_BLUE,
-  GRAYISH_BLUE,
-  CustomTheme,
-} from '@assets/colors';
+import { WHITE, CustomTheme } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -54,7 +49,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const { colors } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
 
   const isWideDisplay = () => width > 500;
   const columnWidth = isWideDisplay() ? '48%' : '100%';
@@ -116,9 +111,9 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                   {t('map:layersBottomSheet:locationHint')}
                 </Text>
                 <Switch
-                  trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-                  thumbColor={WHITE}
-                  ios_backgroundColor={WHITE}
+                  trackColor={{ false: colors.inputBackground, true: dark ? WHITE : colors.inputBackground }}
+                  thumbColor={colors.primary}
+                  ios_backgroundColor={colors.inputBackground}
                   value={mapLayers.location}
                   onValueChange={() => {
                     trackMatomoEvent('User action', 'Map', 'Show own location - '+!mapLayers.location);
