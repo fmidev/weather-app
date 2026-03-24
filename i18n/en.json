@@ -406,9 +406,9 @@
         "moderate": "moderate",
         "strong": "heavy",
         "precipitationFin": {
-          "description": "Finnish radar combination with a 15-minute time step.",
+          "description": "Finnish radar combination with a 5-minute time step.",
           "observation": "The precipitation observation presented on the map has been measured with weather radars in Finland.",
-          "forecast": "The predicted precipitation is a short-term rainfall forecast based on radar images and weather forecast models."
+          "forecast": "The predicted precipitation is a short-term rainfall forecast based on radar observations."
         },
         "precipitationScan": {
           "description": "Scandinavian radar combination with a 1-hour time step.",
@@ -419,8 +419,8 @@
       "lightnings15": {
         "title": "Lightnings",
         "description": "Lightning layer shows observed lightning strikes in the area. Visualization is based on lightning age.",
-        "age1": "0-15 minutes old lightning",
-        "age2": "15-30 minutes old lightning"
+        "age1": "0-5 minutes old lightning",
+        "age2": "5-10 minutes old lightning"
       },
       "lightnings60": {
         "title": "Lightnings",
@@ -601,6 +601,9 @@
     "lessAccessibilityHint": "hide detailed warning description",
     "infoAccessibilityLabel": "warnings info",
     "loadingError": "Failed to load local warnings.",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "dayAfterTomorrow": "In 2 days",
     "types": {
       "thunderstorm": "Severe thunderstorm",
       "wind": "Wind warning for land areas",

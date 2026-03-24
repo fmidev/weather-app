@@ -121,6 +121,7 @@ interface CapViewSettings {
   includeAreaInTitle?: boolean;
   severityBackgroundInSymbol?: boolean;
   hideLongArealist?: boolean;
+  useRelativeDays?: boolean;
 }
 
 interface Warnings {

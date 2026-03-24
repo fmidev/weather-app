@@ -405,9 +405,9 @@
         "moderate": "måttlig",
         "strong": "kraftig",
         "precipitationFin": {
-          "description": "Finländsk radar-kombination med 15 minuters tidssteg.",
+          "description": "Finländsk radar-kombination med 5 minuters tidssteg.",
           "observation": "Den regnobservation som presenteras på kartan har mätts med väderadar i Finland.",
-          "forecast": "Det förutspådda regnet är en korttidsprognos för nederbörd, baserad på radarbilder och väderprognosmodeller."
+          "forecast": "Det förutspådda regnet är en korttidsprognos för nederbörd, baserad på radarobservationer."
         },
         "precipitationScan": {
           "description": "Skandinavisk radar-kombination med 1 timmes tidssteg.",
@@ -418,8 +418,8 @@
       "lightnings15": {
         "title": "Blixtar",
         "description": "Blixtlagret visar observerade blixtar i området. Visualiseringen är baserad på blixternas ålder.",
-        "age1": "0-15 minuter gammal blixt",
-        "age2": "15-30 minuter gammal blixt"
+        "age1": "0-5 minuter gammal blixt",
+        "age2": "5-10 minuter gammal blixt"
       },
       "lightnings60": {
         "title": "Blixtar",
@@ -600,6 +600,9 @@
     "lessAccessibilityHint": "dölja närmare uppgifter om varningen",
     "infoAccessibilityLabel": "Varningar förklaringar",
     "loadingError": "Misslyckades att ladda platsbaserade varningar.",
+    "today": "Idag",
+    "tomorrow": "Imorgon",
+    "dayAfterTomorrow": "I övermorgon",
     "types": {
       "thunderstorm": "Varning för våldsamt åskväder",
       "wind": "Vindvarning för landområden",

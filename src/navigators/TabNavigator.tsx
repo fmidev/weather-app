@@ -39,7 +39,6 @@ import { setCurrentLocation as setCurrentLocationAction } from '@store/location/
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
 import {
-  PRIMARY_BLUE,
   WHITE,
   GRAY_1,
   TRANSPARENT,
@@ -47,6 +46,8 @@ import {
   SHADOW_LIGHT,
   QUATERNARY_DARK,
   QUATERNARY_LIGHT,
+  PRIMARY_LIGHT,
+  PRIMARY_DARK,
 } from '@assets/colors';
 import {
   selectInitialTab,
@@ -204,7 +205,7 @@ const Navigator: React.FC<Props> = ({
   const CommonHeaderOptions: StackNavigationOptions = useMemo(
     () => ({
       headerBackTestID: 'header-back',
-      headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+      headerTintColor: useDarkTheme ? PRIMARY_DARK : PRIMARY_LIGHT,
       headerTitleStyle: {
         fontFamily: 'Roboto-Bold',
       },

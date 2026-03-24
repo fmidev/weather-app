@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
-import { PRIMARY_BLUE, WHITE } from '@assets/colors';
+import { PRIMARY_LIGHT, PRIMARY_DARK } from '@assets/colors';
 
 type HeaderTitleProps = {
   title: string;
@@ -10,7 +10,7 @@ type HeaderTitleProps = {
 
 const HeaderTitle: React.FC<HeaderTitleProps> = ({title, isDark}) => (
   <Text
-    style={[styles.headerTitle, { color: isDark ? WHITE : PRIMARY_BLUE }]}
+    style={[styles.headerTitle, { color: isDark ? PRIMARY_DARK : PRIMARY_LIGHT }]}
     maxFontSizeMultiplier={1.5}
   >
     {title}
