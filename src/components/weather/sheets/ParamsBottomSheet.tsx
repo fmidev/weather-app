@@ -184,7 +184,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
             ? disabledStyle
             : {}
         }
-        trackColor={{ false: colors.inputBackground, true: dark ? WHITE : colors.inputBackground }}
+        trackColor={{ false: colors.listTint, true: dark ? WHITE : colors.inputBackground }}
         thumbColor={colors.primary}
         ios_backgroundColor={colors.inputBackground}
         value={displayParams.some((arr) => arr.includes(param))}
