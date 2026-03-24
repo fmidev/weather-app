@@ -38,7 +38,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MapViewProps = PropsFromRedux & {
-  dates: { time: number; weekday: string; date: string }[];
+  dates: { time: number; weekday: string; date: string, relativeDay: string }[];
   capData?: CapWarning[];
 };
 

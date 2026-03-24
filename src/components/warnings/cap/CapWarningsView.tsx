@@ -65,17 +65,24 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         time: today.toDate().getTime(),
         date: moment(today).locale(locale).format(dateFormat),
         weekday: moment(today).locale(locale).format(weekdayAbbreviationFormat),
+        relativeDay: t('today'),
       },
     ];
     if (capViewSettings) {
       for (let i = 1; i < capViewSettings?.numberOfDays; i += 1) {
         const momentObject = moment(today).add(i, 'days');
+        let relativeDay = '';
+
+        if (i === 1) relativeDay = t('tomorrow');
+        if (i === 2) relativeDay = t('dayAfterTomorrow');
+
         dates.push({
           time: momentObject.toDate().getTime(),
           date: momentObject.locale(locale).format(dateFormat),
           weekday: momentObject
             .locale(locale)
             .format(weekdayAbbreviationFormat),
+          relativeDay,
         });
       }
     }
