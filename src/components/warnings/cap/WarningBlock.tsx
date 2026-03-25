@@ -18,7 +18,7 @@ import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
 import { connect } from 'react-redux';
 import { ClockType } from '@store/settings/types';
-import WarningSymbol from '../WarningsSymbol';
+import WarningSymbol from '@assets/WarningsSymbol';
 import CapSeverityBar from './CapSeverityBar';
 import { Config } from '@config';
 
