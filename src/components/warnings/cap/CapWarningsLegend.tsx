@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-no-comment-textnodes */
+
 import React from 'react';
 import {
   Text,
@@ -20,6 +20,7 @@ import { useTheme } from '@react-navigation/native';
 import { t } from 'i18next';
 import CapSeverityBar from './CapSeverityBar';
 import TypeColorRow from '../TypeColorRow';
+import WarningSymbol, { landEvents, seaEvents, typeMap as eventMap } from '@assets/WarningsSymbol';
 
 const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
   const { colors } = useTheme() as CustomTheme;
@@ -110,17 +111,35 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningExplanationsOnLand')}
             </Text>
-            <Text style={{ color: colors.hourListText }}>
-              // TODO: add warning symbols{' '}
-            </Text>
+            { // @ts-ignore
+              landEvents.map((event) => {
+                const fullName = `${event} warning` as const;
+                return eventMap[fullName] ? (
+                <View key={event} style={styles.legendRow}>
+                  <WarningSymbol type={fullName} size={32} />
+                  <Text style={[styles.eventText, { color: colors.primaryText }]}>
+                    {t(`warnings:types.${event}`)}
+                  </Text>
+                </View>
+                ) : null;
+            })}
           </View>
           <View style={styles.contentContainer}>
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningExplanationsAtSea')}
             </Text>
-            <Text style={{ color: colors.hourListText }}>
-              // TODO: add warning symbols
-            </Text>
+            { // @ts-ignore
+              seaEvents.map((event) => {
+                const fullName = `${event} warning` as const;
+                return eventMap[fullName] ? (
+                <View key={event} style={styles.legendRow}>
+                  <WarningSymbol type={fullName} size={32} />
+                  <Text style={[styles.eventText, { color: colors.primaryText }]}>
+                    {t(`warnings:types.${event}`)}
+                  </Text>
+                </View>
+                ) : null;
+            })}
           </View>
           <View style={[styles.contentContainer, styles.borderBottom]}>
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
@@ -186,6 +205,10 @@ const styles = StyleSheet.create({
   severityBarLegendText: {
     marginLeft: 14,
     flexWrap: 'wrap',
+  },
+  eventText: {
+    marginLeft: 16,
+    width: '100%',
   },
 });
 
