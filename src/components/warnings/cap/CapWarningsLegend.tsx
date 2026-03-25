@@ -111,8 +111,8 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningExplanationsOnLand')}
             </Text>
-            { landEvents.map((event: string) => {
-              const fullName = `${event} warning`;
+            { landEvents.map((event:string) => {
+              const fullName = `${event} warning` as const;
               return eventMap[fullName] ? (
               <View key={event} style={styles.legendRow}>
                 <WarningSymbol type={fullName} size={32} />
@@ -127,8 +127,8 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningExplanationsAtSea')}
             </Text>
-            { seaEvents.map((event: string) => {
-              const fullName = `${event} warning`;
+            { seaEvents.map((event:string) => {
+              const fullName = `${event} warning` as const;
               return eventMap[fullName] ? (
               <View key={event} style={styles.legendRow}>
                 <WarningSymbol type={fullName} size={32} />
