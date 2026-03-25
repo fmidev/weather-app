@@ -111,32 +111,34 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningExplanationsOnLand')}
             </Text>
-            { landEvents.map((event:string) => {
-              const fullName = `${event} warning` as const;
-              return eventMap[fullName] ? (
-              <View key={event} style={styles.legendRow}>
-                <WarningSymbol type={fullName} size={32} />
-                <Text style={[styles.eventText, { color: colors.primaryText }]}>
-                  {t(`warnings:types.${event}`)}
-                </Text>
-              </View>
-              ) : null;
+            { // @ts-ignore
+              landEvents.map((event) => {
+                const fullName = `${event} warning` as const;
+                return eventMap[fullName] ? (
+                <View key={event} style={styles.legendRow}>
+                  <WarningSymbol type={fullName} size={32} />
+                  <Text style={[styles.eventText, { color: colors.primaryText }]}>
+                    {t(`warnings:types.${event}`)}
+                  </Text>
+                </View>
+                ) : null;
             })}
           </View>
           <View style={styles.contentContainer}>
             <Text style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningExplanationsAtSea')}
             </Text>
-            { seaEvents.map((event:string) => {
-              const fullName = `${event} warning` as const;
-              return eventMap[fullName] ? (
-              <View key={event} style={styles.legendRow}>
-                <WarningSymbol type={fullName} size={32} />
-                <Text style={[styles.eventText, { color: colors.primaryText }]}>
-                  {t(`warnings:types.${event}`)}
-                </Text>
-              </View>
-              ) : null;
+            { // @ts-ignore
+              seaEvents.map((event) => {
+                const fullName = `${event} warning` as const;
+                return eventMap[fullName] ? (
+                <View key={event} style={styles.legendRow}>
+                  <WarningSymbol type={fullName} size={32} />
+                  <Text style={[styles.eventText, { color: colors.primaryText }]}>
+                    {t(`warnings:types.${event}`)}
+                  </Text>
+                </View>
+                ) : null;
             })}
           </View>
           <View style={[styles.contentContainer, styles.borderBottom]}>
