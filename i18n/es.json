@@ -135,7 +135,7 @@
       "dayLowestTemperature": "Temperatura mínima del día (°{{ unit }})",
       "daySumOfPrecipitation": "Concentración de lluvia diaria (mm)",
       "time": "Tiempo",
-      "pastTime": "Tiempo transcurrido",
+      "pastTimeOrMissing": "Tiempo transcurrido o datos faltantes",
       "lightRainInHour": "Lluvia ligera por hora",
       "moderateRainInHour": "Lluvia moderada por hora",
       "heavyRainInHour": "Lluvia fuerte por hora",
@@ -345,7 +345,7 @@
     "layersBottomSheet": {
       "closeAccessibilityLabel": "Cerrar la selección de capas del mapa",
       "locationTitle": "Mi ubicación",
-      "locationHint": "Mostrar mi ubicaciónb en el mapa",
+      "locationHint": "Mostrar mi ubicación en el mapa",
       "animationSpeedTitle": "Velocidad de la animación",
       "Slow": "Lento",
       "Normal": "Normal",
