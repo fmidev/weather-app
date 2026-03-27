@@ -95,9 +95,12 @@ const MapControls: React.FC<MapControlsProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
     flex: 1,
     width: '100%',
-    zIndex: 0,
+    height: '100%',
   },
   mapButton: {
     position: 'absolute',
@@ -126,11 +129,11 @@ const styles = StyleSheet.create({
   },
   bottomSecond: {
     right: 12,
-    bottom: 30 + 150,
+    bottom: 8 + 150,
   },
   bottomFirst: {
     right: 12,
-    bottom: 30 + 90,
+    bottom: 8 + 90,
   },
 });
 
