@@ -58,7 +58,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - MapLibreReactNative (11.0.0-beta.10):
+  - MapLibreReactNative (11.0.0-beta.25):
     - boost
     - DoubleConversion
     - fast_float
@@ -1986,7 +1986,7 @@ PODS:
     - Yoga
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-safe-area-context (5.6.1):
+  - react-native-safe-area-context (5.7.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2004,8 +2004,8 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-safe-area-context/common (= 5.6.1)
-    - react-native-safe-area-context/fabric (= 5.6.1)
+    - react-native-safe-area-context/common (= 5.7.0)
+    - react-native-safe-area-context/fabric (= 5.7.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -2016,7 +2016,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-safe-area-context/common (5.6.1):
+  - react-native-safe-area-context/common (5.7.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2044,7 +2044,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-safe-area-context/fabric (5.6.1):
+  - react-native-safe-area-context/fabric (5.7.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2073,7 +2073,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-webview (13.16.0):
+  - react-native-webview (13.15.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2640,7 +2640,7 @@ PODS:
     - React-perflogger (= 0.82.1)
     - React-utils (= 0.82.1)
     - SocketRocket
-  - RNCAsyncStorage (2.2.0):
+  - RNCAsyncStorage (2.1.1):
     - boost
     - DoubleConversion
     - fast_float
@@ -2698,7 +2698,7 @@ PODS:
     - Yoga
   - RNDefaultPreference (1.4.4):
     - React-Core
-  - RNFastImage (8.12.0):
+  - RNFastImage (8.11.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2759,7 +2759,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNLocalize (3.5.2):
+  - RNLocalize (3.4.1):
     - boost
     - DoubleConversion
     - fast_float
@@ -2815,7 +2815,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNReactNativeHapticFeedback (1.14.0):
+  - RNReactNativeHapticFeedback (1.13.1):
     - React-Core
   - RNReanimated (4.2.1):
     - boost
@@ -3025,7 +3025,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNVectorIcons (10.3.0):
+  - RNVectorIcons (10.2.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3492,7 +3492,7 @@ SPEC CHECKSUMS:
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   logicwind-react-native-matomo-tracker: 4a8a1f4b0a2ea2628370f3c87ade3fb79ac93182
-  MapLibreReactNative: e7703d8c96f56e58e278d4af934098e1bdfd027c
+  MapLibreReactNative: ef2b0488b39c6a462dc4005053634b349761d556
   MatomoTracker: dbf4093d2c36b78244ce481d7a10086fad825c7f
   RCT-Folly: 846fda9475e61ec7bcbf8a3fe81edfcaeb090669
   RCTDeprecation: f17e2ebc07876ca9ab8eb6e4b0a4e4647497ae3a
@@ -3533,8 +3533,8 @@ SPEC CHECKSUMS:
   react-native-maps: 92f417ffa2c6598b783f133df25e60ce62aede0f
   react-native-mmkv: a46b0a6df32c179997628085b3a5e0f3386d4053
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
-  react-native-safe-area-context: c6e2edd1c1da07bdce287fa9d9e60c5f7b514616
-  react-native-webview: 654f794a7686b47491cf43aa67f7f428bea00eed
+  react-native-safe-area-context: befb5404eb8a16fdc07fa2bebab3568ecabcbb8a
+  react-native-webview: 4cbb7f05f2c50671a7dcff4012d3e85faad271e4
   React-NativeModulesApple: 46690a0fe94ec28fc6fc686ec797b911d251ded0
   React-oscompat: 95875e81f5d4b3c7b2c888d5bd2c9d83450d8bdb
   React-perflogger: 2e229bf33e42c094fd64516d89ec1187a2b79b5b
@@ -3567,18 +3567,18 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: a45ef34bb22dc1c9b2ac1f74167d9a28af961176
   ReactCodegen: 878add6c7d8ff8cea87697c44d29c03b79b6f2d9
   ReactCommon: 804dc80944fa90b86800b43c871742ec005ca424
-  RNCAsyncStorage: 29f0230e1a25f36c20b05f65e2eb8958d6526e82
+  RNCAsyncStorage: 16657e6cc8c84e130993f4fecd6550012ed252d3
   RNCMaskedView: 5ef8c95cbab95334a32763b72896a7b7d07e6299
   RNDefaultPreference: ee13d69e6693d193cd223d10e15e5b3c012d31ba
-  RNFastImage: 4b6aa4ec13de8dc57deef25f89f00aa93a2cf139
+  RNFastImage: c7d08ed88f255e84529171119df2e8a398ccd25e
   RNGestureHandler: f97d19585553412302394c42495cdaf499589d34
-  RNLocalize: a0ec66afe0980934cfe13f3bc30f476443388a36
+  RNLocalize: 89c0c8fffc339547dc771ff24b4d8a8092d64991
   RNPermissions: 0665727fc92e4a4c0ac727144748e54f59d2f25b
-  RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
+  RNReactNativeHapticFeedback: 1375baff2051b7211dd7f53c6302f76dc980ce65
   RNReanimated: 7d59df16c018cf3ed5d5b45964cedea4fc5c26ef
   RNScreens: ffbb0296608eb3560de641a711bbdb663ed1f6b4
   RNSVG: 1bbfeab22b26db18b73d2e36b37a0f02a1180838
-  RNVectorIcons: 791f13226ec4a3fd13062eda9e892159f0981fae
+  RNVectorIcons: c13cc1db346e960ecd0aafcdd5d0bb458133b9c1
   RNWorklets: d9c050940f140af5d8b611d937eab1cbfce5e9a5
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   SDWebImageAVIFCoder: afe194a084e851f70228e4be35ef651df0fc5c57
