@@ -2,7 +2,7 @@
 
 ## **Prequisites**
 
-- Node (20)
+- Node (20 or newer)
 - Android Studio (latest)
 - XCode (latest)
 - Java JDK 17
@@ -15,7 +15,7 @@ This project is licensed under the MIT Licence - see the [LICENSE](LICENSE) file
 
 ## **Installation**
 
-`git clone --recurse-submodules https://github.com/fmidev/weather-app.git `
+`git clone --recurse-submodules https://github.com/smartmet-co/weather-app.git `
 
 `cd weather-app`
 
@@ -60,6 +60,8 @@ git submodule update --init --recursive
 
 Before running iOS or Android start metro: `yarn start`. Also make sure you have a valid DefaultConfig.ts.
 
+You can open debugger in metro by pressing key `j`.
+
 #### **Run in development environment (Android)**
 
 1. Open **{PROJECT_DIR}/android** in Android Studio and wait build to be completed
@@ -95,25 +97,9 @@ R5CR207HAFP	device
 
 8. The application should run now when opened in the device.
 
+To open project in Android Studio open folder `android` and Android Studio should import project.
+
 #### **Run in development environment (iOS)**
-
-**If you have arm-based mac, do these before running:**
-1. Open Project's build settings in Xcode (Project not Targets)
-2. Add Any iOS Simulator SDK + "arm64" to Debug and Release under Architectures - Excluded Architectures
-3. Add following lines to end of your Podfile under ios -folder:
-
-`post_install do |installer|
-  installer.pods_project.build_configurations.each do |config|
-    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
-  end
-end`
-
-4. Delete VALID_ARCHS from main project's and Pods project's build settings.
-5. Clean project + rebuild
-
-If you have problems you might need to do these as well:
-
-`rm -rf ~/Library/Developer/Xcode/DerivedData/ && pod deintegrate && pod update`
 
 You might need to install ios-deploy to be able to run from command line
  `npm install -g ios-deploy`
@@ -122,8 +108,12 @@ If installing Node with nvm and try to start app from Xcode you might need to do
  `ln -s $(which node) /usr/local/bin/node`
 
 Run project:
-1. `cd ios && pod install && cd ..`
-2. `npx react-native run-ios`
+1. `cd ios && pod install && cd ..` (only once after `yarn install`)
+2. `yarn ios` or `yarn ios --simulator "iPhone 17 Pro"`
+
+You can see available simulators with `xcrun simctl list`
+
+To open project in Xcode open file `ios/MobileWeather/MobileWeather.xcworkspace`
 
 ### Troubleshooting
 
