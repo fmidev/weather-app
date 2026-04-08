@@ -619,10 +619,10 @@
       "High tide": "High tide"
     },
     "severities": {
-      "0": "No danger",
-      "1": "Potentially dangerous",
-      "2": "Dangerous",
-      "3": "Very dangerous"
+      "0": "Normal Conditions",
+      "1": "Yellow warning(Get informed)",
+      "2": "Orange warning (Be prepared)",
+      "3": "Red warning (Take actions)."
     },
     "info": {
       "dailyTitle": "Daily legends",
