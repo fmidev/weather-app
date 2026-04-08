@@ -111,7 +111,7 @@ Run project:
 1. `cd ios && pod install && cd ..` (only once after `yarn install`)
 2. `yarn ios` or `yarn ios --simulator "iPhone 17 Pro"`
 
-You can see available simulator with `xcrun simctl list`
+You can see available simulators with `xcrun simctl list`
 
 To open project in Xcode open file `ios/MobileWeather/MobileWeather.xcworkspace`
 
