@@ -582,10 +582,10 @@
       "High tide": "Pleamar"
     },
     "severities": {
-      "0": "Condiciones normales",
-      "1": "Potencialmente peligroso",
-      "2": "Peligroso",
-      "3": "Muy peligroso"
+      "0": "Condición Normal",
+      "1": "Alerta Amarilla (Informarse)",
+      "2": "Alerta Naranja (Prepararse)",
+      "3": "Alerta Roja (Tomar Acción)"
     },
     "info": {
       "dailyTitle": "Leyendas diarias",
