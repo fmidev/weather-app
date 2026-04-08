@@ -31,6 +31,7 @@ import Announcements from '@components/announcements/Announcements';
 import WarningIconsPanel from '@components/warnings/WarningIconsPanel';
 import MeteorologistSnapshot from '@components/weather/MeteorologistSnapshot';
 import { useTranslation } from 'react-i18next';
+import SunInfo from '@components/weather/forecast/SunInfo';
 
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
@@ -261,6 +262,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           stickyHeaderIndices={announcements && [0]}>
           <Announcements style={styles.announcements} />
           <NextHourForecastPanel currentHour={currentHour} />
+          <SunInfo />
           <ForecastPanel currentHour={currentHour}/>
           <ObservationPanel />
         </ScrollView>

@@ -55,6 +55,8 @@
     "loading": "Descargando el contenido"
   },
   "forecast": {
+    "sunRises": "El sol sale a las",
+    "sunSets": "El sol se pone a las",
     "nextHourForecast": "Pronóstico",
     "precipitation": "precipitación",
     "celsius": "Grados Celsius",
