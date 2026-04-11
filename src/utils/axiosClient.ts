@@ -1,10 +1,13 @@
 import Axios, { AxiosRequestConfig } from 'axios';
-import { setupCache } from 'axios-cache-interceptor';
+import { setupCache, buildMemoryStorage } from 'axios-cache-interceptor';
 import { trackMatomoEvent } from './matomo';
 import { AnalyticActions } from '@config';
 
 const instance = Axios.create();
-const axios = setupCache(instance);
+const axios = setupCache(instance, {
+  storage: buildMemoryStorage(),
+  ttl: 2 * 60 * 1000, // Default 2-minute TTL for all requests
+});
 
 const getErrorMessage = (headers: Record<string, string>): string | undefined => {
   const key = Object.keys(headers).find(k => /^x-(.+)-error$/i.test(k));
