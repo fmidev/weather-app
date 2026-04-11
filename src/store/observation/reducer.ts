@@ -24,6 +24,8 @@ const INITIAL_STATE: ObservationState = {
   stationId: {},
   displayFormat: 'chart',
   chartDisplayParam: undefined,
+  fetchTimestamp: 0,
+  fetchSuccessTime: 0,
 };
 
 const formatData = (
@@ -70,6 +72,7 @@ export default (
         ...state,
         loading: true,
         error: false,
+        fetchTimestamp: Date.now(),
       };
     }
 
@@ -86,6 +89,8 @@ export default (
           action.payload.location.geoid || action.payload.location.latlon || 0,
         loading: false,
         error: false,
+        fetchTimestamp: action.timestamp,
+        fetchSuccessTime: action.timestamp,
       };
       return newState;
     }

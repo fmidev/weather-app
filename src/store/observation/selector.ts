@@ -15,6 +15,11 @@ export const selectLoading = createSelector(
   (observation) => observation.loading
 );
 
+export const selectFetchTimestamp = createSelector(
+  selectObservationDomain,
+  (observation) => observation.fetchTimestamp
+);
+
 export const selectError = createSelector(
   selectObservationDomain,
   (observation) => observation.error

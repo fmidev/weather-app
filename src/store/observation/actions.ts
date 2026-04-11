@@ -24,6 +24,7 @@ export const fetchObservation =
         dispatch({
           type: FETCH_OBSERVATION_SUCCESS,
           payload: { data, location },
+          timestamp: Date.now(),
         });
       })
       .catch((error: Error) => {

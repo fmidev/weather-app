@@ -20,6 +20,7 @@ interface FetchObservationSuccess {
     data: Array<ObservationDataRaw | boolean>;
     location: ObservationLocation;
   };
+  timestamp: number;
 }
 
 interface FetchObservationError {
@@ -138,4 +139,6 @@ export interface ObservationState {
   error: boolean | Error | string;
   displayFormat: 'table' | 'chart';
   chartDisplayParam: ChartType | undefined;
+  fetchTimestamp: number;
+  fetchSuccessTime: number;
 }
