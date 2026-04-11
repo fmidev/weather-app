@@ -33,7 +33,7 @@ export const selectUpdated = createSelector(
   (items, geoid) => items?.[geoid]?.updated || null
 );
 
-const selectFetchTimestamp = createSelector(
+export const selectFetchTimestamp = createSelector(
   selectWarningsDomain,
   (warnings) => warnings.fetchTimestamp
 );

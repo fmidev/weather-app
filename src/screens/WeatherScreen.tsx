@@ -8,6 +8,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { selectAnnouncements } from '@store/announcements/selectors';
+import { selectFetchTimestamp as selectWarningsFetchTimestamp } from '@store/warnings/selectors';
 
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
@@ -35,6 +36,7 @@ import { useTranslation } from 'react-i18next';
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
   location: selectCurrent(state),
+  warningsFetchTimestamp: selectWarningsFetchTimestamp(state),
 });
 
 const mapDispatchToProps = {
@@ -61,13 +63,13 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   resetObservations,
   location,
   announcements,
+  warningsFetchTimestamp,
 }) => {
   const { i18n } = useTranslation();
   const isFocused = useIsFocused();
   const { width} = useWindowDimensions();
   const [forecastUpdated, setForecastUpdated] = useState<number>(Date.now());
   const [observationUpdated, setObservationUpdated] = useState<number>(0);
-  const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
   const [meteorologistUpdated, setMeteorologistUpdated] = useState<number>(Date.now());
   const [newsUpdated, setNewsUpdated] = useState<number>(Date.now());
   const [observationVisible, setObservationVisible] = useState(false);
@@ -123,7 +125,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const updateWarnings = useCallback(() => {
     if (warningsConfig.enabled && warningsConfig.apiUrl[location.country]) {
       fetchWarnings(location);
-      setWarningsUpdated(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchWarnings, location.lat, location.lon, warningsConfig]);
@@ -153,7 +154,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     const meteorologistUpdateTime = meteorologistUpdated +
       (weatherConfig.meteorologist?.updateInterval ?? 10) * 60 * 1000;
     const warningsUpdateTime =
-      warningsUpdated + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
+      warningsFetchTimestamp + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
     const newsUpdateTime =
       newsUpdated + (newsConfig.updateInterval ?? 30) * 60 * 1000;
 
@@ -179,7 +180,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         updateNews();
       }
     }
-  }, [isFocused, forecastUpdated, observationUpdated, warningsUpdated, meteorologistUpdated,
+  }, [isFocused, forecastUpdated, observationUpdated, warningsFetchTimestamp, meteorologistUpdated,
     shouldReload, weatherConfig, warningsConfig, updateForecast, updateObservation, updateWarnings,
     updateMeteorologistSnapshot, newsUpdated, newsConfig.updateInterval, updateNews, observationVisible]);
 

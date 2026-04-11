@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
@@ -16,11 +16,13 @@ import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrent } from '@store/location/selector';
 import { selectAnnouncements } from '@store/announcements/selectors';
+import { selectFetchTimestamp as selectWarningsFetchTimestamp } from '@store/warnings/selectors';
 import CapWarningsView from '@components/warnings/cap/CapWarningsView';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
   announcements: selectAnnouncements(state),
+  warningsFetchTimestamp: selectWarningsFetchTimestamp(state),
 });
 
 const mapDispatchToProps = {
@@ -38,11 +40,11 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   fetchCapWarnings,
   location,
   announcements,
+  warningsFetchTimestamp,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const isFocused = useIsFocused();
   const { shouldReload } = useReloader();
-  const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
 
   const warningsConfig = Config.get('warnings');
   const { useCapView, apiUrl } = warningsConfig;
@@ -56,14 +58,13 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
       } else if (warningsConfig.apiUrl[location.country]) {
         fetchWarnings(location);
       }
-      setWarningsUpdated(Date.now());
     }
   }, [fetchWarnings, fetchCapWarnings, location, warningsConfig]);
 
   useEffect(() => {
     const now = Date.now();
     const warningsUpdateTime =
-      warningsUpdated + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
+      warningsFetchTimestamp + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
 
     if (isFocused) {
       if (now > warningsUpdateTime || shouldReload > warningsUpdateTime) {
@@ -72,7 +73,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
     }
   }, [
     isFocused,
-    warningsUpdated,
+    warningsFetchTimestamp,
     shouldReload,
     warningsConfig,
     updateWarnings,
