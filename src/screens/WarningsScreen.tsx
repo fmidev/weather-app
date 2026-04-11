@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
@@ -45,6 +45,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const isFocused = useIsFocused();
   const { shouldReload } = useReloader();
+  const prevLocationRef = useRef<string>(`${location.id}-${location.lat}-${location.lon}`);
 
   const warningsConfig = Config.get('warnings');
   const { useCapView, apiUrl } = warningsConfig;
@@ -80,6 +81,11 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   ]);
 
   useEffect(() => {
+    const locationKey = `${location.id}-${location.lat}-${location.lon}`;
+    if (prevLocationRef.current === locationKey) {
+      return;
+    }
+    prevLocationRef.current = locationKey;
     updateWarnings();
   }, [location, updateWarnings]);
 

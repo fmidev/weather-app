@@ -75,6 +75,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const [observationVisible, setObservationVisible] = useState(false);
   const observationRef = useRef<View>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+  const prevLocationRef = useRef<string>(`${location.id}-${location.lat}-${location.lon}`);
   const { shouldReload } = useReloader();
 
   const { weather: weatherConfig, warnings: warningsConfig, news: newsConfig } = Config.getAll();
@@ -185,6 +186,12 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     updateMeteorologistSnapshot, newsUpdated, newsConfig.updateInterval, updateNews, observationVisible]);
 
   useEffect(() => {
+    const locationKey = `${location.id}-${location.lat}-${location.lon}`;
+    if (prevLocationRef.current === locationKey) {
+      return;
+    }
+    prevLocationRef.current = locationKey;
+
     setObservationUpdated(0);
     resetObservations();
     updateForecast();
