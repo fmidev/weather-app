@@ -8,7 +8,9 @@ import { useIsFocused } from '@react-navigation/native';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { selectAnnouncements } from '@store/announcements/selectors';
-import { selectFetchTimestamp as selectWarningsFetchTimestamp } from '@store/warnings/selectors';
+import { selectFetchTimestamp as selectWarningsFetchTimestamp, selectLoading as selectWarningsLoading } from '@store/warnings/selectors';
+import { selectLoading as selectForecastLoading } from '@store/forecast/selectors';
+import { selectLoading as selectObservationLoading } from '@store/observation/selector';
 
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
@@ -37,6 +39,9 @@ const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
   location: selectCurrent(state),
   warningsFetchTimestamp: selectWarningsFetchTimestamp(state),
+  forecastLoading: selectForecastLoading(state),
+  warningsLoading: selectWarningsLoading(state),
+  observationLoading: selectObservationLoading(state),
 });
 
 const mapDispatchToProps = {
@@ -64,6 +69,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   location,
   announcements,
   warningsFetchTimestamp,
+  forecastLoading,
+  warningsLoading,
+  observationLoading,
 }) => {
   const { i18n } = useTranslation();
   const isFocused = useIsFocused();
@@ -164,14 +172,14 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
                                     || weatherConfig.observation.lazyLoad === undefined);
 
     if (isFocused) {
-      if (now > forecastUpdateTime || shouldReload > forecastUpdateTime) {
+      if (!forecastLoading && (now > forecastUpdateTime || shouldReload > forecastUpdateTime)) {
         updateForecast();
       }
-      if ((!lazyLoadObservations || observationVisible) &&
+      if (!observationLoading && (!lazyLoadObservations || observationVisible) &&
         (now > observationUpdateTime || shouldReload > observationUpdateTime)) {
         updateObservation();
       }
-      if (now > warningsUpdateTime || shouldReload > warningsUpdateTime) {
+      if (!warningsLoading && (now > warningsUpdateTime || shouldReload > warningsUpdateTime)) {
         updateWarnings();
       }
       if (now > meteorologistUpdateTime || shouldReload > meteorologistUpdateTime) {

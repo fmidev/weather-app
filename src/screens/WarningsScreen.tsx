@@ -16,13 +16,14 @@ import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrent } from '@store/location/selector';
 import { selectAnnouncements } from '@store/announcements/selectors';
-import { selectFetchTimestamp as selectWarningsFetchTimestamp } from '@store/warnings/selectors';
+import { selectFetchTimestamp as selectWarningsFetchTimestamp, selectLoading as selectWarningsLoading } from '@store/warnings/selectors';
 import CapWarningsView from '@components/warnings/cap/CapWarningsView';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
   announcements: selectAnnouncements(state),
   warningsFetchTimestamp: selectWarningsFetchTimestamp(state),
+  warningsLoading: selectWarningsLoading(state),
 });
 
 const mapDispatchToProps = {
@@ -41,6 +42,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   location,
   announcements,
   warningsFetchTimestamp,
+  warningsLoading,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const isFocused = useIsFocused();
@@ -67,7 +69,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
     const warningsUpdateTime =
       warningsFetchTimestamp + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
 
-    if (isFocused) {
+    if (isFocused && !warningsLoading) {
       if (now > warningsUpdateTime || shouldReload > warningsUpdateTime) {
         updateWarnings();
       }
