@@ -52,8 +52,8 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
     if (interval && updated < now - interval * 60 * 1000) {
       await Config.update();
       setUpdated(now);
+      setShouldReload(now);
     }
-    setShouldReload(now);
   }, [updated, interval]);
 
   useEffect(() => {
@@ -65,6 +65,9 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
           setShouldReload(Date.now());
         }
 
+        if (reloadIntervalRef.current) {
+          clearInterval(reloadIntervalRef.current);
+        }
         reloadIntervalRef.current = setInterval(
           () => setShouldReload(Date.now()),
           reloadInterval
