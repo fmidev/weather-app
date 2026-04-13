@@ -34,6 +34,9 @@
 		A2B3FFB72CC8E6AE00EC1293 /* WeatherWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB12CC8E6AE00EC1293 /* WeatherWidgetBundle.swift */; };
 		A2B3FFB92CC9138E00EC1293 /* defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFB82CC9138800EC1293 /* defaults.swift */; };
 		A2B3FFBB2CC9175000EC1293 /* network.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3FFBA2CC9174D00EC1293 /* network.swift */; };
+		A2D35CDE2F8CBC1C00F66919 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = E1DE195D687114145F5197E9 /* MapLibre */; };
+		A2D35CDF2F8CBC1C00F66919 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = B831EC0D927213B0471F4D94 /* MapLibre */; };
+		A2D35CE02F8CBC1C00F66919 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = 18C5A51F13AF682172F66E0A /* MapLibre */; };
 		A2E2E99E2CFDF6070096E794 /* WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2B3FF962CC7D1DA00EC1293 /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A2E488092D002CA100A66016 /* SettingsIntentExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2042C6C2CFF2EEE00C41A9E /* SettingsIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A2E4880C2D00319300A66016 /* WidgetIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A2F695BC2CFEE1520064BAFE /* WidgetIntents.intentdefinition */; };
@@ -155,14 +158,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A21766F22CFF4F99001EEEFF /* Exceptions for "SettingsIntentExtension" folder in "WidgetExtension" target */ = {
+		A21766F22CFF4F99001EEEFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = A2B3FF952CC7D1DA00EC1293 /* WidgetExtension */;
 		};
-		A2E441DA2CFF50AB00802217 /* Exceptions for "SettingsIntentExtension" folder in "SettingsIntentExtension" target */ = {
+		A2E441DA2CFF50AB00802217 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -172,41 +175,9 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				A21766F22CFF4F99001EEEFF /* Exceptions for "SettingsIntentExtension" folder in "WidgetExtension" target */,
-				A2E441DA2CFF50AB00802217 /* Exceptions for "SettingsIntentExtension" folder in "SettingsIntentExtension" target */,
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = SettingsIntentExtension;
-			sourceTree = "<group>";
-		};
-		A286CB982CF49C2900812898 /* managers */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = managers;
-			sourceTree = "<group>";
-		};
-		A299E3022CDB746F003502F5 /* views */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = views;
-			sourceTree = "<group>";
-		};
+		A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (A21766F22CFF4F99001EEEFF /* PBXFileSystemSynchronizedBuildFileExceptionSet */, A2E441DA2CFF50AB00802217 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SettingsIntentExtension; sourceTree = "<group>"; };
+		A286CB982CF49C2900812898 /* managers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = managers; sourceTree = "<group>"; };
+		A299E3022CDB746F003502F5 /* views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = views; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +185,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2D35CE02F8CBC1C00F66919 /* MapLibre in Frameworks */,
 				BFD98EF8D9DDD60D677C76DE /* libPods-MobileWeather.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -222,6 +194,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2D35CDF2F8CBC1C00F66919 /* MapLibre in Frameworks */,
 				A2042C6E2CFF2EEF00C41A9E /* Intents.framework in Frameworks */,
 				610CF3EB365EB96FE3FBADA5 /* libPods-SettingsIntentExtension.a in Frameworks */,
 			);
@@ -231,6 +204,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2D35CDE2F8CBC1C00F66919 /* MapLibre in Frameworks */,
 				A2B3FF9A2CC7D1DA00EC1293 /* SwiftUI.framework in Frameworks */,
 				A2B3FF982CC7D1DA00EC1293 /* WidgetKit.framework in Frameworks */,
 				78B5BEAA54F6CAC3B9F10A72 /* libPods-WidgetExtension.a in Frameworks */,
@@ -380,6 +354,7 @@
 				A6C7C138DD46CCE0D5C077BD /* [CP] Embed Pods Frameworks */,
 				92C4390534123651C377CBF9 /* [CP] Copy Pods Resources */,
 				A2E2E9A12CFDF6070096E794 /* Embed Foundation Extensions */,
+				A2D35D032F8CBD2200F66919 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -650,6 +625,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MobileWeather/Pods-MobileWeather-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		A2D35D032F8CBD2200F66919 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$XCODE_VERSION_MAJOR\" -ge \"1500\" ]; then\n  echo \"Remove duplicate signature files\"\n  find \"$BUILD_DIR/${CONFIGURATION}-iphoneos\" -name \"*.signature\" -type f -exec rm -f {} +\nfi\n";
 		};
 		A6C7C138DD46CCE0D5C077BD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
