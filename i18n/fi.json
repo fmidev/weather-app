@@ -590,7 +590,7 @@
   "warnings": {
     "panelTitle": "Varoitukset",
     "panelTitleSlim": "Varoitukset",
-    "panelTitleCap": "Varoitukset",
+    "panelTitleCap": "Koko maan varoitukset",
     "warningsForNDays": "Varoitukset {{ days }} vrk",
     "capUpdated": "Päivitetty",
     "lastUpdated": "Päivitetty viimeksi",
@@ -608,6 +608,7 @@
     "today": "Tänään",
     "tomorrow": "Huomenna",
     "dayAfterTomorrow": "Ylihuomenna",
+    "highestSeverity": "korkein varoitustaso",
     "types": {
       "thunderstorm": "Raju ukonilma",
       "wind": "Tuulivaroitus maa-alueille",
