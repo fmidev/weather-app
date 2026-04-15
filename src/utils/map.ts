@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 import { XMLParser } from 'fast-xml-parser';
+import { LogManager } from "@maplibre/maplibre-react-native";
 
 import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
@@ -390,4 +391,18 @@ const getWMSLayerUrlsAndBounds = async (
   });
 
   return overlayMap;
+};
+
+export const configureMapLibreLogging = () => {
+  LogManager.onLog((event) => {
+    const { tag, message } = event;
+
+    const shouldSuppress =
+      tag === "Mbgl" &&
+      message.includes("Failed to load tile")
+
+    return shouldSuppress;
+  });
+
+  LogManager.start();
 };
