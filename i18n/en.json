@@ -590,7 +590,7 @@
   "warnings": {
     "panelTitle": "Warnings",
     "panelTitleSlim": "Warnings",
-    "panelTitleCap": "Warnings",
+    "panelTitleCap": "Warnings for the whole country",
     "warningsForNDays": "Warnings {{ days }} days",
     "capUpdated": "Updated",
     "lastUpdated": "Last updated",
@@ -608,6 +608,7 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "dayAfterTomorrow": "In 2 days",
+    "highestSeverity": "highest severity",
     "types": {
       "thunderstorm": "Severe thunderstorm",
       "wind": "Wind warning for land areas",
