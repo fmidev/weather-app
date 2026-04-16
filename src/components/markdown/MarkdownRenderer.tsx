@@ -12,6 +12,7 @@ import packageJSON from '../../../package.json';
 
 const HEX_RE = /^#[0-9a-fA-F]{6}$/;
 const ICON_TOKEN_RE = /\[icon:([a-z0-9-]+)(?:\|(\d+)(?:\|(\d+))?)?\]/g;
+const CUSTOM_LEGEND_TOKEN_RE = /\[((?:radar-legend|legend):[^\]]+)\]\(([^)]+)\)/g;
 const TEMPERATURE_LEGEND_TOKEN = '[temperature-legend]';
 const URL_WITH_SCHEME_RE = /^(https?:\/\/|mailto:|tel:)/i;
 
@@ -22,17 +23,27 @@ type ParsedTrackedLink = {
 
 function parseColors(raw: string): string[] {
   return raw
+    .replace(/^(?:radar-legend|legend):/, '')
     .split(',')
     .map((s) => s.trim())
     .filter((c) => HEX_RE.test(c));
 }
 
-const parseLabels = (raw: string) =>
-  raw
-    .replace(/^\//, '') // remove leading "/" added by markdown link normalization
+const parseLabels = (raw: string) => {
+  const normalized = raw.replace(/^\//, ''); // remove leading "/" added by markdown link normalization
+
+  let decoded = normalized;
+  try {
+    decoded = decodeURIComponent(normalized);
+  } catch {
+    decoded = normalized;
+  }
+
+  return decoded
     .split('|')
     .map((s) => s.trim())
     .filter(Boolean);
+};
 
 const parseTrackedLink = (rawHref: string): ParsedTrackedLink | null => {
   if (!rawHref) return null;
@@ -179,7 +190,12 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
   };
 
   text = (text: string) => {
-    if (!text.includes('[icon:') && !text.includes(TEMPERATURE_LEGEND_TOKEN)) {
+    if (
+      !text.includes('[icon:')
+      && !text.includes(TEMPERATURE_LEGEND_TOKEN)
+      && !text.includes('[radar-legend:')
+      && !text.includes('[legend:')
+    ) {
       return <Text
         key={this.nextKey()}
         style={[styles.text, this.textStyle, this.textColor ? { color: this.textColor } : null]}>
@@ -193,13 +209,16 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
 
     while (rest.length > 0) {
       ICON_TOKEN_RE.lastIndex = 0;
+      CUSTOM_LEGEND_TOKEN_RE.lastIndex = 0;
       const iconMatch = ICON_TOKEN_RE.exec(rest);
+      const radarLegendMatch = CUSTOM_LEGEND_TOKEN_RE.exec(rest);
       const legendIndex = rest.indexOf(TEMPERATURE_LEGEND_TOKEN);
 
       const nextIconIndex = iconMatch ? iconMatch.index : -1;
+      const nextRadarLegendIndex = radarLegendMatch ? radarLegendMatch.index : -1;
       const nextLegendIndex = legendIndex;
 
-      if (nextIconIndex === -1 && nextLegendIndex === -1) {
+      if (nextIconIndex === -1 && nextLegendIndex === -1 && nextRadarLegendIndex === -1) {
         nodes.push(
           <Text
             key={`txt-end-${tokenIndex}`}
@@ -211,10 +230,12 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
         break;
       }
 
-      const useLegend =
-        nextLegendIndex !== -1 &&
-        (nextIconIndex === -1 || nextLegendIndex < nextIconIndex);
-      const nextTokenIndex = useLegend ? nextLegendIndex : nextIconIndex;
+      const nextTokenIndex = [nextIconIndex, nextLegendIndex, nextRadarLegendIndex]
+        .filter((index) => index !== -1)
+        .sort((a, b) => a - b)[0];
+
+      const useLegend = nextTokenIndex === nextLegendIndex;
+      const useRadarLegend = nextTokenIndex === nextRadarLegendIndex;
 
       if (nextTokenIndex > 0) {
         nodes.push(
@@ -234,6 +255,38 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
           </View>
         );
         rest = rest.slice(nextTokenIndex + TEMPERATURE_LEGEND_TOKEN.length);
+      } else if (useRadarLegend && radarLegendMatch) {
+        const [, rawColors, rawLabels] = radarLegendMatch;
+        const colors = parseColors(rawColors);
+        const labels = parseLabels(rawLabels);
+
+        if (colors.length >= 2) {
+          const textStyle = this.textColor ? {
+            ...this.textStyle,
+            color: this.textColor,
+          } : this.textStyle;
+
+          nodes.push(
+            <RadarScaleLegend
+              key={`radar-legend-${tokenIndex}`}
+              colors={colors}
+              labels={labels}
+              accessibilityLabel={this.t ? this.t('markdownRenderer.radarLegendDescription') : ''}
+              textStyle={textStyle}
+            />
+          );
+        } else {
+          nodes.push(
+            <Text
+              key={`radar-legend-fallback-${tokenIndex}`}
+              style={[styles.text, this.textStyle, this.textColor ? { color: this.textColor } : null]}
+            >
+              {radarLegendMatch[0]}
+            </Text>
+          );
+        }
+
+        rest = rest.slice(nextTokenIndex + radarLegendMatch[0].length);
       } else if (iconMatch) {
         const [, name, widthRaw, heightRaw] = iconMatch;
         const width = widthRaw ? Number(widthRaw) : undefined;
@@ -261,7 +314,7 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     const contentText =
       typeof children === 'string' ? children : undefined;
 
-    if (contentText?.startsWith('radar-legend:')) {
+    if (contentText?.startsWith('radar-legend:') || contentText?.startsWith('legend:')) {
       const colors = parseColors(contentText);
       const labels = parseLabels(href);
 

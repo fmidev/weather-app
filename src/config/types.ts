@@ -74,6 +74,12 @@ export interface MapLayer {
   tileFormat?: string;
 }
 
+export interface BaseMap {
+  url: string;
+  lightStyle: string;
+  darkStyle: string;
+}
+
 interface GeoMagneticObservations {
   enabled: boolean;
   producer: string;
@@ -114,6 +120,7 @@ interface CapViewSettings {
     latitudeDelta: number;
     longitudeDelta: number;
   };
+  localWarningsEnabled?: boolean;
   mapZoomEnabled?: boolean;
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;
@@ -273,10 +280,10 @@ export interface ConfigType {
     maxFavorite: number;
   };
   map: {
-    // latitudeDelta: number;
     updateInterval: number;
     sources: { [name: string]: string };
     layers: MapLayer[];
+    baseMap?: BaseMap;
     infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {

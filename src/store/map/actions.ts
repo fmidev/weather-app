@@ -17,6 +17,7 @@ import {
   UPDATE_SELECTED_CALLOUT,
   UPDATE_ANIMATION_SPEED,
 } from './types';
+import type { MapLibrary } from '@store/settings/types';
 
 export const updateSliderTime =
   (time: number) => (dispatch: Dispatch<MapActionTypes>) => {
@@ -34,10 +35,10 @@ export const updateMapLayers =
   };
 
 export const updateOverlays =
-  (activeOverlay: number) => (dispatch: Dispatch<MapActionTypes>) => {
+  (activeOverlay: number, library: MapLibrary) => (dispatch: Dispatch<MapActionTypes>) => {
     let overlays;
     dispatch({ type: UPDATE_OVERLAYS });
-    getOverlayData(activeOverlay)
+    getOverlayData(activeOverlay, library)
       .then((overlayMap: Map<number, MapOverlay> | undefined) => {
         if (overlayMap) {
           overlays = overlayMap;

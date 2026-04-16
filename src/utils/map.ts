@@ -1,10 +1,12 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 import { XMLParser } from 'fast-xml-parser';
+import { LogManager } from "@maplibre/maplibre-react-native";
 
 import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
 import i18n from '@i18n';
+import type { MapLibrary } from '@store/settings/types';
 
 import axiosClient from './axiosClient';
 import packageJSON from '../../package.json';
@@ -116,7 +118,7 @@ export const getSliderMaxUnix = (
 export const getSliderStepSeconds = (sliderStep: number): number =>
   ([5, 15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
 
-export const getOverlayData = async (activeOverlay: number) => {
+export const getOverlayData = async (activeOverlay: number, library: MapLibrary) => {
   const { sources, layers } = Config.get('map');
   const [overlay] = layers.filter(
     ({ id }) => !activeOverlay || activeOverlay === id
@@ -125,7 +127,7 @@ export const getOverlayData = async (activeOverlay: number) => {
   if (overlay.type === 'Timeseries') {
     return getTimeseriesData(sources, overlay);
   }
-  return getWMSLayerUrlsAndBounds(sources, overlay);
+  return getWMSLayerUrlsAndBounds(sources, overlay, library);
 };
 
 const getTimeseriesData = async (
@@ -257,7 +259,8 @@ const parseWmsTimeBounds = (dimText: string): TimeBounds => {
 
 const getWMSLayerUrlsAndBounds = async (
   sources: { [name: string]: string },
-  overlay: MapLayer
+  overlay: MapLayer,
+  library: MapLibrary
 ): Promise<Map<number, MapOverlay> | undefined> => {
   const capabilitiesData = new Map();
   const overlayMap = new Map();
@@ -357,9 +360,9 @@ const getWMSLayerUrlsAndBounds = async (
         request: 'GetMap',
         transparent: 'true',
         layers: layerSrc.layer,
-        bbox: '{minX},{minY},{maxX},{maxY}',
-        width: '{width}',
-        height: '{height}',
+        bbox: library === 'maplibre' ? '{bbox-epsg-3857}' : '{minX},{minY},{maxX},{maxY}',
+        width: library === 'maplibre' ? '256' : '{width}',
+        height: library === 'maplibre' ? '256' : '{height}',
         format: `image/${layer.tileFormat ?? 'png'}`,
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
@@ -388,4 +391,18 @@ const getWMSLayerUrlsAndBounds = async (
   });
 
   return overlayMap;
+};
+
+export const configureMapLibreLogging = () => {
+  LogManager.onLog((event) => {
+    const { tag, message } = event;
+
+    const shouldSuppress =
+      tag === "Mbgl" &&
+      message.includes("Failed to load tile")
+
+    return shouldSuppress;
+  });
+
+  LogManager.start();
 };
