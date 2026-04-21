@@ -406,3 +406,43 @@ export const configureMapLibreLogging = () => {
 
   LogManager.start();
 };
+
+export type Coordinate = {
+  latitude: number;
+  longitude: number;
+};
+
+export type BBox = {
+  minLatitude: number;
+  maxLatitude: number;
+  minLongitude: number;
+  maxLongitude: number;
+};
+
+export const getBoundingBox = (coordinates: Coordinate[]): BBox | null => {
+  if (coordinates.length === 0) {
+    return null;
+  }
+
+  return coordinates.reduce<BBox>(
+    (bbox, { latitude, longitude }) => ({
+      minLatitude: Math.min(bbox.minLatitude, latitude),
+      maxLatitude: Math.max(bbox.maxLatitude, latitude),
+      minLongitude: Math.min(bbox.minLongitude, longitude),
+      maxLongitude: Math.max(bbox.maxLongitude, longitude),
+    }),
+    {
+      minLatitude: coordinates[0].latitude,
+      maxLatitude: coordinates[0].latitude,
+      minLongitude: coordinates[0].longitude,
+      maxLongitude: coordinates[0].longitude,
+    }
+  );
+};
+
+export const isPointInsideBoundingBox = (point: Coordinate, bbox: BBox) =>
+  point.latitude >= bbox.minLatitude &&
+  point.latitude <= bbox.maxLatitude &&
+  point.longitude >= bbox.minLongitude &&
+  point.longitude <= bbox.maxLongitude;
+
