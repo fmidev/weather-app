@@ -2,13 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { isPointInPolygon, isPointWithinRadius } from 'geolib';
+import { isPointInPolygon } from 'geolib';
 import moment from 'moment';
 import { connect, ConnectedProps } from 'react-redux';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
 
 import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon'
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { Config } from '@config';
 import { CustomTheme } from '@assets/colors';
@@ -20,11 +21,13 @@ import {
 } from '@store/warnings/selectors';
 import { severityList } from '@store/warnings/constants';
 import { State } from '@store/types';
-import { Location } from '@store/location/types';
 import { CapInfo, CapWarning } from '@store/warnings/types';
 import { getSeveritiesForDays, selectCapInfoByLanguage } from '@utils/helpers';
 import CapSeverityBar from './CapSeverityBar';
 import LocalWarningsDetails from './LocalWarningsDetails';
+import { getBoundingBox, isPointInsideBoundingBox } from '@utils/map';
+import type { Coordinate, BBox } from '@utils/map';
+import PanelHeader from '@components/common/PanelHeader';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -35,11 +38,21 @@ const mapStateToProps = (state: State) => ({
 
 const connector = connect(mapStateToProps, {});
 
-type LocalWarningsBarProps = ConnectedProps<typeof connector>;
+type PropsFromRedux= ConnectedProps<typeof connector>;
 
-type Coordinate = {
-  latitude: number;
-  longitude: number;
+type LocalWarningsBarProps = PropsFromRedux & {
+  legendSheetRef: React.RefObject<any>;
+};
+
+type ParsedPolygon = {
+  coordinates: Coordinate[];
+  bbox: BBox;
+};
+
+type PreparedWarning = {
+  warning: CapWarning;
+  info: CapInfo;
+  polygons: ParsedPolygon[];
 };
 
 const parsePolygon = (polygon: string): Coordinate[] =>
@@ -52,39 +65,36 @@ const parsePolygon = (polygon: string): Coordinate[] =>
     )
     .map(([latitude, longitude]) => ({ latitude, longitude }));
 
-const isPointInsideCircle = (point: Coordinate, circle: string) => {
-  const [centerCoordinates, radiusInKm] = circle.split(' ');
-  if (!centerCoordinates || !radiusInKm) return false;
-
-  const [latitude, longitude] = centerCoordinates.split(',').map(Number);
-  const radius = Number(radiusInKm);
-
-  if ([latitude, longitude, radius].some((value) => Number.isNaN(value))) {
-    return false;
-  }
-
-  return isPointWithinRadius(point, { latitude, longitude }, radius * 1000);
-};
-
-const warningContainsLocation = (
-  warning: CapWarning,
-  location: Location,
-  language: string
-) => {
+const prepareWarning = (warning: CapWarning, language: string): PreparedWarning => {
   const info = Array.isArray(warning.info)
     ? selectCapInfoByLanguage(warning.info, language)
     : warning.info;
-  const point = {
-    latitude: location.lat,
-    longitude: location.lon,
-  };
+  const polygons = [info.area?.polygon]
+    .flat()
+    .filter(Boolean)
+    .map((polygon) => parsePolygon(polygon))
+    .map((coordinates) => {
+      const bbox = getBoundingBox(coordinates);
 
-  const polygons = [info.area?.polygon].flat().filter(Boolean);
-  const circles = [info.area?.circle].flat().filter(Boolean);
+      if (!bbox || coordinates.length < 3) {
+        return null;
+      }
 
+      return { coordinates, bbox };
+    })
+    .filter((polygon): polygon is ParsedPolygon => Boolean(polygon));
+
+
+  return { warning, info, polygons };
+};
+
+const warningContainsLocation = (warning: PreparedWarning, point: Coordinate) => {
   return (
-    polygons.some((polygon) => isPointInPolygon(point, parsePolygon(polygon))) ||
-    circles.some((circle) => isPointInsideCircle(point, circle))
+    warning.polygons.some(
+      ({ coordinates, bbox }) =>
+        isPointInsideBoundingBox(point, bbox) &&
+        isPointInPolygon(point, coordinates)
+    )
   );
 };
 
@@ -101,6 +111,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
   currentLocation,
   capWarnings,
   clockType,
+  legendSheetRef,
 }) => {
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('warnings');
@@ -113,14 +124,27 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
   const dateFormat = locale === 'en' ? 'MMM D' : 'D.M.';
   moment.locale(locale);
 
+  const preparedWarnings = useMemo(
+    () => (capWarnings || []).map((warning) => prepareWarning(warning, locale)),
+    [capWarnings, locale]
+  );
+
   const localWarnings = useMemo(
-    () =>
-      currentLocation && capWarnings
-        ? capWarnings.filter((warning) =>
-            warningContainsLocation(warning, currentLocation, locale)
-          )
-        : [],
-    [capWarnings, currentLocation, locale]
+    () => {
+      if (!currentLocation || preparedWarnings.length === 0) {
+        return [];
+      }
+
+      const point = {
+        latitude: currentLocation.lat,
+        longitude: currentLocation.lon,
+      };
+      const warnings = preparedWarnings.filter((warning) =>
+        warningContainsLocation(warning, point)
+      );
+      return warnings;
+    },
+    [currentLocation, preparedWarnings]
   );
 
   const daySummaries = useMemo(() => {
@@ -130,17 +154,12 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
       startDay.clone().add(index, 'days')
     );
     const dailySeverities = getSeveritiesForDays(
-      localWarnings,
+      localWarnings.map(({ warning }) => warning),
       dates.map((date) => date.valueOf())
     );
 
     return dates.map((date, index) => {
-      const count = localWarnings.filter((warning) => {
-        const info = Array.isArray(warning.info)
-          ? selectCapInfoByLanguage(warning.info, locale)
-          : warning.info;
-        return overlapsDay(info, date);
-      }).length;
+      const count = localWarnings.filter(({ info }) => overlapsDay(info, date)).length;
 
       const severities = dailySeverities[index] ?? [0, 0, 0, 0];
       return {
@@ -151,33 +170,22 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
         highestSeverity: Math.max(...severities, 0),
       };
     });
-  }, [capViewSettings?.numberOfDays, localWarnings, locale]);
+  }, [capViewSettings?.numberOfDays, localWarnings]);
 
   const selectedDayWarnings = useMemo(() => {
     const activeDay = daySummaries[selectedDay]?.day;
     if (!activeDay) return [];
 
     return localWarnings
-      .filter((warning) => {
-        const info = Array.isArray(warning.info)
-          ? selectCapInfoByLanguage(warning.info, locale)
-          : warning.info;
-        return overlapsDay(info, activeDay);
-      })
+      .filter(({ info }) => overlapsDay(info, activeDay))
       .sort((left, right) => {
-        const leftInfo = Array.isArray(left.info)
-          ? selectCapInfoByLanguage(left.info, locale)
-          : left.info;
-        const rightInfo = Array.isArray(right.info)
-          ? selectCapInfoByLanguage(right.info, locale)
-          : right.info;
-
         return (
-          severityList.indexOf(rightInfo.severity) -
-          severityList.indexOf(leftInfo.severity)
+          severityList.indexOf(right.info.severity) -
+          severityList.indexOf(left.info.severity)
         );
-      });
-  }, [daySummaries, localWarnings, locale, selectedDay]);
+      })
+      .map(({ warning }) => warning);
+  }, [daySummaries, localWarnings, selectedDay]);
 
   useEffect(() => {
     setSelectedDay(0);
@@ -204,10 +212,31 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
 
   return (
     <View style={{ backgroundColor: colors.background }}>
+      <PanelHeader title={t('panelTitle')} justifyCenter />
       <View style={styles.cardContainer}>
-        <Text style={[styles.headerText, styles.bold, { color: colors.primaryText }]}>
-          {`${t('panelTitle')}, ${currentLocation.name}`}
-        </Text>
+        <View style={styles.headerRow}>
+          <View style={styles.headerSide} />
+          <View style={styles.headerTitleWrapper}>
+            <Text style={[styles.headerText, styles.bold, { color: colors.primaryText }]}>
+              {currentLocation.name}
+            </Text>
+          </View>
+          <View style={styles.headerSide}>
+            <AccessibleTouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('infoAccessibilityLabel')}
+              accessibilityHint={t('infoAccessibilityHint')}
+              style={styles.infoButton}
+              onPress={() => legendSheetRef.current?.open()}>
+              <Icon
+                name="info"
+                color={colors.primaryText}
+                height={24}
+                width={24}
+              />
+            </AccessibleTouchableOpacity>
+          </View>
+        </View>
         <View
           style={[
             styles.weekWarningsContainer,
@@ -317,7 +346,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    paddingTop: 16,
+    paddingTop: 8,
   },
   bold: {
     fontFamily: 'Roboto-Bold',
@@ -329,6 +358,19 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 16,
     textAlign: 'center',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerSide: {
+    width: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitleWrapper: {
+    flex: 1,
+    justifyContent: 'center',
   },
   weekWarningsContainer: {
     marginTop: 16,
@@ -410,6 +452,12 @@ const styles = StyleSheet.create({
   loadingLast: {
     paddingTop: 0,
     paddingBottom: 8,
+  },
+  infoButton: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
