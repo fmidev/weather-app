@@ -48,6 +48,12 @@ type PlatformSpecificNumber = {
   web?: number;
 };
 
+type TemperatureUnit = 'C' | 'F';
+type PrecipitationUnit = 'mm' | 'in';
+type WindUnit = 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
+type PressureUnit = 'hPa' | 'inHg' | 'mmHg' | 'mbar';
+export type MeasurementUnit = TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
+
 export interface MapLayer {
   id: number;
   type: 'WMS' | 'GeoJSON' | 'Timeseries';
@@ -66,6 +72,12 @@ export interface MapLayer {
   times: Times;
   tileSize?: number | PlatformSpecificNumber;
   tileFormat?: string;
+}
+
+export interface BaseMap {
+  url: string;
+  lightStyle: string;
+  darkStyle: string;
 }
 
 interface GeoMagneticObservations {
@@ -108,11 +120,16 @@ interface CapViewSettings {
     latitudeDelta: number;
     longitudeDelta: number;
   };
+  localWarningsEnabled?: boolean;
+  localWarningsAfterCountry?: boolean;
   mapZoomEnabled?: boolean;
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;
+  warningBlockWarningCountEnabled?: boolean;
   includeAreaInTitle?: boolean;
   severityBackgroundInSymbol?: boolean;
+  hideLongArealist?: boolean;
+  useRelativeDays?: boolean;
 }
 
 interface Warnings {
@@ -164,7 +181,7 @@ interface DynamicConfigDisabled extends Partial<DynamicConfig> {
 interface SocialMediaLink {
   name: string;
   icon: string;
-  appUrl: string;
+  appUrl?: string;
   url: string;
 }
 
@@ -195,7 +212,6 @@ interface OnboardingWizard {
   enabled: boolean;
   languageSpecificLogo?: boolean;
   termsOfUseChanged?: boolean;
-  termsOfUseFormat?: 'jsx' | 'markdown';
   backgroundImageProperties?: BackgroundImageProperties;
 }
 
@@ -235,6 +251,16 @@ interface Analytics {
   url?: string; // matomo server url
 }
 
+interface MapInfoBottomSheet {
+  url: string;
+}
+
+interface MarkdownSettings {
+  termsOfUse: boolean;
+  aboutTheApplication: boolean;
+  accessibility: boolean;
+}
+
 // TODO: how to handle errors. Add error categories to "actions" and then name -field can be error message content
 // for example: trackMatomoEvent('Error', 'Error loading forecast data', error.getMessage())
 // Events in Matomo have three dimension (category, action, name)
@@ -255,10 +281,11 @@ export interface ConfigType {
     maxFavorite: number;
   };
   map: {
-    // latitudeDelta: number;
     updateInterval: number;
     sources: { [name: string]: string };
     layers: MapLayer[];
+    baseMap?: BaseMap;
+    infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {
     apiUrl: string;
@@ -289,15 +316,17 @@ export interface ConfigType {
   settings: {
     languages: string[];
     units: {
-      temperature: 'C' | 'F';
-      precipitation: 'mm' | 'in';
-      wind: 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
-      pressure: 'hPa' | 'inHg' | 'mmHg' | 'mbar';
+      temperature: TemperatureUnit;
+      precipitation: PrecipitationUnit;
+      wind: WindUnit;
+      pressure: PressureUnit;
     };
     showUnitSettings?: boolean;
+    excludeUnits?: MeasurementUnit[];
     clockType: 12 | 24;
     themes: Themes;
     verboseErrorMessages?: boolean;
+    markdown?: MarkdownSettings;
   };
   announcements: AnnouncementsEnabled | AnnouncementsDisabled;
   socialMediaLinks: SocialMediaLink[];

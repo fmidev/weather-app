@@ -15,12 +15,15 @@ import moment from 'moment';
 import {
   selectCapWarningData,
   selectFetchSuccessTime,
+  selectLoading,
 } from '@store/warnings/selectors';
 import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
 import TextList from './TextList';
+import LocalWarningsBar from './LocalWarningsBar';
 
 const mapStateToProps = (state: State) => ({
+  loading: selectLoading(state),
   currentLocation: selectCurrent(state),
   capWarnings: selectCapWarningData(state),
   updated: selectFetchSuccessTime(state),
@@ -28,14 +31,13 @@ const mapStateToProps = (state: State) => ({
 
 const connector = connect(mapStateToProps, {});
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type CapWarningsViewProps = PropsFromRedux;
+type CapWarningsViewProps = ConnectedProps<typeof connector>;
 
 const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   updated,
   currentLocation,
   capWarnings,
+  loading,
 }) => {
   const legendSheetRef = useRef<RBSheet>(null);
 
@@ -47,6 +49,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   const { colors } = useTheme() as CustomTheme;
 
   const capViewSettings = Config.get('warnings')?.capViewSettings;
+  const { default: defaultLocation} = Config.get('location');
 
   let textViewTitle = `${t('warningsForNDays', {
     days: capViewSettings?.numberOfDays,
@@ -62,17 +65,24 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         time: today.toDate().getTime(),
         date: moment(today).locale(locale).format(dateFormat),
         weekday: moment(today).locale(locale).format(weekdayAbbreviationFormat),
+        relativeDay: t('today'),
       },
     ];
     if (capViewSettings) {
       for (let i = 1; i < capViewSettings?.numberOfDays; i += 1) {
         const momentObject = moment(today).add(i, 'days');
+        let relativeDay = '';
+
+        if (i === 1) relativeDay = t('tomorrow');
+        if (i === 2) relativeDay = t('dayAfterTomorrow');
+
         dates.push({
           time: momentObject.toDate().getTime(),
           date: momentObject.locale(locale).format(dateFormat),
           weekday: momentObject
             .locale(locale)
             .format(weekdayAbbreviationFormat),
+          relativeDay,
         });
       }
     }
@@ -83,6 +93,11 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
 
   return (
     <View>
+      { capViewSettings?.localWarningsEnabled
+        && defaultLocation?.country === currentLocation.country
+        && capViewSettings?.localWarningsAfterCountry !== true && (
+        <LocalWarningsBar legendSheetRef={legendSheetRef} />
+      )}
       <View>
         <PanelHeader title={t('panelTitleCap')} justifyCenter />
         <View
@@ -103,26 +118,30 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                 styles.centeredContent,
                 styles.dataSourcePanelUpdatedRow,
               ]}>
-              <Text
-                style={[
-                  styles.regularFont,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}>
-                {`${t('capUpdated')} `}
-              </Text>
-              <Text
-                style={[
-                  styles.boldFont,
-                  {
-                    color: colors.hourListText,
-                  },
-                ]}>
-                {moment(updated)
-                  .locale(locale)
-                  .format(locale === 'en' ? 'DD MMM' : 'D.M. HH.mm')}
-              </Text>
+              { !loading && (
+                <>
+                  <Text
+                    style={[
+                      styles.regularFont,
+                      {
+                        color: colors.hourListText,
+                      },
+                    ]}>
+                    {`${t('capUpdated')} `}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.boldFont,
+                      {
+                        color: colors.hourListText,
+                      },
+                    ]}>
+                    {moment(updated)
+                      .locale(locale)
+                      .format(locale === 'en' ? 'DD MMM' : 'D.M. HH.mm')}
+                  </Text>
+                </>
+              )}
             </View>
             <AccessibleTouchableOpacity
               accessibilityRole="button"
@@ -143,6 +162,11 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         <PanelHeader title={textViewTitle} justifyCenter />
         <TextList capData={capWarnings} dates={dates} />
       </View>
+      { capViewSettings?.localWarningsEnabled
+        && defaultLocation?.country === currentLocation.country
+        && capViewSettings?.localWarningsAfterCountry && (
+        <LocalWarningsBar legendSheetRef={legendSheetRef} />
+      )}
       <RBSheet
         ref={legendSheetRef}
         height={600}
@@ -181,6 +205,7 @@ const styles = StyleSheet.create({
   },
   dataSourcePanelContainer: {
     paddingTop: 18,
+    height: 100,
   },
   dataSourcePanelUpdatedRow: {
     marginLeft: 12,

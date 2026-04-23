@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme, useNavigation, NavigationProp } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -46,9 +46,13 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   const { t, i18n } = useTranslation('warnings');
   const { colors, dark } = useTheme() as CustomTheme;
   const navigation = useNavigation<NavigationProp<TabParamList>>();
-
-  moment.locale(i18n.language);
   const colorMode = dark ? 'dark' : 'light';
+
+  useEffect(() => {
+    if (i18n.language !== moment.locale()) {
+      moment.locale(i18n.language);
+    }
+  }, [i18n.language]);
 
   if (loading) {
     return (
@@ -215,7 +219,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     elevation: 5,
     zIndex: 5,
-    flex: 1,
     right: 6,
     top: -14,
     width: 24,

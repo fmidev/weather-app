@@ -1,10 +1,12 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 import { XMLParser } from 'fast-xml-parser';
+import { LogManager } from "@maplibre/maplibre-react-native";
 
 import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
 import i18n from '@i18n';
+import type { MapLibrary } from '@store/settings/types';
 
 import axiosClient from './axiosClient';
 import packageJSON from '../../package.json';
@@ -116,7 +118,7 @@ export const getSliderMaxUnix = (
 export const getSliderStepSeconds = (sliderStep: number): number =>
   ([5, 15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
 
-export const getOverlayData = async (activeOverlay: number) => {
+export const getOverlayData = async (activeOverlay: number, library: MapLibrary) => {
   const { sources, layers } = Config.get('map');
   const [overlay] = layers.filter(
     ({ id }) => !activeOverlay || activeOverlay === id
@@ -125,7 +127,7 @@ export const getOverlayData = async (activeOverlay: number) => {
   if (overlay.type === 'Timeseries') {
     return getTimeseriesData(sources, overlay);
   }
-  return getWMSLayerUrlsAndBounds(sources, overlay);
+  return getWMSLayerUrlsAndBounds(sources, overlay, library);
 };
 
 const getTimeseriesData = async (
@@ -193,34 +195,72 @@ const normalizeToArray = <T>(value?: T | T[]): T[] =>
 
 const flattenLayers = (root: RawWmsLayer): WmsLayer[] => {
   const result: WmsLayer[] = [];
+  const visit = (
+    layer: RawWmsLayer,
+    inheritedDimension?: WmsDimension | WmsDimension[]
+  ) => {
+    const effectiveDimension = layer.Dimension ?? inheritedDimension;
 
-  const visit = (layer: RawWmsLayer) => {
-    if (layer.Name && layer.Title && layer.Abstract && layer.Dimension) {
+    if (layer.Name && layer.Title && effectiveDimension) {
       result.push({
         Name: layer.Name,
         Title: layer.Title,
-        Abstract: layer.Abstract,
+        Abstract: layer.Abstract ?? '',
         CRS: normalizeToArray(layer.CRS),
         BoundingBox: normalizeToArray(layer.BoundingBox),
-        Dimension: layer.Dimension,
+        Dimension: effectiveDimension,
       });
     }
 
     const children = layer.Layer;
     if (Array.isArray(children)) {
-      children.forEach(visit);
+      children.forEach((child) => visit(child, effectiveDimension));
     } else if (children) {
-      visit(children);
+      visit(children, effectiveDimension);
     }
   };
 
-  visit(root);
+  visit(root, root.Dimension);
   return result;
+};
+
+type TimeBounds = { layerStart: string; layerEnd: string };
+
+const parseWmsTimeBounds = (dimText: string): TimeBounds => {
+  const segments = dimText
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  if (segments.length === 0) {
+    throw new Error('WMS time dimension is empty');
+  }
+
+  const parseSegment = (seg: string) => {
+    // segment can be in formats:
+    // - start/end/period
+    // - start/end
+    // - individual time step
+    const parts = seg.split('/').map((p) => p.trim()).filter(Boolean);
+
+    if (parts.length === 1) {
+      return { start: parts[0], end: parts[0] };
+    }
+
+    // start/end(/period)
+    return { start: parts[0], end: parts[1] };
+  };
+
+  const first = parseSegment(segments[0]);
+  const last = parseSegment(segments[segments.length - 1]);
+
+  return { layerStart: first.start, layerEnd: last.end };
 };
 
 const getWMSLayerUrlsAndBounds = async (
   sources: { [name: string]: string },
-  overlay: MapLayer
+  overlay: MapLayer,
+  library: MapLibrary
 ): Promise<Map<number, MapOverlay> | undefined> => {
   const capabilitiesData = new Map();
   const overlayMap = new Map();
@@ -274,7 +314,7 @@ const getWMSLayerUrlsAndBounds = async (
 
       const parsedResponse = parser.parse(data);
 
-      const rootLayer: WmsLayer = parsedResponse.WMS_Capabilities.Capability.Layer;
+      const rootLayer: RawWmsLayer = parsedResponse.WMS_Capabilities.Capability.Layer;
       const allLayers = flattenLayers(rootLayer);
       const filteredLayers = allLayers.filter((L: WmsLayer) =>
         allLayerNames.includes(L.Name)
@@ -296,16 +336,7 @@ const getWMSLayerUrlsAndBounds = async (
         ? [wmsLayer.Dimension as WmsDimension] : [];
 
       const timeDimension = dimensionArray.find((dim) => dim.name === 'time') ?? dimensionArray[0];
-      const steps = timeDimension.text.split(/[,/]/);
-      const lastStep = steps[steps.length - 1];
-
-      const layerStart = steps[0];
-      // Only supports start/end/interval and time list formats as time dimension
-      // Also the first time interval works if multiple time intervals are provided
-      // A time list format is identified by having more than three elements in the steps array.
-      // This condition ensures that the last step is a valid ISO 8601 date and not time interval.
-      const isTimeList = steps.length > 3 && moment(lastStep, moment.ISO_8601, true).isValid();
-      const layerEnd = isTimeList ? lastStep : steps[1];
+      const { layerStart, layerEnd } = parseWmsTimeBounds(timeDimension.text);
 
       const referenceTimeDimension = dimensionArray.find(
         (dim) => dim.name === 'reference_time'
@@ -329,9 +360,9 @@ const getWMSLayerUrlsAndBounds = async (
         request: 'GetMap',
         transparent: 'true',
         layers: layerSrc.layer,
-        bbox: '{minX},{minY},{maxX},{maxY}',
-        width: '{width}',
-        height: '{height}',
+        bbox: library === 'maplibre' ? '{bbox-epsg-3857}' : '{minX},{minY},{maxX},{maxY}',
+        width: library === 'maplibre' ? '256' : '{width}',
+        height: library === 'maplibre' ? '256' : '{height}',
         format: `image/${layer.tileFormat ?? 'png'}`,
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
@@ -361,3 +392,57 @@ const getWMSLayerUrlsAndBounds = async (
 
   return overlayMap;
 };
+
+export const configureMapLibreLogging = () => {
+  LogManager.onLog((event) => {
+    const { tag, message } = event;
+
+    const shouldSuppress =
+      tag === "Mbgl" &&
+      message.includes("Failed to load tile")
+
+    return shouldSuppress;
+  });
+
+  LogManager.start();
+};
+
+export type Coordinate = {
+  latitude: number;
+  longitude: number;
+};
+
+export type BBox = {
+  minLatitude: number;
+  maxLatitude: number;
+  minLongitude: number;
+  maxLongitude: number;
+};
+
+export const getBoundingBox = (coordinates: Coordinate[]): BBox | null => {
+  if (coordinates.length === 0) {
+    return null;
+  }
+
+  return coordinates.reduce<BBox>(
+    (bbox, { latitude, longitude }) => ({
+      minLatitude: Math.min(bbox.minLatitude, latitude),
+      maxLatitude: Math.max(bbox.maxLatitude, latitude),
+      minLongitude: Math.min(bbox.minLongitude, longitude),
+      maxLongitude: Math.max(bbox.maxLongitude, longitude),
+    }),
+    {
+      minLatitude: coordinates[0].latitude,
+      maxLatitude: coordinates[0].latitude,
+      minLongitude: coordinates[0].longitude,
+      maxLongitude: coordinates[0].longitude,
+    }
+  );
+};
+
+export const isPointInsideBoundingBox = (point: Coordinate, bbox: BBox) =>
+  point.latitude >= bbox.minLatitude &&
+  point.latitude <= bbox.maxLatitude &&
+  point.longitude >= bbox.minLongitude &&
+  point.longitude <= bbox.maxLongitude;
+

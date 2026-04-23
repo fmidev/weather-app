@@ -32,6 +32,7 @@ import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 import Vertical10DaysForecast from './forecast/Vertical10DaysForecast';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackMatomoEvent } from '@utils/matomo';
+import { formatAccessibleDateTime } from '@utils/helpers';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -117,6 +118,10 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
     ageCheck: forecastAge > (ageWarning ?? 720) * 60 * 1000,
   };
 
+  const accessibleLastUpdated = forecastLastUpdatedMoment
+    ? formatAccessibleDateTime(forecastLastUpdatedMoment, t, clockType === 24, false)
+    : '';
+
   return (
     <View
       style={[
@@ -130,7 +135,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
       ]}>
       <PanelHeader
         title={t('panelHeader', { forecastLength: forecastLengthTitle || 10 })}
+        accessibleTitle={t('accessiblePanelHeader', { forecastLength: forecastLengthTitle || 10 })}
         lastUpdated={forecastLastUpdated}
+        accessibleLastUpdated={accessibleLastUpdated}
         thin
       />
       <View style={styles.panelContainer}>

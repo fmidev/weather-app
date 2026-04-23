@@ -7,6 +7,9 @@ import en from './en.json';
 import fi from './fi.json';
 import sv from './sv.json';
 
+import defaultConfig from '../defaultConfig';
+
+const { languages } = defaultConfig.settings;
 const languageResources = { en, fi, sv };
 
 const getDeviceLanguage = () => {
@@ -16,7 +19,7 @@ const getDeviceLanguage = () => {
     return locales[0].languageTag; // Esim. "fi-FI"
   }
 
-  return "en";
+  return languages[0] || 'en';
 };
 
 
@@ -33,7 +36,7 @@ const languageDetector = <LanguageDetectorAsyncModule>{
   detect: async (callback: any) => {
     const savedDataJSON = await getItem(LOCALE);
     const lng = savedDataJSON || null;
-    const selectLanguage = lng || systemLng || 'fi';
+    const selectLanguage = lng || systemLng || languages[0] || 'en';
     callback(selectLanguage);
   },
   cacheUserLanguage: () => {},
@@ -44,7 +47,7 @@ i18n
   .use(initReactI18next)
   .init({
     compatibilityJSON: 'v3',
-    fallbackLng: 'fi',
+    fallbackLng: languages[0] || 'en',
     resources: languageResources,
     ns: ['navigation'],
     defaultNS: 'navigation',

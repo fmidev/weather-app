@@ -1,3 +1,9 @@
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { View, StyleSheet, Platform, ActivityIndicator } from 'react-native';
+import Map, { Polygon } from 'react-native-maps';
+import { connect, ConnectedProps } from 'react-redux';
+import moment from 'moment';
+
 import { Config } from '@config';
 import { useTheme } from '@react-navigation/native';
 import { CapWarning, Severity } from '@store/warnings/types';
@@ -8,14 +14,12 @@ import {
   CustomTheme,
   GRAY_8,
 } from '@assets/colors';
-import moment from 'moment';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
-import Map, { Polygon } from 'react-native-maps';
 import darkMapStyle from '@utils/dark_map_style.json';
 import { getSeveritiesForDays } from '@utils/helpers';
 import DaySelectorList from './DaySelectorList';
 import WarningTypeFiltersList from './WarningTypeFiltersList';
+import { selectLoading } from '@store/warnings/selectors';
+import type { State } from '@store/types';
 
 const SEVERITY_COLORS: { [key: string]: string } = {
   Extreme: CAP_WARNING_RED,
@@ -24,12 +28,24 @@ const SEVERITY_COLORS: { [key: string]: string } = {
 };
 
 const SEVERITIES: Severity[] = ['Moderate', 'Severe', 'Extreme'];
-const MapView = ({
+
+const mapStateToProps = (state: State) => ({
+  loading: selectLoading(state),
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type MapViewProps = PropsFromRedux & {
+  dates: { time: number; weekday: string; date: string, relativeDay: string }[];
+  capData?: CapWarning[];
+};
+
+const MapView: React.FC<MapViewProps> = ({
+  loading,
   dates,
   capData,
-}: {
-  dates: { time: number; weekday: string; date: string }[];
-  capData?: CapWarning[];
 }) => {
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const [selectedFilters, setSelectedFilters] = useState<
@@ -87,7 +103,7 @@ const MapView = ({
   useEffect(() => setSelectedFilters([]), [date]);
 
   const mapRef = useRef<Map>(null);
-  const { dark } = useTheme() as CustomTheme;
+  const { colors, dark } = useTheme() as CustomTheme;
   const capViewSettings = Config.get('warnings')?.capViewSettings;
 
   const darkGoogleMapsStyle =
@@ -146,11 +162,11 @@ const MapView = ({
     [capData, dates]
   );
 
+  const backgroundOverlayColor = dark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+
   return (
     <View
-      style={
-        (styles.mapContainer, { height: capViewSettings?.mapHeight ?? 400 })
-      }>
+      style={[styles.mapContainer, { height: capViewSettings?.mapHeight ?? 400 }]}>
       <Map
         style={styles.map}
         accessibilityElementsHidden
@@ -186,17 +202,34 @@ const MapView = ({
               ))
             )}
       </Map>
-      <DaySelectorList
-        dates={dates}
-        activeDay={selectedDay}
-        onDayChange={(index) => setSelectedDay(index)}
-        dailySeverities={dailySeverities}
-      />
-      <WarningTypeFiltersList
-        warnings={uniqueWarnings}
-        onWarningTypePress={handleWarningTypePress}
-        activeWarnings={selectedFilters}
-      />
+      { loading ? (
+        Platform.OS === 'android' ?
+          <ActivityIndicator size="large" color={colors.primary} />
+          : (
+            <View
+              pointerEvents="none"
+              style={[
+                styles.loadingOverlay,
+                { backgroundColor: backgroundOverlayColor },
+              ]}>
+                <ActivityIndicator size="large" color={colors.primary} />
+            </View>
+          )
+      ) : (
+        <>
+          <DaySelectorList
+            dates={dates}
+            activeDay={selectedDay}
+            onDayChange={(index) => setSelectedDay(index)}
+            dailySeverities={dailySeverities}
+          />
+          <WarningTypeFiltersList
+            warnings={uniqueWarnings}
+            onWarningTypePress={handleWarningTypePress}
+            activeWarnings={selectedFilters}
+          />
+        </>
+      )}
     </View>
   );
 };
@@ -211,8 +244,15 @@ const styles = StyleSheet.create({
     marginTop: -30,
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20,
+    elevation: 20,
   },
 });
 
-export default MapView;
+export default connector(MapView);
