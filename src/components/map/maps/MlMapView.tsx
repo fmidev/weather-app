@@ -5,6 +5,7 @@ import { Camera, Map, ViewAnnotation, type MapRef, type CameraRef, InitialViewSt
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { getDistance } from 'geolib';
+import type { TrueSheet } from '@lodev09/react-native-true-sheet';
 
 import WMSOverlay from '@components/map/layers/WMSOverlay';
 import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
@@ -29,8 +30,6 @@ import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
 import type { Position } from "geojson";
 import { trackMatomoEvent } from '@utils/matomo';
-
-import type RBSheet from 'react-native-raw-bottom-sheet';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -66,8 +65,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MapViewProps = PropsFromRedux & {
-  infoSheetRef: React.RefObject<RBSheet | null>,
-  mapLayersSheetRef: React.RefObject<RBSheet | null>
+  infoSheetRef: React.RefObject<TrueSheet | null>,
+  mapLayersSheetRef: React.RefObject<TrueSheet | null>
 };
 
 // MapView using Maplibre
@@ -265,10 +264,10 @@ const MlMapView: React.FC<MapViewProps> = ({
         )}
       </Map>
       <MapControls
-        onLayersPressed={() => mapLayersSheetRef.current?.open()}
+        onLayersPressed={() => mapLayersSheetRef.current?.present()}
         onInfoPressed={() => {
           trackMatomoEvent('User action', 'Map', 'Open info panel');
-          infoSheetRef.current?.open()
+          infoSheetRef.current?.present()
         }}
         onZoomIn={() => {
           trackMatomoEvent('User action', 'Map', 'Zoom IN');

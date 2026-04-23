@@ -40,6 +40,7 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    paddingTop: 8,
   },
   sheetListContainer: {
     flex: 1,

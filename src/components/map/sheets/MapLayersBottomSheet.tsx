@@ -161,18 +161,16 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
+    height: '100%',
     paddingBottom: 8,
   },
   sheetListContainer: {
     flex: 1,
-    marginTop: -10,
     paddingHorizontal: 20,
-    paddingBottom: 8,
+    paddingVertical: 8,
   },
   closeButtonContainer: {
     position: 'absolute',
-    top: -16,
     right: 8,
   },
   sheetTitle: {

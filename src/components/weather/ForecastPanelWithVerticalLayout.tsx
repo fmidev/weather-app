@@ -298,7 +298,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
       <TrueSheet
         ref={paramSheetRef}
         detents={[0.75]}
-        maxHeight={600}
+        maxContentHeight={600}
         backgroundColor={colors.background}
         scrollable
       >
@@ -307,7 +307,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
       <TrueSheet
         ref={weatherInfoSheetRef}
         detents={[0.75]}
-        maxHeight={600}
+        maxContentHeight={600}
         backgroundColor={colors.background}
         scrollable
       >

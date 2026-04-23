@@ -3,10 +3,10 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Platform } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
 import type { MapPressEvent } from 'react-native-maps';
-import RBSheet from 'react-native-raw-bottom-sheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 import moment from 'moment';
+import type { TrueSheet } from '@lodev09/react-native-true-sheet';
 
 import WMSOverlay from '@components/map/layers/WMSOverlay';
 import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
@@ -60,8 +60,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type MapViewProps = PropsFromRedux & {
-  infoSheetRef: React.RefObject<RBSheet | null>,
-  mapLayersSheetRef: React.RefObject<RBSheet | null>
+  infoSheetRef: React.RefObject<TrueSheet | null>,
+  mapLayersSheetRef: React.RefObject<TrueSheet | null>
 };
 
 // MapView using react-native-maps
@@ -219,10 +219,10 @@ const RnMapView: React.FC<MapViewProps> = ({
         )}
       </MapView>
       <MapControls
-        onLayersPressed={() => mapLayersSheetRef.current?.open()}
+        onLayersPressed={() => mapLayersSheetRef.current?.present()}
         onInfoPressed={() => {
           trackMatomoEvent('User action', 'Map', 'Open info panel');
-          infoSheetRef.current?.open()
+          infoSheetRef.current?.present()
         }}
         onZoomIn={() => {
           trackMatomoEvent('User action', 'Map', 'Zoom IN');
