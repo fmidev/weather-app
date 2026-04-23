@@ -33,6 +33,7 @@ import Vertical10DaysForecast from './forecast/Vertical10DaysForecast';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackMatomoEvent } from '@utils/matomo';
 import { formatAccessibleDateTime } from '@utils/helpers';
+import { CustomTheme } from '@assets/colors';
 
 const TABLE = 'table';
 const CHART = 'chart';
