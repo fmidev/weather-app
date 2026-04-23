@@ -252,7 +252,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
         <TrueSheet
           ref={infoSheetRef}
           detents={[0.75]}
-          maxHeight={600}
+          maxContentHeight={600}
           backgroundColor={colors.background}
           scrollable
         >
