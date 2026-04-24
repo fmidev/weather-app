@@ -9,8 +9,10 @@ jest.mock('@maplibre/maplibre-react-native', () => ({
 }));
 
 import {
+  getBoundingBox,
   getTimeseriesData,
   getWMSLayerUrlsAndBounds,
+  isPointInsideBoundingBox,
 } from '../../src/utils/map';
 
 import axiosClient from '../../src/utils/axiosClient';
@@ -144,5 +146,62 @@ describe('map helper functions', () => {
       windSpeedMS: 5,
       windDirection: 213,
     });
+  });
+
+  it('should calculate bounding box from coordinates', () => {
+    const bbox = getBoundingBox([
+      { latitude: 60.1699, longitude: 24.9384 },
+      { latitude: 65.0121, longitude: 25.4651 },
+      { latitude: 61.4978, longitude: 23.761 },
+      { latitude: 59.437, longitude: 24.7536 },
+    ]);
+
+    expect(bbox).toEqual({
+      minLatitude: 59.437,
+      maxLatitude: 65.0121,
+      minLongitude: 23.761,
+      maxLongitude: 25.4651,
+    });
+  });
+
+  it('should return null bounding box for empty coordinates', () => {
+    expect(getBoundingBox([])).toBeNull();
+  });
+
+  it('should detect whether point is inside bounding box', () => {
+    const bbox = {
+      minLatitude: 59.437,
+      maxLatitude: 65.0121,
+      minLongitude: 23.761,
+      maxLongitude: 25.4651,
+    };
+
+    expect(
+      isPointInsideBoundingBox(
+        { latitude: 60.1699, longitude: 24.9384 },
+        bbox
+      )
+    ).toBe(true);
+
+    expect(
+      isPointInsideBoundingBox(
+        { latitude: 59.437, longitude: 23.761 },
+        bbox
+      )
+    ).toBe(true);
+
+    expect(
+      isPointInsideBoundingBox(
+        { latitude: 66, longitude: 24.9384 },
+        bbox
+      )
+    ).toBe(false);
+
+    expect(
+      isPointInsideBoundingBox(
+        { latitude: 60.1699, longitude: 26 },
+        bbox
+      )
+    ).toBe(false);
   });
 });

@@ -21,13 +21,12 @@ type ParsedTrackedLink = {
   action?: string;
 };
 
-function parseColors(raw: string): string[] {
-  return raw
+const parseColors = (raw: string): string[] =>
+  raw
     .replace(/^(?:radar-legend|legend):/, '')
     .split(',')
     .map((s) => s.trim())
     .filter((c) => HEX_RE.test(c));
-}
 
 const parseLabels = (raw: string) => {
   const normalized = raw.replace(/^\//, ''); // remove leading "/" added by markdown link normalization
