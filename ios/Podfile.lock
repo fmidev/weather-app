@@ -47,7 +47,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - MapLibreReactNative (11.0.0-beta.25):
+  - MapLibreReactNative (11.0.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2748,7 +2748,7 @@ SPEC CHECKSUMS:
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   logicwind-react-native-matomo-tracker: 0fb8fc899ef1001e76c38556dfc182a9a32fb4c6
-  MapLibreReactNative: 2b9db978a923d38e215740702a7e3d6ef01127b2
+  MapLibreReactNative: 9678b56ba428d81084c9357ca0bc24e10e273577
   MatomoTracker: dbf4093d2c36b78244ce481d7a10086fad825c7f
   RCTDeprecation: d69f6f20a20f669a0aa3115ab1109f28e98ae03e
   RCTRequired: 305a8212b9d90fa335b6a6a960e5212bbb434484
