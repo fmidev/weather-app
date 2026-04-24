@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 import { XMLParser } from 'fast-xml-parser';
+import { LogManager } from "@maplibre/maplibre-react-native";
 
 import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
@@ -360,8 +361,8 @@ const getWMSLayerUrlsAndBounds = async (
         transparent: 'true',
         layers: layerSrc.layer,
         bbox: library === 'maplibre' ? '{bbox-epsg-3857}' : '{minX},{minY},{maxX},{maxY}',
-        width: library === 'maplibre' ? '256' : '{width}',
-        height: library === 'maplibre' ? '256' : '{height}',
+        width: library === 'maplibre' ? '512' : '{width}',
+        height: library === 'maplibre' ? '512' : '{height}',
         format: `image/${layer.tileFormat ?? 'png'}`,
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
@@ -391,3 +392,57 @@ const getWMSLayerUrlsAndBounds = async (
 
   return overlayMap;
 };
+
+export const configureMapLibreLogging = () => {
+  LogManager.onLog((event) => {
+    const { tag, message } = event;
+
+    const shouldSuppress =
+      tag === "Mbgl" &&
+      message.includes("Failed to load tile")
+
+    return shouldSuppress;
+  });
+
+  LogManager.start();
+};
+
+export type Coordinate = {
+  latitude: number;
+  longitude: number;
+};
+
+export type BBox = {
+  minLatitude: number;
+  maxLatitude: number;
+  minLongitude: number;
+  maxLongitude: number;
+};
+
+export const getBoundingBox = (coordinates: Coordinate[]): BBox | null => {
+  if (coordinates.length === 0) {
+    return null;
+  }
+
+  return coordinates.reduce<BBox>(
+    (bbox, { latitude, longitude }) => ({
+      minLatitude: Math.min(bbox.minLatitude, latitude),
+      maxLatitude: Math.max(bbox.maxLatitude, latitude),
+      minLongitude: Math.min(bbox.minLongitude, longitude),
+      maxLongitude: Math.max(bbox.maxLongitude, longitude),
+    }),
+    {
+      minLatitude: coordinates[0].latitude,
+      maxLatitude: coordinates[0].latitude,
+      minLongitude: coordinates[0].longitude,
+      maxLongitude: coordinates[0].longitude,
+    }
+  );
+};
+
+export const isPointInsideBoundingBox = (point: Coordinate, bbox: BBox) =>
+  point.latitude >= bbox.minLatitude &&
+  point.latitude <= bbox.maxLatitude &&
+  point.longitude >= bbox.minLongitude &&
+  point.longitude <= bbox.maxLongitude;
+

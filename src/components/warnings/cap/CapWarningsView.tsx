@@ -20,6 +20,7 @@ import {
 import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
 import TextList from './TextList';
+import LocalWarningsBar from './LocalWarningsBar';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -30,9 +31,7 @@ const mapStateToProps = (state: State) => ({
 
 const connector = connect(mapStateToProps, {});
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type CapWarningsViewProps = PropsFromRedux;
+type CapWarningsViewProps = ConnectedProps<typeof connector>;
 
 const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   updated,
@@ -50,6 +49,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   const { colors } = useTheme() as CustomTheme;
 
   const capViewSettings = Config.get('warnings')?.capViewSettings;
+  const { default: defaultLocation} = Config.get('location');
 
   let textViewTitle = `${t('warningsForNDays', {
     days: capViewSettings?.numberOfDays,
@@ -93,6 +93,11 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
 
   return (
     <View>
+      { capViewSettings?.localWarningsEnabled
+        && defaultLocation?.country === currentLocation.country
+        && capViewSettings?.localWarningsAfterCountry !== true && (
+        <LocalWarningsBar legendSheetRef={legendSheetRef} />
+      )}
       <View>
         <PanelHeader title={t('panelTitleCap')} justifyCenter />
         <View
@@ -157,6 +162,11 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         <PanelHeader title={textViewTitle} justifyCenter />
         <TextList capData={capWarnings} dates={dates} />
       </View>
+      { capViewSettings?.localWarningsEnabled
+        && defaultLocation?.country === currentLocation.country
+        && capViewSettings?.localWarningsAfterCountry && (
+        <LocalWarningsBar legendSheetRef={legendSheetRef} />
+      )}
       <RBSheet
         ref={legendSheetRef}
         height={600}

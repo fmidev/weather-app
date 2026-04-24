@@ -120,6 +120,8 @@ interface CapViewSettings {
     latitudeDelta: number;
     longitudeDelta: number;
   };
+  localWarningsEnabled?: boolean;
+  localWarningsAfterCountry?: boolean;
   mapZoomEnabled?: boolean;
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;

@@ -230,13 +230,15 @@ const MlMapView: React.FC<MapViewProps> = ({
       <Map
         testID="maplibre_map"
         ref={mapRef}
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{ flex: 1, width: '100%', height: '100%' }}
+        style={styles.map}
         mapStyle={mapStyle}
         onDidFinishLoadingStyle={() => setStyleReady(true)}
         onDidFinishRenderingFrameFully={onDidFinishRenderingFrame}
         onRegionDidChange={onRegionDidChange}
-        >
+        touchRotate={false}
+        attribution={false}
+        logo={false}
+      >
         <Camera
           ref={cameraRef}
           initialViewState={cameraDefaults}
@@ -297,6 +299,11 @@ const styles = StyleSheet.create({
     marginBottom: -30,
     marginTop: -30,
   },
+  map: {
+    flex: 1,
+    width: '100%',
+    height: '100%'
+  }
 });
 
 export default connector(MlMapView);

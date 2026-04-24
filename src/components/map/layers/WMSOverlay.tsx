@@ -133,14 +133,13 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   return (
     <>
-      {renderTiles.map((k, i) => (
+      {renderTiles.map((k) => (
         <MemoizedWMSTile
           key={k}
           urlTemplate={urlMap.get(k) as string}
           opacity={k === current ? 1 : 0}
           tileSize={overlay.tileSize}
           library={library}
-          index={i}
         />
       ))}
     </>
