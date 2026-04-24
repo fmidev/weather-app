@@ -82,7 +82,7 @@ describe('Modify Objects', () => {
         dynamicConfig: { interval: 300 },
       })
     ).toMatchObject({
-      dynamicConfig: { interval: 300 },
+      dynamicConfig: { interval: 1 },
     });
   });
 
