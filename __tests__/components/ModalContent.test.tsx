@@ -4,6 +4,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 import ModalContent from '../../src/components/weather/forecast/ModalContent';
 
 const mockTrackMatomoEvent = jest.fn();
+const mockModalForecast = jest.fn();
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
@@ -25,7 +26,8 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 jest.mock('@utils/helpers', () => ({
-  uppercaseFirst: (value: string) => value.charAt(0).toUpperCase() + value.slice(1),
+  uppercaseFirst: (value: string) =>
+    value.charAt(0).toUpperCase() + value.slice(1),
 }));
 
 jest.mock('@utils/matomo', () => ({
@@ -37,7 +39,10 @@ jest.mock('@assets/Icon', () => ({
   default: ({ name, onPress, accessibilityLabel }: any) => {
     const { Pressable, Text } = require('react-native');
     return (
-      <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={accessibilityLabel || name}>
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel || name}>
         <Text testID={`icon-${name}`}>{name}</Text>
       </Pressable>
     );
@@ -57,7 +62,10 @@ jest.mock('@components/common/CloseButton', () => ({
   default: ({ onPress, testID, accessibilityLabel }: any) => {
     const { Pressable, Text } = require('react-native');
     return (
-      <Pressable testID={testID} onPress={onPress} accessibilityLabel={accessibilityLabel}>
+      <Pressable
+        testID={testID}
+        onPress={onPress}
+        accessibilityLabel={accessibilityLabel}>
         <Text>close</Text>
       </Pressable>
     );
@@ -67,6 +75,7 @@ jest.mock('@components/common/CloseButton', () => ({
 jest.mock('../../src/components/weather/forecast/ModalForecast', () => ({
   __esModule: true,
   default: ({ data, initialPosition }: any) => {
+    mockModalForecast({ data, initialPosition });
     const { Text } = require('react-native');
     return <Text testID="modal-forecast">{`${data.length}-${initialPosition}`}</Text>;
   },
@@ -75,9 +84,10 @@ jest.mock('../../src/components/weather/forecast/ModalForecast', () => ({
 describe('ModalContent', () => {
   beforeEach(() => {
     mockTrackMatomoEvent.mockClear();
+    mockModalForecast.mockClear();
   });
 
-  it('renders modal header and handles prev next close', () => {
+  it('renders modal header, selected day forecast and handles prev next close', () => {
     const onClose = jest.fn();
     const onDayChange = jest.fn();
     const timeStamp = new Date('2035-03-03T12:00:00Z').getTime();
@@ -100,6 +110,68 @@ describe('ModalContent', () => {
     expect(onDayChange).toHaveBeenCalledWith(false);
     expect(onDayChange).toHaveBeenCalledWith(true);
     expect(onClose).toHaveBeenCalled();
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+      'User action',
+      'Weather',
+      'Modal PREV day'
+    );
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+      'User action',
+      'Weather',
+      'Modal NEXT day'
+    );
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+      'User action',
+      'Weather',
+      'Modal close X'
+    );
+    expect(mockModalForecast).toHaveBeenCalledWith({
+      data: [{ epochtime: 1 }],
+      initialPosition: 'start',
+    });
     expect(getByTestId('modal-forecast')).toBeTruthy();
+  });
+
+  it('does not render previous day action for the first day', () => {
+    const timeStamp = new Date('2035-03-03T12:00:00Z').getTime();
+
+    const { getByLabelText, queryByLabelText } = render(
+      <ModalContent
+        data={{ '3.3.': [{ epochtime: 1 }] } as any}
+        activeDayIndex={0}
+        timeStamp={timeStamp}
+        onClose={jest.fn()}
+        onDayChange={jest.fn()}
+        initialPosition="end"
+      />
+    );
+
+    expect(queryByLabelText('previousDay')).toBeNull();
+    expect(getByLabelText('nextDay')).toBeTruthy();
+    expect(mockModalForecast).toHaveBeenCalledWith({
+      data: [{ epochtime: 1 }],
+      initialPosition: 'end',
+    });
+  });
+
+  it('passes an empty list to ModalForecast when forecast data is missing', () => {
+    const timeStamp = new Date('2035-03-03T12:00:00Z').getTime();
+
+    const { getByTestId } = render(
+      <ModalContent
+        data={undefined as any}
+        activeDayIndex={1}
+        timeStamp={timeStamp}
+        onClose={jest.fn()}
+        onDayChange={jest.fn()}
+        initialPosition="start"
+      />
+    );
+
+    expect(getByTestId('modal-forecast').props.children).toBe('0-start');
+    expect(mockModalForecast).toHaveBeenCalledWith({
+      data: [],
+      initialPosition: 'start',
+    });
   });
 });
