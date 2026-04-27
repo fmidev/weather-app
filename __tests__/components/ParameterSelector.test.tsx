@@ -73,7 +73,7 @@ describe('ParameterSelector', () => {
     const { getByLabelText, getByText } = render(
       <ParameterSelector
         chartTypes={['temperature', 'wind', 'pressure'] as any}
-        parameter="wind" as any
+        parameter={'wind' as any}
         setParameter={setParameter}
       />
     );
@@ -98,7 +98,7 @@ describe('ParameterSelector', () => {
     const view = render(
       <ParameterSelector
         chartTypes={['temperature', 'wind', 'pressure'] as any}
-        parameter="temperature" as any
+        parameter={'temperature' as any}
         setParameter={jest.fn()}
       />
     );

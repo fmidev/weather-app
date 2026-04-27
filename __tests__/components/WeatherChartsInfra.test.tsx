@@ -142,7 +142,7 @@ describe('weather chart infrastructure components', () => {
   });
 
   it('renders chart data renderer with hidden daily edge labels and precipitation axis ticks', () => {
-    const Component = jest.fn(() => null);
+    const Component = jest.fn<any, any[]>(() => null);
 
     render(
       <ChartDataRenderer

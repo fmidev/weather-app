@@ -100,7 +100,7 @@ describe('MarkdownRenderer', () => {
       key === 'markdonwRenderer.openInBrowser' ? 'Open in browser' : key
     );
     renderer.setTextColor('#445566');
-    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
 
     const { getByA11yRole, getByTestId } = render(
       renderer.link('Documentation', 'https://example.test/docs|Map')
@@ -124,7 +124,7 @@ describe('MarkdownRenderer', () => {
   it('formats mailto links with app version and hides external-link icon', () => {
     const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
     const renderer = new MarkdownRenderer();
-    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
 
     const { getByA11yRole, queryByTestId } = render(
       renderer.link('Email support', 'mailto:test@example.com?body=v{version}|Other')

@@ -1,5 +1,9 @@
-import fs from 'fs';
-import path from 'path';
+declare const require: any;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+declare const __dirname: string;
+
+const fs = require('fs');
+const path = require('path');
 
 jest.mock('@maplibre/maplibre-react-native', () => ({
   LogManager: {
@@ -69,11 +73,12 @@ describe('map helper functions', () => {
     expect(parsedOverlay?.step).toBe(60);
     expect(parsedOverlay?.forecast?.start).toBe('2026-02-26T07:00:00Z');
     expect(parsedOverlay?.forecast?.end).toBe('2026-03-13T00:00:00Z');
-    expect(parsedOverlay?.forecast?.styles).toBe('Mobile_dark');
-    expect(parsedOverlay?.forecast?.url).toContain(
+    const forecastLayer = parsedOverlay?.forecast as any;
+    expect(forecastLayer?.styles).toBe('Mobile_dark');
+    expect(forecastLayer?.url).toContain(
       'layers=weatherapp:scandinavia:precipitationForecast'
     );
-    expect(parsedOverlay?.forecast?.url).toContain(
+    expect(forecastLayer?.url).toContain(
       'reference_time=2026-03-03T07:40:00Z'
     );
   });
@@ -137,8 +142,9 @@ describe('map helper functions', () => {
     expect(parsedOverlay?.type).toBe('Timeseries');
     expect(parsedOverlay?.data).toBe(timeseriesData);
 
+    const timeseries = parsedOverlay?.data as any;
     const helsinki =
-      parsedOverlay?.data?.['24.93545, 60.16952']?.['558457']?.Helsinki?.[0];
+      timeseries?.['24.93545, 60.16952']?.['558457']?.Helsinki?.[0];
     expect(helsinki).toEqual({
       epochtime: 1772528400,
       smartSymbol: 57,

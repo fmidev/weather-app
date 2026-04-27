@@ -67,21 +67,21 @@ jest.mock('@store/settings/selectors', () => ({
   selectMapLibrary: (state: any) => state.mock.mapLibrary,
 }));
 
-const mockFetchForecast = jest.fn((location: any, country: string) => ({
+const mockFetchForecast = jest.fn((...args: any[]) => ({
   type: 'FORECAST/FETCH',
-  payload: { location, country },
+  payload: { location: args[0], country: args[1] },
 }));
-const mockFetchObservation = jest.fn((location: any, country: string) => ({
+const mockFetchObservation = jest.fn((...args: any[]) => ({
   type: 'OBSERVATION/FETCH',
-  payload: { location, country },
+  payload: { location: args[0], country: args[1] },
 }));
-const mockFetchWarnings = jest.fn((location: any) => ({
+const mockFetchWarnings = jest.fn((...args: any[]) => ({
   type: 'WARNINGS/FETCH',
-  payload: location,
+  payload: args[0],
 }));
-const mockUpdateOverlays = jest.fn((activeOverlay: number, mapLibrary: string) => ({
+const mockUpdateOverlays = jest.fn((...args: any[]) => ({
   type: 'MAP/UPDATE_OVERLAYS',
-  payload: { activeOverlay, mapLibrary },
+  payload: { activeOverlay: args[0], mapLibrary: args[1] },
 }));
 
 jest.mock('@store/forecast/actions', () => ({

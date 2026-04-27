@@ -288,7 +288,9 @@ describe('forecast reducer', () => {
       totalTempMin: -1,
     });
     expect(selectors.selectForecastByDay(state)).toBeTruthy();
-    expect(selectors.selectHeaderLevelForecast(state)?.[0]).toMatchObject({
+    const headerLevelForecast = selectors.selectHeaderLevelForecast(state);
+    expect(headerLevelForecast).toBeTruthy();
+    expect(headerLevelForecast && headerLevelForecast[0]).toMatchObject({
       maxTemperature: 5,
       maxWindSpeed: 7,
       minTemperature: 1,

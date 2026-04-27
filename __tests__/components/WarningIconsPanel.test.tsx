@@ -184,7 +184,9 @@ describe('WarningIconsPanel', () => {
       getByA11yLabel(/Warnings: 2, Strong wind in coastal areas\./)
     ).toBeTruthy();
 
-    fireEvent.press(getByTestId('warnings_panel').parent);
+    const panelParent = getByTestId('warnings_panel').parent;
+    expect(panelParent).toBeTruthy();
+    fireEvent.press(panelParent!);
 
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
       'User action',

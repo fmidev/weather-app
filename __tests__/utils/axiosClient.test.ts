@@ -122,12 +122,12 @@ describe('axiosClient', () => {
     mockCachedAxios.mockRejectedValueOnce(error);
 
     await expect(
-      axiosClient({ url: 'https://example.test' }, undefined, 'Forecast')
+      axiosClient({ url: 'https://example.test' }, undefined, 'Weather')
     ).rejects.toBe(error);
 
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
       'Error',
-      'Forecast',
+      'Weather',
       'Timeout'
     );
   });

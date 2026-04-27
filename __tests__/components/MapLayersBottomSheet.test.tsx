@@ -8,9 +8,9 @@ import MapLayersBottomSheet from '../../src/components/map/sheets/MapLayersBotto
 const mockSelectActiveOverlay = jest.fn((state: any) => state.mock.activeOverlay);
 const mockSelectMapLayers = jest.fn((state: any) => state.mock.mapLayers);
 const mockSelectAnimationSpeed = jest.fn((state: any) => state.mock.animationSpeed);
-const mockUpdateMapLayers = jest.fn((layers: any) => ({
+const mockUpdateMapLayers = jest.fn((...args: any[]) => ({
   type: 'MAP/UPDATE_MAP_LAYERS',
-  payload: layers,
+  payload: args[0],
 }));
 const mockTrackMatomoEvent = jest.fn();
 const mockWindowDimensions = jest.fn();

@@ -9,7 +9,7 @@ import { DARK_RED, LIGHT_RED, LIGHT_BLUE } from '../../src/assets/colors';
 const mockConfigGet = jest.fn();
 const mockSelectCrisis = jest.fn();
 const mockSelectMaintenance = jest.fn();
-const mockSelectFetchTimestamp = jest.fn(() => 0);
+const mockSelectFetchTimestamp = jest.fn<any, any[]>(() => 0);
 
 jest.mock('@config', () => ({
   Config: {
@@ -78,7 +78,7 @@ describe('AnnouncementStrip', () => {
   let openURLSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce();
+    openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
     mockConfigGet.mockImplementation((key: string) => {
       if (key === 'announcements') {
         return { enabled: true };

@@ -118,7 +118,7 @@ jest.mock('@config', () => ({
 }));
 
 jest.mock('@react-navigation/native', () => ({
-  useFocusEffect: (...args: any[]) => mockUseFocusEffect(...args),
+  useFocusEffect: (effect: any) => mockUseFocusEffect(effect),
   useIsFocused: () => mockState.focused,
   useTheme: () => ({
     dark: mockState.dark,

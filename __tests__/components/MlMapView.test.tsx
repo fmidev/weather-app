@@ -10,9 +10,9 @@ const mockSelectTimeZone = jest.fn((state: any) => state.mock.timezone);
 const mockSelectDisplayLocation = jest.fn((state: any) => state.mock.displayLocation);
 const mockSelectOverlay = jest.fn((state: any) => state.mock.overlay);
 const mockSelectActiveOverlay = jest.fn((state: any) => state.mock.activeOverlay);
-const mockUpdateOverlays = jest.fn((overlayId: number, library: string) => ({
+const mockUpdateOverlays = jest.fn((...args: any[]) => ({
   type: 'MAP/UPDATE_OVERLAYS',
-  payload: { overlayId, library },
+  payload: { overlayId: args[0], library: args[1] },
 }));
 const mockTrackMatomoEvent = jest.fn();
 const mockGetDistance = jest.fn();
@@ -25,7 +25,9 @@ const mockWMSOverlay = jest.fn((props) => (
 const mockTimeseriesOverlay = jest.fn((props) => (
   <Text testID={`timeseries-overlay-${props.library}`}>timeseries</Text>
 ));
-const mockMapControls = jest.fn(() => <Text testID="map-controls">controls</Text>);
+const mockMapControls = jest.fn<any, any[]>(() => (
+  <Text testID="map-controls">controls</Text>
+));
 
 const mockMapRefApi = {
   getBounds: jest.fn(),
@@ -272,7 +274,7 @@ describe('MlMapView', () => {
       })
     );
 
-    const controlsProps = mockMapControls.mock.calls.at(-1)?.[0];
+    const controlsProps = mockMapControls.mock.calls.at(-1)?.[0] as any;
     expect(controlsProps.showRelocateButton).toBe(true);
 
     await act(async () => {

@@ -300,4 +300,7 @@ const dummyOverlay = {
   type: 'WMS',
 } as types.MapOverlay;
 
-const flushPromises = () => new Promise(process.nextTick);
+const flushPromises = () =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, 0);
+  });
