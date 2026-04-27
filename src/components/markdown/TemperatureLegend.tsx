@@ -13,11 +13,12 @@ const TemperatureLegend: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
+      <View testID="temperature-legend-row" style={styles.row}>
       {
         [...Array(50)].map((_, i) => (
           <View
             key={i}
+            testID={`temperature-legend-block-${i + 1}`}
             style={[
               i === 0 ||
               i === 6 ||
@@ -36,7 +37,7 @@ const TemperatureLegend: React.FC = () => {
         ))
       }
       </View>
-      <View style={styles.labelRow}>
+      <View testID="temperature-legend-label-row" style={styles.labelRow}>
         <Text
           style={[
             styles.temperatureMinus30,

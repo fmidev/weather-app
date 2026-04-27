@@ -67,6 +67,8 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
   // const lastTracked = useRef(0);
 
   useEffect(() => {
+    if (!data || data.length === 0) return;
+
     if (initialPosition === 'start') {
       setCurrentIndex(0);
       flatListRef.current?.scrollToIndex({
@@ -84,7 +86,7 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
     }
   }, [data, initialPosition]);
 
-  if (!data) return null;
+  if (!data || data.length === 0) return null;
 
   const startHour = parseInt(data[0].localtime.substring(9, 11), 10);
   const endHour = parseInt(data[data.length-1].localtime.substring(9, 11), 10);
