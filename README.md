@@ -2,12 +2,12 @@
 
 ## **Prequisites**
 
-- Node (20)
+- Node (24.3.0 or newer)
 - Android Studio (latest)
 - XCode (latest)
 - Java JDK 17
 
-Follow this [guide](https://reactnative.dev/docs/0.82/set-up-your-environment) for setting up React Native development environment.
+Follow this [guide](https://reactnative.dev/docs/0.85/set-up-your-environment) for setting up React Native development environment.
 
 ## **Licence**
 This project is licensed under the MIT Licence - see the [LICENSE](LICENSE) file for details.
@@ -20,6 +20,8 @@ This project is licensed under the MIT Licence - see the [LICENSE](LICENSE) file
 `cd weather-app`
 
 `yarn install`
+
+`cd ios && pod install`
 
 If you forget to clone with `--recurse-submodules`, you can fix assets by running
 
