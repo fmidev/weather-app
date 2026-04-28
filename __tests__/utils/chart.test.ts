@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import {
   calculateTemperatureTickCount,
@@ -59,10 +59,12 @@ const epochSeconds = (value: string) => moment(value).unix();
 describe('chart utils', () => {
   beforeEach(() => {
     jest.useFakeTimers();
+    moment.tz.setDefault('Europe/Helsinki');
     jest.setSystemTime(new Date('2024-01-15T12:30:00+02:00'));
   });
 
   afterEach(() => {
+    moment.tz.setDefault();
     jest.useRealTimers();
   });
 
