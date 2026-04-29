@@ -4,6 +4,15 @@ import axiosClient from '@utils/axiosClient';
 import { XMLParser } from 'fast-xml-parser';
 import moment from 'moment';
 
+type FeedLink = {
+  href: string;
+  type?: string;
+};
+
+type FeedEntry = {
+  link?: FeedLink | FeedLink[];
+};
+
 const isRelevantMessage = (warning: CapWarning) => {
   const isActual = warning.status === 'Actual';
   const isPublic = warning.scope === 'Public';
@@ -29,11 +38,20 @@ const isRelevantMessage = (warning: CapWarning) => {
 const parseReferences = (references: string) =>
   references.split(' ').map((ref) => ref.split(',')[1]);
 
+const toArray = <T>(value?: T | T[]): T[] => {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+};
+
 const getCapWarnings = async () => {
   const CAP_MIME_TYPE = 'application/cap+xml';
   const options = {
+    attributeNamePrefix: '',
     ignoreAttributes: false,
-    processEntities: true,
+    parseTagValue: false,
+    processEntities: {
+      enabled: true,
+    },
   };
   const parser = new XMLParser(options);
 
@@ -42,18 +60,17 @@ const getCapWarnings = async () => {
   const url = capViewSettings?.datasources[0]?.url;
   const { data: feedData } = await axiosClient({ url });
   const { feed } = parser.parse(feedData);
-  const entriesList = Array.isArray(feed.entry) ? feed.entry : [feed.entry];
+  const entriesList = toArray<FeedEntry>(feed.entry);
 
-  const urls: string[] = entriesList.map((entry: { link: Array<{ '@_href': string; '@_type'?: string }> } | { link: { '@_href': string; '@_type'?: string } }) => {
-    if (Array.isArray(entry.link)) {
-      // Meteoalarm feed may contain multiple links
-      const links = entry.link.filter((link) => link['@_type'] && link['@_type'] === CAP_MIME_TYPE);
-      return links[0]['@_href'].replace('http://', 'https://');
-    } else {
-      // Smartmet feed contains only one link
-      return (entry.link['@_href'] as string).replace('http://', 'https://');
-    }
-  });
+  const urls: string[] = entriesList
+    .map((entry) => {
+      const links = toArray(entry.link);
+      const capLink =
+        links.find((link) => link.type === CAP_MIME_TYPE) ?? links[0];
+
+      return capLink?.href.replace('http://', 'https://');
+    })
+    .filter((capUrl): capUrl is string => Boolean(capUrl));
   const uniqueUrls = [...new Set(urls)];
 
   const capWarnings: CapWarning[] = (
