@@ -36,7 +36,7 @@ const TimeSelectButtonGroup: React.FC<TimeSelectButtonGroupProps> = ({
       <View style={[styles.container]}>
       {
         hours.map((hour, index) => {
-          const active = selected >= hour && selected < hour + 5
+          const active = selected >= hour && selected <= hour + 5
           const text = formatText(hour);
           const accessibilityLabel = `${t('at')} ${text}`;
 
