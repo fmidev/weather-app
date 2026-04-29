@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 
 import ModalForecast from '../../src/components/weather/forecast/ModalForecast';
 import * as constants from '../../src/store/forecast/constants';
@@ -174,6 +174,7 @@ const makeData = (count: number, startHour = 0) =>
 
 describe('ModalForecast', () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     mockForecastListColumn.mockClear();
     mockForecastListHeaderColumn.mockClear();
     mockScrollToIndex.mockClear();
@@ -184,6 +185,10 @@ describe('ModalForecast', () => {
       fontScale: 1,
       scale: 1,
     };
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('returns null without data', () => {
@@ -233,6 +238,11 @@ describe('ModalForecast', () => {
         modal: true,
       })
     );
+
+    act(() => {
+      jest.advanceTimersByTime(50);
+    });
+
     expect(mockScrollToIndex).toHaveBeenCalledWith({
       animated: false,
       index: 0,
@@ -251,6 +261,10 @@ describe('ModalForecast', () => {
       />
     );
 
+    act(() => {
+      jest.advanceTimersByTime(50);
+    });
+
     expect(mockScrollToIndex).toHaveBeenCalledWith({
       animated: false,
       index: 3,
@@ -268,6 +282,11 @@ describe('ModalForecast', () => {
         initialPosition="start"
       />
     );
+
+    act(() => {
+      jest.advanceTimersByTime(50);
+    });
+    mockScrollToIndex.mockClear();
 
     fireEvent.scroll(view.getByTestId('flat-list'), {
       nativeEvent: {
