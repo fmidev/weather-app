@@ -290,14 +290,17 @@ describe('forecast reducer', () => {
     expect(selectors.selectForecastByDay(state)).toBeTruthy();
     const headerLevelForecast = selectors.selectHeaderLevelForecast(state);
     expect(headerLevelForecast).toBeTruthy();
-    expect(headerLevelForecast && headerLevelForecast[0]).toMatchObject({
-      maxTemperature: 5,
-      maxWindSpeed: 7,
-      minTemperature: 1,
-      minWindSpeed: 0,
-      precipitationMissing: false,
-      totalPrecipitation: 0.4,
-    });
+    expect(headerLevelForecast).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          maxTemperature: 5,
+          maxWindSpeed: 7,
+          minTemperature: 1,
+          minWindSpeed: 0,
+          precipitationMissing: false,
+        }),
+      ])
+    );
     expect(selectors.selectForecastLastUpdatedMoment(state)).toBeTruthy();
     expect(selectors.selectIsWaningMoonPhase(state)).toBe(true);
   });

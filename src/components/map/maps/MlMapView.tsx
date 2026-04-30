@@ -236,6 +236,7 @@ const MlMapView: React.FC<MapViewProps> = ({
         onDidFinishRenderingFrameFully={onDidFinishRenderingFrame}
         onRegionDidChange={onRegionDidChange}
         touchRotate={false}
+        touchPitch={false}
         attribution={false}
         logo={false}
       >

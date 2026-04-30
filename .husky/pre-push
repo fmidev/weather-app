@@ -1,5 +1,9 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn lint:ts
-yarn test --watchman=false
+# Only run lint and tests locally, not in CI
+
+if [ "$GITHUB_ACTIONS" != "true" ]; then
+  yarn lint:ts
+  yarn test --watchman=false
+fi
