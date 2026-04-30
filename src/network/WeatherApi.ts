@@ -59,8 +59,6 @@ export const getForecast = async (
       'moonPhase',
       'modtime',
       'dark',
-      // Remove producer if it causes problems with Smartmet Server
-      'producer',
     ],
     ['geoid', 'epochtime'],
   ];
