@@ -71,18 +71,22 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
 
     if (initialPosition === 'start') {
       setCurrentIndex(0);
-      flatListRef.current?.scrollToIndex({
-        animated: false,
-        index: 0,
-        viewPosition: 0,
-      });
+      setTimeout(() => {
+        flatListRef.current?.scrollToIndex({
+          animated: false,
+          index: 0,
+          viewPosition: 0,
+        });
+      }, 50);
     } else {
       setCurrentIndex(data.length - 1);
-      flatListRef.current?.scrollToIndex({
-        animated: false,
-        index: data.length - 1,
-        viewPosition: 0,
-      });
+      setTimeout(() => {
+        flatListRef.current?.scrollToIndex({
+          animated: false,
+          index: data.length - 1,
+          viewPosition: 0,
+        });
+      }, 50);
     }
   }, [data, initialPosition]);
 
