@@ -11,8 +11,12 @@ const mockGetSliderMinUnix = jest.fn();
 const mockGetSliderMaxUnix = jest.fn();
 const mockGetSliderStepSeconds = jest.fn();
 const mockUseIsFocused = jest.fn();
+const getTileTime = (urlTemplate: string) =>
+  urlTemplate.match(/[?&]time=([^&]+)/)?.[1];
 const mockMemoizedWMSTile = jest.fn((props) => (
-  <Text testID={`wms-tile-${props.index}`}>{props.urlTemplate}</Text>
+  <Text testID={`wms-tile-${getTileTime(props.urlTemplate)}`}>
+    {props.urlTemplate}
+  </Text>
 ));
 
 jest.mock('@store/map/selectors', () => ({
@@ -124,15 +128,14 @@ describe('WMSOverlay', () => {
       </Provider>
     );
 
-    expect(getByTestId('wms-tile-0')).toBeTruthy();
-    expect(getByTestId('wms-tile-1')).toBeTruthy();
-    expect(getByTestId('wms-tile-2')).toBeTruthy();
-    expect(getByTestId('wms-tile-3')).toBeTruthy();
+    expect(getByTestId('wms-tile-2025-01-01T00:00:00.000Z')).toBeTruthy();
+    expect(getByTestId('wms-tile-2025-01-01T01:00:00.000Z')).toBeTruthy();
+    expect(getByTestId('wms-tile-2025-01-01T02:00:00.000Z')).toBeTruthy();
+    expect(getByTestId('wms-tile-2025-01-01T03:00:00.000Z')).toBeTruthy();
 
     expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
-        index: 0,
         opacity: 0,
         library: 'react-native-maps',
         tileSize: 256,
@@ -142,7 +145,6 @@ describe('WMSOverlay', () => {
     expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
-        index: 1,
         opacity: 1,
         urlTemplate: expect.stringContaining('styles=obs-light'),
       })
@@ -150,7 +152,6 @@ describe('WMSOverlay', () => {
     expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
       3,
       expect.objectContaining({
-        index: 2,
         opacity: 0,
         urlTemplate: expect.stringContaining('https://example.test/fc'),
       })
@@ -158,7 +159,6 @@ describe('WMSOverlay', () => {
     expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
       4,
       expect.objectContaining({
-        index: 3,
         opacity: 0,
         urlTemplate: expect.stringContaining('styles=fc-light'),
       })

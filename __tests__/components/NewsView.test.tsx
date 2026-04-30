@@ -83,8 +83,8 @@ describe('NewsView', () => {
       title: 'Spring weather outlook',
       imageUrl: 'https://cdn.example.com/news-image.webp',
       imageAlt: 'Clouds over Helsinki',
-      createdAt: '2035-03-03T10:15:00+02:00',
-      updatedAt: '2035-03-04T11:30:00+02:00',
+      createdAt: '2035-03-03T10:15:00',
+      updatedAt: '2035-03-04T11:30:00',
       language: 'fi',
       showEditedDateTime: true,
     };
