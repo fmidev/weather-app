@@ -74,8 +74,20 @@ jest.mock('@components/common/CloseButton', () => ({
 
 jest.mock('../../src/components/weather/forecast/ModalForecast', () => ({
   __esModule: true,
-  default: ({ data, initialPosition }: any) => {
-    mockModalForecast({ data, initialPosition });
+  default: ({
+    data,
+    initialPosition,
+    maxHeight,
+    onScrollOffsetChange,
+    onScrollOffsetMaxChange,
+  }: any) => {
+    mockModalForecast({
+      data,
+      initialPosition,
+      maxHeight,
+      onScrollOffsetChange,
+      onScrollOffsetMaxChange,
+    });
     const { Text } = require('react-native');
     return <Text testID="modal-forecast">{`${data.length}-${initialPosition}`}</Text>;
   },
@@ -128,6 +140,9 @@ describe('ModalContent', () => {
     expect(mockModalForecast).toHaveBeenCalledWith({
       data: [{ epochtime: 1 }],
       initialPosition: 'start',
+      maxHeight: undefined,
+      onScrollOffsetChange: undefined,
+      onScrollOffsetMaxChange: undefined,
     });
     expect(getByTestId('modal-forecast')).toBeTruthy();
   });
@@ -151,6 +166,9 @@ describe('ModalContent', () => {
     expect(mockModalForecast).toHaveBeenCalledWith({
       data: [{ epochtime: 1 }],
       initialPosition: 'end',
+      maxHeight: undefined,
+      onScrollOffsetChange: undefined,
+      onScrollOffsetMaxChange: undefined,
     });
   });
 
@@ -172,6 +190,9 @@ describe('ModalContent', () => {
     expect(mockModalForecast).toHaveBeenCalledWith({
       data: [],
       initialPosition: 'start',
+      maxHeight: undefined,
+      onScrollOffsetChange: undefined,
+      onScrollOffsetMaxChange: undefined,
     });
   });
 });

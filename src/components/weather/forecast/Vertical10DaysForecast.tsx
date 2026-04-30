@@ -1,8 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
-  View, StyleSheet, useWindowDimensions, GestureResponderEvent, PanResponderGestureState,
+  View,
+  StyleSheet,
+  useWindowDimensions,
+  GestureResponderEvent,
+  PanResponderGestureState,
   AppState, AppStateStatus
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
@@ -25,7 +30,6 @@ import Icon from '@components/common/ScalableIcon';
 import { formatAccessibleDate, formatAccessibleTemperature, uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 import { trackMatomoEvent } from '@utils/matomo';
-import { MAX_PARAMETERS_WITHOUT_SCROLL } from './constants';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -57,8 +61,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   dayData,
   units,
   invalidData,
-  displayParams,
 }) => {
+  const insets = useSafeAreaInsets();
   const { width, height, fontScale} = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
@@ -66,6 +70,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const decimalSeparator = locale === 'en' ? '.' : ',';
   const isWideDisplay = () => width > 500;
   const largeFonts = fontScale >= 1.5;
+  const modalMaxHeight = height - insets.top - insets.bottom - 20;
 
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
@@ -80,9 +85,32 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const [modalTimeStamp, setModalTimeStamp] = useState(0);
   const [modalActiveDayIndex, setModalActiveDayIndex] = useState(0);
   const [initialPosition, setInitialPosition] = useState<'start' | 'end'>('start');
+  const [modalScrollOffset, setModalScrollOffset] = useState(0);
+  const [modalScrollOffsetMax, setModalScrollOffsetMax] = useState(0);
 
-  const shouldHorizontalScroll = height < 500 ||
-                                (height < 900 && displayParams.length > MAX_PARAMETERS_WITHOUT_SCROLL);
+  const shouldPropagateModalSwipe = useCallback(
+    (_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+      const { dx, dy } = gestureState;
+      const edgeTolerance = 2;
+      const isAtTop = modalScrollOffset <= edgeTolerance;
+      const isAtBottom =
+        modalScrollOffsetMax <= edgeTolerance ||
+        modalScrollOffset >= modalScrollOffsetMax - edgeTolerance;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        return true;
+      }
+      if (dy > 0 && isAtTop) {
+        return false;
+      }
+      if (dy < 0 && isAtBottom) {
+        return false;
+      }
+
+      return true;
+    },
+    [modalScrollOffset, modalScrollOffsetMax]
+  );
 
   const appState = useRef<AppStateStatus>(AppState.currentState);
 
@@ -296,23 +324,22 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
         onBackButtonPress={ () => setModalVisible(false ) }
         onBackdropPress={ () => setModalVisible(false ) }
         swipeDirection={['down', 'up']}
-        propagateSwipe={(_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-          if (shouldHorizontalScroll) return true;
-
-          const { dx, dy } = gestureState;
-          if (Math.abs(dx) > Math.abs(dy)) {
-            return true;
-          }
-          return false;
-        }}
+        scrollOffset={modalScrollOffset}
+        scrollOffsetMax={modalScrollOffsetMax}
+        propagateSwipe={shouldPropagateModalSwipe}
       >
         <View style={styles.centeredView}>
-          <View style={[styles.modalView, { backgroundColor: colors.modalBackground }]}>
+          <View style={
+            [styles.modalView, { backgroundColor: colors.modalBackground, maxHeight: modalMaxHeight }]
+          }>
             <ModalContent
               activeDayIndex={modalActiveDayIndex}
               timeStamp={modalTimeStamp}
               onClose={() => setModalVisible(false) }
               initialPosition={initialPosition}
+              modalMaxHeight={modalMaxHeight}
+              onScrollOffsetChange={setModalScrollOffset}
+              onScrollOffsetMaxChange={setModalScrollOffsetMax}
               onDayChange={ (forward: boolean) => {
                 let newDayIndex = forward ? modalActiveDayIndex + 1 : modalActiveDayIndex - 1;
                 if (newDayIndex < 0) newDayIndex = 0;
@@ -372,7 +399,6 @@ const styles = StyleSheet.create({
     width: 58,
   },
   centeredView: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -381,6 +407,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 8,
     alignItems: 'center',
+    overflow: 'hidden',
     shadowColor: BLACK,
     shadowOffset: {
       width: 0,

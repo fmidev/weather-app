@@ -29,7 +29,6 @@ import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
 import TimeSelectButtonGroup from './TimeSelectButtonGroup';
-import { MAX_PARAMETERS_WITHOUT_SCROLL } from './constants';
 // import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
@@ -45,6 +44,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ModalForecastProps = PropsFromRedux & {
   data: TimeStepData[];
   initialPosition?: 'start' | 'end';
+  maxHeight?: number;
+  onScrollOffsetChange?: (offset: number) => void;
+  onScrollOffsetMaxChange?: (offset: number) => void;
 };
 
 const ModalForecast: React.FC<ModalForecastProps> = ({
@@ -53,6 +55,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
   clockType,
   units,
   initialPosition,
+  maxHeight,
+  onScrollOffsetChange,
+  onScrollOffsetMaxChange,
 }) => {
   const { fontScale } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -106,11 +111,10 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
     setCurrentIndex(index);
   };
 
-  // Large content should have horizontal scrolling,
-  // otherwise disable scrolling so that swipe to close works
-  const shouldHorizontalScroll = height < 500 || (height < 900 && displayParams.length > MAX_PARAMETERS_WITHOUT_SCROLL);
   const isWideDisplay = width > 500;
-  const maxTableHeight = isWideDisplay ? height - 130 : height - 150;
+  const timeSelectorHeight = isWideDisplay ? 0 : 48;
+  const modalChromeHeight = 70 + 16 + timeSelectorHeight;
+  const maxTableHeight = Math.max(160, (maxHeight ?? height) - modalChromeHeight);
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
@@ -468,15 +472,18 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
           }}
         />
       )}
-      {shouldHorizontalScroll ? (
-        <ScrollView style={[styles.table, { maxHeight: maxTableHeight }]}>
-          {modalContent}
-        </ScrollView>
-      ) : (
-        <View style={[styles.table, { maxHeight: maxTableHeight }]}>
-          {modalContent}
-        </View>
-      )}
+      <ScrollView
+        nestedScrollEnabled
+        onContentSizeChange={(_, contentHeight) => {
+          onScrollOffsetMaxChange?.(Math.max(0, contentHeight - maxTableHeight));
+        }}
+        onScroll={({ nativeEvent }) => {
+          onScrollOffsetChange?.(nativeEvent.contentOffset.y);
+        }}
+        scrollEventThrottle={16}
+        style={[styles.table, { maxHeight: maxTableHeight }]}>
+        {modalContent}
+      </ScrollView>
     </>
   );
 };

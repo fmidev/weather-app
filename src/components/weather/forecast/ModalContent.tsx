@@ -29,6 +29,9 @@ type ModalContentProps = PropsFromRedux & {
   onClose: () => void;
   onDayChange: (forward: boolean) => void;
   initialPosition: 'start' | 'end';
+  modalMaxHeight?: number;
+  onScrollOffsetChange?: (offset: number) => void;
+  onScrollOffsetMaxChange?: (offset: number) => void;
 };
 
 const DailyModal: React.FC<ModalContentProps> = ({
@@ -37,7 +40,10 @@ const DailyModal: React.FC<ModalContentProps> = ({
   timeStamp,
   onClose,
   onDayChange,
-  initialPosition
+  initialPosition,
+  modalMaxHeight,
+  onScrollOffsetChange,
+  onScrollOffsetMaxChange,
 }) => {
   const { fontScale } = useWindowDimensions();
   const { t, i18n } = useTranslation('forecast');
@@ -100,6 +106,9 @@ const DailyModal: React.FC<ModalContentProps> = ({
       <ModalForecast
         data={data ? data[moment(timeStamp).format('D.M.')] : []}
         initialPosition={initialPosition}
+        maxHeight={modalMaxHeight}
+        onScrollOffsetChange={onScrollOffsetChange}
+        onScrollOffsetMaxChange={onScrollOffsetMaxChange}
       />
     </View>
   );
