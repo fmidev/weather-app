@@ -321,9 +321,7 @@
   },
   "about": {
     "versionInfo": "Version av applikationen",
-    "followUs": "Följ oss",
-    "title": "Meteorologiska institutets väderapplikation",
-    "body": "I vår väderapplikation får du väderinformation för nästan alla orter i Finland och genom att tillåta positionering av din enhet visar tjänsten automatiskt väderprognosen för din position fram till 10 dygn. Är du endast intresserad av temperaturen eller vill du också ha information om till exempel lufttryck, vindbyar eller till exempel UV-index? Både i väderprognoser och väderobservationer kan du fritt välja vilka väderuppgifter du vill följa. I applikationen kan du också spara din favoritort både i Finland och utomlands och enkelt bläddra bland dem. De uppgifter du önskar finns både som tabeller och som grafisk presentation. I animationerna på kartan kan du följa med bland annat regnområdenas rörelse, och en regnprognos baserad på radarbilder visar vart regnen rör sig under de kommande timmarna. I tjänsten syns gällande vädervarningar på den plats du valt och du kan också enkelt kontrollera officiella vädervarningar i hela Finland."
+    "followUs": "Följ oss"
   },
   "settings": {
     "language": "Språk",
@@ -676,23 +674,7 @@
   },
   "termsAndConditions": {
     "close": "Stäng",
-    "closeButtonAccessibilityHint": "Stäng användarvillkoren och navigera tillbaka till föregående vy",
-    "generalTitle": "Användarvillkor för Meteorologiska institutets väderapplikation",
-    "contentsTitle": "1. Användarrättens innehåll",
-    "contentsDescription": "Applikationens användare har rätt att använda applikationen i enlighet med dessa användarvillkor. Användarrätten är inte exklusiv och kan inte överföras till en tredje part. Användarrätten upphör när användaren raderar applikationen. Applikationens användare ansvarar för anskaffningen av den utrustning, programvara och datakommunikationsförbindelser som behövs för användningen av applikationen samt för kostnaderna för dessa och för att apparaterna, programvaran och förbindelserna fungerar. Användaren ser till att applikationen används i en informationssäker användningsmiljö.",
-    "generalDescription": "Användarvillkoren tillämpas på användningen av väderapplikationens(”applikationen”) som upprätthålls av Meteorologiska institutet. Syftet med applikationen är att erbjuda användaren väderobservationer, -prognoser och -varningar. Dessa användarvillkor utgör avtalet om användningen av applikationen mellan Meteorologiska institutet och applikationens användare. Användaren ska godkänna dessa användarvillkor i samband med att applikationen tas i bruk, varvid de binder användaren. Det är frivilligt att använda applikationen. Applikationen erbjuds via App Store eller Google Play Store, varvid användaren utöver dessa användarvillkor även ska följa tjänsteleverantörens egna användarvillkor.",
-    "personalInfoTitle": "2. Personuppgifter",
-    "personalInfoDescription": "Applikationen samlar inte in personuppgifter eller information om plats eller rörelse. Användaren kan när som helst gå till applikationens inställningar och ändra eller återkalla de behörigheter som har getts. Meteorologiska institutet kan använda underleverantörer för att möjliggöra den tjänst som tillhandahålls via applikationen. Applikationen använder också analysverktyg för att samla in anonymiserad data för att förbättra tjänsten. Dessa uppgifter kan inte användas för att identifiera enskilda användare.",
-    "immaterialRightsTitle": "3. Immateriella rättigheter",
-    "immaterialRightsDescription": "Alla immateriella rättigheter och äganderätter i anslutning till applikationen tillhör Meteorologiska institutet. Applikationen kan innehålla programvara med öppen källkod.",
-    "liabilityTitle": "4. Ansvarsbegränsningar",
-    "liabilityDescription": "Meteorologiska institutet övervakar systemet och eftersträvar efter bästa förmåga att förhindra störningar och avbrott i tjänsten. Meteorologiska institutet svarar inte för beslut som fattats på grund av en tjänst eller brist på en tjänst eller för direkta eller indirekta skador som användningen av materialet orsakar. Meteorologiska institutet ansvarar inte för sina skyldigheter enligt dessa användarvillkor till den del det är fråga om ett oöverstigligt hinder som inte är beroende av Meteorologiska institutet.",
-    "rightToChangesTitle": "5. Ändring av användarvillkoren och deras giltighet",
-    "rightToChangesDescription": "Meteorologiska institutet har rätt att ändra innehållet i applikationen och dessa användarvillkor. Användaren informeras om ändringar i användarvillkoren och applikationens innehåll. För att användaren ska kunna fortsätta använda applikationen efter att användarvillkoren ändrats måste användaren godkänna de ändrade användarvillkoren i applikationen.",
-    "applicableLawTitle": "6. Tillämplig lag och tvister",
-    "applicableLawDescription": "På användarvillkoren tillämpas den finska lagen, förutom dess lagvalsregel. Eventuella tvister avgörs i Helsingfors tingsrätt.",
-    "contactDetailsTitle": "7. Kontaktuppgifter",
-    "contactDetailsDescription": "Meteorologiska institutet\nPB 503\n00101 Helsingfors"
+    "closeButtonAccessibilityHint": "Stäng användarvillkoren och navigera tillbaka till föregående vy"
   },
   "feedback": {
     "title": "Tack för att du hjälper oss utveckla våra tjänster!",
@@ -711,28 +693,6 @@
     "tryAgain": "Försök igen"
   },
   "accessibility": {
-    "generalTitle": "Tillgängligheten i Meteorologiska institutets väderapplikation",
-    "generalAbout": "I detta tillgänglighetsutlåtande beskriver vi hur Meteorologiska institutets applikation uppfyller kraven som lagen om tillhandahållande av digitala tjänster ställer, brister i applikationens tillgänglighet samt hur du kan ge respons på tillgänglighetsproblem.",
-    "generalDescription": "Meteorologiska institutet ansvarar för denna applikation. Vi vill att så många som möjligt ska kunna använda våra digitala tjänster. Vi beaktar tillgängligheten i utvecklingen av digitala tjänster.",
-    "subTitle1": "Hur tillgänglig är applikationen?",
-    "description1": "Applikationen uppfyller delvis A- och AA-nivåns tillgänglighetskriterier som nämns i lagen (WCAG-kriterierna 2.1). Brister i tillgänglighet som förekommer i applikationen är beskrivna nedan.",
-    "subTitle2": "Noterade du brister i tillgängligheten?",
-    "description2": "Vi strävar till att fortgående förbättra applikationens tillgänglighet. Om du upptäcker brister som inte beskrivs på den här sidan, meddela oss så gör vi vårt bästa för att åtgärda bristerna. Vi svarar så snart som möjligt eller senast inom två veckor. Du kan kontakta oss per e-post på adressen:",
-    "email": "tillganglighet@fmi.fi",
-    "subTitle3": "Tillsyn",
-    "description3": "Transport- och kommunikationsverket Traficom är den myndighet som övervakar att lagens tillgänglighetskrav följs i Finland. Om du inte är nöjd med det svar du har fått eller om du inte alls har fått något svar inom två veckor, kan du kontakta Traficom.",
-    "website": "www.tillgänglighetskrav.fi",
-    "email2": "tillganglighet@traficom.fi",
-    "trafiContact": "\nEnheten för tillsyn över digital tillgänglighet\n\ntelefonnummer växeln 029 534 5000",
-    "subTitle4": "Teknisk information om applikationens tillgänglighet",
-    "description4": "Applikationen är inte ännu till alla delar tillgänglig.",
-    "subTitle5": "Innehåll eller funktioner som inte är tillgängliga",
-    "description5": "- I applikationen finns element som inte har en beskrivande rubrik eller etikett. (WCAG 2.4.6)\n- I en del av applikationens vädersymboler och balkarna som anger nederbördsmängden är kontrasten till bakgrunden eller de intilliggande elementen inte tillräcklig. (WCAG 1.4.3)\n- En del av symbolerna i applikationen (till exempel balkarna för dagvisa nederbördsmängder) har ingen textmotsvarighet. (WCAG 1.1.1).\n- I applikationen finns element som är grupperade så att de hör ihop, men som kan få ett separat fokus. (WCAG 2.4.3)\n- Applikationen har ett inbäddat delområde i webbtjänsten vars språk inte alltid motsvarar det valda språket i applikationen. (WCAG 3.1.1 och 3.1.2)\n- Applikationen innehåller delar på olika språk som i vissa fall läses på ett språk som avviker från applikationens språk. (WCAG 3.1.2)",
-    "description5.1": "Målet är att åtgärda bristerna som listas här under 2024-2025, om möjligt utan väsentliga förändringar i appens utseende eller funktionalitet.",
-    "subTitle6": "Tillgängligheten i innehåll som baserar sig på kartor",
-    "description6": "I applikationen erbjuds väderinformation som baserar sig på kartor. Enligt lagen behöver kartor och karttjänster inte uppfylla tillgänglighetskraven. Data som visualiserats på kartan är tillgängliga i ett annat format i applikationen.",
-    "subTitle7": "Hur har vi testat tillgängligheten?",
-    "description7": "Anmärkningarna i detta tillgänglighetsutlåtande grundar sig på en bedömning av en tredje part om huruvida webbtjänsten uppfyller kraven i lagen om tillhandahållande av digitala tjänster. Applikationen är publicerad 10.5.2022. Detta utlåtande har upprättats 21.4.2022. Detta utlåtande uppdaterades senast 8.4.2024.",
     "link1": "Lagen om tillhandahållande av digitala tjänster (306/2019)",
     "link2": "Webbplatsen Tillgänglighetskrav",
     "openInBrowser": "Öppna i webbläsaren"
