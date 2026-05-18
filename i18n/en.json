@@ -321,9 +321,7 @@
   },
   "about": {
     "versionInfo": "Application version",
-    "followUs": "Follow us",
-    "title": "The Weather app by the Finnish Meteorological Institute",
-    "body": "Our Weather app provides weather information for almost all Finnish municipalities. If you enable location on your device, the service will automatically show your location's forecast for up to 10 days. Are you only interested in temperature or do you also want information about pressure, wind gusts or the UV index? Both weather forecasts and weather observations allow you to choose which weather data you want to see. You can also save your favorite locations in Finland and abroad on the app and browse them easily. The information is available as tables and graphs. The animations in the map section allow you to follow, for example, the movement of rainfall areas, and the rain forecast based on radar images shows the direction in which rainfall areas will move in the coming hours. The service displays current weather warnings at your chosen location and you can also easily check official weather warnings throughout Finland."
+    "followUs": "Follow us"
   },
   "settings": {
     "language": "Language",
@@ -677,23 +675,7 @@
   },
   "termsAndConditions": {
     "close": "Close",
-    "closeButtonAccessibilityHint": "Close Terms of Use and navigate back to previous screen",
-    "generalTitle": "Terms of Use for the Weather mobile application by the Finnish Meteorological Institute",
-    "contentsTitle": "1. Right of use",
-    "contentsDescription": "The user of the application has the right to use the application in accordance with these terms of use. The right of use is not exclusive and cannot be transferred to a third party. The license expires when the user deletes the application. The user of the application is responsible for the acquisition of the equipment, software and telecommunications connections needed to use the application, the costs incurred and the operation of the devices, software and connections. The user shall take care to use the application in a secure environment.",
-    "generalDescription": "These terms of use apply to the use of the Weather mobile application (henceforth ‘application’) maintained by the Finnish Meteorological Institute. The purpose of the application is to provide the user with weather observations, forecasts and warnings. These terms of use constitute the agreement between the Finnish Meteorological Institute and the user of the application. These terms of use are binding and must be approved by the user when taking the application into use. The use of the application is voluntary. The application is provided through the App Store or Google Play Store, meaning that the user must comply with both these terms of use and the terms of use of the service provider in question.",
-    "personalInfoTitle": "2. Personal data",
-    "personalInfoDescription": "The application does not collect any personal data or information related to location or movement. At any time, the user may access the application settings and change or cancel the permissions they have given. The Finnish Meteorological Institute may use subcontractors to enable the service provided through the application. The application also uses analytics to collect anonymised data to help us improve the service. This data cannot be used to identify individual users.",
-    "immaterialRightsTitle": "3. Intellectual property rights",
-    "immaterialRightsDescription": "All the intellectual property rights and proprietary rights for the application belong to the Finnish Meteorological Institute. The application may contain open source software.",
-    "liabilityTitle": "4. Limitations of liability",
-    "liabilityDescription": "The Finnish Meteorological Institute monitors the system and seeks to prevent disturbances and interruptions to the service to the best of its ability. The Finnish Meteorological Institute is not responsible for any decisions made on the basis of the service or its lack of availability, nor for any direct or indirect damage caused by the use of the data. The Finnish Meteorological Institute is not liable for its obligations under these terms of use in cases of force majeure.",
-    "rightToChangesTitle": "5. Validity of and changes to terms of use",
-    "rightToChangesDescription": "Validity of and changes to terms of use The Finnish Meteorological Institute has the right to change the contents of the application and these terms of use. Users shall be notified of any changes to the terms of use and any changes to the application content. In order for the user to continue using the application after changes have been applied to the terms of use, the user must accept the changed terms of use within the application.",
-    "applicableLawTitle": "6. Applicable law and disputes",
-    "applicableLawDescription": "These terms of use are governed by Finnish law with the exception of its conflict of laws principles. Any disputes shall be resolved in the Helsinki District Court.",
-    "contactDetailsTitle": "7. Contact information",
-    "contactDetailsDescription": "The Finnish Meteorological Institute\nPO Box 503\n00101 Helsinki"
+    "closeButtonAccessibilityHint": "Close Terms of Use and navigate back to previous screen"
   },
   "feedback": {
     "title": "Thank you for helping us improve our services!",
@@ -712,28 +694,6 @@
     "tryAgain": "Try again"
   },
   "accessibility": {
-    "generalTitle": "Accessibility of the Finnish Meteorological Institute's Weather application",
-    "generalAbout": "This accessibility statement explains how the Finnish Meteorological Institute’s application complies with the Act on the Provision of Digital Services, what shortcomings there are in the accessibility of the application and how you can give us feedback on accessibility issues.",
-    "generalDescription": "This application is the responsibility of the Finnish Meteorological Institute. We want as many users as possible to be able to access our digital services. We take accessibility into account in the development of digital services.",
-    "subTitle1": "How accessible is the application?",
-    "description1": "This application partly meets the accessibility criteria required by law at level A and AA (WCAG 2.1). The application has some shortcomings in accessibility, which are described in more detail below.",
-    "subTitle2": "Did you notice shortcomings in accessibility?",
-    "description2": "We are constantly working to improve the accessibility of the application. If you discover any issues that are not described on this page, please let us know and we will do our best to remedy them. We will respond as soon as possible or within two weeks at the latest. You can contact us by email at:",
-    "email": "accessibility@fmi.fi",
-    "subTitle3": "Accessibility monitoring",
-    "description3": "Finnish Transport and Communications Agency Traficom monitors the implementation of accessibility requirements. If you are not satisfied with the response you have received or you do not receive a response at all within two weeks, you can give feedback to Traficom. The website provides detailed information on how to file a complaint and how the matter will be processed.",
-    "website": "www.webaccessibility.fi",
-    "email2": "saavutettavuus@traficom.fi",
-    "trafiContact": "\nDigital Accessibility Supervision Unit\n\ntelephone switchboard 029 534 5000",
-    "subTitle4": "Details on technical accessibility",
-    "description4": "The application is not yet fully accessible.",
-    "subTitle5": "Content or functions that are not yet accessible",
-    "description5": "- The application contains elements that do not have a descriptive heading or label. (WCAG 2.4.6)\n- Some weather symbols and rainfall bars in the application do not have sufficient contrast to the background or adjacent elements. (WCAG 1.4.3)\n- Some of the application symbols (e.g. rainfall bars per day) do not have a text equivalent. (WCAG 1.1.1).\n- The application has elements that are grouped together but may become in focus separately. (WCAG 2.4.3)\n- The application features an embedded section of an online service whose language does not match the selected language of the application in all cases. (WCAG 3.1.1 and 3.1.2)\n- The application contains sections that are in different languages and are in some cases read not in the language of the application. (WCAG 3.1.2)",
-    "description5.1": "The aim is to rectify the shortcomings listed here during 2024-2025 if possible without significant changes to app outlook or functionality.",
-    "subTitle6": "Accessibility of map-based content",
-    "description6": "The application provides map-based weather information. Under legislation, maps and map services do not have to meet accessibility requirements. The data visualised on maps is available elsewhere in the application in an accessible format.",
-    "subTitle7": "How have we tested accessibility?",
-    "description7": "The observations in this accessibility statement are based on a third-party assessment of whether the online service meets the legal requirements. The application was published on 10th May 2022. This statement was prepared on 21th April 2022. The statement was last updated on 8th April 2024.",
     "link1": "Act on the Provision of Digital Services (306/2019)",
     "link2": "Website on accessibility requirements",
     "openInBrowser": "Open in browser"
