@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,19 @@ const LanguageSettings: React.FC<Props> = ({
 }) => {
   const { colors } = useTheme();
   const { t } = useTranslation('settings');
+
+  const changeLanguage = useCallback((language: string) => {
+    if (currentLanguage !== language) {
+      onChangeLanguage(language);
+      setTimeout(() => {
+        trackMatomoEvent(
+          'User action',
+          'Settings',
+          `Select language - ${language}`
+        );
+      }, 50);
+    }
+  }, [currentLanguage, onChangeLanguage]);
 
   return (
     <>
@@ -50,18 +63,7 @@ const LanguageSettings: React.FC<Props> = ({
               { borderBottomColor: colors.border },
             ]}>
             <AccessibleTouchableOpacity
-              onPress={
-                currentLanguage === language
-                  ? () => {}
-                  : () => {
-                      trackMatomoEvent(
-                        'User action',
-                        'Settings',
-                        `Select language - ${language}`
-                      );
-                      onChangeLanguage(language);
-                    }
-              }
+              onPress={() => changeLanguage(language)}
               testID={`settings_set_language_${language}`}
               delayPressIn={100}
               accessibilityState={{

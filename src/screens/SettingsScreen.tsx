@@ -177,14 +177,15 @@ const SettingsScreen: React.FC<Props> = ({
         testID="settings_scrollview"
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
+
         <LocationSettings
           locationPermission={locationPermission}
           locationPermissionsDisplayString={locationPermissionsDisplayString}
           onOpenSettings={goToSettings}
         />
 
-        {showUnitSettings && units && (
-          <UnitSettings units={units} onChangeUnits={onChangeUnits} />
+        {themes.light && themes.dark && (
+          <ThemeSettings theme={theme} updateTheme={updateTheme} />
         )}
 
         {languages?.length > 1 && (
@@ -194,19 +195,20 @@ const SettingsScreen: React.FC<Props> = ({
             onChangeLanguage={onChangeLanguage}
           />
         )}
-        <View>
-          {themes.light && themes.dark && (
-            <ThemeSettings theme={theme} updateTheme={updateTheme} />
-          )}
-          <TimeSettings
-            clockType={clockType}
-            updateClockType={updateClockType}
-          />
-          <MapSettings
-            mapLibrary={mapLibrary}
-            updateMapLibrary={updateMapLibrary}
-          />
-        </View>
+
+        <TimeSettings
+          clockType={clockType}
+          updateClockType={updateClockType}
+        />
+
+        {showUnitSettings && units && (
+          <UnitSettings units={units} onChangeUnits={onChangeUnits} />
+        )}
+
+        <MapSettings
+          mapLibrary={mapLibrary}
+          updateMapLibrary={updateMapLibrary}
+        />
       </ScrollView>
     </View>
   );

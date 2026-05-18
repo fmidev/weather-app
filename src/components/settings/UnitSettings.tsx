@@ -51,6 +51,7 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
         style={[
           styles.rowWrapper,
           styles.withBorderBottom,
+          styles.withMarginTop,
           { borderBottomColor: colors.border },
         ]}
         testID="settings_units_header">
@@ -218,6 +219,9 @@ const styles = StyleSheet.create({
   draggableIcon: {
     width: 65,
     backgroundColor: GRAY_1,
+  },
+  withMarginTop: {
+    marginTop: 16,
   },
 });
 
