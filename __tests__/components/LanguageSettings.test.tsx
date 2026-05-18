@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 
 import LanguageSettings from '../../src/components/settings/LanguageSettings';
 import { trackMatomoEvent } from '../../src/utils/matomo';
@@ -33,7 +33,12 @@ jest.mock('@components/common/ScalableIcon', () => ({
 
 describe('LanguageSettings', () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('renders language options and changes only non-selected language', () => {
@@ -52,11 +57,17 @@ describe('LanguageSettings', () => {
     expect(onChangeLanguage).not.toHaveBeenCalled();
 
     fireEvent.press(getByTestId('settings_set_language_en'));
+    expect(onChangeLanguage).toHaveBeenCalledWith('en');
+    expect(trackMatomoEvent).not.toHaveBeenCalled();
+
+    act(() => {
+      jest.advanceTimersByTime(50);
+    });
+
     expect(trackMatomoEvent).toHaveBeenCalledWith(
       'User action',
       'Settings',
       'Select language - en'
     );
-    expect(onChangeLanguage).toHaveBeenCalledWith('en');
   });
 });

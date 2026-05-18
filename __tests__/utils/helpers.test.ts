@@ -424,26 +424,26 @@ describe('helpers getSeveritiesForDays', () => {
   });
 
   it('returns severities for all four 6-hour periods in a day', () => {
-    const date = moment.utc('2035-06-01T00:00:00Z').valueOf();
+    const date = moment('2035-06-01T00:00:00').valueOf();
     const warnings = [
       makeWarning(
-        '2035-06-01T01:00:00Z',
-        '2035-06-01T02:00:00Z',
+        '2035-06-01T01:00:00',
+        '2035-06-01T02:00:00',
         'Moderate'
       ), // 00-06
       makeWarning(
-        '2035-06-01T07:00:00Z',
-        '2035-06-01T08:00:00Z',
+        '2035-06-01T07:00:00',
+        '2035-06-01T08:00:00',
         'Severe'
       ), // 06-12
       makeWarning(
-        '2035-06-01T13:00:00Z',
-        '2035-06-01T14:00:00Z',
+        '2035-06-01T13:00:00',
+        '2035-06-01T14:00:00',
         'Extreme'
       ), // 12-18
       makeWarning(
-        '2035-06-01T19:00:00Z',
-        '2035-06-01T20:00:00Z',
+        '2035-06-01T19:00:00',
+        '2035-06-01T20:00:00',
         'Moderate'
       ), // 18-24
     ];
