@@ -422,7 +422,8 @@
         "title": "Salamat",
         "description": "Salamakartta näyttää havaitut salamat alueella. Visualisointi perustuu salaman ikään.",
         "age1": "0-5 minuuttia vanha salama",
-        "age2": "5-10 minuuttia vanha salama"
+        "age2": "5-10 minuuttia vanha salama",
+        "age3": "10-15 minuuttia vanha salama"
       },
       "lightnings60": {
         "title": "Salamat",

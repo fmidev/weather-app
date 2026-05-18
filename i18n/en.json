@@ -422,7 +422,8 @@
         "title": "Lightnings",
         "description": "Lightning layer shows observed lightning strikes in the area. Visualization is based on lightning age.",
         "age1": "0-5 minutes old lightning",
-        "age2": "5-10 minutes old lightning"
+        "age2": "5-10 minutes old lightning",
+        "age3": "10-15 minutes old lightning"
       },
       "lightnings60": {
         "title": "Lightnings",

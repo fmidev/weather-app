@@ -422,7 +422,8 @@
         "title": "Blixtar",
         "description": "Blixtlagret visar observerade blixtar i området. Visualiseringen är baserad på blixternas ålder.",
         "age1": "0-5 minuter gammal blixt",
-        "age2": "5-10 minuter gammal blixt"
+        "age2": "5-10 minuter gammal blixt",
+        "age3": "10-15 minuter gammal blixt"
       },
       "lightnings60": {
         "title": "Blixtar",
