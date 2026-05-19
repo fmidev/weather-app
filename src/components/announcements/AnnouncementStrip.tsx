@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Linking,
   StyleProp,
@@ -11,7 +10,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { Config } from '@config';
@@ -21,10 +19,17 @@ import {
   selectMaintenance,
   selectFetchTimestamp,
 } from '@store/announcements/selectors';
-import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
+import {
+  fetchAnnouncements as fetchAnnouncementsAction,
+  dismissAnnouncement as dismissAnnouncementAction,
+} from '@store/announcements/actions';
 
-import { LIGHT_RED, DARK_RED, LIGHT_BLUE, PRIMARY_BLUE } from '@assets/colors';
+import {
+  CRISIS_BG, CRISIS_TEXT, MAINTENANCE_BG, MAINTENANCE_TEXT
+} from '@assets/colors';
+import Text from '@components/common/AppText';
 import AnnouncementIcon from './AnnouncementIcon';
+import CloseButton from '@components/common/CloseButton';
 import type { AnnouncementType } from './types';
 
 const mapStateToProps = (state: State) => ({
@@ -35,6 +40,7 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = {
   fetchAnnouncements: fetchAnnouncementsAction,
+  dismissAnnouncement: dismissAnnouncementAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -51,6 +57,7 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   type,
   crisis,
   maintenance,
+  dismissAnnouncement,
 }) => {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation('announcements');
@@ -58,10 +65,10 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   const { layout } = Config.get('weather');
 
   const announcement = type === 'crisis' ? crisis : maintenance;
-  const backgroundColor = type === 'crisis' ? LIGHT_RED : LIGHT_BLUE;
-  const textColor = type === 'crisis' ? DARK_RED : PRIMARY_BLUE;
+  const backgroundColor = type === 'crisis' ? CRISIS_BG : MAINTENANCE_BG;
+  const textColor = type === 'crisis' ? CRISIS_TEXT : MAINTENANCE_TEXT;
   const prefix = type === 'crisis' ? t('crisisPrefix') : t('maintenancePrefix');
-  const paddingTop = layout === 'fmi' ? insets.top + 5 : 5;
+  const paddingTop = layout === 'fmi' ? insets.top : 5;
 
   if (!announcement || !enabled) {
     return null;
@@ -71,36 +78,46 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   const isLink = linkRegex.test(announcement.link);
 
   return (
-    <View style={[style, styles.container, { backgroundColor, paddingTop }]}>
-      <View style={styles.iconContainer}>
-        <AnnouncementIcon type={type} />
-      </View>
-      {isLink ? (
-        <AccessibleTouchableOpacity
-          style={styles.touchable}
-          accessibilityRole="link"
-          accessibilityHint={t('openInBrowser')}
-          onPress={() => Linking.openURL(announcement.link)}>
-          <View style={[styles.textContainer]}>
-            <Text
-              style={[styles.text, styles.link, { color: textColor }]}
-              accessibilityLabel={`${prefix} ${announcement.content}`}>
-              {announcement.content}
-            </Text>
-          </View>
-          <View style={[styles.iconContainer, styles.rightIcon]}>
-            <Icon name="open-in-new" color={textColor} width={18} height={18} />
-          </View>
-        </AccessibleTouchableOpacity>
-      ) : (
-        <View style={styles.textContainer}>
-          <Text
-            style={[styles.text, { color: textColor }]}
-            accessibilityLabel={`${prefix} ${announcement.content}`}>
-            {announcement.content}
-          </Text>
+    <View style={{ backgroundColor, paddingTop }}>
+      <View style={[style, styles.container]}>
+        <View style={styles.iconColumn}>
+          <AnnouncementIcon type={type} />
         </View>
-      )}
+        <View style={styles.contentColumn}>
+          {isLink ? (
+            <AccessibleTouchableOpacity
+              style={styles.touchable}
+              accessibilityRole="link"
+              accessibilityHint={t('openInBrowser')}
+              onPress={() => Linking.openURL(announcement.link)}>
+              <View style={styles.linkTextContainer}>
+                <Text
+                  style={[styles.text, styles.link, { color: textColor }]}
+                  accessibilityLabel={`${prefix} ${announcement.content}`}>
+                  {announcement.content}
+                </Text>
+              </View>
+            </AccessibleTouchableOpacity>
+          ) : (
+            <View>
+              <Text
+                style={[styles.text, { color: textColor }]}
+                accessibilityLabel={`${prefix} ${announcement.content}`}>
+                {announcement.content}
+              </Text>
+            </View>
+          )}
+        </View>
+        <View style={styles.closeColumn}>
+          {type === 'maintenance' && (
+            <CloseButton
+              onPress={() => dismissAnnouncement(announcement.id)}
+              accessibilityLabel={t('closeAnnouncement')}
+              size={32}
+            />
+          )}
+        </View>
+      </View>
     </View>
   );
 };
@@ -109,33 +126,36 @@ const styles = StyleSheet.create({
   container: {
     padding: 12,
     flexDirection: 'row',
+    alignItems: 'center',
   },
-  iconContainer: {
+  iconColumn: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  contentColumn: {
+    flex: 1,
+    marginHorizontal: 12,
+  },
+  closeColumn: {
+    width: 44,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   text: {
     fontFamily: 'Roboto-Medium',
     fontSize: 16,
-    alignItems: 'flex-end',
-  },
-  textContainer: {
-    alignItems: 'flex-start',
-    marginLeft: 12,
     flexShrink: 1,
   },
   link: {
     textDecorationLine: 'underline',
   },
-  rightIcon: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-    marginRight: 24,
+  linkTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
   touchable: {
     minHeight: 18,
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },

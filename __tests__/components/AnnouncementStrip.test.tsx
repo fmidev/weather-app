@@ -4,12 +4,19 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
 
 import AnnouncementStrip from '../../src/components/announcements/AnnouncementStrip';
-import { DARK_RED, LIGHT_RED, LIGHT_BLUE } from '../../src/assets/colors';
+import {
+  CRISIS_BG,
+  MAINTENANCE_BG,
+} from '../../src/assets/colors';
 
 const mockConfigGet = jest.fn();
 const mockSelectCrisis = jest.fn();
 const mockSelectMaintenance = jest.fn();
 const mockSelectFetchTimestamp = jest.fn<any, any[]>(() => 0);
+const mockDismissAnnouncement = jest.fn((id: string) => ({
+  type: 'DISMISS_ANNOUNCEMENT',
+  id,
+}));
 
 jest.mock('@config', () => ({
   Config: {
@@ -27,6 +34,7 @@ jest.mock('@store/announcements/actions', () => ({
   fetchAnnouncements: () => ({
     type: 'ANNOUNCEMENTS/FETCH',
   }),
+  dismissAnnouncement: (id: string) => mockDismissAnnouncement(id),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -54,6 +62,24 @@ jest.mock('../../src/components/announcements/AnnouncementIcon', () => ({
   default: ({ type }: { type: string }) => {
     const { Text: MockText } = require('react-native');
     return <MockText testID={`announcement-strip-icon-${type}`}>{type}</MockText>;
+  },
+}));
+
+jest.mock('@components/common/CloseButton', () => ({
+  __esModule: true,
+  default: ({ onPress, accessibilityLabel }: any) => {
+    const {
+      Text: MockText,
+      TouchableOpacity,
+    } = require('react-native');
+    return (
+      <TouchableOpacity
+        accessibilityLabel={accessibilityLabel}
+        onPress={onPress}
+        testID="announcement-strip-close-button">
+        <MockText>{accessibilityLabel}</MockText>
+      </TouchableOpacity>
+    );
   },
 }));
 
@@ -91,6 +117,7 @@ describe('AnnouncementStrip', () => {
     mockSelectCrisis.mockReset();
     mockSelectMaintenance.mockReset();
     mockSelectFetchTimestamp.mockClear();
+    mockDismissAnnouncement.mockClear();
     mockIcon.mockClear();
   });
 
@@ -127,12 +154,13 @@ describe('AnnouncementStrip', () => {
   it('renders maintenance announcement without link as plain text', () => {
     mockSelectCrisis.mockReturnValue(undefined);
     mockSelectMaintenance.mockReturnValue({
+      id: 'maintenance-1',
       content: 'Planned maintenance at 10:00',
       link: 'maintenance-info',
     });
 
     const store = createStore({ mock: {} });
-    const { getByText, queryByA11yRole, getByA11yLabel, toJSON } = render(
+    const { getByText, queryByA11yRole, getByA11yLabel, getByTestId, toJSON } = render(
       <Provider store={store as any}>
         <AnnouncementStrip type="maintenance" />
       </Provider>
@@ -142,14 +170,22 @@ describe('AnnouncementStrip', () => {
     expect(getByA11yLabel('Maintenance Planned maintenance at 10:00')).toBeTruthy();
     expect(queryByA11yRole('link')).toBeNull();
 
+    fireEvent.press(getByTestId('announcement-strip-close-button'));
+
+    expect(mockDismissAnnouncement).toHaveBeenCalledWith('maintenance-1');
+    expect(store.dispatch).toHaveBeenCalledWith({
+      type: 'DISMISS_ANNOUNCEMENT',
+      id: 'maintenance-1',
+    });
+
     const tree = toJSON() as any;
     const styleArray = Array.isArray(tree.props.style)
       ? tree.props.style
       : [tree.props.style];
     const mergedStyle = Object.assign({}, ...styleArray);
 
-    expect(mergedStyle.backgroundColor).toBe(LIGHT_BLUE);
-    expect(mergedStyle.paddingTop).toBe(17);
+    expect(mergedStyle.backgroundColor).toBe(MAINTENANCE_BG);
+    expect(mergedStyle.paddingTop).toBe(12);
   });
 
   it('renders crisis announcement as link and opens browser on press', async () => {
@@ -170,15 +206,6 @@ describe('AnnouncementStrip', () => {
     expect(getByA11yHint('Open in browser')).toBeTruthy();
     expect(getByA11yLabel('Crisis Storm warning in effect')).toBeTruthy();
     expect(getByTestId('announcement-strip-icon-crisis')).toBeTruthy();
-    expect(getByTestId('icon-open-in-new')).toBeTruthy();
-    expect(mockIcon).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'open-in-new',
-        color: DARK_RED,
-        width: 18,
-        height: 18,
-      })
-    );
 
     const tree = toJSON() as any;
     const styleArray = Array.isArray(tree.props.style)
@@ -186,15 +213,10 @@ describe('AnnouncementStrip', () => {
       : [tree.props.style];
     const mergedStyle = Object.assign({}, ...styleArray);
 
-    expect(mergedStyle.backgroundColor).toBe(LIGHT_RED);
+    expect(mergedStyle.backgroundColor).toBe(CRISIS_BG);
 
     fireEvent.press(getByA11yRole('link'));
 
     expect(openURLSpy).toHaveBeenCalledWith('https://example.test/crisis');
-    expect(mockIcon).toHaveBeenCalledWith(
-      expect.objectContaining({
-        color: DARK_RED,
-      })
-    );
   });
 });

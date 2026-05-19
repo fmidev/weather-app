@@ -5,6 +5,7 @@ import {
   FETCH_ANNOUNCEMENTS,
   FETCH_ANNOUNCEMENTS_SUCCESS,
   FETCH_ANNOUNCEMENTS_ERROR,
+  DISMISS_ANNOUNCEMENT,
   AnnouncementActionTypes,
 } from './types';
 
@@ -27,6 +28,11 @@ const fetchAnnouncements =
           timestamp: Date.now(),
         });
       });
+  };
+
+export const dismissAnnouncement =
+  (announcementId: string) => (dispatch: Dispatch<AnnouncementActionTypes>) => {
+    dispatch({ type: DISMISS_ANNOUNCEMENT, id: announcementId });
   };
 
 export default fetchAnnouncements;
