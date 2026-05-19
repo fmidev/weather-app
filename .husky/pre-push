@@ -6,4 +6,6 @@
 if [ "$GITHUB_ACTIONS" != "true" ]; then
   yarn lint:ts
   yarn test --watchman=false
+  # Checks secret leaks in the commits that are being pushed
+  gitleaks detect --log-opts="@{u}..HEAD"
 fi

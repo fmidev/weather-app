@@ -15,6 +15,11 @@ This project is licensed under the MIT Licence - see the [LICENSE](LICENSE) file
 
 ## **Installation**
 
+Homebrew package manager for macOS is required: https://brew.sh/
+
+`brew install cocoapods`
+`brew install gitleaks`
+
 `git clone --recurse-submodules https://github.com/fmidev/weather-app.git `
 
 `cd weather-app`
