@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
+    marginLeft: 20,
   },
   withMarginTop: {
     marginTop: 16,
