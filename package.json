@@ -32,7 +32,7 @@
     "@react-navigation/bottom-tabs": "7.9.0",
     "@react-navigation/native": "7.1.26",
     "@react-navigation/stack": "7.6.13",
-    "@testing-library/react-native": "8.0.0",
+    "@testing-library/react-native": "13.3.3",
     "@types/supercluster": "5.0.3",
     "axios": "1.15.0",
     "axios-cache-interceptor": "1.12.0",
