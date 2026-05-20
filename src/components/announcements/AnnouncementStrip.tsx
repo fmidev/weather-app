@@ -113,7 +113,6 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
             <CloseButton
               onPress={() => dismissAnnouncement(announcement.id)}
               accessibilityLabel={t('closeAnnouncement')}
-              size={32}
             />
           )}
         </View>
