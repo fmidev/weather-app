@@ -1,4 +1,6 @@
 import { Platform } from 'react-native';
+import { isAxiosError } from 'axios';
+
 import { ForecastLocation, WeatherData } from '@store/forecast/types';
 import {
   ObservationLocation,
@@ -116,7 +118,7 @@ export const getForecast = async (
   const results = await Promise.allSettled(queries);
 
   const lastIndex = results.length - 1;
-  let error: boolean | string = false;
+  let error = '';
 
   const forecastData = results.flatMap((result, index) => {
     if (index === lastIndex && geoMagneticObservationsEnabled) {
@@ -126,12 +128,16 @@ export const getForecast = async (
       return result.value;
     }
     if (result.status === 'rejected') {
-      const { reason } = result; // AxiosError
-      error = "\n" + 'Message: ' + reason.message + "\n";
-      error += 'Code: ' + reason.code + "\n";
-      error += 'Url: ' + reason.config?.url +"\n";
-      error += 'Status: ' + reason.response?.status + "\n";
-      error += 'Data: ' + reason.response?.data.subString(0, 100) + "\n"
+      const { reason } = result;
+      if (isAxiosError(reason)) {
+        error += 'Message: ' + reason.message + '\n';
+        error += 'Code: ' + reason.code + '\n';
+        error += 'Url: ' + reason.config?.url + '\n';
+        error += 'Status: ' + reason.response?.status + '\n';
+        error += 'Data: ' + String(reason.response?.data ?? '').substring(0, 100) + '\n';
+      } else {
+        error += 'Message: ' + String(reason) + '\n';
+      }
     }
     return [];
   });
