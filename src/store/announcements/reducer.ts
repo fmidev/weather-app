@@ -5,10 +5,12 @@ import {
   FETCH_ANNOUNCEMENTS,
   FETCH_ANNOUNCEMENTS_SUCCESS,
   FETCH_ANNOUNCEMENTS_ERROR,
+  DISMISS_ANNOUNCEMENT,
 } from './types';
 
 const INITIAL_STATE: AnnouncementsState = {
   data: [],
+  dismissed: [],
   loading: false,
   error: false,
   fetchTimestamp: Date.now(),
@@ -48,6 +50,14 @@ export default (
       };
     }
 
+    case DISMISS_ANNOUNCEMENT: {
+      return {
+        ...state,
+        data: state.data.filter((announcement) => announcement.id !== action.id),
+        dismissed: [...state.dismissed, action.id],
+      };
+    }
+
     default: {
       return state;
     }
@@ -56,5 +66,5 @@ export default (
 
 export const announcementsPersist: PersistConfig = {
   key: 'announcements',
-  whitelist: [],
+  whitelist: ['dismissed'],
 };

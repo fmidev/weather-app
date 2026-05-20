@@ -702,7 +702,8 @@
   "announcements": {
     "crisisPrefix": "Warning:",
     "maintenancePrefix": "Attention:",
-    "openInBrowser": "Open in browser"
+    "openInBrowser": "Open in browser",
+    "closeAnnouncement": "Close announcement"
   },
   "news": {
     "title": "News",

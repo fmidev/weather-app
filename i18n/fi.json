@@ -702,7 +702,8 @@
   "announcements": {
     "crisisPrefix": "Varoitus:",
     "maintenancePrefix": "Huomio:",
-    "openInBrowser": "Avaa selaimessa"
+    "openInBrowser": "Avaa selaimessa",
+    "closeAnnouncement": "Sulje ilmoitus"
   },
   "news": {
     "title": "Ajankohtaista",

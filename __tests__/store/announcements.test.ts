@@ -16,6 +16,8 @@ const maintenance = {
   type: 'Maintenance',
 } as any;
 
+const dismissed = [] as Array<string>;
+
 describe('announcements store', () => {
   it('handles fetch lifecycle actions', () => {
     expect(
@@ -33,6 +35,7 @@ describe('announcements store', () => {
       })
     ).toMatchObject({
       data: [announcement],
+      dismissed,
       error: false,
       fetchSuccessTime: 123,
       fetchTimestamp: 123,
@@ -56,6 +59,7 @@ describe('announcements store', () => {
     const state = {
       announcements: {
         data: [announcement, maintenance],
+        dismissed,
         error: false,
         fetchSuccessTime: 123,
         fetchTimestamp: 123,

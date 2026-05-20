@@ -59,7 +59,7 @@ export default combineReducers({
     WarningsReducer
   ),
   announcements: persistReducer(
-    persistReducerConfig(announcementsPersist),
+    mmkvReducerConfig(announcementsPersist),
     AnnouncementsReducer
   ),
   meteorologist: persistReducer(
