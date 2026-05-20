@@ -9,6 +9,7 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRoute } from '@react-navigation/native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -60,6 +61,7 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   dismissAnnouncement,
 }) => {
   const insets = useSafeAreaInsets();
+  const route = useRoute();
   const { t } = useTranslation('announcements');
   const { enabled } = Config.get('announcements');
   const { layout } = Config.get('weather');
@@ -68,7 +70,7 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   const backgroundColor = type === 'crisis' ? CRISIS_BG : MAINTENANCE_BG;
   const textColor = type === 'crisis' ? CRISIS_TEXT : MAINTENANCE_TEXT;
   const prefix = type === 'crisis' ? t('crisisPrefix') : t('maintenancePrefix');
-  const paddingTop = layout === 'fmi' ? insets.top : 5;
+  const paddingTop = layout === 'fmi' && route.name === 'StackWeather' ? insets.top : 5;
 
   if (!announcement || !enabled) {
     return null;

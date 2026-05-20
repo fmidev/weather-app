@@ -57,6 +57,12 @@ jest.mock('react-native-safe-area-context', () => ({
   }),
 }));
 
+jest.mock('@react-navigation/native', () => ({
+  useRoute: () => ({
+    name: 'StackWeather',
+  }),
+}));
+
 jest.mock('../../src/components/announcements/AnnouncementIcon', () => ({
   __esModule: true,
   default: ({ type }: { type: string }) => {
