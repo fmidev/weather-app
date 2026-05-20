@@ -155,6 +155,34 @@ describe('WeatherApi', () => {
     );
   });
 
+  it('throws formatted Axios error details when forecast request fails', async () => {
+    const responseData = 'x'.repeat(120);
+    const axiosError = {
+      isAxiosError: true,
+      message: 'Request failed',
+      code: 'ERR_BAD_RESPONSE',
+      config: { url: 'https://weather.example/timeseries' },
+      response: {
+        status: 503,
+        data: responseData,
+      },
+    };
+
+    mockAxiosClient
+      .mockRejectedValueOnce(axiosError)
+      .mockResolvedValueOnce({ data: [{ epochtime: 1, windSpeedMS: 4 }] });
+
+    await expect(getForecast({ geoid: 123 } as any, 'FI')).rejects.toThrow(
+      [
+        'Message: Request failed',
+        'Code: ERR_BAD_RESPONSE',
+        'Url: https://weather.example/timeseries',
+        'Status: 503',
+        `Data: ${responseData.substring(0, 100)}`,
+      ].join('\n')
+    );
+  });
+
   it('fetches observations and daily observations when enabled', async () => {
     mockAxiosClient
       .mockResolvedValueOnce({ data: { hourly: true } })
