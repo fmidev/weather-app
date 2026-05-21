@@ -655,7 +655,8 @@
   "setUp": {
     "termsAndConditions": "Käyttöehdot",
     "termsAndConditionsChanged": "Käyttöehdot on päivitetty",
-    "termsAndConditionsDescription": "Käyttääksesi palvelua, sinun tulee hyväksyä käyttöehdot. Tutustu käyttö-\nehtoihin painamalla Käyttöehdot-linkkiä.",
+    "termsAndConditionsDescription": "Käyttääksesi palvelua, sinun tulee hyväksyä käyttöehdot. Tutustu käyttöehtoihin painamalla Lue käyttöehdot -painiketta.",
+    "readTermsAndConditions": "Lue käyttöehdot",
     "accept": "Hyväksy",
     "location": "Sijainti",
     "locationDescription": "Sovellus käyttää laitteen sijaintia paikantamaan käyttäjän. Sijaintia käytetään vain esitystarkoitukseen.",
@@ -675,8 +676,11 @@
     "step": "Vaihe {{ current }} kautta {{ total }}"
   },
   "termsAndConditions": {
-    "close": "Sulje",
-    "closeButtonAccessibilityHint": "Sulje Käyttöehdot ja navigoi takaisin edelliseen näkymään"
+    "accept": "Hyväksy",
+    "decline": "Hylkää",
+    "acceptTermsError": "Et voi käyttää sovellusta hyväksymättä käyttöehtoja.",
+    "acceptButtonAccessibilityHint": "Hyväksy käyttöehdot ja navigoi eteenpäin",
+    "declineButtonAccessibilityHint": "Hylkää käyttöehdot, mutta et voi käyttää sovellusta"
   },
   "feedback": {
     "title": "Kiitos, että autat meitä kehittämään palvelujamme!",

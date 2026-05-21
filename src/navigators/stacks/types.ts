@@ -26,6 +26,6 @@ export type WeatherStackParamList = {
 
 export type SetupStackParamList = {
   Onboarding: undefined;
-  SetupScreen: undefined;
+  SetupScreen: { acceptedTerms?: boolean } | undefined;
   TermsAndConditions: undefined;
 };
