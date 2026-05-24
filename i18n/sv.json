@@ -654,7 +654,8 @@
   "setUp": {
     "termsAndConditions": "Användarvillkor",
     "termsAndConditionsChanged": "Användarvillkoren har ändrats",
-    "termsAndConditionsDescription": "För att använda tjänsten måste du godkänna applikationens användarvillkor. Bekanta dig med användningsvillkoren genom att klicka på länken Användningsvillkor.",
+    "termsAndConditionsDescription": "För att använda tjänsten måste du godkänna applikationens användarvillkor. Bekanta dig med användningsvillkoren genom att klicka på knapp Läs användarvillkoren.",
+    "readTermsAndConditions": "Läs användarvillkoren",
     "accept": "Godkänn",
     "location": "Läge",
     "locationDescription": "Applikationen använder enhetens position för att lokalisera användaren. Positionen används endast för presentationssyfte.",
@@ -674,8 +675,11 @@
     "step": "Steg {{ current }} av {{ total }}"
   },
   "termsAndConditions": {
-    "close": "Stäng",
-    "closeButtonAccessibilityHint": "Stäng användarvillkoren och navigera tillbaka till föregående vy"
+    "accept": "Godkänn",
+    "decline": "Avbryt",
+    "acceptTermsError": "Du kan inte använda appen utan att godkänna användarvillkoren.",
+    "acceptButtonAccessibilityHint": "Godkänn användarvillkoren och navigera vidare",
+    "declineButtonAccessibilityHint": "Avbryt användarvillkoren, men du kan inte använda appen"
   },
   "feedback": {
     "title": "Tack för att du hjälper oss utveckla våra tjänster!",

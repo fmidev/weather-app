@@ -655,7 +655,8 @@
   "setUp": {
     "termsAndConditions": "Terms of Use",
     "termsAndConditionsChanged": "The Terms of Use have changed",
-    "termsAndConditionsDescription": "You must accept the terms of use to use the service. Learn more about the Terms of Use by tapping the Terms of Use link.",
+    "termsAndConditionsDescription": "You must accept the terms of use to use the service. Learn more about the Terms of Use by tapping the Read the Terms of Use button.",
+    "readTermsAndConditions": "Read the Terms of Use",
     "accept": "Accept",
     "location": "Location",
     "locationDescription": "The app uses the device location to locate the user. The location is used only for visual display purposes. ",
@@ -675,8 +676,11 @@
     "step": "Step {{ current }} of {{ total }}"
   },
   "termsAndConditions": {
-    "close": "Close",
-    "closeButtonAccessibilityHint": "Close Terms of Use and navigate back to previous screen"
+    "accept": "Accept",
+    "decline": "Decline",
+    "acceptTermsError": "You cannot use the app without accepting the terms of use.",
+    "acceptButtonAccessibilityHint": "Accept the terms of use and navigate forward",
+    "declineButtonAccessibilityHint": "Decline the terms of use, but you cannot use the app"
   },
   "feedback": {
     "title": "Thank you for helping us improve our services!",

@@ -11,12 +11,13 @@ describe('SetupScreen', () => {
     resetScreenMocks();
   });
 
-  it('requires viewing terms before continuing to location permission', () => {
+  it('continues to location permission after accepting terms', () => {
     const navigation = { navigate: jest.fn() };
     const setUpDone = jest.fn();
-    const { getAllByText, getByTestId } = render(
+    const { getAllByText, getByTestId, rerender } = render(
       <SetupScreen
         navigation={navigation as any}
+        route={{ params: undefined } as any}
         setUpDone={setUpDone}
         termsOfUseChanged={false}
       />
@@ -24,31 +25,49 @@ describe('SetupScreen', () => {
 
     fireEvent.press(getByTestId('setup_primary_button'));
     expect(getAllByText('termsAndConditions').length).toBeGreaterThan(0);
-
-    fireEvent.press(getByTestId('setup_secondary_button'));
     expect(navigation.navigate).toHaveBeenCalledWith('TermsAndConditions');
 
-    fireEvent.press(getByTestId('setup_primary_button'));
+    rerender(
+      <SetupScreen
+        navigation={navigation as any}
+        route={{ params: { acceptedTerms: true } } as any}
+        setUpDone={setUpDone}
+        termsOfUseChanged={false}
+      />
+    );
+
     expect(getByTestId('setup_title_text').props.children).toBe('location');
 
     fireEvent.press(getByTestId('setup_primary_button'));
     expect(mockPermissionsRequest).toHaveBeenCalled();
   });
 
-  it('finishes setup directly when terms of use have changed and were viewed', () => {
+  it('finishes setup after accepting changed terms of use', () => {
+    const navigation = { navigate: jest.fn() };
     const setUpDone = jest.fn();
-    const { getByTestId, queryByTestId } = render(
+    const { getByTestId, queryByTestId, rerender } = render(
       <SetupScreen
-        navigation={{ navigate: jest.fn() } as any}
+        navigation={navigation as any}
+        route={{ params: undefined } as any}
         setUpDone={setUpDone}
         termsOfUseChanged
       />
     );
 
     expect(queryByTestId('setup_pagination')).toBeNull();
+    expect(setUpDone).not.toHaveBeenCalled();
 
-    fireEvent.press(getByTestId('setup_secondary_button'));
     fireEvent.press(getByTestId('setup_primary_button'));
+    expect(navigation.navigate).toHaveBeenCalledWith('TermsAndConditions');
+
+    rerender(
+      <SetupScreen
+        navigation={navigation as any}
+        route={{ params: { acceptedTerms: true } } as any}
+        setUpDone={setUpDone}
+        termsOfUseChanged
+      />
+    );
 
     expect(setUpDone).toHaveBeenCalledTimes(1);
   });

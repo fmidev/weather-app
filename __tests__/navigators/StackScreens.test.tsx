@@ -11,6 +11,7 @@ const mockStackScreens = jest.fn();
 const mockHeaderTitle = jest.fn();
 const mockSetupScreen = jest.fn();
 const mockTermsAndConditionsScreen = jest.fn();
+const mockNavigate = jest.fn();
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
@@ -46,7 +47,7 @@ jest.mock('@react-navigation/stack', () => ({
             : null;
         const renderedChildren =
           typeof props.children === 'function'
-            ? props.children({ navigation: { goBack: jest.fn() } })
+            ? props.children({ navigation: { goBack: jest.fn(), navigate: mockNavigate } })
             : null;
         return (
           <View testID={`stack-screen-${props.name}`}>
@@ -119,6 +120,7 @@ describe('navigator stack screens', () => {
     mockHeaderTitle.mockClear();
     mockSetupScreen.mockClear();
     mockTermsAndConditionsScreen.mockClear();
+    mockNavigate.mockClear();
   });
 
   it('renders map stack with map and search screens', () => {
@@ -206,9 +208,16 @@ describe('navigator stack screens', () => {
     );
     expect(mockTermsAndConditionsScreen).toHaveBeenCalledWith(
       expect.objectContaining({
-        showCloseButton: true,
+        showActions: true,
+        onAccept: expect.any(Function),
       })
     );
+    mockTermsAndConditionsScreen.mock.calls[0][0].onAccept();
+    expect(mockNavigate).toHaveBeenCalledWith({
+      name: 'SetupScreen',
+      params: { acceptedTerms: true },
+      merge: true,
+    });
     expect(view.getByTestId('header-title-setUp:termsAndConditions')).toBeTruthy();
   });
 });

@@ -11,15 +11,31 @@ describe('TermsAndConditionsScreen', () => {
     resetScreenMocks();
   });
 
-  it('renders terms content and calls close handler', () => {
-    const onClose = jest.fn();
+  it('renders terms content and calls accept handler', () => {
+    const onAccept = jest.fn();
     const { getByTestId } = render(
-      <TermsAndConditionsScreen showCloseButton onClose={onClose} />
+      <TermsAndConditionsScreen showActions onAccept={onAccept} />
     );
 
     expect(getByTestId('terms_and_conditions_view')).toBeTruthy();
+    fireEvent.press(getByTestId('terms_accept_button'));
+    expect(onAccept).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows error message when terms are declined', () => {
+    const { getByTestId, getByText } = render(
+      <TermsAndConditionsScreen showActions />
+    );
+
     fireEvent.press(getByTestId('terms_close_button'));
-    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(getByText('acceptTermsError')).toBeTruthy();
+  });
+
+  it('does not render action buttons by default', () => {
+    const { queryByTestId } = render(<TermsAndConditionsScreen />);
+
+    expect(queryByTestId('terms_accept_button')).toBeNull();
+    expect(queryByTestId('terms_close_button')).toBeNull();
   });
 
   it('renders markdown content when enabled', () => {
