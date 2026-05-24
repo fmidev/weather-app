@@ -682,6 +682,8 @@
     "title": "Thank you for helping us improve our services!",
     "body1": "Use the Send feedback button to give us feedback on the application. The button will take you to your mobile phone’s email program.",
     "body2": "We will process all feedback we receive but cannot guarantee a personal reply.",
+    "openFAQ": "Open frequently asked questions",
+    "openFAQHint": "Open frequently asked questions in browser",
     "sendFeedback": "Send feedback",
     "moveToHint": "Move to your mail application"
   },

@@ -37,6 +37,10 @@ export const resetScreenMocks = () => {
       return {
         email: 'feedback@example.test',
         enabled: true,
+        faqUrl: {
+          en: 'https://example.test/faq-en',
+          fi: 'https://example.test/faq-fi',
+        },
         subject: { en: 'Feedback subject' },
       };
     }
