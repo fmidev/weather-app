@@ -685,6 +685,8 @@
     "title": "Tack för att du hjälper oss utveckla våra tjänster!",
     "body1": "Ge respons om applikationen via Skicka respons. Knappen öppnar telefonens e-postprogram.",
     "body2": "Vi behandlar all respons men vi garanterar inte att du får ett personligt svar.",
+    "openFAQ": "Öppna vanliga frågor",
+    "openFAQHint": "Öppna vanliga frågor i webbläsaren",
     "sendFeedback": "Skicka respons",
     "moveToHint": "Gå till telefonens e-postprogram"
   },

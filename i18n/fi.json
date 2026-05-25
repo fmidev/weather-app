@@ -686,6 +686,8 @@
     "title": "Kiitos, että autat meitä kehittämään palvelujamme!",
     "body1": "Kerro meille palautteesi sovelluksesta Lähetä palautetta -painikkeen kautta. Painikkeesta siirryt laitteen sähköpostiohjelmaan.",
     "body2": "Käsittelemme kaikki palautteet, mutta emme voi taata henkilökohtaista vastausta.",
+    "openFAQ": "Avaa usein kysytyt kysymykset",
+    "openFAQHint": "Avaa usein kysytyt kysymykset selaimessa",
     "sendFeedback": "Lähetä palautetta",
     "moveToHint": "Siirry laitteen sähköpostiohjelmaan"
   },

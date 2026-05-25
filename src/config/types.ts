@@ -221,6 +221,9 @@ interface Feedback {
   subject: {
     [locale: string]: string;
   };
+  faqUrl?: {
+    [locale: string]: string;
+  };
 }
 
 interface News {
