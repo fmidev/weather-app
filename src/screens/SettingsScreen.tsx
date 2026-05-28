@@ -71,11 +71,13 @@ const SettingsScreen: React.FC<Props> = ({
   theme,
   geoids,
   units,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mapLibrary,
   updateUnits,
   updateClockType,
   updateTheme,
   updateLocationsLocales,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateMapLibrary
 }) => {
   const [locationPermission, setLocationPermission] = useState<
@@ -655,6 +657,7 @@ const SettingsScreen: React.FC<Props> = ({
               </View>
             </AccessibleTouchableOpacity>
           </View>
+          {/*
           <View
             style={[
               styles.rowWrapper,
@@ -736,6 +739,7 @@ const SettingsScreen: React.FC<Props> = ({
               </View>
             </AccessibleTouchableOpacity>
           </View>
+          */}
         </View>
       </ScrollView>
     </View>
