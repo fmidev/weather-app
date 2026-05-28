@@ -11,11 +11,13 @@ import { State } from '@store/types';
 import {
   selectCrisis,
   selectFetchTimestamp,
+  selectMaintenance,
 } from '@store/announcements/selectors';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 
 const mapStateToProps = (state: State) => ({
   crisis: selectCrisis(state),
+  maintenance: selectMaintenance(state),
   fetchTimestamp: selectFetchTimestamp(state),
 });
 
@@ -28,10 +30,14 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type AnnouncementsProps = {
+  includeTopInset?: boolean;
   style?: StyleProp<ViewStyle>;
 } & PropsFromRedux;
 
 const Announcements: React.FC<AnnouncementsProps> = ({
+  crisis,
+  includeTopInset,
+  maintenance,
   style,
   fetchAnnouncements,
   fetchTimestamp,
@@ -65,8 +71,11 @@ const Announcements: React.FC<AnnouncementsProps> = ({
 
   return (
     <View style={style}>
-      <AnnouncementStrip type="crisis" />
-      <AnnouncementStrip type="maintenance" />
+      <AnnouncementStrip includeTopInset={includeTopInset} type="crisis" />
+      <AnnouncementStrip
+        includeTopInset={includeTopInset && !crisis && !!maintenance}
+        type="maintenance"
+      />
     </View>
   );
 };

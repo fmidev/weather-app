@@ -420,7 +420,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     position: 'absolute',
-    bottom: 8,
+    bottom: 38,
     right: 12,
     left: 12,
     minHeight: 75,

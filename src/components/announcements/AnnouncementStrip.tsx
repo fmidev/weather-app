@@ -9,7 +9,6 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRoute } from '@react-navigation/native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
@@ -61,20 +60,20 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   dismissAnnouncement,
 }) => {
   const insets = useSafeAreaInsets();
-  const route = useRoute();
   const { t } = useTranslation('announcements');
   const { enabled } = Config.get('announcements');
-  const { layout } = Config.get('weather');
 
   const announcement = type === 'crisis' ? crisis : maintenance;
   const backgroundColor = type === 'crisis' ? CRISIS_BG : MAINTENANCE_BG;
   const textColor = type === 'crisis' ? CRISIS_TEXT : MAINTENANCE_TEXT;
   const prefix = type === 'crisis' ? t('crisisPrefix') : t('maintenancePrefix');
-  const paddingTop = layout === 'fmi' && route.name === 'StackWeather' ? insets.top : 5;
+  const paddingTop = Math.max(Math.round(insets.top), 5);
 
   if (!announcement || !enabled) {
     return null;
   }
+
+  announcement.content = 'Erittäin pitkä teksti joka testaa kuinka hyvin teksti skaalautuu ja meneekö se useammalle riville vai jääkö se yhteen riviin ja meneekö siitä sitten osittain pois näkyvistä vai näkyykö se kokonaan.';
 
   const linkRegex = new RegExp(/^http.*$/);
   const isLink = linkRegex.test(announcement.link);
@@ -125,7 +124,8 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    paddingBottom: 8,
+    paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },

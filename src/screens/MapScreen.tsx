@@ -6,7 +6,6 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import MlMapView from '@components/map/maps/MlMapView';
 import RnMapview from '@components/map/maps/RnMapView';
-import Announcements from '@components/announcements/Announcements';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import { GRAY_1 } from '@assets/colors';
@@ -37,8 +36,6 @@ const MapScreen: React.FC<MapScreenProps> = ({mapLibrary}) => {
         :
         <RnMapview infoSheetRef={infoSheetRef} mapLayersSheetRef={mapLayersSheetRef} />
       }
-
-      <Announcements style={styles.announcements} />
 
       <RBSheet
         ref={infoSheetRef}
@@ -82,10 +79,6 @@ const styles = StyleSheet.create({
   draggableIcon: {
     backgroundColor: GRAY_1,
     width: 65,
-  },
-  announcements: {
-    width: '100%',
-    marginTop: 30,
   },
 });
 
