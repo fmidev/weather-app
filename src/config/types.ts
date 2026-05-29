@@ -24,6 +24,7 @@ export type WMSSource = {
   source: string;
   layer: string;
   type: 'observation' | 'forecast';
+  referenceTimeEnabled?: boolean;
   customParameters?: {
     [name: string]: string | number | { dark: string; light: string };
   };

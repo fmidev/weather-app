@@ -79,8 +79,54 @@ describe('map helper functions', () => {
       'layers=weatherapp:scandinavia:precipitationForecast'
     );
     expect(forecastLayer?.url).toContain(
-      'reference_time=2026-03-03T07:40:00Z'
+      'dim_reference_time=2026-03-03T07:40:00Z'
     );
+  });
+
+  it('should not add reference time parameter when layer reference time is disabled', async () => {
+    const xml = fs.readFileSync(
+      path.join(__dirname, '../data/GetCapabilities.xml'),
+      'utf8'
+    );
+
+    (axiosClient as jest.Mock).mockResolvedValueOnce({ data: xml });
+
+    const sources = {
+      smartmet: 'https://example.test',
+    };
+
+    const overlay = {
+      id: 42,
+      type: 'WMS',
+      name: {
+        en: 'Precipitation and lightnings 5min.',
+        fi: 'Sade ja salamat 5min.',
+        sv: 'Regn och blixt 5min.',
+      },
+      times: {
+        timeStep: 60,
+        forecast: 8,
+      },
+      tileSize: 256,
+      sources: [
+        {
+          source: 'smartmet',
+          layer: 'weatherapp:scandinavia:precipitationForecast',
+          type: 'forecast',
+          referenceTimeEnabled: false,
+          customParameters: {
+            styles: 'Mobile_dark',
+          },
+        },
+      ],
+    } as any;
+
+    const result = await getWMSLayerUrlsAndBounds(sources, overlay, 'maplibre');
+    const parsedOverlay = result?.get(42);
+    const forecastLayer = parsedOverlay?.forecast as any;
+
+    expect(forecastLayer?.url).not.toContain('dim_reference_time=');
+    expect(forecastLayer?.url).not.toContain('reference_time=');
   });
 
   it('should get timeseries data for map markers', async () => {
