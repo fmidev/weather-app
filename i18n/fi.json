@@ -321,9 +321,7 @@
   },
   "about": {
     "versionInfo": "Sovelluksen versio",
-    "followUs": "Seuraa meitä",
-    "title": "Ilmatieteen laitoksen Sää -sovellus",
-    "body": "Sää-sovelluksestamme saat säätietoja lähes kaikille Suomen paikkakunnille ja sallimalla laitteesi paikannuksen, palvelu näyttää automaattisesti sijaintisi sääennusteen 10 vrk asti. Kiinnostaako sinua vain lämpötila vai haluatko myös tietoja esimerkiksi ilmanpaineesta, tuulen puuskista tai vaikkapa UV-indeksistä? Sekä sääennusteissa että säähavainnoissa voit vapaasti valita mitä säätietoja haluat seurata. Voit myös tallentaa sovellukseen suosikkipaikkakuntasi niin Suomesta kuin ulkomailta ja selata niitä helposti. Haluamasi tiedot ovat tarjolla sekä taulukkoina että graafisena esityksenä. Kartta-osion animaatioista voit seurata mm. sadealueiden liikettä ja tutkakuviin perustuva sade-ennuste kertoo mihin päin sateet liikkuvat tulevien tuntien aikana. Palvelussa näkyvät voimassa olevat säävaroitukset valitsemassasi sijainnissa ja pystyt myös helposti tarkistamaan viralliset säävaroitukset koko Suomen alueelta."
+    "followUs": "Seuraa meitä"
   },
   "settings": {
     "language": "Kieli",
@@ -424,7 +422,8 @@
         "title": "Salamat",
         "description": "Salamakartta näyttää havaitut salamat alueella. Visualisointi perustuu salaman ikään.",
         "age1": "0-5 minuuttia vanha salama",
-        "age2": "5-10 minuuttia vanha salama"
+        "age2": "5-10 minuuttia vanha salama",
+        "age3": "10-15 minuuttia vanha salama"
       },
       "lightnings60": {
         "title": "Salamat",
@@ -656,7 +655,8 @@
   "setUp": {
     "termsAndConditions": "Käyttöehdot",
     "termsAndConditionsChanged": "Käyttöehdot on päivitetty",
-    "termsAndConditionsDescription": "Käyttääksesi palvelua, sinun tulee hyväksyä käyttöehdot. Tutustu käyttö-\nehtoihin painamalla Käyttöehdot-linkkiä.",
+    "termsAndConditionsDescription": "Käyttääksesi palvelua, sinun tulee hyväksyä käyttöehdot. Tutustu käyttöehtoihin painamalla Lue käyttöehdot -painiketta.",
+    "readTermsAndConditions": "Lue käyttöehdot",
     "accept": "Hyväksy",
     "location": "Sijainti",
     "locationDescription": "Sovellus käyttää laitteen sijaintia paikantamaan käyttäjän. Sijaintia käytetään vain esitystarkoitukseen.",
@@ -676,29 +676,18 @@
     "step": "Vaihe {{ current }} kautta {{ total }}"
   },
   "termsAndConditions": {
-    "close": "Sulje",
-    "closeButtonAccessibilityHint": "Sulje Käyttöehdot ja navigoi takaisin edelliseen näkymään",
-    "generalTitle": "Ilmatieteen laitoksen Sää -mobiilisovelluksen käyttöehdot",
-    "contentsTitle": "1. Käyttöoikeuden sisältö",
-    "contentsDescription": "Sovelluksen käyttäjällä on oikeus käyttää sovellusta näiden käyttöehtojen mukaisesti. Käyttöoikeus ei ole yksinomainen, eikä se ole siirrettävissä kolmannelle osapuolelle. Käyttöoikeus päättyy käyttäjän poistaessa sovelluksen. Sovelluksen käyttäjä vastaa sovelluksen käyttämiseksi tarvittavien laitteiden, ohjelmistojen ja tietoliikenneyhteyksien hankkimisesta sekä niistä aiheutuvista kustannuksista ja laitteiden, ohjelmistojen ja yhteyksien toiminnasta. Käyttäjä huolehtii sovelluksen käytöstä tietoturvallisessa käyttöympäristössä.",
-    "generalDescription": "Käyttöehtoja sovelletaan Ilmatieteen laitoksen ylläpitämän Sää-sovelluksen (”sovellus”) käyttöön. Sovelluksen tarkoituksena on tarjota käyttäjälle säähavaintoja, -ennusteita ja -varoituksia. Nämä käyttöehdot muodostavat sovelluksen käyttöä koskevan sopimuksen Ilmatieteen laitoksen ja sovelluksen käyttäjän välille. Sovelluksen käyttäjän on hyväksyttävä nämä käyttöehdot sovelluksen käyttöönoton yhteydessä, jolloin ne sitovat käyttäjää. Sovelluksen käyttö on vapaaehtoista. Sovellus tarjotaan käyttöön App Storen tai Google Play Storen kautta, jolloin näiden käyttöehtojen lisäksi käyttäjän tulee noudattaa kyseisen palvelutarjoajan omia käyttöehtoja.",
-    "personalInfoTitle": "2. Henkilötiedot",
-    "personalInfoDescription": "Sovellus ei kerää henkilötietoja eikä sijaintiin tai liikkumiseen liittyviä tietoja. Käyttäjä voi milloin tahansa siirtyä sovelluksen asetuksiin ja muuttaa tai peruuttaa suostumuksensa. Ilmatieteen laitos voi käyttää alihankkijoita sovelluksen tarjoaman palvelun mahdollistamiseksi. Sovellus käyttää myös analytiikkaa kerätäkseen anonymisoitua tietoa palvelun parantamiseksi. Näitä tietoja ei voida käyttää yksittäisten käyttäjien tunnistamiseen.",
-    "immaterialRightsTitle": "3. Immateriaalioikeudet",
-    "immaterialRightsDescription": "Kaikki sovellukseen liittyvät immateriaalioikeudet ja omistusoikeudet kuuluvat Ilmatieteen laitokselle. Sovellus voi sisältää avoimen lähdekoodin ohjelmistoja.",
-    "liabilityTitle": "4. Vastuurajoitukset",
-    "liabilityDescription": "Ilmatieteen laitos valvoo järjestelmää ja pyrkii parhaan kykynsä mukaan estämään häiriöt ja katkokset palvelussa. Ilmatieteen laitos ei vastaa palvelun tai sen puutteen perusteella tehdyistä päätöksistä eikä aineiston käytöstä aiheutuvista välittömistä tai välillisistä vahingoista. Ilmatieteen laitos ei ole vastuussa näiden käyttöehtojen mukaisista velvoitteistaan siltä osin, kun kyse on Ilmatieteen laitoksesta riippumattomasta ylivoimaisesta esteestä.",
-    "rightToChangesTitle": "5. Käyttöehtojen muuttaminen ja voimassaolo",
-    "rightToChangesDescription": "Käyttöehtojen muuttaminen ja voimassaolo Ilmatieteen laitoksen on oikeus muuttaa sovelluksen sisältöjä ja näitä käyttöehtoja. Käyttöehtojen muutoksesta ja sovelluksen sisältömuutoksista ilmoitetaan käyttäjälle. Jotta käyttäjä voi jatkaa sovelluksen käyttöä käyttöehtojen muutoksen jälkeen, on käyttäjän hyväksyttävä muutetut käyttöehdot sovelluksessa.",
-    "applicableLawTitle": "6. Sovellettava laki ja riitatilanteet",
-    "applicableLawDescription": "Käyttöehtoihin sovelletaan Suomen lakia lukuunottamatta sen lainvalintaan koskevia säännöksiä. Mahdolliset riitatilanteet ratkaistaan Helsingin käräjäoikeudessa.",
-    "contactDetailsTitle": "7. Yhteystiedot",
-    "contactDetailsDescription": "Ilmatieteen laitos\nPL 503\n00101 Helsinki"
+    "accept": "Hyväksy",
+    "decline": "Hylkää",
+    "acceptTermsError": "Et voi käyttää sovellusta hyväksymättä käyttöehtoja.",
+    "acceptButtonAccessibilityHint": "Hyväksy käyttöehdot ja navigoi eteenpäin",
+    "declineButtonAccessibilityHint": "Hylkää käyttöehdot, mutta et voi käyttää sovellusta"
   },
   "feedback": {
     "title": "Kiitos, että autat meitä kehittämään palvelujamme!",
     "body1": "Kerro meille palautteesi sovelluksesta Lähetä palautetta -painikkeen kautta. Painikkeesta siirryt laitteen sähköpostiohjelmaan.",
     "body2": "Käsittelemme kaikki palautteet, mutta emme voi taata henkilökohtaista vastausta.",
+    "openFAQ": "Avaa usein kysytyt kysymykset",
+    "openFAQHint": "Avaa usein kysytyt kysymykset selaimessa",
     "sendFeedback": "Lähetä palautetta",
     "moveToHint": "Siirry laitteen sähköpostiohjelmaan"
   },
@@ -712,28 +701,6 @@
     "tryAgain": "Yritä uudelleen"
   },
   "accessibility": {
-    "generalTitle": "Ilmatieteen laitoksen sää -sovelluksen saavutettavuus",
-    "generalAbout": "Tässä saavutettavuusselosteessa kerrotaan, miten Ilmatieteen laitoksen sovelluksessa noudatetaan lakia digitaalisten palvelujen tarjoamisesta, mitä puutteita sovelluksen saavutettavuudessa on ja miten voit antaa meille palautetta saavutettavuusongelmista.",
-    "generalDescription": "Tästä sovelluksesta vastaa Ilmatieteen laitos. Haluamme, että mahdollisimman moni käyttäjä pystyy käyttämään digitaalisia palvelujamme. Otamme saavutettavuuden huomioon digitaalisten palvelujen kehityksessä.",
-    "subTitle1": "Miten saavutettava sovellus on?",
-    "description1": "Tämä sovellus täyttää osittain lain vaatimat A- ja AA-tason saavutettavuuskriteerit (WCAG-kriteeristö 2.1). Sovelluksessa on saavutettavuuspuutteita, jotka on kuvattu tarkemmin alempana.",
-    "subTitle2": "Huomasitko puutteita saavutettavuudessa?",
-    "description2": "Pyrimme jatkuvasti parantamaan sovelluksen saavutettavuutta. Jos löydät ongelmia, joita ei ole kuvattu tällä sivulla, ilmoita niistä meille ja teemme parhaamme puutteiden korjaamiseksi. Vastaamme mahdollisimman pian tai viimeistään kahden viikon sisällä. Voit ottaa yhteyttä sähköpostitse osoitteella:",
-    "email": "saavutettavuus@fmi.fi",
-    "subTitle3": "Saavutettavuuden valvonta",
-    "description3": "Traficom valvoo saavutettavuusvaatimusten toteutumista vuoden 2025 alusta alkaen. Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta lainkaan kahden viikon aikana, voit antaa palautteen Traficomiin.",
-    "website": "www.saavutettavuusvaatimukset.fi",
-    "email2": "saavutettavuus@traficom.fi",
-    "trafiContact": "\nDigitaalisen esteettömyyden ja saavutettavuuden valvontayksikkö\n\npuhelinnumero vaihde 029 534 5000",
-    "subTitle4": "Tarkemmat tiedot teknisestä saavutettavuudesta",
-    "description4": "Sovellus ei ole vielä kaikilta osin saavutettava.",
-    "subTitle5": "Sisällöt ja toiminnot, jotka eivät vielä ole saavutettavia",
-    "description5": "- Sovelluksessa on elementtejä, joilla ei ole kuvaavaa otsikkoa tai nimilappua. (WCAG 2.4.6)\n- Osassa sovelluksen sääsymboleista ja sademäärää osoittavissa palkeissa ei ole riittävä kontrasti taustaan tai viereisiin elementteihin nähden. (WCAG 1.4.3)\n- Osassa sovelluksen symboleista (esimerkiksi päiväkohtaisten sademäärien palkit) ei ole tekstivastinetta. (WCAG 1.1.1).\n- Sovelluksessa on elementtejä, jotka ovat ryhmitelty yhteen kuuluviksi, mutta saattavat saada kohdistuksen erikseen. (WCAG 2.4.3)\n- Sovelluksessa on upotettuna verkkopalvelun osa-alue, jonka kielisyys ei kaikissa tapauksissa vastaa sovelluksen valittua kieltä. (WCAG 3.1.1 ja 3.1.2)\n- Sovelluksessa on erikielisiä osia, jotka joissain tapauksissa luetaan sovelluksen kielestä poikkevalla kielellä. (WCAG 3.1.2)",
-    "description5.1": "Tässä listatut puutteet pyritään korjaamaan vuosien 2024 - 2025 aikana mikäli ne eivät vaadi merkittäviä muutoksia sovelluksen ulkonäköön tai toiminnallisuuteen.",
-    "subTitle6": "Karttoihin perustuvan sisällön saavutettavuus",
-    "description6": "Sovelluksessa tarjotaan karttoihin perustuvaa säätietoa. Lain mukaan karttojen ja karttapalvelujen ei tarvitse täyttää saavutettavuusvaatimuksia. Kartalla visualisoitu data on saatavilla muualla sovelluksessa saavutettavassa muodossa.",
-    "subTitle7": "Miten olemme testanneet saavutettavuutta?",
-    "description7": "Tämän saavutettavuusselosteen huomiot perustuvat kolmannen osapuolen tekemään arviointiin siitä, täyttääkö verkkopalvelu laissa määritellyt vaatimukset. Sovellus on julkaistu 10.5.2022. Tämä seloste on laadittu 21.4.2022. Selostetta on päivitetty viimeksi 8.4.2024.",
     "link1": "Laki digitaalisten palvelujen tarjoamisesta (306/2019)",
     "link2": "Saavutettavuusvaatimukset-verkkosivusto",
     "openInBrowser": "Avaa selaimessa"
@@ -741,7 +708,8 @@
   "announcements": {
     "crisisPrefix": "Varoitus:",
     "maintenancePrefix": "Huomio:",
-    "openInBrowser": "Avaa selaimessa"
+    "openInBrowser": "Avaa selaimessa",
+    "closeAnnouncement": "Sulje ilmoitus"
   },
   "news": {
     "title": "Ajankohtaista",

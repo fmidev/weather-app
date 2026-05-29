@@ -28,7 +28,7 @@ const MapScreen: React.FC<MapScreenProps> = ({mapLibrary}) => {
   const mapLayersSheetRef = useRef<RBSheet>(null);
   const infoSheetRef = useRef<RBSheet>(null);
 
-    const largeFonts = fontScale > 1.5;
+  const largeFonts = fontScale > 1.5;
 
   return (
     <>

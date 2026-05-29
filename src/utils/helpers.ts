@@ -421,7 +421,7 @@ export const getIndexForDaySmartSymbol = (dayArray: TimeStepData[]): number => {
 
 const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
 
-const getSeveritiesForTimePeriod = (
+export const getSeveritiesForTimePeriod = (
   warnings: CapWarning[],
   start: moment.Moment,
   end: moment.Moment
@@ -441,9 +441,12 @@ const getSeveritiesForTimePeriod = (
       return severities.indexOf(info.severity) + 1
     });
 
-  const maxSeverity = Math.max(...(severitiesForTimePeriod ?? [0]));
+  const maxSeverity = Math.max(
+    ...(severitiesForTimePeriod.length > 0 ? severitiesForTimePeriod : [0])
+  );
   return maxSeverity;
 };
+
 export const getSeveritiesForDays = (
   warnings: CapWarning[] | undefined,
   dates: number[]

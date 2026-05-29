@@ -4,6 +4,8 @@ import { getForecast } from '@network/WeatherApi';
 import { ChartType } from '@components/weather/charts/types';
 import { Config } from '@config';
 import { trackMatomoEvent } from '@utils/matomo';
+import packageJSON from '../../../package.json';
+
 import {
   Error,
   FETCH_FORECAST,
@@ -43,6 +45,7 @@ export const fetchForecast =
         if (modtimeMoment && moment().diff(modtimeMoment, 'hours') >= MAX_FORECAST_AGE) {
           const producer = dataSettings[index].producer;
           trackMatomoEvent('Error', 'Weather', `Old modtime ${modtime} with producer ${producer} for geoid ${id}`);
+          trackMatomoEvent('Error', 'Weather', `Old modtime - version ${packageJSON.version}`);
           const retryData = await getForecast(location, country, producer);
           fixedForecasts.push(retryData.forecasts[0]);
         } else {

@@ -210,6 +210,15 @@ const LegacyInfo: React.FC = () => {
                     {t('infoBottomSheet.lightnings15.age2')}
                   </Text>
                 </View>
+                <View style={[styles.row, styles.lightningsContainer]}>
+                  <Icon
+                    name={dark ? 'flash3-dark' : 'flash3'}
+                    style={styles.lightningIcon}
+                  />
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('infoBottomSheet.lightnings15.age3')}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
