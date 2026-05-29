@@ -73,8 +73,6 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
     return null;
   }
 
-  announcement.content = 'Erittäin pitkä teksti joka testaa kuinka hyvin teksti skaalautuu ja meneekö se useammalle riville vai jääkö se yhteen riviin ja meneekö siitä sitten osittain pois näkyvistä vai näkyykö se kokonaan.';
-
   const linkRegex = new RegExp(/^http.*$/);
   const isLink = linkRegex.test(announcement.link);
 

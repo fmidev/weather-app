@@ -5,6 +5,21 @@ import MapControls from '../../src/components/map/ui/MapControls';
 
 const mockUseOrientation = jest.fn();
 
+jest.mock('react-redux', () => ({
+  connect: () => (Component: any) => Component,
+}));
+
+jest.mock('@config', () => ({
+  Config: {
+    get: (key: string) => {
+      if (key === 'announcements') {
+        return { enabled: true };
+      }
+      return {};
+    },
+  },
+}));
+
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({
     top: 0,

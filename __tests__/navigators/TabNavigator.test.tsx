@@ -202,6 +202,14 @@ jest.mock('@components/common/CommonHeaderTitle', () => ({
   },
 }));
 
+jest.mock('@components/announcements/AnnouncementsHeader', () => ({
+  __esModule: true,
+  default: () => {
+    const { Text } = require('react-native');
+    return <Text testID="announcements-header">announcements</Text>;
+  },
+}));
+
 jest.mock('@components/common/HeaderBackImage', () => ({
   __esModule: true,
   default: () => null,
