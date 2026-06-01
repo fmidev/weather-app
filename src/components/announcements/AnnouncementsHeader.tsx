@@ -35,7 +35,7 @@ const AnnouncementsHeader: React.FC<AnnouncementsHeaderProps> = ({
   return (
     <>
       {hasAnnouncements && (
-        <Announcements includeTopInset style={styles.announcements} />
+        <Announcements style={styles.announcements} />
       )}
       <StackHeader
         {...headerProps}

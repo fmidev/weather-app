@@ -30,14 +30,10 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type AnnouncementsProps = {
-  includeTopInset?: boolean;
   style?: StyleProp<ViewStyle>;
 } & PropsFromRedux;
 
 const Announcements: React.FC<AnnouncementsProps> = ({
-  crisis,
-  includeTopInset,
-  maintenance,
   style,
   fetchAnnouncements,
   fetchTimestamp,
@@ -71,11 +67,8 @@ const Announcements: React.FC<AnnouncementsProps> = ({
 
   return (
     <View style={style}>
-      <AnnouncementStrip includeTopInset={includeTopInset} type="crisis" />
-      <AnnouncementStrip
-        includeTopInset={includeTopInset && !crisis && !!maintenance}
-        type="maintenance"
-      />
+      <AnnouncementStrip type="crisis" />
+      <AnnouncementStrip type="maintenance" />
     </View>
   );
 };
