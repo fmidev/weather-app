@@ -38,7 +38,7 @@ target 'MobileWeather' do
   )
 
   post_install do |installer|
-
+    
     installer.pods_project.targets.each do |target|
       if target.name == "React-Core.common-RCTI18nStrings"
         target.remove_from_project
@@ -50,7 +50,10 @@ target 'MobileWeather' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
-    )  
+    )
+    
+    $MLRN.post_install(installer)
+    
   end
 end
 

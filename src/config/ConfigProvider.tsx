@@ -96,6 +96,14 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
       () => setShouldReload(Date.now()),
       reloadInterval
     );
+
+    // Cleanup on unmount
+    return () => {
+      if (reloadIntervalRef.current) {
+        clearInterval(reloadIntervalRef.current);
+        reloadIntervalRef.current = null;
+      }
+    };
   }, []);
 
   return (

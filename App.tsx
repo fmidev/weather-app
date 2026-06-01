@@ -7,11 +7,12 @@ import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import ReduxThunk from 'redux-thunk';
 import NetInfo from '@react-native-community/netinfo';
+
 import '@i18n';
 import { ConfigProvider } from '@config';
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';
-
+import { configureMapLibreLogging } from '@utils/map';
 import defaultConfig from './defaultConfig';
 
 const App: React.FC = () => {
@@ -28,6 +29,8 @@ const App: React.FC = () => {
   NetInfo.configure({
     reachabilityShouldRun: () => false,
   });
+
+  configureMapLibreLogging();
 
   return (
     <Provider store={store}>

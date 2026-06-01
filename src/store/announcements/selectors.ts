@@ -21,6 +21,11 @@ export const selectAnnouncements = createSelector(
   (announcements) => announcements.data
 );
 
+export const selectDismissedAnnouncements = createSelector(
+  selectAnnouncementsDomain,
+  (announcements) => announcements.dismissed
+);
+
 export const selectCrisis = createSelector(
   selectAnnouncements,
   (announcements) =>
@@ -30,11 +35,13 @@ export const selectCrisis = createSelector(
 );
 
 export const selectMaintenance = createSelector(
-  selectAnnouncements,
-  (announcements) =>
+  selectAnnouncements, selectDismissedAnnouncements,
+  (announcements, dismissed) =>
     announcements &&
     announcements.length > 0 &&
-    announcements.filter((a) => a.type === 'Maintenance')[0]
+    announcements.filter(
+      (a) => a.type === 'Maintenance' && !dismissed.includes(a.id)
+    )[0]
 );
 
 export const selectFetchTimestamp = createSelector(

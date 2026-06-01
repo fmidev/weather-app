@@ -11,6 +11,7 @@ import { selectForecastInvalidData as selectForecastInvalidDataError } from '@st
 import { selectError as selectObservationError } from '@store/observation/selector';
 import { selectError as selectWarningsError } from '@store/warnings/selectors';
 import { selectActiveOverlay, selectOverlaysError } from '@store/map/selectors';
+import { selectMapLibrary } from '@store/settings/selectors';
 
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
@@ -32,6 +33,7 @@ const mapStateToProps = (state: State) => ({
   warningsError: selectWarningsError(state),
   activeOverlay: selectActiveOverlay(state),
   overlaysError: selectOverlaysError(state),
+  mapLibrary: selectMapLibrary(state),
 });
 
 const mapDispatchToProps = {
@@ -79,6 +81,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
   updateOverlays,
   navReady,
   currentRoute,
+  mapLibrary,
 }) => {
   const activeRoute = navReady ? (currentRoute?.name ?? '') : '';
 
@@ -108,8 +111,8 @@ const ErrorComponent: React.FC<ErrorProps> = ({
   }, [fetchWarnings, location]);
 
   const tryUpdateOverlays = useCallback(() => {
-    updateOverlays(activeOverlay);
-  }, [updateOverlays, activeOverlay]);
+    updateOverlays(activeOverlay, mapLibrary);
+  }, [updateOverlays, activeOverlay, mapLibrary]);
 
   const tryAgainFunctions: {
     forecast: () => void;

@@ -1,10 +1,12 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 import { XMLParser } from 'fast-xml-parser';
+import { LogManager } from "@maplibre/maplibre-react-native";
 
 import { MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
 import i18n from '@i18n';
+import type { MapLibrary } from '@store/settings/types';
 
 import axiosClient from './axiosClient';
 import packageJSON from '../../package.json';
@@ -116,7 +118,7 @@ export const getSliderMaxUnix = (
 export const getSliderStepSeconds = (sliderStep: number): number =>
   ([5, 15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
 
-export const getOverlayData = async (activeOverlay: number) => {
+export const getOverlayData = async (activeOverlay: number, library: MapLibrary) => {
   const { sources, layers } = Config.get('map');
   const [overlay] = layers.filter(
     ({ id }) => !activeOverlay || activeOverlay === id
@@ -125,10 +127,10 @@ export const getOverlayData = async (activeOverlay: number) => {
   if (overlay.type === 'Timeseries') {
     return getTimeseriesData(sources, overlay);
   }
-  return getWMSLayerUrlsAndBounds(sources, overlay);
+  return getWMSLayerUrlsAndBounds(sources, overlay, library);
 };
 
-const getTimeseriesData = async (
+export const getTimeseriesData = async (
   sources: { [name: string]: string },
   overlay: MapLayer
 ): Promise<Map<number, MapOverlay> | undefined> => {
@@ -255,9 +257,10 @@ const parseWmsTimeBounds = (dimText: string): TimeBounds => {
   return { layerStart: first.start, layerEnd: last.end };
 };
 
-const getWMSLayerUrlsAndBounds = async (
+export const getWMSLayerUrlsAndBounds = async (
   sources: { [name: string]: string },
-  overlay: MapLayer
+  overlay: MapLayer,
+  library: MapLibrary
 ): Promise<Map<number, MapOverlay> | undefined> => {
   const capabilitiesData = new Map();
   const overlayMap = new Map();
@@ -357,9 +360,9 @@ const getWMSLayerUrlsAndBounds = async (
         request: 'GetMap',
         transparent: 'true',
         layers: layerSrc.layer,
-        bbox: '{minX},{minY},{maxX},{maxY}',
-        width: '{width}',
-        height: '{height}',
+        bbox: library === 'maplibre' ? '{bbox-epsg-3857}' : '{minX},{minY},{maxX},{maxY}',
+        width: library === 'maplibre' ? '512' : '{width}',
+        height: library === 'maplibre' ? '512' : '{height}',
         format: `image/${layer.tileFormat ?? 'png'}`,
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
@@ -389,3 +392,57 @@ const getWMSLayerUrlsAndBounds = async (
 
   return overlayMap;
 };
+
+export const configureMapLibreLogging = () => {
+  LogManager.onLog((event) => {
+    const { tag, message } = event;
+
+    const shouldSuppress =
+      tag === "Mbgl" &&
+      message.includes("Failed to load tile")
+
+    return shouldSuppress;
+  });
+
+  LogManager.start();
+};
+
+export type Coordinate = {
+  latitude: number;
+  longitude: number;
+};
+
+export type BBox = {
+  minLatitude: number;
+  maxLatitude: number;
+  minLongitude: number;
+  maxLongitude: number;
+};
+
+export const getBoundingBox = (coordinates: Coordinate[]): BBox | null => {
+  if (coordinates.length === 0) {
+    return null;
+  }
+
+  return coordinates.reduce<BBox>(
+    (bbox, { latitude, longitude }) => ({
+      minLatitude: Math.min(bbox.minLatitude, latitude),
+      maxLatitude: Math.max(bbox.maxLatitude, latitude),
+      minLongitude: Math.min(bbox.minLongitude, longitude),
+      maxLongitude: Math.max(bbox.maxLongitude, longitude),
+    }),
+    {
+      minLatitude: coordinates[0].latitude,
+      maxLatitude: coordinates[0].latitude,
+      minLongitude: coordinates[0].longitude,
+      maxLongitude: coordinates[0].longitude,
+    }
+  );
+};
+
+export const isPointInsideBoundingBox = (point: Coordinate, bbox: BBox) =>
+  point.latitude >= bbox.minLatitude &&
+  point.latitude <= bbox.maxLatitude &&
+  point.longitude >= bbox.minLongitude &&
+  point.longitude <= bbox.maxLongitude;
+

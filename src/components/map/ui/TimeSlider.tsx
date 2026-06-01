@@ -93,6 +93,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   const { width } = useWindowDimensions();
   const [sliderWidth, setSliderWidth] = useState<number>(width - 24);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const prevCurrentIndexRef = useRef<number>(-1);
 
   const multiplier = Math.round(width / 400);
 
@@ -152,12 +153,15 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   useEffect(() => {
     if (currentIndex >= 0) {
-      if (!isAnimating) {
+      // Only trigger haptics on actual slider movement, not when sliderTimes
+      // changes underneath (e.g. data refresh after navigating away and back).
+      if (!isAnimating && prevCurrentIndexRef.current !== currentIndex) {
         ReactNativeHapticFeedback.trigger(
           Platform.OS === 'ios' ? 'selection' : 'impactMedium'
         );
       }
       updateSliderTime(sliderTimes[currentIndex] || 0);
+      prevCurrentIndexRef.current = currentIndex;
     }
   }, [currentIndex, sliderTimes, updateSliderTime, isAnimating]);
 
@@ -337,7 +341,11 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
             </ScrollView>
           )}
           {sliderTime === 0 && (
-            <ActivityIndicator size="small" style={styles.sliderWrapper} />
+            <ActivityIndicator
+              size="small"
+              style={styles.sliderWrapper}
+              pointerEvents="none"
+            />
           )}
           {sliderTime > 0 && (
             <>
@@ -412,7 +420,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     position: 'absolute',
-    bottom: 38,
+    bottom: 8,
     right: 12,
     left: 12,
     minHeight: 75,

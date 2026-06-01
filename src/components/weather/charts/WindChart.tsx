@@ -101,7 +101,7 @@ const WindChart: React.FC<ChartDataProps> = ({
           domain={chartDomain}
           labels={({ datum }) => `${datum}`}
           labelComponent={<WindLabel />}
-          style={{ data: { stroke: colors.primaryText } }}
+          style={{ data: { stroke: colors.chartPrimaryLine } }}
           interpolation="basis"
         />
       )}

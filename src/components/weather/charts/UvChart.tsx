@@ -18,7 +18,7 @@ const UvChart: React.FC<ChartDataProps> = ({
         <VictoryLine
           data={uvCumulated}
           domain={chartDomain}
-          style={{ data: { stroke: colors.primaryText } }}
+          style={{ data: { stroke: colors.chartPrimaryLine } }}
           interpolation="basis"
         />
       )}

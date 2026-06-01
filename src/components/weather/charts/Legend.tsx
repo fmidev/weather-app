@@ -43,7 +43,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   type LineProps = { color?: string; height?: number };
 
   // eslint-disable-next-line react/no-unstable-nested-components
-  const Line = ({ color = colors.primaryText, height = 2 }: LineProps) => (
+  const Line = ({ color = colors.chartPrimaryLine, height = 2 }: LineProps) => (
     <View
       style={[
         styles.legendLine,

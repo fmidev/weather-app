@@ -74,6 +74,12 @@ export interface MapLayer {
   tileFormat?: string;
 }
 
+export interface BaseMap {
+  url: string;
+  lightStyle: string;
+  darkStyle: string;
+}
+
 interface GeoMagneticObservations {
   enabled: boolean;
   producer: string;
@@ -114,6 +120,8 @@ interface CapViewSettings {
     latitudeDelta: number;
     longitudeDelta: number;
   };
+  localWarningsEnabled?: boolean;
+  localWarningsAfterCountry?: boolean;
   mapZoomEnabled?: boolean;
   mapScrollEnabled?: boolean;
   mapToolbarEnabled?: boolean;
@@ -121,6 +129,7 @@ interface CapViewSettings {
   includeAreaInTitle?: boolean;
   severityBackgroundInSymbol?: boolean;
   hideLongArealist?: boolean;
+  useRelativeDays?: boolean;
 }
 
 interface Warnings {
@@ -212,6 +221,9 @@ interface Feedback {
   subject: {
     [locale: string]: string;
   };
+  faqUrl?: {
+    [locale: string]: string;
+  };
 }
 
 interface News {
@@ -272,10 +284,10 @@ export interface ConfigType {
     maxFavorite: number;
   };
   map: {
-    // latitudeDelta: number;
     updateInterval: number;
     sources: { [name: string]: string };
     layers: MapLayer[];
+    baseMap?: BaseMap;
     infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {
@@ -283,6 +295,7 @@ export interface ConfigType {
     layout?: 'default' | 'fmi' | 'legacyWithoutBackgroundColor';
     forecast: {
       ageWarning?: number;
+      maxAge?: number;
       updateInterval: number;
       timePeriod: number | string | 'data';
       forecastLengthTitle?: number;

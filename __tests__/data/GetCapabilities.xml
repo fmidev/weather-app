@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities version="1.3.0" xmlns="http://www.opengis.net/wms" xmlns:sld="http://www.opengis.net/sld" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/sld_capabilities.xsd http://inspire.ec.europa.eu/schemas/inspire_vs/1.0 http://inspire.ec.europa.eu/schemas/inspire_vs/1.0/inspire_vs.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+<Service>
+  <Name>WMS</Name>
+  <Title>Finnish Meteorological Institute Web Map Service</Title>
+  <Abstract>Finnish Meteorological Institute's Web Map Service</Abstract>
+  <KeywordList>
+      <Keyword>Weather</Keyword>
+      <Keyword>Forecast</Keyword>
+  </KeywordList>
+  <OnlineResource xlink:href="https://en.ilmatieteenlaitos.fi/open-data"/>
+  <ContactInformation>
+    <ContactPersonPrimary>
+      <ContactPerson>Santeri Oksman</ContactPerson>
+      <ContactOrganization>Finnish Meteorological Institute (FMI)</ContactOrganization>
+    </ContactPersonPrimary>
+    <ContactPosition>Customer Service</ContactPosition>
+    <ContactAddress>
+      <AddressType>postal</AddressType>
+      <Address>PL 503</Address>
+      <City>Helsinki</City>
+      <StateOrProvince>Uusimaa</StateOrProvince>
+      <PostCode>00101</PostCode>
+      <Country>Finland</Country>
+    </ContactAddress>
+    <ContactVoiceTelephone>+358 29 539 1000</ContactVoiceTelephone>
+    <ContactFacsimileTelephone>+358 29 539 2303</ContactFacsimileTelephone>
+    <ContactElectronicMailAddress>santeri.oksman@fmi.fi</ContactElectronicMailAddress>
+  </ContactInformation>
+  <Fees>The use of this service and the returned data is limited. Contract with FMI is required for any kind of use.</Fees>
+  <AccessConstraints>The use of this service and the returned data is limited. Contract with FMI is required for any kind of use.</AccessConstraints>
+  <LayerLimit>1000</LayerLimit>
+  <MaxWidth>10000</MaxWidth>
+  <MaxHeight>10000</MaxHeight>
+</Service>
+<Capability>
+  <Request>
+    <GetCapabilities>
+      <Format>text/xml</Format>
+      <Format>application/json</Format>
+      <DCPType>
+        <HTTP>
+          <Get>
+            <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms"/>
+          </Get>
+          <Post>
+            <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms"/>
+          </Post>
+        </HTTP>
+      </DCPType>
+    </GetCapabilities>
+    <GetMap>
+      <Format>application/geo+json</Format>
+      <Format>application/pdf</Format>
+      <Format>application/topo+json</Format>
+      <Format>image/png</Format>
+      <Format>image/svg+xml</Format>
+      <Format>image/webp</Format>
+      <DCPType>
+        <HTTP>
+          <Get>
+            <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms"/>
+          </Get>
+          <Post>
+            <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms"/>
+          </Post>
+        </HTTP>
+      </DCPType>
+    </GetMap>
+  </Request>
+  <Exception>
+    <Format>XML</Format>
+    <Format>application/json</Format>
+  </Exception>
+  <inspire_vs:ExtendedCapabilities>
+    <inspire_common:MetadataUrl xsi:type="inspire_common:resourceLocatorType">
+      <inspire_common:URL>http://catalog.fmi.fi/geonetwork/srv/en/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=1234dfc1-4c08-4491-8ca0-b8ea2941c24a&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full</inspire_common:URL>
+      <inspire_common:MediaType>application/vnd.ogc.csw.GetRecordByIdResponse_xml</inspire_common:MediaType>
+    </inspire_common:MetadataUrl>
+    <inspire_common:SupportedLanguages xsi:type="inspire_common:supportedLanguagesType">
+      <inspire_common:DefaultLanguage>
+      <inspire_common:Language>eng</inspire_common:Language>
+    </inspire_common:DefaultLanguage>
+    <inspire_common:SupportedLanguage>
+      <inspire_common:Language>eng</inspire_common:Language>
+      </inspire_common:SupportedLanguage>
+    </inspire_common:SupportedLanguages>
+    <inspire_common:ResponseLanguage>
+      <inspire_common:Language>eng</inspire_common:Language>
+    </inspire_common:ResponseLanguage>
+  </inspire_vs:ExtendedCapabilities>
+  <Layer queryable="0" cascaded="0" opaque="1" noSubsets="0" fixedWidth="0" fixedHeight="0">
+    <Title>Finnish Meteorological Institute Web Map Service</Title>
+      
+        <Layer queryable="0">
+      <Title>weatherapp</Title>
+
+	
+	  <Layer queryable="0">
+      <Title>weatherapp:scandinavia</Title>
+
+	  
+	    <Layer queryable="1">
+      <Name>weatherapp:scandinavia:precipitationForecast</Name>
+      <Title>Precipitation accumulation rate in mm/h</Title>
+      <Abstract>Precipitation accumulation rate in mm/h for FMI Weather Application.</Abstract>
+      <CRS>AUTO2:42001</CRS>
+      <CRS>AUTO2:42002</CRS>
+      <CRS>AUTO2:42003</CRS>
+      <CRS>AUTO2:42004</CRS>
+      <CRS>AUTO2:42005</CRS>
+      <CRS>AUTO2:42400</CRS>
+      <CRS>AUTO2:42401</CRS>
+      <CRS>AUTO2:97001</CRS>
+      <CRS>AUTO2:97002</CRS>
+      <CRS>AUTO2:97003</CRS>
+      <CRS>CRS:27</CRS>
+      <CRS>CRS:83</CRS>
+      <CRS>CRS:SmartMetEurope</CRS>
+      <CRS>CRS:SmartMetScandinavia</CRS>
+      <CRS>CRS:SmartMetScandinavia25</CRS>
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3047</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3413</CRS>
+      <CRS>EPSG:3575</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-9.0983804935</westBoundLongitude>
+        <eastBoundLongitude>45.3471</eastBoundLongitude>
+        <southBoundLatitude>52.6997</southBoundLatitude>
+        <northBoundLatitude>72.6420217095</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:27" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:83" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:SmartMetEurope" minx="-1312897.50274" miny="-3791768.39275" maxx="1972246.64597" maxy="-2780654.13798"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia" minx="-1951385.31114" miny="-3506180.652" maxx="888282.844414" maxy="-1875185.61081"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia25" minx="-2249596.53507" miny="-3322842.50692" maxx="721494.121857" maxy="-1945535.40178"/>
+      <BoundingBox CRS="EPSG:3035" minx="3047050.3504" miny="3456711.00813" maxx="5439126.21347" maxy="5793044.69679"/>
+      <BoundingBox CRS="EPSG:3047" minx="297299.322398" miny="5843088.47278" maxx="600193.783757" maxy="8063059.63249"/>
+      <BoundingBox CRS="EPSG:3067" minx="43547.7892277" miny="6549298.62199" maxx="674306.988933" maxy="7782478.68382"/>
+      <BoundingBox CRS="EPSG:3413" minx="1948685.40737" miny="-2691843.11717" maxx="1894242.10841" maxy="11475.5307426"/>
+      <BoundingBox CRS="EPSG:3575" minx="-1337488.44137" miny="-3862789.27874" maxx="1117018.08194" maxy="-1574874.50066"/>
+      <BoundingBox CRS="EPSG:3857" minx="-1012827.08358" miny="6927642.58038" maxx="5048016.08095" maxy="11988552.0984"/>
+      <BoundingBox CRS="EPSG:4326" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <Dimension name="time" units="ISO8601" multipleValues="0" nearestValue="0" current="1">2026-02-26T07:00:00Z/2026-03-13T00:00:00Z/PT1H</Dimension>
+      
+      <Dimension name="reference_time" units="ISO8601" default="2026-03-03T07:40:00Z" multipleValues="0" nearestValue="0" current="1">2026-03-03T06:41:00Z,2026-03-03T07:40:00Z</Dimension>
+      
+      <Style>
+        <Name>Mobile_dark</Name>
+        <Title>Precipitation accumulation rate in mm/h</Title>
+        <LegendURL width="142" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=Mobile_dark&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationForecast&amp;width=142&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      <Style>
+        <Name>Mobile_light</Name>
+        <Title>Precipitation accumulation rate in mm/h</Title>
+        <LegendURL width="142" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=Mobile_light&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationForecast&amp;width=142&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      <Style>
+        <Name>default</Name>
+        <Title>Default style</Title>
+        <LegendURL width="142" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=default&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationForecast&amp;width=142&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      </Layer>
+
+	    
+	    <Layer queryable="1">
+      <Name>weatherapp:scandinavia:precipitationForecast2</Name>
+      <Title>Precipitation accumulation rate in mm/h</Title>
+      <Abstract>Precipitation accumulation rate in mm/h for FMI Weather Application.</Abstract>
+      <CRS>AUTO2:42001</CRS>
+      <CRS>AUTO2:42002</CRS>
+      <CRS>AUTO2:42003</CRS>
+      <CRS>AUTO2:42004</CRS>
+      <CRS>AUTO2:42005</CRS>
+      <CRS>AUTO2:42400</CRS>
+      <CRS>AUTO2:42401</CRS>
+      <CRS>AUTO2:97001</CRS>
+      <CRS>AUTO2:97002</CRS>
+      <CRS>AUTO2:97003</CRS>
+      <CRS>CRS:27</CRS>
+      <CRS>CRS:83</CRS>
+      <CRS>CRS:SmartMetEurope</CRS>
+      <CRS>CRS:SmartMetScandinavia</CRS>
+      <CRS>CRS:SmartMetScandinavia25</CRS>
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3047</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3413</CRS>
+      <CRS>EPSG:3575</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-9.0983804935</westBoundLongitude>
+        <eastBoundLongitude>45.3471</eastBoundLongitude>
+        <southBoundLatitude>52.6997</southBoundLatitude>
+        <northBoundLatitude>72.6420217095</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:27" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:83" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:SmartMetEurope" minx="-1312897.50274" miny="-3791768.39275" maxx="1972246.64597" maxy="-2780654.13798"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia" minx="-1951385.31114" miny="-3506180.652" maxx="888282.844414" maxy="-1875185.61081"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia25" minx="-2249596.53507" miny="-3322842.50692" maxx="721494.121857" maxy="-1945535.40178"/>
+      <BoundingBox CRS="EPSG:3035" minx="3047050.3504" miny="3456711.00813" maxx="5439126.21347" maxy="5793044.69679"/>
+      <BoundingBox CRS="EPSG:3047" minx="297299.322398" miny="5843088.47278" maxx="600193.783757" maxy="8063059.63249"/>
+      <BoundingBox CRS="EPSG:3067" minx="43547.7892277" miny="6549298.62199" maxx="674306.988933" maxy="7782478.68382"/>
+      <BoundingBox CRS="EPSG:3413" minx="1948685.40737" miny="-2691843.11717" maxx="1894242.10841" maxy="11475.5307426"/>
+      <BoundingBox CRS="EPSG:3575" minx="-1337488.44137" miny="-3862789.27874" maxx="1117018.08194" maxy="-1574874.50066"/>
+      <BoundingBox CRS="EPSG:3857" minx="-1012827.08358" miny="6927642.58038" maxx="5048016.08095" maxy="11988552.0984"/>
+      <BoundingBox CRS="EPSG:4326" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <Dimension name="time" units="ISO8601" multipleValues="0" nearestValue="0" current="1">2026-02-26T07:00:00Z/2026-03-13T00:00:00Z/PT1H</Dimension>
+      
+      <Dimension name="reference_time" units="ISO8601" default="2026-03-03T07:40:00Z" multipleValues="0" nearestValue="0" current="1">2026-03-03T06:41:00Z,2026-03-03T07:40:00Z</Dimension>
+      
+      <Style>
+        <Name>Mobile_dark</Name>
+        <Title>Precipitation accumulation rate in mm/h</Title>
+        <LegendURL width="150" height="151">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=Mobile_dark&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationForecast2&amp;width=150&amp;height=151"/>
+        </LegendURL>
+      </Style>
+      <Style>
+        <Name>Mobile_light</Name>
+        <Title>Precipitation accumulation rate in mm/h</Title>
+        <LegendURL width="150" height="151">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=Mobile_light&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationForecast2&amp;width=150&amp;height=151"/>
+        </LegendURL>
+      </Style>
+      <Style>
+        <Name>default</Name>
+        <Title>Default style</Title>
+        <LegendURL width="150" height="151">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=default&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationForecast2&amp;width=150&amp;height=151"/>
+        </LegendURL>
+      </Style>
+      </Layer>
+
+	    
+	    <Layer queryable="1">
+      <Name>weatherapp:scandinavia:precipitationObservations</Name>
+      <Title>Radar Scandinavia Precipitation 1 h</Title>
+      <Abstract>Radar Scandinavia Precipitation and lightings from the last 1h. Red lightnings are 0-20min old, yellow 20-40min old and darker yellow 40-60min old. Layer is for FMI Weather Application.</Abstract>
+      <CRS>AUTO2:42001</CRS>
+      <CRS>AUTO2:42002</CRS>
+      <CRS>AUTO2:42003</CRS>
+      <CRS>AUTO2:42004</CRS>
+      <CRS>AUTO2:42005</CRS>
+      <CRS>AUTO2:42400</CRS>
+      <CRS>AUTO2:42401</CRS>
+      <CRS>AUTO2:97001</CRS>
+      <CRS>AUTO2:97002</CRS>
+      <CRS>AUTO2:97003</CRS>
+      <CRS>CRS:27</CRS>
+      <CRS>CRS:83</CRS>
+      <CRS>CRS:SmartMetEurope</CRS>
+      <CRS>CRS:SmartMetScandinavia</CRS>
+      <CRS>CRS:SmartMetScandinavia25</CRS>
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3047</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3413</CRS>
+      <CRS>EPSG:3575</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-10.9082060862</westBoundLongitude>
+        <eastBoundLongitude>37.162</eastBoundLongitude>
+        <southBoundLatitude>51.113</southBoundLatitude>
+        <northBoundLatitude>72.3995556997</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:27" minx="-10.9082060862" miny="51.113" maxx="37.162" maxy="72.3995556997"/>
+      <BoundingBox CRS="CRS:83" minx="-10.9082060862" miny="51.113" maxx="37.162" maxy="72.3995556997"/>
+      <BoundingBox CRS="CRS:SmartMetEurope" minx="-1497746.76875" miny="-3920526.1152" maxx="1556269.9448" maxy="-3033120.19652"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia" minx="-2087534.94643" miny="-3615716.58979" maxx="612261.112381" maxy="-1982549.8271"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia25" minx="-2394775.5668" miny="-3420093.95232" maxx="437155.610767" maxy="-2028437.01885"/>
+      <BoundingBox CRS="EPSG:3035" minx="2879871.33956" miny="3319676.62771" maxx="5223482.42767" maxy="5654452.25519"/>
+      <BoundingBox CRS="EPSG:3047" minx="290023.206022" miny="5666671.71864" maxx="601548.760887" maxy="8036043.73393"/>
+      <BoundingBox CRS="EPSG:3067" minx="43547.7892277" miny="6549298.62199" maxx="674306.988933" maxy="7782478.68382"/>
+      <BoundingBox CRS="EPSG:3413" minx="1862699.0954" miny="-2752044.01571" maxx="1903190.58239" maxy="-261990.726618"/>
+      <BoundingBox CRS="EPSG:3575" minx="-1518373.67514" miny="-3974519.4383" maxx="893630.532011" maxy="-1741657.23879"/>
+      <BoundingBox CRS="EPSG:3857" minx="-1214295.94699" miny="6641306.50778" maxx="4136854.91686" maxy="11898687.7944"/>
+      <BoundingBox CRS="EPSG:4326" minx="-10.9082060862" miny="51.113" maxx="37.162" maxy="72.3995556997"/>
+      <Dimension name="time" units="ISO8601" multipleValues="0" nearestValue="0" current="1">2026-03-03T02:00:00Z/2026-03-03T08:00:00Z/PT1H</Dimension>
+      
+      <Style>
+        <Name>Mobile_dark</Name>
+        <Title>Radar Scandinavia Precipitation 1 h</Title>
+        <LegendURL width="145" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=Mobile_dark&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationObservations&amp;width=145&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      <Style>
+        <Name>Mobile_light</Name>
+        <Title>Radar Scandinavia Precipitation 1 h</Title>
+        <LegendURL width="145" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=Mobile_light&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationObservations&amp;width=145&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      <Style>
+        <Name>default</Name>
+        <Title>Default style</Title>
+        <LegendURL width="145" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=default&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationObservations&amp;width=145&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      </Layer>
+
+	    
+	    <Layer queryable="1">
+      <Name>weatherapp:scandinavia:precipitationObservations2</Name>
+      <Title>Radar Scandinavia Precipitation 1 h</Title>
+      <Abstract>Radar Scandinavia Precipitation and lightings from the last 1h. Red lightnings are 0-20min old, yellow 20-40min old and darker yellow 40-60min old. Layer is for FMI Weather Application.</Abstract>
+      <CRS>AUTO2:42001</CRS>
+      <CRS>AUTO2:42002</CRS>
+      <CRS>AUTO2:42003</CRS>
+      <CRS>AUTO2:42004</CRS>
+      <CRS>AUTO2:42005</CRS>
+      <CRS>AUTO2:42400</CRS>
+      <CRS>AUTO2:42401</CRS>
+      <CRS>AUTO2:97001</CRS>
+      <CRS>AUTO2:97002</CRS>
+      <CRS>AUTO2:97003</CRS>
+      <CRS>CRS:27</CRS>
+      <CRS>CRS:83</CRS>
+      <CRS>CRS:SmartMetEurope</CRS>
+      <CRS>CRS:SmartMetScandinavia</CRS>
+      <CRS>CRS:SmartMetScandinavia25</CRS>
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3047</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3413</CRS>
+      <CRS>EPSG:3575</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-10.9082060862</westBoundLongitude>
+        <eastBoundLongitude>37.162</eastBoundLongitude>
+        <southBoundLatitude>51.113</southBoundLatitude>
+        <northBoundLatitude>72.3995556997</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:27" minx="-10.9082060862" miny="51.113" maxx="37.162" maxy="72.3995556997"/>
+      <BoundingBox CRS="CRS:83" minx="-10.9082060862" miny="51.113" maxx="37.162" maxy="72.3995556997"/>
+      <BoundingBox CRS="CRS:SmartMetEurope" minx="-1497746.76875" miny="-3920526.1152" maxx="1556269.9448" maxy="-3033120.19652"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia" minx="-2087534.94643" miny="-3615716.58979" maxx="612261.112381" maxy="-1982549.8271"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia25" minx="-2394775.5668" miny="-3420093.95232" maxx="437155.610767" maxy="-2028437.01885"/>
+      <BoundingBox CRS="EPSG:3035" minx="2879871.33956" miny="3319676.62771" maxx="5223482.42767" maxy="5654452.25519"/>
+      <BoundingBox CRS="EPSG:3047" minx="290023.206022" miny="5666671.71864" maxx="601548.760887" maxy="8036043.73393"/>
+      <BoundingBox CRS="EPSG:3067" minx="43547.7892277" miny="6549298.62199" maxx="674306.988933" maxy="7782478.68382"/>
+      <BoundingBox CRS="EPSG:3413" minx="1862699.0954" miny="-2752044.01571" maxx="1903190.58239" maxy="-261990.726618"/>
+      <BoundingBox CRS="EPSG:3575" minx="-1518373.67514" miny="-3974519.4383" maxx="893630.532011" maxy="-1741657.23879"/>
+      <BoundingBox CRS="EPSG:3857" minx="-1214295.94699" miny="6641306.50778" maxx="4136854.91686" maxy="11898687.7944"/>
+      <BoundingBox CRS="EPSG:4326" minx="-10.9082060862" miny="51.113" maxx="37.162" maxy="72.3995556997"/>
+      <Dimension name="time" units="ISO8601" multipleValues="0" nearestValue="0" current="1">2026-03-03T02:00:00Z/2026-03-03T08:00:00Z/PT1H</Dimension>
+      
+      <Style>
+        <Name>Mobile_dark</Name>
+        <Title>Radar Scandinavia Precipitation 1 h</Title>
+        <LegendURL width="313" height="186">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=Mobile_dark&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationObservations2&amp;width=313&amp;height=186"/>
+        </LegendURL>
+      </Style>
+      <Style>
+        <Name>Mobile_light</Name>
+        <Title>Radar Scandinavia Precipitation 1 h</Title>
+        <LegendURL width="313" height="186">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=Mobile_light&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationObservations2&amp;width=313&amp;height=186"/>
+        </LegendURL>
+      </Style>
+      <Style>
+        <Name>default</Name>
+        <Title>Default style</Title>
+        <LegendURL width="313" height="186">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=default&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AprecipitationObservations2&amp;width=313&amp;height=186"/>
+        </LegendURL>
+      </Style>
+      </Layer>
+
+	    
+	    <Layer queryable="1">
+      <Name>weatherapp:scandinavia:temperatureForecast</Name>
+      <Title>FMI Forecast Temperature</Title>
+      <Abstract>Terrain corrected temperature using atmospheric lapse rate and terrain elevation produced by FMI. Layer is for FMI Weather Application.</Abstract>
+      <CRS>AUTO2:42001</CRS>
+      <CRS>AUTO2:42002</CRS>
+      <CRS>AUTO2:42003</CRS>
+      <CRS>AUTO2:42004</CRS>
+      <CRS>AUTO2:42005</CRS>
+      <CRS>AUTO2:42400</CRS>
+      <CRS>AUTO2:42401</CRS>
+      <CRS>AUTO2:97001</CRS>
+      <CRS>AUTO2:97002</CRS>
+      <CRS>AUTO2:97003</CRS>
+      <CRS>CRS:27</CRS>
+      <CRS>CRS:83</CRS>
+      <CRS>CRS:SmartMetEurope</CRS>
+      <CRS>CRS:SmartMetScandinavia</CRS>
+      <CRS>CRS:SmartMetScandinavia25</CRS>
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3047</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3413</CRS>
+      <CRS>EPSG:3575</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-9.0983804935</westBoundLongitude>
+        <eastBoundLongitude>45.3471</eastBoundLongitude>
+        <southBoundLatitude>52.6997</southBoundLatitude>
+        <northBoundLatitude>72.6420217095</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:27" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:83" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:SmartMetEurope" minx="-1312897.50274" miny="-3791768.39275" maxx="1972246.64597" maxy="-2780654.13798"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia" minx="-1951385.31114" miny="-3506180.652" maxx="888282.844414" maxy="-1875185.61081"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia25" minx="-2249596.53507" miny="-3322842.50692" maxx="721494.121857" maxy="-1945535.40178"/>
+      <BoundingBox CRS="EPSG:3035" minx="3047050.3504" miny="3456711.00813" maxx="5439126.21347" maxy="5793044.69679"/>
+      <BoundingBox CRS="EPSG:3047" minx="297299.322398" miny="5843088.47278" maxx="600193.783757" maxy="8063059.63249"/>
+      <BoundingBox CRS="EPSG:3067" minx="43547.7892277" miny="6549298.62199" maxx="674306.988933" maxy="7782478.68382"/>
+      <BoundingBox CRS="EPSG:3413" minx="1948685.40737" miny="-2691843.11717" maxx="1894242.10841" maxy="11475.5307426"/>
+      <BoundingBox CRS="EPSG:3575" minx="-1337488.44137" miny="-3862789.27874" maxx="1117018.08194" maxy="-1574874.50066"/>
+      <BoundingBox CRS="EPSG:3857" minx="-1012827.08358" miny="6927642.58038" maxx="5048016.08095" maxy="11988552.0984"/>
+      <BoundingBox CRS="EPSG:4326" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <Dimension name="time" units="ISO8601" multipleValues="0" nearestValue="0" current="1">2026-02-26T07:00:00Z/2026-03-13T00:00:00Z/PT1H</Dimension>
+      
+      <Dimension name="reference_time" units="ISO8601" default="2026-03-03T07:40:00Z" multipleValues="0" nearestValue="0" current="1">2026-03-03T06:41:00Z,2026-03-03T07:40:00Z</Dimension>
+      
+      <Style>
+        <Name>default</Name>
+        <Title>Default style</Title>
+        <LegendURL width="154" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=default&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AtemperatureForecast&amp;width=154&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      </Layer>
+
+	    
+	    <Layer queryable="1">
+      <Name>weatherapp:scandinavia:temperatureForecast2</Name>
+      <Title>FMI Forecast Temperature</Title>
+      <Abstract>Terrain corrected temperature using atmospheric lapse rate and terrain elevation produced by FMI. Layer is for FMI Weather Application.</Abstract>
+      <CRS>AUTO2:42001</CRS>
+      <CRS>AUTO2:42002</CRS>
+      <CRS>AUTO2:42003</CRS>
+      <CRS>AUTO2:42004</CRS>
+      <CRS>AUTO2:42005</CRS>
+      <CRS>AUTO2:42400</CRS>
+      <CRS>AUTO2:42401</CRS>
+      <CRS>AUTO2:97001</CRS>
+      <CRS>AUTO2:97002</CRS>
+      <CRS>AUTO2:97003</CRS>
+      <CRS>CRS:27</CRS>
+      <CRS>CRS:83</CRS>
+      <CRS>CRS:SmartMetEurope</CRS>
+      <CRS>CRS:SmartMetScandinavia</CRS>
+      <CRS>CRS:SmartMetScandinavia25</CRS>
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3047</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3413</CRS>
+      <CRS>EPSG:3575</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-9.0983804935</westBoundLongitude>
+        <eastBoundLongitude>45.3471</eastBoundLongitude>
+        <southBoundLatitude>52.6997</southBoundLatitude>
+        <northBoundLatitude>72.6420217095</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:27" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:83" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:SmartMetEurope" minx="-1312897.50274" miny="-3791768.39275" maxx="1972246.64597" maxy="-2780654.13798"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia" minx="-1951385.31114" miny="-3506180.652" maxx="888282.844414" maxy="-1875185.61081"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia25" minx="-2249596.53507" miny="-3322842.50692" maxx="721494.121857" maxy="-1945535.40178"/>
+      <BoundingBox CRS="EPSG:3035" minx="3047050.3504" miny="3456711.00813" maxx="5439126.21347" maxy="5793044.69679"/>
+      <BoundingBox CRS="EPSG:3047" minx="297299.322398" miny="5843088.47278" maxx="600193.783757" maxy="8063059.63249"/>
+      <BoundingBox CRS="EPSG:3067" minx="43547.7892277" miny="6549298.62199" maxx="674306.988933" maxy="7782478.68382"/>
+      <BoundingBox CRS="EPSG:3413" minx="1948685.40737" miny="-2691843.11717" maxx="1894242.10841" maxy="11475.5307426"/>
+      <BoundingBox CRS="EPSG:3575" minx="-1337488.44137" miny="-3862789.27874" maxx="1117018.08194" maxy="-1574874.50066"/>
+      <BoundingBox CRS="EPSG:3857" minx="-1012827.08358" miny="6927642.58038" maxx="5048016.08095" maxy="11988552.0984"/>
+      <BoundingBox CRS="EPSG:4326" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <Dimension name="time" units="ISO8601" multipleValues="0" nearestValue="0" current="1">2026-02-26T07:00:00Z/2026-03-13T00:00:00Z/PT1H</Dimension>
+      
+      <Dimension name="reference_time" units="ISO8601" default="2026-03-03T07:40:00Z" multipleValues="0" nearestValue="0" current="1">2026-03-03T06:41:00Z,2026-03-03T07:40:00Z</Dimension>
+      
+      <Style>
+        <Name>default</Name>
+        <Title>Default style</Title>
+        <LegendURL width="154" height="520">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=default&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AtemperatureForecast2&amp;width=154&amp;height=520"/>
+        </LegendURL>
+      </Style>
+      </Layer>
+
+	    
+	    <Layer queryable="1">
+      <Name>weatherapp:scandinavia:windForecast</Name>
+      <Title>FMI Forecast Wind Arrows</Title>
+      <Abstract>Wind arrows produced by FMI. Layer is for FMI Weather Application.</Abstract>
+      <CRS>AUTO2:42001</CRS>
+      <CRS>AUTO2:42002</CRS>
+      <CRS>AUTO2:42003</CRS>
+      <CRS>AUTO2:42004</CRS>
+      <CRS>AUTO2:42005</CRS>
+      <CRS>AUTO2:42400</CRS>
+      <CRS>AUTO2:42401</CRS>
+      <CRS>AUTO2:97001</CRS>
+      <CRS>AUTO2:97002</CRS>
+      <CRS>AUTO2:97003</CRS>
+      <CRS>CRS:27</CRS>
+      <CRS>CRS:83</CRS>
+      <CRS>CRS:SmartMetEurope</CRS>
+      <CRS>CRS:SmartMetScandinavia</CRS>
+      <CRS>CRS:SmartMetScandinavia25</CRS>
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3047</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3413</CRS>
+      <CRS>EPSG:3575</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-9.0983804935</westBoundLongitude>
+        <eastBoundLongitude>45.3471</eastBoundLongitude>
+        <southBoundLatitude>52.6997</southBoundLatitude>
+        <northBoundLatitude>72.6420217095</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:27" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:83" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:SmartMetEurope" minx="-1312897.50274" miny="-3791768.39275" maxx="1972246.64597" maxy="-2780654.13798"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia" minx="-1951385.31114" miny="-3506180.652" maxx="888282.844414" maxy="-1875185.61081"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia25" minx="-2249596.53507" miny="-3322842.50692" maxx="721494.121857" maxy="-1945535.40178"/>
+      <BoundingBox CRS="EPSG:3035" minx="3047050.3504" miny="3456711.00813" maxx="5439126.21347" maxy="5793044.69679"/>
+      <BoundingBox CRS="EPSG:3047" minx="297299.322398" miny="5843088.47278" maxx="600193.783757" maxy="8063059.63249"/>
+      <BoundingBox CRS="EPSG:3067" minx="43547.7892277" miny="6549298.62199" maxx="674306.988933" maxy="7782478.68382"/>
+      <BoundingBox CRS="EPSG:3413" minx="1948685.40737" miny="-2691843.11717" maxx="1894242.10841" maxy="11475.5307426"/>
+      <BoundingBox CRS="EPSG:3575" minx="-1337488.44137" miny="-3862789.27874" maxx="1117018.08194" maxy="-1574874.50066"/>
+      <BoundingBox CRS="EPSG:3857" minx="-1012827.08358" miny="6927642.58038" maxx="5048016.08095" maxy="11988552.0984"/>
+      <BoundingBox CRS="EPSG:4326" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <Dimension name="time" units="ISO8601" multipleValues="0" nearestValue="0" current="1">2026-02-26T07:00:00Z/2026-03-13T00:00:00Z/PT1H</Dimension>
+      
+      <Dimension name="reference_time" units="ISO8601" default="2026-03-03T07:40:00Z" multipleValues="0" nearestValue="0" current="1">2026-03-03T06:41:00Z,2026-03-03T07:40:00Z</Dimension>
+      
+      <Style>
+        <Name>default</Name>
+        <Title>Default style</Title>
+        <LegendURL width="30" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=default&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AwindForecast&amp;width=30&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      </Layer>
+
+	    
+	    <Layer queryable="1">
+      <Name>weatherapp:scandinavia:windForecast2</Name>
+      <Title>FMI Forecast Wind Arrows</Title>
+      <Abstract>Wind arrows produced by FMI. Layer is for FMI Weather Application.</Abstract>
+      <CRS>AUTO2:42001</CRS>
+      <CRS>AUTO2:42002</CRS>
+      <CRS>AUTO2:42003</CRS>
+      <CRS>AUTO2:42004</CRS>
+      <CRS>AUTO2:42005</CRS>
+      <CRS>AUTO2:42400</CRS>
+      <CRS>AUTO2:42401</CRS>
+      <CRS>AUTO2:97001</CRS>
+      <CRS>AUTO2:97002</CRS>
+      <CRS>AUTO2:97003</CRS>
+      <CRS>CRS:27</CRS>
+      <CRS>CRS:83</CRS>
+      <CRS>CRS:SmartMetEurope</CRS>
+      <CRS>CRS:SmartMetScandinavia</CRS>
+      <CRS>CRS:SmartMetScandinavia25</CRS>
+      <CRS>EPSG:3035</CRS>
+      <CRS>EPSG:3047</CRS>
+      <CRS>EPSG:3067</CRS>
+      <CRS>EPSG:3413</CRS>
+      <CRS>EPSG:3575</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-9.0983804935</westBoundLongitude>
+        <eastBoundLongitude>45.3471</eastBoundLongitude>
+        <southBoundLatitude>52.6997</southBoundLatitude>
+        <northBoundLatitude>72.6420217095</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:27" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:83" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <BoundingBox CRS="CRS:SmartMetEurope" minx="-1312897.50274" miny="-3791768.39275" maxx="1972246.64597" maxy="-2780654.13798"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia" minx="-1951385.31114" miny="-3506180.652" maxx="888282.844414" maxy="-1875185.61081"/>
+      <BoundingBox CRS="CRS:SmartMetScandinavia25" minx="-2249596.53507" miny="-3322842.50692" maxx="721494.121857" maxy="-1945535.40178"/>
+      <BoundingBox CRS="EPSG:3035" minx="3047050.3504" miny="3456711.00813" maxx="5439126.21347" maxy="5793044.69679"/>
+      <BoundingBox CRS="EPSG:3047" minx="297299.322398" miny="5843088.47278" maxx="600193.783757" maxy="8063059.63249"/>
+      <BoundingBox CRS="EPSG:3067" minx="43547.7892277" miny="6549298.62199" maxx="674306.988933" maxy="7782478.68382"/>
+      <BoundingBox CRS="EPSG:3413" minx="1948685.40737" miny="-2691843.11717" maxx="1894242.10841" maxy="11475.5307426"/>
+      <BoundingBox CRS="EPSG:3575" minx="-1337488.44137" miny="-3862789.27874" maxx="1117018.08194" maxy="-1574874.50066"/>
+      <BoundingBox CRS="EPSG:3857" minx="-1012827.08358" miny="6927642.58038" maxx="5048016.08095" maxy="11988552.0984"/>
+      <BoundingBox CRS="EPSG:4326" minx="-9.0983804935" miny="52.6997" maxx="45.3471" maxy="72.6420217095"/>
+      <Dimension name="time" units="ISO8601" multipleValues="0" nearestValue="0" current="1">2026-02-26T07:00:00Z/2026-03-13T00:00:00Z/PT1H</Dimension>
+      
+      <Dimension name="reference_time" units="ISO8601" default="2026-03-03T07:40:00Z" multipleValues="0" nearestValue="0" current="1">2026-03-03T06:41:00Z,2026-03-03T07:40:00Z</Dimension>
+      
+      <Style>
+        <Name>default</Name>
+        <Title>Default style</Title>
+        <LegendURL width="30" height="10">
+          <Format>image/png</Format>
+          <OnlineResource xlink:type="simple" xlink:href="https://data.fmi.fi/fmi-apikey/ff22323b-ac44-486c-887c-3fb6ddf1116c/wms?service=WMS&amp;request=GetLegendGraphic&amp;version=1.3.0&amp;sld_version=1.1.0&amp;style=default&amp;format=image%2Fpng&amp;layer=weatherapp%3Ascandinavia%3AwindForecast2&amp;width=30&amp;height=10"/>
+        </LegendURL>
+      </Style>
+      </Layer>
+
+	    </Layer></Layer>
+  </Layer>
+</Capability>
+</WMS_Capabilities>

@@ -18,7 +18,7 @@ const PressureChart: React.FC<ChartDataProps> = ({
         <VictoryLine
           data={pressure}
           domain={chartDomain}
-          style={{ data: { stroke: colors.primaryText } }}
+          style={{ data: { stroke: colors.chartPrimaryLine} }}
           interpolation="basis"
         />
       )}

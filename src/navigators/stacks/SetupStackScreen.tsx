@@ -18,8 +18,9 @@ import {
   setDidLaunchApp as setDidLaunchAppAction,
 } from '@store/navigation/actions';
 import { State } from '@store/types';
+import type { SetupStackParamList } from './types';
 
-const SetupStack = createStackNavigator();
+const SetupStack = createStackNavigator<SetupStackParamList>();
 
 const mapStateToProps = (state: State) => ({
   didLaunchApp: selectDidLaunchApp(state),
@@ -74,13 +75,20 @@ const SetupStackScreen: React.FC<SetupStackScreenProps> = ({
         name="TermsAndConditions"
         options={{
           ...commonHeaderOptions,
+          headerLeft: () => null,
           // eslint-disable-next-line react/no-unstable-nested-components
           headerTitle: () => <HeaderTitle title={t('setUp:termsAndConditions')} isDark={useDarkTheme} />
         }}>
         {({ navigation }) => (
           <TermsAndConditionsScreen
-            showCloseButton
-            onClose={() => navigation.goBack()}
+            showActions={true}
+            onAccept={() => {
+              navigation.navigate({
+                name: 'SetupScreen',
+                params: { acceptedTerms: true },
+                merge: true,
+              });
+            }}
           />
         )}
       </SetupStack.Screen>

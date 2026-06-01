@@ -1,5 +1,11 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn lint:ts
-# yarn test
+# Only run lint and tests locally, not in CI
+
+if [ "$GITHUB_ACTIONS" != "true" ]; then
+  yarn lint:ts
+  yarn test --watchman=false
+  # Checks secret leaks in the commits that are being pushed
+  gitleaks detect --log-opts="@{u}..HEAD"
+fi

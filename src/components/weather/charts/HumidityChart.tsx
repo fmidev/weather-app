@@ -20,7 +20,7 @@ const HumidityChart: React.FC<ChartDataProps> = ({
         <VictoryLine
           data={humidityData}
           domain={chartDomain}
-          style={{ data: { stroke: colors.primaryText } }}
+          style={{ data: { stroke: colors.chartPrimaryLine } }}
           interpolation="basis"
         />
       )}
