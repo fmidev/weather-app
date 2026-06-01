@@ -8,7 +8,7 @@ import { State } from '../types';
 import { DisplayParameters, ForecastState, TimeStepData } from './types';
 import constants, { DAY_LENGTH } from './constants';
 
-const FORECAST_MAX_AGE = 24;
+const FORECAST_MAX_AGE = 24; // Default if not set in DynamicConfig
 
 const selectForecastDomain: Selector<State, ForecastState> = (state) =>
   state.forecast;
@@ -39,6 +39,9 @@ export const selectForecastAge = createSelector(
 export const selectForecast = createSelector(
   [selectData, selectGeoid, selectHour],
   (items, geoid) => {
+    const { maxAge } = Config.get('weather').forecast;
+    const forecastMaxAge = maxAge || FORECAST_MAX_AGE;
+
     const now = new Date();
     if (items) {
       const locationItems = items[!isNaN(geoid) ? geoid : 0];
@@ -47,7 +50,7 @@ export const selectForecast = createSelector(
 
       const modtime = moment(locationItems?.[0]?.modtime+'Z');
       const duration = moment.duration(moment().diff(modtime));
-      if (duration.asHours() > FORECAST_MAX_AGE) {
+      if (duration.asHours() > forecastMaxAge) {
         return [];
       }
 

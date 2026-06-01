@@ -295,6 +295,7 @@ export interface ConfigType {
     layout?: 'default' | 'fmi' | 'legacyWithoutBackgroundColor';
     forecast: {
       ageWarning?: number;
+      maxAge?: number;
       updateInterval: number;
       timePeriod: number | string | 'data';
       forecastLengthTitle?: number;

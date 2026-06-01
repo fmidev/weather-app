@@ -26,8 +26,8 @@ export const fetchForecast =
   async (dispatch: Dispatch<ForecastActionTypes>) => {
     dispatch({ type: FETCH_FORECAST });
 
-    const MAX_FORECAST_AGE = 24; // hours
-    const { forecast: { data: dataSettings } } = Config.get('weather');
+    const { forecast: { data: dataSettings, maxAge } } = Config.get('weather');
+    const forecastMaxAge = maxAge || 24;
 
     try {
       const data = await getForecast(location, country);
@@ -42,7 +42,7 @@ export const fetchForecast =
         const modtime = forecast[id][0].modtime;
         const modtimeMoment = modtime ? moment(modtime+'Z') : undefined;
 
-        if (modtimeMoment && moment().diff(modtimeMoment, 'hours') >= MAX_FORECAST_AGE) {
+        if (modtimeMoment && moment().diff(modtimeMoment, 'hours') >= forecastMaxAge) {
           const producer = dataSettings[index].producer;
           trackMatomoEvent('Error', 'Weather', `Old modtime ${modtime} with producer ${producer} for geoid ${id}`);
           trackMatomoEvent('Error', 'Weather', `Old modtime - version ${packageJSON.version}`);
