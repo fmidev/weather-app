@@ -95,9 +95,39 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SettingsIntentExtension; sourceTree = "<group>"; };
-		A286CB982CF49C2900812898 /* managers */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = managers; sourceTree = "<group>"; };
-		A299E3022CDB746F003502F5 /* views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = views; sourceTree = "<group>"; };
+		A2042C6F2CFF2EEF00C41A9E /* SettingsIntentExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = SettingsIntentExtension;
+			sourceTree = "<group>";
+		};
+		A286CB982CF49C2900812898 /* managers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = managers;
+			sourceTree = "<group>";
+		};
+		A299E3022CDB746F003502F5 /* views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +135,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2D35CE02F8CBC1C00F66919 /* MapLibre in Frameworks */,
 				BFD98EF8D9DDD60D677C76DE /* libPods-MobileWeather.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -791,16 +820,6 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		18C5A51F13AF682172F66E0A /* MapLibre */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 518D50ADEBD8890687058542 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
-			productName = MapLibre;
-		};
-		B831EC0D927213B0471F4D94 /* MapLibre */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 518D50ADEBD8890687058542 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
-			productName = MapLibre;
-		};
-		E1DE195D687114145F5197E9 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 518D50ADEBD8890687058542 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
 			productName = MapLibre;

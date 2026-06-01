@@ -1,6 +1,4 @@
 PODS:
-  - Alamofire (5.11.0)
-  - AsyncLocationKit (1.6.3)
   - BVLinearGradient (2.8.3):
     - React-Core
   - FBLazyVector (0.85.1)
@@ -2415,12 +2413,9 @@ PODS:
   - SDWebImageWebPCoder (0.15.0):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
-  - SwiftyJSON (5.0.2)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 5.10)
-  - AsyncLocationKit (from `https://github.com/AsyncSwift/AsyncLocationKit.git`, tag `1.6.4`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
@@ -2518,12 +2513,10 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - RNWorklets (from `../node_modules/react-native-worklets`)
-  - SwiftyJSON (~> 5.0)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
-    - Alamofire
     - libavif
     - libdav1d
     - libwebp
@@ -2531,12 +2524,8 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageAVIFCoder
     - SDWebImageWebPCoder
-    - SwiftyJSON
 
 EXTERNAL SOURCES:
-  AsyncLocationKit:
-    :git: https://github.com/AsyncSwift/AsyncLocationKit.git
-    :tag: 1.6.4
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   FBLazyVector:
@@ -2733,17 +2722,10 @@ EXTERNAL SOURCES:
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
-CHECKOUT OPTIONS:
-  AsyncLocationKit:
-    :git: https://github.com/AsyncSwift/AsyncLocationKit.git
-    :tag: 1.6.4
-
 SPEC CHECKSUMS:
-  Alamofire: bd5e7b23a1a750975288482c1831d71e74415f86
-  AsyncLocationKit: b34a2ee37910405a98401021b6aedeb37440a1a2
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   FBLazyVector: ed7eadee1965b0b918ca9d0f2c2328f7eb3fd095
-  hermes-engine: 8d6e4c364a8533f576052edcd711adc4a2f733ce
+  hermes-engine: 8742071a8cd9ed67c7d1ec66bda4e98a4fa5c834
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
@@ -2758,7 +2740,7 @@ SPEC CHECKSUMS:
   React: 6dbd7825a18782848e8c62f1feb16b344cb17ac6
   React-callinvoker: 90c70d14c7ca646fdae3e25e8d9fbb0fbb20459c
   React-Core: 9dce76263f670de254e896f317676e7e95369ac2
-  React-Core-prebuilt: 4515303be78fab48e3b07e8cb08df9da5682e2db
+  React-Core-prebuilt: 0746646e950013f5b1c67d312887efada28ce826
   React-CoreModules: b9fadb43261b88cb0d3a2d59808603567e995095
   React-cxxreact: 6b36616248fea28ce6dfbffcf09322321eb96186
   React-debug: 8f85c5da52e386c83482e45744f6e61b39b9493d
@@ -2827,7 +2809,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 52da2413bc956c40a4de19ad32a92b87248f7ce8
   ReactCodegen: aac672d7021359dc55fbd6d63f56192651664f09
   ReactCommon: 66763e5bd1b778828ff6cb82d771b7162a5215c2
-  ReactNativeDependencies: eaeb63e9f5cc27a2e125d566755b2a5714cee163
+  ReactNativeDependencies: 6a8208ddaeb178b08df977a26403b2762d8ca906
   RNCAsyncStorage: 57b3615901b76eeafa4586a369a25f6521ec3b5e
   RNCMaskedView: eb2b2e538afa907f05a5848a1a1ac26092e6fec9
   RNDefaultPreference: ee13d69e6693d193cd223d10e15e5b3c012d31ba
@@ -2844,9 +2826,8 @@ SPEC CHECKSUMS:
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   SDWebImageAVIFCoder: afe194a084e851f70228e4be35ef651df0fc5c57
   SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
-  SwiftyJSON: f5b1bf1cd8dd53cd25887ac0eabcfd92301c6a5a
   Yoga: b1085f68c014785350a2afdc95eaef0d49f23ccb
 
-PODFILE CHECKSUM: 26c3da9bdbdaccfcabc66d1d56c99b96bcde5257
+PODFILE CHECKSUM: 1e52817f7b5b49590d68907634a700c27f69b946
 
 COCOAPODS: 1.16.2

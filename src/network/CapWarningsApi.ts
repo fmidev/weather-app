@@ -69,7 +69,7 @@ const getCapWarnings = async () => {
       const capLink =
         links.find((link) => link.type === CAP_MIME_TYPE) ?? links[0];
 
-      return capLink?.href.replace('http://', 'https://');
+      return capLink?.href;
     })
     .filter((capUrl): capUrl is string => Boolean(capUrl));
   const uniqueUrls = [...new Set(urls)];
