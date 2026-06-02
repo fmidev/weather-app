@@ -176,7 +176,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
 
   return (
     <View
-      style={layout === 'fmi' ? [ styles.extraPadding, {
+      style={layout === 'vertical' ? [ styles.extraPadding, {
         marginLeft: insets.left,
         marginRight: insets.right,
       }] : [
@@ -186,7 +186,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           shadowColor: colors.shadow,
         }
       ]}>
-      <PanelHeader title={t('panelHeader')} thin={layout === 'fmi'} />
+      <PanelHeader title={t('panelHeader')} thin={layout === 'vertical'} />
       <View style={styles.panelContainer}>
         {loading && <ActivityIndicator />}
         {stationList.length > 0 && (
@@ -205,7 +205,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 title={title}
                 accessibilityLabel=""
                 iconStart="map-marker"
-                rounded={layout === 'fmi'}
+                rounded={layout === 'vertical'}
               />
             </View>
           </View>

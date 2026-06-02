@@ -3,7 +3,11 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   ActivityIndicator, View, StyleSheet, ImageBackground, useWindowDimensions, Platform
 } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import {
+  useNavigation,
+  NavigationProp,
+  useTheme,
+} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import moment from 'moment-timezone';
@@ -21,7 +25,7 @@ import { selectIsAuroraBorealisLikely } from '@store/forecast/selectors';
 import { weatherBackgroundGetter } from '@assets/images/backgrounds';
 
 import { formatAccessibleTemperature, getGeolocation } from '@utils/helpers';
-import { WHITE } from '@assets/colors';
+import { CustomTheme, WHITE } from '@assets/colors';
 
 import { Config } from '@config';
 import {
@@ -75,13 +79,21 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     moment.tz.setDefault(timezone);
   }, [timezone]);
 
-  const navigation = useNavigation<NavigationProp<WeatherStackParamList>>()
+  const navigation = useNavigation<NavigationProp<WeatherStackParamList>>();
   const insets = useSafeAreaInsets();
   const { width, fontScale } = useWindowDimensions();
+  const { colors } = useTheme() as CustomTheme;
+  const weatherConfig = Config.get('weather');
+  const backgroundImagesEnabled =
+    weatherConfig.backgroundImagesEnabled !== false;
 
   if (loading || !nextHourForecast) {
     return (
-      <View style={[styles.container, styles.column]}>
+      <View style={[
+        styles.container,
+        styles.column,
+        !backgroundImagesEnabled && { backgroundColor: colors.screenBackground },
+      ]}>
         <ActivityIndicator accessibilityLabel={t('weather:loading')} />
       </View>
     );
@@ -128,15 +140,18 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   }
 
   const auroraBorealis = smartSymbol && smartSymbol > 100
-                          && nextHourForecast?.totalCloudCover && nextHourForecast?.totalCloudCover <= 50
+                          && nextHourForecast?.totalCloudCover
+                          && nextHourForecast?.totalCloudCover <= 50
                           && isAuroraBorealisLikely;
   const isWideDisplay = () => width > 500;
-  const weatherBackground = weatherBackgroundGetter(
-    auroraBorealis ? 'aurora' : smartSymbol.toString(),
-    isWideDisplay(),
-  );
-  const textColor = WHITE;
-  const overlayColor = 'rgba(0,0,0,0.3)';
+  const weatherBackground = backgroundImagesEnabled
+    ? weatherBackgroundGetter(
+      auroraBorealis ? 'aurora' : smartSymbol.toString(),
+      isWideDisplay(),
+    )
+    : undefined;
+  const textColor = backgroundImagesEnabled ? WHITE : colors.primaryText;
+  const imageOverlayColor = 'rgba(0,0,0,0.3)';
   const largeFonts = fontScale >= 1.5;
   const contentHeight = largeFonts ? 600 : 420;
   const iconSize = Math.min(fontScale * 22, 44);
@@ -149,36 +164,41 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     ? location.name
     : `${location.name}, ${location.area}`;
 
-  return (
-    <ImageBackground
-      source={weatherBackground}
-      resizeMode="cover"
-      style={styles.backgroundImage}
-    >
-      { /* Gradient overlay for the background image */ }
-      <LinearGradient
-        colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.2)']}
-        start={{ x: 0.5, y: 1 }}
-        end={{ x: 0.5, y: 0 }}
-        style={StyleSheet.absoluteFill}
-      />
-      <LinearGradient
-        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
-        locations={[0.4024, 1]}
-        start={{ x: 0.5, y: 1 }}
-        end={{ x: 0.5, y: 0 }}
-        style={StyleSheet.absoluteFill}
-      />
-      <SafeAreaView style={[
-        styles.container, { paddingTop: paddingTop, paddingBottom: paddingBottom, height: contentHeight }
-        ]} >
+  const content = (
+    <>
+      {backgroundImagesEnabled && (
+        <>
+          <LinearGradient
+            colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.2)']}
+            start={{ x: 0.5, y: 1 }}
+            end={{ x: 0.5, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
+            locations={[0.4024, 1]}
+            start={{ x: 0.5, y: 1 }}
+            end={{ x: 0.5, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </>
+      )}
+      <SafeAreaView
+        style={[
+          styles.container,
+          {
+            paddingTop: paddingTop,
+            paddingBottom: paddingBottom,
+            height: contentHeight,
+          }
+        ]}>
         <View style={[styles.row]}>
           <IconButton
             testID="locate_button"
             icon="locate"
             accessibilityLabel={t('navigation:locate')}
             iconColor={textColor}
-            backgroundColor={overlayColor}
+            backgroundColor={colors.weatherButtonBackground}
             onPress={() => {
               trackMatomoEvent('User action', 'Weather', 'Geolocation');
               getGeolocation(setCurrentLocation, t);
@@ -212,7 +232,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             icon="search"
             accessibilityLabel={t('navigation:search')}
             iconColor={textColor}
-            backgroundColor={overlayColor}
+            backgroundColor={colors.weatherButtonBackground}
             onPress={() => {
               trackMatomoEvent('User action', 'Weather', 'Open search - button');
               navigation.navigate('Search')
@@ -253,13 +273,34 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             </View>
           </View>
         </View>
-    </SafeAreaView>
-    <View style={[styles.overlay, {backgroundColor: overlayColor}]}>
-      <NextHourForecastBar forecast={nextHourForecast} wide={isWideDisplay()} />
-      <NextHoursForecast currentHour={currentHour} />
+      </SafeAreaView>
+      <View style={[styles.overlay, {backgroundColor: imageOverlayColor}]}>
+        <NextHourForecastBar forecast={nextHourForecast} wide={isWideDisplay()} />
+        <NextHoursForecast currentHour={currentHour} />
+      </View>
+    </>
+  );
+
+  return backgroundImagesEnabled && weatherBackground ? (
+    <ImageBackground
+      testID="next-hour-forecast-background"
+      source={weatherBackground}
+      resizeMode="cover"
+      style={styles.backgroundImage}
+    >
+      {content}
+    </ImageBackground>
+  ) : (
+    <View
+      testID="next-hour-forecast-background"
+      style={[
+        styles.backgroundImage,
+        { backgroundColor: colors.forecastBackground },
+      ]}
+    >
+      {content}
     </View>
-  </ImageBackground>
-);
+  );
 };
 
 const styles = StyleSheet.create({

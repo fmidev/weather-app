@@ -95,7 +95,7 @@ export const resetScreenMocks = () => {
     },
     weather: {
       forecast: { updateInterval: 5 },
-      layout: 'fmi',
+      layout: 'vertical',
       meteorologist: { updateInterval: 10, url: 'https://met.example.test' },
       observation: { enabled: true, lazyLoad: false, updateInterval: 5 },
     },

@@ -2,8 +2,6 @@ import React from 'react';
 import { ImageBackground } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
-import NextHourForecastPanelWithWeatherBackground from '../../src/components/weather/NextHourForecastPanelWithWeatherBackground';
-
 const mockConfigGet = jest.fn();
 const mockConverter = jest.fn();
 const mockFormatAccessibleTemperature = jest.fn();
@@ -15,6 +13,14 @@ const mockNextHoursForecast = jest.fn();
 const mockSetCurrentLocation = jest.fn();
 const mockToPrecision = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
+let mockTheme = {
+  colors: {
+    primaryText: '#111111',
+    screenBackground: '#eeeeee',
+    weatherButtonBackground: '#dddddd',
+    forecastBackground: '#cccccc',
+  },
+};
 let mockWindowDimensions = {
   width: 390,
   height: 800,
@@ -58,6 +64,7 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: mockNavigate,
   }),
+  useTheme: () => mockTheme,
 }));
 
 jest.mock('react-i18next', () => ({
@@ -169,6 +176,9 @@ jest.mock('../../src/components/weather/NextHoursForecast', () => ({
   },
 }));
 
+const NextHourForecastPanelWithWeatherBackground =
+  require('../../src/components/weather/NextHourForecastPanelWithWeatherBackground').default;
+
 const forecast = {
   epochtime: 2000000000,
   smartSymbol: 101,
@@ -197,6 +207,14 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
       height: 800,
       fontScale: 1,
       scale: 1,
+    };
+    mockTheme = {
+      colors: {
+        primaryText: '#111111',
+        screenBackground: '#eeeeee',
+        weatherButtonBackground: '#dddddd',
+        forecastBackground: '#cccccc',
+      },
     };
 
     mockConfigGet.mockReturnValue({
@@ -315,5 +333,39 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
     expect(view.UNSAFE_getByType(ImageBackground).props.source).toEqual({
       testBackground: '2-wide',
     });
+  });
+
+  it('uses theme screen background when background images are disabled', () => {
+    mockConfigGet.mockImplementation((key: string) => {
+      if (key === 'weather') {
+        return { backgroundImagesEnabled: false };
+      }
+      return {
+        units: {
+          temperature: 'C',
+        },
+      };
+    });
+
+    const view = render(
+      <NextHourForecastPanelWithWeatherBackground
+        loading={false}
+        nextHourForecast={forecast as any}
+        timezone="Europe/Helsinki"
+        units={{ temperature: { unitAbb: 'C' } } as any}
+        location={{ name: 'Helsinki', area: 'Uusimaa' } as any}
+        setCurrentLocation={mockSetCurrentLocation as any}
+        isAuroraBorealisLikely
+        currentHour={13}
+      />
+    );
+
+    expect(view.UNSAFE_queryByType(ImageBackground)).toBeNull();
+    expect(view.getByTestId('next-hour-forecast-background').props.style).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ backgroundColor: '#cccccc' }),
+      ])
+    );
+    expect(view.queryAllByTestId('linear-gradient')).toHaveLength(0);
   });
 });
