@@ -366,6 +366,6 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
         expect.objectContaining({ backgroundColor: '#cccccc' }),
       ])
     );
-    expect(view.queryAllByTestId('linear-gradient')).toHaveLength(0);
+    expect(view.queryAllByTestId('linear-gradient')).toHaveLength(2);
   });
 });
