@@ -150,7 +150,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
       isWideDisplay(),
     )
     : undefined;
-  const textColor = backgroundImagesEnabled ? WHITE : colors.primaryText;
+  const textColor = WHITE;
   const imageOverlayColor = 'rgba(0,0,0,0.3)';
   const largeFonts = fontScale >= 1.5;
   const contentHeight = largeFonts ? 600 : 420;
@@ -166,23 +166,19 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   const content = (
     <>
-      {backgroundImagesEnabled && (
-        <>
-          <LinearGradient
-            colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.2)']}
-            start={{ x: 0.5, y: 1 }}
-            end={{ x: 0.5, y: 0 }}
-            style={StyleSheet.absoluteFill}
-          />
-          <LinearGradient
-            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
-            locations={[0.4024, 1]}
-            start={{ x: 0.5, y: 1 }}
-            end={{ x: 0.5, y: 0 }}
-            style={StyleSheet.absoluteFill}
-          />
-        </>
-      )}
+      <LinearGradient
+        colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.2)']}
+        start={{ x: 0.5, y: 1 }}
+        end={{ x: 0.5, y: 0 }}
+        style={StyleSheet.absoluteFill}
+      />
+      <LinearGradient
+        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
+        locations={[0.4024, 1]}
+        start={{ x: 0.5, y: 1 }}
+        end={{ x: 0.5, y: 0 }}
+        style={StyleSheet.absoluteFill}
+      />
       <SafeAreaView
         style={[
           styles.container,
@@ -198,7 +194,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             icon="locate"
             accessibilityLabel={t('navigation:locate')}
             iconColor={textColor}
-            backgroundColor={colors.weatherButtonBackground}
+            backgroundColor={imageOverlayColor}
             onPress={() => {
               trackMatomoEvent('User action', 'Weather', 'Geolocation');
               getGeolocation(setCurrentLocation, t);
@@ -232,7 +228,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             icon="search"
             accessibilityLabel={t('navigation:search')}
             iconColor={textColor}
-            backgroundColor={colors.weatherButtonBackground}
+            backgroundColor={imageOverlayColor}
             onPress={() => {
               trackMatomoEvent('User action', 'Weather', 'Open search - button');
               navigation.navigate('Search')
