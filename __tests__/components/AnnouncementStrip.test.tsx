@@ -116,7 +116,7 @@ describe('AnnouncementStrip', () => {
         return { enabled: true };
       }
       if (key === 'weather') {
-        return { layout: 'fmi' };
+        return { layout: 'vertical' };
       }
       return {};
     });
@@ -137,7 +137,7 @@ describe('AnnouncementStrip', () => {
         return { enabled: false };
       }
       if (key === 'weather') {
-        return { layout: 'fmi' };
+        return { layout: 'vertical' };
       }
       return {};
     });

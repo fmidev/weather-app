@@ -305,7 +305,7 @@ const Navigator: React.FC<Props> = ({
     , [LocationHeaderOptions, navigationRef]);
 
   const weatherScreenOptions = useMemo(() =>
-    weatherLayout === 'fmi'
+    weatherLayout === 'vertical'
       ? { headerShown: false }
       : LocationHeaderOptions({ navigation: navigationRef as any }),
     [LocationHeaderOptions, navigationRef, weatherLayout]);

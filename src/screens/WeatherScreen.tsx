@@ -157,7 +157,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     const newsUpdateTime =
       newsUpdated + (newsConfig.updateInterval ?? 30) * 60 * 1000;
 
-    const lazyLoadObservations = weatherConfig.layout === 'fmi'
+    const lazyLoadObservations = weatherConfig.layout === 'vertical'
                                   && (weatherConfig.observation.lazyLoad === true
                                     || weatherConfig.observation.lazyLoad === undefined);
 
@@ -209,7 +209,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   const currentHour = new Date().getHours();
 
-  return weatherConfig.layout === 'fmi' ? (
+  return weatherConfig.layout === 'vertical' ? (
       <View testID="weather_view">
         <ScrollView
           testID="weather_scrollview"
