@@ -292,7 +292,8 @@ export interface ConfigType {
   };
   weather: {
     apiUrl: string;
-    layout?: 'default' | 'fmi' | 'legacyWithoutBackgroundColor';
+    layout?: 'default' | 'vertical' | 'legacyWithoutBackgroundColor';
+    backgroundImagesEnabled?: boolean;
     forecast: {
       ageWarning?: number;
       maxAge?: number;

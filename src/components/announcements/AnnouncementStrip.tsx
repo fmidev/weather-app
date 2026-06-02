@@ -70,7 +70,7 @@ const AnnouncementStrip: React.FC<AnnouncementStripProps> = ({
   const backgroundColor = type === 'crisis' ? CRISIS_BG : MAINTENANCE_BG;
   const textColor = type === 'crisis' ? CRISIS_TEXT : MAINTENANCE_TEXT;
   const prefix = type === 'crisis' ? t('crisisPrefix') : t('maintenancePrefix');
-  const paddingTop = layout === 'fmi' && route.name === 'StackWeather' ? insets.top : 5;
+  const paddingTop = layout === 'vertical' && route.name === 'StackWeather' ? insets.top : 5;
 
   if (!announcement || !enabled) {
     return null;
