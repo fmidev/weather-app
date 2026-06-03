@@ -12,7 +12,11 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StackNavigationOptions, StackNavigationProp } from '@react-navigation/stack';
+import {
+  StackHeaderProps,
+  StackNavigationOptions,
+  StackNavigationProp,
+} from '@react-navigation/stack';
 import type { NavigationState, Route } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
@@ -32,6 +36,7 @@ import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import HeaderButton from '@components/common/HeaderButton';
 import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
+import AnnouncementsHeader from '@components/announcements/AnnouncementsHeader';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
@@ -301,7 +306,11 @@ const Navigator: React.FC<Props> = ({
   );
 
   const mapScreenOptions = useMemo(
-    () => LocationHeaderOptions({ navigation: navigationRef as any })
+    () => ({
+      ...LocationHeaderOptions({ navigation: navigationRef as any }),
+      // eslint-disable-next-line react/no-unstable-nested-components
+      header: (props: StackHeaderProps) => <AnnouncementsHeader {...props} />,
+    })
     , [LocationHeaderOptions, navigationRef]);
 
   const weatherScreenOptions = useMemo(() =>
@@ -311,7 +320,11 @@ const Navigator: React.FC<Props> = ({
     [LocationHeaderOptions, navigationRef, weatherLayout]);
 
   const warningsScreenOptions = useMemo(
-    () => LocationHeaderOptions({ navigation: navigationRef as any }),
+    () => ({
+      ...LocationHeaderOptions({ navigation: navigationRef as any }),
+      // eslint-disable-next-line react/no-unstable-nested-components
+      header: (props: StackHeaderProps) => <AnnouncementsHeader {...props} />,
+    }),
     [LocationHeaderOptions, navigationRef] );
 
   if (!ready || !theme) {

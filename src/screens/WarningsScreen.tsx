@@ -11,16 +11,13 @@ import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import WarningsWebViewPanel from '@components/warnings/WarningsWebViewPanel';
 import WarningsPanel from '@components/warnings/WarningsPanel';
-import Announcements from '@components/announcements/Announcements';
 import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrent } from '@store/location/selector';
-import { selectAnnouncements } from '@store/announcements/selectors';
 import CapWarningsView from '@components/warnings/cap/CapWarningsView';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
-  announcements: selectAnnouncements(state),
 });
 
 const mapDispatchToProps = {
@@ -37,7 +34,6 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
   fetchWarnings,
   fetchCapWarnings,
   location,
-  announcements,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const isFocused = useIsFocused();
@@ -87,9 +83,7 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
       <ScrollView
         testID="warnings_scrollview"
         style={[styles.container, { backgroundColor: colors.screenBackground }]}
-        showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={announcements && [0]}>
-        <Announcements style={styles.announcements} />
+        showsVerticalScrollIndicator={false}>
         {useCapView ? (
           <CapWarningsView />
         ) : (
@@ -111,9 +105,6 @@ const styles = StyleSheet.create({
   },
   container: {
     minHeight: '100%',
-  },
-  announcements: {
-    elevation: 10,
   },
 });
 

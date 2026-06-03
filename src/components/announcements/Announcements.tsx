@@ -11,11 +11,13 @@ import { State } from '@store/types';
 import {
   selectCrisis,
   selectFetchTimestamp,
+  selectMaintenance,
 } from '@store/announcements/selectors';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 
 const mapStateToProps = (state: State) => ({
   crisis: selectCrisis(state),
+  maintenance: selectMaintenance(state),
   fetchTimestamp: selectFetchTimestamp(state),
 });
 
