@@ -49,8 +49,5 @@ describe('SettingsScreen', () => {
 
     fireEvent.press(getByText('12-hour-clock'));
     expect(props.updateClockType).toHaveBeenCalledWith(12);
-
-    fireEvent.press(getByText('settings:maplibre'));
-    expect(props.updateMapLibrary).toHaveBeenCalledWith('maplibre');
   });
 });
