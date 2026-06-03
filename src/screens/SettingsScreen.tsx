@@ -68,11 +68,13 @@ const SettingsScreen: React.FC<Props> = ({
   theme,
   geoids,
   units,
+
   mapLibrary,
   updateUnits,
   updateClockType,
   updateTheme,
   updateLocationsLocales,
+
   updateMapLibrary
 }) => {
   const [locationPermission, setLocationPermission] = useState<

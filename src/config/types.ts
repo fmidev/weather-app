@@ -24,6 +24,7 @@ export type WMSSource = {
   source: string;
   layer: string;
   type: 'observation' | 'forecast';
+  referenceTimeEnabled?: boolean;
   customParameters?: {
     [name: string]: string | number | { dark: string; light: string };
   };
@@ -292,9 +293,11 @@ export interface ConfigType {
   };
   weather: {
     apiUrl: string;
-    layout?: 'default' | 'fmi' | 'legacyWithoutBackgroundColor';
+    layout?: 'default' | 'vertical' | 'legacyWithoutBackgroundColor';
+    backgroundImagesEnabled?: boolean;
     forecast: {
       ageWarning?: number;
+      maxAge?: number;
       updateInterval: number;
       timePeriod: number | string | 'data';
       forecastLengthTitle?: number;

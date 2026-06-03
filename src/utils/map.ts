@@ -342,10 +342,10 @@ export const getWMSLayerUrlsAndBounds = async (
         (dim) => dim.name === 'reference_time'
       );
 
-      let referenceTime: string | undefined;
-      if (referenceTimeDimension) {
-        referenceTime = referenceTimeDimension.default;
-      }
+      const referenceTime =
+        layerSrc.referenceTimeEnabled !== false && referenceTimeDimension
+          ? referenceTimeDimension.default
+          : undefined;
 
       const url = sources[layerSrc.source];
 
@@ -367,7 +367,7 @@ export const getWMSLayerUrlsAndBounds = async (
         srs: 'EPSG:3857',
         crs: 'EPSG:3857',
         ...customParameters,
-        ...(referenceTime ? { reference_time: referenceTime } : {}),
+        ...(referenceTime ? { dim_reference_time: referenceTime } : {}),
       });
 
       const overlayUrl = decodeURIComponent(`${url}/wms?${query.toString()}`);
@@ -445,4 +445,3 @@ export const isPointInsideBoundingBox = (point: Coordinate, bbox: BBox) =>
   point.latitude <= bbox.maxLatitude &&
   point.longitude >= bbox.minLongitude &&
   point.longitude <= bbox.maxLongitude;
-
