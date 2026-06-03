@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { AppState, AppStateStatus, ScrollView } from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
 import moment from 'moment';
@@ -122,9 +122,20 @@ const createStore = (state: any) => ({
 });
 
 describe('TimeSlider', () => {
+  let appStateChangeHandler: ((nextAppState: AppStateStatus) => void) | undefined;
+  let removeAppStateSubscription: jest.Mock;
+
   beforeEach(() => {
     jest.useFakeTimers();
     jest.clearAllMocks();
+    removeAppStateSubscription = jest.fn();
+    appStateChangeHandler = undefined;
+    jest.spyOn(AppState, 'addEventListener').mockImplementation(
+      (_event, handler) => {
+        appStateChangeHandler = handler;
+        return { remove: removeAppStateSubscription } as any;
+      }
+    );
     mockUseIsFocused.mockReturnValue(true);
     mockGetSliderMinUnix.mockReturnValue(1710000000);
     mockGetSliderMaxUnix.mockReturnValue(1710007200);
@@ -136,6 +147,7 @@ describe('TimeSlider', () => {
       jest.runOnlyPendingTimers();
     });
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   it('renders steps and current observation label', () => {
@@ -220,6 +232,36 @@ describe('TimeSlider', () => {
       'Map',
       'Animation - START'
     );
+  });
+
+  it('pauses animation when app goes to background', () => {
+    const store = createStore({
+      mock: {
+        activeOverlayId: 1,
+        sliderTime: 1710000000,
+        overlay: {
+          step: 60,
+          observation: { end: '2024-03-09T16:00:00Z' },
+        },
+        clockType: 24,
+        animationSpeed: 50,
+      },
+    });
+
+    const { getByA11yLabel } = render(
+      <Provider store={store as any}>
+        <TimeSlider />
+      </Provider>
+    );
+
+    fireEvent.press(getByA11yLabel('Play'));
+    expect(getByA11yLabel('Pause')).toBeTruthy();
+
+    act(() => {
+      appStateChangeHandler?.('background');
+    });
+
+    expect(getByA11yLabel('Play')).toBeTruthy();
   });
 
   it('dispatches initial slider time selection and triggers haptics after layout', () => {

@@ -15,6 +15,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Platform,
+  AppState,
+  AppStateStatus,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
@@ -140,6 +142,14 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const isFocused = useIsFocused();
 
+  const clear = useCallback(() => {
+    setIsAnimating(false);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
   /**
    * clear animation if:
    *  user navigates off screen
@@ -149,7 +159,25 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
     if ((!isFocused || sliderTime === 0) && isAnimating) {
       clear();
     }
-  }, [isFocused, isAnimating, sliderTime]);
+  }, [isFocused, isAnimating, sliderTime, clear]);
+
+  // Sets animation to pause when app goes to background or becomes inactive
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState.match(/inactive|background/)) {
+        clear();
+      }
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [clear]);
 
   useEffect(() => {
     if (currentIndex >= 0) {
@@ -248,14 +276,6 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       }
     };
   }, [isAnimating, animationSpeed, stepWidth]);
-
-  const clear = () => {
-    setIsAnimating(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
 
   return (
     <View
