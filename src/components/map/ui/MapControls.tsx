@@ -113,10 +113,6 @@ const styles = StyleSheet.create({
     height: 44,
     width: 44,
   },
-  // eslint-disable-next-line react-native/no-unused-styles
-  labelMapButton: {
-    minWidth: 230,
-  },
   center: {
     alignSelf: 'center',
   },
