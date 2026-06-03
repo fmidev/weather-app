@@ -35,7 +35,7 @@ import UnitSettings from '@components/settings/UnitSettings';
 import LanguageSettings from '@components/settings/LanguageSettings';
 import ThemeSettings from '@components/settings/ThemeSettings';
 import TimeSettings from '@components/settings/TimeSettings';
-import MapSettings from '@components/settings/MapSettings';
+//import MapSettings from '@components/settings/MapSettings';
 
 const LOCATION_ALWAYS = 'location_always';
 const LOCATION_WHEN_IN_USE = 'location_when_in_use';
@@ -68,13 +68,13 @@ const SettingsScreen: React.FC<Props> = ({
   theme,
   geoids,
   units,
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mapLibrary,
   updateUnits,
   updateClockType,
   updateTheme,
   updateLocationsLocales,
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateMapLibrary
 }) => {
   const [locationPermission, setLocationPermission] = useState<
@@ -207,10 +207,12 @@ const SettingsScreen: React.FC<Props> = ({
           <UnitSettings units={units} onChangeUnits={onChangeUnits} />
         )}
 
+        { /*
         <MapSettings
           mapLibrary={mapLibrary}
           updateMapLibrary={updateMapLibrary}
         />
+        */}
       </ScrollView>
     </View>
   );
