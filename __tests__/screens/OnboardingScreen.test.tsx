@@ -66,10 +66,12 @@ describe('OnboardingScreen', () => {
     fireEvent.press(getByTestId('onboarding_set_language_en'));
 
     expect(mockChangeLanguage).toHaveBeenCalledWith('en');
-    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
-      'User action',
-      'Onboarding',
-      'Select language - en'
+    await waitFor(() =>
+      expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+        'User action',
+        'Onboarding',
+        'Select language - en'
+      )
     );
     await waitFor(() => expect(mockSetItem).toHaveBeenCalledWith('locale', 'en'));
 
