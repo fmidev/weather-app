@@ -663,6 +663,10 @@
     "showBuiltInLocationPermissionQuestion": "Next"
   },
   "onboarding": {
+    "language": "Språk",
+    "fi": "Suomi",
+    "sv": "Svenska",
+    "en": "English",
     "next": "Next",
     "skip": "Skip",
     "weatherTitle": "Weather forecast and observations",

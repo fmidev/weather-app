@@ -663,6 +663,10 @@
     "showBuiltInLocationPermissionQuestion": "Seuraava"
   },
   "onboarding": {
+    "language": "Kieli",
+    "fi": "Suomi",
+    "sv": "Svenska",
+    "en": "English",
     "next": "Seuraava",
     "skip": "Ohita",
     "weatherTitle": "Sääennuste ja -havainnot",
