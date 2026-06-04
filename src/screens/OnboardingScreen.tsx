@@ -50,12 +50,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
       return;
     }
 
-    i18n.changeLanguage(language);
-    trackMatomoEvent(
-      'User action',
-      'Onboarding',
-      `Select language - ${language}`
-    );
+    await i18n.changeLanguage(language);
+    initMatomo(); // re-init matomo to use correct siteId
+    trackMatomoEvent('User action', 'Onboarding', `Select language - ${language}`);
 
     try {
       await setItem(LOCALE, language);
