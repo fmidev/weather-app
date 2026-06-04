@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
     marginTop: 32,
     marginBottom: 16,
   },

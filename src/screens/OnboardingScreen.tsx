@@ -352,6 +352,7 @@ const styles = StyleSheet.create({
     marginTop: 60,
     alignSelf: 'center',
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   textNormal: {
     fontSize: 16,
@@ -368,6 +369,7 @@ const styles = StyleSheet.create({
   languageTitle: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
     marginBottom: 20,
   },
   languageButton: {

@@ -338,6 +338,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     alignSelf: 'center',
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   textNormal: {
     fontSize: 16,
@@ -348,6 +349,7 @@ const styles = StyleSheet.create({
   textHighlight: {
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
   },
   secondaryButton: {
     borderBottomWidth: 2,
