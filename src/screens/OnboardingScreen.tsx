@@ -24,7 +24,7 @@ import { useOrientation } from '@utils/hooks';
 import { Config } from '@config';
 import { providerLogos } from '@assets/images';
 import { LOCALE, setItem } from '@utils/async_storage';
-import { trackMatomoEvent } from '@utils/matomo';
+import { initMatomo, trackMatomoEvent } from '@utils/matomo';
 
 type OnboardingScreenProps = {
   navigation: StackNavigationProp<SetupStackParamList, 'Onboarding'>;
