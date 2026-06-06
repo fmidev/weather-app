@@ -30,11 +30,11 @@ describe('CapWarningsApi', () => {
       <feed>
         <updated>2035-01-01T00:00:00Z</updated>
         <entry>
-          <link href="http://warnings.example/keep.xml" type="application/cap+xml" />
-          <link href="http://warnings.example/keep.html" type="text/html" />
+          <link href="https://warnings.example/keep.xml" type="application/cap+xml" />
+          <link href="https://warnings.example/keep.html" type="text/html" />
         </entry>
         <entry>
-          <link href="http://warnings.example/expired.xml" type="application/cap+xml" />
+          <link href="https://warnings.example/expired.xml" type="application/cap+xml" />
         </entry>
       </feed>
     `;

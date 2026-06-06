@@ -41,8 +41,22 @@ function WarningBlock({
   const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
   const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
 
+  const sortedWarnings = useMemo(() => [...warnings].sort((a, b) => {
+    const aInfo = Array.isArray(a.info) ? selectCapInfoByLanguage(a.info, locale) : a.info;
+    const bInfo = Array.isArray(b.info) ? selectCapInfoByLanguage(b.info, locale) : b.info;
+
+    const severityDiff =
+      severities.indexOf(bInfo.severity) - severities.indexOf(aInfo.severity);
+
+    if (severityDiff !== 0) return severityDiff;
+
+    return (
+      moment(aInfo.effective).toDate().getTime() - moment(bInfo.effective).toDate().getTime()
+    );
+  }), [warnings, locale]);
+
   const dailySeverities = getSeveritiesForDays(
-    warnings,
+    sortedWarnings,
     dates.map(({ time }) => time)
   );
 
@@ -55,21 +69,27 @@ function WarningBlock({
   }, [xOffset]);
 
   const headerWarning = useMemo(() => {
-    let mostSevere = warnings[0];
-    warnings.forEach((warning) => {
-      const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-      const currentSeverity = severities.indexOf(info.severity);
+    let mostSevere = sortedWarnings[0];
+
+    sortedWarnings.forEach((warning) => {
+      const info = Array.isArray(warning.info) ? selectCapInfoByLanguage(warning.info, locale) : warning.info;
+      const currentMostSevereInfo =
+        Array.isArray(mostSevere.info) ? selectCapInfoByLanguage(mostSevere.info, locale) : mostSevere.info;
+
+      const currentSeverity = severities.indexOf(currentMostSevereInfo.severity);
       const severity = severities.indexOf(info.severity);
+
       if (severity > currentSeverity) {
         mostSevere = warning;
       }
     });
+
     return mostSevere;
-  }, [warnings]);
+  }, [sortedWarnings, locale]);
 
   const headerWarningAreas = [
     ...new Set(
-      warnings
+      sortedWarnings
         .map((warning) => Array.isArray(warning.info) ?
           selectCapInfoByLanguage(warning.info, locale).area.areaDesc : warning.info.area.areaDesc)
         .map((area) => area.charAt(0).toUpperCase().concat(area.substring(1)))
@@ -142,10 +162,10 @@ function WarningBlock({
     });
   };
   const headerTimeSpanString = [
-    ...new Set(getHeaderWarningTimeSpans(warnings)),
+    ...new Set(getHeaderWarningTimeSpans(sortedWarnings)),
   ].join(', ');
 
-  const warningTimeSpans = warnings.map((warning) => {
+  const warningTimeSpans = sortedWarnings.map((warning) => {
     const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
     const start = moment(info.effective);
     const end = moment(info.expires);
@@ -184,7 +204,7 @@ function WarningBlock({
             styles.openableContent,
             { backgroundColor: colors.accordionContentBackground },
           ]}>
-          {warnings.map((warning, index) => {
+          {sortedWarnings.map((warning, index) => {
             const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
             return (
               <WarningItem
