@@ -62,17 +62,17 @@ const MapView: React.FC<MapViewProps> = ({
     const dayEnd = date.clone().add(1, 'days');
     const warnings = capData?.filter((warning) => {
       const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-      const effectiveMoment = moment(info.effective);
+      const onsetMoment = moment(info.onset);
       const expiryMoment = moment(info.expires);
 
       const endsDuringDay =
-        effectiveMoment.isBefore(dayStart) && expiryMoment.isAfter(dayStart);
+        onsetMoment.isBefore(dayStart) && expiryMoment.isAfter(dayStart);
       const isContainedInDay =
-        effectiveMoment.isAfter(dayStart) && expiryMoment.isBefore(dayEnd);
+        onsetMoment.isAfter(dayStart) && expiryMoment.isBefore(dayEnd);
       const startsDuringDay =
-        effectiveMoment.isBefore(dayEnd) && expiryMoment.isAfter(dayEnd);
+        onsetMoment.isBefore(dayEnd) && expiryMoment.isAfter(dayEnd);
       const dayContained =
-        effectiveMoment.isBefore(dayStart) && expiryMoment.isAfter(dayEnd);
+        onsetMoment.isBefore(dayStart) && expiryMoment.isAfter(dayEnd);
 
       return (
         endsDuringDay || isContainedInDay || startsDuringDay || dayContained

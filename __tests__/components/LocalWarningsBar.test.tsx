@@ -196,6 +196,7 @@ describe('LocalWarningsBar', () => {
         event: 'Wind',
         severity: 'Moderate',
         effective: today.clone().toISOString(),
+        onset: today.clone().toISOString(),
         expires: today.clone().endOf('day').toISOString(),
         area: {
           areaDesc: 'Helsinki',
@@ -209,6 +210,7 @@ describe('LocalWarningsBar', () => {
         event: 'Rain',
         severity: 'Severe',
         effective: today.clone().add(1, 'day').toISOString(),
+        onset: today.clone().add(1, 'day').toISOString(),
         expires: today.clone().add(1, 'day').endOf('day').toISOString(),
         area: {
           areaDesc: 'Espoo',

@@ -31,7 +31,7 @@ const LocalWarningsDetails: React.FC<LocalWarningsDetailsProps> = ({
 
   const warningTimeSpans = warnings.map((warning) => {
     const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-    const start = moment(info.effective);
+    const start = moment(info.onset);
     const end = moment(info.expires);
     const startFormatted = start
       .locale(locale)

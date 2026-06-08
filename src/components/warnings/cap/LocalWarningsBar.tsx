@@ -102,7 +102,7 @@ const overlapsDay = (info: CapInfo, day: moment.Moment) => {
   const dayStart = day.clone().startOf('day');
   const dayEnd = day.clone().endOf('day');
 
-  return moment(info.effective).isSameOrBefore(dayEnd) &&
+  return moment(info.onset).isSameOrBefore(dayEnd) &&
     moment(info.expires).isSameOrAfter(dayStart);
 };
 

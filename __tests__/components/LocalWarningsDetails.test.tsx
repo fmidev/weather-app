@@ -45,6 +45,7 @@ describe('LocalWarningsDetails', () => {
         event: 'Wind',
         severity: 'Severe',
         effective: '2025-01-01T10:00:00Z',
+        onset: '2025-01-01T10:00:00Z',
         expires: '2025-01-01T12:00:00Z',
         area: { areaDesc: 'Helsinki' },
       },
