@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import { GREEN, ORANGE, RED, YELLOW, WHITE } from '@assets/colors';
 import Icon from '@components/common/ScalableIcon';
 import type { Severity, WarningPhysical, WarningType } from '@store/warnings/types';
+import { BOLD_FONT } from '@assets/constants';
 
 type WarningIconProps = {
   severity?: number;
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     color: WHITE,
     fontSize: 10,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
 });
 

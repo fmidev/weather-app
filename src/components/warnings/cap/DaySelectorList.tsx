@@ -5,6 +5,7 @@ import { CustomTheme, GRAYISH_BLUE } from '@assets/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CapSeverityBar from './CapSeverityBar';
 import { Config } from '@config';
+import { MEDIUM_FONT } from '@assets/constants';
 
 const DaySelector = ({
   active,
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   text: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 14,
   },
   row: {

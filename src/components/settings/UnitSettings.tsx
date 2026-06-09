@@ -13,6 +13,7 @@ import { Config, type MeasurementUnit } from '@config';
 import { UnitMap, UnitType } from '@store/settings/types';
 import { getUnitsHiddenInSettings, UNITS } from '@utils/units';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 interface Props {
   units: UnitMap;
@@ -178,7 +179,7 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
 const styles = StyleSheet.create({
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   rowWrapper: {
     marginHorizontal: 20,
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     marginLeft: 20,
   },
   sheetContainer: {

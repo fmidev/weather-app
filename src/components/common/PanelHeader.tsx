@@ -4,6 +4,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Text from '@components/common/AppText';
 import { CustomTheme } from '@assets/colors';
+import { BOLD_FONT } from '@assets/constants';
 
 type PanelHeaderProps = {
   title: string;
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
 });
 

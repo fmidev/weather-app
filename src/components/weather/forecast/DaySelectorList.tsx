@@ -15,6 +15,7 @@ import PrecipitationStrip from './PrecipitationStrip';
 import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { selectForecastInvalidData } from '@store/forecast/selectors';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -216,15 +217,15 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     textTransform: 'capitalize',
   },
   forecastText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   precipitationStrip: {
     marginBottom: -6,

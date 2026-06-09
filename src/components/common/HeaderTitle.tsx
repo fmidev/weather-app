@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
 import { PRIMARY_BLUE, WHITE } from '@assets/colors';
+import { BOLD_FONT } from '@assets/constants';
 
 type HeaderTitleProps = {
   title: string;
@@ -19,7 +20,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({title, isDark}) => (
 
 const styles = StyleSheet.create({
   headerTitle: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontSize: 16,
   }
 });

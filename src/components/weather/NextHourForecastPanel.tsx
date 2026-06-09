@@ -30,6 +30,7 @@ import {
   getForecastParameterUnitTranslationKey,
 } from '@utils/units';
 import { selectClockType } from '@store/settings/selectors';
+import { LIGHT_FONT, REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -341,22 +342,22 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   unitText: {
     fontSize: 24,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     paddingTop: 12,
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   feelsLikeText: {
     fontSize: 20,
   },
   temperatureText: {
     fontSize: 72,
-    fontFamily: 'Roboto-Light',
+    fontFamily: LIGHT_FONT,
   },
   bottomInfoRow: {
     marginBottom: 11,

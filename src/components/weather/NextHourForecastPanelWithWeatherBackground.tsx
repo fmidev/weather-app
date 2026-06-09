@@ -42,6 +42,7 @@ import NextHourForecastBar from './forecast/NextHourForecastBar';
 import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
 import type { WeatherStackParamList } from '@navigators/stacks/types';
+import { LIGHT_FONT, REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -331,23 +332,23 @@ const styles = StyleSheet.create({
   },
   largeText: {
     fontSize: 18,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   unitText: {
     fontSize: 24,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     paddingTop: 12,
   },
   centeredText: {
     textAlign: 'center',
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   temperatureText: {
     fontSize: 72,
-    fontFamily: 'Roboto-Light',
+    fontFamily: LIGHT_FONT,
   },
   backgroundImage: {
     flex: 1,

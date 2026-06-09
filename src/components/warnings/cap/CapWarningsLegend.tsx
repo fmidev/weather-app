@@ -20,6 +20,7 @@ import { useTheme } from '@react-navigation/native';
 import { t } from 'i18next';
 import CapSeverityBar from './CapSeverityBar';
 import TypeColorRow from '../TypeColorRow';
+import { BOLD_FONT } from '@assets/constants';
 
 const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
   const { colors } = useTheme() as CustomTheme;
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   headingText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontSize: 16,
     marginVertical: 25,
   },

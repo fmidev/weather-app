@@ -15,6 +15,7 @@ import { updateActiveOverlay as updateActiveOverlayAction } from '@store/map/act
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
 import { Config } from '@config';
+import { REGULAR_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
@@ -95,7 +96,7 @@ const LayerSelector: React.FC<LayerSelectorProps> = ({
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     flexShrink: 1,
   },
   row: {

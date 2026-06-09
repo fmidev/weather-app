@@ -18,6 +18,7 @@ import Icon from '@assets/Icon';
 import { Config } from '@config';
 import { selectUnits } from '@store/settings/selectors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 6,
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   mainRow: {
     flexDirection: 'row',
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   },
   tempText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     marginLeft: 4,
   },
   calloutContainer: {
@@ -167,11 +168,11 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   calloutTitle: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 16,
   },
   calloutText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     fontSize: 14,
   },
   windSpeedRow: {

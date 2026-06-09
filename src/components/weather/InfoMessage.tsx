@@ -3,6 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { CustomTheme, GRAY_1_OPACITY_15, GRAY_4, WHITE } from '@assets/colors';
+import { REGULAR_FONT } from '@assets/constants';
 
 const InfoMessage: React.FC<{ translationKey: string }> = ({
   translationKey,
@@ -22,7 +23,7 @@ const InfoMessage: React.FC<{ translationKey: string }> = ({
 const styles = StyleSheet.create({
   infoText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   infoView: {
     backgroundColor: GRAY_1_OPACITY_15,

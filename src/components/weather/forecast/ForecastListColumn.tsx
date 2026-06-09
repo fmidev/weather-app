@@ -20,6 +20,7 @@ import {
   toPrecision,
 } from '@utils/units';
 import { ClockType, UnitMap } from '@store/settings/types';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 type ForecastListColumnProps = {
   clockType: ClockType;
@@ -433,7 +434,7 @@ const styles = StyleSheet.create({
   },
   hourText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   hourColumn: {
     width: 52,
@@ -457,7 +458,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   regularText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     fontSize: 16,
   },
 });

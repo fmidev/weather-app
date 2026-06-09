@@ -11,6 +11,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import type { NewsItem } from '@store/news/types';
 import { trackMatomoEvent } from '@utils/matomo';
 import { formatAccessibleDate } from '@utils/helpers';
+import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 
 type NewsProps = {
   item: NewsItem;
@@ -113,12 +114,12 @@ const styles = StyleSheet.create({
   },
   meta: {
     fontSize: 15,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     marginBottom: 8,
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     marginBottom: 8,
   },
   image: {

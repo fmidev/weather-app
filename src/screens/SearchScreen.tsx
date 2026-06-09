@@ -48,6 +48,7 @@ import IconButton from '@components/common/IconButton';
 import { getGeolocation } from '@utils/helpers';
 import { CustomTheme } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
@@ -323,7 +324,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   searchIcon: {
     marginRight: 8,
@@ -336,7 +337,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: 0,
     paddingHorizontal: 8,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     fontSize: 16,
   },
   locateRow: {
@@ -354,7 +355,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     marginLeft: 16,
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
 });
 

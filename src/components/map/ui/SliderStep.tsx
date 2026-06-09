@@ -6,6 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import Text from '@components/common/AppText';
 import { CustomTheme } from '@assets/colors';
 import { ClockType } from '@store/settings/types';
+import { MEDIUM_FONT } from '@assets/constants';
 
 type SliderStepProps = {
   clockType: ClockType;
@@ -108,7 +109,7 @@ const SliderStep: React.FC<SliderStepProps> = ({
 const styles = StyleSheet.create({
   text: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   quarterContainer: {
     minHeight: 32,

@@ -11,6 +11,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import { Config } from '@config';
 import { trackMatomoEvent } from '@utils/matomo';
 import type { OthersStackParamList } from '@navigators/stacks/types';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 interface Props {
   navigation: StackNavigationProp<OthersStackParamList, 'StackOthers'>;
@@ -268,11 +269,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   textRegular: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   row: {
     flexDirection: 'row',

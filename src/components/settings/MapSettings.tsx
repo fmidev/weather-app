@@ -8,6 +8,7 @@ import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import { MapLibrary } from '@store/settings/types';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 interface Props {
   mapLibrary: MapLibrary;
@@ -115,7 +116,7 @@ const MapSettings: React.FC<Props> = ({ mapLibrary, updateMapLibrary }) => {
 const styles = StyleSheet.create({
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   rowWrapper: {
     marginHorizontal: 20,
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     marginLeft: 20,
   },
   withMarginTop: {

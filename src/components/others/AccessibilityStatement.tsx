@@ -18,6 +18,7 @@ import Icon from '@assets/Icon';
 import { CustomTheme } from '@assets/colors';
 import packageJSON from '../../../package.json';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const AccessibilityStatement: React.FC = () => {
   const {
@@ -326,13 +327,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     marginTop: 32,
     marginBottom: 16,
   },
   subTitle: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     marginTop: 32,
     marginBottom: 16,
   },
@@ -344,17 +345,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontSize: 16,
     maxWidth: '90%',
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     marginBottom: 16,
   },
   body: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   withPaddingBottom: {
     paddingBottom: 24,

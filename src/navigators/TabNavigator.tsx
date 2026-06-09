@@ -71,6 +71,7 @@ import { sendMatomoEvents, trackMatomoEvent } from '@utils/matomo';
 import HeaderBackImage from '@components/common/HeaderBackImage';
 import HeaderTitle from '@components/common/HeaderTitle';
 import packageJSON from '../../package.json';
+import { MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
@@ -210,7 +211,7 @@ const Navigator: React.FC<Props> = ({
       headerBackTestID: 'header-back',
       headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
       headerTitleStyle: {
-        fontFamily: 'Roboto-Bold',
+        fontFamily: BOLD_FONT,
       },
       headerStyle: {
         ...styles.header,
@@ -576,7 +577,7 @@ const Navigator: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   tabText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 14,
   },
   sheetContainer: {

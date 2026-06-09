@@ -22,6 +22,7 @@ import {
 } from '@assets/colors';
 import { ChartType } from '../charts/types';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 type ParameterSelectorProps = {
   chartTypes: ChartType[];
@@ -187,13 +188,13 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   selectedText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   medium: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   gradient: {
     position: 'absolute',

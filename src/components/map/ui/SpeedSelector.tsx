@@ -16,6 +16,7 @@ import {
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   animationSpeed: selectAnimationSpeed(state)
@@ -95,7 +96,7 @@ const SpeedSelector: React.FC<SpeedSelectorProps> = ({
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     flexShrink: 1,
   },
   row: {

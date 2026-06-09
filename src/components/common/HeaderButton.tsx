@@ -6,6 +6,7 @@ import { useOrientation } from '@utils/hooks';
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
+import { MEDIUM_FONT } from '@assets/constants';
 
 type HeaderButtonProps = {
   title?: string;
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   marginBottom: {
     marginBottom: 10,

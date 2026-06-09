@@ -33,6 +33,7 @@ import ChartList from './forecast/ChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const TABLE = 'table';
 const CHART = 'chart';
@@ -359,7 +360,7 @@ const styles = StyleSheet.create({
   },
   forecastText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   justifyStart: {
     justifyContent: 'flex-start',
@@ -368,7 +369,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   selectedText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   withMarginRight: {
     marginRight: 16,
