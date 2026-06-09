@@ -42,7 +42,7 @@ import NextHourForecastBar from './forecast/NextHourForecastBar';
 import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
 import type { WeatherStackParamList } from '@navigators/stacks/types';
-import { LIGHT_FONT,REGULAR_FONT, BOLD_FONT } from '@assets/constants';
+import { LIGHT_FONT, REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
