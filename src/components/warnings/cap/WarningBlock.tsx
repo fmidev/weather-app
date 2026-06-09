@@ -12,6 +12,7 @@ import { selectClockType } from '@store/settings/selectors';
 import { connect } from 'react-redux';
 import { ClockType } from '@store/settings/types';
 import WarningItem from './WarningItem';
+import { Config } from '@config';
 
 const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
 
@@ -32,6 +33,7 @@ function WarningBlock({
   warnings: CapWarning[];
   xOffset?: number;
 }>) {
+  const { default: defaultLocation } = Config.get('location');
   const [open, setOpen] = useState(false);
   const { colors } = useTheme() as CustomTheme;
   const scrollViewRef = useRef<ScrollView>(null);
@@ -57,7 +59,8 @@ function WarningBlock({
 
   const dailySeverities = getSeveritiesForDays(
     sortedWarnings,
-    dates.map(({ time }) => time)
+    dates.map(({ time }) => time),
+    defaultLocation.timezone
   );
 
   useEffect(() => {
@@ -167,8 +170,8 @@ function WarningBlock({
 
   const warningTimeSpans = sortedWarnings.map((warning) => {
     const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-    const start = moment(info.onset);
-    const end = moment(info.expires);
+    const start = moment(info.onset).tz(defaultLocation.timezone);
+    const end = moment(info.expires).tz(defaultLocation.timezone);
     const startFormatted = start
       .locale(locale)
       .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`);

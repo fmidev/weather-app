@@ -113,6 +113,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
   clockType,
   legendSheetRef,
 }) => {
+  const { default: defaultLocation } = Config.get('location');
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('warnings');
   const capViewSettings = Config.get('warnings')?.capViewSettings;
@@ -155,7 +156,8 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
     );
     const dailySeverities = getSeveritiesForDays(
       localWarnings.map(({ warning }) => warning),
-      dates.map((date) => date.valueOf())
+      dates.map((date) => date.valueOf()),
+      defaultLocation.timezone
     );
 
     return dates.map((date, index) => {
@@ -170,7 +172,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
         highestSeverity: Math.max(...severities, 0),
       };
     });
-  }, [capViewSettings?.numberOfDays, localWarnings]);
+  }, [capViewSettings?.numberOfDays, defaultLocation.timezone, localWarnings]);
 
   const selectedDayWarnings = useMemo(() => {
     const activeDay = daySummaries[selectedDay]?.day;

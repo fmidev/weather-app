@@ -47,6 +47,7 @@ const MapView: React.FC<MapViewProps> = ({
   dates,
   capData,
 }) => {
+  const { default: defaultLocation } = Config.get('location');
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const [selectedFilters, setSelectedFilters] = useState<
     { severity: Severity; event: string }[]
@@ -157,9 +158,10 @@ const MapView: React.FC<MapViewProps> = ({
     () =>
       getSeveritiesForDays(
         capData,
-        dates.map(({ time }) => time)
+        dates.map(({ time }) => time),
+        defaultLocation.timezone
       ),
-    [capData, dates]
+    [capData, dates, defaultLocation.timezone]
   );
 
   const backgroundOverlayColor = dark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)';
