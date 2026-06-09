@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import LocalWarningsBar from '../../src/components/warnings/cap/LocalWarningsBar';
 
@@ -10,6 +10,7 @@ const mockGetSeveritiesForDays = jest.fn();
 const mockIsPointInPolygon = jest.fn();
 const mockGetBoundingBox = jest.fn();
 const mockIsPointInsideBoundingBox = jest.fn();
+const timezone = 'Europe/Helsinki';
 
 jest.mock('@config', () => ({
   Config: {
@@ -146,7 +147,7 @@ describe('LocalWarningsBar', () => {
       if (key === 'location') {
         return {
           default: {
-            timezone: 'Europe/Helsinki',
+            timezone,
           },
         };
       }
@@ -196,7 +197,7 @@ describe('LocalWarningsBar', () => {
   });
 
   it('renders local warning summary, opens legend and changes selected day', () => {
-    const today = moment().startOf('day');
+    const today = moment.tz(timezone).startOf('day');
     const warningToday = {
       identifier: 'warning-today',
       info: {
@@ -241,7 +242,7 @@ describe('LocalWarningsBar', () => {
     expect(mockGetSeveritiesForDays).toHaveBeenCalledWith(
       [warningToday, warningTomorrow],
       expect.any(Array),
-      'Europe/Helsinki'
+      timezone
     );
     expect(getByTestId('local-warning-details').props.children).toBe('warning-today');
     expect(getByTestId('severity-0-1-0-0')).toBeTruthy();
