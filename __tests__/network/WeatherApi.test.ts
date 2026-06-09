@@ -222,6 +222,15 @@ describe('WeatherApi', () => {
   });
 
   it('fetches current position and location locales', async () => {
+    mockConfigGet.mockImplementation((key: string) =>
+      key === 'location'
+        ? {
+            keyword: 'extended_names',
+            maxDistance: 20,
+            useInKeyword: true,
+          }
+        : weatherConfig
+    );
     mockAxiosClient
       .mockResolvedValueOnce({ data: { 123: [{ name: 'Helsinki' }] } })
       .mockResolvedValueOnce({ data: { 123: [{ name: 'Helsinki' }] } });
@@ -235,6 +244,8 @@ describe('WeatherApi', () => {
         params: expect.objectContaining({
           latlon: '60.1,24.9',
           lang: 'en',
+          inkeyword: 'extended_names',
+          maxdistance: 20,
           param: expect.stringContaining('geoid'),
         }),
       },
