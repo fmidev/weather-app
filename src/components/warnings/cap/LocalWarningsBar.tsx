@@ -28,6 +28,7 @@ import LocalWarningsDetails from './LocalWarningsDetails';
 import { getBoundingBox, isPointInsideBoundingBox } from '@utils/map';
 import type { Coordinate, BBox } from '@utils/map';
 import PanelHeader from '@components/common/PanelHeader';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -352,11 +353,11 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   medium: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   headerText: {
     fontSize: 16,
@@ -407,7 +408,7 @@ const styles = StyleSheet.create({
   badgeText: {
     textAlign: 'center',
     fontSize: 14,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   warningsSingleDayContainer: {
@@ -437,7 +438,7 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   dayWarningHeaderText: {
     textTransform: 'capitalize',

@@ -40,6 +40,7 @@ import {
 import { useOrientation } from '@utils/hooks';
 import { GRAY_1, CustomTheme } from '@assets/colors';
 import { Config } from '@config';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   uniqueSmartSymbols: selectUniqueSmartSymbols(state),
@@ -903,17 +904,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     flex: 2,
     flexWrap: 'wrap',
   },
   iconText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 14,
   },
   flex1: {
@@ -952,7 +953,7 @@ const styles = StyleSheet.create({
   },
   unitText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     flex: 1,
     flexWrap: 'wrap',
   },
@@ -967,18 +968,18 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   landscape: {
     paddingBottom: 200,
   },
   symbolText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     paddingVertical: 0,
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   }
 });

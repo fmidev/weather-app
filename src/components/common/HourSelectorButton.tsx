@@ -5,6 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import Text from '@components/common/AppText';
 import { CustomTheme, WHITE, BLACK } from '@assets/colors';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 type HourSelectorButtonProps = {
   accessibilityHint?: string;
@@ -62,10 +63,10 @@ const HourSelectorButton: React.FC<HourSelectorButtonProps> = ({
 const styles = StyleSheet.create({
   forecastText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   selectedText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   button: {
     width: 70,

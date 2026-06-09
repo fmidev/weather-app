@@ -16,6 +16,7 @@ import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatAccessibleDateTime } from '@utils/helpers';
+import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -122,17 +123,17 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   title: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 16,
     marginBottom: 8,
   },
   updated: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 14,
     marginBottom: 8,
   },
   text: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     fontSize: 14,
   },
   warningIcon: {

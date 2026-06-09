@@ -7,6 +7,7 @@ import Text from '@components/common/AppText'
 import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
 import { GRAY_1, CustomTheme } from '@assets/colors';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 type SearchInfoSheetProps = {
   onClose: () => void;
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   row: {
     flexDirection: 'row',
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   text: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     fontSize: 16,
   },
   withMarginLeft: {

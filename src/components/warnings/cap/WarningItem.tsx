@@ -10,6 +10,7 @@ import { CapWarning, WarningType } from '@store/warnings/types';
 import { selectCapInfoByLanguage } from '@utils/helpers';
 import WarningSymbol from '../../../assets/WarningsSymbol';
 import CapSeverityBar from './CapSeverityBar';
+import { BOLD_FONT } from '@assets/constants';
 
 const MAX_AREA_COUNT_FOR_HIDE_LONG_AREA_LIST = 5;
 
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   headingTitle: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontSize: 16,
   },
   headingText: {

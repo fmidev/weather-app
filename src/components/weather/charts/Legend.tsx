@@ -12,6 +12,7 @@ import { ChartType } from './types';
 import { selectDailyObservationParametersWithData } from '@store/observation/selector';
 import { useSelector } from 'react-redux';
 import { UnitMap } from '@store/settings/types';
+import { REGULAR_FONT } from '@assets/constants';
 
 type ChartLegendProps = {
   chartType: ChartType;
@@ -470,7 +471,7 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     marginLeft: 16,
   },
   legendLineBlock: {

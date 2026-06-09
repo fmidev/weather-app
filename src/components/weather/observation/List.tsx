@@ -27,6 +27,7 @@ import DailyObservationRow from './DailyObservationRow';
 import { selectUnits } from '@store/settings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '@store/types';
+import { MEDIUM_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -484,7 +485,7 @@ const List: React.FC<ListProps> = ({
 };
 const styles = StyleSheet.create({
   bold: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   currentDay: {
     paddingLeft: 8,

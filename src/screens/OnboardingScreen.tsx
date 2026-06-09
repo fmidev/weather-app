@@ -25,6 +25,7 @@ import { Config } from '@config';
 import { providerLogos } from '@assets/images';
 import { LOCALE, setItem } from '@utils/async_storage';
 import { initMatomo, trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 type OnboardingScreenProps = {
   navigation: StackNavigationProp<SetupStackParamList, 'Onboarding'>;
@@ -348,14 +349,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 60,
     alignSelf: 'center',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   textNormal: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   languageOptions: {
     flexDirection: 'row',
@@ -365,7 +366,7 @@ const styles = StyleSheet.create({
   },
   languageTitle: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
     marginBottom: 20,
   },
@@ -381,7 +382,7 @@ const styles = StyleSheet.create({
   },
   languageButtonText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     textAlign: 'center',
   },
   button: {
@@ -399,7 +400,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     textAlign: 'center',
   },
   pagination: {

@@ -43,6 +43,7 @@ import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
 import { observationTypeParameters } from './charts/settings';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   data: selectData(state),
@@ -380,7 +381,7 @@ const styles = StyleSheet.create({
   },
   observationText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   panelContainer: {
     paddingVertical: 12,
@@ -388,7 +389,7 @@ const styles = StyleSheet.create({
   },
   panelText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     paddingBottom: 2,
   },
   panelWrapper: {
@@ -407,7 +408,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   selectedText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   sheetContainer: {
     borderTopLeftRadius: 10,

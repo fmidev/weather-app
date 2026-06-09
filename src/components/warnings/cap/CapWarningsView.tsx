@@ -21,6 +21,7 @@ import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
 import TextList from './TextList';
 import LocalWarningsBar from './LocalWarningsBar';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -199,10 +200,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   boldFont: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   regularFont: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   dataSourcePanelContainer: {
     paddingTop: 18,

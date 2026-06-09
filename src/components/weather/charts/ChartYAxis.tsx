@@ -8,6 +8,7 @@ import { ChartDomain, ChartMinMax, ChartType } from './types';
 import { UnitMap } from '@store/settings/types';
 import { Config } from '@config';
 import { useWindowDimensions } from 'react-native';
+import { REGULAR_FONT } from '@assets/constants';
 
 type ChartYAxisProps = {
   chartType: ChartType;
@@ -89,7 +90,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
     angle: 0,
     fill: colors.hourListText,
     fontSize: Math.min(fontScale * 12, 20),
-    fontFamily: 'Roboto',
+    fontFamily: REGULAR_FONT,
   };
 
   const tickFormat = (tick: any) => {
@@ -133,7 +134,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
       style={{
         tickLabels: {
           fontSize: Math.min(14 * fontScale, 20),
-          fontFamily: 'Roboto',
+          fontFamily: REGULAR_FONT,
           fill: colors.hourListText,
         },
       }}

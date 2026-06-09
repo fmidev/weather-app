@@ -10,6 +10,7 @@ import { ClockType } from '@store/settings/types';
 import { CapWarning } from '@store/warnings/types';
 import { severityList } from '@store/warnings/constants';
 import WarningItem from './WarningItem';
+import { REGULAR_FONT } from '@assets/constants';
 
 type LocalWarningsDetailsProps = {
   warnings: CapWarning[];
@@ -80,7 +81,7 @@ const LocalWarningsDetails: React.FC<LocalWarningsDetailsProps> = ({
 
 const styles = StyleSheet.create({
   description: {
-    fontFamily: 'Roboto',
+    fontFamily: REGULAR_FONT,
     fontSize: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,

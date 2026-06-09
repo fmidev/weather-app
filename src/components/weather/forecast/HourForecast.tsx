@@ -14,6 +14,7 @@ import { Config } from '@config';
 import { converter, getForecastParameterUnitTranslationKey, toPrecision } from '@utils/units';
 import Text from '@components/common/AppText';
 import { formatAccessibleTemperature } from '@utils/helpers';
+import { MEDIUM_FONT, SEMIBOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -92,11 +93,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   timeText: {
-    fontFamily: 'Roboto-SemiBold',
+    fontFamily: SEMIBOLD_FONT,
     fontSize: 16,
   },
   temperatureText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 16,
   },
 });

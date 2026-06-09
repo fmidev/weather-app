@@ -29,6 +29,7 @@ import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
 import TimeSelectButtonGroup from './TimeSelectButtonGroup';
+import { MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 // import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
@@ -509,11 +510,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   panelText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   withMarginRight10: {
     marginRight: 10,

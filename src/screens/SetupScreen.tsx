@@ -21,6 +21,7 @@ import { useOrientation } from '@utils/hooks';
 import { Config } from '@config';
 import { providerLogos } from '@assets/images';
 import type { SetupStackParamList } from '@navigators/stacks/types';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 type SetupScreenProps = {
   setUpDone: () => void;
@@ -337,18 +338,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 30,
     alignSelf: 'center',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   textNormal: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   textHighlight: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   secondaryButton: {
@@ -366,7 +367,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     textAlign: 'center',
   },
   pagination: {

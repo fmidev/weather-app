@@ -12,6 +12,7 @@ import { Config } from '@config';
 import { UnitMap } from '@store/settings/types';
 import LinearGradient from 'react-native-linear-gradient';
 import { useTranslation } from 'react-i18next';
+import { MEDIUM_FONT } from '@assets/constants';
 
 type ForecastListHeaderColumnProps = {
   displayParams: [number, DisplayParameters][];
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
   },
   panelText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   iconColumn: {
     width: 52,
