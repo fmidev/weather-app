@@ -11,7 +11,7 @@ import { selectCurrent } from '@store/location/selector';
 import { connect, ConnectedProps } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Config } from '@config';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import {
   selectCapWarningData,
   selectFetchSuccessTime,
@@ -59,7 +59,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
     textViewTitle += ` - ${currentLocation?.name}`;
 
   const getDateIndicatorDates = () => {
-    const today = moment(new Date()).hours(12).minutes(0);
+    const today = moment(new Date()).hours(12).minutes(0).tz(defaultLocation.timezone);
     const dates = [
       {
         time: today.toDate().getTime(),
@@ -137,6 +137,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                       },
                     ]}>
                     {moment(updated)
+                      .tz(defaultLocation.timezone)
                       .locale(locale)
                       .format(locale === 'en' ? 'DD MMM' : 'D.M. HH.mm')}
                   </Text>

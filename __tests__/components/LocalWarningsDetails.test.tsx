@@ -32,7 +32,12 @@ jest.mock('../../src/components/warnings/cap/WarningItem', () => ({
 describe('LocalWarningsDetails', () => {
   it('renders empty state when there are no warnings', () => {
     const { getByText } = render(
-      <LocalWarningsDetails warnings={[]} clockType={24} locale="en" />
+      <LocalWarningsDetails
+        warnings={[]}
+        clockType={24}
+        locale="en"
+        timezone="Europe/Helsinki"
+      />
     );
 
     expect(getByText('No warnings')).toBeTruthy();
@@ -52,7 +57,12 @@ describe('LocalWarningsDetails', () => {
     } as any;
 
     const { getByLabelText } = render(
-      <LocalWarningsDetails warnings={[warning]} clockType={24} locale="en" />
+      <LocalWarningsDetails
+        warnings={[warning]}
+        clockType={24}
+        locale="en"
+        timezone="Europe/Helsinki"
+      />
     );
 
     expect(getByLabelText(/Wind, Severe/)).toBeTruthy();

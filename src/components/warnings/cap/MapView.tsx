@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Platform, ActivityIndicator } from 'react-native';
 import Map, { Polygon } from 'react-native-maps';
 import { connect, ConnectedProps } from 'react-redux';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import { Config } from '@config';
 import { useTheme } from '@react-navigation/native';
@@ -54,8 +54,8 @@ const MapView: React.FC<MapViewProps> = ({
   >([]);
 
   const date = useMemo(
-    () => moment(dates[selectedDay].time),
-    [selectedDay, dates]
+    () => moment(dates[selectedDay].time).tz(defaultLocation.timezone),
+    [selectedDay, dates, defaultLocation.timezone]
   );
 
   const applicableWarnings = useMemo(() => {
@@ -63,7 +63,7 @@ const MapView: React.FC<MapViewProps> = ({
     const dayEnd = date.clone().add(1, 'days');
     const warnings = capData?.filter((warning) => {
       const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-      const onsetMoment = moment(info.onset);
+      const onsetMoment = moment(info.onset).tz(defaultLocation.timezone);
       const expiryMoment = moment(info.expires);
 
       const endsDuringDay =
@@ -80,7 +80,7 @@ const MapView: React.FC<MapViewProps> = ({
       );
     });
     return warnings;
-  }, [capData, date]);
+  }, [capData, date, defaultLocation.timezone]);
 
   const uniqueWarnings = useMemo(() => {
     const currentUniqueWarnings: CapWarning[] = [];

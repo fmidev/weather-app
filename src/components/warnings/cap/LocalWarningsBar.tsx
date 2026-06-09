@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { isPointInPolygon } from 'geolib';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { connect, ConnectedProps } from 'react-redux';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
@@ -98,12 +98,12 @@ const warningContainsLocation = (warning: PreparedWarning, point: Coordinate) =>
   );
 };
 
-const overlapsDay = (info: CapInfo, day: moment.Moment) => {
+const overlapsDay = (info: CapInfo, day: moment.Moment, timezone: string) => {
   const dayStart = day.clone().startOf('day');
   const dayEnd = day.clone().endOf('day');
 
-  return moment(info.onset).isSameOrBefore(dayEnd) &&
-    moment(info.expires).isSameOrAfter(dayStart);
+  return moment(info.onset).tz(timezone).isSameOrBefore(dayEnd) &&
+    moment(info.expires).tz(timezone).isSameOrAfter(dayStart);
 };
 
 const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
@@ -150,7 +150,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
 
   const daySummaries = useMemo(() => {
     const dayCount = capViewSettings?.numberOfDays ?? 5;
-    const startDay = moment(new Date()).hours(12).minutes(0).seconds(0).milliseconds(0);
+    const startDay = moment(new Date()).hours(12).minutes(0).seconds(0).milliseconds(0).tz(defaultLocation.timezone);
     const dates = Array.from({ length: dayCount }, (_, index) =>
       startDay.clone().add(index, 'days')
     );
@@ -161,7 +161,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
     );
 
     return dates.map((date, index) => {
-      const count = localWarnings.filter(({ info }) => overlapsDay(info, date)).length;
+      const count = localWarnings.filter(({ info }) => overlapsDay(info, date, defaultLocation.timezone)).length;
 
       const severities = dailySeverities[index] ?? [0, 0, 0, 0];
       return {
@@ -179,7 +179,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
     if (!activeDay) return [];
 
     return localWarnings
-      .filter(({ info }) => overlapsDay(info, activeDay))
+      .filter(({ info }) => overlapsDay(info, activeDay, defaultLocation.timezone))
       .sort((left, right) => {
         return (
           severityList.indexOf(right.info.severity) -
@@ -187,7 +187,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
         );
       })
       .map(({ warning }) => warning);
-  }, [daySummaries, localWarnings, selectedDay]);
+  }, [daySummaries, localWarnings, selectedDay, defaultLocation.timezone]);
 
   useEffect(() => {
     setSelectedDay(0);
@@ -340,6 +340,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
           warnings={selectedDayWarnings}
           clockType={clockType}
           locale={locale}
+          timezone={defaultLocation.timezone}
         />
       </View>
     </View>

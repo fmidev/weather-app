@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import Text from '@components/common/AppText';
 import { CustomTheme } from '@assets/colors';
@@ -15,12 +15,14 @@ type LocalWarningsDetailsProps = {
   warnings: CapWarning[];
   clockType: ClockType;
   locale: string;
+  timezone: string;
 };
 
 const LocalWarningsDetails: React.FC<LocalWarningsDetailsProps> = ({
   warnings,
   clockType,
   locale,
+  timezone,
 }) => {
   const { t } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
@@ -31,8 +33,8 @@ const LocalWarningsDetails: React.FC<LocalWarningsDetailsProps> = ({
 
   const warningTimeSpans = warnings.map((warning) => {
     const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-    const start = moment(info.onset);
-    const end = moment(info.expires);
+    const start = moment(info.onset).tz(timezone);
+    const end = moment(info.expires).tz(timezone);
     const startFormatted = start
       .locale(locale)
       .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`);
