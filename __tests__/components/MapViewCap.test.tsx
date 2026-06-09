@@ -96,6 +96,13 @@ describe('MapView', () => {
           },
         };
       }
+      if (key === 'location') {
+        return {
+          default: {
+            timezone: 'Europe/Helsinki',
+          },
+        };
+      }
       return {};
     });
     mockGetSeveritiesForDays.mockReturnValue([

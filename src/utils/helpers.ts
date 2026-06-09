@@ -15,7 +15,7 @@ import {
 } from '@store/forecast/types';
 import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
-import moment, { MomentObjectOutput } from 'moment';
+import moment, { MomentObjectOutput } from 'moment-timezone';
 import { Config } from '@config';
 import { CapInfo, CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from '../assets/colors';

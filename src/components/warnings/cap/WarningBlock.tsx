@@ -5,7 +5,7 @@ import { CustomTheme } from '@assets/colors';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { getSeveritiesForDays, selectCapInfoByLanguage } from '@utils/helpers';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';

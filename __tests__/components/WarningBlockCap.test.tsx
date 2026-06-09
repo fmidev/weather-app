@@ -5,6 +5,21 @@ import WarningBlock from '../../src/components/warnings/cap/WarningBlock';
 
 const mockScrollTo = jest.fn();
 
+jest.mock('@config', () => ({
+  Config: {
+    get: (key: string) => {
+      if (key === 'location') {
+        return {
+          default: {
+            timezone: 'Europe/Helsinki',
+          },
+        };
+      }
+      return {};
+    },
+  },
+}));
+
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
 }));

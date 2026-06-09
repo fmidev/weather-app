@@ -143,6 +143,13 @@ describe('LocalWarningsBar', () => {
           },
         };
       }
+      if (key === 'location') {
+        return {
+          default: {
+            timezone: 'Europe/Helsinki',
+          },
+        };
+      }
       return {};
     });
 
@@ -231,6 +238,11 @@ describe('LocalWarningsBar', () => {
 
     expect(getByText('Local warnings')).toBeTruthy();
     expect(getByText('Helsinki')).toBeTruthy();
+    expect(mockGetSeveritiesForDays).toHaveBeenCalledWith(
+      [warningToday, warningTomorrow],
+      expect.any(Array),
+      'Europe/Helsinki'
+    );
     expect(getByTestId('local-warning-details').props.children).toBe('warning-today');
     expect(getByTestId('severity-0-1-0-0')).toBeTruthy();
 
