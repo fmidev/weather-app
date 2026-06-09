@@ -268,12 +268,15 @@ export const getCurrentPosition = async (
   longitude: number
 ): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
   const { apiUrl } = Config.get('weather');
+  const { useInKeyword, keyword, maxDistance } = Config.get('location');
   const { language } = i18n;
 
   const params = {
     ...locationQueryParams,
     latlon: `${latitude},${longitude}`,
     lang: language,
+    ...(useInKeyword ? { inkeyword: keyword } : {}),
+    ...(maxDistance !== undefined ? { maxdistance: maxDistance } : {}),
   };
 
   const { data } = await axiosClient({

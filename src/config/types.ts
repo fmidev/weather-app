@@ -283,6 +283,8 @@ export interface ConfigType {
     keyword: string;
     maxRecent: number;
     maxFavorite: number;
+    maxDistance?: number;
+    useInKeyword?: boolean;
   };
   map: {
     updateInterval: number;
