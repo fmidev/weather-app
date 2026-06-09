@@ -150,7 +150,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
 
   const daySummaries = useMemo(() => {
     const dayCount = capViewSettings?.numberOfDays ?? 5;
-    const startDay = moment(new Date()).hours(12).minutes(0).seconds(0).milliseconds(0).tz(defaultLocation.timezone);
+    const startDay = moment().tz(defaultLocation.timezone).hours(12).minutes(0).seconds(0).milliseconds(0);
     const dates = Array.from({ length: dayCount }, (_, index) =>
       startDay.clone().add(index, 'days')
     );

@@ -59,7 +59,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
     textViewTitle += ` - ${currentLocation?.name}`;
 
   const getDateIndicatorDates = () => {
-    const today = moment(new Date()).hours(12).minutes(0).tz(defaultLocation.timezone);
+    const today = moment().tz(defaultLocation.timezone).hours(12).minutes(0);
     const dates = [
       {
         time: today.toDate().getTime(),
@@ -139,7 +139,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                     {moment(updated)
                       .tz(defaultLocation.timezone)
                       .locale(locale)
-                      .format(locale === 'en' ? 'DD MMM' : 'D.M. HH.mm')}
+                      .format(locale === 'en' ? 'DD MMM HH.mm' : 'D.M. HH.mm')}
                   </Text>
                 </>
               )}
