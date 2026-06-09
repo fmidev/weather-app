@@ -32,7 +32,12 @@ jest.mock('../../src/components/warnings/cap/WarningItem', () => ({
 describe('LocalWarningsDetails', () => {
   it('renders empty state when there are no warnings', () => {
     const { getByText } = render(
-      <LocalWarningsDetails warnings={[]} clockType={24} locale="en" />
+      <LocalWarningsDetails
+        warnings={[]}
+        clockType={24}
+        locale="en"
+        timezone="Europe/Helsinki"
+      />
     );
 
     expect(getByText('No warnings')).toBeTruthy();
@@ -45,13 +50,19 @@ describe('LocalWarningsDetails', () => {
         event: 'Wind',
         severity: 'Severe',
         effective: '2025-01-01T10:00:00Z',
+        onset: '2025-01-01T10:00:00Z',
         expires: '2025-01-01T12:00:00Z',
         area: { areaDesc: 'Helsinki' },
       },
     } as any;
 
     const { getByLabelText } = render(
-      <LocalWarningsDetails warnings={[warning]} clockType={24} locale="en" />
+      <LocalWarningsDetails
+        warnings={[warning]}
+        clockType={24}
+        locale="en"
+        timezone="Europe/Helsinki"
+      />
     );
 
     expect(getByLabelText(/Wind, Severe/)).toBeTruthy();

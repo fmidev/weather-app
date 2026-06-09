@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import LocalWarningsBar from '../../src/components/warnings/cap/LocalWarningsBar';
 
@@ -10,6 +10,7 @@ const mockGetSeveritiesForDays = jest.fn();
 const mockIsPointInPolygon = jest.fn();
 const mockGetBoundingBox = jest.fn();
 const mockIsPointInsideBoundingBox = jest.fn();
+const timezone = 'Europe/Helsinki';
 
 jest.mock('@config', () => ({
   Config: {
@@ -143,6 +144,13 @@ describe('LocalWarningsBar', () => {
           },
         };
       }
+      if (key === 'location') {
+        return {
+          default: {
+            timezone,
+          },
+        };
+      }
       return {};
     });
 
@@ -189,13 +197,14 @@ describe('LocalWarningsBar', () => {
   });
 
   it('renders local warning summary, opens legend and changes selected day', () => {
-    const today = moment().startOf('day');
+    const today = moment.tz(timezone).startOf('day');
     const warningToday = {
       identifier: 'warning-today',
       info: {
         event: 'Wind',
         severity: 'Moderate',
         effective: today.clone().toISOString(),
+        onset: today.clone().toISOString(),
         expires: today.clone().endOf('day').toISOString(),
         area: {
           areaDesc: 'Helsinki',
@@ -209,6 +218,7 @@ describe('LocalWarningsBar', () => {
         event: 'Rain',
         severity: 'Severe',
         effective: today.clone().add(1, 'day').toISOString(),
+        onset: today.clone().add(1, 'day').toISOString(),
         expires: today.clone().add(1, 'day').endOf('day').toISOString(),
         area: {
           areaDesc: 'Espoo',
@@ -229,6 +239,11 @@ describe('LocalWarningsBar', () => {
 
     expect(getByText('Local warnings')).toBeTruthy();
     expect(getByText('Helsinki')).toBeTruthy();
+    expect(mockGetSeveritiesForDays).toHaveBeenCalledWith(
+      [warningToday, warningTomorrow],
+      expect.any(Array),
+      timezone
+    );
     expect(getByTestId('local-warning-details').props.children).toBe('warning-today');
     expect(getByTestId('severity-0-1-0-0')).toBeTruthy();
 

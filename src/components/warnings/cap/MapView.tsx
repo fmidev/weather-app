@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Platform, ActivityIndicator } from 'react-native';
 import Map, { Polygon } from 'react-native-maps';
 import { connect, ConnectedProps } from 'react-redux';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import { Config } from '@config';
 import { useTheme } from '@react-navigation/native';
@@ -47,14 +47,15 @@ const MapView: React.FC<MapViewProps> = ({
   dates,
   capData,
 }) => {
+  const { default: defaultLocation } = Config.get('location');
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const [selectedFilters, setSelectedFilters] = useState<
     { severity: Severity; event: string }[]
   >([]);
 
   const date = useMemo(
-    () => moment(dates[selectedDay].time),
-    [selectedDay, dates]
+    () => moment(dates[selectedDay].time).tz(defaultLocation.timezone),
+    [selectedDay, dates, defaultLocation.timezone]
   );
 
   const applicableWarnings = useMemo(() => {
@@ -62,24 +63,24 @@ const MapView: React.FC<MapViewProps> = ({
     const dayEnd = date.clone().add(1, 'days');
     const warnings = capData?.filter((warning) => {
       const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-      const effectiveMoment = moment(info.effective);
+      const onsetMoment = moment(info.onset).tz(defaultLocation.timezone);
       const expiryMoment = moment(info.expires);
 
       const endsDuringDay =
-        effectiveMoment.isBefore(dayStart) && expiryMoment.isAfter(dayStart);
+        onsetMoment.isBefore(dayStart) && expiryMoment.isAfter(dayStart);
       const isContainedInDay =
-        effectiveMoment.isAfter(dayStart) && expiryMoment.isBefore(dayEnd);
+        onsetMoment.isAfter(dayStart) && expiryMoment.isBefore(dayEnd);
       const startsDuringDay =
-        effectiveMoment.isBefore(dayEnd) && expiryMoment.isAfter(dayEnd);
+        onsetMoment.isBefore(dayEnd) && expiryMoment.isAfter(dayEnd);
       const dayContained =
-        effectiveMoment.isBefore(dayStart) && expiryMoment.isAfter(dayEnd);
+        onsetMoment.isBefore(dayStart) && expiryMoment.isAfter(dayEnd);
 
       return (
         endsDuringDay || isContainedInDay || startsDuringDay || dayContained
       );
     });
     return warnings;
-  }, [capData, date]);
+  }, [capData, date, defaultLocation.timezone]);
 
   const uniqueWarnings = useMemo(() => {
     const currentUniqueWarnings: CapWarning[] = [];
@@ -157,9 +158,10 @@ const MapView: React.FC<MapViewProps> = ({
     () =>
       getSeveritiesForDays(
         capData,
-        dates.map(({ time }) => time)
+        dates.map(({ time }) => time),
+        defaultLocation.timezone
       ),
-    [capData, dates]
+    [capData, dates, defaultLocation.timezone]
   );
 
   const backgroundOverlayColor = dark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)';

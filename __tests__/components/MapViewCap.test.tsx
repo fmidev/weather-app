@@ -96,6 +96,13 @@ describe('MapView', () => {
           },
         };
       }
+      if (key === 'location') {
+        return {
+          default: {
+            timezone: 'Europe/Helsinki',
+          },
+        };
+      }
       return {};
     });
     mockGetSeveritiesForDays.mockReturnValue([
@@ -129,7 +136,8 @@ describe('MapView', () => {
         event: 'Wind',
         severity: 'Severe',
         effective: '2024-01-01T00:00:00Z',
-        expires: '2099-01-03T00:00:00Z',
+        onset: '2024-01-01T00:00:00Z',
+        expires: '2024-01-03T00:00:00Z',
         area: {
           polygon: '60,24 60.1,24 60.1,24.1 60,24.1',
         },

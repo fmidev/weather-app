@@ -143,6 +143,7 @@ describe('CapWarningsView', () => {
         return {
           default: {
             country: 'FI',
+            timezone: 'Europe/Helsinki',
           },
         };
       }
@@ -187,6 +188,7 @@ describe('CapWarningsView', () => {
         return {
           default: {
             country: 'FI',
+            timezone: 'Europe/Helsinki',
           },
         };
       }
