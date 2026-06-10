@@ -13,6 +13,7 @@ import { knownWarningTypes } from '@store/warnings/constants';
 import SeverityBar from './SeverityBar';
 import TypeColorRow from './TypeColorRow';
 import WarningIcon from './WarningIcon';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 type InfoSheetProps = {
   onClose: () => void;
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   landscape: {
     paddingBottom: 200,
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     flex: 2,
     flexWrap: 'wrap',
   },
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
   badgeText: {
     textAlign: 'center',
     fontSize: 14,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
 });
 

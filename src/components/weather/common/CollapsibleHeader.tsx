@@ -7,6 +7,7 @@ import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';
+import { REGULAR_FONT } from '@assets/constants';
 
 type CollapsiblePanelHeaderProps = {
   open: boolean;
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   alignStart: {
     alignItems: 'flex-start',

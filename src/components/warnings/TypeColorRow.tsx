@@ -4,7 +4,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, StyleSheet } from 'react-native';
 
-import Text from '@components/common/AppText'
+import Text from '@components/common/AppText';
+import { REGULAR_FONT } from '@assets/constants';
 
 const TypeColorRow = ({
   severity,
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     flex: 2,
     flexWrap: 'wrap',
   },

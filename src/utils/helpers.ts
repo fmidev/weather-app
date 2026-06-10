@@ -15,7 +15,7 @@ import {
 } from '@store/forecast/types';
 import { TimeStepData as ObsTimeStepData } from '@store/observation/types';
 import { getCurrentPosition } from '@network/WeatherApi';
-import moment, { MomentObjectOutput } from 'moment';
+import moment, { MomentObjectOutput } from 'moment-timezone';
 import { Config } from '@config';
 import { CapInfo, CapWarning, Severity } from '@store/warnings/types';
 import { Rain } from '../assets/colors';
@@ -424,16 +424,17 @@ const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
 export const getSeveritiesForTimePeriod = (
   warnings: CapWarning[],
   start: moment.Moment,
-  end: moment.Moment
+  end: moment.Moment,
+  timezone: string
 ) => {
   const severitiesForTimePeriod = warnings
     ?.filter((warning) => {
       const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-      const effective = moment(info.effective);
-      const expires = moment(info.expires);
-      const beginsDuringPeriod = effective.isBetween(start, end);
+      const onset = moment(info.onset).tz(timezone);
+      const expires = moment(info.expires).tz(timezone);
+      const beginsDuringPeriod = onset.isBetween(start, end);
       const endsDuringPeriod = expires.isBetween(start, end);
-      const periodContained = effective.isBefore(start) && expires.isAfter(end);
+      const periodContained = onset.isBefore(start) && expires.isAfter(end);
       return beginsDuringPeriod || endsDuringPeriod || periodContained;
     })
     .map((warning) => {
@@ -449,7 +450,8 @@ export const getSeveritiesForTimePeriod = (
 
 export const getSeveritiesForDays = (
   warnings: CapWarning[] | undefined,
-  dates: number[]
+  dates: number[],
+  timezone: string
 ) => {
   if (!warnings) return [];
 
@@ -457,13 +459,13 @@ export const getSeveritiesForDays = (
   dates.forEach((date) => {
     const daySeverities: number[] = [];
 
-    const startMomentObject = moment(date);
+    const startMomentObject = moment(date).tz(timezone);
     startMomentObject.hour(0).minute(0);
     const endMomentObject = startMomentObject.clone().add(6, 'hours');
     daySeverities.push(
       Math.max(
         0,
-        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject, timezone)
       )
     );
 
@@ -472,17 +474,7 @@ export const getSeveritiesForDays = (
     daySeverities.push(
       Math.max(
         0,
-        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
-      )
-    );
-
-    startMomentObject.add(6, 'hours');
-    endMomentObject.add(6, 'hours');
-
-    daySeverities.push(
-      Math.max(
-        0,
-        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject, timezone)
       )
     );
 
@@ -492,7 +484,17 @@ export const getSeveritiesForDays = (
     daySeverities.push(
       Math.max(
         0,
-        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject)
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject, timezone)
+      )
+    );
+
+    startMomentObject.add(6, 'hours');
+    endMomentObject.add(6, 'hours');
+
+    daySeverities.push(
+      Math.max(
+        0,
+        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject, timezone)
       )
     );
 

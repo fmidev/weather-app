@@ -31,6 +31,7 @@ import Text from '@components/common/AppText';
 import AnnouncementIcon from './AnnouncementIcon';
 import CloseButton from '@components/common/CloseButton';
 import type { AnnouncementType } from './types';
+import { MEDIUM_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   crisis: selectCrisis(state),
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 16,
     flexShrink: 1,
   },

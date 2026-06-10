@@ -291,6 +291,7 @@ describe('helpers getFeelsLikeIconName', () => {
 });
 
 describe('helpers getSeveritiesForTimePeriod', () => {
+  const timezone = 'UTC';
   const start = moment.utc('2035-06-01T00:00:00Z');
   const end = moment.utc('2035-06-01T06:00:00Z');
 
@@ -351,7 +352,7 @@ describe('helpers getSeveritiesForTimePeriod', () => {
       ), // contains period
     ];
 
-    expect(getSeveritiesForTimePeriod(warnings, start, end)).toBe(3);
+    expect(getSeveritiesForTimePeriod(warnings, start, end, timezone)).toBe(3);
   });
 
   it('returns 0 when no warnings overlap the time period', () => {
@@ -363,7 +364,7 @@ describe('helpers getSeveritiesForTimePeriod', () => {
       ),
     ];
 
-    expect(getSeveritiesForTimePeriod(warnings, start, end)).toBe(0);
+    expect(getSeveritiesForTimePeriod(warnings, start, end, timezone)).toBe(0);
   });
 
   it('supports CAP warning info in array form', () => {
@@ -376,11 +377,12 @@ describe('helpers getSeveritiesForTimePeriod', () => {
       ),
     ];
 
-    expect(getSeveritiesForTimePeriod(warnings, start, end)).toBe(2);
+    expect(getSeveritiesForTimePeriod(warnings, start, end, timezone)).toBe(2);
   });
 });
 
 describe('helpers getSeveritiesForDays', () => {
+  const timezone = 'UTC';
   const makeWarning = (
     effective: string,
     expires: string,
@@ -420,34 +422,34 @@ describe('helpers getSeveritiesForDays', () => {
 
   it('returns empty array when warnings are undefined', () => {
     const date = moment.utc('2035-06-01T00:00:00Z').valueOf();
-    expect(getSeveritiesForDays(undefined, [date])).toEqual([]);
+    expect(getSeveritiesForDays(undefined, [date], timezone)).toEqual([]);
   });
 
   it('returns severities for all four 6-hour periods in a day', () => {
-    const date = moment('2035-06-01T00:00:00').valueOf();
+    const date = moment.utc('2035-06-01T00:00:00Z').valueOf();
     const warnings = [
       makeWarning(
-        '2035-06-01T01:00:00',
-        '2035-06-01T02:00:00',
+        '2035-06-01T01:00:00Z',
+        '2035-06-01T02:00:00Z',
         'Moderate'
       ), // 00-06
       makeWarning(
-        '2035-06-01T07:00:00',
-        '2035-06-01T08:00:00',
+        '2035-06-01T07:00:00Z',
+        '2035-06-01T08:00:00Z',
         'Severe'
       ), // 06-12
       makeWarning(
-        '2035-06-01T13:00:00',
-        '2035-06-01T14:00:00',
+        '2035-06-01T13:00:00Z',
+        '2035-06-01T14:00:00Z',
         'Extreme'
       ), // 12-18
       makeWarning(
-        '2035-06-01T19:00:00',
-        '2035-06-01T20:00:00',
+        '2035-06-01T19:00:00Z',
+        '2035-06-01T20:00:00Z',
         'Moderate'
       ), // 18-24
     ];
 
-    expect(getSeveritiesForDays(warnings, [date])).toEqual([[1, 2, 3, 1]]);
+    expect(getSeveritiesForDays(warnings, [date], timezone)).toEqual([[1, 2, 3, 1]]);
   });
 });

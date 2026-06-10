@@ -4,6 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
 import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
+import { BOLD_FONT } from '@assets/constants';
 
 function SimpleButton({
   accessibilityHint,
@@ -42,7 +43,7 @@ function SimpleButton({
 const styles = StyleSheet.create({
   text: {
     fontSize: 15,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   withMarginRight: {
     marginRight: 16,

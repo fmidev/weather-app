@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { isPointInPolygon } from 'geolib';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { connect, ConnectedProps } from 'react-redux';
 import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
@@ -28,6 +28,7 @@ import LocalWarningsDetails from './LocalWarningsDetails';
 import { getBoundingBox, isPointInsideBoundingBox } from '@utils/map';
 import type { Coordinate, BBox } from '@utils/map';
 import PanelHeader from '@components/common/PanelHeader';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -98,12 +99,12 @@ const warningContainsLocation = (warning: PreparedWarning, point: Coordinate) =>
   );
 };
 
-const overlapsDay = (info: CapInfo, day: moment.Moment) => {
+const overlapsDay = (info: CapInfo, day: moment.Moment, timezone: string) => {
   const dayStart = day.clone().startOf('day');
   const dayEnd = day.clone().endOf('day');
 
-  return moment(info.effective).isSameOrBefore(dayEnd) &&
-    moment(info.expires).isSameOrAfter(dayStart);
+  return moment(info.onset).tz(timezone).isSameOrBefore(dayEnd) &&
+    moment(info.expires).tz(timezone).isSameOrAfter(dayStart);
 };
 
 const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
@@ -113,6 +114,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
   clockType,
   legendSheetRef,
 }) => {
+  const { default: defaultLocation } = Config.get('location');
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('warnings');
   const capViewSettings = Config.get('warnings')?.capViewSettings;
@@ -149,17 +151,18 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
 
   const daySummaries = useMemo(() => {
     const dayCount = capViewSettings?.numberOfDays ?? 5;
-    const startDay = moment(new Date()).hours(12).minutes(0).seconds(0).milliseconds(0);
+    const startDay = moment().tz(defaultLocation.timezone).hours(12).minutes(0).seconds(0).milliseconds(0);
     const dates = Array.from({ length: dayCount }, (_, index) =>
       startDay.clone().add(index, 'days')
     );
     const dailySeverities = getSeveritiesForDays(
       localWarnings.map(({ warning }) => warning),
-      dates.map((date) => date.valueOf())
+      dates.map((date) => date.valueOf()),
+      defaultLocation.timezone
     );
 
     return dates.map((date, index) => {
-      const count = localWarnings.filter(({ info }) => overlapsDay(info, date)).length;
+      const count = localWarnings.filter(({ info }) => overlapsDay(info, date, defaultLocation.timezone)).length;
 
       const severities = dailySeverities[index] ?? [0, 0, 0, 0];
       return {
@@ -170,14 +173,14 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
         highestSeverity: Math.max(...severities, 0),
       };
     });
-  }, [capViewSettings?.numberOfDays, localWarnings]);
+  }, [capViewSettings?.numberOfDays, defaultLocation.timezone, localWarnings]);
 
   const selectedDayWarnings = useMemo(() => {
     const activeDay = daySummaries[selectedDay]?.day;
     if (!activeDay) return [];
 
     return localWarnings
-      .filter(({ info }) => overlapsDay(info, activeDay))
+      .filter(({ info }) => overlapsDay(info, activeDay, defaultLocation.timezone))
       .sort((left, right) => {
         return (
           severityList.indexOf(right.info.severity) -
@@ -185,7 +188,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
         );
       })
       .map(({ warning }) => warning);
-  }, [daySummaries, localWarnings, selectedDay]);
+  }, [daySummaries, localWarnings, selectedDay, defaultLocation.timezone]);
 
   useEffect(() => {
     setSelectedDay(0);
@@ -338,6 +341,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
           warnings={selectedDayWarnings}
           clockType={clockType}
           locale={locale}
+          timezone={defaultLocation.timezone}
         />
       </View>
     </View>
@@ -349,11 +353,11 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   medium: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   headerText: {
     fontSize: 16,
@@ -404,7 +408,7 @@ const styles = StyleSheet.create({
   badgeText: {
     textAlign: 'center',
     fontSize: 14,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   warningsSingleDayContainer: {
@@ -434,7 +438,7 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   dayWarningHeaderText: {
     textTransform: 'capitalize',

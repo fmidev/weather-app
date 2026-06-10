@@ -18,6 +18,7 @@ import { MarkdownRenderer } from '@components/markdown/MarkdownRenderer';
 import { CustomTheme } from '@assets/colors';
 import { Config } from '@config';
 import { termsOfUseDocuments } from '@assets/markdown';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const renderer = new MarkdownRenderer();
 
@@ -198,13 +199,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
     marginTop: 32,
     marginBottom: 16,
   },
   body: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   bottomContainer: {
     width: '100%',
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   withPaddingBottom: {
     paddingBottom: 24,
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     paddingHorizontal: 16,
     paddingBottom: 8,
   }

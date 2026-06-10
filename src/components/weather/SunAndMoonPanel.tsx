@@ -18,6 +18,7 @@ import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import { Config } from '@config';
 import { formatAccessibleDateTime } from '@utils/helpers';
+import { REGULAR_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -257,12 +258,12 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 };
 const styles = StyleSheet.create({
   text: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     fontSize: 14,
     color: BLACK,
   },
   smallText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     fontSize: 12,
     lineHeight: 13,
     paddingTop: 2,

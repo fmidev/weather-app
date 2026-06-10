@@ -9,6 +9,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 
 import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { Location } from '@store/location/types';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 type ClearProps =
   | { clearTitle?: undefined; onClear?: never }
@@ -163,17 +164,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 16,
     marginBottom: 2,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     flex: 1,
     flexDirection: 'row',
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   regular: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     textAlign: 'right',
   },
   listHeader: {
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   resultText: {
     fontSize: 16,
     marginLeft: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   actionButtonContainer: {
     width: 50,

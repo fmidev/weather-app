@@ -7,6 +7,7 @@ import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';
+import { MEDIUM_FONT } from '@assets/constants';
 
 type RelocateButtonProps = {
   onPress: () => void;
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     textAlign: 'center',
   },
 });

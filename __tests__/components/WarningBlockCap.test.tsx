@@ -5,6 +5,21 @@ import WarningBlock from '../../src/components/warnings/cap/WarningBlock';
 
 const mockScrollTo = jest.fn();
 
+jest.mock('@config', () => ({
+  Config: {
+    get: (key: string) => {
+      if (key === 'location') {
+        return {
+          default: {
+            timezone: 'Europe/Helsinki',
+          },
+        };
+      }
+      return {};
+    },
+  },
+}));
+
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
 }));
@@ -61,6 +76,7 @@ describe('WarningBlock', () => {
           event: 'Wind',
           severity: 'Moderate',
           effective: '2024-01-01T00:00:00Z',
+          onset: '2024-01-01T00:00:00Z',
           expires: '2024-01-01T12:00:00Z',
           area: { areaDesc: 'helsinki' },
         },
@@ -71,6 +87,7 @@ describe('WarningBlock', () => {
           event: 'Wind',
           severity: 'Severe',
           effective: '2024-01-01T06:00:00Z',
+          onset: '2024-01-01T06:00:00Z',
           expires: '2024-01-02T12:00:00Z',
           area: { areaDesc: 'espoo' },
         },

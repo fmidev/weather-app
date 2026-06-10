@@ -11,7 +11,7 @@ import { selectCurrent } from '@store/location/selector';
 import { connect, ConnectedProps } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Config } from '@config';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import {
   selectCapWarningData,
   selectFetchSuccessTime,
@@ -21,6 +21,7 @@ import CapWarningsLegend from './CapWarningsLegend';
 import MapView from './MapView';
 import TextList from './TextList';
 import LocalWarningsBar from './LocalWarningsBar';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -59,7 +60,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
     textViewTitle += ` - ${currentLocation?.name}`;
 
   const getDateIndicatorDates = () => {
-    const today = moment(new Date()).hours(12).minutes(0);
+    const today = moment().tz(defaultLocation.timezone).hours(12).minutes(0);
     const dates = [
       {
         time: today.toDate().getTime(),
@@ -137,8 +138,9 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                       },
                     ]}>
                     {moment(updated)
+                      .tz(defaultLocation.timezone)
                       .locale(locale)
-                      .format(locale === 'en' ? 'DD MMM' : 'D.M. HH.mm')}
+                      .format(locale === 'en' ? 'DD MMM HH.mm' : 'D.M. HH.mm')}
                   </Text>
                 </>
               )}
@@ -198,10 +200,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   boldFont: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   regularFont: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   dataSourcePanelContainer: {
     paddingTop: 18,

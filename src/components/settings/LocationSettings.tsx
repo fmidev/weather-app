@@ -7,6 +7,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 interface Props {
   locationPermission?: string;
@@ -89,7 +90,7 @@ const LocationSettings: React.FC<Props> = ({
 const styles = StyleSheet.create({
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   rowWrapper: {
     marginHorizontal: 20,
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     marginLeft: 20,
   },
   withMarginTop: {
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   },
   editText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     marginRight: 8,
   },
   editRow: {

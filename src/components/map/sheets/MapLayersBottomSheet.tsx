@@ -25,6 +25,7 @@ import {
 } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
@@ -202,11 +203,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     flexShrink: 1,
   },
 });

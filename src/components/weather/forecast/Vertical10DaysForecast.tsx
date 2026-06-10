@@ -30,6 +30,7 @@ import Icon from '@components/common/ScalableIcon';
 import { formatAccessibleDate, formatAccessibleTemperature, uppercaseFirst } from '@utils/helpers';
 import ModalContent from './ModalContent';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -386,11 +387,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   precipitationContainer: {
     width: 80,

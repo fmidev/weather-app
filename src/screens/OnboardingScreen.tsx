@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import {
   ImageBackground,
   Image,
@@ -23,6 +23,9 @@ import { GRAY_1, CustomTheme } from '@assets/colors';
 import { useOrientation } from '@utils/hooks';
 import { Config } from '@config';
 import { providerLogos } from '@assets/images';
+import { LOCALE, setItem } from '@utils/async_storage';
+import { initMatomo, trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 type OnboardingScreenProps = {
   navigation: StackNavigationProp<SetupStackParamList, 'Onboarding'>;
@@ -30,6 +33,7 @@ type OnboardingScreenProps = {
 
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const { languageSpecificLogo, backgroundImageProperties } = Config.get('onboardingWizard');
+  const { languages } = Config.get('settings');
   const { t, i18n } = useTranslation('onboarding');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
@@ -41,6 +45,22 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const skipButtonBottomPosition = Math.round(insets.bottom);
 
   const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];
+
+  const changeLanguage = useCallback(async (language: string): Promise<void> => {
+    if (i18n.language === language) {
+      return;
+    }
+
+    await i18n.changeLanguage(language);
+    initMatomo(); // re-init matomo to use correct siteId
+    trackMatomoEvent('User action', 'Onboarding', `Select language - ${language}`);
+
+    try {
+      await setItem(LOCALE, language);
+    } catch (error) {
+      console.error('error:', error);
+    }
+  }, [i18n]);
 
   const onboardingInfo = [
     {
@@ -79,61 +99,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     }
   };
 
-  const InfoComponent: React.FC<{
-    icon: string;
-    title: string;
-    description: string;
-  }> = ({ icon, title, description }) => (
-    <View
-      style={[
-        styles.infoContainer,
-        { backgroundColor: colors.background, shadowColor: colors.shadow },
-      ]}>
-      <View
-        testID="onboarding_info_icon_container"
-        style={[
-          styles.iconContainer,
-          { backgroundColor: colors.background, shadowColor: colors.shadow },
-        ]}>
-        <Icon
-          name={icon}
-          width={32}
-          height={32}
-          maxFontSizeMultiplier={1.5}
-          color={colors.text}
-        />
-      </View>
-      <Text
-        testID="onboarding_title_text"
-        ref={titleRef}
-        style={[styles.title, { color: colors.text }]}
-        accessibilityRole="header"
-        accessibilityLabel={`${t('step', {
-          current: pageIndex + 1,
-          total: 4,
-        })}: ${title}`}>
-        {title}
-      </Text>
-      <Text
-        testID="onboarding_description_text"
-        style={[styles.textNormal, { color: colors.hourListText }]}>
-        {description}
-      </Text>
-      <AccessibleTouchableOpacity
-        testID="onboarding_next_button"
-        accessibilityRole="button"
-        style={styles.buttonContainer}
-        onPress={handlePress}>
-        <View style={[styles.button, { borderColor: colors.text }]}>
-          <View style={styles.textContainer}>
-            <Text style={[styles.text, { color: colors.text }]}>
-              {t('next')}
-            </Text>
-          </View>
-        </View>
-      </AccessibleTouchableOpacity>
-    </View>
-  );
+  const currentInfo = onboardingInfo[pageIndex];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -177,11 +143,97 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           styles.innerContainer,
           isLandscape && styles.innerContainerLandscape,
         ]}>
-        <InfoComponent
-          icon={onboardingInfo[pageIndex].icon}
-          title={onboardingInfo[pageIndex].title}
-          description={onboardingInfo[pageIndex].description}
-        />
+        <View
+          style={[
+            styles.infoContainer,
+            { backgroundColor: colors.background, shadowColor: colors.shadow },
+          ]}>
+          <View
+            testID="onboarding_info_icon_container"
+            style={[
+              styles.iconContainer,
+              { backgroundColor: colors.background, shadowColor: colors.shadow },
+            ]}>
+            <Icon
+              name={currentInfo.icon}
+              width={32}
+              height={32}
+              maxFontSizeMultiplier={1.5}
+              color={colors.text}
+            />
+          </View>
+          <Text
+            testID="onboarding_title_text"
+            ref={titleRef}
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header"
+            accessibilityLabel={`${t('step', {
+              current: pageIndex + 1,
+              total: 4,
+            })}: ${currentInfo.title}`}>
+            {currentInfo.title}
+          </Text>
+          <Text
+            testID="onboarding_description_text"
+            style={[styles.textNormal, { color: colors.hourListText }]}>
+            {currentInfo.description}
+          </Text>
+          {pageIndex === 0 && (
+            <>
+              <Text
+                testID="onboarding_language_title"
+                accessibilityRole="header"
+                style={[styles.languageTitle, { color: colors.text }]}>
+                {t('language')}
+              </Text>
+              <View
+                testID="onboarding_language_options"
+                style={styles.languageOptions}>
+                {languages.map((language) => {
+                  const selected = i18n.language === language;
+                  return (
+                    <AccessibleTouchableOpacity
+                      key={language}
+                      testID={`onboarding_set_language_${language}`}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected }}
+                      onPress={() => changeLanguage(language)}
+                      style={[
+                        styles.languageButton,
+                        {
+                          backgroundColor: selected
+                            ? colors.inputBackground
+                            : colors.background,
+                          borderColor: selected ? colors.text : colors.border,
+                        },
+                      ]}>
+                      <Text
+                        style={[
+                          styles.languageButtonText,
+                          { color: colors.text },
+                        ]}>
+                        {t(language)}
+                      </Text>
+                    </AccessibleTouchableOpacity>
+                  );
+                })}
+              </View>
+            </>
+          )}
+          <AccessibleTouchableOpacity
+            testID="onboarding_next_button"
+            accessibilityRole="button"
+            style={styles.buttonContainer}
+            onPress={handlePress}>
+            <View style={[styles.button, { borderColor: colors.text }]}>
+              <View style={styles.textContainer}>
+                <Text style={[styles.text, { color: colors.text }]}>
+                  {t('next')}
+                </Text>
+              </View>
+            </View>
+          </AccessibleTouchableOpacity>
+        </View>
       </View>
       <View
         testID="onboarding_pagination"
@@ -297,13 +349,41 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 60,
     alignSelf: 'center',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   textNormal: {
     fontSize: 16,
     textAlign: 'center',
+    marginBottom: 16,
+    fontFamily: REGULAR_FONT,
+  },
+  languageOptions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     marginBottom: 20,
-    fontFamily: 'Roboto-Regular',
+  },
+  languageTitle: {
+    fontSize: 16,
+    fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  languageButton: {
+    borderRadius: 20,
+    borderWidth: 2,
+    marginHorizontal: 4,
+    marginVertical: 4,
+    minHeight: 40,
+    minWidth: 88,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  languageButtonText: {
+    fontSize: 16,
+    fontFamily: MEDIUM_FONT,
+    textAlign: 'center',
   },
   button: {
     minWidth: 120,
@@ -320,7 +400,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     textAlign: 'center',
   },
   pagination: {

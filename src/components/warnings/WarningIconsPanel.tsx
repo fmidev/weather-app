@@ -21,6 +21,7 @@ import { MotiView } from 'moti';
 import { Skeleton } from 'moti/skeleton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
@@ -231,26 +232,26 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     lineHeight: 14,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   medium: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   cardContainer: {
     paddingVertical: 8,
   },
   cardText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   errorText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
   },
   headerText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
     marginBottom: 6,
   },

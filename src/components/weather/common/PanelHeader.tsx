@@ -6,6 +6,7 @@ import Text from '@components/common/AppText';
 import { CustomTheme, RED } from '@assets/colors';
 import CommonPanelHeader from '@components/common/PanelHeader';
 import { useTheme } from '@react-navigation/native';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 type PanelHeaderProps = {
   title: string;
@@ -58,10 +59,10 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
 const styles = StyleSheet.create({
   updatedText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   bold: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
 });
 

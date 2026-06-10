@@ -39,6 +39,7 @@ import {
 import { Config } from '@config';
 import { DisplayParameters } from '@store/forecast/types';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
@@ -299,22 +300,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   withMarginRight: {
     marginRight: 10,
   },
   restoreText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
   },
   iconText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     width: 40,
   },
   iconContainer: {

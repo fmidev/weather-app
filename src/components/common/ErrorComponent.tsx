@@ -24,6 +24,7 @@ import { Config } from '@config';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 import type { Route } from '@react-navigation/native';
+import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
@@ -254,17 +255,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     color: BLACK,
   },
   text: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     color: BLACK,
   },
   buttonText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     color: BLACK,
   },
   closeButton: {

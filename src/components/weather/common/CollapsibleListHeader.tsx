@@ -6,6 +6,7 @@ import Icon from '@assets/Icon';
 import { CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/helpers';
 import PrecipitationStrip from '../forecast/PrecipitationStrip';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 type CollapsiblePanelHeaderProps = {
   open: boolean;
@@ -149,15 +150,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     textTransform: 'capitalize',
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   regular: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   alignStart: {
     alignItems: 'flex-start',

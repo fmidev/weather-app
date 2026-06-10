@@ -5,13 +5,14 @@ import { CustomTheme } from '@assets/colors';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { getSeveritiesForDays, selectCapInfoByLanguage } from '@utils/helpers';
 import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
 import { connect } from 'react-redux';
 import { ClockType } from '@store/settings/types';
 import WarningItem from './WarningItem';
+import { Config } from '@config';
 
 const severities: Severity[] = ['Moderate', 'Severe', 'Extreme'];
 
@@ -32,6 +33,7 @@ function WarningBlock({
   warnings: CapWarning[];
   xOffset?: number;
 }>) {
+  const { default: defaultLocation } = Config.get('location');
   const [open, setOpen] = useState(false);
   const { colors } = useTheme() as CustomTheme;
   const scrollViewRef = useRef<ScrollView>(null);
@@ -41,9 +43,24 @@ function WarningBlock({
   const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
   const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
 
+  const sortedWarnings = useMemo(() => [...warnings].sort((a, b) => {
+    const aInfo = Array.isArray(a.info) ? selectCapInfoByLanguage(a.info, locale) : a.info;
+    const bInfo = Array.isArray(b.info) ? selectCapInfoByLanguage(b.info, locale) : b.info;
+
+    const severityDiff =
+      severities.indexOf(bInfo.severity) - severities.indexOf(aInfo.severity);
+
+    if (severityDiff !== 0) return severityDiff;
+
+    return (
+      moment(aInfo.onset).toDate().getTime() - moment(bInfo.onset).toDate().getTime()
+    );
+  }), [warnings, locale]);
+
   const dailySeverities = getSeveritiesForDays(
-    warnings,
-    dates.map(({ time }) => time)
+    sortedWarnings,
+    dates.map(({ time }) => time),
+    defaultLocation.timezone
   );
 
   useEffect(() => {
@@ -55,21 +72,27 @@ function WarningBlock({
   }, [xOffset]);
 
   const headerWarning = useMemo(() => {
-    let mostSevere = warnings[0];
-    warnings.forEach((warning) => {
-      const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-      const currentSeverity = severities.indexOf(info.severity);
+    let mostSevere = sortedWarnings[0];
+
+    sortedWarnings.forEach((warning) => {
+      const info = Array.isArray(warning.info) ? selectCapInfoByLanguage(warning.info, locale) : warning.info;
+      const currentMostSevereInfo =
+        Array.isArray(mostSevere.info) ? selectCapInfoByLanguage(mostSevere.info, locale) : mostSevere.info;
+
+      const currentSeverity = severities.indexOf(currentMostSevereInfo.severity);
       const severity = severities.indexOf(info.severity);
+
       if (severity > currentSeverity) {
         mostSevere = warning;
       }
     });
+
     return mostSevere;
-  }, [warnings]);
+  }, [sortedWarnings, locale]);
 
   const headerWarningAreas = [
     ...new Set(
-      warnings
+      sortedWarnings
         .map((warning) => Array.isArray(warning.info) ?
           selectCapInfoByLanguage(warning.info, locale).area.areaDesc : warning.info.area.areaDesc)
         .map((area) => area.charAt(0).toUpperCase().concat(area.substring(1)))
@@ -80,14 +103,14 @@ function WarningBlock({
     const timespans = capWarnings.map((warning) => {
       const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
       return {
-        effective: info.effective,
+        onset: info.onset,
         expiry: info.expires,
       }
     });
     timespans.sort(
       (span1, span2) =>
-        moment(span1.effective).toDate().getTime() -
-        moment(span2.effective).toDate().getTime()
+        moment(span1.onset).toDate().getTime() -
+        moment(span2.onset).toDate().getTime()
     );
     const intervals = [];
 
@@ -100,7 +123,7 @@ function WarningBlock({
       // Get all timespans that begin before current has ended
 
       if (
-        moment(span.effective).toDate().getTime() <
+        moment(span.onset).toDate().getTime() <
         moment(currentTimespan.expiry).toDate().getTime()
       ) {
         spans.push({
@@ -111,7 +134,7 @@ function WarningBlock({
       } else {
         const lastToExpire = Math.max(...spans.map((s) => s.time));
         intervals.push({
-          effective: moment(currentTimespan.effective),
+          onset: moment(currentTimespan.onset),
           expiry: moment(lastToExpire),
         });
         currentTimespan = timespans[index];
@@ -123,32 +146,32 @@ function WarningBlock({
 
     if (currentTimespan && (spans.length === 0 || intervals.length === 0)) {
       intervals.push({
-        effective: moment(currentTimespan.effective),
+        onset: moment(currentTimespan.onset),
         expiry: moment(currentTimespan.expiry),
       });
     }
 
-    return intervals.map(({ effective, expiry }) => {
-      const effectiveFormatted = effective
+    return intervals.map(({ onset, expiry }) => {
+      const onsetFormatted = onset
         .locale(locale)
         .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
 
-      if (effective.isSame(expiry, 'day')) return effectiveFormatted;
+      if (onset.isSame(expiry, 'day')) return onsetFormatted;
 
       const expiryFormatted = expiry
         .locale(locale)
         .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
-      return `${effectiveFormatted} - ${expiryFormatted}`;
+      return `${onsetFormatted} - ${expiryFormatted}`;
     });
   };
   const headerTimeSpanString = [
-    ...new Set(getHeaderWarningTimeSpans(warnings)),
+    ...new Set(getHeaderWarningTimeSpans(sortedWarnings)),
   ].join(', ');
 
-  const warningTimeSpans = warnings.map((warning) => {
+  const warningTimeSpans = sortedWarnings.map((warning) => {
     const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-    const start = moment(info.effective);
-    const end = moment(info.expires);
+    const start = moment(info.onset).tz(defaultLocation.timezone);
+    const end = moment(info.expires).tz(defaultLocation.timezone);
     const startFormatted = start
       .locale(locale)
       .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`);
@@ -184,7 +207,7 @@ function WarningBlock({
             styles.openableContent,
             { backgroundColor: colors.accordionContentBackground },
           ]}>
-          {warnings.map((warning, index) => {
+          {sortedWarnings.map((warning, index) => {
             const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
             return (
               <WarningItem

@@ -11,6 +11,7 @@ import Icon from '@assets/Icon';
 import packageJSON from '../../package.json';
 import { trackMatomoEvent } from '@utils/matomo';
 import { WHITE, BLACK } from '@assets/colors';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const FeedbackScreen: React.FC = () => {
   const { t, i18n } = useTranslation('feedback');
@@ -124,11 +125,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   link: {
     padding: 4,
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     fontWeight: 'bold',
     fontSize: 16,
   },

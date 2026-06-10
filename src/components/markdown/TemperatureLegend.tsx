@@ -6,6 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import Text from '@components/common/AppText';
 
 import { CustomTheme, getTemperatureIndexColor } from '@assets/colors';
+import { REGULAR_FONT } from '@assets/constants';
 
 const TemperatureLegend: React.FC = () => {
   const { t } = useTranslation('map');
@@ -78,7 +79,7 @@ const TemperatureLegend: React.FC = () => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 14,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   labelRow: {
     marginTop: 8,

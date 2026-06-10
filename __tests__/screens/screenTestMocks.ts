@@ -17,6 +17,18 @@ export const mockState = {
   language: 'en',
 };
 
+const mockTranslations: { [key: string]: { [key: string]: string } } = {
+  en: {
+    language: 'Language',
+  },
+  fi: {
+    language: 'Kieli',
+  },
+  sv: {
+    language: 'Språk',
+  },
+};
+
 export const resetScreenMocks = () => {
   jest.clearAllMocks();
   mockState.dark = false;
@@ -163,7 +175,9 @@ jest.mock('react-i18next', () => ({
       language: mockState.language,
     },
     t: (key: string, options?: any) =>
-      options ? `${key}:${JSON.stringify(options)}` : key,
+      options
+        ? `${key}:${JSON.stringify(options)}`
+        : mockTranslations[mockState.language]?.[key] || key,
   }),
 }));
 

@@ -13,6 +13,7 @@ import { CustomTheme } from '@assets/colors';
 
 import { State } from '@store/types';
 import { selectActiveOverlay } from '@store/map/selectors';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const LegacyInfo: React.FC = () => {
   const { t } = useTranslation('map');
@@ -438,11 +439,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   rainContainer: {
     justifyContent: 'space-around',

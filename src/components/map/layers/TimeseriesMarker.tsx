@@ -18,6 +18,7 @@ import { updateSelectedCallout as updateSelectedCalloutAction } from '@store/map
 
 import { Config } from '@config';
 import { selectUnits } from '@store/settings/selectors';
+import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   selectedCallout: selectSelectedCallout(state),
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
   },
   tempText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     marginLeft: 4,
   },
   calloutContainer: {
@@ -172,11 +173,11 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   calloutTitle: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: MEDIUM_FONT,
     fontSize: 16,
   },
   calloutText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     fontSize: 14,
   },
   windSpeedRow: {

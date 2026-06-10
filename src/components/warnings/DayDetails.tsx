@@ -15,6 +15,7 @@ import { State } from '@store/types';
 import { selectClockType } from '@store/settings/selectors';
 import WarningIcon from './WarningIcon';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerText: {
-    fontFamily: 'Roboto',
+    fontFamily: REGULAR_FONT,
     fontSize: 16,
     paddingHorizontal: 5,
   },
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   description: {
-    fontFamily: 'Roboto',
+    fontFamily: REGULAR_FONT,
     fontSize: 16,
   },
   separator: {

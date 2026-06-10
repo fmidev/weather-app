@@ -20,6 +20,7 @@ import { State } from '@store/types';
 import { connect, ConnectedProps } from 'react-redux';
 import InfoMessage from '../InfoMessage';
 import Text from '@components/common/AppText';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -217,7 +218,7 @@ const Latest: React.FC<LatestProps> = ({
 const styles = StyleSheet.create({
   bold: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
   },
   justifyStart: {
     justifyContent: 'flex-start',
@@ -235,17 +236,17 @@ const styles = StyleSheet.create({
   },
   panelMeasurement: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     marginBottom: 8,
   },
   panelValue: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     marginBottom: 8,
   },
   panelText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   row: {
     flexDirection: 'row',

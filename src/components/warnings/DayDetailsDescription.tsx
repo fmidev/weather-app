@@ -6,6 +6,7 @@ import Text from '@components/common/AppText';
 import { CustomTheme } from '@assets/colors';
 import { Warning } from '@store/warnings/types';
 import { useTranslation } from 'react-i18next';
+import { REGULAR_FONT } from '@assets/constants';
 
 type DayDetailsDescriptionProps = {
   warnings: Warning[];
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     minHeight: 18,
   },
   description: {
-    fontFamily: 'Roboto',
+    fontFamily: REGULAR_FONT,
     fontSize: 14,
   },
 });

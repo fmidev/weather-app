@@ -10,6 +10,7 @@ import { Config } from '@config';
 import { aboutTheApplicationDocuments } from '@assets/markdown';
 import packageJSON from '../../package.json';
 import type { CustomTheme } from '@assets/colors';
+import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const renderer = new MarkdownRenderer();
 
@@ -83,13 +84,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     marginTop: 32,
     marginBottom: 16,
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
     marginBottom: 16,
   },
 });

@@ -662,6 +662,10 @@
     "showBuiltInLocationPermissionQuestion": "Nästa"
   },
   "onboarding": {
+    "language": "Språk",
+    "fi": "Suomi",
+    "sv": "Svenska",
+    "en": "English",
     "next": "Nästa",
     "skip": "Hoppa över",
     "weatherTitle": "Väderprognos och -observationer",

@@ -14,6 +14,7 @@ import Icon from '@assets/Icon';
 import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
 import { trackMatomoEvent } from '@utils/matomo';
+import { REGULAR_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   data: selectForecastByDay(state),
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: REGULAR_FONT,
   },
   bold: {
     fontWeight: 'bold',

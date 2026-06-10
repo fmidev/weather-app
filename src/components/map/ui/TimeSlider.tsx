@@ -55,6 +55,7 @@ import { selectClockType } from '@store/settings/selectors';
 import SliderStep from './SliderStep';
 import { trackMatomoEvent } from '@utils/matomo';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BOLD_FONT } from '@assets/constants';
 
 const QUARTER_WIDTH = 15;
 const STEP_60 = 3600;
@@ -460,7 +461,7 @@ const styles = StyleSheet.create({
   },
   currentTimeText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: BOLD_FONT,
     position: 'absolute',
     bottom: 0,
     zIndex: 5,
