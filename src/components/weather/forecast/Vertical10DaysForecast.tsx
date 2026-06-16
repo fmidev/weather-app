@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
-import moment from 'moment';
+import moment from '@utils/moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
@@ -27,7 +27,7 @@ import { State } from '@store/types';
 import { selectForecastInvalidData, selectDisplayParams } from '@store/forecast/selectors';
 
 import Icon from '@components/common/ScalableIcon';
-import { formatAccessibleDate, formatAccessibleTemperature, uppercaseFirst } from '@utils/helpers';
+import { formatAccessibleDate, formatAccessibleTemperature } from '@utils/helpers';
 import ModalContent from './ModalContent';
 import { trackMatomoEvent } from '@utils/matomo';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
@@ -202,8 +202,6 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
         converter(precipitationUnit, totalPrecipitation)
       );
 
-    const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-    const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
     const symbolSize = Math.min(64, fontScale * 44);
     const rowHeight = fontScale ? 80 : 70;
 
@@ -230,10 +228,10 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               accessibilityLabel={formatAccessibleDate(stepMoment, false)}
               style={styles.day}>
               <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
-                { uppercaseFirst(stepMoment.format(weekdayAbbreviationFormat)) }
+                { stepMoment.formatDateTime('weekdayAbbreviation', locale) }
               </Text>
               <Text maxFontSizeMultiplier={1.3} style={[styles.text, { color: colors.primaryText }]}>
-                {stepMoment.format(dateFormat)}
+                {stepMoment.formatDateTime('date', locale)}
               </Text>
             </View>
             <View accessible accessibilityLabel={t(`symbols:${smartSymbol}`)}>

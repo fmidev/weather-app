@@ -9,7 +9,6 @@ import { State } from '@store/types';
 import { CustomTheme } from '@assets/colors';
 import { selectForecastByDay } from '@store/forecast/selectors';
 import ModalForecast from './ModalForecast';
-import { uppercaseFirst } from '@utils/helpers';
 import Icon from '@assets/Icon';
 import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
@@ -49,9 +48,7 @@ const DailyModal: React.FC<ModalContentProps> = ({
   const { fontScale } = useWindowDimensions();
   const { t, i18n } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
-  const largeFonts = fontScale >= 1.5;
   const iconSize = Math.min(fontScale * 22, 44);
-  const dateFormat = largeFonts ? 'dd D.M.' : 'dddd, D.M.';
 
   return (
     <View style={styles.container}>
@@ -77,7 +74,7 @@ const DailyModal: React.FC<ModalContentProps> = ({
             accessibilityRole="header"
             numberOfLines={1}
             style={[styles.text, styles.bold, styles.headerText, { color: colors.primaryText }]}>
-            {uppercaseFirst(moment(timeStamp).locale(i18n.language).format(dateFormat))}
+            {moment(timeStamp).formatDateTime('longDate', i18n.language)}
           </Text>
           <View accessible>
             <Icon

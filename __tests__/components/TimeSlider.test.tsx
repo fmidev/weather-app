@@ -173,7 +173,7 @@ describe('TimeSlider', () => {
     const expectedTime = moment
       .unix(1710000000)
       .locale('en')
-      .format('ddd HH.mm');
+      .format('ddd HH:mm');
 
     expect(getByTestId('slider-step-1710000000')).toBeTruthy();
     expect(getByTestId('slider-step-1710003600')).toBeTruthy();

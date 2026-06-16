@@ -39,9 +39,6 @@ function WarningBlock({
   const scrollViewRef = useRef<ScrollView>(null);
   const { i18n } = useTranslation();
   const locale = i18n.language;
-  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-  const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
-  const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
 
   const sortedWarnings = useMemo(() => [...warnings].sort((a, b) => {
     const aInfo = Array.isArray(a.info) ? selectCapInfoByLanguage(a.info, locale) : a.info;
@@ -152,15 +149,13 @@ function WarningBlock({
     }
 
     return intervals.map(({ onset, expiry }) => {
-      const onsetFormatted = onset
-        .locale(locale)
-        .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+      const onsetFormatted = onset.formatDateTime('weekdayAbbreviationAndDate', locale);
 
       if (onset.isSame(expiry, 'day')) return onsetFormatted;
 
       const expiryFormatted = expiry
         .locale(locale)
-        .format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+        .formatDateTime('weekdayAbbreviationAndDate', locale);;
       return `${onsetFormatted} - ${expiryFormatted}`;
     });
   };
@@ -172,17 +167,17 @@ function WarningBlock({
     const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
     const start = moment(info.onset).tz(defaultLocation.timezone);
     const end = moment(info.expires).tz(defaultLocation.timezone);
-    const startFormatted = start
-      .locale(locale)
-      .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`);
+    const startFormatted = `${start.formatDateTime(
+        'weekdayAbbreviationAndDate',
+        locale
+      )} ${start.formatDateTime('time', locale, clockType)}`;
 
-    const endFormatted = end
-      .locale(locale)
-      .format(
-        start.isSame(end, 'day')
-          ? timeFormat
-          : `${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`
-      );
+    const endFormatted = start.isSame(end, 'day')
+      ? end.formatDateTime('time', locale, clockType)
+      : `${end.formatDateTime(
+        'weekdayAbbreviationAndDate',
+        locale
+      )} ${end.formatDateTime('time', locale, clockType)}`;
     return `${startFormatted} - ${endFormatted}`;
   });
 

@@ -108,17 +108,9 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
       Number(moment(overlay.observation.end).format('X'))) ||
     0;
 
-  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-
-  const currentSliderTime = moment
-    .unix(sliderTime)
-    .locale(locale)
-    .format(
-      `${weekdayAbbreviationFormat} ${clockType === 12 ? 'h.mm a' : 'HH.mm'}`
-    );
-
-  const currentSliderTimeCapitalized =
-    currentSliderTime.charAt(0).toUpperCase() + currentSliderTime.slice(1);
+  const sliderMoment = moment.unix(sliderTime);
+  const currentSliderTime = sliderMoment.formatDateTime('weekdayAbbreviation', locale)
+      + ' ' + sliderMoment.formatDateTime('time', locale, clockType);
 
   const { sliderStep, sliderTimes } = useMemo(() => {
     const minUnix = getSliderMinUnix(activeOverlayId, overlay);
@@ -378,7 +370,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
                     color: colors.hourListText,
                   },
                 ]}>
-                {currentSliderTimeCapitalized}
+                {currentSliderTime}
               </Text>
               <Text
                 maxFontSizeMultiplier={1.5}

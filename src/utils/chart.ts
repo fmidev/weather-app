@@ -173,11 +173,8 @@ export const tickFormat = (
     return '';
   }
   if (daily || hour === 0) {
-    return `${capitalize(
-      time.format(locale === 'en' ? 'ddd' : 'dd')
-    )}\n${time.format(
-      locale === 'en' ? 'D MMM' : 'D.M.'
-    )}`;
+    return `${time.formatDateTime('weekdayAbbreviation', locale, clockType)}\n${time.formatDateTime(
+      'date', locale)}`;
   }
   return time.format(clockType === 12 ? 'h a' : 'HH');
 };

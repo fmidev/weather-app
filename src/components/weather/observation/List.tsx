@@ -363,8 +363,7 @@ const List: React.FC<ListProps> = ({
               { color: colors.hourListText },
             ]}>
             {moment(data[0].epochtime * 1000)
-              .locale(locale)
-              .format(locale === 'en' ? `dddd D MMM` : `dddd D.M.`)}
+              .formatDateTime('weekdayAndDate', locale)}
           </Text>
         )}
       </View>
@@ -408,9 +407,7 @@ const List: React.FC<ListProps> = ({
         const time = moment(timeStep.epochtime * 1000).locale(locale);
         const previousTime = moment(arr?.[i - 1]?.epochtime * 1000);
 
-        const timeToDisplay = time.format(
-          clockType === 12 ? 'h.mm a' : 'HH.mm'
-        );
+        const timeToDisplay = time.formatDateTime('time', locale, clockType);
 
         return (
           <View key={timeStep.epochtime}>
@@ -430,9 +427,7 @@ const List: React.FC<ListProps> = ({
                     styles.capitalize,
                     { color: colors.hourListText },
                   ]}>
-                  {time.format(
-                    locale === 'en' ? 'dddd D MMM' : `dddd D.M.`
-                  )}
+                  {time.formatDateTime('weekdayAndDate', locale)}
                 </Text>
               </View>
             )}

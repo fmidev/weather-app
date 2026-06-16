@@ -112,11 +112,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
 
   const forecastLastUpdated = {
     time: forecastLastUpdatedMoment
-      ? forecastLastUpdatedMoment.format(
-          `${locale === 'en' ? 'D MMM' : 'D.M.'} ${
-            clockType === 12 ? 'h:mm a' : 'HH:mm'
-          }`
-        )
+      ? forecastLastUpdatedMoment.formatDateTime('dateTime', locale, clockType)
       : undefined,
     ageCheck: forecastAge > (ageWarning ?? 720) * 60 * 1000,
   };
