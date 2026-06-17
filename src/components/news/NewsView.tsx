@@ -26,8 +26,6 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('news');
   const { width } = useWindowDimensions();
-  const dateFormat = 'D.M.YYYY';
-  const dateAndTimeFormat = 'D.M.YYYY HH:mm';
   const titleHeight = titleNumberOfLines ? titleNumberOfLines * 20 : null;
 
   const openLink = async (type: string, id: string) => {
@@ -47,11 +45,11 @@ const NewsView: React.FC<NewsProps> = ({ item, titleNumberOfLines, gridLayout })
 
   const createdMoment = moment(item.createdAt);
   const title =
-    `${t(item.type)} ${createdMoment.format(dateFormat)}` +
+    `${t(item.type)} ${createdMoment.formatDateTime('dateYear', i18n.language)}` +
     (
       item.createdAt.substring(0, 10) !== item.updatedAt.substring(0, 10) &&
       item.showEditedDateTime
-        ? ` (${t('updated')} ${moment(item.updatedAt).format(dateAndTimeFormat)})`
+        ? ` (${t('updated')} ${moment(item.updatedAt).formatDateTime('longDateTime', i18n.language)})`
         : ''
     );
   const accessibleTitle =

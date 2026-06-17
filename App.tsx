@@ -9,6 +9,7 @@ import ReduxThunk from 'redux-thunk';
 import NetInfo from '@react-native-community/netinfo';
 
 import '@i18n';
+import '@utils/moment';
 import { ConfigProvider } from '@config';
 import reducers from './src/store';
 import TabNavigator from './src/navigators/TabNavigator';

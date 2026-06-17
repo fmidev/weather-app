@@ -1,8 +1,8 @@
 import React from 'react';
-import moment from 'moment-timezone';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import ForecastPanelWithVerticalLayout from '../../src/components/weather/ForecastPanelWithVerticalLayout';
+import moment from '../../src/utils/moment';
 
 const mockConfigGet = jest.fn();
 const mockFormatAccessibleDateTime = jest.fn();

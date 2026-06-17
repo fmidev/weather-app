@@ -28,25 +28,22 @@ const LocalWarningsDetails: React.FC<LocalWarningsDetailsProps> = ({
   const { t } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
 
-  const timeFormat = clockType === 12 ? 'h.mm a' : 'H:mm';
-  const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
-  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-
   const warningTimeSpans = warnings.map((warning) => {
     const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
     const start = moment(info.onset).tz(timezone);
     const end = moment(info.expires).tz(timezone);
-    const startFormatted = start
-      .locale(locale)
-      .format(`${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`);
+    const startFormatted = `${start.formatDateTime(
+        'weekdayAbbreviationAndDate',
+        locale
+      )} ${start.formatDateTime('time', locale, clockType)}`;
 
-    const endFormatted = end
-      .locale(locale)
-      .format(
-        start.isSame(end, 'day')
-          ? timeFormat
-          : `${weekdayAbbreviationFormat} ${dateFormat} ${timeFormat}`
-      );
+    const endFormatted = start.isSame(end, 'day')
+      ? end.formatDateTime('time', locale, clockType)
+      : `${end.formatDateTime(
+        'weekdayAbbreviationAndDate',
+        locale
+      )} ${end.formatDateTime('time', locale, clockType)}`;
+
     return `${startFormatted} - ${endFormatted}`;
   });
 

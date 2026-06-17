@@ -42,11 +42,10 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   clockType,
   gridLayout,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
   const { dark, colors } = useTheme() as CustomTheme;
   const colorMode = dark ? 'dark' : 'light';
-  const timeFormat = clockType === 12 ? 'D.M.YYYY h.mm a' : 'D.M.YYYY HH:mm';
   const marginLeft = gridLayout ? 8 : insets.left + 16;
   const marginRight = gridLayout ? insets.right : insets.right + 16;
   const minHeight = gridLayout ? 160 : 150;
@@ -103,7 +102,7 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
         <Text
           accessibilityLabel={formatAccessibleDateTime(updatedMoment, t, clockType === 24)}
           style={[styles.updated, { color: colors.primaryText }]}>
-          { updatedMoment.format(timeFormat) }
+          { updatedMoment.formatDateTime('longDateTime', i18n.language, clockType) }
         </Text>
         <Text style={[styles.text, { color: colors.primaryText }]}>{snapshot.text}</Text>
       </View>

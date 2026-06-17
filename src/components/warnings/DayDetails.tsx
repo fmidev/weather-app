@@ -92,15 +92,9 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
                     `DD MMMM ${timeFormat}`
                   )}`}>
                   <Text style={styles.bold}>{`${t(`types.${type}`)}`}</Text>
-                  {` – ${t('valid')} ${moment(duration.startTime).format(
-                    locale === 'en'
-                      ? `MMM D ${timeFormat}`
-                      : `D.M. ${timeFormat}`
-                  )} - ${moment(duration.endTime).format(
-                    locale === 'en'
-                      ? `MMM D ${timeFormat}`
-                      : `D.M. ${timeFormat}`
-                  )} `}
+                  {` – ${t('valid')} ${
+                    moment(duration.startTime).formatDateTime('dateTime', locale)
+                    } - ${moment(duration.endTime).formatDateTime('dateTime', locale)} `}
                 </Text>
               </View>
               <View style={styles.iconPadding}>

@@ -48,18 +48,17 @@ const Latest: React.FC<LatestProps> = ({
   const locale = i18n.language;
   const { parameters } = Config.get('weather').observation;
   const decimalSeparator = locale === 'en' ? '.' : ',';
-  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-  const dateFormat =
-    clockType === 12
-      ? `${locale === 'en' ? 'D MMM' : 'D.M.'} [${t('at')}] h:mm a`
-      : `D.M. [${t('at')}] HH:mm`;
-
   const latestObservation = getLatestObservationAvoidingMissingValues(data);
 
   if (!latestObservation) return null;
 
   const observationMoment = moment(latestObservation.epochtime * 1000).locale(locale);
-  const latestObservationTime = observationMoment.format(`${weekdayAbbreviationFormat} ${dateFormat}`);
+  const latestObservationTime = `${observationMoment.formatDateTime(
+    'weekdayAbbreviation',
+    i18n.language
+  )} ${observationMoment.formatDateTime('date', i18n.language)} ${t(
+    'at'
+  )} ${observationMoment.formatDateTime('time', i18n.language, clockType)}`;
   const accessibleObservationTime = formatAccessibleDateTime(observationMoment, t, clockType === 24, false);
 
   const hoursSinceLatestObservation =

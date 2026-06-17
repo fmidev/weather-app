@@ -51,7 +51,6 @@ const DaySelector = ({
         <Text
           style={[
             styles.text,
-            styles.capitalized,
             { color: colors.primaryText },
           ]}>
           {capViewSettings?.useRelativeDays ? relativeDay : weekday}
@@ -99,9 +98,6 @@ const DaySelectorList = ({
 );
 
 const styles = StyleSheet.create({
-  capitalized: {
-    textTransform: 'capitalize',
-  },
   container: {
     position: 'absolute',
     top: 12,

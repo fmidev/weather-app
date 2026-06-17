@@ -98,7 +98,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   }
 
   const locale = i18n.language;
-  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
+
   return (
     <View
       testID="warnings_panel"
@@ -227,7 +227,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                           color: colors.text,
                         },
                       ]}>
-                      {moment(date).format(weekdayAbbreviationFormat)}
+                      {moment(date).formatDateTime('weekdayAbbreviation', locale)}
                     </Text>
                     <Text
                       maxFontSizeMultiplier={1.5}
@@ -239,7 +239,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                           color: colors.text,
                         },
                       ]}>
-                      {moment(date).format(locale === 'en' ? 'MMM D' : 'D.M.')}
+                      {moment(date).formatDateTime('date', locale)}
                     </Text>
                     <SeverityBar severity={severity} />
                   </View>

@@ -44,8 +44,6 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
 
   const { t, i18n } = useTranslation('warnings');
   const locale = i18n.language;
-  const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
-  const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
 
   const { colors } = useTheme() as CustomTheme;
 
@@ -64,8 +62,8 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
     const dates = [
       {
         time: today.toDate().getTime(),
-        date: moment(today).locale(locale).format(dateFormat),
-        weekday: moment(today).locale(locale).format(weekdayAbbreviationFormat),
+        date: today.formatDateTime('date', locale),
+        weekday: today.formatDateTime('weekdayAbbreviation', locale),
         relativeDay: t('today'),
       },
     ];
@@ -79,10 +77,8 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
 
         dates.push({
           time: momentObject.toDate().getTime(),
-          date: momentObject.locale(locale).format(dateFormat),
-          weekday: momentObject
-            .locale(locale)
-            .format(weekdayAbbreviationFormat),
+          date: momentObject.formatDateTime('date', locale),
+          weekday: momentObject.formatDateTime('weekdayAbbreviation', locale),
           relativeDay,
         });
       }
@@ -139,8 +135,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                     ]}>
                     {moment(updated)
                       .tz(defaultLocation.timezone)
-                      .locale(locale)
-                      .format(locale === 'en' ? 'DD MMM HH.mm' : 'D.M. HH.mm')}
+                      .formatDateTime('dateTime', locale)}
                   </Text>
                 </>
               )}
