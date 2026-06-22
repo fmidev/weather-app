@@ -113,4 +113,54 @@ describe('WarningBlock', () => {
     fireEvent.press(getByTestId('warning-item-Wind-header'));
     expect(getAllByTestId(/warning-item-Wind-/)).toHaveLength(3);
   });
+
+  it('does not render Invalid date for multiple separate header time spans', () => {
+    const warnings = [
+      {
+        identifier: '1',
+        info: {
+          event: 'Wind',
+          severity: 'Moderate',
+          effective: '2024-01-01T00:00:00Z',
+          onset: '2024-01-01T00:00:00Z',
+          expires: '2024-01-01T01:00:00Z',
+          area: { areaDesc: 'helsinki' },
+        },
+      },
+      {
+        identifier: '2',
+        info: {
+          event: 'Wind',
+          severity: 'Moderate',
+          effective: '2024-01-02T00:00:00Z',
+          onset: '2024-01-02T00:00:00Z',
+          expires: '2024-01-02T01:00:00Z',
+          area: { areaDesc: 'espoo' },
+        },
+      },
+      {
+        identifier: '3',
+        info: {
+          event: 'Wind',
+          severity: 'Moderate',
+          effective: '2024-01-03T00:00:00Z',
+          onset: '2024-01-03T00:00:00Z',
+          expires: '2024-01-03T01:00:00Z',
+          area: { areaDesc: 'vantaa' },
+        },
+      },
+    ];
+
+    const { getByTestId } = render(
+      <WarningBlock
+        clockType={24 as any}
+        dates={[{ time: 1, date: '1 Jan', weekday: 'Mon' }]}
+        warnings={warnings as any}
+      />
+    );
+
+    expect(getByTestId('warning-item-Wind-header').props.children).not.toContain(
+      'Invalid date'
+    );
+  });
 });
