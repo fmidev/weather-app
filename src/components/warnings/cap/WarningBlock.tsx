@@ -109,44 +109,29 @@ function WarningBlock({
         moment(span1.onset).toDate().getTime() -
         moment(span2.onset).toDate().getTime()
     );
+
+    if (timespans.length === 0) return [];
+
     const intervals = [];
+    let currentInterval = {
+      onset: moment(timespans[0].onset),
+      expiry: moment(timespans[0].expiry),
+    };
 
-    let index = 0;
-    let currentTimespan = timespans[index];
-    let spans = [];
+    timespans.slice(1).forEach((span) => {
+      const onset = moment(span.onset);
+      const expiry = moment(span.expiry);
 
-    while (index < timespans.length) {
-      const span = timespans[index];
-      // Get all timespans that begin before current has ended
-
-      if (
-        moment(span.onset).toDate().getTime() <
-        moment(currentTimespan.expiry).toDate().getTime()
-      ) {
-        spans.push({
-          timespan: span,
-          time: moment(span.expiry).toDate().getTime(),
-          index,
-        });
+      if (onset.toDate().getTime() < currentInterval.expiry.toDate().getTime()) {
+        if (expiry.toDate().getTime() > currentInterval.expiry.toDate().getTime()) {
+          currentInterval.expiry = expiry;
+        }
       } else {
-        const lastToExpire = Math.max(...spans.map((s) => s.time));
-        intervals.push({
-          onset: moment(currentTimespan.onset),
-          expiry: moment(lastToExpire),
-        });
-        currentTimespan = timespans[index];
-        spans = [];
+        intervals.push(currentInterval);
+        currentInterval = { onset, expiry };
       }
-
-      index += 1;
-    }
-
-    if (currentTimespan && (spans.length === 0 || intervals.length === 0)) {
-      intervals.push({
-        onset: moment(currentTimespan.onset),
-        expiry: moment(currentTimespan.expiry),
-      });
-    }
+    });
+    intervals.push(currentInterval);
 
     return intervals.map(({ onset, expiry }) => {
       const onsetFormatted = onset.formatDateTime('weekdayAbbreviationAndDate', locale);
