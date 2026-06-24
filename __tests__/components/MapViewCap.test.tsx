@@ -124,7 +124,7 @@ describe('MapView', () => {
         dates={[
           { time: new Date('2024-01-01T12:00:00Z').getTime(), weekday: 'Mon', date: '1 Jan', relativeDay: 'Today' },
         ]}
-        capData={undefined as any}
+        capData={undefined}
       />
     ).UNSAFE_getByType(ActivityIndicator)).toBeTruthy();
   });
