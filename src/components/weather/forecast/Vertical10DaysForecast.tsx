@@ -298,7 +298,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                       convertedTotalPrecipitation?.replace('.', decimalSeparator) ||
                       (0).toFixed(1).replace('.', decimalSeparator)
                     }`}</Text>
-                    {` ${precipitationUnit}`}
+                    {` ${t(`unitAbbreviations:${precipitationUnit}`)}`}
                   </Text>
                 </View>
                 <PrecipitationStrip

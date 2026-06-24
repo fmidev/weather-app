@@ -153,7 +153,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
                   {numericOrDash(windSpeedValue)}
                 </Text>
                 <Text style={[styles.text, { color: textColor }]}>
-                  {` ${windUnit}`}
+                  {` ${t(`unitAbbreviations:${windUnit}`)}`}
                 </Text>
               </View>
             </View>
@@ -184,7 +184,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
                 precipitationValue?.replace('.', decimalSeparator) ||
                 (0).toFixed(1).replace('.', decimalSeparator)
               }`}</Text>
-              {` ${precipitationUnit}`}
+              {` ${t(`unitAbbreviations:${precipitationUnit}`)}`}
             </Text>
           </>
         )}
@@ -222,7 +222,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
               <Text>
                 {numericOrDash(feelsLikeValue)}
               </Text>
-              <Text>{`°${temperatureUnit}`}</Text>
+              <Text>{`°${t(`unitAbbreviations:${temperatureUnit}`)}`}</Text>
             </Text>
           </View>
           <Icon
