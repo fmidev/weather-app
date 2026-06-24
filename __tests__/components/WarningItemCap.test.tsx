@@ -4,6 +4,8 @@ import { render } from '@testing-library/react-native';
 import WarningItem from '../../src/components/warnings/cap/WarningItem';
 
 const mockConfigGet = jest.fn();
+let mockSortAreas = false;
+let mockRemoveDuplicateAreas = false;
 const mockIcon = jest.fn((props) => {
   const { Text } = require('react-native');
   return <Text {...props} testID={`icon-${props.name}`}>icon</Text>;
@@ -64,12 +66,16 @@ describe('WarningItem', () => {
   beforeEach(() => {
     mockConfigGet.mockReset();
     mockIcon.mockClear();
+    mockSortAreas = false;
+    mockRemoveDuplicateAreas = false;
     mockConfigGet.mockImplementation((key: string) => {
       if (key === 'warnings') {
         return {
           capViewSettings: {
             warningBlockWarningCountEnabled: true,
             hideLongArealist: true,
+            sortAreas: mockSortAreas,
+            removeDuplicateAreas: mockRemoveDuplicateAreas,
           },
         };
       }
@@ -130,5 +136,53 @@ describe('WarningItem', () => {
 
     expect(getByText('Heavy rain expected')).toBeTruthy();
     expect(getByText('Helsinki')).toBeTruthy();
+  });
+
+  it('sorts areasDescription alphabetically when configured', () => {
+    mockSortAreas = true;
+    const warning = {
+      info: {
+        event: 'Rain',
+        severity: 'Moderate',
+        area: { areaDesc: 'Helsinki' },
+        description: 'Heavy rain expected',
+      },
+    } as any;
+
+    const { getByText } = render(
+      <WarningItem
+        areasDescription="Vantaa, Espoo, Helsinki"
+        warning={warning}
+        timespan="Tue 2 Jan"
+        includeSeverityBars={false}
+        includeArrow={false}
+      />
+    );
+
+    expect(getByText('Espoo, Helsinki, Vantaa')).toBeTruthy();
+  });
+
+  it('removes duplicate areas when configured', () => {
+    mockRemoveDuplicateAreas = true;
+    const warning = {
+      info: {
+        event: 'Rain',
+        severity: 'Moderate',
+        area: { areaDesc: 'Helsinki' },
+        description: 'Heavy rain expected',
+      },
+    } as any;
+
+    const { getByText } = render(
+      <WarningItem
+        areasDescription="Helsinki, Espoo, Helsinki"
+        warning={warning}
+        timespan="Tue 2 Jan"
+        includeSeverityBars={false}
+        includeArrow={false}
+      />
+    );
+
+    expect(getByText('Helsinki, Espoo')).toBeTruthy();
   });
 });
