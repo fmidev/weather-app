@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Platform, ActivityIndicator } from 'react-native';
-import Map, { Polygon } from 'react-native-maps';
+import Map, { Geojson } from 'react-native-maps';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment-timezone';
 
@@ -15,6 +15,7 @@ import {
   GRAY_8,
 } from '@assets/colors';
 import darkMapStyle from '@utils/dark_map_style.json';
+import { parseCapPolygon } from '@utils/capPolygon';
 import { getSeveritiesForDays } from '@utils/helpers';
 import DaySelectorList from './DaySelectorList';
 import WarningTypeFiltersList from './WarningTypeFiltersList';
@@ -106,32 +107,59 @@ const MapView: React.FC<MapViewProps> = ({
   const mapRef = useRef<Map>(null);
   const { colors, dark } = useTheme() as CustomTheme;
   const capViewSettings = Config.get('warnings')?.capViewSettings;
+  const polygonAccuracy = capViewSettings?.polygonAccuracy;
 
   const darkGoogleMapsStyle =
     dark && Platform.OS === 'android' ? darkMapStyle : [];
 
-  const polygonArray =
-    applicableWarnings
+  const parsedCapData = useMemo(() => {
+    return applicableWarnings
       ?.map((warning) => {
         const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
         return {
-          identifier: warning.identifier,
           event: info.event,
           severity: info?.severity,
-          polygons: [info.area.polygon].flat().map((polygon, index) => ({
-            key: `${warning.identifier}-${index}`,
-            latLng: polygon
-              ?.split(' ')
-              .map((coordinates) =>
-                coordinates.split(',').map((coordinate) => Number(coordinate))
-              )
-              .map((pair) => ({
-                latitude: pair[0],
-                longitude: pair[1],
-              })),
-          })),
-      }})
-      .flat() || [];
+          polygons: [info.area.polygon]
+            .flat()
+            .filter(Boolean)
+            .map((polygon) => parseCapPolygon(polygon, polygonAccuracy)),
+        };
+      })
+      || [];
+  }, [applicableWarnings, polygonAccuracy]);
+
+  const geojsonCollections = useMemo(() => {
+    const collections: Record<string, any> = {
+      Moderate: { type: 'FeatureCollection', features: [] },
+      Severe: { type: 'FeatureCollection', features: [] },
+      Extreme: { type: 'FeatureCollection', features: [] },
+    };
+
+    parsedCapData.forEach(({ event, severity, polygons }) => {
+      const isHidden =
+        !!selectedFilters.find(
+          (filter) => filter.event === event && filter.severity === severity
+        );
+
+      // Exclude hidden warnings from GeoJSON
+      if (isHidden || !severity || !SEVERITIES.includes(severity as Severity)) return;
+
+      polygons.forEach((coords) => {
+        if (coords && coords.length >= 3) {
+          collections[severity as Severity].features.push({
+            type: 'Feature',
+            geometry: {
+              type: 'Polygon',
+              coordinates: [coords], // GeoJSON polygon coordinates require an array of rings
+            },
+            properties: {},
+          });
+        }
+      });
+    });
+
+    return collections;
+  }, [parsedCapData, selectedFilters]);
 
   const handleWarningTypePress = (warning: CapWarning) => {
     const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
@@ -184,27 +212,18 @@ const MapView: React.FC<MapViewProps> = ({
         moveOnMarkerPress={false}
         scrollEnabled={capViewSettings?.mapScrollEnabled}
         zoomEnabled={capViewSettings?.mapZoomEnabled}>
-        {polygonArray?.length > 0 &&
-          polygonArray
-            .filter(
-              ({ event, severity }) =>
-                !selectedFilters.find(
-                  (filter) =>
-                    filter.event === event && filter.severity === severity
-                )
-            )
-            .map(({ severity, polygons }) =>
-              polygons.map((polygon) => (
-                <Polygon
-                  coordinates={polygon.latLng}
-                  key={polygon.key}
-                  fillColor={SEVERITY_COLORS[severity]}
-                  zIndex={SEVERITIES.indexOf(severity)}
-                />
-              ))
-            )}
+        {SEVERITIES.map((severity, index) => (
+          <Geojson
+            key={severity}
+            geojson={geojsonCollections[severity]}
+            fillColor={SEVERITY_COLORS[severity]}
+            strokeColor={colors.primaryText}
+            strokeWidth={1}
+            zIndex={index}
+          />
+        ))}
       </Map>
-      { loading ? (
+      { loading && !capData ? (
         Platform.OS === 'android' ?
           <ActivityIndicator size="large" color={colors.primary} />
           : (

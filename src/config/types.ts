@@ -133,6 +133,7 @@ interface CapViewSettings {
   useRelativeDays?: boolean;
   sortAreas?: boolean;
   removeDuplicateAreas?: boolean;
+  polygonAccuracy?: number; // in meters, if not set original polygon is used
 }
 
 interface Warnings {
