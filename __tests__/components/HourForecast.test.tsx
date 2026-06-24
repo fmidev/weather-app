@@ -28,8 +28,10 @@ jest.mock('@store/settings/selectors', () => ({
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, options?: any) =>
-      options?.value ? `${key}:${options.value}` : key,
+    t: (key: string) =>
+      key.startsWith('unitAbbreviations:')
+        ? key.replace('unitAbbreviations:', '')
+        : key,
   }),
 }));
 

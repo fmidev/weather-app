@@ -265,7 +265,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
                 maxFontSizeMultiplier={1.5}
                 style={[styles.unitText, { color: textColor }]}
                 >
-                °{temperatureUnit}
+                {`°${t(`unitAbbreviations:${temperatureUnit}`)}`}
               </Text>
             </View>
           </View>

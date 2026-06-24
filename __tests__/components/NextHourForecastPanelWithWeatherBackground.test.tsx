@@ -69,7 +69,10 @@ jest.mock('@react-navigation/native', () => ({
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string) =>
+      key.startsWith('unitAbbreviations:')
+        ? key.replace('unitAbbreviations:', '')
+        : key,
   }),
 }));
 

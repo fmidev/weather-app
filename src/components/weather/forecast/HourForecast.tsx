@@ -79,7 +79,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
       <View>
         <Text
           style={[styles.temperatureText, { color: textColor }]}>
-          {`${convertedTemperature}°${temperatureUnit}`}
+          {`${convertedTemperature}°${t(`unitAbbreviations:${temperatureUnit}`)}`}
         </Text>
       </View>
     </View>
