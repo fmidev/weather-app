@@ -43,14 +43,14 @@ jest.mock('react-native-maps', () => {
       {children}
     </View>
   ));
-  const Polygon = ({ coordinates, fillColor }: any) => (
-    <View testID={`polygon-${fillColor}-${coordinates.length}`} />
+  const Geojson = ({ geojson, fillColor }: any) => (
+    <View testID={`geojson-${fillColor}-${geojson?.features?.length ?? 0}`} />
   );
 
   return {
     __esModule: true,
     default: MockMap,
-    Polygon,
+    Geojson,
   };
 });
 
@@ -124,7 +124,7 @@ describe('MapView', () => {
         dates={[
           { time: new Date('2024-01-01T12:00:00Z').getTime(), weekday: 'Mon', date: '1 Jan', relativeDay: 'Today' },
         ]}
-        capData={[]}
+        capData={undefined as any}
       />
     ).UNSAFE_getByType(ActivityIndicator)).toBeTruthy();
   });
@@ -157,10 +157,11 @@ describe('MapView', () => {
 
     expect(getByTestId('day-selector')).toBeTruthy();
     expect(getByTestId('warning-filter')).toBeTruthy();
-    expect(queryAllByTestId('polygon-#FFCB5F-4')).toHaveLength(1);
+    expect(queryAllByTestId('geojson-#FFCB5F-1')).toHaveLength(1);
 
     fireEvent.press(getByTestId('warning-filter'));
-    expect(queryAllByTestId('polygon-#FFCB5F-4')).toHaveLength(0);
+    expect(queryAllByTestId('geojson-#FFCB5F-1')).toHaveLength(0);
+    expect(queryAllByTestId('geojson-#FFCB5F-0')).toHaveLength(1);
 
     fireEvent.press(getByTestId('day-selector'));
   });
