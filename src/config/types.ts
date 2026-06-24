@@ -131,6 +131,8 @@ interface CapViewSettings {
   severityBackgroundInSymbol?: boolean;
   hideLongArealist?: boolean;
   useRelativeDays?: boolean;
+  sortAreas?: boolean;
+  removeDuplicateAreas?: boolean;
 }
 
 interface Warnings {

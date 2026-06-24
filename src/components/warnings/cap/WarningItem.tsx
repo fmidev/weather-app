@@ -53,7 +53,27 @@ const WarningItem: React.FC<WarningItemProps> = ({
     .toUpperCase()
     .concat(info.area.areaDesc.substring(1));
 
-  const areaList = areasDescription || areaDesc;
+  const formatAreasDescription = (description: string): string => {
+    let areas = description.split(',').map((area) => area.trim());
+
+    if (capViewSettings?.removeDuplicateAreas === true) {
+      areas = [...new Set(areas)];
+    }
+
+    if (capViewSettings?.sortAreas === true) {
+      areas.sort((areaA, areaB) => areaA.localeCompare(areaB, i18n.language));
+    }
+
+    return areas.join(', ');
+  };
+
+  const shouldFormatAreas =
+    areasDescription &&
+    (capViewSettings?.sortAreas === true ||
+      capViewSettings?.removeDuplicateAreas === true);
+  const areaList = shouldFormatAreas
+    ? formatAreasDescription(areasDescription)
+    : areasDescription || areaDesc;
   const areaCount = areaList.split(',').length;
 
   return (
