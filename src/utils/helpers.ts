@@ -23,7 +23,7 @@ import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
 import { trackMatomoEvent } from './matomo';
 import { findNearestLocation } from './geolocation';
-import i18n from 'i18next';
+import i18n from '@i18n';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
