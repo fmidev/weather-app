@@ -34,7 +34,7 @@ export const addFavorite =
   };
 
 export const deleteFavorite =
-  (id: number) => (dispatch: Dispatch<LocationActionTypes>) => {
+  (id: number | string) => (dispatch: Dispatch<LocationActionTypes>) => {
     dispatch({ type: DELETE_FAVORITE, id });
   };
 
