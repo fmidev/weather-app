@@ -42,21 +42,24 @@ const getPosition = (
         const name = location?.name[i18n.language] || location?.name.primary || `${latitude}, ${longitude}`;
         const region = location?.region[i18n.language] || location?.region.primary || '';
 
-         AccessibilityInfo.announceForAccessibility(
-           region
-             ? `${t('navigation:locatedTo')} ${name}, ${region}`
-             : `${t('navigation:locatedTo')} ${name}`
-         );
+        AccessibilityInfo.announceForAccessibility(
+          region
+            ? `${t('navigation:locatedTo')} ${name}, ${region}`
+            : `${t('navigation:locatedTo')} ${name}`
+        );
 
-        callback({
-          id: location?.id || 0,
-          lat: latitude,
-          lon: longitude,
-          name: name,
-          area: region,
-          timezone: location?.timezone || '',
-          country: location?.country || '',
-        }, true);
+        callback(
+          {
+            id: location?.id || 0,
+            lat: latitude,
+            lon: longitude,
+            name,
+            area: region,
+            timezone: location?.timezone || '',
+            country: location?.country || '',
+          },
+          true
+        );
       } else {
         getCurrentPosition(latitude, longitude)
           .then((json) => {
