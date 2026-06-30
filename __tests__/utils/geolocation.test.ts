@@ -1,4 +1,4 @@
-import { findNearestLocation } from "@utils/geolocation";
+import { findNearestLocation } from '@utils/geolocation';
 
 const locations = [
   {
