@@ -70,9 +70,8 @@ export default (
     }
 
     case FETCH_FORECAST_SUCCESS: {
-      const rawGeoid = action.data.location.geoid;
-      const geoid =
-        typeof rawGeoid === 'number' && Number.isNaN(rawGeoid) ? 0 : rawGeoid ?? 0;
+      const geoid = action.data.location.geoid ?? 0;
+      return {
         ...state,
         data: {
           ...state.data,
