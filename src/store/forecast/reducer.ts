@@ -32,7 +32,10 @@ const INITIAL_STATE: ForecastState = {
 
 const formatData = (dataSets: TimeStepDataSet, location: ForecastLocation): WeatherData => {
   const weatherData: WeatherData = {};
-  const id = String(location.geoid ?? 0);
+  const rawGeoid = location.geoid;
+  const normalizedGeoid =
+    typeof rawGeoid === 'number' && Number.isNaN(rawGeoid) ? 0 : rawGeoid ?? 0;
+  const id = String(normalizedGeoid);
   const stepsByEpoch = new Map<number, TimeStepData>();
 
   dataSets.forEach((steps) => {
