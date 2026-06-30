@@ -16,7 +16,6 @@ import { findNearestGeoMagneticObservationStation, GeoMagneticStation, isAuroraB
 const isLocationValid = (
   location: ForecastLocation | ObservationLocation
 ): boolean =>
-  (location.geoid && Number.isInteger(location.geoid)) ||
   location.latlon !== undefined;
 
 export const getForecast = async (

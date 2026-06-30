@@ -5,6 +5,7 @@ import { getDistance } from 'geolib';
 import { Country, Location, SearchLocation } from '@assets/locations/types';
 
 const searchLocations = [] as SearchLocation[];
+let initializedLanguage: string | undefined;
 
 const normalizeText = (value: string) =>
   value
@@ -64,6 +65,8 @@ const getSearchScore = (
 };
 
 export const initSearchLocations = (language: string) => {
+  searchLocations.length = 0;
+
   (locations as Location[]).forEach((location) => {
     const searchLocation: SearchLocation = {
       ...location,
@@ -75,12 +78,14 @@ export const initSearchLocations = (language: string) => {
 
     searchLocations.push(searchLocation);
   });
+  initializedLanguage = language;
 };
 
 export const search = (query: string, language: string, maxResults = 20) => {
   const normalizedQuery = normalizeText(query);
+   if (normalizedQuery.length === 0) return [];
 
-  if (searchLocations.length === 0) {
+  if (searchLocations.length === 0 || initializedLanguage !== language) {
     initSearchLocations(language);
   }
 

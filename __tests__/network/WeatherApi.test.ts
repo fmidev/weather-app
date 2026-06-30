@@ -163,7 +163,7 @@ describe('WeatherApi', () => {
       .mockRejectedValueOnce(axiosError)
       .mockResolvedValueOnce({ data: [{ epochtime: 1, windSpeedMS: 4 }] });
 
-    await expect(getForecast({ geoid: 123 } as any, 'FI')).rejects.toThrow(
+    await expect(getForecast({ latlon: '60.1,24.9' } as any, 'FI')).rejects.toThrow(
       [
         'Message: Request failed',
         'Code: ERR_BAD_RESPONSE',
