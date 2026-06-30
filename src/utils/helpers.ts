@@ -38,7 +38,7 @@ const getPosition = (
       const { source, maxDistance } = Config.get('location');
 
       if (source === 'json') {
-        const location = findNearestLocation(latitude, longitude, maxDistance || 10);
+        const location = findNearestLocation(latitude, longitude, maxDistance ?? 10);
         const name = location?.name[i18n.language] || location?.name.primary || `${latitude}, ${longitude}`;
         const region = location?.region[i18n.language] || location?.region.primary || '';
 
