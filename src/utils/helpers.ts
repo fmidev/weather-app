@@ -23,7 +23,7 @@ import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
 import { trackMatomoEvent } from './matomo';
 import { findNearestLocation } from './geolocation';
-import i18n from 'i18next';
+import i18n from '@i18n';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -38,7 +38,7 @@ const getPosition = (
       const { source, maxDistance } = Config.get('location');
 
       if (source === 'json') {
-        const location = findNearestLocation(latitude, longitude, maxDistance || 10);
+        const location = findNearestLocation(latitude, longitude, maxDistance ?? 10);
         const name = location?.name[i18n.language] || location?.name.primary || `${latitude}, ${longitude}`;
         const region = location?.region[i18n.language] || location?.region.primary || '';
 
