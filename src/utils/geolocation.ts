@@ -82,8 +82,8 @@ export const initSearchLocations = (language: string) => {
 };
 
 export const search = (query: string, language: string, maxResults = 20) => {
-  const normalizedQuery = normalizeText(query);
-   if (normalizedQuery.length === 0) return [];
+  const normalizedQuery = normalizeText(query).trim();
+  if (normalizedQuery.length === 0) return [];
 
   if (searchLocations.length === 0 || initializedLanguage !== language) {
     initSearchLocations(language);
