@@ -1,4 +1,5 @@
 import { knownWarningTypes, severityList } from './constants';
+import type { Location } from '../location/types';
 
 export const FETCH_WARNINGS = 'FETCH_WARNINGS';
 export const FETCH_WARNINGS_SUCCESS = 'FETCH_WARNINGS_SUCCESS';
@@ -14,7 +15,7 @@ interface FetchWarnings {
 interface FetchWarningsSuccess {
   type: typeof FETCH_WARNINGS_SUCCESS;
   data: WarningsData;
-  id: number;
+  id: number | string;
   timestamp: number;
 }
 
@@ -93,9 +94,7 @@ export interface CapWarning {
   info: CapInfo | [CapInfo]
 }
 
-export interface LocationWarnings {
-  [id: number]: WarningsData;
-}
+export type LocationWarnings = Partial<Record<Location['id'], WarningsData>>;
 
 export interface WarningsData {
   warnings: Warning[];

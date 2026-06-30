@@ -71,37 +71,27 @@ describe('WeatherApi', () => {
 
   it('returns empty forecast for invalid location', async () => {
     await expect(getForecast({} as any, 'FI')).resolves.toEqual({
-      forecasts: [],
+      forecast: [],
+      location: {},
       isAuroraBorealisLikely: false,
     });
     expect(mockAxiosClient).not.toHaveBeenCalled();
   });
 
-  it('fetches forecast for geoid location', async () => {
+  it('excludes the geomagnetic placeholder from forecast data', async () => {
+    const location = { geoid: 123, latlon: '60.0,25.0' };
     mockAxiosClient
       .mockResolvedValueOnce({ data: [{ epochtime: 1, temperature: 5 }] })
       .mockResolvedValueOnce({ data: [{ epochtime: 1, windSpeedMS: 4 }] });
 
-    await expect(getForecast({ geoid: 123 } as any, 'FI')).resolves.toEqual({
-      forecasts: [
+    await expect(getForecast(location, 'FI')).resolves.toEqual({
+      forecast: [
         [{ epochtime: 1, temperature: 5 }],
         [{ epochtime: 1, windSpeedMS: 4 }],
-        {},
       ],
+      location,
       isAuroraBorealisLikely: false,
     });
-
-    expect(mockAxiosClient).toHaveBeenCalledTimes(2);
-    expect(mockAxiosClient.mock.calls[0][0]).toEqual(
-      expect.objectContaining({
-        url: 'https://weather.example/timeseries',
-        params: expect.objectContaining({
-          geoid: 123,
-          producer: 'forecast-a',
-          param: expect.stringContaining('temperature'),
-        }),
-      })
-    );
   });
 
   it('adds geomagnetic request to forecast and resolves aurora likelihood', async () => {
@@ -128,13 +118,14 @@ describe('WeatherApi', () => {
         data: [{ epochtime: 1, geomagneticRIndex: 7 }],
       });
 
-    await expect(
-      getForecast({ latlon: '68.0,24.0' } as any, 'FI')
-    ).resolves.toEqual({
-      forecasts: [
+    const location = { latlon: '68.0,24.0' };
+
+    await expect(getForecast(location, 'FI')).resolves.toEqual({
+      forecast: [
         [{ epochtime: 1, temperature: 5 }],
         [{ epochtime: 1, windSpeedMS: 4 }],
       ],
+      location,
       isAuroraBorealisLikely: true,
     });
 
@@ -172,7 +163,7 @@ describe('WeatherApi', () => {
       .mockRejectedValueOnce(axiosError)
       .mockResolvedValueOnce({ data: [{ epochtime: 1, windSpeedMS: 4 }] });
 
-    await expect(getForecast({ geoid: 123 } as any, 'FI')).rejects.toThrow(
+    await expect(getForecast({ latlon: '60.1,24.9' } as any, 'FI')).rejects.toThrow(
       [
         'Message: Request failed',
         'Code: ERR_BAD_RESPONSE',

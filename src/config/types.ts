@@ -299,6 +299,7 @@ export type AnalyticActions = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Search
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
   location: {
+    source: 'smartmet' | 'json';
     default: Location;
     apiUrl: string;
     keyword: string;

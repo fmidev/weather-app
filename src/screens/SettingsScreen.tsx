@@ -132,7 +132,11 @@ const SettingsScreen: React.FC<Props> = ({
   const onChangeLanguage = async (lang: string): Promise<void> => {
     i18n.changeLanguage(lang);
     // geoid = 0 is non location database location and without name
-    updateLocationsLocales(geoids.filter(id => id !== 0));
+    updateLocationsLocales(
+      geoids.filter(
+        (id): id is number => typeof id === 'number' && id !== 0
+      )
+    );
     initMatomo(); // re-init matomo to use correct siteId
     try {
       await setItem(LOCALE, lang);

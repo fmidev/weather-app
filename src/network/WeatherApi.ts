@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import { isAxiosError } from 'axios';
 
-import { ForecastLocation, WeatherData } from '@store/forecast/types';
+import { ForecastLocation, TimeStepDataSet } from '@store/forecast/types';
 import {
   ObservationLocation,
   ObservationDataRaw,
@@ -16,14 +16,13 @@ import { findNearestGeoMagneticObservationStation, GeoMagneticStation, isAuroraB
 const isLocationValid = (
   location: ForecastLocation | ObservationLocation
 ): boolean =>
-  (location.geoid && Number.isInteger(location.geoid)) ||
   location.latlon !== undefined;
 
 export const getForecast = async (
   location: ForecastLocation,
   country: string,
   retry: string | false = false // producer name or false if not a retry
-): Promise<{forecasts: WeatherData[], isAuroraBorealisLikely: boolean}> => {
+): Promise<{forecast: TimeStepDataSet, location: ForecastLocation, isAuroraBorealisLikely: boolean}> => {
   const { language } = i18n;
   const {
     apiUrl,
@@ -32,16 +31,13 @@ export const getForecast = async (
   } = Config.get('weather');
 
   if (!isLocationValid(location)) {
-    return {forecasts: [], isAuroraBorealisLikely: false};
+    return {forecast: [], location, isAuroraBorealisLikely: false};
   }
 
-  const locationParam = location.geoid ? { geoid: location.geoid } : { latlon: location.latlon };
-
   const params = {
-    ...locationParam,
+    latlon: location.latlon,
     endtime: timePeriod,
     format: 'json',
-    attributes: 'geoid',
     lang: language,
     tz: 'utc',
     who: `${packageJSON.name}-${Platform.OS}${retry ? '-retry' : ''}`,
@@ -49,10 +45,8 @@ export const getForecast = async (
 
   const metaParams = [
     [
-      'geoid',
       'epochtime',
       'localtime',
-      'name',
       'sunrise',
       'sunset',
       'sunriseToday',
@@ -62,7 +56,7 @@ export const getForecast = async (
       'modtime',
       'dark',
     ],
-    ['geoid', 'epochtime'],
+    ['epochtime'],
   ];
 
   const queries = dataSettings.flatMap(({ parameters, producer }, index) =>
@@ -121,7 +115,7 @@ export const getForecast = async (
   let error = '';
 
   const forecastData = results.flatMap((result, index) => {
-    if (index === lastIndex && geoMagneticObservationsEnabled) {
+    if (index === lastIndex) {
       return [];
     }
     if (result.status === 'fulfilled') {
@@ -149,18 +143,19 @@ export const getForecast = async (
   const geoMagneticResult = results[lastIndex];
   const geoMagneticObservationData = geoMagneticObservationsEnabled && geoMagneticResult.status === 'fulfilled' ? geoMagneticResult.value : null;
 
-  const forecasts = forecastData.map(({ data }) => data);
+  const forecast = forecastData.map(({ data }) => data);
 
   if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
     && geoMagneticObservationData !== null && geoMagneticObservationData.data.length > 0) {
     const { data } = geoMagneticObservationData;
     return {
-      forecasts,
+      location,
+      forecast,
       isAuroraBorealisLikely: isAuroraBorealisLikely(data[data.length - 1].geomagneticRIndex, nearestGeoMagneticStation),
     };
   }
 
-  return { forecasts, isAuroraBorealisLikely: false };
+  return { forecast, location, isAuroraBorealisLikely: false };
 };
 
 export const getObservation = async (
@@ -196,10 +191,8 @@ export const getObservation = async (
     observationProducer as string
   );
 
-  const locationParam = location.geoid ? { geoid: location.geoid } : { latlon: location.latlon };
-
   const hourlyParams = {
-    ...locationParam,
+    latlon: location.latlon,
     numberofstations: numberOfStations,
     starttime: `-${timePeriod}h`,
     endtime: '0',

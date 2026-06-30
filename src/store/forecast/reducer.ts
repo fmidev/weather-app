@@ -11,6 +11,9 @@ import {
   UPDATE_FORECAST_DISPLAY_FORMAT,
   UPDATE_FORECAST_CHART_PARAMETER,
   DisplayParameters,
+  TimeStepData,
+  ForecastLocation,
+  TimeStepDataSet,
 } from './types';
 
 import constants from './constants';
@@ -27,38 +30,30 @@ const INITIAL_STATE: ForecastState = {
   fetchSuccessTime: 0,
 };
 
-const formatData = (dataSets: WeatherData[]): WeatherData => {
+const formatData = (dataSets: TimeStepDataSet, location: ForecastLocation): WeatherData => {
   const weatherData: WeatherData = {};
-  dataSets.forEach((dataSet) => {
-    Object.entries(dataSet).forEach(([id, steps]) => {
-      if (!weatherData[id]) {
-        Object.assign(weatherData, { [id]: steps });
-      } else {
-        steps.forEach((step) => {
-          const timeIndex = weatherData[id].findIndex(
-            ({ epochtime }) => epochtime === step.epochtime
-          );
-          if (timeIndex >= 0) {
-            Object.assign(weatherData[id][timeIndex], {
-              ...weatherData[id][timeIndex],
-              ...step,
-            });
-          } else {
-            weatherData[id].push(step);
-          }
-        });
-      }
+  const rawGeoid = location.geoid;
+  const normalizedGeoid =
+    typeof rawGeoid === 'number' && Number.isNaN(rawGeoid) ? 0 : rawGeoid ?? 0;
+  const id = String(normalizedGeoid);
+  const stepsByEpoch = new Map<number, TimeStepData>();
+
+  dataSets.forEach((steps) => {
+    steps.forEach((step) => {
+      const existingStep = stepsByEpoch.get(step.epochtime);
+      stepsByEpoch.set(
+        step.epochtime,
+        existingStep ? { ...existingStep, ...step } : { ...step }
+      );
     });
   });
+
+  if (stepsByEpoch.size > 0) {
+    weatherData[id] = Array.from(stepsByEpoch.values());
+  }
+
   return weatherData;
 };
-
-const fixLocationsWithoutGeoId = (data: WeatherData): WeatherData =>
-  Object.keys(data).reduce((result, key) => {
-    const normalizedKey = key === 'nan' ? '0' : key;
-    result[normalizedKey] = data[key];
-    return result;
-  }, {} as WeatherData);
 
 export default (
   // eslint-disable-next-line @typescript-eslint/default-param-last
@@ -75,14 +70,13 @@ export default (
     }
 
     case FETCH_FORECAST_SUCCESS: {
-      const geoid =
-        action.data?.forecasts?.[0] && Object.keys(action.data.forecasts[0]).length > 0
-          ? Object.keys(action.data.forecasts[0])[0] : 0;
+      const geoid = action.data.location.geoid ?? 0;
       return {
         ...state,
-        data: fixLocationsWithoutGeoId(
-          { ...state.data, ...formatData(action.data.forecasts) },
-        ),
+        data: {
+          ...state.data,
+          ...formatData(action.data.forecast, action.data.location),
+        },
         auroraBorealisData: {
           ...state.auroraBorealisData,
           [geoid]: action.data.isAuroraBorealisLikely

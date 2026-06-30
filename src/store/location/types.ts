@@ -21,7 +21,7 @@ export type Location = {
   area: string;
   lat: number;
   lon: number;
-  id: number;
+  id: number | string;
   timezone: string;
   country: string;
   isGeolocation?: boolean;
@@ -61,7 +61,7 @@ interface AddFavorite {
 
 interface DeleteFavorite {
   type: typeof DELETE_FAVORITE;
-  id: number;
+  id: number | string;
 }
 
 interface DeleteAllFavorites {

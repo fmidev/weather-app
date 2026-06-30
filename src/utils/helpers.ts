@@ -22,6 +22,8 @@ import { Rain } from '../assets/colors';
 import { converter, toPrecision, UNITS } from './units';
 import { UnitMap } from '@store/settings/types';
 import { trackMatomoEvent } from './matomo';
+import { findNearestLocation } from './geolocation';
+import i18n from '@i18n';
 
 const getPosition = (
   callback: (arg0: Location, arg1: boolean) => void,
@@ -33,32 +35,59 @@ const getPosition = (
       latitude = roundCoordinates(latitude);
       longitude = roundCoordinates(longitude);
 
-      getCurrentPosition(latitude, longitude)
-        .then((json) => {
-          const geoid = Number(Object.keys(json)[0]);
-          const item = Object.values(json)[0][0];
-          const { name, localtz, iso2, country, region } = item;
+      const { source, maxDistance } = Config.get('location');
 
-          AccessibilityInfo.announceForAccessibility(
-            geoid
-              ? `${t('navigation:locatedTo')} ${name}, ${region}`
-              : `${t('navigation:locatedTo')} ${name}`
-          );
+      if (source === 'json') {
+        const location = findNearestLocation(latitude, longitude, maxDistance ?? 10);
+        const name = location?.name[i18n.language] || location?.name.primary || `${latitude}, ${longitude}`;
+        const region = location?.region[i18n.language] || location?.region.primary || '';
 
-          callback(
-            {
-              lat: latitude,
-              lon: longitude,
-              name,
-              area: iso2 === 'FI' && country === region ? '' : region,
-              id: geoid,
-              timezone: localtz,
-              country: iso2,
-            },
-            true
-          );
-        })
-        .catch((e) => console.error(e));
+        AccessibilityInfo.announceForAccessibility(
+          region
+            ? `${t('navigation:locatedTo')} ${name}, ${region}`
+            : `${t('navigation:locatedTo')} ${name}`
+        );
+
+        callback(
+          {
+            id: location?.id || 0,
+            lat: latitude,
+            lon: longitude,
+            name,
+            area: region,
+            timezone: location?.timezone || '',
+            country: location?.country || '',
+          },
+          true
+        );
+      } else {
+        getCurrentPosition(latitude, longitude)
+          .then((json) => {
+            const geoid = Number(Object.keys(json)[0]);
+            const item = Object.values(json)[0][0];
+            const { name, localtz, iso2, country, region } = item;
+
+            AccessibilityInfo.announceForAccessibility(
+              geoid
+                ? `${t('navigation:locatedTo')} ${name}, ${region}`
+                : `${t('navigation:locatedTo')} ${name}`
+            );
+
+            callback(
+              {
+                lat: latitude,
+                lon: longitude,
+                name,
+                area: iso2 === 'FI' && country === region ? '' : region,
+                id: geoid,
+                timezone: localtz,
+                country: iso2,
+              },
+              true
+            );
+          })
+          .catch((e) => console.error(e));
+      }
     },
     (error) => {
       console.log('GEOLOCATION NOT AVAILABLE', error);

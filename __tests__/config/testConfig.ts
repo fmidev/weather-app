@@ -7,6 +7,7 @@ const defaultConfig: ConfigType = {
     interval: 1,
   },
   location: {
+    source: 'smartmet',
     default: {
       name: 'Helsinki',
       area: 'Suomi',

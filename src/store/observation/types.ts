@@ -92,7 +92,7 @@ export interface TimeStepData
 }
 
 export interface ObservationLocation {
-  geoid?: number;
+  geoid?: number | string;
   latlon?: string;
 }
 

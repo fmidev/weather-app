@@ -1,8 +1,11 @@
 import axios from 'axios';
+import i18n from '@i18n';
+
 import getAutocomplete from '@network/AutocompleteApi';
 import { Dispatch } from 'react';
 import { Config } from '@config';
 import { getLocationsLocales } from '@network/WeatherApi';
+import { search } from '@utils/geolocation';
 import {
   SET_CURRENT_LOCATION,
   Location,
@@ -31,7 +34,7 @@ export const addFavorite =
   };
 
 export const deleteFavorite =
-  (id: number) => (dispatch: Dispatch<LocationActionTypes>) => {
+  (id: number | string) => (dispatch: Dispatch<LocationActionTypes>) => {
     dispatch({ type: DELETE_FAVORITE, id });
   };
 
@@ -42,18 +45,42 @@ export const deleteAllFavorites =
 
 export const searchLocation =
   (pattern: string) => (dispatch: Dispatch<LocationActionTypes>) => {
-    getAutocomplete(pattern)
-      .then((data) => {
-        dispatch({
-          type: FETCH_AUTOCOMPLETE,
-          data,
-        });
-      })
-      .catch((error) => {
-        if (!axios.isCancel(error)) {
-          dispatch({ type: RESET_AUTOCOMPLETE });
-        }
+    const { source } = Config.get('location');
+    const { language } = i18n;
+
+    if (source === 'json') {
+      const results = search(pattern, language, 20);
+      dispatch({
+        type: FETCH_AUTOCOMPLETE,
+        data: {
+          autocomplete: {
+            'found-results': results.length,
+            'max-results': 20,
+            result: results.map((location) => ({
+              id: location.id,
+              name: location.name[language] || location.name.primary,
+              area: location.region[language] || location.region.primary,
+              country: location.country,
+              lat: location.latitude,
+              lon: location.longitude,
+              timezone: location.timezone,
+          })),
+        }}
       });
+    } else {
+      getAutocomplete(pattern)
+        .then((data) => {
+          dispatch({
+            type: FETCH_AUTOCOMPLETE,
+            data,
+          });
+        })
+        .catch((error) => {
+          if (!axios.isCancel(error)) {
+            dispatch({ type: RESET_AUTOCOMPLETE });
+          }
+        });
+    }
   };
 
 export const resetSearch = () => (dispatch: Dispatch<LocationActionTypes>) => {
