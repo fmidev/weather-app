@@ -24,7 +24,8 @@ interface FetchForecast {
 interface FetchForecastSuccess {
   type: typeof FETCH_FORECAST_SUCCESS;
   data: {
-    forecasts: WeatherData[],
+    location: ForecastLocation,
+    forecast: TimeStepDataSet,
     isAuroraBorealisLikely: boolean
   };
   timestamp: number;
@@ -99,13 +100,15 @@ export interface TimeStepData extends Partial<ForecastParameters> {
   [key: string]: string | number | undefined;
 }
 export interface ForecastLocation {
-  geoid?: number;
+  geoid?: number | string;
   latlon?: string;
 }
 
 export interface WeatherData {
   [geoid: string | number]: TimeStepData[];
 }
+
+export type TimeStepDataSet = TimeStepData[][];
 
 export interface AuroraBorealisData {
   [geoid: string | number]: boolean; // Is Aurora borealis likely

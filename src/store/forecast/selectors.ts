@@ -41,10 +41,10 @@ export const selectForecast = createSelector(
   (items, geoid) => {
     const { maxAge } = Config.get('weather').forecast;
     const forecastMaxAge = maxAge || FORECAST_MAX_AGE;
-
     const now = new Date();
+
     if (items) {
-      const locationItems = items[!isNaN(geoid) ? geoid : 0];
+      const locationItems = items[typeof geoid === 'number' && Number.isNaN(geoid) ? 0 : geoid];
 
       if (!locationItems?.[0]?.modtime) return [];
 

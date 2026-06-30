@@ -6,7 +6,6 @@ import * as constants from '@store/forecast/constants';
 
 const mockConfigGet = jest.fn();
 const mockGetForecast = jest.fn();
-const mockTrackMatomoEvent = jest.fn();
 
 jest.mock('@config', () => ({
   Config: {
@@ -16,10 +15,6 @@ jest.mock('@config', () => ({
 
 jest.mock('@network/WeatherApi', () => ({
   getForecast: (...args: any[]) => mockGetForecast(...args),
-}));
-
-jest.mock('@utils/matomo', () => ({
-  trackMatomoEvent: (...args: any[]) => mockTrackMatomoEvent(...args),
 }));
 
 const defaultParameters = [
@@ -44,6 +39,7 @@ const defaultState: types.ForecastState = {
 describe('forecast reducer', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockGetForecast.mockReset();
     jest.useRealTimers();
     mockConfigGet.mockReturnValue({
       forecast: {
@@ -84,18 +80,13 @@ describe('forecast reducer', () => {
         {
           type: types.FETCH_FORECAST_SUCCESS,
           data: {
-            forecasts: [
-              {
-                99: [
-                  createStep({ epochtime: 10, smartSymbol: 1 }),
-                  createStep({ epochtime: 20, temperature: 2 }),
-                ],
-              },
-              {
-                99: [
-                  createStep({ epochtime: 10, precipitation1h: 0.2 }),
-                ],
-              },
+            location: { geoid: 99 },
+            forecast: [
+              [
+                createStep({ epochtime: 10, smartSymbol: 1 }),
+                createStep({ epochtime: 20, temperature: 2 }),
+              ],
+              [createStep({ epochtime: 10, precipitation1h: 0.2 })],
             ],
             isAuroraBorealisLikely: true,
           },
@@ -123,16 +114,13 @@ describe('forecast reducer', () => {
     ]);
   });
 
-  it('should normalize nan geoid to zero on FETCH_FORECAST_SUCCESS', () => {
+  it('should use zero as the fallback geoid on FETCH_FORECAST_SUCCESS', () => {
     expect(
       reducer(undefined, {
         type: types.FETCH_FORECAST_SUCCESS,
         data: {
-          forecasts: [
-            {
-              nan: [createStep({ epochtime: 10, temperature: 3 })],
-            },
-          ],
+          location: {},
+          forecast: [[createStep({ epochtime: 10, temperature: 3 })]],
           isAuroraBorealisLikely: false,
         },
         timestamp: 123,
@@ -338,59 +326,24 @@ describe('forecast reducer', () => {
     ]);
   });
 
-  it('dispatches forecast actions including stale modtime retry', async () => {
-    jest.useFakeTimers().setSystemTime(new Date('2023-11-14T22:13:20Z'));
+  it('dispatches forecast success actions', async () => {
     const dispatch = jest.fn();
     const location = { geoid: 99 };
-    mockGetForecast
-      .mockResolvedValueOnce({
-        forecasts: [
-          {
-            99: [
-              createStep({
-                modtime: '2023-11-12T00:00:00',
-                temperature: 1,
-              }),
-            ],
-          },
-          {},
-        ],
-        isAuroraBorealisLikely: false,
-      })
-      .mockResolvedValueOnce({
-        forecasts: [
-          {
-            99: [
-              createStep({
-                modtime: '2023-11-14T21:00:00',
-                temperature: 3,
-              }),
-            ],
-          },
-        ],
-        isAuroraBorealisLikely: false,
-      });
+    const data = {
+      location,
+      forecast: [[createStep({ temperature: 3 })]],
+      isAuroraBorealisLikely: false,
+    };
+    mockGetForecast.mockResolvedValueOnce(data);
 
     await actions.fetchForecast(location, 'FI')(dispatch);
 
     expect(dispatch).toHaveBeenCalledWith({ type: types.FETCH_FORECAST });
-    expect(mockGetForecast).toHaveBeenNthCalledWith(1, location, 'FI');
-    expect(mockGetForecast).toHaveBeenNthCalledWith(2, location, 'FI', 'harmonie');
-    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
-      'Error',
-      'Weather',
-      expect.stringContaining('Old modtime')
-    );
+    expect(mockGetForecast).toHaveBeenCalledTimes(1);
+    expect(mockGetForecast).toHaveBeenCalledWith(location, 'FI');
     expect(dispatch).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        data: {
-          forecasts: [
-            {
-              99: [expect.objectContaining({ temperature: 3 })],
-            },
-          ],
-          isAuroraBorealisLikely: false,
-        },
+        data,
         type: types.FETCH_FORECAST_SUCCESS,
       })
     );

@@ -80,7 +80,7 @@ export default (
       const { location } = action;
       delete location.isGeolocation;
 
-      if (isNaN(location.id)) {
+      if (typeof location.id === 'number' && Number.isNaN(location.id)) {
         location.name = `${roundCoordinates(location.lat)}, ${roundCoordinates(
           location.lon
         )}`;

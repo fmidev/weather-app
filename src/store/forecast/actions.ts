@@ -1,10 +1,7 @@
 import { Dispatch } from 'redux';
-import moment from 'moment';
 import { getForecast } from '@network/WeatherApi';
 import { ChartType } from '@components/weather/charts/types';
 import { Config } from '@config';
-import { trackMatomoEvent } from '@utils/matomo';
-import packageJSON from '../../../package.json';
 
 import {
   Error,
@@ -18,7 +15,6 @@ import {
   UPDATE_FORECAST_DISPLAY_FORMAT,
   UPDATE_FORECAST_CHART_PARAMETER,
   DisplayParameters,
-  WeatherData,
 } from './types';
 
 export const fetchForecast =
@@ -26,34 +22,8 @@ export const fetchForecast =
   async (dispatch: Dispatch<ForecastActionTypes>) => {
     dispatch({ type: FETCH_FORECAST });
 
-    const { forecast: { data: dataSettings, maxAge } } = Config.get('weather');
-    const forecastMaxAge = maxAge || 24;
-
     try {
       const data = await getForecast(location, country);
-      let fixedForecasts = [] as WeatherData[];
-
-      // Checks modtime and retry data fetch if data is older than 24 hours
-
-      for (const [index, forecast] of data.forecasts.filter(
-        item => Object.entries(item).length > 0 // filter out empty forecasts
-      ).entries()) {
-        const id = Object.keys(forecast)[0];
-        const modtime = forecast[id][0].modtime;
-        const modtimeMoment = modtime ? moment(modtime+'Z') : undefined;
-
-        if (modtimeMoment && moment().diff(modtimeMoment, 'hours') >= forecastMaxAge) {
-          const producer = dataSettings[index].producer;
-          trackMatomoEvent('Error', 'Weather', `Old modtime ${modtime} with producer ${producer} for geoid ${id}`);
-          trackMatomoEvent('Error', 'Weather', `Old modtime - version ${packageJSON.version}`);
-          const retryData = await getForecast(location, country, producer);
-          fixedForecasts.push(retryData.forecasts[0]);
-        } else {
-          fixedForecasts.push(forecast);
-        }
-      }
-
-      data.forecasts = fixedForecasts;
 
       dispatch({
         type: FETCH_FORECAST_SUCCESS,
