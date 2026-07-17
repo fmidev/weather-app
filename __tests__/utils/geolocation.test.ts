@@ -103,6 +103,39 @@ const locations = [
     population: 978770,
     timezone: 'Europe/Stockholm',
   },
+  {
+    id: 'kyiv',
+    name: {
+      primary: 'Kyiv',
+      uk: 'Київ',
+    },
+    longitude: 30.5234,
+    latitude: 50.4501,
+    region: {
+      primary: 'Kyiv',
+      uk: 'Київ',
+    },
+    country: 'UA',
+    population: 2952301,
+    timezone: 'Europe/Kyiv',
+  },
+  {
+    id: 'kamianets-podilskyi',
+    name: {
+      primary: 'Kamianets-Podilskyi',
+      uk: 'Кам’янець-Подільський',
+    },
+    longitude: 26.5852,
+    latitude: 48.679,
+    region: {
+      primary: 'Khmelnytskyi Oblast',
+      fi: 'Hmelnytskyin alue',
+      uk: 'Хмельницька область',
+    },
+    country: 'UA',
+    population: 96896,
+    timezone: 'Europe/Kyiv',
+  },
 ];
 
 jest.mock('@assets/locations/locations.json', () => locations);
@@ -124,6 +157,14 @@ jest.mock('@assets/locations/countries.json', () => [
       sv: 'Sverige',
     },
     country: 'SE',
+  },
+  {
+    id: 'ukraine',
+    name: {
+      primary: 'Ukraine',
+      uk: 'Україна',
+    },
+    country: 'UA',
   },
 ]);
 
@@ -161,6 +202,24 @@ describe('geolocation search', () => {
     const results = search('tuk', 'fi');
 
     expect(results[0].id).toBe('stockholm');
+  });
+
+  it('finds locations using Cyrillic names', () => {
+    const { search } = require('../../src/utils/geolocation');
+
+    const results = search('київ', 'uk');
+
+    expect(results.map(({ id }: { id: string }) => id)).toEqual(['kyiv']);
+  });
+
+  it('normalizes apostrophe variants in Cyrillic location names', () => {
+    const { search } = require('../../src/utils/geolocation');
+
+    const results = search("кам'янець", 'uk');
+
+    expect(results.map(({ id }: { id: string }) => id)).toEqual([
+      'kamianets-podilskyi',
+    ]);
   });
 
   it('limits returned results after sorting', () => {
