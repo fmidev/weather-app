@@ -130,7 +130,7 @@ const SettingsScreen: React.FC<Props> = ({
   };
 
   const onChangeLanguage = async (lang: string): Promise<void> => {
-    i18n.changeLanguage(lang);
+    await i18n.changeLanguage(lang);
     // geoid = 0 is non location database location and without name
     updateLocationsLocales(
       geoids.filter(

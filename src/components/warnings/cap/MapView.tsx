@@ -8,6 +8,7 @@ import { Config } from '@config';
 import { useTheme } from '@react-navigation/native';
 import { CapWarning, Severity } from '@store/warnings/types';
 import {
+  BLACK,
   CAP_WARNING_ORANGE,
   CAP_WARNING_RED,
   CAP_WARNING_YELLOW,
@@ -217,7 +218,7 @@ const MapView: React.FC<MapViewProps> = ({
             key={severity}
             geojson={geojsonCollections[severity]}
             fillColor={SEVERITY_COLORS[severity]}
-            strokeColor={colors.primaryText}
+            strokeColor={BLACK}
             strokeWidth={1}
             zIndex={index}
           />
