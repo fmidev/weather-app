@@ -48,6 +48,8 @@ const WarningItem: React.FC<WarningItemProps> = ({
   const info = Array.isArray(warning.info)
     ? selectCapInfoByLanguage(warning.info, i18n.language)
     : warning.info;
+  const infoEn = Array.isArray(warning.info) ? selectCapInfoByLanguage(warning.info, 'en'): warning.info;
+
   const areaDesc = info.area.areaDesc
     .charAt(0)
     .toUpperCase()
@@ -87,8 +89,8 @@ const WarningItem: React.FC<WarningItemProps> = ({
           },
         ]}>
         <WarningSymbol
-          type={info.event as WarningType}
-          severity={info.severity}
+          type={infoEn.event as WarningType}
+          severity={infoEn.severity}
           size={32}
         />
         <View style={[styles.headingMainContent, { width: width - 136 }]}>
