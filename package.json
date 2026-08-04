@@ -130,6 +130,9 @@
     "setupFiles": [
       "<rootDir>/jest.setup.js"
     ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/)+defaultConfig$": "<rootDir>/defaultConfig_unit_tests.ts"
+    },
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/e2e/"

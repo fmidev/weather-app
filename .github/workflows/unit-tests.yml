@@ -30,13 +30,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Get defaultConfig
-        env:
-          defaultConfig: ${{ secrets.DEFAULTCONFIG }}
-        shell: bash
-        run: |
-          touch defaultConfig.ts
-          echo "$defaultConfig" >> defaultConfig.ts
-
       - name: Run Jest tests
         run: yarn test --watchman=false
