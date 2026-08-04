@@ -24,6 +24,11 @@ updates:
         update-types:
           - "version-update:semver-major"
           - "version-update:semver-minor"
+      # Keep React Native presets and configs on the same minor as React Native.
+      - dependency-name: "@react-native/*"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
       - dependency-name: "react"
         update-types:
           - "version-update:semver-major"
