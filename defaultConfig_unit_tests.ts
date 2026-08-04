@@ -2,9 +2,7 @@ import type { ConfigType } from '@config';
 
 const defaultConfig: ConfigType = {
   dynamicConfig: {
-    enabled: true,
-    apiUrl: '',
-    interval: 1,
+    enabled: false,
   },
   location: {
     source: 'smartmet',
