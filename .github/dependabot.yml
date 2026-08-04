@@ -33,11 +33,13 @@ updates:
         update-types:
           - "version-update:semver-major"
           - "version-update:semver-minor"
+          - "version-update:semver-patch"
       - dependency-name: "react-test-renderer"
         update-types:
           - "version-update:semver-major"
           - "version-update:semver-minor"
-      # React Native 0.85.1 Jest preset depends on the Jest 29 environment.
+          - "version-update:semver-patch"
+      # React Native 0.85.x Jest preset depends on the Jest 29 environment.
       - dependency-name: "jest"
         update-types:
           - "version-update:semver-major"
