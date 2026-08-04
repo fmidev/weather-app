@@ -14,7 +14,6 @@ updates:
     versioning-strategy: "increase"
     labels:
       - "dependencies"
-      - "javascript"
     groups:
       npm-minor-and-patch:
         update-types:
