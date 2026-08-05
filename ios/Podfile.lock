@@ -1459,9 +1459,9 @@ PODS:
     - Yoga
   - react-native-launch-arguments (4.1.1):
     - React
-  - react-native-maps (1.27.2):
-    - react-native-maps/Maps (= 1.27.2)
-  - react-native-maps/Generated (1.27.2):
+  - react-native-maps (1.29.0):
+    - react-native-maps/Maps (= 1.29.0)
+  - react-native-maps/Generated (1.29.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1483,7 +1483,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-maps/Maps (1.27.2):
+  - react-native-maps/Maps (1.29.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2789,7 +2789,7 @@ SPEC CHECKSUMS:
   react-native-config: 136f9755ccc991cc6438053a44363259ad4c7813
   react-native-geolocation: c41d1ad8e832fa800b4e457c721e348bcc5aa147
   react-native-launch-arguments: eab68037b01ea7c78a0b3b55da3a5e967e9aaf92
-  react-native-maps: cb32168a32e30f83beb08198325ff96b70dd5c9f
+  react-native-maps: 7e3af023b773d6670e3c07e9c8170af842b243e0
   react-native-mmkv: d1b6ffd420a8d43f12c1af836bafff833cf251cf
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 6b4966397ada0f7dd481e4486a2ef936834861a1
