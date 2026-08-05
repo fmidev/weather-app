@@ -58,4 +58,5 @@ export interface SettingsState {
   units: UnitMap | undefined;
   theme?: Theme;
   mapLibrary: MapLibrary;
+  sessionId: number; // smartmet-session-id for wms-layer requests
 }

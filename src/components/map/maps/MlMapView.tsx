@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text } from 'react-native';
-import { Camera, Map, ViewAnnotation, type MapRef, type CameraRef, InitialViewState } from '@maplibre/maplibre-react-native';
+import {
+  Camera,
+  Map,
+  TransformRequestManager,
+  ViewAnnotation,
+  type MapRef,
+  type CameraRef,
+  InitialViewState,
+} from '@maplibre/maplibre-react-native';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { getDistance } from 'geolib';
@@ -12,6 +20,7 @@ import MapControls from '@components/map/ui/MapControls';
 
 import { State } from '@store/types';
 import { selectCurrent, selectTimeZone } from '@store/location/selector';
+import { selectSessionId } from '@store/settings/selectors';
 import {
   selectActiveOverlay,
   selectDisplayLocation,
@@ -47,6 +56,8 @@ const ANIMATE_ZOOM = {
 const MIN_ZOOM_LEVEL = 4;
 const MAX_ZOOM_LEVEL = 10;
 const DEFAULT_ZOOM_LEVEL = 8;
+const SESSION_COOKIE_HEADER_ID = 'smartmet-session-cookie';
+const WMS_GET_MAP_REQUEST_PATTERN = '(?i)(?:[?&])request=GetMap(?:&|$)';
 
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
@@ -54,6 +65,7 @@ const mapStateToProps = (state: State) => ({
   overlay: selectOverlay(state),
   activeOverlay: selectActiveOverlay(state),
   timezone: selectTimeZone(state),
+  sessionId: selectSessionId(state),
 });
 
 const mapDispatchToProps = {
@@ -79,6 +91,7 @@ const MlMapView: React.FC<MapViewProps> = ({
   activeOverlay,
   updateOverlays,
   timezone,
+  sessionId,
   infoSheetRef,
   mapLayersSheetRef,
 }) => {
@@ -98,6 +111,17 @@ const MlMapView: React.FC<MapViewProps> = ({
 
   const location = currentLocation ?? Config.get('location').default;
   const { baseMap } = Config.get('map');
+
+  useEffect(() => {
+    TransformRequestManager.addHeader({
+      id: SESSION_COOKIE_HEADER_ID,
+      match: WMS_GET_MAP_REQUEST_PATTERN,
+      name: 'Cookie',
+      value: `smartmet-session-id=${sessionId}`,
+    });
+
+    return () => TransformRequestManager.removeHeader(SESSION_COOKIE_HEADER_ID);
+  }, [sessionId]);
 
   const initialRegion = useMemo(() => ({
     latitude: location.lat ?? INITIAL_REGION.latitude,
