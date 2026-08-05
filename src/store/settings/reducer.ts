@@ -9,11 +9,17 @@ import {
   UPDATE_MAP_LIBRARY,
 } from './types';
 
+const SESSION_ID_MAX = 10_000_000;
+
+export const generateSessionId = () =>
+  Math.floor(Math.random() * SESSION_ID_MAX) + 1;
+
 const INITIAL_STATE: SettingsState = {
   units: getDefaultUnits(),
   theme: undefined,
   clockType: undefined,
   mapLibrary: 'react-native-maps',
+  sessionId: generateSessionId(),
 };
 
 export default (
