@@ -5,10 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { isPointInPolygon } from 'geolib';
 import moment from 'moment-timezone';
 import { connect, ConnectedProps } from 'react-redux';
-import { MotiView } from 'moti';
-import { Skeleton } from 'moti/skeleton';
 
 import Text from '@components/common/AppText';
+import Skeleton from '@components/common/Skeleton';
 import Icon from '@components/common/ScalableIcon'
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { Config } from '@config';
@@ -115,11 +114,10 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
   legendSheetRef,
 }) => {
   const { default: defaultLocation } = Config.get('location');
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('warnings');
   const capViewSettings = Config.get('warnings')?.capViewSettings;
   const [selectedDay, setSelectedDay] = useState(0);
-  const colorMode = dark ? 'dark' : 'light';
 
   const locale = i18n.language;
   moment.locale(locale);
@@ -194,17 +192,17 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
 
   if (loading) {
     return (
-      <MotiView style={{backgroundColor: colors.background}}>
+      <View style={{backgroundColor: colors.background}}>
         <View style={styles.loading}>
-          <Skeleton colorMode={colorMode} width={'100%'} height={40} radius={10} />
+          <Skeleton width="100%" height={40} radius={10} />
         </View>
         <View style={styles.loading}>
-          <Skeleton colorMode={colorMode} width={'100%'} height={65} radius={10} />
+          <Skeleton width="100%" height={65} radius={10} />
         </View>
         <View style={[styles.loading, styles.loadingLast]}>
-          <Skeleton colorMode={colorMode} width={'100%'} height={40} radius={10} />
+          <Skeleton width="100%" height={40} radius={10} />
         </View>
-      </MotiView>
+      </View>
     );
   }
 

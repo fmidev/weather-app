@@ -1,11 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
-import { Text } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
-import { MotiView, View } from 'moti';
-import { Skeleton } from 'moti/skeleton';
 import Markdown from 'react-native-marked';
 
 import { State } from '@store/types';
@@ -14,6 +11,7 @@ import { getLayerDocumentation } from '@network/MarkdownApi';
 import { useTranslation } from 'react-i18next';
 import { Config } from '@config';
 import { MarkdownRenderer } from '@components/markdown/MarkdownRenderer';
+import Skeleton from '@components/common/Skeleton';
 import type { WMSSource } from '@config';
 import type { CustomTheme } from '@assets/colors';
 
@@ -35,8 +33,7 @@ const MarkdownLayerInfo: React.FC<MarkdownLayerInfoProps> = ({activeOverlay}) =>
   const [loading, setLoading] = useState(true);
   const [markdown, setMarkdown] = useState('');
 
-  const { dark, colors } = useTheme() as CustomTheme;
-  const colorMode = dark ? 'dark' : 'light';
+  const { colors } = useTheme() as CustomTheme;
 
   renderer.setHeadingColor(colors.text);
   renderer.setTextColor(colors.primaryText);
@@ -68,16 +65,16 @@ const MarkdownLayerInfo: React.FC<MarkdownLayerInfoProps> = ({activeOverlay}) =>
 
   if (loading) {
     return (
-      <MotiView style={styles.moti}>
+      <View style={styles.skeletonContainer}>
         {[...Array(3)].map((_, i) => (
           <Fragment key={i}>
-            <Skeleton colorMode={colorMode} width={'100%'} height={20} radius={10} />
-            <View style={styles.motiSpacer} />
-            <Skeleton colorMode={colorMode} width={'100%'} height={160} radius={10} />
-            <View style={styles.motiSpacer} />
+            <Skeleton width="100%" height={20} radius={10} />
+            <View style={styles.skeletonSpacer} />
+            <Skeleton width="100%" height={160} radius={10} />
+            <View style={styles.skeletonSpacer} />
           </Fragment>
         ))}
-      </MotiView>
+      </View>
     );
   }
 
@@ -103,10 +100,10 @@ const MarkdownLayerInfo: React.FC<MarkdownLayerInfoProps> = ({activeOverlay}) =>
 export default connector(MarkdownLayerInfo);
 
 const styles = StyleSheet.create({
-  moti: {
+  skeletonContainer: {
     margin: 8,
   },
-  motiSpacer: {
+  skeletonSpacer: {
     height: 8,
   },
   container: {

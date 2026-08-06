@@ -1,10 +1,9 @@
 import React from 'react';
 import Icon from '@assets/Icon';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import { Config } from '@config';
 import Text from '@components/common/AppText';

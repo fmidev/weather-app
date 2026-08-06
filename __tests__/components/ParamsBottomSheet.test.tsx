@@ -28,6 +28,10 @@ jest.mock('@store/forecast/actions', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
+  SafeAreaView: ({ children, ...props }: any) => {
+    const { View } = require('react-native');
+    return <View {...props}>{children}</View>;
+  },
   useSafeAreaInsets: () => ({
     left: 5,
     right: 7,

@@ -57,19 +57,13 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-jest.mock('moti', () => ({
-  MotiView: ({ children }: any) => {
-    const { View } = require('react-native');
-    return <View testID="moti-view">{children}</View>;
-  },
-}));
-
-jest.mock('moti/skeleton', () => ({
-  Skeleton: () => {
+jest.mock('@components/common/Skeleton', () => ({
+  __esModule: true,
+  default: () => {
     const { Text: MockText } = require('react-native');
     return <MockText testID="news-skeleton">loading</MockText>;
   },
-}), { virtual: true });
+}));
 
 jest.mock('@components/common/PanelHeader', () => ({
   __esModule: true,
@@ -162,7 +156,6 @@ describe('News', () => {
       </Provider>
     );
 
-    expect(getByTestId('moti-view')).toBeTruthy();
     expect(getByTestId('news-panel-header')).toBeTruthy();
     expect(getAllByTestId('news-skeleton')).toHaveLength(3);
   });

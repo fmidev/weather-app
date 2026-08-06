@@ -49,16 +49,13 @@ jest.mock('@utils/helpers', () => ({
   selectCapInfoByLanguage: (info: any) => info[0],
 }));
 
-jest.mock('moti', () => ({
-  MotiView: ({ children }: any) => children,
-}));
-
-jest.mock('moti/skeleton', () => ({
-  Skeleton: () => {
+jest.mock('@components/common/Skeleton', () => ({
+  __esModule: true,
+  default: () => {
     const { Text } = require('react-native');
     return <Text testID="skeleton">loading</Text>;
   },
-}), { virtual: true });
+}));
 
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({
