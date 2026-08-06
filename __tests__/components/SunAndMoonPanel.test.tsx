@@ -60,22 +60,15 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-jest.mock('moti', () => ({
-  MotiView: ({ children }: any) => {
-    const { View } = require('react-native');
-    return <View testID="moti-view">{children}</View>;
-  },
-}));
-
 jest.mock(
-  'moti/skeleton',
+  '@components/common/Skeleton',
   () => ({
-    Skeleton: (props: any) => {
+    __esModule: true,
+    default: (props: any) => {
       const { Text } = require('react-native');
       return <Text testID="skeleton">{JSON.stringify(props)}</Text>;
     },
-  }),
-  { virtual: true }
+  })
 );
 
 jest.mock('@assets/images/backgrounds', () => ({
@@ -151,7 +144,6 @@ describe('SunAndMoonPanel', () => {
       />
     );
 
-    expect(view.getByTestId('moti-view')).toBeTruthy();
     expect(view.getAllByTestId('skeleton')).toHaveLength(2);
   });
 

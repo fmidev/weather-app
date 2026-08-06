@@ -52,16 +52,13 @@ jest.mock('moment', () => {
   return wrappedMoment;
 });
 
-jest.mock('moti', () => ({
-  MotiView: ({ children }: any) => children,
-}));
-
-jest.mock('moti/skeleton', () => ({
-  Skeleton: () => {
+jest.mock('@components/common/Skeleton', () => ({
+  __esModule: true,
+  default: () => {
     const { Text } = require('react-native');
     return <Text testID="warnings-skeleton">loading</Text>;
   },
-}), { virtual: true });
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({

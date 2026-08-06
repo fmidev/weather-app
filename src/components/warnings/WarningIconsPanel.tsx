@@ -14,11 +14,10 @@ import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
 
 import Text from '@components/common/AppText';
+import Skeleton from '@components/common/Skeleton';
 import WarningIcon from './WarningIcon';
 import DayDetailsDescription from './DayDetailsDescription';
 import { TabParamList } from '@navigators/types';
-import { MotiView } from 'moti';
-import { Skeleton } from 'moti/skeleton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackMatomoEvent } from '@utils/matomo';
 import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
@@ -45,9 +44,8 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation('warnings');
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const navigation = useNavigation<NavigationProp<TabParamList>>();
-  const colorMode = dark ? 'dark' : 'light';
 
   useEffect(() => {
     if (i18n.language !== moment.locale()) {
@@ -57,12 +55,12 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
 
   if (loading) {
     return (
-      <MotiView style={[styles.cardWrapper, styles.noPadding, {
+      <View style={[styles.cardWrapper, styles.noPadding, {
         marginLeft: insets.left + 16,
         marginRight: insets.right + 16
       }]}>
-        <Skeleton colorMode={colorMode} width={'100%'} height={160} radius={10} />
-      </MotiView>
+        <Skeleton width="100%" height={160} radius={10} />
+      </View>
     );
   }
 

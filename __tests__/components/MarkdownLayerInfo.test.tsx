@@ -69,23 +69,13 @@ jest.mock('react-native-marked', () => ({
   },
 }));
 
-jest.mock('moti', () => ({
-  MotiView: ({ children }: any) => {
-    const { View } = require('react-native');
-    return <View testID="moti-view">{children}</View>;
-  },
-  View: ({ children }: any) => {
-    const { View } = require('react-native');
-    return <View>{children}</View>;
-  },
-}));
-
-jest.mock('moti/skeleton', () => ({
-  Skeleton: () => {
+jest.mock('@components/common/Skeleton', () => ({
+  __esModule: true,
+  default: () => {
     const { Text: MockText } = require('react-native');
     return <MockText testID="skeleton">loading</MockText>;
   },
-}), { virtual: true });
+}));
 
 jest.mock('react-native-safe-area-context', () => ({
   SafeAreaView: ({ children }: any) => {
@@ -130,11 +120,10 @@ describe('MarkdownLayerInfo', () => {
     mockGetLayerDocumentation.mockResolvedValue('# Layer docs');
     mockSelectActiveOverlay.mockReturnValue(1);
 
-    const { getAllByTestId, getByTestId } = render(
+    const { getAllByTestId } = render(
       <MarkdownLayerInfo />
     );
 
-    expect(getByTestId('moti-view')).toBeTruthy();
     expect(getAllByTestId('skeleton').length).toBeGreaterThan(1);
 
     await waitFor(() => {
@@ -147,11 +136,10 @@ describe('MarkdownLayerInfo', () => {
   it('shows loading skeleton while markdown is loading', () => {
     mockSelectActiveOverlay.mockReturnValue(2);
 
-    const { getAllByTestId, getByTestId } = render(
+    const { getAllByTestId } = render(
       <MarkdownLayerInfo />
     );
 
-    expect(getByTestId('moti-view')).toBeTruthy();
     expect(getAllByTestId('skeleton').length).toBeGreaterThan(1);
   });
 

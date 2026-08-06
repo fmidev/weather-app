@@ -4,8 +4,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { MotiView } from 'moti';
-import { Skeleton } from 'moti/skeleton';
 import moment from 'moment';
 
 import { State } from '@store/types';
@@ -13,6 +11,7 @@ import { selectLoading, selectError, selectMeteorologistSnapshot } from '@store/
 import { selectClockType } from '@store/settings/selectors';
 import { CustomTheme } from '@assets/colors';
 import Text from '@components/common/AppText';
+import Skeleton from '@components/common/Skeleton';
 import Icon from '@assets/Icon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatAccessibleDateTime } from '@utils/helpers';
@@ -44,8 +43,7 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { dark, colors } = useTheme() as CustomTheme;
-  const colorMode = dark ? 'dark' : 'light';
+  const { colors } = useTheme() as CustomTheme;
   const marginLeft = gridLayout ? 8 : insets.left + 16;
   const marginRight = gridLayout ? insets.right : insets.right + 16;
   const minHeight = gridLayout ? 160 : 150;
@@ -53,9 +51,9 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   if (loading) {
     return (
       // eslint-disable-next-line react-native/no-inline-styles
-      <MotiView style={{ marginLeft, marginRight, marginTop: 16 }}>
-        <Skeleton colorMode={colorMode} width={'100%'} height={minHeight} radius={10} />
-      </MotiView>
+      <View style={{ marginLeft, marginRight, marginTop: 16 }}>
+        <Skeleton width="100%" height={minHeight} radius={10} />
+      </View>
     );
   }
 

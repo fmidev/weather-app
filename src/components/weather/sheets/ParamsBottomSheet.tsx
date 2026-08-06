@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
@@ -69,7 +69,6 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   units,
 }) => {
   const { fontScale } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
@@ -204,9 +203,10 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   );
 
   return (
-    <View
+    <SafeAreaView
       testID="weather_params_bottom_sheet"
-      style={[styles.wrapper, { paddingLeft: insets.left, paddingRight: insets.right }]}
+      edges={['bottom', 'left', 'right']}
+      style={styles.wrapper}
     >
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
@@ -259,7 +259,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
           </TouchableOpacity>
         </ScrollView>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -2,8 +2,6 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, ImageBackground, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { MotiView } from 'moti';
-import { Skeleton } from 'moti/skeleton';
 import moment from 'moment';
 
 import { State } from '@store/types';
@@ -15,6 +13,7 @@ import { useTheme } from '@react-navigation/native';
 import { CustomTheme, WHITE, BLACK } from '@assets/colors';
 import { resolveMoonPhase } from '@utils/moon';
 import Text from '@components/common/AppText';
+import Skeleton from '@components/common/Skeleton';
 import Icon from '@assets/Icon';
 import { Config } from '@config';
 import { formatAccessibleDateTime } from '@utils/helpers';
@@ -46,20 +45,19 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
   const { t } = useTranslation('forecast');
   const { colors, dark } = useTheme() as CustomTheme;
 
-  const colorMode = dark ? 'dark' : 'light';
   const boxWidth = largeFonts ? scaleFactor * 175 : 175;
   const boxHeight = largeFonts ? scaleFactor * 100 : 100;
 
   if (loading || !forecast) {
     return (
-      <MotiView style={[styles.flex, styles.row, styles.center, { backgroundColor: colors.background }]}>
+      <View style={[styles.flex, styles.row, styles.center, { backgroundColor: colors.background }]}>
         <View style={styles.sunBox}>
-          <Skeleton colorMode={colorMode} width={boxWidth} height={boxHeight} radius={10} />
+          <Skeleton width={boxWidth} height={boxHeight} radius={10} />
         </View>
         <View style={styles.moonBox}>
-          <Skeleton colorMode={colorMode} width={boxWidth} height={boxHeight} radius={10} />
+          <Skeleton width={boxWidth} height={boxHeight} radius={10} />
         </View>
-      </MotiView>
+      </View>
     );
   }
 

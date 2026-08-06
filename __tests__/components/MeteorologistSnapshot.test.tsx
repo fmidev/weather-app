@@ -45,26 +45,15 @@ jest.mock('react-native-safe-area-context', () => ({
   }),
 }));
 
-jest.mock('moti', () => ({
-  MotiView: ({ children, style }: any) => {
-    const { View } = require('react-native');
-    return (
-      <View testID="moti-view" style={style}>
-        {children}
-      </View>
-    );
-  },
-}));
-
 jest.mock(
-  'moti/skeleton',
+  '@components/common/Skeleton',
   () => ({
-    Skeleton: (props: any) => {
+    __esModule: true,
+    default: (props: any) => {
       const { Text } = require('react-native');
       return <Text testID="snapshot-skeleton">{JSON.stringify(props)}</Text>;
     },
-  }),
-  { virtual: true }
+  })
 );
 
 jest.mock('@components/common/AppText', () => ({
@@ -108,7 +97,6 @@ describe('MeteorologistSnapshot', () => {
       />
     );
 
-    expect(view.getByTestId('moti-view')).toBeTruthy();
     expect(view.getByTestId('snapshot-skeleton')).toBeTruthy();
     expect(view.getByText(/"height":150/)).toBeTruthy();
   });

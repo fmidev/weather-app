@@ -7,8 +7,6 @@ import {
 } from 'react-native';
 import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { MotiView } from 'moti';
-import { Skeleton } from 'moti/skeleton';
 
 import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { State } from '@store/types';
@@ -22,6 +20,7 @@ import moment from 'moment';
 
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
+import Skeleton from '@components/common/Skeleton';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -51,12 +50,11 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   error,
 }) => {
   const { t, i18n } = useTranslation('warnings');
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const infoSheetRef = useRef<RBSheet>(null);
   const headerRef = useRef<View>(null);
-  const colorMode = dark ? 'dark' : 'light';
 
   moment.locale(i18n.language);
 
@@ -75,17 +73,17 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
 
   if (loading) {
     return (
-      <MotiView style={{backgroundColor: colors.background}}>
+      <View style={{backgroundColor: colors.background}}>
         <View style={[styles.loading, styles.loadingFirst]}>
-          <Skeleton colorMode={colorMode} width={'100%'} height={40} radius={10} />
+          <Skeleton width="100%" height={40} radius={10} />
         </View>
         <View style={styles.loading}>
-          <Skeleton colorMode={colorMode} width={'100%'} height={65} radius={10} />
+          <Skeleton width="100%" height={65} radius={10} />
         </View>
         <View style={[styles.loading, styles.loadingLast, { borderColor: colors.border}]}>
-          <Skeleton colorMode={colorMode} width={'100%'} height={20} radius={10} />
+          <Skeleton width="100%" height={20} radius={10} />
         </View>
-      </MotiView>
+      </View>
     );
   }
 
