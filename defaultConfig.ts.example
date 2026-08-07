@@ -71,6 +71,7 @@ const defaultConfig: ConfigType = {
       numberOfStations: 10,
       producer: { default: 'observation_producer' },
       dailyProducers: ['observation_producer'],
+      identifier: 'fmisid',
       timePeriod: 24,
       parameters: ['temperature'],
       dailyParameters: ['minimumTemperature', 'maximumTemperature]

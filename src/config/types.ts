@@ -91,6 +91,7 @@ interface Observation {
   updateInterval: number;
   numberOfStations: number;
   producer: string | { default: string; [name: string]: string };
+  identifier: 'fmisid' | 'wmo';
   dailyProducers?: string[];
   timePeriod: number;
   parameters: (keyof ObservationParameters)[];

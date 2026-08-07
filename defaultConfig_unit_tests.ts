@@ -318,6 +318,7 @@ const defaultConfig: ConfigType = {
       updateInterval: 5,
       numberOfStations: 10,
       producer: { FI: 'observations_fmi', default: 'foreign' },
+      identifier: 'fmisid',
       timePeriod: 72,
       parameters: [
         'dewPoint',
