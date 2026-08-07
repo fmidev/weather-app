@@ -172,7 +172,7 @@ export const getObservation = async (
       timePeriod,
       parameters,
       dailyParameters,
-      identifier,
+      identifier = 'fmisid',
     },
   } = Config.get('weather');
   const { language } = i18n;
