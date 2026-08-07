@@ -91,6 +91,7 @@ const defaultConfig: ConfigType = {
       enabled: true,
       numberOfStations: 10,
       producer: 'observation_producer',
+      identifier: 'fmisid',
       timePeriod: 24,
       parameters: ['temperature'],
     },
