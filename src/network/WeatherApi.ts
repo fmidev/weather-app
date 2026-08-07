@@ -172,6 +172,7 @@ export const getObservation = async (
       timePeriod,
       parameters,
       dailyParameters,
+      identifier,
     },
   } = Config.get('weather');
   const { language } = i18n;
@@ -197,9 +198,9 @@ export const getObservation = async (
     starttime: `-${timePeriod}h`,
     endtime: '0',
     param: [
+      identifier,
       'distance',
       'epochtime',
-      'fmisid', // geoid??
       'stationname',
       'stationtype',
       ...(parameters || []),
@@ -208,7 +209,7 @@ export const getObservation = async (
     producer: observationProducer,
     precision: 'double',
     lang: language,
-    attributes: 'fmisid,stationname,stationtype,distance',
+    attributes: `${identifier},stationname,stationtype,distance`,
     who: `${packageJSON.name}-${Platform.OS}`,
   };
 
@@ -216,9 +217,9 @@ export const getObservation = async (
     ...hourlyParams,
     starttime: '-720h', // 30 days = 30 * 24h = 720h
     param: [
+      identifier,
       'distance',
       'epochtime',
-      'fmisid',
       'stationname',
       'stationtype',
       ...(dailyParameters || []),
