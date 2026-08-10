@@ -46,7 +46,7 @@
     "react-native": "0.86.2",
     "react-native-config": "1.6.1",
     "react-native-default-preference": "1.4.4",
-    "react-native-gesture-handler": "2.32.0",
+    "react-native-gesture-handler": "3.1.0",
     "react-native-haptic-feedback": "1.13.1",
     "react-native-launch-arguments": "4.1.1",
     "react-native-linear-gradient": "2.8.3",
