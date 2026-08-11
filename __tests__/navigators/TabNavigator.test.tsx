@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import TabNavigator from '../../src/navigators/TabNavigator';
+import { MacContentSizeProvider } from '../../src/components/common/MacContentSizeContext';
 
 const mockConfigGet = jest.fn();
 const mockFetchAnnouncements = jest.fn();
@@ -387,6 +388,11 @@ describe('TabNavigator', () => {
       true
     );
     expect(mockFetchAnnouncements).toHaveBeenCalled();
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+      'Init',
+      'Platform',
+      expect.stringMatching(/^ios - /)
+    );
     expect(mockI18nOn).toHaveBeenCalledWith(
       'languageChanged',
       expect.any(Function)
@@ -423,6 +429,52 @@ describe('TabNavigator', () => {
 
     fireEvent.press(view.getByTestId('search-info-sheet'));
     expect(mockRBSheetClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits for Mac detection before running launch effects', () => {
+    const navigator = (
+      <TabNavigator
+        initialTab="Map"
+        theme="light"
+        didLaunchApp
+        termsOfUseAccepted
+        setCurrentLocation={mockSetCurrentLocation as any}
+        setNavigationTab={mockSetNavigationTab as any}
+        fetchAnnouncements={mockFetchAnnouncements as any}
+      />
+    );
+
+    const view = render(
+      <MacContentSizeProvider
+        isRunningOnMac={false}
+        isPlatformDetectionComplete={false}>
+        {navigator}
+      </MacContentSizeProvider>
+    );
+
+    expect(mockGetGeolocation).not.toHaveBeenCalled();
+    expect(mockFetchAnnouncements).not.toHaveBeenCalled();
+    expect(mockTrackMatomoEvent).not.toHaveBeenCalledWith(
+      'Init',
+      'Platform',
+      expect.any(String)
+    );
+
+    view.rerender(
+      <MacContentSizeProvider
+        isRunningOnMac
+        isPlatformDetectionComplete>
+        {navigator}
+      </MacContentSizeProvider>
+    );
+
+    expect(mockGetGeolocation).toHaveBeenCalledTimes(1);
+    expect(mockFetchAnnouncements).toHaveBeenCalledTimes(1);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+      'Init',
+      'Platform',
+      expect.stringMatching(/^MacOS - /)
+    );
   });
 
   it('omits warnings tab when warnings are disabled', () => {

@@ -88,7 +88,9 @@ describe('ScalableIcon', () => {
 
   it('scales icon dimensions by an additional 1.3 when running on Mac', () => {
     render(
-      <MacContentSizeProvider isRunningOnMac>
+      <MacContentSizeProvider
+        isRunningOnMac
+        isPlatformDetectionComplete>
         <ScalableIcon
           name="menu"
           width={20}

@@ -20,11 +20,20 @@ import { selectIsRunningOnMac } from '@store/settings/selectors';
 import { MacContentSizeProvider } from '@components/common/MacContentSizeContext';
 import defaultConfig from './defaultConfig';
 
-const AppContent: React.FC<React.PropsWithChildren> = ({ children }) => {
+type AppContentProps = React.PropsWithChildren<{
+  isPlatformDetectionComplete: boolean;
+}>;
+
+const AppContent: React.FC<AppContentProps> = ({
+  children,
+  isPlatformDetectionComplete,
+}) => {
   const isRunningOnMac = useSelector(selectIsRunningOnMac);
 
   return (
-    <MacContentSizeProvider isRunningOnMac={isRunningOnMac}>
+    <MacContentSizeProvider
+      isRunningOnMac={isRunningOnMac}
+      isPlatformDetectionComplete={isPlatformDetectionComplete}>
       {children}
     </MacContentSizeProvider>
   );
@@ -32,6 +41,8 @@ const AppContent: React.FC<React.PropsWithChildren> = ({ children }) => {
 
 const App: React.FC = () => {
   const composeEnhancers = compose;
+  const [isPlatformDetectionComplete, setIsPlatformDetectionComplete] =
+    React.useState(false);
 
   const store = React.useMemo(
     () =>
@@ -46,13 +57,27 @@ const App: React.FC = () => {
   const persistor = React.useMemo(() => persistStore(store), [store]);
 
   React.useEffect(() => {
-    isRunningInIOSCompatibilityMode()
-      .then((isRunningOnMac) => {
+    let isActive = true;
+
+    const detectPlatform = async () => {
+      let isRunningOnMac = false;
+      try {
+        isRunningOnMac = await isRunningInIOSCompatibilityMode();
+      } catch (error) {
+        console.error('Failed to detect iOS compatibility mode:', error);
+      }
+
+      if (isActive) {
         setIsRunningOnMac(isRunningOnMac)(store.dispatch);
-      })
-      .catch(() => {
-        setIsRunningOnMac(false)(store.dispatch);
-      });
+        setIsPlatformDetectionComplete(true);
+      }
+    };
+
+    detectPlatform();
+
+    return () => {
+      isActive = false;
+    };
   }, [store]);
 
   NetInfo.configure({
@@ -63,7 +88,8 @@ const App: React.FC = () => {
 
   return (
     <Provider store={store}>
-      <AppContent>
+      <AppContent
+        isPlatformDetectionComplete={isPlatformDetectionComplete}>
         <PersistGate loading={null} persistor={persistor}>
           <ConfigProvider defaultConfig={defaultConfig}>
             <TabNavigator />

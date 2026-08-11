@@ -40,7 +40,10 @@ import AnnouncementsHeader from '@components/announcements/AnnouncementsHeader';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
-import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
+import {
+  useIsPlatformDetectionComplete,
+  useIsRunningOnMac,
+} from '@components/common/MacContentSizeContext';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
@@ -105,6 +108,7 @@ const Navigator: React.FC<Props> = ({
   fetchAnnouncements,
 }) => {
   const isRunningOnMac = useIsRunningOnMac();
+  const isPlatformDetectionComplete = useIsPlatformDetectionComplete();
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
@@ -158,7 +162,11 @@ const Navigator: React.FC<Props> = ({
   }, [handleLanguageChanged, i18n]);
 
   useEffect(() => {
-    if (didLaunchApp && !didChangeLanguage) {
+    if (
+      didLaunchApp &&
+      !didChangeLanguage &&
+      isPlatformDetectionComplete
+    ) {
       trackMatomoEvent('Init', 'Geolocation', 'Launch app');
       if (isRunningOnMac) {
         trackMatomoEvent('Init', 'Platform', 'MacOS' + ' - ' + packageJSON.version);
@@ -168,7 +176,15 @@ const Navigator: React.FC<Props> = ({
       getGeolocation(setCurrentLocation, t, true);
       fetchAnnouncements();
     }
-  }, [didLaunchApp, setCurrentLocation, t, didChangeLanguage, fetchAnnouncements, isRunningOnMac]);
+  }, [
+    didLaunchApp,
+    setCurrentLocation,
+    t,
+    didChangeLanguage,
+    fetchAnnouncements,
+    isRunningOnMac,
+    isPlatformDetectionComplete,
+  ]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {

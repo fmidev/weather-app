@@ -39,7 +39,9 @@ describe('AppText', () => {
 
   it('scales an explicit font size by 1.3 when running on Mac', () => {
     const { getByTestId } = render(
-      <MacContentSizeProvider isRunningOnMac>
+      <MacContentSizeProvider
+        isRunningOnMac
+        isPlatformDetectionComplete>
         <AppText
           testID="app-text"
           // eslint-disable-next-line react-native/no-inline-styles
@@ -55,7 +57,9 @@ describe('AppText', () => {
 
   it('scales the default iOS font size when no font size is provided', () => {
     const { getByTestId } = render(
-      <MacContentSizeProvider isRunningOnMac>
+      <MacContentSizeProvider
+        isRunningOnMac
+        isPlatformDetectionComplete>
         <AppText testID="app-text">Mac text</AppText>
       </MacContentSizeProvider>
     );
