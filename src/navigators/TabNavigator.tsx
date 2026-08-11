@@ -9,7 +9,7 @@ import {
   AppState,
   AppStateStatus
 } from 'react-native';
-import { connect, ConnectedProps, useSelector } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -39,7 +39,8 @@ import CommonHeaderTitle from '@components/common/CommonHeaderTitle';
 import AnnouncementsHeader from '@components/announcements/AnnouncementsHeader';
 
 import { State } from '@store/types';
-import { selectTheme, selectIsRunningOnMac } from '@store/settings/selectors';
+import { selectTheme } from '@store/settings/selectors';
+import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
@@ -103,7 +104,7 @@ const Navigator: React.FC<Props> = ({
   termsOfUseAccepted,
   fetchAnnouncements,
 }) => {
-  const isRunningOnMac = useSelector(selectIsRunningOnMac);
+  const isRunningOnMac = useIsRunningOnMac();
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });

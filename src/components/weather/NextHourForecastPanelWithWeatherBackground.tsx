@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect, ConnectedProps, useSelector } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import {
   ActivityIndicator, View, StyleSheet, ImageBackground, useWindowDimensions, Platform
 } from 'react-native';
@@ -20,7 +20,8 @@ import {
   selectNextHourForecast,
 } from '@store/forecast/selectors';
 import { selectTimeZone, selectCurrent } from '@store/location/selector';
-import { selectIsRunningOnMac, selectUnits } from '@store/settings/selectors';
+import { selectUnits } from '@store/settings/selectors';
+import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 import { selectIsAuroraBorealisLikely } from '@store/forecast/selectors';
 import { weatherBackgroundGetter } from '@assets/images/backgrounds';
 
@@ -80,7 +81,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
     moment.tz.setDefault(timezone);
   }, [timezone]);
 
-  const isRunningOnMac = useSelector(selectIsRunningOnMac);
+  const isRunningOnMac = useIsRunningOnMac();
   const navigation = useNavigation<NavigationProp<WeatherStackParamList>>();
   const insets = useSafeAreaInsets();
   const { width, fontScale } = useWindowDimensions();

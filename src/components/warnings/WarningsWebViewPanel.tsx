@@ -4,13 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
 import { useTheme } from '@react-navigation/native';
 import 'react-native-url-polyfill/auto';
-import { useSelector } from 'react-redux';
 
 import { Config } from '@config';
 import PanelHeader from '@components/weather/common/PanelHeader';
+import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 import { CustomTheme } from '@assets/colors';
 import { MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
-import { selectIsRunningOnMac } from '@store/settings/selectors';
 
 const ALLOWED_HOSTS = ['cdn.fmi.fi'];
 
@@ -25,7 +24,7 @@ const InvalidURLView = () => (
 const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
   updateInterval
 }) => {
-  const isRunningOnMac = useSelector(selectIsRunningOnMac);
+  const isRunningOnMac = useIsRunningOnMac();
   const { fontScale } = useWindowDimensions()
   const [viewHeight, setViewHeight] = useState<number>(2000);
   const { dark } = useTheme() as CustomTheme;

@@ -1,10 +1,9 @@
 import React, { memo } from 'react';
 import { useWindowDimensions } from 'react-native';
-import { useSelector } from 'react-redux';
 import { VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
 
-import { selectIsRunningOnMac } from '@store/settings/selectors';
+import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 import { calculateTemperatureTickCount, chartYLabelText } from '@utils/chart';
 import { useTranslation } from 'react-i18next';
 import { ChartDomain, ChartMinMax, ChartType } from './types';
@@ -37,7 +36,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
   units,
   secondaryParameterMissing,
 }) => {
-  const isRunningOnMac = useSelector(selectIsRunningOnMac);
+  const isRunningOnMac = useIsRunningOnMac();
   const { fontScale } = useWindowDimensions();
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();

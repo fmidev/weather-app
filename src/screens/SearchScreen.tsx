@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, ConnectedProps, useSelector } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import {
   AccessibilityInfo,
   View,
@@ -49,7 +49,7 @@ import { getGeolocation } from '@utils/helpers';
 import { CustomTheme } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
 import { REGULAR_FONT, BOLD_FONT, MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
-import { selectIsRunningOnMac } from '@store/settings/selectors';
+import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
@@ -99,7 +99,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   setLoading,
   navigation,
 }) => {
-  const isRunningOnMac = useSelector(selectIsRunningOnMac);
+  const isRunningOnMac = useIsRunningOnMac();
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
