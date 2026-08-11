@@ -4,9 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
 import { useTheme } from '@react-navigation/native';
 import 'react-native-url-polyfill/auto';
+import { useSelector } from 'react-redux';
+
 import { Config } from '@config';
 import PanelHeader from '@components/weather/common/PanelHeader';
 import { CustomTheme } from '@assets/colors';
+import { MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
+import { selectIsRunningOnMac } from '@store/settings/selectors';
 
 const ALLOWED_HOSTS = ['cdn.fmi.fi'];
 
@@ -21,6 +25,7 @@ const InvalidURLView = () => (
 const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
   updateInterval
 }) => {
+  const isRunningOnMac = useSelector(selectIsRunningOnMac);
   const { fontScale } = useWindowDimensions()
   const [viewHeight, setViewHeight] = useState<number>(2000);
   const { dark } = useTheme() as CustomTheme;
@@ -64,7 +69,7 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
       <smartmet-alert-client
         language="${locale}"
         theme="${dark ? 'dark' : 'light'}"
-        font-scale="${Math.min(fontScale, 2)}"
+        font-scale="${Math.min(isRunningOnMac ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER : fontScale, 2)}"
         gray-scale-selector="true"
       ></smartmet-alert-client>
       <script type="module" src="${webViewUrl}/index.js" refresh-interval="${updateInterval}"></script>

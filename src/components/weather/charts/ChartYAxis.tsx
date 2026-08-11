@@ -1,14 +1,17 @@
 import React, { memo } from 'react';
+import { useWindowDimensions } from 'react-native';
+import { useSelector } from 'react-redux';
 import { VictoryAxis, VictoryLabel } from 'victory-native';
 import { useTheme } from '@react-navigation/native';
-import { CustomTheme } from '@assets/colors';
+
+import { selectIsRunningOnMac } from '@store/settings/selectors';
 import { calculateTemperatureTickCount, chartYLabelText } from '@utils/chart';
 import { useTranslation } from 'react-i18next';
 import { ChartDomain, ChartMinMax, ChartType } from './types';
 import { UnitMap } from '@store/settings/types';
 import { Config } from '@config';
-import { useWindowDimensions } from 'react-native';
-import { REGULAR_FONT } from '@assets/constants';
+import { REGULAR_FONT, MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
+import { CustomTheme } from '@assets/colors';
 
 type ChartYAxisProps = {
   chartType: ChartType;
@@ -34,6 +37,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
   units,
   secondaryParameterMissing,
 }) => {
+  const isRunningOnMac = useSelector(selectIsRunningOnMac);
   const { fontScale } = useWindowDimensions();
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
@@ -89,7 +93,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
     textAnchor: right ? 'start' : 'end',
     angle: 0,
     fill: colors.hourListText,
-    fontSize: Math.min(fontScale * 12, 20),
+    fontSize: Math.min(isRunningOnMac ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER * 12 : fontScale * 12, 20),
     fontFamily: REGULAR_FONT,
   };
 
@@ -133,7 +137,7 @@ const ChartYAxis: React.FC<ChartYAxisProps> = ({
       label={labelText}
       style={{
         tickLabels: {
-          fontSize: Math.min(14 * fontScale, 20),
+          fontSize: Math.min(isRunningOnMac ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER * 14 : fontScale * 14, 20),
           fontFamily: REGULAR_FONT,
           fill: colors.hourListText,
         },

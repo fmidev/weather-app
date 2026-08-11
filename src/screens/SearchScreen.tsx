@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect, ConnectedProps, useSelector } from 'react-redux';
 import {
   AccessibilityInfo,
   View,
@@ -48,7 +48,8 @@ import IconButton from '@components/common/IconButton';
 import { getGeolocation } from '@utils/helpers';
 import { CustomTheme } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
-import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
+import { REGULAR_FONT, BOLD_FONT, MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
+import { selectIsRunningOnMac } from '@store/settings/selectors';
 
 const mapStateToProps = (state: State) => ({
   favorites: selectFavorites(state),
@@ -98,6 +99,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   setLoading,
   navigation,
 }) => {
+  const isRunningOnMac = useSelector(selectIsRunningOnMac);
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
@@ -146,6 +148,8 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     ({ id }) => id === location.id
   );
 
+  const inputFontSize = isRunningOnMac ? MAC_CONTENT_SIZE_MULTIPLIER * 16 : 16;
+
   return (
     <View testID="search_view" style={styles.container}>
       <Text
@@ -179,6 +183,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             styles.input,
             {
               color: colors.text,
+              fontSize: inputFontSize,
             },
           ]}
           autoCorrect={false}

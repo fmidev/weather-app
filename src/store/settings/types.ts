@@ -3,6 +3,7 @@ export const INIT_SETTINGS = 'INIT_SETTINGS';
 export const UPDATE_UNITS = 'UPDATE_UNITS';
 export const UPDATE_THEME = 'UPDATE_THEME';
 export const UPDATE_MAP_LIBRARY = 'UPDATE_MAP_LIBRARY';
+export const SET_IS_RUNNING_ON_MAC = 'SET_IS_RUNNING_ON_MAC';
 
 export type ClockType = 12 | 24;
 
@@ -43,6 +44,11 @@ interface UpdateMapLibrary {
   library: MapLibrary;
 }
 
+interface SetIsRunningOnMac {
+  type: typeof SET_IS_RUNNING_ON_MAC;
+  isRunningOnMac: boolean;
+}
+
 export type Theme = 'light' | 'dark' | 'automatic';
 export type MapLibrary = 'react-native-maps' | 'maplibre';
 
@@ -51,7 +57,8 @@ export type SettingsActionTypes =
   | UpdateUnits
   | UpdateTheme
   | UpdateClockType
-  | UpdateMapLibrary;
+  | UpdateMapLibrary
+  | SetIsRunningOnMac;
 
 export interface SettingsState {
   clockType?: ClockType;
@@ -59,4 +66,5 @@ export interface SettingsState {
   theme?: Theme;
   mapLibrary: MapLibrary;
   sessionId: number; // smartmet-session-id for wms-layer requests
+  isRunningOnMac: boolean;
 }

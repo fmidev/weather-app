@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import Text from '@components/common/AppText';
 import { PRIMARY_BLUE, WHITE } from '@assets/colors';
 import { BOLD_FONT } from '@assets/constants';
 

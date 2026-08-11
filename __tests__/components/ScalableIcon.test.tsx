@@ -6,15 +6,21 @@ import { render } from '@testing-library/react-native';
 import ScalableIcon from '../../src/components/common/ScalableIcon';
 
 const mockIcon = jest.fn((props) => <Text {...props} testID="scalable-icon">icon</Text>);
+const mockUseSelector = jest.fn();
 
 jest.mock('@assets/Icon', () => ({
   __esModule: true,
   default: (props: any) => mockIcon(props),
 }));
 
+jest.mock('react-redux', () => ({
+  useSelector: (...args: any[]) => mockUseSelector(...args),
+}));
+
 describe('ScalableIcon', () => {
   beforeEach(() => {
     mockIcon.mockClear();
+    mockUseSelector.mockReturnValue(false);
   });
 
   it('scales width, height and size with default maxScaleFactor=2', () => {
@@ -81,6 +87,29 @@ describe('ScalableIcon', () => {
         width: undefined,
         height: undefined,
         size: undefined,
+      })
+    );
+  });
+
+  it('scales icon dimensions by an additional 1.3 when running on Mac', () => {
+    mockUseSelector.mockReturnValue(true);
+
+    render(
+      <ScalableIcon
+        name="menu"
+        width={20}
+        height={10}
+        size={16}
+        maxScaleFactor={1}
+      />
+    );
+
+    expect(mockIcon).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'menu',
+        width: 26,
+        height: 13,
+        size: 20.8,
       })
     );
   });

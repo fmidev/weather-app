@@ -1,10 +1,21 @@
 /* eslint-disable react-native/no-color-literals */
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import AppText from '../../src/components/common/AppText';
 
+const mockUseSelector = jest.fn();
+
+jest.mock('react-redux', () => ({
+  useSelector: (...args: any[]) => mockUseSelector(...args),
+}));
+
 describe('AppText', () => {
+  beforeEach(() => {
+    mockUseSelector.mockReturnValue(false);
+  });
+
   it('sets accessibility font scaling defaults', () => {
     const { getByTestId } = render(
       <AppText testID="app-text">Hello</AppText>
@@ -33,5 +44,32 @@ describe('AppText', () => {
     expect(text.props.accessibilityRole).toBe('header');
     expect(text.props.style).toMatchObject({ color: 'red' });
     expect(getByText('Header text')).toBeTruthy();
+  });
+
+  it('scales an explicit font size by 1.3 when running on Mac', () => {
+    mockUseSelector.mockReturnValue(true);
+
+    const { getByTestId } = render(
+      <AppText
+        testID="app-text"
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{ fontSize: 16 }}>
+        Mac text
+      </AppText>
+    );
+
+    const style = StyleSheet.flatten(getByTestId('app-text').props.style);
+    expect(style.fontSize).toBe(20.8);
+  });
+
+  it('scales the default iOS font size when no font size is provided', () => {
+    mockUseSelector.mockReturnValue(true);
+
+    const { getByTestId } = render(
+      <AppText testID="app-text">Mac text</AppText>
+    );
+
+    const style = StyleSheet.flatten(getByTestId('app-text').props.style);
+    expect(style.fontSize).toBe(18.2);
   });
 });

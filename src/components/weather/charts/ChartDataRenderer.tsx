@@ -1,14 +1,18 @@
 import React, { memo } from 'react';
-import chartTheme from '@assets/chartTheme';
+import { useWindowDimensions } from 'react-native';
+import { useSelector } from 'react-redux';
 import { VictoryAxis, VictoryChart } from 'victory-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
+
+import chartTheme from '@assets/chartTheme';
 import { CustomTheme } from '@assets/colors';
 import { tickFormat } from '@utils/chart';
 import { ClockType, UnitMap } from '@store/settings/types';
 import { ChartDataProps, ChartDomain, ChartType, ChartValues } from './types';
 import { Config } from '@config';
-import { useWindowDimensions } from 'react-native';
+import { selectIsRunningOnMac } from '@store/settings/selectors';
+import { MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
 
 type ChartDataRendererProps = {
   chartDimensions: { x: number; y: number };
@@ -36,6 +40,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
   units,
   observation,
 }) => {
+  const isRunningOnMac = useSelector(selectIsRunningOnMac);
   const { fontScale } = useWindowDimensions()
   const { colors } = useTheme() as CustomTheme;
   const defaultUnits = Config.get('settings').units;
@@ -78,7 +83,7 @@ const ChartDataRenderer: React.FC<ChartDataRendererProps> = ({
           },
           tickLabels: {
             fill: colors.hourListText,
-            fontSize: Math.min(fontScale * 14, 18),
+            fontSize: Math.min(isRunningOnMac ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER * 14 : fontScale * 14, 18),
             fontWeight: ({ tick }) =>
               isDaily || moment(tick).hour() === 0 ? 'bold' : 'normal',
           },

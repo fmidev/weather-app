@@ -180,7 +180,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
                   precipitationUnit
                 )}`
               )}`}>
-              <Text style={[styles.bold]}>{`${
+              <Text style={[styles.text, styles.bold]}>{`${
                 precipitationValue?.replace('.', decimalSeparator) ||
                 (0).toFixed(1).replace('.', decimalSeparator)
               }`}</Text>
@@ -197,7 +197,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
               value: numericOrDash(forecast.uvCumulated?.toString()),
             })}>
             {'UV '}
-            <Text style={[styles.bold]}>
+            <Text style={[styles.text, styles.bold]}>
               {numericOrDash(forecast.uvCumulated?.toString())}
             </Text>
           </Text>
@@ -219,7 +219,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
                 { color: textColor },
               ]}>
               {t('feelsLike')}{' '}
-              <Text>
+              <Text style={styles.text}>
                 {numericOrDash(feelsLikeValue)}
               </Text>
               <Text>{`°${t(`unitAbbreviations:${temperatureUnit}`)}`}</Text>
