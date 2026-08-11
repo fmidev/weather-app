@@ -24,11 +24,14 @@ import { UnitMap } from '@store/settings/types';
 import { trackMatomoEvent } from './matomo';
 import { findNearestLocation } from './geolocation';
 import i18n from '@i18n';
+import { isRunningInIOSCompatibilityMode } from './iosCompatibilityMode';
 
-const getPosition = (
+const getPosition = async(
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>
-) =>
+) => {
+  const isRunningOnMac = await isRunningInIOSCompatibilityMode();
+
   Geolocation.getCurrentPosition(
     (position) => {
       let { latitude, longitude } = position.coords;
@@ -93,11 +96,12 @@ const getPosition = (
       console.log('GEOLOCATION NOT AVAILABLE', error);
     },
     {
-      enableHighAccuracy: Platform.OS === 'ios', // iOS only
+      enableHighAccuracy: Platform.OS === 'ios' && !isRunningOnMac, // iOS only
       timeout: 15000,
       maximumAge: 60000,
     }
   );
+};
 
 const alertNoPermission = (t: TFunction<string[] | string>) =>
   Alert.alert(

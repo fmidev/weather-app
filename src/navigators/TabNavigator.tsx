@@ -40,6 +40,10 @@ import AnnouncementsHeader from '@components/announcements/AnnouncementsHeader';
 
 import { State } from '@store/types';
 import { selectTheme } from '@store/settings/selectors';
+import {
+  useIsPlatformDetectionComplete,
+  useIsRunningOnMac,
+} from '@components/common/MacContentSizeContext';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
@@ -103,6 +107,8 @@ const Navigator: React.FC<Props> = ({
   termsOfUseAccepted,
   fetchAnnouncements,
 }) => {
+  const isRunningOnMac = useIsRunningOnMac();
+  const isPlatformDetectionComplete = useIsPlatformDetectionComplete();
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
@@ -156,9 +162,17 @@ const Navigator: React.FC<Props> = ({
   }, [handleLanguageChanged, i18n]);
 
   useEffect(() => {
-    if (didLaunchApp && !didChangeLanguage) {
+    if (
+      didLaunchApp &&
+      !didChangeLanguage &&
+      isPlatformDetectionComplete
+    ) {
       trackMatomoEvent('Init', 'Geolocation', 'Launch app');
-      trackMatomoEvent('Init', 'Platform', Platform.OS +' - '+packageJSON.version);
+      if (isRunningOnMac) {
+        trackMatomoEvent('Init', 'Platform', 'MacOS' + ' - ' + packageJSON.version);
+      } else {
+        trackMatomoEvent('Init', 'Platform', Platform.OS +' - '+packageJSON.version);
+      }
       getGeolocation(setCurrentLocation, t, true);
       fetchAnnouncements();
     }
@@ -168,6 +182,8 @@ const Navigator: React.FC<Props> = ({
     t,
     didChangeLanguage,
     fetchAnnouncements,
+    isRunningOnMac,
+    isPlatformDetectionComplete,
   ]);
 
   useEffect(() => {
@@ -328,6 +344,16 @@ const Navigator: React.FC<Props> = ({
     }),
     [LocationHeaderOptions, navigationRef] );
 
+  const tabBarStyle = useMemo(
+    () => {
+      if ((Platform.OS === 'android' && Platform.Version < 35) || isRunningOnMac) {
+        return { height: 70 };
+      }
+      return {};
+    },
+    [isRunningOnMac]
+  );
+
   if (!ready || !theme) {
     return null;
   }
@@ -379,8 +405,11 @@ const Navigator: React.FC<Props> = ({
             tabBarInactiveTintColor: useDarkTheme
               ? darkTheme.colors.tabBarInactive
               : lightTheme.colors.tabBarInactive,
-            tabBarLabelStyle: styles.tabText,
-            tabBarStyle: Platform.OS === 'android' && Platform.Version < 35 ? { height: 70 } : {},
+            tabBarLabelStyle: {
+              ...styles.tabText,
+              fontSize: isRunningOnMac ? 18 : 14,
+            },
+            tabBarStyle,
             // eslint-disable-next-line react/no-unstable-nested-components
             tabBarButton: ({ style, accessibilityState, ...rest }) => {
               const activeColor = useDarkTheme
@@ -449,7 +478,6 @@ const Navigator: React.FC<Props> = ({
               headerShown: false,
               tabBarButtonTestID: 'navigation_map',
               tabBarLabel: `${t('navigation:map')}`,
-              tabBarLabelStyle: styles.tabText,
               // eslint-disable-next-line react/no-unstable-nested-components
               tabBarIcon: ({ color, size }) => (
                 <Icon

@@ -43,6 +43,8 @@
 		A2F695BD2CFEE1520064BAFE /* WidgetIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A2F695BC2CFEE1520064BAFE /* WidgetIntents.intentdefinition */; };
 		A41FA36F27FD733200B08157 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		A454032C25E66E860005997E /* SwiftEnabler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A454032B25E66E860005997E /* SwiftEnabler.swift */; };
+		F10000012F00000000000001 /* IOSCompatibilityMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000032F00000000000003 /* IOSCompatibilityMode.swift */; };
+		F10000022F00000000000002 /* IOSCompatibilityModeBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = F10000042F00000000000004 /* IOSCompatibilityModeBridge.m */; };
 		A45BF91D26B41657000BF75C /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91826B41657000BF75C /* Roboto-Bold.ttf */; };
 		A45BF91E26B41657000BF75C /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91926B41657000BF75C /* Roboto-Light.ttf */; };
 		A45BF91F26B41657000BF75C /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A45BF91A26B41657000BF75C /* Roboto-Medium.ttf */; };
@@ -138,6 +140,8 @@
 		A443E2B525DBFF4700B0BCF9 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		A454032A25E66E860005997E /* MobileWeather-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "MobileWeather-Bridging-Header.h"; path = "../MobileWeather-Bridging-Header.h"; sourceTree = "<group>"; };
 		A454032B25E66E860005997E /* SwiftEnabler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftEnabler.swift; path = ../SwiftEnabler.swift; sourceTree = "<group>"; };
+		F10000032F00000000000003 /* IOSCompatibilityMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSCompatibilityMode.swift; sourceTree = "<group>"; };
+		F10000042F00000000000004 /* IOSCompatibilityModeBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IOSCompatibilityModeBridge.m; sourceTree = "<group>"; };
 		A454033125E6830C0005997E /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		A45BF91826B41657000BF75C /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		A45BF91926B41657000BF75C /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Light.ttf"; path = "../src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
@@ -259,6 +263,8 @@
 				A454032A25E66E860005997E /* MobileWeather-Bridging-Header.h */,
 				9629DD67B904687D291DE4B6 /* PrivacyInfo.xcprivacy */,
 				A292E7552D5F16C000DC288E /* AppDelegate.swift */,
+				F10000032F00000000000003 /* IOSCompatibilityMode.swift */,
+				F10000042F00000000000004 /* IOSCompatibilityModeBridge.m */,
 			);
 			path = MobileWeather;
 			sourceTree = "<group>";
@@ -863,6 +869,8 @@
 			files = (
 				A292E7562D5F16C000DC288E /* AppDelegate.swift in Sources */,
 				A454032C25E66E860005997E /* SwiftEnabler.swift in Sources */,
+				F10000012F00000000000001 /* IOSCompatibilityMode.swift in Sources */,
+				F10000022F00000000000002 /* IOSCompatibilityModeBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

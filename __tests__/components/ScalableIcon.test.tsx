@@ -4,6 +4,7 @@ import { Text } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import ScalableIcon from '../../src/components/common/ScalableIcon';
+import { MacContentSizeProvider } from '../../src/components/common/MacContentSizeContext';
 
 const mockIcon = jest.fn((props) => <Text {...props} testID="scalable-icon">icon</Text>);
 
@@ -81,6 +82,31 @@ describe('ScalableIcon', () => {
         width: undefined,
         height: undefined,
         size: undefined,
+      })
+    );
+  });
+
+  it('scales icon dimensions by an additional 1.3 when running on Mac', () => {
+    render(
+      <MacContentSizeProvider
+        isRunningOnMac
+        isPlatformDetectionComplete>
+        <ScalableIcon
+          name="menu"
+          width={20}
+          height={10}
+          size={16}
+          maxScaleFactor={1}
+        />
+      </MacContentSizeProvider>
+    );
+
+    expect(mockIcon).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'menu',
+        width: 26,
+        height: 13,
+        size: 20.8,
       })
     );
   });

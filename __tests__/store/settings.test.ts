@@ -50,6 +50,7 @@ describe('settings reducer', () => {
           clockType: 24,
           mapLibrary: 'react-native-maps',
           sessionId: 123,
+          isRunningOnMac: false,
         },
         {
           type: types.UPDATE_UNITS,
@@ -78,6 +79,7 @@ describe('settings reducer', () => {
       clockType: 24,
       mapLibrary: 'react-native-maps',
       sessionId: 123,
+      isRunningOnMac: false,
     });
   });
 
@@ -91,6 +93,7 @@ describe('settings reducer', () => {
       clockType: undefined,
       mapLibrary: 'react-native-maps',
       sessionId: expect.any(Number),
+      isRunningOnMac: false,
     });
   });
 
@@ -104,6 +107,7 @@ describe('settings reducer', () => {
       clockType: 24,
       mapLibrary: 'react-native-maps',
       sessionId: expect.any(Number),
+      isRunningOnMac: false,
     });
   });
 
@@ -119,7 +123,17 @@ describe('settings reducer', () => {
       clockType: undefined,
       mapLibrary: 'maplibre',
       sessionId: expect.any(Number),
+      isRunningOnMac: false,
     });
+  });
+
+  it('should handle SET_IS_RUNNING_ON_MAC', () => {
+    expect(
+      reducer(undefined, {
+        type: types.SET_IS_RUNNING_ON_MAC,
+        isRunningOnMac: true,
+      }).isRunningOnMac
+    ).toBe(true);
   });
 
   it('selects explicitly stored settings', () => {
@@ -129,6 +143,7 @@ describe('settings reducer', () => {
         mapLibrary: 'maplibre',
         theme: 'dark',
         sessionId: 456,
+        isRunningOnMac: true,
         units: {
           temperature: {
             unitAbb: 'C',
@@ -145,6 +160,7 @@ describe('settings reducer', () => {
     expect(selectors.selectClockType(state)).toBe(24);
     expect(selectors.selectMapLibrary(state)).toBe('maplibre');
     expect(selectors.selectSessionId(state)).toBe(456);
+    expect(selectors.selectIsRunningOnMac(state)).toBe(true);
   });
 
   it('generates a session id within the allowed range', () => {
@@ -173,6 +189,10 @@ describe('settings reducer', () => {
 
   it('does not persist the session id', () => {
     expect(settingsPersist.whitelist).not.toContain('sessionId');
+  });
+
+  it('does not persist the runtime platform value', () => {
+    expect(settingsPersist.whitelist).not.toContain('isRunningOnMac');
   });
 
   it('selects theme fallback from config when no theme is stored', () => {
@@ -212,6 +232,7 @@ describe('settings reducer', () => {
     actions.updateTheme('automatic')(dispatch);
     actions.updateClockType(12)(dispatch);
     actions.updateMapLibrary('maplibre')(dispatch);
+    actions.setIsRunningOnMac(true)(dispatch);
 
     expect(dispatch).toHaveBeenCalledWith({
       type: types.UPDATE_UNITS,
@@ -228,6 +249,10 @@ describe('settings reducer', () => {
     expect(dispatch).toHaveBeenCalledWith({
       type: types.UPDATE_MAP_LIBRARY,
       library: 'maplibre',
+    });
+    expect(dispatch).toHaveBeenCalledWith({
+      type: types.SET_IS_RUNNING_ON_MAC,
+      isRunningOnMac: true,
     });
   });
 });

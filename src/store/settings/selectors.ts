@@ -44,3 +44,8 @@ export const selectSessionId = createSelector(
   selectSettingsDomain,
   (settings) => settings.sessionId
 );
+
+export const selectIsRunningOnMac = createSelector(
+  selectSettingsDomain,
+  (settings) => settings.isRunningOnMac
+);

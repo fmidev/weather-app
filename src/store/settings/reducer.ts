@@ -7,6 +7,7 @@ import {
   SettingsActionTypes,
   UPDATE_CLOCK_TYPE,
   UPDATE_MAP_LIBRARY,
+  SET_IS_RUNNING_ON_MAC,
 } from './types';
 
 const SESSION_ID_MAX = 10_000_000;
@@ -20,6 +21,7 @@ const INITIAL_STATE: SettingsState = {
   clockType: undefined,
   mapLibrary: 'react-native-maps',
   sessionId: generateSessionId(),
+  isRunningOnMac: false,
 };
 
 export default (
@@ -52,7 +54,14 @@ export default (
     case UPDATE_MAP_LIBRARY: {
       return {
         ...state,
-        mapLibrary: action.library
+        mapLibrary: action.library,
+      };
+    }
+
+    case SET_IS_RUNNING_ON_MAC: {
+      return {
+        ...state,
+        isRunningOnMac: action.isRunningOnMac,
       };
     }
 
