@@ -436,8 +436,12 @@ const List: React.FC<ListProps> = ({
                 </Text>
               </View>
             )}
-            <View style={[styles.row]} accessible>
+            <View
+              testID={`observation_list_row_${timeStep.epochtime}`}
+              style={styles.row}
+              accessible={!useCompactDailyLayout}>
               <View
+                testID={`observation_list_row_content_${timeStep.epochtime}`}
                 style={[
                   styles.row,
                   styles.observationRow,
@@ -529,6 +533,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   observationRow: {
+    maxHeight: 50,
     padding: 8,
   },
   compactDailyObservationRow: {

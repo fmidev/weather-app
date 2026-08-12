@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import ObservationList from '../../src/components/weather/observation/List';
@@ -241,6 +242,14 @@ describe('Observation List', () => {
     expect(mockDailyObservationRow).toHaveBeenCalledWith(
       expect.objectContaining({ compactLayout: false })
     );
+    expect(
+      view.getByTestId('observation_list_row_2000001600').props.accessible
+    ).toBe(true);
+    expect(
+      StyleSheet.flatten(
+        view.getByTestId('observation_list_row_content_2000001600').props.style
+      ).maxHeight
+    ).toBe(50);
   });
 
   it('uses labeled daily rows and hides the table header on narrow displays', () => {
@@ -265,5 +274,13 @@ describe('Observation List', () => {
     expect(mockDailyObservationRow).toHaveBeenCalledWith(
       expect.objectContaining({ compactLayout: true })
     );
+    expect(
+      view.getByTestId('observation_list_row_2000001600').props.accessible
+    ).toBe(false);
+    expect(
+      StyleSheet.flatten(
+        view.getByTestId('observation_list_row_content_2000001600').props.style
+      ).maxHeight
+    ).toBeUndefined();
   });
 });
