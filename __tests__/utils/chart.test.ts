@@ -154,6 +154,10 @@ describe('chart utils', () => {
       expect(capitalize('monday')).toBe('Monday');
     });
 
+    it('returns an empty string when given an empty string', () => {
+      expect(capitalize('')).toBe('');
+    });
+
     it('formats daily and midnight ticks with weekday and date', () => {
       expect(
         tickFormat(moment('2024-01-15T00:00:00+02:00').valueOf(), 'en', 24)
