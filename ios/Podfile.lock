@@ -1495,10 +1495,30 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-config (1.5.1):
-    - react-native-config/App (= 1.5.1)
-  - react-native-config/App (1.5.1):
+  - react-native-config (1.6.1):
+    - react-native-config/App (= 1.6.1)
+  - react-native-config/App (1.6.1):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
     - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - react-native-geolocation (3.4.0):
     - hermes-engine
     - RCTRequired
@@ -1594,7 +1614,7 @@ PODS:
     - Yoga
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-safe-area-context (5.7.0):
+  - react-native-safe-area-context (5.8.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1606,8 +1626,8 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-safe-area-context/common (= 5.7.0)
-    - react-native-safe-area-context/fabric (= 5.7.0)
+    - react-native-safe-area-context/common (= 5.8.1)
+    - react-native-safe-area-context/fabric (= 5.8.1)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1618,7 +1638,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/common (5.7.0):
+  - react-native-safe-area-context/common (5.8.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1640,7 +1660,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/fabric (5.7.0):
+  - react-native-safe-area-context/fabric (5.8.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1663,7 +1683,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-webview (13.15.0):
+  - react-native-webview (14.0.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2128,7 +2148,7 @@ PODS:
     - Yoga
   - RNDefaultPreference (1.4.4):
     - React-Core
-  - RNFastImage (8.11.0):
+  - RNFastImage (8.13.0):
     - hermes-engine
     - libavif/core (~> 0.11.1)
     - libavif/libdav1d (~> 0.11.1)
@@ -2153,9 +2173,10 @@ PODS:
     - ReactNativeDependencies
     - SDWebImage (>= 5.19.1)
     - SDWebImageAVIFCoder (~> 0.11.0)
+    - SDWebImageSVGCoder (~> 1.7.0)
     - SDWebImageWebPCoder (~> 0.14)
     - Yoga
-  - RNGestureHandler (2.32.0):
+  - RNGestureHandler (3.1.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2177,7 +2198,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNLocalize (3.4.1):
+  - RNLocalize (3.7.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2199,7 +2220,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNPermissions (5.4.4):
+  - RNPermissions (5.6.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2322,7 +2343,7 @@ PODS:
     - ReactNativeDependencies
     - RNWorklets
     - Yoga
-  - RNScreens (4.24.0):
+  - RNScreens (4.26.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2344,9 +2365,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNScreens/common (= 4.24.0)
+    - RNScreens/common (= 4.26.2)
     - Yoga
-  - RNScreens/common (4.24.0):
+  - RNScreens/common (4.26.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2369,7 +2390,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNSVG (15.15.4):
+  - RNSVG (15.15.5):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2390,9 +2411,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNSVG/common (= 15.15.4)
+    - RNSVG/common (= 15.15.5)
     - Yoga
-  - RNSVG/common (15.15.4):
+  - RNSVG/common (15.15.5):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2414,7 +2435,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNVectorIcons (10.2.0):
+  - RNVectorIcons (10.3.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2513,6 +2534,8 @@ PODS:
   - SDWebImageAVIFCoder (0.11.1):
     - libavif/core (>= 0.11.0)
     - SDWebImage (~> 5.10)
+  - SDWebImageSVGCoder (1.7.0):
+    - SDWebImage/Core (~> 5.6)
   - SDWebImageWebPCoder (0.15.0):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
@@ -2633,6 +2656,7 @@ SPEC REPOS:
     - MatomoTracker
     - SDWebImage
     - SDWebImageAVIFCoder
+    - SDWebImageSVGCoder
     - SDWebImageWebPCoder
     - SwiftyJSON
 
@@ -2894,14 +2918,14 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 44dd007f917e2396afa0e70bbd70273237d93fde
   React-microtasksnativemodule: f413ee411341fb3c34d20e85e9f6f524921fab15
   React-mutationobservernativemodule: 58f6d2adf7d98e72b241608dfa2ddce414d2a4e7
-  react-native-config: 136f9755ccc991cc6438053a44363259ad4c7813
+  react-native-config: 6188f674e4f4b3bdfd43c22886fb04f3103793ff
   react-native-geolocation: c41d1ad8e832fa800b4e457c721e348bcc5aa147
   react-native-launch-arguments: eab68037b01ea7c78a0b3b55da3a5e967e9aaf92
   react-native-maps: 7e3af023b773d6670e3c07e9c8170af842b243e0
   react-native-mmkv: d1b6ffd420a8d43f12c1af836bafff833cf251cf
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
-  react-native-safe-area-context: 6b4966397ada0f7dd481e4486a2ef936834861a1
-  react-native-webview: 51acf11ff6710757bc99a7d31c94295c5b130062
+  react-native-safe-area-context: c4a6d0fbf9c77ee28dab7e4d4c369df7753f20d4
+  react-native-webview: fa32202d241bd953cb7aa323f266a43ff86dfac9
   React-NativeModulesApple: 167e532fb9bae30f3c66636b8ee0092bab263667
   React-networking: 89f6b69755a3176f30e56ba1ba8e214b1518ecfb
   React-oscompat: db6675ddaef3bddd1b41533627f3d26ec710c05f
@@ -2940,18 +2964,19 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 57b3615901b76eeafa4586a369a25f6521ec3b5e
   RNCMaskedView: eb2b2e538afa907f05a5848a1a1ac26092e6fec9
   RNDefaultPreference: ee13d69e6693d193cd223d10e15e5b3c012d31ba
-  RNFastImage: a20e544c995369cb772787a835937bdc6972f3b5
-  RNGestureHandler: 92172e79df6e88e0e93b6341f9dcd8b5a02746ba
-  RNLocalize: 8323e948a030ff47ae23336b3a042592289667ef
-  RNPermissions: 3318877a7e86a177f1db62c43a59e1f8f0aa5c3c
+  RNFastImage: 5fafd2e70056cf7729b1bdcd558a7f0fea2aff0e
+  RNGestureHandler: a426f18ab9021991fe2cbc8bf1677b740e20e70c
+  RNLocalize: f370284ea42c48f29f0d8dd3a7bcc28a04f82155
+  RNPermissions: 4c763adb8adb715e0cc10450a313f25e321ebe12
   RNReactNativeHapticFeedback: 1375baff2051b7211dd7f53c6302f76dc980ce65
   RNReanimated: 5aa9e73d0f8d3c40d5c9bec396d6a61098db31f0
-  RNScreens: 01b065ded2dfe7987bcce770ff3a196be417ff41
-  RNSVG: 3fe8590403ac9f107b4d14591bc6e54da4894e5c
-  RNVectorIcons: 1965d63e341570227866dafdf9fd53c4c6ef3bb3
+  RNScreens: 7118cd7715c226856125b5bece3c4d9abec90356
+  RNSVG: 6cae8d4082913be2eb43eaec2a456222c42195ed
+  RNVectorIcons: 97f26211c07d69e45b189f9dd0dbbe5e2d2b0b92
   RNWorklets: 9052122d7f98de547d247e775ea2069839236d38
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   SDWebImageAVIFCoder: afe194a084e851f70228e4be35ef651df0fc5c57
+  SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
   SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
   SwiftyJSON: f5b1bf1cd8dd53cd25887ac0eabcfd92301c6a5a
   Yoga: 9891cfb1c680f64de9c41b09e7453dea33454d2b

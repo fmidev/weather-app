@@ -44,6 +44,7 @@ type ListProps = PropsFromRedux & {
 };
 
 const EXCLUDED_HEADER_PARAMETERS = ['windDirection', 'minimumTemperature'];
+const WIDE_DISPLAY_MIN_WIDTH = 500;
 
 const List: React.FC<ListProps> = ({
   clockType,
@@ -52,7 +53,7 @@ const List: React.FC<ListProps> = ({
   preferredDailyParameters,
   units,
 }) => {
-  const { fontScale } = useWindowDimensions();
+  const { fontScale, width } = useWindowDimensions();
   const { t, i18n } = useTranslation('observation');
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { colors } = useTheme() as CustomTheme;
@@ -60,6 +61,8 @@ const List: React.FC<ListProps> = ({
 
   const isDaily =
     parameter === 'daily' || preferredDailyParameters.includes(parameter);
+  const useCompactDailyLayout =
+    parameter === 'daily' && width <= WIDE_DISPLAY_MIN_WIDTH;
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
 
@@ -367,32 +370,34 @@ const List: React.FC<ListProps> = ({
           </Text>
         )}
       </View>
-      <View
-        testID={`observation_list_header_${parameter}`}
-        style={[
-          styles.row,
-          styles.observationRow,
-          {
-            borderBottomColor: colors.border,
-          },
-        ]}>
-        {!isDaily && (
-          <View style={styles.time}>
-            <Text
-              maxFontSizeMultiplier={1.2}
-              style={[
-                styles.rowItem,
-                styles.time,
-                styles.listText,
-                styles.bold,
-                { color: colors.hourListText, width: timeWidth },
-              ]}>
-              {t('time')}
-            </Text>
-          </View>
-        )}
-        {getHeaderLabels()}
-      </View>
+      {!useCompactDailyLayout && (
+        <View
+          testID={`observation_list_header_${parameter}`}
+          style={[
+            styles.row,
+            styles.observationRow,
+            {
+              borderBottomColor: colors.border,
+            },
+          ]}>
+          {!isDaily && (
+            <View style={styles.time}>
+              <Text
+                maxFontSizeMultiplier={1.2}
+                style={[
+                  styles.rowItem,
+                  styles.time,
+                  styles.listText,
+                  styles.bold,
+                  { color: colors.hourListText, width: timeWidth },
+                ]}>
+                {t('time')}
+              </Text>
+            </View>
+          )}
+          {getHeaderLabels()}
+        </View>
+      )}
 
       {data?.filter((ob) => ob.epochtime % 3600 === 0).flatMap((timeStep, i, arr) => {
         if (
@@ -431,11 +436,16 @@ const List: React.FC<ListProps> = ({
                 </Text>
               </View>
             )}
-            <View style={[styles.row]} accessible>
+            <View
+              testID={`observation_list_row_${timeStep.epochtime}`}
+              style={styles.row}
+              accessible={!useCompactDailyLayout}>
               <View
+                testID={`observation_list_row_content_${timeStep.epochtime}`}
                 style={[
                   styles.row,
                   styles.observationRow,
+                  useCompactDailyLayout && styles.compactDailyObservationRow,
                   {
                     backgroundColor:
                       !isDaily && i % 2 !== 0 ? GRAY_1_OPACITY : undefined,
@@ -468,6 +478,7 @@ const List: React.FC<ListProps> = ({
                     parameter={parameter}
                     epochtime={timeStep.epochtime}
                     data={data}
+                    compactLayout={useCompactDailyLayout}
                   />
                 )}
               </View>
@@ -487,7 +498,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   headerText: {
-    height: 50,
+    maxHeight: 50,
   },
   listText: {
     fontSize: 16,
@@ -510,7 +521,6 @@ const styles = StyleSheet.create({
   row: {
     flex: 1,
     flexDirection: 'row',
-    maxHeight: 50,
   },
   windColumn: {
     flex: 1,
@@ -523,7 +533,11 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
   observationRow: {
+    maxHeight: 50,
     padding: 8,
+  },
+  compactDailyObservationRow: {
+    maxHeight: undefined,
   },
   capitalize: {
     textTransform: 'capitalize',

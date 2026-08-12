@@ -6,7 +6,7 @@ import {
   request,
   RESULTS,
 } from 'react-native-permissions';
-import { TFunction } from 'react-i18next';
+import { TFunction } from 'i18next';
 
 import { Location } from '@store/location/types';
 import {

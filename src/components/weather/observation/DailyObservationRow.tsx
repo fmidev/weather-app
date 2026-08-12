@@ -8,17 +8,20 @@ import moment from 'moment';
 import Text from '@components/common/AppText';
 import { getObservationCellValue } from '@utils/helpers';
 import { CustomTheme } from '@assets/colors';
+import { REGULAR_FONT } from '@assets/constants';
 
 type DailyObservationRowProps = {
   parameter: 'daily' | 'snowDepth06';
   epochtime: number;
   data: TimeStepData[];
+  compactLayout?: boolean;
 };
 
 const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
   parameter,
   epochtime,
   data,
+  compactLayout = false,
 }) => {
   const { t, i18n } = useTranslation('observation');
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
@@ -76,11 +79,48 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
       )}`;
     }
 
+    const accessibleCellValue = cellValue.replace(
+      ` ${unitTranslate(unit.replace('°', ''))}`,
+      ''
+    );
+    const isMissingValue = cellValue
+      .split(' ... ')
+      .every((value) => value === '-');
+    const accessibilityValue = isMissingValue
+      ? t('paramUnits.na')
+      : `${accessibleCellValue.replace(/,/g, '.')} ${t(`paramUnits.${unit}`)}`;
     const accessibilityLabel = `${t(
-      `measurements.${translationKey || parameter}`
-    )}: ${cellValue.replace(',', '.')} ${
-      cellValue === '-' ? t('paramUnits.na') : t(`paramUnits.${unit}`)
-    }`;
+      `measurements.${translationKey || param}`
+    )}: ${accessibilityValue}`;
+
+    if (compactLayout) {
+      return (
+        <View
+          key={param}
+          accessible
+          accessibilityLabel={accessibilityLabel}
+          style={styles.compactRow}>
+          <Text
+            maxFontSizeMultiplier={1.5}
+            style={[
+              styles.listText,
+              styles.compactLabel,
+              { color: colors.hourListText },
+            ]}>
+            {t(`measurements.${translationKey || param}`)}
+          </Text>
+          <Text
+            maxFontSizeMultiplier={1.5}
+            style={[
+              styles.listText,
+              styles.compactValue,
+              { color: colors.hourListText },
+            ]}>
+            {cellValue}
+          </Text>
+        </View>
+      );
+    }
 
     return (
       <Text
@@ -98,7 +138,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
   };
 
   return (
-    <View style={styles.row}>
+    <View style={compactLayout ? styles.compactContainer : styles.row}>
       {parameter.includes('snowDepth') &&
         formattedObservationValue(
           'snowDepth06',
@@ -131,6 +171,7 @@ const styles = StyleSheet.create({
   },
   listText: {
     fontSize: 16,
+    fontFamily: REGULAR_FONT,
   },
   rowItem: {
     flex: 1,
@@ -138,6 +179,23 @@ const styles = StyleSheet.create({
   },
   centeredText: {
     textAlign: 'center',
+  },
+  compactContainer: {
+    width: '100%',
+  },
+  compactRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 4,
+  },
+  compactLabel: {
+    flexShrink: 1,
+    paddingRight: 12,
+  },
+  compactValue: {
+    flexShrink: 1,
+    marginLeft: 'auto',
+    textAlign: 'right',
   },
 });
 

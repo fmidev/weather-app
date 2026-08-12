@@ -99,7 +99,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const decimalSeparator = locale === 'en' ? '.' : ',';
   const stationSheetRef = useRef<RBSheet>(null);
   const { enabled, parameters } = Config.get('weather').observation;
-  const { layout } = Config.get('weather')
+  const { layout } = Config.get('weather');
 
   useEffect(() => {
     const sid = stationList[0]?.id;
@@ -177,16 +177,23 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
 
   return (
     <View
-      style={layout === 'vertical' ? [ styles.extraPadding, {
-        marginLeft: insets.left,
-        marginRight: insets.right,
-      }] : [
-        styles.panelWrapper,
-        {
-          backgroundColor: colors.background,
-          shadowColor: colors.shadow,
-        }
-      ]}>
+      style={
+        layout === 'vertical'
+          ? [
+              styles.extraPadding,
+              {
+                marginLeft: insets.left,
+                marginRight: insets.right,
+              },
+            ]
+          : [
+              styles.panelWrapper,
+              {
+                backgroundColor: colors.background,
+                shadowColor: colors.shadow,
+              },
+            ]
+      }>
       <PanelHeader title={t('panelHeader')} thin={layout === 'vertical'} />
       <View style={styles.panelContainer}>
         {loading && <ActivityIndicator />}
@@ -224,7 +231,11 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 accessibilityLabel={t('showObservationChart')}
                 activeOpacity={1}
                 onPress={() => {
-                  trackMatomoEvent('User action', 'Weather', 'Show OBSERVATIONS in CHART format');
+                  trackMatomoEvent(
+                    'User action',
+                    'Weather',
+                    'Show OBSERVATIONS in CHART format'
+                  );
                   updateDisplayFormat(CHART);
                 }}
                 style={styles.withMarginRight}>
@@ -264,7 +275,11 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 accessibilityLabel={t('showObservationList')}
                 activeOpacity={1}
                 onPress={() => {
-                  trackMatomoEvent('User action', 'Weather', 'Show OBSERVATIONS in LIST format');
+                  trackMatomoEvent(
+                    'User action',
+                    'Weather',
+                    'Show OBSERVATIONS in LIST format'
+                  );
                   updateDisplayFormat(LIST);
                 }}>
                 <View
@@ -359,7 +374,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginBottom: 8,
     flex: 1,
-    paddingBottom: 28,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,
@@ -377,7 +391,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   extraPadding: {
-    paddingTop: 16
+    paddingTop: 16,
   },
   observationText: {
     fontSize: 14,

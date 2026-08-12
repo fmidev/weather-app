@@ -83,11 +83,11 @@ const SetupStackScreen: React.FC<SetupStackScreenProps> = ({
           <TermsAndConditionsScreen
             showActions={true}
             onAccept={() => {
-              navigation.navigate({
-                name: 'SetupScreen',
-                params: { acceptedTerms: true },
-                merge: true,
-              });
+              navigation.navigate(
+                'SetupScreen',
+                { acceptedTerms: true },
+                { merge: true }
+              );
             }}
           />
         )}

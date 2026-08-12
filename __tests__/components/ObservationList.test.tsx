@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import ObservationList from '../../src/components/weather/observation/List';
@@ -150,6 +151,10 @@ describe('Observation List', () => {
     });
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('renders temperature headers, current day and hourly rows', () => {
     const view = render(
       <ObservationList
@@ -209,6 +214,13 @@ describe('Observation List', () => {
   });
 
   it('renders daily rows once per day for daily parameters', () => {
+    jest.spyOn(require('react-native'), 'useWindowDimensions').mockReturnValue({
+      width: 768,
+      height: 1024,
+      scale: 2,
+      fontScale: 1,
+    });
+
     const view = render(
       <ObservationList
         clockType={24 as any}
@@ -227,5 +239,48 @@ describe('Observation List', () => {
     expect(view.queryByText('time')).toBeNull();
     expect(view.getAllByText('daily-3')).toHaveLength(2);
     expect(mockDailyObservationRow).toHaveBeenCalledTimes(2);
+    expect(mockDailyObservationRow).toHaveBeenCalledWith(
+      expect.objectContaining({ compactLayout: false })
+    );
+    expect(
+      view.getByTestId('observation_list_row_2000001600').props.accessible
+    ).toBe(true);
+    expect(
+      StyleSheet.flatten(
+        view.getByTestId('observation_list_row_content_2000001600').props.style
+      ).maxHeight
+    ).toBe(50);
+  });
+
+  it('uses labeled daily rows and hides the table header on narrow displays', () => {
+    jest.spyOn(require('react-native'), 'useWindowDimensions').mockReturnValue({
+      width: 390,
+      height: 844,
+      scale: 3,
+      fontScale: 1,
+    });
+
+    const view = render(
+      <ObservationList
+        clockType={24 as any}
+        parameter="daily"
+        preferredDailyParameters={['daily']}
+        units={{} as any}
+        data={[{ epochtime: 2000001600, rrday: 1 }] as any}
+      />
+    );
+
+    expect(view.queryByTestId('observation_list_header_daily')).toBeNull();
+    expect(mockDailyObservationRow).toHaveBeenCalledWith(
+      expect.objectContaining({ compactLayout: true })
+    );
+    expect(
+      view.getByTestId('observation_list_row_2000001600').props.accessible
+    ).toBe(false);
+    expect(
+      StyleSheet.flatten(
+        view.getByTestId('observation_list_row_content_2000001600').props.style
+      ).maxHeight
+    ).toBeUndefined();
   });
 });

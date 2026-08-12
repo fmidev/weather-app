@@ -1,6 +1,7 @@
 import { Alert } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import moment from 'moment';
+import type { TFunction } from 'i18next';
 import {
   checkMultiple,
   PERMISSIONS,
@@ -30,7 +31,7 @@ const flushAsync = async () => {
 
 describe('helpers getGeolocation', () => {
   const callback = jest.fn();
-  const t = (key: string) => key;
+  const t = ((key: string) => key) as TFunction<string[] | string>;
 
   beforeEach(() => {
     jest.clearAllMocks();
