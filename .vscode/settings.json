@@ -1,4 +1,7 @@
 {
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "prettier.prettierPath": "node_modules/prettier/index.cjs",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   }

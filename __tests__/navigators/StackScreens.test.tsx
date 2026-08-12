@@ -213,11 +213,11 @@ describe('navigator stack screens', () => {
       })
     );
     mockTermsAndConditionsScreen.mock.calls[0][0].onAccept();
-    expect(mockNavigate).toHaveBeenCalledWith({
-      name: 'SetupScreen',
-      params: { acceptedTerms: true },
-      merge: true,
-    });
+    expect(mockNavigate).toHaveBeenCalledWith(
+      'SetupScreen',
+      { acceptedTerms: true },
+      { merge: true }
+    );
     expect(view.getByTestId('header-title-setUp:termsAndConditions')).toBeTruthy();
   });
 });
