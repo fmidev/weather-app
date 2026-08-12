@@ -154,8 +154,8 @@ export const dailyChartTickValues = (days: number) => {
   return tickValues.sort((a, b) => a - b);
 };
 
-export const capitalize = ([first, ...rest]: string) =>
-  first.toUpperCase() + rest.join('');
+export const capitalize = (value: string) =>
+  value ? value[0].toUpperCase() + value.slice(1) : '';
 
 export const tickFormat = (
   tick: any,
