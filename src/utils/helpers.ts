@@ -27,7 +27,7 @@ import i18n from '@i18n';
 import { isRunningInIOSCompatibilityMode } from './iosCompatibilityMode';
 import { roundCoordinates } from './number';
 
-const getPosition = async(
+const getPosition = async (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>
 ) => {
@@ -42,9 +42,17 @@ const getPosition = async(
       const { source, maxDistance } = Config.get('location');
 
       if (source === 'json') {
-        const location = findNearestLocation(latitude, longitude, maxDistance ?? 10);
-        const name = location?.name[i18n.language] || location?.name.primary || `${latitude}, ${longitude}`;
-        const region = location?.region[i18n.language] || location?.region.primary || '';
+        const location = findNearestLocation(
+          latitude,
+          longitude,
+          maxDistance ?? 10
+        );
+        const name =
+          location?.name[i18n.language] ||
+          location?.name.primary ||
+          `${latitude}, ${longitude}`;
+        const region =
+          location?.region[i18n.language] || location?.region.primary || '';
 
         AccessibilityInfo.announceForAccessibility(
           region
@@ -152,14 +160,18 @@ export const getGeolocation = async (
           getPosition(callback, t);
         }
         if (res === RESULTS.BLOCKED) {
-          trackMatomoEvent('Notice', 'Geolocation', 'COARSE_LOCATION_NO_PERMISSION');
+          trackMatomoEvent(
+            'Notice',
+            'Geolocation',
+            'COARSE_LOCATION_NO_PERMISSION'
+          );
           alertNoPermission(t);
         }
       })
       .catch((e) => {
         // TODO: is this a good way to handle error message?
         trackMatomoEvent('Error', 'Geolocation', e.message);
-        console.error(e)
+        console.error(e);
       });
   }
   if (!failSilently && values.every((value) => value === RESULTS.BLOCKED)) {
@@ -248,7 +260,7 @@ export const getObservationCellValue = (
   divider?: number,
   showUnit?: boolean,
   decimalSeparator: ',' | '.' = ',',
-  t?: (key: string) => string,
+  t?: (key: string) => string
 ): string => {
   const unitAbb = unit.replace('°', ''); // get rid of ° in temperature units
   const unitParameterObject = UNITS.find((x) =>
@@ -277,7 +289,10 @@ export const getObservationCellValue = (
       : Number(value).toFixed(decimals || 0)
     )
       .toString()
-      .replace('.', decimalSeparator)} ${showUnit ? translatedUnit : ''}`.trim();
+      .replace(
+        '.',
+        decimalSeparator
+      )} ${showUnit ? translatedUnit : ''}`.trim();
   }
   return '-';
 };
@@ -316,20 +331,26 @@ export const getParameterUnit = (
     Config.get('settings').units;
   switch (param) {
     case 'precipitation1h':
-      return t ? t(units?.precipitation.unitAbb ?? precipitation) : units?.precipitation.unitAbb ?? precipitation;
+      return t
+        ? t(units?.precipitation.unitAbb ?? precipitation)
+        : (units?.precipitation.unitAbb ?? precipitation);
     case 'precipitationIntensity':
     case 'ri_10min':
-      return `${t ? t(units?.precipitation.unitAbb ?? precipitation) : units?.precipitation.unitAbb ?? precipitation}/h`
+      return `${t ? t(units?.precipitation.unitAbb ?? precipitation) : (units?.precipitation.unitAbb ?? precipitation)}/h`;
     case 'humidity':
       return '%';
     case 'temperature':
     case 'dewPoint':
-      return t ? `°${ t(units?.temperature.unitAbb ?? temperature) }` : `°${ units?.temperature.unitAbb ?? temperature}`;
+      return t
+        ? `°${t(units?.temperature.unitAbb ?? temperature)}`
+        : `°${units?.temperature.unitAbb ?? temperature}`;
     case 'windSpeedMS':
     case 'windGust':
-      return t ? t(units?.wind.unitAbb ?? wind) : units?.wind.unitAbb ?? wind;
+      return t ? t(units?.wind.unitAbb ?? wind) : (units?.wind.unitAbb ?? wind);
     case 'pressure':
-      return t ? t(units?.pressure.unitAbb ?? pressure) : units?.pressure.unitAbb ?? pressure;
+      return t
+        ? t(units?.pressure.unitAbb ?? pressure)
+        : (units?.pressure.unitAbb ?? pressure);
     case 'visibility':
       return 'km';
     case 'snowDepth':
@@ -345,7 +366,8 @@ export const getParameterUnit = (
 
 export const formatAccessibleTemperature = (
   val: string | number | undefined | null,
-  t: (key: string) => string): string  => {
+  t: (key: string) => string
+): string => {
   if (val === null || val === undefined || val === '') return '-';
 
   const num = Number(val);
@@ -354,7 +376,7 @@ export const formatAccessibleTemperature = (
   const valuePart =
     num < 0 ? `${t('forecast:minus')} ${Math.abs(num)}` : `${num}`;
   return `${valuePart}`;
-}
+};
 
 // https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
 const getEaster = (year: number): Date => {
@@ -462,7 +484,7 @@ export const getSeveritiesForTimePeriod = (
     })
     .map((warning) => {
       const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
-      return severities.indexOf(info.severity) + 1
+      return severities.indexOf(info.severity) + 1;
     });
 
   const maxSeverity = Math.max(
@@ -488,7 +510,12 @@ export const getSeveritiesForDays = (
     daySeverities.push(
       Math.max(
         0,
-        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject, timezone)
+        getSeveritiesForTimePeriod(
+          warnings,
+          startMomentObject,
+          endMomentObject,
+          timezone
+        )
       )
     );
 
@@ -497,7 +524,12 @@ export const getSeveritiesForDays = (
     daySeverities.push(
       Math.max(
         0,
-        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject, timezone)
+        getSeveritiesForTimePeriod(
+          warnings,
+          startMomentObject,
+          endMomentObject,
+          timezone
+        )
       )
     );
 
@@ -507,7 +539,12 @@ export const getSeveritiesForDays = (
     daySeverities.push(
       Math.max(
         0,
-        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject, timezone)
+        getSeveritiesForTimePeriod(
+          warnings,
+          startMomentObject,
+          endMomentObject,
+          timezone
+        )
       )
     );
 
@@ -517,7 +554,12 @@ export const getSeveritiesForDays = (
     daySeverities.push(
       Math.max(
         0,
-        getSeveritiesForTimePeriod(warnings, startMomentObject, endMomentObject, timezone)
+        getSeveritiesForTimePeriod(
+          warnings,
+          startMomentObject,
+          endMomentObject,
+          timezone
+        )
       )
     );
 
@@ -526,32 +568,48 @@ export const getSeveritiesForDays = (
   return dailySeverities;
 };
 
-// Rounds coordinates to maximum 4 decimal places
-export const uppercaseFirst = (str: string) => str ? str[0].toUpperCase() + str.slice(1) : '';
+export const uppercaseFirst = (str: string) =>
+  str ? str[0].toUpperCase() + str.slice(1) : '';
 
-export const selectCapInfoByLanguage = (infos: Array<CapInfo>, language: string):CapInfo => {
+export const selectCapInfoByLanguage = (
+  infos: Array<CapInfo>,
+  language: string
+): CapInfo => {
   const info = infos.find((item) => {
     const [l] = item.language.split('-');
     return l === language;
   });
 
   if (info) {
-    return info
+    return info;
   }
   return infos[0];
-}
+};
 
 export const msToBeaufort = (speed: number): number => {
   const thresholds = [
-    0.3, 1.6, 3.4, 5.5, 8, 10.8,
-    13.9, 17.2, 20.8, 24.5, 28.5,
-    32.7, Infinity,
+    0.3,
+    1.6,
+    3.4,
+    5.5,
+    8,
+    10.8,
+    13.9,
+    17.2,
+    20.8,
+    24.5,
+    28.5,
+    32.7,
+    Infinity,
   ];
 
   return thresholds.findIndex((limit) => speed < limit);
 };
 
-export const formatAccessibleDate = (m: moment.Moment, includeYear = true): string => {
+export const formatAccessibleDate = (
+  m: moment.Moment,
+  includeYear = true
+): string => {
   return m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
 };
 
@@ -563,8 +621,13 @@ export const formatAccessibleDateTime = (
 ): string => {
   const datePart = m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
 
-  if (is24Hour) return datePart+' '+m.format('H:mm');
+  if (is24Hour) return datePart + ' ' + m.format('H:mm');
 
-  return datePart+' '+m.format('h:mm ')+' '
-          +(m.hours() >= 12 ? t('time:pmSpoken') : t('time:amSpoken'));
+  return (
+    datePart +
+    ' ' +
+    m.format('h:mm ') +
+    ' ' +
+    (m.hours() >= 12 ? t('time:pmSpoken') : t('time:amSpoken'))
+  );
 };

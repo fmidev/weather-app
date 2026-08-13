@@ -23,6 +23,7 @@ export const toStringWithDecimal = (
   return input.toString().replace('.', separator);
 };
 
+// Rounds coordinates to maximum 4 decimal places
 export const roundCoordinates = (value: number): number => {
   const stringValue = value.toString();
   const items = stringValue.split('.');
