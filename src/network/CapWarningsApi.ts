@@ -10,7 +10,9 @@ const isRelevantMessage = (warning: CapWarning) => {
   const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
   const isMet = info.category === 'Met';
   const isAckOrError = ['Ack', 'Error'].includes(warning.msgType);
-  const hasValidUrgency = ['Immediate', 'Expected', 'Future'].includes(info.urgency);
+  const hasValidUrgency = ['Immediate', 'Expected', 'Future'].includes(
+    info.urgency
+  );
   const hasArea = Boolean(info.area?.polygon) || Boolean(info.area?.circle);
 
   const hasExpired = moment(info.expires).isBefore(moment.now());
@@ -44,25 +46,31 @@ const getCapWarnings = async () => {
   const { feed } = parser.parse(feedData);
   const entriesList = Array.isArray(feed.entry) ? feed.entry : [feed.entry];
 
-  const urls : [string] = entriesList.flatMap((entry: { link: [{ '@_href': string, '@_type': string | undefined }] }) => {
-    if (Array.isArray(entry.link)) {
-      // Meteoalarm feed may contain multiple links
-      const links = entry.link.filter((link) => link['@_type'] && link['@_type'] === CAP_MIME_TYPE);
-      return links[0]['@_href'];
-    } else if (entry.link['@_type'] && entry.link['@_type'] === CAP_MIME_TYPE) {
-      // Smartmet feed contains only one link
-      return entry.link['@_href'];
-    } else {
-      return [];
+  const urls: [string] = entriesList.flatMap(
+    (entry: { link: [{ '@_href': string; '@_type': string | undefined }] }) => {
+      if (Array.isArray(entry.link)) {
+        // Meteoalarm feed may contain multiple links
+        const links = entry.link.filter(
+          (link) => link['@_type'] && link['@_type'] === CAP_MIME_TYPE
+        );
+        return links[0]['@_href'];
+      } else if (
+        entry.link['@_type'] &&
+        entry.link['@_type'] === CAP_MIME_TYPE
+      ) {
+        // Smartmet feed contains only one link
+        return entry.link['@_href'];
+      } else {
+        return [];
+      }
     }
-  });
+  );
   const uniqueUrls = [...new Set(urls)];
 
   const capWarnings: CapWarning[] = (
-    await Promise.all(
-      uniqueUrls.map(capUrl => axiosClient({ url: capUrl }))
-    )
-  ).map(({ data }) => parser.parse(data).alert)
+    await Promise.all(uniqueUrls.map((capUrl) => axiosClient({ url: capUrl })))
+  )
+    .map(({ data }) => parser.parse(data).alert)
     .filter((warning) => warning); // remove undefined, null
 
   const relevantMessages = capWarnings.filter(isRelevantMessage);
@@ -75,11 +83,6 @@ const getCapWarnings = async () => {
     .filter((message) => message.msgType === 'Cancel')
     .map((message) => parseReferences(message.references))
     .flat();
-
-  relevantMessages.filter(
-    (message) =>
-      ![...updatedMessages, ...canceledMessages].includes(message.identifier)
-  );
 
   const finalMessages = relevantMessages.filter(
     (message) =>
