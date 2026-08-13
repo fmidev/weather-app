@@ -14,7 +14,7 @@ import {
   TimeseriesLocation,
   SET_LOADING,
 } from './types';
-import { roundCoordinates } from '@utils/helpers';
+import { roundCoordinates } from '@utils/number';
 
 const INITIAL_STATE: LocationState = {
   favorites: [],

@@ -90,8 +90,11 @@ jest.mock('@utils/units', () => ({
 jest.mock('@utils/helpers', () => ({
   isOdd: (value: number) => value % 2 === 1,
   getWindDirection: (...args: any[]) => mockGetWindDirection(...args),
-  roundToNearestTen: (value: number) => Math.round(value / 10) * 10,
   formatAccessibleTemperature: (value: string) => value,
+}));
+
+jest.mock('@utils/number', () => ({
+  roundToNearestTen: (value: number) => Math.round(value / 10) * 10,
 }));
 
 describe('ForecastListColumn', () => {

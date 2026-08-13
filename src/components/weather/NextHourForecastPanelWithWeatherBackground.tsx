@@ -44,6 +44,7 @@ import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
 import type { WeatherStackParamList } from '@navigators/stacks/types';
 import { LIGHT_FONT, REGULAR_FONT, BOLD_FONT, MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
+import { numericOrDash } from '@utils/number';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -108,9 +109,6 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   const defaultUnits = Config.get('settings').units;
   const temperatureUnit =
     units?.temperature.unitAbb ?? defaultUnits.temperature;
-
-  const numericOrDash = (val: string | undefined | null): string =>
-    val && !Number.isNaN(val) ? val : '-';
 
   const convertValue = (
     unit: string,
