@@ -76,10 +76,15 @@ export const secondaryYDomainForWeatherChart = (
     return { y: [0, 10] };
   }
 
-  const tickCount = calculateTemperatureTickCount(temperatureDomain);
   const values: number[] = minMax.filter(
-    (v): v is number => v !== undefined && v !== null
+    (v): v is number => typeof v === 'number' && Number.isFinite(v)
   );
+  const tickCount = calculateTemperatureTickCount(temperatureDomain);
+
+  if (values.length === 0 || !Number.isFinite(tickCount) || tickCount <= 0) {
+    return { y: [0, 10] };
+  }
+
   let max = Math.ceil(Math.max(...values));
 
   while (max < 5 || max % tickCount !== 0) {
