@@ -8,8 +8,8 @@ export const numericOrDash = (
   ) {
     return '-';
   }
-
-  return Number.isFinite(Number(value)) ? String(value) : '-';
+  const normalizedValue = typeof value === 'string' ? value.trim() : value;
+  return Number.isFinite(Number(normalizedValue)) ? String(normalizedValue) : '-';
 };
 
 type DotOrComma = ',' | '.';
