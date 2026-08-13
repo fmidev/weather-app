@@ -104,6 +104,23 @@ describe('chart utils', () => {
       });
     });
 
+    it('uses a safe secondary domain for missing or invalid values', () => {
+      expect(secondaryYDomainForWeatherChart([], { y: [-10, 20] })).toEqual({
+        y: [0, 10],
+      });
+      expect(
+        secondaryYDomainForWeatherChart([null, NaN, Infinity], {
+          y: [-10, 20],
+        })
+      ).toEqual({ y: [0, 10] });
+    });
+
+    it('uses a safe secondary domain for an invalid temperature domain', () => {
+      expect(
+        secondaryYDomainForWeatherChart([1, 2], { y: [0, 1] })
+      ).toEqual({ y: [0, 10] });
+    });
+
     it('calculates temperature tick count from divisible domain range', () => {
       expect(calculateTemperatureTickCount({ y: [-10, 15] })).toBe(6);
       expect(calculateTemperatureTickCount({ y: [-10, 20] })).toBe(7);
