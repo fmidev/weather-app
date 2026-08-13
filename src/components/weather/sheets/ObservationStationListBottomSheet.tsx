@@ -18,7 +18,7 @@ import {
 import { setStationId as setStationIdAction } from '@store/observation/actions';
 
 import { GRAY_1, CustomTheme } from '@assets/colors';
-import { toStringWithDecimal } from '@utils/helpers';
+import { toStringWithDecimal } from '@utils/number';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackMatomoEvent } from '@utils/matomo';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';

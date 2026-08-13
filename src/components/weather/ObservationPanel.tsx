@@ -26,7 +26,7 @@ import {
 
 import { State } from '@store/types';
 import { CustomTheme, GRAY_1 } from '@assets/colors';
-import { toStringWithDecimal } from '@utils/helpers';
+import { toStringWithDecimal } from '@utils/number';
 import { Config } from '@config';
 import { ObservationParameters } from '@store/observation/types';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';

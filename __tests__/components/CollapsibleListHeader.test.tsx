@@ -21,7 +21,7 @@ jest.mock('@assets/Icon', () => ({
   default: (props: any) => mockIcon(props),
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/number', () => ({
   toStringWithDecimal: (...args: any[]) => mockToStringWithDecimal(...args),
 }));
 

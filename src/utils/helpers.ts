@@ -25,6 +25,7 @@ import { trackMatomoEvent } from './matomo';
 import { findNearestLocation } from './geolocation';
 import i18n from '@i18n';
 import { isRunningInIOSCompatibilityMode } from './iosCompatibilityMode';
+import { roundCoordinates } from './number';
 
 const getPosition = async(
   callback: (arg0: Location, arg1: boolean) => void,
@@ -216,17 +217,6 @@ export const getWindDirection = (dataValue: number | undefined): number => {
     direction = (dataValue || 0) + 45 - 180;
   }
   return direction;
-};
-
-type DotOrComma = ',' | '.';
-
-export const toStringWithDecimal = (
-  input: number | undefined,
-  separator: DotOrComma
-): string => {
-  if (Number.isNaN(input) || input === 0 || !input) return `0${separator}0`;
-  if (Number.isInteger(input)) return `${input}${separator}0`;
-  return input.toString().replace('.', separator);
 };
 
 const minusParams = [
@@ -537,16 +527,6 @@ export const getSeveritiesForDays = (
 };
 
 // Rounds coordinates to maximum 4 decimal places
-export const roundCoordinates = (value: number): number => {
-  const stringValue = value.toString();
-  const items = stringValue.split('.');
-
-  // Return original value if maximum 4 decimal places
-  if (items.length === 2 && items[1].length <= 4) return value;
-
-  return +(Math.round(parseFloat(value + 'e+4')) + 'e-4');
-};
-
 export const uppercaseFirst = (str: string) => str ? str[0].toUpperCase() + str.slice(1) : '';
 
 export const selectCapInfoByLanguage = (infos: Array<CapInfo>, language: string):CapInfo => {
@@ -559,11 +539,6 @@ export const selectCapInfoByLanguage = (infos: Array<CapInfo>, language: string)
     return info
   }
   return infos[0];
-}
-
-export function roundToNearestTen(n: number): number {
-  const r = Math.round(n / 10) * 10;
-  return Object.is(r, -0) ? 0 : r; // normalize -0 -> 0
 }
 
 export const msToBeaufort = (speed: number): number => {

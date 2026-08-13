@@ -92,7 +92,7 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/number', () => ({
   toStringWithDecimal: (value: number, separator: string) =>
     typeof value === 'number' ? value.toFixed(1).replace('.', separator) : '-',
 }));

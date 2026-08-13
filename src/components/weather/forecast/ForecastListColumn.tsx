@@ -12,7 +12,8 @@ import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
-import { isOdd, getWindDirection, roundToNearestTen, formatAccessibleTemperature } from '@utils/helpers';
+import { isOdd, getWindDirection, formatAccessibleTemperature } from '@utils/helpers';
+import { roundToNearestTen } from '@utils/number';
 import { Config } from '@config';
 import {
   converter,

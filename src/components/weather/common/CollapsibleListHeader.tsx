@@ -4,7 +4,7 @@ import { useTheme } from '@react-navigation/native';
 
 import Icon from '@assets/Icon';
 import { CustomTheme } from '@assets/colors';
-import { toStringWithDecimal } from '@utils/helpers';
+import { toStringWithDecimal } from '@utils/number';
 import PrecipitationStrip from '../forecast/PrecipitationStrip';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 

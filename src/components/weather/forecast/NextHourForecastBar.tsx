@@ -25,6 +25,7 @@ import {
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { TimeStepData } from '@store/forecast/types';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
+import { numericOrDash } from '@utils/number';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -69,9 +70,6 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
     units?.precipitation.unitAbb ?? defaultUnits.precipitation;
 
   const currentTime = moment.unix(forecast.epochtime);
-  const numericOrDash = (val: string | undefined | null): string =>
-    val && !Number.isNaN(val) ? val : '-';
-
   const convertValue = (
     unit: string,
     unitAbb: string,

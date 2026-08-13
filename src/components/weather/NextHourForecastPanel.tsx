@@ -31,6 +31,7 @@ import {
 } from '@utils/units';
 import { selectClockType } from '@store/settings/selectors';
 import { LIGHT_FONT, REGULAR_FONT, BOLD_FONT } from '@assets/constants';
+import { numericOrDash } from '@utils/number';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -88,9 +89,6 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
     nextHourForecast?.smartSymbol?.toString() || '0',
     dark
   );
-
-  const numericOrDash = (val: string | undefined | null): string =>
-    val && !Number.isNaN(val) ? val : '-';
 
   const convertValue = (
     unit: string,
