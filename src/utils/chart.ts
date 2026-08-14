@@ -8,9 +8,13 @@ import { Config } from '@config';
 import { ClockType, UnitMap } from '@store/settings/types';
 import moment from 'moment';
 
-export const chartXDomain = (tickValues: number[]): ChartDomain => ({
-  x: [tickValues[0], tickValues[tickValues.length - 1]],
-});
+export const chartXDomain = (
+  tickValues: number[]
+): ChartDomain | undefined => {
+  if (tickValues.length === 0) return undefined;
+
+  return { x: [tickValues[0], tickValues[tickValues.length - 1]] };
+};
 
 export const chartYDomain = (
   minMax: ChartMinMax,

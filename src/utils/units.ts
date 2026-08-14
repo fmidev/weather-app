@@ -184,7 +184,17 @@ export const toPrecision = (
 };
 
 // converts given numeric value to corresponding unit abbreviation
-export const converter = (unitAbb: string, value: number): number => {
+export function converter(unitAbb: string, value: number): number;
+export function converter(unitAbb: string, value: null): null;
+export function converter(unitAbb: string, value: undefined): undefined;
+export function converter(
+  unitAbb: string,
+  value: number | null | undefined
+): number | null | undefined;
+export function converter(
+  unitAbb: string,
+  value: number | null | undefined
+): number | null | undefined {
   if (value === null || value === undefined) return value;
 
   switch (unitAbb) {
@@ -217,7 +227,7 @@ export const converter = (unitAbb: string, value: number): number => {
       // pressure: hehtopascal [hPa] = millibascal [mbar]
       return value;
   }
-};
+}
 
 export const getForecastParameterUnitTranslationKey = (unit: string) => {
   switch (unit) {

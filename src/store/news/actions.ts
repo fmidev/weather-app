@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+import { Dispatch } from 'redux';
 import getNews from '@network/NewsApi';
 import {
   Error,

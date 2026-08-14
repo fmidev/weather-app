@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+import { Dispatch } from 'redux';
 import getMeteorologistSnapshot from '@network/MeteorologistSnapshotApi';
 import {
   Error,
