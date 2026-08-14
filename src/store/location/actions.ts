@@ -2,7 +2,7 @@ import axios from 'axios';
 import i18n from '@i18n';
 
 import getAutocomplete from '@network/AutocompleteApi';
-import { Dispatch } from 'react';
+import { Dispatch } from 'redux';
 import { Config } from '@config';
 import { getLocationsLocales } from '@network/WeatherApi';
 import { search } from '@utils/geolocation';

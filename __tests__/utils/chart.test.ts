@@ -73,6 +73,10 @@ describe('chart utils', () => {
       expect(chartXDomain([1000, 2000, 3000])).toEqual({ x: [1000, 3000] });
     });
 
+    it('returns undefined when x domain has no tick values', () => {
+      expect(chartXDomain([])).toBeUndefined();
+    });
+
     it('uses fixed y domains for percentage and precipitation charts', () => {
       expect(chartYDomain([12, 80], 'humidity')).toEqual({ y: [0, 100] });
       expect(chartYDomain([0.2, 0.7], 'visCloud')).toEqual({ y: [0, 1] });

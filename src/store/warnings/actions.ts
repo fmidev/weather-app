@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+import { Dispatch } from 'redux';
 import getWarnings from '@network/WarningsApi';
 import { Location } from '@store/location/types';
 import getCapWarnings from '@network/CapWarningsApi';

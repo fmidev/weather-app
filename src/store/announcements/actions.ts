@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+import { Dispatch } from 'redux';
 import getAnnouncements from '@network/AnnouncementsApi';
 import {
   Error,

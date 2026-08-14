@@ -6,7 +6,6 @@ import { Provider, useSelector } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import ReduxThunk from 'redux-thunk';
-import NetInfo from '@react-native-community/netinfo';
 
 import '@i18n';
 import '@utils/moment';
@@ -79,10 +78,6 @@ const App: React.FC = () => {
       isActive = false;
     };
   }, [store]);
-
-  NetInfo.configure({
-    reachabilityShouldRun: () => false,
-  });
 
   configureMapLibreLogging();
 
