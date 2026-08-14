@@ -211,6 +211,44 @@ describe('RnMapView', () => {
     expect(mockMapRefApi.animateToRegion).toHaveBeenCalled();
   });
 
+  it('uses native camera zoom range on iOS', () => {
+    Object.defineProperty(Platform, 'OS', {
+      configurable: true,
+      value: 'ios',
+    });
+
+    const store = createStore({
+      mock: {
+        currentLocation: undefined,
+        displayLocation: false,
+        overlay: undefined,
+        activeOverlay: undefined,
+        timezone: 'Europe/Helsinki',
+      },
+    });
+
+    render(
+      <Provider store={store as any}>
+        <RnMapView
+          infoSheetRef={{ current: null }}
+          mapLayersSheetRef={{ current: null }}
+        />
+      </Provider>
+    );
+
+    expect(lastMapProps).toEqual(
+      expect.objectContaining({
+        minZoomLevel: undefined,
+        maxZoomLevel: undefined,
+        cameraZoomRange: {
+          minCenterCoordinateDistance: 75_000,
+          maxCenterCoordinateDistance: 5_000_000,
+          animated: false,
+        },
+      })
+    );
+  });
+
   it('handles region changes, map press and control callbacks', async () => {
     mockGetDistance.mockReturnValue(15000);
 

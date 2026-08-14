@@ -43,6 +43,12 @@ const ANIMATE_ZOOM = {
   longitudeDelta: 1.4189536248254342,
 };
 
+const IOS_CAMERA_ZOOM_RANGE = {
+  minCenterCoordinateDistance: 75_000,
+  maxCenterCoordinateDistance: 5_000_000,
+  animated: false,
+};
+
 const mapStateToProps = (state: State) => ({
   currentLocation: selectCurrent(state),
   displayLocation: selectDisplayLocation(state),
@@ -60,8 +66,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type MapViewProps = PropsFromRedux & {
-  infoSheetRef: React.RefObject<RBSheet | null>,
-  mapLayersSheetRef: React.RefObject<RBSheet | null>
+  infoSheetRef: React.RefObject<RBSheet | null>;
+  mapLayersSheetRef: React.RefObject<RBSheet | null>;
 };
 
 // MapView using react-native-maps
@@ -76,7 +82,7 @@ const RnMapView: React.FC<MapViewProps> = ({
   updateRegion,
   updateSelectedCallout,
   infoSheetRef,
-  mapLayersSheetRef
+  mapLayersSheetRef,
 }) => {
   const { dark } = useTheme();
   const isFocused = useIsFocused();
@@ -187,8 +193,8 @@ const RnMapView: React.FC<MapViewProps> = ({
   const darkGoogleMapsStyle =
     dark && Platform.OS === 'android' ? darkMapStyle : [];
 
-  const mapMaxZoom = Platform.OS === 'android' ? 10 : 9.5;
-  const mapMinZoom = Platform.OS === 'android' ? 4 : 3.5;
+  const mapMaxZoom = Platform.OS === 'android' ? 10 : undefined;
+  const mapMinZoom = Platform.OS === 'android' ? 4 : undefined;
 
   return (
     <View style={styles.mapContainer}>
@@ -198,8 +204,11 @@ const RnMapView: React.FC<MapViewProps> = ({
         testID="map"
         style={styles.map}
         userInterfaceStyle={dark ? 'dark' : 'light'}
-        maxZoomLevel={mapMaxZoom}
         minZoomLevel={mapMinZoom}
+        maxZoomLevel={mapMaxZoom}
+        cameraZoomRange={
+          Platform.OS === 'ios' ? IOS_CAMERA_ZOOM_RANGE : undefined
+        }
         customMapStyle={darkGoogleMapsStyle}
         initialRegion={initialRegion}
         rotateEnabled={false}
@@ -207,8 +216,12 @@ const RnMapView: React.FC<MapViewProps> = ({
         onRegionChangeComplete={onRegionChangeComplete}
         onPress={onPress}
         moveOnMarkerPress={false}>
-        {overlay && overlay.type === 'WMS' && <WMSOverlay overlay={overlay} library="react-native-maps"/>}
-        {overlay && overlay.type === 'Timeseries' && <TimeseriesOverlay overlay={overlay} />}
+        {overlay && overlay.type === 'WMS' && (
+          <WMSOverlay overlay={overlay} library="react-native-maps" />
+        )}
+        {overlay && overlay.type === 'Timeseries' && (
+          <TimeseriesOverlay overlay={overlay} />
+        )}
         {displayLocation && currentLocation && (
           <MapMarker
             coordinates={{
@@ -222,13 +235,13 @@ const RnMapView: React.FC<MapViewProps> = ({
         onLayersPressed={() => mapLayersSheetRef.current?.open()}
         onInfoPressed={() => {
           trackMatomoEvent('User action', 'Map', 'Open info panel');
-          infoSheetRef.current?.open()
+          infoSheetRef.current?.open();
         }}
         onZoomIn={() => {
           trackMatomoEvent('User action', 'Map', 'Zoom IN');
           handleZoomIn();
         }}
-        onZoomOut={() =>{
+        onZoomOut={() => {
           trackMatomoEvent('User action', 'Map', 'Zoom OUT');
           handleZoomOut();
         }}
