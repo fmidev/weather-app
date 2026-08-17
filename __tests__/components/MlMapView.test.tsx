@@ -196,6 +196,10 @@ describe('MlMapView', () => {
     });
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('dispatches overlay update and renders WMS overlay after style is ready', async () => {
     const store = createStore({
       mock: {
@@ -241,6 +245,53 @@ describe('MlMapView', () => {
         })
       );
     });
+  });
+
+  it('updates overlays when the update interval has elapsed', () => {
+    jest
+      .spyOn(Date, 'now')
+      .mockReturnValueOnce(1_000_000)
+      .mockReturnValueOnce(1_000_000)
+      .mockReturnValue(1_060_000);
+    mockConfigGet.mockImplementation((key: string) => {
+      if (key === 'map') {
+        return {
+          updateInterval: 1,
+          baseMap: {
+            url: 'https://maps.example/',
+            darkStyle: 'dark',
+            lightStyle: 'light',
+          },
+        };
+      }
+      if (key === 'location') {
+        return { default: { lat: 60.1699, lon: 24.9384 } };
+      }
+      return {};
+    });
+
+    const store = createStore({
+      mock: {
+        currentLocation: undefined,
+        displayLocation: false,
+        overlay: { type: 'WMS', step: 60 },
+        activeOverlay: 3,
+        timezone: 'Europe/Helsinki',
+        sessionId: 1234567,
+      },
+    });
+
+    render(
+      <Provider store={store as any}>
+        <MlMapView
+          infoSheetRef={{ current: null }}
+          mapLayersSheetRef={{ current: null }}
+        />
+      </Provider>
+    );
+
+    expect(mockUpdateOverlays).toHaveBeenCalledTimes(2);
+    expect(mockUpdateOverlays).toHaveBeenLastCalledWith(3, 'maplibre');
   });
 
   it('passes bounds to timeseries overlay and wires map controls actions', async () => {

@@ -6,13 +6,86 @@ import {
   UPDATE_OVERLAYS,
   UPDATE_OVERLAYS_SUCCESS,
   UPDATE_OVERLAYS_ERROR,
+  Layer,
   MapActionTypes,
+  MapOverlay,
   MapState,
+  TimeseriesLayer,
   UPDATE_ACTIVE_OVERLAY,
   UPDATE_REGION,
   UPDATE_SELECTED_CALLOUT,
   UPDATE_ANIMATION_SPEED,
 } from './types';
+
+const areLayerStylesEqual = (first: Layer['styles'], second: Layer['styles']) =>
+  typeof first === 'string' || typeof second === 'string'
+    ? first === second
+    : first.dark === second.dark && first.light === second.light;
+
+const areLayersEqual = (first?: Layer, second?: Layer) => {
+  if (first === second) return true;
+  if (!first || !second) return false;
+
+  return (
+    first.url === second.url &&
+    first.start === second.start &&
+    first.end === second.end &&
+    areLayerStylesEqual(first.styles, second.styles)
+  );
+};
+
+const areTimeseriesLayersEqual = (
+  first?: TimeseriesLayer,
+  second?: TimeseriesLayer
+) => {
+  if (first === second) return true;
+  if (!first || !second) return false;
+
+  return first.start === second.start && first.end === second.end;
+};
+
+const areOverlayMapsEqual = (
+  current: Map<number, MapOverlay> | undefined,
+  next: Map<number, MapOverlay>
+) => {
+  if (!current || current.size !== next.size) return false;
+
+  return [...next.entries()].every(([id, nextOverlay]) => {
+    const currentOverlay = current.get(id);
+    if (!currentOverlay || currentOverlay.type !== nextOverlay.type) {
+      return false;
+    }
+
+    if (currentOverlay.type === 'Timeseries') {
+      return (
+        Boolean(currentOverlay.etag) &&
+        currentOverlay.etag === nextOverlay.etag &&
+        currentOverlay.step === nextOverlay.step &&
+        areTimeseriesLayersEqual(
+          currentOverlay.observation as TimeseriesLayer | undefined,
+          nextOverlay.observation as TimeseriesLayer | undefined
+        ) &&
+        areTimeseriesLayersEqual(
+          currentOverlay.forecast as TimeseriesLayer | undefined,
+          nextOverlay.forecast as TimeseriesLayer | undefined
+        )
+      );
+    }
+
+    return (
+      currentOverlay.step === nextOverlay.step &&
+      currentOverlay.tileSize === nextOverlay.tileSize &&
+      areLayersEqual(
+        currentOverlay.observation as Layer | undefined,
+        nextOverlay.observation as Layer | undefined
+      ) &&
+      areLayersEqual(
+        currentOverlay.forecast as Layer | undefined,
+        nextOverlay.forecast as Layer | undefined
+      )
+    );
+  });
+};
 
 const INITIAL_STATE: MapState = {
   mapLayers: {
@@ -54,6 +127,8 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
     }
 
     case UPDATE_OVERLAYS: {
+      if (state.overlaysError === false) return state;
+
       return {
         ...state,
         overlaysError: false,
@@ -61,6 +136,8 @@ export default (state = INITIAL_STATE, action: MapActionTypes): MapState => {
     }
 
     case UPDATE_OVERLAYS_SUCCESS: {
+      if (areOverlayMapsEqual(state.overlays, action.overlays)) return state;
+
       return {
         ...state,
         overlays: action.overlays,
