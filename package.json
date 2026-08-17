@@ -71,7 +71,7 @@
     "redux-persist": "6.0.0",
     "redux-thunk": "2.4.0",
     "reselect": "4.1.4",
-    "supercluster": "7.1.4",
+    "supercluster": "9.0.0",
     "victory-native": "37.3.6"
   },
   "devDependencies": {
