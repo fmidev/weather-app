@@ -7992,12 +7992,12 @@ react-native-modal@14.0.0-rc.0:
   dependencies:
     react-native-animatable "1.4.0"
 
-react-native-nitro-geolocation@^1.4.3:
+react-native-nitro-geolocation@1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/react-native-nitro-geolocation/-/react-native-nitro-geolocation-1.4.3.tgz#90e05137c61526de6b91947d5f5ec06f38f1bc00"
   integrity sha512-8r09M6fjf7krCXRuF3RskuJpcxE8dvwQtRJnlrk+U3tO4v+ltyXhRRGmAMlO2Y/PEv1II8sgnIgil58RaLPI4A==
 
-react-native-nitro-modules@^0.36.5:
+react-native-nitro-modules@0.36.5:
   version "0.36.5"
   resolved "https://registry.yarnpkg.com/react-native-nitro-modules/-/react-native-nitro-modules-0.36.5.tgz#438c77e4f1e77bd1d3e901eb5b4953762e68a078"
   integrity sha512-SJby84+hovD70JmQ1fq+56tw3oapJeChehUqXA4Gqjm+ktJhMAcj8LGwoAjStSOUwRaK7czbzBPB0Widj+EDoQ==
