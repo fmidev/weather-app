@@ -72,6 +72,53 @@ PODS:
   - MatomoTracker (7.8.0):
     - MatomoTracker/Core (= 7.8.0)
   - MatomoTracker/Core (7.8.0)
+  - NitroGeolocation (1.4.3):
+    - hermes-engine
+    - NitroModules
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
+  - NitroModules (0.36.5):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - RCTDeprecation (0.86.2)
   - RCTRequired (0.86.2)
   - RCTSwiftUI (0.86.2)
@@ -1519,28 +1566,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-geolocation (3.4.0):
-    - hermes-engine
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-Core-prebuilt
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-jsi
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-renderercss
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - ReactNativeDependencies
-    - Yoga
   - react-native-launch-arguments (4.1.1):
     - React
   - react-native-maps (1.29.0):
@@ -2550,6 +2575,8 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - "logicwind-react-native-matomo-tracker (from `../node_modules/@logicwind/react-native-matomo-tracker`)"
   - "MapLibreReactNative (from `../node_modules/@maplibre/maplibre-react-native`)"
+  - NitroGeolocation (from `../node_modules/react-native-nitro-geolocation`)
+  - NitroModules (from `../node_modules/react-native-nitro-modules`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
   - RCTRequired (from `../node_modules/react-native/Libraries/Required`)
   - RCTSwiftUI (from `../node_modules/react-native/ReactApple/RCTSwiftUI`)
@@ -2589,7 +2616,6 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - React-mutationobservernativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver`)
   - react-native-config (from `../node_modules/react-native-config`)
-  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-launch-arguments (from `../node_modules/react-native-launch-arguments`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
@@ -2675,6 +2701,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@logicwind/react-native-matomo-tracker"
   MapLibreReactNative:
     :path: "../node_modules/@maplibre/maplibre-react-native"
+  NitroGeolocation:
+    :path: "../node_modules/react-native-nitro-geolocation"
+  NitroModules:
+    :path: "../node_modules/react-native-nitro-modules"
   RCTDeprecation:
     :path: "../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation"
   RCTRequired:
@@ -2751,8 +2781,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver"
   react-native-config:
     :path: "../node_modules/react-native-config"
-  react-native-geolocation:
-    :path: "../node_modules/@react-native-community/geolocation"
   react-native-launch-arguments:
     :path: "../node_modules/react-native-launch-arguments"
   react-native-maps:
@@ -2881,6 +2909,8 @@ SPEC CHECKSUMS:
   logicwind-react-native-matomo-tracker: 0fb8fc899ef1001e76c38556dfc182a9a32fb4c6
   MapLibreReactNative: 9f1f16d5f5f522309ad1f2afc483a34cfc56fe6e
   MatomoTracker: dbf4093d2c36b78244ce481d7a10086fad825c7f
+  NitroGeolocation: c99862e219b43e9a419cb382fcccd8e4d6059dd9
+  NitroModules: 452230d9b63c6c3f59dd97eeaa27ec3449271d4a
   RCTDeprecation: bccb6545c26db881ecddfd83a3f9ea82aba1605f
   RCTRequired: b2f74764d596fc0051f00fee94b49bf41a6f7f5a
   RCTSwiftUI: c6d6a31b849b9dfa64c33b55dc91ac15dd55774c
@@ -2919,7 +2949,6 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: f413ee411341fb3c34d20e85e9f6f524921fab15
   React-mutationobservernativemodule: 58f6d2adf7d98e72b241608dfa2ddce414d2a4e7
   react-native-config: 6188f674e4f4b3bdfd43c22886fb04f3103793ff
-  react-native-geolocation: c41d1ad8e832fa800b4e457c721e348bcc5aa147
   react-native-launch-arguments: eab68037b01ea7c78a0b3b55da3a5e967e9aaf92
   react-native-maps: 7e3af023b773d6670e3c07e9c8170af842b243e0
   react-native-mmkv: d1b6ffd420a8d43f12c1af836bafff833cf251cf
