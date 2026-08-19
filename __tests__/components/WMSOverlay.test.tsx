@@ -165,6 +165,48 @@ describe('WMSOverlay', () => {
     );
   });
 
+  it('passes the tile format to WMS tiles', () => {
+    const store = createStore({
+      mock: {
+        activeOverlayId: 1,
+        sliderTime: 1735693200,
+      },
+    });
+    const vectorLayers = [
+      {
+        id: 'precipitation',
+        type: 'fill',
+        'source-layer': 'precipitation_rate',
+      },
+    ];
+    const vectorOverlay = {
+      ...overlay,
+      tileFormat: 'pbf',
+      observation: {
+        ...overlay.observation,
+        vectorStyles: { light: vectorLayers, dark: vectorLayers },
+      },
+      forecast: {
+        ...overlay.forecast,
+        vectorStyles: { light: vectorLayers, dark: vectorLayers },
+      },
+    };
+
+    render(
+      <Provider store={store as any}>
+        <WMSOverlay overlay={vectorOverlay as any} library="maplibre" />
+      </Provider>
+    );
+
+    expect(mockMemoizedWMSTile).toHaveBeenCalledWith(
+      expect.objectContaining({
+        library: 'maplibre',
+        tileFormat: 'pbf',
+        vectorLayers,
+      })
+    );
+  });
+
   it('renders only current, previous and next tile on ios for react-native-maps', () => {
     setPlatformOS('ios');
 

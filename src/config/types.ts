@@ -53,7 +53,9 @@ type TemperatureUnit = 'C' | 'F';
 type PrecipitationUnit = 'mm' | 'in';
 type WindUnit = 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
 type PressureUnit = 'hPa' | 'inHg' | 'mmHg' | 'mbar';
-export type MeasurementUnit = TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
+export type MeasurementUnit =
+  TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
+export type MapTileFormat = 'png' | 'jpg' | 'webp' | 'pbf';
 
 export interface MapLayer {
   id: number;
@@ -72,7 +74,7 @@ export interface MapLayer {
   sources: WMSSource[] | TimeseriesSource[];
   times: Times;
   tileSize?: number | PlatformSpecificNumber;
-  tileFormat?: string;
+  tileFormat?: MapTileFormat;
 }
 
 export interface BaseMap {
@@ -294,8 +296,27 @@ interface DateTimeSettings {
 // this way it's easier to see stuff in Matomo web UI.
 //
 // Category = who, Action = where, Name = what was done.
-export type AnalyticCategories = 'User action' | 'Init' | 'Notice' | 'Warning' | 'Error';
-export type AnalyticActions = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Search' | 'Settings' | 'Navigation' | 'Geolocation' | 'News' | 'Platform' | 'Announcements' | 'Autocomplete' | 'Timeseries' | 'WMS' | 'DynamicConfig' | 'Snapshot' | 'Onboarding' | 'Not specified';
+export type AnalyticCategories =
+  'User action' | 'Init' | 'Notice' | 'Warning' | 'Error';
+export type AnalyticActions =
+  | 'Weather'
+  | 'Map'
+  | 'Warnings'
+  | 'Other'
+  | 'Search'
+  | 'Settings'
+  | 'Navigation'
+  | 'Geolocation'
+  | 'News'
+  | 'Platform'
+  | 'Announcements'
+  | 'Autocomplete'
+  | 'Timeseries'
+  | 'WMS'
+  | 'DynamicConfig'
+  | 'Snapshot'
+  | 'Onboarding'
+  | 'Not specified';
 
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;

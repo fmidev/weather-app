@@ -1,11 +1,19 @@
 import React from 'react';
 import { WMSTile } from 'react-native-maps';
-import { Layer, RasterSource } from '@maplibre/maplibre-react-native';
+import {
+  Layer,
+  RasterSource,
+  VectorSource,
+} from '@maplibre/maplibre-react-native';
+import type { MapTileFormat } from '@config';
+import type { VectorLayerStyle } from '@store/map/types';
 
 type MemoizedWMSTileProps = {
   urlTemplate: string;
   tileSize?: number;
   opacity?: number;
+  tileFormat?: MapTileFormat;
+  vectorLayers?: VectorLayerStyle[];
   library?: 'maplibre' | 'react-native-maps';
 };
 
@@ -13,10 +21,45 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   urlTemplate,
   tileSize,
   opacity,
+  tileFormat,
+  vectorLayers,
   library = 'react-native-maps',
 }) => {
   const items = urlTemplate.split('?');
   const key = items.length > 1 ? items[1] : urlTemplate;
+
+  if (library === 'maplibre' && tileFormat === 'pbf') {
+    return (
+      <VectorSource id={`wms-source-${key}`} tiles={[urlTemplate]}>
+        {vectorLayers?.map(({ id, paint, ...layer }, index) => {
+          const opacityProperty = `${layer.type}-opacity`;
+          const baseOpacity = paint?.[opacityProperty];
+          const layerProps = {
+            ...layer,
+            id: `wms-layer-${key}-${id ?? index}`,
+            source: `wms-source-${key}`,
+            beforeId: 'places_region',
+            paint: {
+              ...paint,
+              [opacityProperty]:
+                (typeof baseOpacity === 'number' ? baseOpacity : 1) * (opacity ?? 0),
+              [`${opacityProperty}-transition`]: {
+                duration: 10,
+                delay: 0,
+              },
+            },
+          } as React.ComponentProps<typeof Layer>;
+
+          return (
+            <Layer
+              {...layerProps}
+              key={`wms-layer-${key}-${id ?? index}`}
+            />
+          );
+        })}
+      </VectorSource>
+    );
+  }
 
   return library === 'maplibre' ? (
     <RasterSource

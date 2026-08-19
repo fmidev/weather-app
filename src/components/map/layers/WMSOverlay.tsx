@@ -72,7 +72,10 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   );
 
   const urlMap = useMemo(() => {
-    const map = new Map<string, string>();
+    const map = new Map<string, {
+      url: string;
+      vectorStyles?: Layer['vectorStyles'];
+    }>();
     if ((!observation?.url && !forecast?.url) || !borderTime.time) {
       return map;
     }
@@ -88,12 +91,15 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
       const layer = (isForecast ? forecast : observation) || {};
       if (layer.url) {
-        map.set(
-          stamp,
-          `${layer.url}&styles=${
+        const styleQuery = overlay.tileFormat === 'pbf'
+          ? ''
+          : `&styles=${
             typeof layer.styles === 'string' ? layer.styles : layer.styles?.[theme]
-          }&time=${stamp}&who=${packageJSON.name}-${Platform.OS}`
-        );
+          }`;
+        map.set(stamp, {
+          url: `${layer.url}${styleQuery}&time=${stamp}&who=${packageJSON.name}-${Platform.OS}`,
+          vectorStyles: layer.vectorStyles,
+        });
       }
     }
 
@@ -106,6 +112,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     memoizedMaxUnix,
     currentStep,
     dark,
+    overlay.tileFormat,
   ]);
 
   if (!overlay.observation && !overlay.forecast) return null;
@@ -136,9 +143,11 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       {renderTiles.map((k) => (
         <MemoizedWMSTile
           key={k}
-          urlTemplate={urlMap.get(k) as string}
+          urlTemplate={urlMap.get(k)?.url as string}
           opacity={k === current ? 1 : 0}
           tileSize={overlay.tileSize}
+          tileFormat={overlay.tileFormat}
+          vectorLayers={urlMap.get(k)?.vectorStyles?.[dark ? 'dark' : 'light']}
           library={library}
         />
       ))}

@@ -3,7 +3,7 @@ import moment from 'moment';
 import { XMLParser } from 'fast-xml-parser';
 import { LogManager } from "@maplibre/maplibre-react-native";
 
-import { MapOverlay } from '@store/map/types';
+import { Layer, MapOverlay, VectorLayerStyle } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
 import i18n from '@i18n';
 import type { MapLibrary } from '@store/settings/types';
@@ -55,6 +55,10 @@ type WmsLayer = {
         default: string;
         units: string;
       }[];
+};
+
+type MapboxStyleResponse = {
+  layers: Array<VectorLayerStyle & { source?: string }>;
 };
 
 const round = (unix: number, step: number): number =>
@@ -323,10 +327,10 @@ export const getWMSLayerUrlsAndBounds = async (
     })
   );
 
-  wmsLayers.forEach((layer) => {
+  await Promise.all(wmsLayers.map(async (layer) => {
     const toReturn = { type: 'WMS' } as MapOverlay;
 
-    layer.sources.forEach((layerSrc) => {
+    await Promise.all(layer.sources.map(async (layerSrc) => {
       const wmsLayer = capabilitiesData
         .get(layerSrc.source)
         .find((src: WmsLayer) => src.Name === layerSrc.layer);
@@ -352,25 +356,67 @@ export const getWMSLayerUrlsAndBounds = async (
       const { styles, ...customParameters } = {
         styles: '',
         ...layerSrc.customParameters,
+      } as {
+        styles: string | { dark: string; light: string };
+        [name: string]: string | number | { dark: string; light: string };
       };
+      const tileFormat =
+        layer.tileFormat === 'pbf' && library !== 'maplibre'
+          ? 'webp'
+          : layer.tileFormat ?? 'png';
 
-      const query = new URLSearchParams({
-        service: 'WMS',
-        version: '1.3.0',
-        request: 'GetMap',
-        transparent: 'true',
-        layers: layerSrc.layer,
-        bbox: library === 'maplibre' ? '{bbox-epsg-3857}' : '{minX},{minY},{maxX},{maxY}',
-        width: library === 'maplibre' ? '512' : '{width}',
-        height: library === 'maplibre' ? '512' : '{height}',
-        format: `image/${layer.tileFormat ?? 'png'}`,
-        srs: 'EPSG:3857',
-        crs: 'EPSG:3857',
-        ...customParameters,
-        ...(referenceTime ? { dim_reference_time: referenceTime } : {}),
-      });
+      let overlayUrl: string;
+      let vectorStyles: Layer['vectorStyles'];
 
-      const overlayUrl = decodeURIComponent(`${url}/wms?${query.toString()}`);
+      if (tileFormat === 'pbf') {
+        const collectionUrl = `${url}/tiles/collections/${encodeURI(layerSrc.layer)}`;
+        const query = new URLSearchParams({
+          f: 'application/vnd.mapbox-vector-tile',
+          ...customParameters,
+          ...(referenceTime ? { dim_reference_time: referenceTime } : {}),
+        });
+        overlayUrl = decodeURIComponent(
+          `${collectionUrl}/tiles/EPSG:3857/{z}/{y}/{x}?${query.toString()}`
+        );
+
+        const getVectorStyle = async (styleName: string) => {
+          const { data } = await axiosClient({
+            url: `${collectionUrl}/styles/${encodeURIComponent(styleName || 'default')}`,
+            params: { f: 'mapbox' },
+          }, undefined, 'WMS') as { data: MapboxStyleResponse };
+
+          return data.layers.map((layerStyle) => {
+            const style = { ...layerStyle };
+            delete style.source;
+            return style;
+          });
+        };
+
+        const lightStyle = typeof styles === 'string' ? styles : styles.light;
+        const darkStyle = typeof styles === 'string' ? styles : styles.dark;
+        const light = await getVectorStyle(lightStyle);
+        const dark = lightStyle === darkStyle
+          ? light
+          : await getVectorStyle(darkStyle);
+        vectorStyles = { light, dark };
+      } else {
+        const query = new URLSearchParams({
+          service: 'WMS',
+          version: '1.3.0',
+          request: 'GetMap',
+          transparent: 'true',
+          layers: layerSrc.layer,
+          bbox: library === 'maplibre' ? '{bbox-epsg-3857}' : '{minX},{minY},{maxX},{maxY}',
+          width: library === 'maplibre' ? '512' : '{width}',
+          height: library === 'maplibre' ? '512' : '{height}',
+          format: `image/${tileFormat}`,
+          srs: 'EPSG:3857',
+          crs: 'EPSG:3857',
+          ...customParameters,
+          ...(referenceTime ? { dim_reference_time: referenceTime } : {}),
+        });
+        overlayUrl = decodeURIComponent(`${url}/wms?${query.toString()}`);
+      }
 
       Object.assign(toReturn, {
         [layerSrc.type]: {
@@ -378,17 +424,19 @@ export const getWMSLayerUrlsAndBounds = async (
           start: layerStart,
           end: layerEnd,
           styles,
+          vectorStyles,
         },
         step: layer.times.timeStep,
         tileSize:
           typeof layer.tileSize === 'object'
             ? layer.tileSize[Platform.OS]
             : layer.tileSize,
+        tileFormat,
       });
-    });
+    }));
 
     overlayMap.set(layer.id, toReturn);
-  });
+  }));
 
   return overlayMap;
 };
