@@ -62,6 +62,8 @@
 	<string>Laitteen sijaintia käytetään sijaintipohjaisten säätietojen esittämiseen.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Laitteen sijaintia käytetään sijaintipohjaisten säätietojen esittämiseen.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Motion data may be used to improve location tracking.</string>
 	<key>NSNotificationsUsageDescription</key>
 	<string>Sovellus käyttää ilmoituksia varoitusten lähettämiseen.</string>
 	<key>RCTNewArchEnabled</key>
