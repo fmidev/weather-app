@@ -149,7 +149,7 @@ const MlMapView: React.FC<MapViewProps> = ({
   useEffect(() => {
     const now = Date.now();
     const mapUpdateTime = mapUpdated + (updateInterval ?? 5) * 60 * 1000;
-    if (isFocused && (now > mapUpdateTime || shouldReload > mapUpdateTime)) {
+    if (isFocused && (now >= mapUpdateTime || shouldReload >= mapUpdateTime)) {
       updateOverlays(activeOverlay, 'maplibre');
       setMapUpdated(now);
     }

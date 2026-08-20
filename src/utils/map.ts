@@ -164,10 +164,16 @@ export const getTimeseriesData = async (
   };
 
   const url = `${sources[layer.source]}/timeseries`;
-  const { data } = await axiosClient({ url, params }, undefined, 'Timeseries');
+  const { data, headers } = await axiosClient(
+    { url, params },
+    undefined,
+    'Timeseries'
+  );
+  const responseEtag = headers?.get?.('etag') ?? headers?.etag;
 
   Object.assign(toReturn, {
     data,
+    etag: typeof responseEtag === 'string' ? responseEtag : undefined,
     order: [
       ...new Set(
         Object.keys(data)

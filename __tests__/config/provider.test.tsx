@@ -1,10 +1,11 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { render, waitFor } from '@testing-library/react-native';
+import { act, render, waitFor } from '@testing-library/react-native';
 import { MMKV } from 'react-native-mmkv';
 
 import { Config, ConfigProvider } from '@config';
 import axiosClient from '@utils/axiosClient';
+import { useReloader } from '@utils/reloader';
 import defaultConfig from './testConfig';
 
 jest.mock('@utils/axiosClient', () => jest.fn());
@@ -19,12 +20,20 @@ jest.mock('react-native-launch-arguments', () => {
 });
 
 const TestComponent = () => <Text>{Config.get('weather').apiUrl}</Text>;
+const ReloaderTestComponent = () => {
+  const { shouldReload } = useReloader();
+  return <Text testID="should-reload">{shouldReload}</Text>;
+};
 
 describe('ConfigProvider children renders', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (Config as any).hasBeenSet = false;
     new MMKV().clearAll();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   afterAll(() => {
@@ -46,6 +55,33 @@ describe('ConfigProvider children renders', () => {
       props: {},
       children: ['weatherApiUrl'],
     });
+    container.unmount();
+  });
+
+  it('publishes a reload heartbeat every ten seconds', () => {
+    jest.useFakeTimers();
+    const noReloadConfig = JSON.parse(JSON.stringify(defaultConfig));
+    noReloadConfig.dynamicConfig.enabled = false;
+    const container = render(
+      <ConfigProvider defaultConfig={noReloadConfig}>
+        <ReloaderTestComponent />
+      </ConfigProvider>
+    );
+
+    expect(container.getByTestId('should-reload').props.children).toBe(0);
+
+    act(() => {
+      jest.advanceTimersByTime(9_999);
+    });
+    expect(container.getByTestId('should-reload').props.children).toBe(0);
+
+    act(() => {
+      jest.advanceTimersByTime(1);
+    });
+    expect(container.getByTestId('should-reload').props.children).toBeGreaterThan(
+      0
+    );
+
     container.unmount();
   });
 

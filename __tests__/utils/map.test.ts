@@ -134,7 +134,10 @@ describe('map helper functions', () => {
       fs.readFileSync(path.join(__dirname, '../data/timeseries.json'), 'utf8')
     );
 
-    (axiosClient as jest.Mock).mockResolvedValueOnce({ data: timeseriesData });
+    (axiosClient as jest.Mock).mockResolvedValueOnce({
+      data: timeseriesData,
+      headers: { etag: '"timeseries-v1"' },
+    });
 
     const sources = {
       smartmet: 'https://example.test',
@@ -187,6 +190,7 @@ describe('map helper functions', () => {
 
     expect(parsedOverlay?.type).toBe('Timeseries');
     expect(parsedOverlay?.data).toBe(timeseriesData);
+    expect(parsedOverlay?.etag).toBe('"timeseries-v1"');
 
     const timeseries = parsedOverlay?.data as any;
     const helsinki =

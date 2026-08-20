@@ -104,6 +104,7 @@ export type TimeseriesData = {
 
 export interface MapOverlay {
   type: 'WMS' | 'Timeseries';
+  etag?: string;
   observation?: Layer | TimeseriesLayer;
   forecast?: Layer | TimeseriesLayer;
   data?: TimeseriesData[];
