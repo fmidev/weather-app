@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  AppState,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, Platform, AppState } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
@@ -35,7 +29,7 @@ import UnitSettings from '@components/settings/UnitSettings';
 import LanguageSettings from '@components/settings/LanguageSettings';
 import ThemeSettings from '@components/settings/ThemeSettings';
 import TimeSettings from '@components/settings/TimeSettings';
-import MapSettings from '@components/settings/MapSettings';
+//import MapSettings from '@components/settings/MapSettings';
 
 const LOCATION_ALWAYS = 'location_always';
 const LOCATION_WHEN_IN_USE = 'location_when_in_use';
@@ -68,14 +62,14 @@ const SettingsScreen: React.FC<Props> = ({
   theme,
   geoids,
   units,
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mapLibrary,
   updateUnits,
   updateClockType,
   updateTheme,
   updateLocationsLocales,
-
-  updateMapLibrary
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateMapLibrary,
 }) => {
   const [locationPermission, setLocationPermission] = useState<
     string | undefined
@@ -133,9 +127,7 @@ const SettingsScreen: React.FC<Props> = ({
     await i18n.changeLanguage(lang);
     // geoid = 0 is non location database location and without name
     updateLocationsLocales(
-      geoids.filter(
-        (id): id is number => typeof id === 'number' && id !== 0
-      )
+      geoids.filter((id): id is number => typeof id === 'number' && id !== 0)
     );
     initMatomo(); // re-init matomo to use correct siteId
     try {
@@ -183,7 +175,6 @@ const SettingsScreen: React.FC<Props> = ({
         testID="settings_scrollview"
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
-
         <LocationSettings
           locationPermission={locationPermission}
           locationPermissionsDisplayString={locationPermissionsDisplayString}
@@ -202,19 +193,18 @@ const SettingsScreen: React.FC<Props> = ({
           />
         )}
 
-        <TimeSettings
-          clockType={clockType}
-          updateClockType={updateClockType}
-        />
+        <TimeSettings clockType={clockType} updateClockType={updateClockType} />
 
         {showUnitSettings && units && (
           <UnitSettings units={units} onChangeUnits={onChangeUnits} />
         )}
 
+        {/*
         <MapSettings
           mapLibrary={mapLibrary}
           updateMapLibrary={updateMapLibrary}
         />
+        */}
       </ScrollView>
     </View>
   );
