@@ -30,7 +30,11 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
 
   if (library === 'maplibre' && tileFormat === 'pbf') {
     return (
-      <VectorSource id={`wms-source-${key}`} tiles={[urlTemplate]}>
+      <VectorSource
+        id={`wms-source-${key}`}
+        tiles={[urlTemplate]}
+        minzoom={1}
+        maxzoom={4}>
         {vectorLayers?.map(({ id, paint, ...layer }, index) => {
           const opacityProperty = `${layer.type}-opacity`;
           const baseOpacity = paint?.[opacityProperty];
@@ -42,7 +46,8 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
             paint: {
               ...paint,
               [opacityProperty]:
-                (typeof baseOpacity === 'number' ? baseOpacity : 1) * (opacity ?? 0),
+                (typeof baseOpacity === 'number' ? baseOpacity : 1) *
+                (opacity ?? 0),
               [`${opacityProperty}-transition`]: {
                 duration: 10,
                 delay: 0,
@@ -51,10 +56,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
           } as React.ComponentProps<typeof Layer>;
 
           return (
-            <Layer
-              {...layerProps}
-              key={`wms-layer-${key}-${id ?? index}`}
-            />
+            <Layer {...layerProps} key={`wms-layer-${key}-${id ?? index}`} />
           );
         })}
       </VectorSource>
@@ -62,11 +64,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   }
 
   return library === 'maplibre' ? (
-    <RasterSource
-      id={`wms-source-${key}`}
-      tiles={[urlTemplate]}
-      tileSize={512}
-    >
+    <RasterSource id={`wms-source-${key}`} tiles={[urlTemplate]} tileSize={512}>
       <Layer
         type="raster"
         id={`wms-layer-${key}`}
@@ -74,22 +72,22 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
         source={`wms-source-${key}`}
         beforeId="places_region"
         paint={{
-          "raster-opacity": opacity ?? 0,
-          "raster-opacity-transition": {
+          'raster-opacity': opacity ?? 0,
+          'raster-opacity-transition': {
             duration: 10,
             delay: 0,
           },
         }}
       />
     </RasterSource>
-) : (
+  ) : (
     <WMSTile
       key={key}
       urlTemplate={urlTemplate}
       tileSize={tileSize ?? 256}
       opacity={opacity ?? 0}
     />
-  )
+  );
 };
 
 export default React.memo(MemoizedWMSTile);
