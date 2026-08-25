@@ -5,8 +5,7 @@ import {
   RasterSource,
   VectorSource,
 } from '@maplibre/maplibre-react-native';
-import type { MapTileFormat } from '@config';
-import type { VectorTileSettings } from '@config';
+import type { MapTileFormat, VectorTileSettings } from '@config';
 import type { VectorLayerStyle } from '@store/map/types';
 
 type MemoizedWMSTileProps = {
@@ -19,7 +18,10 @@ type MemoizedWMSTileProps = {
   library?: 'maplibre' | 'react-native-maps';
 };
 
-const parseMvtReference = (reference: string | undefined, defaultProperty: string) => {
+const parseMvtReference = (
+  reference: string | undefined,
+  defaultProperty: string
+) => {
   if (!reference) return {};
 
   const separator = reference.indexOf('.');
@@ -54,9 +56,10 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
     const accuracy = Math.max(0, Math.floor(mvt.valueAccuracy));
     const multiplier = 10 ** accuracy;
     const numericValue: any[] = ['to-number', ['get', mvtProperty]];
-    const roundedValue = accuracy === 0
-      ? ['round', numericValue]
-      : ['/', ['round', ['*', numericValue, multiplier]], multiplier];
+    const roundedValue =
+      accuracy === 0
+        ? ['round', numericValue]
+        : ['/', ['round', ['*', numericValue, multiplier]], multiplier];
     textField = ['to-string', roundedValue];
   }
 
@@ -72,11 +75,12 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
           const opacityProperty = `${layer.type}-opacity`;
           const baseOpacity = paint?.[opacityProperty];
           const animationOpacity = opacity ?? 0;
-          const combinedOpacity = baseOpacity === undefined
-            ? animationOpacity
-            : typeof baseOpacity === 'number'
-              ? baseOpacity * animationOpacity
-              : ['*', baseOpacity, animationOpacity];
+          const combinedOpacity =
+            baseOpacity === undefined
+              ? animationOpacity
+              : typeof baseOpacity === 'number'
+                ? baseOpacity * animationOpacity
+                : ['*', baseOpacity, animationOpacity];
           const layerProps = {
             ...layer,
             id: `wms-layer-${key}-${id ?? index}`,
