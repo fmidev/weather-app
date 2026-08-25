@@ -198,7 +198,7 @@ describe('MemoizedWMSTile', () => {
         tileFormat="pbf"
         mvt={{
           value: 'windarrow_forecast.speed',
-          valueAccuracy: 0,
+          precision: 0,
           style: false,
         }}
         library="maplibre"

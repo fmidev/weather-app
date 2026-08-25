@@ -52,7 +52,7 @@ type PlatformSpecificNumber = {
 export type VectorTileSettings = {
   style?: boolean;
   value?: string;
-  valueAccuracy?: number;
+  precision?: number;
   windDirection?: string;
   windDirectionFix?: number;
   maxZoom?: number;

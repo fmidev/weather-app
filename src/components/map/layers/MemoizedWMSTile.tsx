@@ -52,12 +52,12 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
     parseMvtReference(mvt?.windDirection, 'direction');
 
   let textField: any[] = ['to-string', ['get', mvtProperty]];
-  if (mvt?.valueAccuracy !== undefined) {
-    const accuracy = Math.max(0, Math.floor(mvt.valueAccuracy));
-    const multiplier = 10 ** accuracy;
+  if (mvt?.precision !== undefined) {
+    const precision = Math.max(0, Math.floor(mvt.precision));
+    const multiplier = 10 ** precision;
     const numericValue: any[] = ['to-number', ['get', mvtProperty]];
     const roundedValue =
-      accuracy === 0
+      precision === 0
         ? ['round', numericValue]
         : ['/', ['round', ['*', numericValue, multiplier]], multiplier];
     textField = ['to-string', roundedValue];
