@@ -63,6 +63,43 @@ describe('MemoizedWMSTile', () => {
     );
   });
 
+  it('preserves a data-driven opacity expression during animation', () => {
+    const opacityExpression = [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      4,
+      0.25,
+      10,
+      0.8,
+    ];
+
+    render(
+      <MemoizedWMSTile
+        urlTemplate="https://example.test/wms?format=pbf"
+        opacity={0.5}
+        tileFormat="pbf"
+        vectorLayers={[
+          {
+            id: 'precipitation',
+            type: 'fill',
+            'source-layer': 'precipitation_rate',
+            paint: { 'fill-opacity': opacityExpression },
+          },
+        ]}
+        library="maplibre"
+      />
+    );
+
+    expect(mockLayer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        paint: expect.objectContaining({
+          'fill-opacity': ['*', opacityExpression, 0.5],
+        }),
+      })
+    );
+  });
+
   it('keeps using a raster source for other MapLibre tile formats', () => {
     const urlTemplate = 'https://example.test/wms?format=image/png';
 

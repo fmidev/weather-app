@@ -71,6 +71,12 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
         {vectorLayers?.map(({ id, paint, ...layer }, index) => {
           const opacityProperty = `${layer.type}-opacity`;
           const baseOpacity = paint?.[opacityProperty];
+          const animationOpacity = opacity ?? 0;
+          const combinedOpacity = baseOpacity === undefined
+            ? animationOpacity
+            : typeof baseOpacity === 'number'
+              ? baseOpacity * animationOpacity
+              : ['*', baseOpacity, animationOpacity];
           const layerProps = {
             ...layer,
             id: `wms-layer-${key}-${id ?? index}`,
@@ -78,9 +84,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
             beforeId: 'places_region',
             paint: {
               ...paint,
-              [opacityProperty]:
-                (typeof baseOpacity === 'number' ? baseOpacity : 1) *
-                (opacity ?? 0),
+              [opacityProperty]: combinedOpacity,
               [`${opacityProperty}-transition`]: {
                 duration: 10,
                 delay: 0,
