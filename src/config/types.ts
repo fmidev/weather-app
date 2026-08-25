@@ -64,7 +64,7 @@ type WindUnit = 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
 type PressureUnit = 'hPa' | 'inHg' | 'mmHg' | 'mbar';
 export type MeasurementUnit =
   TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
-export type MapTileFormat = 'png' | 'jpg' | 'webp' | 'pbf';
+export type MapTileFormat = 'png' | 'jpeg' | 'webp' | 'pbf';
 
 export interface MapLayer {
   id: number;
