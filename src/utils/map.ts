@@ -392,13 +392,15 @@ export const getWMSLayerUrlsAndBounds = async (
           });
         };
 
-        const lightStyle = typeof styles === 'string' ? styles : styles.light;
-        const darkStyle = typeof styles === 'string' ? styles : styles.dark;
-        const light = await getVectorStyle(lightStyle);
-        const dark = lightStyle === darkStyle
-          ? light
-          : await getVectorStyle(darkStyle);
-        vectorStyles = { light, dark };
+        if (layer.mvt?.style !== false) {
+          const lightStyle = typeof styles === 'string' ? styles : styles.light;
+          const darkStyle = typeof styles === 'string' ? styles : styles.dark;
+          const light = await getVectorStyle(lightStyle);
+          const dark = lightStyle === darkStyle
+            ? light
+            : await getVectorStyle(darkStyle);
+          vectorStyles = { light, dark };
+        }
       } else {
         const query = new URLSearchParams({
           service: 'WMS',
@@ -432,6 +434,7 @@ export const getWMSLayerUrlsAndBounds = async (
             ? layer.tileSize[Platform.OS]
             : layer.tileSize,
         tileFormat,
+        mvt: layer.mvt,
       });
     }));
 

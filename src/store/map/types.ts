@@ -1,5 +1,5 @@
 import { Region } from 'react-native-maps';
-import type { MapTileFormat } from '@config';
+import type { MapTileFormat, VectorTileSettings } from '@config';
 
 export const UPDATE_SLIDER_TIME = 'UPDATE_SLIDER_TIME';
 export const ANIMATE_TO_AREA = 'ANIMATE_TO_AREA';
@@ -126,6 +126,7 @@ export interface MapOverlay {
   step: number;
   tileSize?: number;
   tileFormat?: MapTileFormat;
+  mvt?: VectorTileSettings;
 }
 
 export interface Error {

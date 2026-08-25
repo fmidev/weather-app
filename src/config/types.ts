@@ -49,6 +49,15 @@ type PlatformSpecificNumber = {
   web?: number;
 };
 
+export type VectorTileSettings = {
+  style?: boolean;
+  value?: string;
+  valueAccuracy?: number;
+  windDirection?: string;
+  windDirectionFix?: number;
+  maxZoom?: number;
+};
+
 type TemperatureUnit = 'C' | 'F';
 type PrecipitationUnit = 'mm' | 'in';
 type WindUnit = 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
@@ -75,6 +84,7 @@ export interface MapLayer {
   times: Times;
   tileSize?: number | PlatformSpecificNumber;
   tileFormat?: MapTileFormat;
+  mvt?: VectorTileSettings;
 }
 
 export interface BaseMap {

@@ -6,6 +6,7 @@ import {
   VectorSource,
 } from '@maplibre/maplibre-react-native';
 import type { MapTileFormat } from '@config';
+import type { VectorTileSettings } from '@config';
 import type { VectorLayerStyle } from '@store/map/types';
 
 type MemoizedWMSTileProps = {
@@ -14,7 +15,22 @@ type MemoizedWMSTileProps = {
   opacity?: number;
   tileFormat?: MapTileFormat;
   vectorLayers?: VectorLayerStyle[];
+  mvt?: VectorTileSettings;
   library?: 'maplibre' | 'react-native-maps';
+};
+
+const parseMvtReference = (reference: string | undefined, defaultProperty: string) => {
+  if (!reference) return {};
+
+  const separator = reference.indexOf('.');
+  if (separator < 0) {
+    return { sourceLayer: reference, property: defaultProperty };
+  }
+
+  return {
+    sourceLayer: reference.slice(0, separator),
+    property: reference.slice(separator + 1) || defaultProperty,
+  };
 };
 
 const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
@@ -23,18 +39,35 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   opacity,
   tileFormat,
   vectorLayers,
+  mvt,
   library = 'react-native-maps',
 }) => {
   const items = urlTemplate.split('?');
   const key = items.length > 1 ? items[1] : urlTemplate;
+  const { sourceLayer: mvtSourceLayer, property: mvtProperty } =
+    parseMvtReference(mvt?.value, 'text');
+  const { sourceLayer: windSourceLayer, property: windProperty } =
+    parseMvtReference(mvt?.windDirection, 'direction');
+
+  let textField: any[] = ['to-string', ['get', mvtProperty]];
+  if (mvt?.valueAccuracy !== undefined) {
+    const accuracy = Math.max(0, Math.floor(mvt.valueAccuracy));
+    const multiplier = 10 ** accuracy;
+    const numericValue: any[] = ['to-number', ['get', mvtProperty]];
+    const roundedValue = accuracy === 0
+      ? ['round', numericValue]
+      : ['/', ['round', ['*', numericValue, multiplier]], multiplier];
+    textField = ['to-string', roundedValue];
+  }
 
   if (library === 'maplibre' && tileFormat === 'pbf') {
     return (
       <VectorSource
         id={`wms-source-${key}`}
         tiles={[urlTemplate]}
-        minzoom={1}
-        maxzoom={4}>
+        {...(mvt?.maxZoom !== undefined
+          ? { minzoom: 1, maxzoom: mvt.maxZoom }
+          : {})}>
         {vectorLayers?.map(({ id, paint, ...layer }, index) => {
           const opacityProperty = `${layer.type}-opacity`;
           const baseOpacity = paint?.[opacityProperty];
@@ -59,6 +92,66 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
             <Layer {...layerProps} key={`wms-layer-${key}-${id ?? index}`} />
           );
         })}
+        {mvtSourceLayer && (
+          <Layer
+            {...({
+              id: `wms-text-layer-${key}-${mvt?.value}`,
+              type: 'symbol',
+              source: `wms-source-${key}`,
+              'source-layer': mvtSourceLayer,
+              beforeId: 'places_region',
+              layout: {
+                'text-field': textField,
+                'text-font': ['Noto Sans Regular'],
+                'text-size': 16,
+                'text-allow-overlap': true,
+                'text-ignore-placement': true,
+                visibility: 'visible',
+              },
+              paint: {
+                'text-color': '#1a1a1a',
+                'text-halo-color': '#ffffff',
+                'text-halo-width': 1.5,
+                'text-opacity': opacity ?? 0,
+                'text-opacity-transition': {
+                  duration: 10,
+                  delay: 0,
+                },
+              },
+            } as unknown as React.ComponentProps<typeof Layer>)}
+          />
+        )}
+        {windSourceLayer && (
+          <Layer
+            {...({
+              id: `wms-wind-arrow-layer-${key}-${mvt?.windDirection}`,
+              type: 'symbol',
+              source: `wms-source-${key}`,
+              'source-layer': windSourceLayer,
+              beforeId: 'places_region',
+              layout: {
+                'icon-image': 'mvt-wind-arrow',
+                'icon-size': 0.5,
+                'icon-rotate': [
+                  '+',
+                  ['to-number', ['get', windProperty]],
+                  mvt?.windDirectionFix ?? 0,
+                ],
+                'icon-rotation-alignment': 'map',
+                'icon-allow-overlap': true,
+                'icon-ignore-placement': true,
+                visibility: 'visible',
+              },
+              paint: {
+                'icon-opacity': opacity ?? 0,
+                'icon-opacity-transition': {
+                  duration: 10,
+                  delay: 0,
+                },
+              },
+            } as unknown as React.ComponentProps<typeof Layer>)}
+          />
+        )}
       </VectorSource>
     );
   }

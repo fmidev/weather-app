@@ -157,6 +157,7 @@ describe('map helper functions', () => {
       name: { en: 'Vector precipitation' },
       times: { timeStep: 60, forecast: 8 },
       tileFormat: 'pbf',
+      mvt: { value: 'temperature_numeric_pos' },
       sources: [
         {
           source: 'smartmet',
@@ -171,6 +172,7 @@ describe('map helper functions', () => {
 
     const parsedOverlay = result?.get(42);
     expect(parsedOverlay?.tileFormat).toBe('pbf');
+    expect(parsedOverlay?.mvt).toEqual({ value: 'temperature_numeric_pos' });
     expect((parsedOverlay?.forecast as any)?.url).toContain(
       '/tiles/collections/weatherapp:scandinavia:precipitationForecast/' +
       'tiles/EPSG:3857/{z}/{y}/{x}?f=application/vnd.mapbox-vector-tile'
@@ -195,6 +197,48 @@ describe('map helper functions', () => {
     expect((nativeMapsOverlay?.forecast as any)?.url).toContain(
       'format=image/webp'
     );
+  });
+
+  it('should not load a Mapbox style when mvt.style is false', async () => {
+    const xml = fs.readFileSync(
+      path.join(__dirname, '../data/GetCapabilities.xml'),
+      'utf8'
+    );
+    (axiosClient as jest.Mock).mockResolvedValueOnce({ data: xml });
+
+    const pbfLayer = {
+      id: 42,
+      type: 'WMS',
+      name: { en: 'Vector wind' },
+      times: { timeStep: 60, forecast: 8 },
+      tileFormat: 'pbf',
+      mvt: {
+        value: 'windarrow_forecast.speed',
+        valueAccuracy: 0,
+        style: false,
+      },
+      sources: [
+        {
+          source: 'smartmet',
+          layer: 'weatherapp:scandinavia:windForecast2',
+          type: 'forecast',
+        },
+      ],
+    } as any;
+
+    const result = await getWMSLayerUrlsAndBounds(
+      { smartmet: 'https://example.test' },
+      pbfLayer,
+      'maplibre'
+    );
+    const forecastLayer = result?.get(42)?.forecast as any;
+    const requestedUrls = (axiosClient as jest.Mock).mock.calls.map(
+      ([request]) => request?.url ?? ''
+    );
+
+    expect(axiosClient).toHaveBeenCalledTimes(1);
+    expect(requestedUrls.some((url) => url.includes('/styles/'))).toBe(false);
+    expect(forecastLayer?.vectorStyles).toBeUndefined();
   });
 
   it('should get timeseries data for map markers', async () => {

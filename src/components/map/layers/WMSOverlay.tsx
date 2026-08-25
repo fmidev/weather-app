@@ -122,21 +122,27 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
 
   const tiles = [...urlMap.keys()];
 
-  const iosTiles = () => {
+  const bufferedTiles = () => {
     const currentTileIndex = tiles.indexOf(current);
     if (currentTileIndex < 0) {
       return [];
     }
-    return [
-      ...new Set([
-        tiles[currentTileIndex],
-        tiles[currentTileIndex !== 0 ? currentTileIndex - 1 : 0],
-        tiles[currentTileIndex !== tiles.length - 1 ? currentTileIndex + 1 : 0],
-      ]),
-    ];
+
+    const previousTileIndex =
+      (currentTileIndex - 1 + tiles.length) % tiles.length;
+    const nextTileIndex = (currentTileIndex + 1) % tiles.length;
+
+    return [...new Set([
+      tiles[currentTileIndex],
+      tiles[previousTileIndex],
+      tiles[nextTileIndex],
+    ])];
   };
 
-  const renderTiles = Platform.OS === 'ios' && library !== 'maplibre' ? iosTiles() : tiles;
+  const useTileBuffer =
+    (Platform.OS === 'ios' && library !== 'maplibre') ||
+    (library === 'maplibre' && overlay.tileFormat === 'pbf');
+  const renderTiles = useTileBuffer ? bufferedTiles() : tiles;
 
   return (
     <>
@@ -148,6 +154,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
           tileSize={overlay.tileSize}
           tileFormat={overlay.tileFormat}
           vectorLayers={urlMap.get(k)?.vectorStyles?.[dark ? 'dark' : 'light']}
+          mvt={overlay.mvt}
           library={library}
         />
       ))}

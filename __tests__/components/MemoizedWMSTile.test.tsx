@@ -49,6 +49,8 @@ describe('MemoizedWMSTile', () => {
         tiles: [urlTemplate],
       })
     );
+    expect(mockVectorSource.mock.calls[0][0]).not.toHaveProperty('minzoom');
+    expect(mockVectorSource.mock.calls[0][0]).not.toHaveProperty('maxzoom');
     expect(mockRasterSource).not.toHaveBeenCalled();
     expect(mockLayer).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -78,6 +80,140 @@ describe('MemoizedWMSTile', () => {
     expect(mockVectorSource).not.toHaveBeenCalled();
     expect(mockLayer).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'raster' })
+    );
+  });
+
+  it('sets the vector source maxzoom from the MVT configuration', () => {
+    render(
+      <MemoizedWMSTile
+        urlTemplate="https://example.test/wms?format=pbf"
+        tileFormat="pbf"
+        mvt={{ maxZoom: 6 }}
+        library="maplibre"
+      />
+    );
+
+    expect(mockVectorSource).toHaveBeenCalledWith(
+      expect.objectContaining({ minzoom: 1, maxzoom: 6 })
+    );
+  });
+
+  it('adds a text layer for the configured PBF source layer', () => {
+    const urlTemplate = 'https://example.test/wms?format=pbf';
+
+    render(
+      <MemoizedWMSTile
+        urlTemplate={urlTemplate}
+        opacity={0.5}
+        tileFormat="pbf"
+        mvt={{ value: 'temperature_numeric_pos' }}
+        library="maplibre"
+      />
+    );
+
+    expect(mockLayer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'symbol',
+        'source-layer': 'temperature_numeric_pos',
+        layout: expect.objectContaining({
+          'text-field': ['to-string', ['get', 'text']],
+          'text-font': ['Noto Sans Regular'],
+          'text-allow-overlap': true,
+          'text-ignore-placement': true,
+          visibility: 'visible',
+        }),
+        paint: expect.objectContaining({
+          'text-opacity': 0.5,
+        }),
+      })
+    );
+  });
+
+  it('preloads inactive PBF text layers with zero opacity', () => {
+    render(
+      <MemoizedWMSTile
+        urlTemplate="https://example.test/wms?format=pbf"
+        opacity={0}
+        tileFormat="pbf"
+        mvt={{ value: 'temperature_numeric_pos' }}
+        library="maplibre"
+      />
+    );
+
+    expect(mockLayer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'symbol',
+        layout: expect.objectContaining({
+          visibility: 'visible',
+        }),
+        paint: expect.objectContaining({
+          'text-opacity': 0,
+        }),
+      })
+    );
+  });
+
+  it('uses the speed property for the wind arrow source layer', () => {
+    render(
+      <MemoizedWMSTile
+        urlTemplate="https://example.test/wms?format=pbf"
+        opacity={1}
+        tileFormat="pbf"
+        mvt={{
+          value: 'windarrow_forecast.speed',
+          valueAccuracy: 0,
+          style: false,
+        }}
+        library="maplibre"
+      />
+    );
+
+    expect(mockLayer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'symbol',
+        'source-layer': 'windarrow_forecast',
+        layout: expect.objectContaining({
+          'text-field': [
+            'to-string',
+            ['round', ['to-number', ['get', 'speed']]],
+          ],
+        }),
+      })
+    );
+  });
+
+  it('adds a rotated wind arrow layer for the configured direction property', () => {
+    render(
+      <MemoizedWMSTile
+        urlTemplate="https://example.test/wms?format=pbf"
+        opacity={0.5}
+        tileFormat="pbf"
+        mvt={{
+          style: false,
+          windDirection: 'windarrow_forecast.direction',
+          windDirectionFix: -135,
+        }}
+        library="maplibre"
+      />
+    );
+
+    expect(mockLayer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'symbol',
+        'source-layer': 'windarrow_forecast',
+        layout: expect.objectContaining({
+          'icon-image': 'mvt-wind-arrow',
+          'icon-rotate': [
+            '+',
+            ['to-number', ['get', 'direction']],
+            -135,
+          ],
+          'icon-rotation-alignment': 'map',
+        }),
+        paint: expect.objectContaining({
+          'icon-opacity': 0.5,
+        }),
+      })
     );
   });
 });
