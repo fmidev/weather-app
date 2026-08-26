@@ -152,8 +152,8 @@ describe('LayerSelector', () => {
   it('lists groups first and selects the first layer in a group', () => {
     mockConfigGet.mockReturnValue({
       layerGroups: [
-        { id: 1, name: { en: 'Rain' }, layers: [1, 2] },
         { id: 2, name: { en: 'Wind' }, layers: [4, 5] },
+        { id: 1, name: { en: 'Rain' }, layers: [1, 2] },
       ],
       layers: [
         { id: 8, name: { en: 'Weather forecast on map' } },

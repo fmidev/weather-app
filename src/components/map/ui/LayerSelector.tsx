@@ -42,12 +42,13 @@ const LayerSelector: React.FC<LayerSelectorProps> = ({
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const { layers, layerGroups = [] } = Config.get('map');
+  const sortedLayerGroups = [...layerGroups].sort((a, b) => a.id - b.id);
 
   const groupedLayerIds = new Set(
     layerGroups.flatMap((group) => group.layers)
   );
   const layerOptions = [
-    ...layerGroups.flatMap((group) => {
+    ...sortedLayerGroups.flatMap((group) => {
       const defaultLayer = layers.find(
         (layer) => layer.id === group.layers[0]
       );
