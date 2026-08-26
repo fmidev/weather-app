@@ -26,6 +26,7 @@ const defaultConfig: ConfigType = {
       smartmet: 'https://test.fmi.fi',
       geoserver: 'https://testwms.fmi.fi',
     },
+    layerGroups: [],
     baseMap: {
       url: 'https://test.fmi.fi/styles/',
       lightStyle: 'white_{lang}.json',

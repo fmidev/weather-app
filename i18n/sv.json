@@ -375,6 +375,10 @@
       "forecast": "prognos",
       "observation": "observation"
     },
+    "timeStepSelector": {
+      "minutesAccessibilityLabel": "Tidssteg på {{count}} minuter",
+      "selectAccessibilityHint": "Tryck för att välja tidssteg"
+    },
     "layersBottomSheet": {
       "closeAccessibilityLabel": "Stäng valet av kartnivå",
       "locationTitle": "Egen position",

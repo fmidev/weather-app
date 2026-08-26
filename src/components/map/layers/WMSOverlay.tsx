@@ -136,6 +136,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       {renderTiles.map((k) => (
         <MemoizedWMSTile
           key={k}
+          tileId={k}
           urlTemplate={urlMap.get(k) as string}
           opacity={k === current ? 1 : 0}
           tileSize={overlay.tileSize}
