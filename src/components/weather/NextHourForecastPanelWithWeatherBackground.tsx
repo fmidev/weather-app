@@ -288,7 +288,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
         </View>
         <View style={styles.alignCenter}>
           <Text
-            testID="next_hour_forecast_time"
+            testID="next-hour-forecast-time"
             style={[
               styles.largeText,
               styles.centeredText,
