@@ -136,6 +136,7 @@ describe('WMSOverlay', () => {
     expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
+        tileId: '2025-01-01T00:00:00.000Z',
         opacity: 0,
         library: 'react-native-maps',
         tileSize: 256,

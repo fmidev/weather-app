@@ -29,6 +29,7 @@ const defaultConfig: ConfigType = {
       server1: 'server1Url',
       server2: 'server2Url',
     },
+    layerGroups: [],
     layers: [
       {
         id: 1,

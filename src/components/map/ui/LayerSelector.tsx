@@ -41,54 +41,94 @@ const LayerSelector: React.FC<LayerSelectorProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
-  const { layers } = Config.get('map');
+  const { layers, layerGroups = [] } = Config.get('map');
+  const sortedLayerGroups = [...layerGroups].sort((a, b) => a.id - b.id);
+
+  const groupedLayerIds = new Set(
+    layerGroups.flatMap((group) => group.layers)
+  );
+  const layerOptions = [
+    ...sortedLayerGroups.flatMap((group) => {
+      const defaultLayer = layers.find(
+        (layer) => layer.id === group.layers[0]
+      );
+
+      return defaultLayer
+        ? [
+          {
+            key: `group-${group.id}`,
+            layerId: defaultLayer.id,
+            layerIds: group.layers,
+            name: group.name,
+          },
+        ]
+        : [];
+    }),
+    ...layers
+      .filter((layer) => !groupedLayerIds.has(layer.id))
+      .map((layer) => ({
+        key: `layer-${layer.id}`,
+        layerId: layer.id,
+        layerIds: [layer.id],
+        name: layer.name,
+      })),
+  ];
 
   const { colors } = useTheme() as CustomTheme;
   return (
     <View testID="map_layer_selector">
-      {layers.length > 0 && layers.map((layer) => (
-        <AccessibleTouchableOpacity
-          key={layer.id}
-          accessibilityRole="button"
-          accessibilityLabel={
-            layer.id === activeOverlay
-              ? `${layer?.name && layer?.name[locale]}`
-              : `${layer?.name && layer?.name[locale]}, ${t(
-                  'map:layersBottomSheet:notSelected'
-                )}`
-          }
-          accessibilityState={{ selected: layer.id === activeOverlay }}
-          accessibilityHint={
-            layer.id === activeOverlay
-              ? ''
-              : t('map:layersBottomSheet:selectLayerAccessibilityHint')
-          }
-          onPress={() => {
-            if (layer.id === activeOverlay) return;
-            trackMatomoEvent('User action', 'Map', 'Layer selected - '+layer?.name[locale]);
-            onClose();
-            updateActiveOverlay(Number(layer.id));
-          }}>
-          <View style={styles.row}>
-            <Text
-              maxFontSizeMultiplier={1.5}
-              style={[styles.text, { color: colors.hourListText }]}
-            >
-              {(layer?.name && layer?.name[locale]) || ''}
-            </Text>
-            <Icon
-              name={
-                activeOverlay === layer.id
-                  ? 'radio-button-on'
-                  : 'radio-button-off'
-              }
-              style={{
-                color: activeOverlay === layer.id ? colors.primary : GRAY_1,
-              }}
-            />
-          </View>
-        </AccessibleTouchableOpacity>
-      ))}
+      {layerOptions.map((option) => {
+        const isSelected = option.layerIds.includes(activeOverlay);
+        const optionName = option.name?.[locale] ?? '';
+
+        return (
+          <AccessibleTouchableOpacity
+            key={option.key}
+            accessibilityRole="button"
+            accessibilityLabel={
+              isSelected
+                ? optionName
+                : `${optionName}, ${t(
+                    'map:layersBottomSheet:notSelected'
+                  )}`
+            }
+            accessibilityState={{ selected: isSelected }}
+            accessibilityHint={
+              isSelected
+                ? ''
+                : t('map:layersBottomSheet:selectLayerAccessibilityHint')
+            }
+            onPress={() => {
+              if (isSelected) return;
+              trackMatomoEvent(
+                'User action',
+                'Map',
+                'Layer selected - '+optionName
+              );
+              onClose();
+              updateActiveOverlay(Number(option.layerId));
+            }}>
+            <View style={styles.row}>
+              <Text
+                maxFontSizeMultiplier={1.5}
+                style={[styles.text, { color: colors.hourListText }]}
+              >
+                {optionName}
+              </Text>
+              <Icon
+                name={
+                  isSelected
+                    ? 'radio-button-on'
+                    : 'radio-button-off'
+                }
+                style={{
+                  color: isSelected ? colors.primary : GRAY_1,
+                }}
+              />
+            </View>
+          </AccessibleTouchableOpacity>
+        );
+      })}
     </View>
   );
 };

@@ -21,7 +21,7 @@ const connector = connect(mapStateToProps);
 
 type MapScreenProps = ConnectedProps<typeof connector>;
 
-const MapScreen: React.FC<MapScreenProps> = ({mapLibrary}) => {
+const MapScreen: React.FC<MapScreenProps> = ({ mapLibrary }) => {
   const { colors } = useTheme();
   const { fontScale } = useWindowDimensions();
   const mapLayersSheetRef = useRef<RBSheet>(null);
@@ -31,11 +31,17 @@ const MapScreen: React.FC<MapScreenProps> = ({mapLibrary}) => {
 
   return (
     <>
-      { mapLibrary === 'maplibre' ?
-        <MlMapView infoSheetRef={infoSheetRef} mapLayersSheetRef={mapLayersSheetRef} />
-        :
-        <RnMapview infoSheetRef={infoSheetRef} mapLayersSheetRef={mapLayersSheetRef} />
-      }
+      {mapLibrary === 'maplibre' ? (
+        <MlMapView
+          infoSheetRef={infoSheetRef}
+          mapLayersSheetRef={mapLayersSheetRef}
+        />
+      ) : (
+        <RnMapview
+          infoSheetRef={infoSheetRef}
+          mapLayersSheetRef={mapLayersSheetRef}
+        />
+      )}
 
       <RBSheet
         ref={infoSheetRef}
@@ -54,7 +60,7 @@ const MapScreen: React.FC<MapScreenProps> = ({mapLibrary}) => {
 
       <RBSheet
         ref={mapLayersSheetRef}
-        height={largeFonts ? 650 : 620}
+        height={largeFonts ? 530 : 500}
         closeOnDragDown
         customStyles={{
           container: {
@@ -68,7 +74,7 @@ const MapScreen: React.FC<MapScreenProps> = ({mapLibrary}) => {
         />
       </RBSheet>
     </>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
