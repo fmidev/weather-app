@@ -166,7 +166,6 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
     smartSymbol = smartSymbol - 100; // Convert to day variant
   }
 
-  console.log('fontScale', fontScale);
 
   const auroraBorealis =
     smartSymbol &&
