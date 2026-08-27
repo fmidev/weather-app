@@ -167,11 +167,11 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
   }
 
 
+  const totalCloudCover = nextHourForecast?.totalCloudCover;
   const auroraBorealis =
-    smartSymbol &&
     smartSymbol > 100 &&
-    nextHourForecast?.totalCloudCover &&
-    nextHourForecast?.totalCloudCover <= 50 &&
+    typeof totalCloudCover === 'number' &&
+    totalCloudCover <= 50 &&
     isAuroraBorealisLikely;
   const isWideDisplay = () => width > 500;
   const weatherBackground = backgroundImagesEnabled
