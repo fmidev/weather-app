@@ -28,7 +28,7 @@ type ForecastListColumnProps = {
   data: TimeStepData;
   displayParams: [number, DisplayParameters][];
   units?: UnitMap;
-  modal?: boolean;
+  compact?: boolean;
 };
 
 const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
@@ -36,7 +36,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   data,
   displayParams,
   units,
-  modal, // Different styling for modal
+  compact,
 }) => {
   const { fontScale } = useWindowDimensions();
   const { t, i18n } = useTranslation();
@@ -57,8 +57,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   );
 
   const height = Math.min(fontScale * 52, 78);
+  const timeRowHeight = compact ? height / 2 : height;
   const width = Math.min(fontScale * 52, 62);
-  const modalWidth = Math.min(fontScale * 48, 62);
+  const compactWidth = Math.min(fontScale * 48, 62);
   const windIconSize = Math.min(fontScale * 20, 30);
   const symbolSize = Math.min(fontScale * 40, 50);
 
@@ -67,8 +68,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
       accessible
       key={data.epochtime}
       style={[
-        modal ? styles.modalHourColumn : styles.hourColumn,
-        ...(!modal===true && (time === '00' || time === '12 am')
+        compact ? styles.compactHourColumn : styles.hourColumn,
+        ...(!compact && (time === '00' || time === '12 am')
           ? [
               styles.dayChangeBorder,
               {
@@ -77,13 +78,15 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               },
             ]
           : [{ borderColor: colors.border }]),
-        { width: modal ? modalWidth : width }
+        { width: compact ? compactWidth : width }
       ]}>
-      <View style={[
-        styles.hourBlock,
-        { height },
-        modal !== true && { backgroundColor: colors.listTint },
-      ]}>
+      <View
+        testID="forecast-time-row"
+        style={[
+          styles.hourBlock,
+          { height: timeRowHeight },
+          !compact && { backgroundColor: colors.listTint },
+        ]}>
         <Text
           accessibilityLabel={`${t('forecast:at')} ${time}`}
           style={[styles.hourText, { color: colors.hourListText }]}>
@@ -443,7 +446,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     alignItems: 'center',
   },
-  modalHourColumn: {
+  compactHourColumn: {
     width: 48,
     borderRightWidth: 0,
     borderTopWidth: 0,

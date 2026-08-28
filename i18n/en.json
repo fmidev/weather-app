@@ -104,6 +104,7 @@
     "popMissing": "Precipitation probability missing",
     "minus": "minus",
     "showHourlyForecast": "Show hourly forecast for the day",
+    "hideHourlyForecast": "Hide hourly forecast for the day",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",
       "feelsLike": "feels like: {{ value }} {{ unit }}.",

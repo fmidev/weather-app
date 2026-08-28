@@ -126,11 +126,19 @@ export const selectIsWaningMoonPhase = createSelector(
     forecast[23].moonPhase < forecast[0].moonPhase
 )
 
+const hasEndOfDayForecast = (forecast: TimeStepData[]) =>
+  forecast.some(({ localtime }) => {
+    const localMoment = moment(localtime, moment.ISO_8601, true);
+    return localMoment.isValid() && localMoment.hour() === 23;
+  });
+
 export const selectHeaderLevelForecast = createSelector(
   selectForecastByDay,
   (forecastByDay) =>
     forecastByDay &&
-    Object.keys(forecastByDay).map((key: string) => {
+    Object.keys(forecastByDay)
+    .filter((key) => hasEndOfDayForecast(forecastByDay[key]))
+    .map((key: string) => {
       const dayArr = forecastByDay[key];
       const tempArray = dayArr.map((h) => h.temperature || 0);
       const windArray = dayArr.map((h) => h.windSpeedMS || 0);

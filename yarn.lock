@@ -7735,13 +7735,6 @@ react-is@^19.2.3:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.2.5.tgz#7e7b54143e9313fed787b23fd4295d5a23872ad9"
   integrity sha512-Dn0t8IQhCmeIT3wu+Apm1/YVsJXsGWi6k4sPdnBIdqMVtHtv0IGi6dcpNpNkNac0zB2uUAqNX3MHzN8c+z2rwQ==
 
-react-native-animatable@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.4.0.tgz#05a259e1566081ce7d3f6fba1e92edc65f5c6160"
-  integrity sha512-DZwaDVWm2NBvBxf7I0wXKXLKb/TxDnkV53sWhCvei1pRyTX3MVFpkvdYBknNBqPrxYuAIlPxEp7gJOidIauUkw==
-  dependencies:
-    prop-types "^15.8.1"
-
 react-native-config@1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.6.1.tgz#f8428829fda74384484d773fe36820159c559159"
@@ -7809,13 +7802,6 @@ react-native-mmkv@3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-3.3.1.tgz#854ec786d3951e4bbbaa6161d812c3345d071d85"
   integrity sha512-LYamDWQirPTUJZ9Re+BkCD+zLRGNr+EVJDeIeblvoJXGatWy9PXnChtajDSLqwjX3EXVeUyjgrembs7wlBw9ug==
-
-react-native-modal@14.0.0-rc.0:
-  version "14.0.0-rc.0"
-  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-14.0.0-rc.0.tgz#8891c08a573cc0772e359c03cd6e36f6e28334ff"
-  integrity sha512-9Wkg77VUdIkkSxnxm6UctRtIzRnnvuE+MbvIOlHkYjGn/W3dJRej6B7GRGhjyn1QPZ/pO4+dixkxjMgyc380lQ==
-  dependencies:
-    react-native-animatable "1.4.0"
 
 react-native-nitro-geolocation@1.4.3:
   version "1.4.3"

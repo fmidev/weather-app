@@ -17,13 +17,13 @@ import { MEDIUM_FONT } from '@assets/constants';
 type ForecastListHeaderColumnProps = {
   displayParams: [number, DisplayParameters][];
   units?: UnitMap;
-  modal?: boolean; // Different styling for modal
+  compact?: boolean;
 };
 
 const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   displayParams,
   units,
-  modal,
+  compact,
 }) => {
   const { fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
@@ -43,27 +43,34 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   ];
 
   const height = Math.min(fontScale * 52, 78);
+  const timeRowHeight = compact ? height / 2 : height;
   const width = Math.min(fontScale * 52, 78);
-  const modalWidth = Math.min(fontScale * 38, 64);
+  const compactWidth = Math.min(fontScale * 38, 64);
 
   return (
     <View
       accessible={false}
       accessibilityElementsHidden
       style={[
-        modal ? styles.modalColumn : styles.iconColumn,
+        compact ? styles.compactColumn : styles.iconColumn,
         {
           borderColor: colors.border,
-          width: modal ? modalWidth : width,
+          width: compact ? compactWidth : width,
         },
       ]}>
       <LinearGradient
         colors={ dark ? darkGradient : lightGradient }
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 0 }}
-        style={[styles.gradient, { width: modal ? modalWidth : width }]}
+        style={[styles.gradient, { width: compact ? compactWidth : width }]}
       >
-      <View style={[styles.hourBlock, { height }, modal !== true && { backgroundColor: colors.listTint }]}>
+      <View
+        testID="forecast-header-time-row"
+        style={[
+          styles.hourBlock,
+          { height: timeRowHeight },
+          !compact && { backgroundColor: colors.listTint },
+        ]}>
         <Icon name="clock" color={colors.hourListText} />
       </View>
       {displayParams
@@ -76,7 +83,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 style={[
                   styles.hourBlock,
                   {
-                    backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    backgroundColor: isOdd(index) && !compact ? colors.listTint : undefined,
                     height,
                   },
                 ]}>
@@ -96,7 +103,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 style={[
                   styles.hourBlock,
                   {
-                    backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    backgroundColor: isOdd(index) && !compact ? colors.listTint : undefined,
                     height,
                   },
                 ]}>
@@ -116,7 +123,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 style={[
                   styles.hourBlock,
                   {
-                    backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    backgroundColor: isOdd(index) && !compact ? colors.listTint : undefined,
                     height,
                   },
                 ]}>
@@ -138,7 +145,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                   styles.hourBlock,
                   styles.row,
                   {
-                    backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    backgroundColor: isOdd(index) && !compact ? colors.listTint : undefined,
                     height,
                   },
                 ]}>
@@ -158,7 +165,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 style={[
                   styles.hourBlock,
                   {
-                    backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    backgroundColor: isOdd(index) && !compact ? colors.listTint : undefined,
                     height,
                   },
                 ]}>
@@ -196,7 +203,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
                 style={[
                   styles.hourBlock,
                   {
-                    backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                    backgroundColor: isOdd(index) && !compact ? colors.listTint : undefined,
                     height,
                   },
                 ]}>
@@ -214,7 +221,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
               style={[
                 styles.hourBlock,
                 {
-                  backgroundColor: isOdd(index) && modal !== true ? colors.listTint : undefined,
+                  backgroundColor: isOdd(index) && !compact ? colors.listTint : undefined,
                   height,
                 },
               ]}>
@@ -250,7 +257,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     alignItems: 'center',
   },
-  modalColumn: {
+  compactColumn: {
     width: 38,
     borderWidth: 0,
     borderBottomWidth: 0,

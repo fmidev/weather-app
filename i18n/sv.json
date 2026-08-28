@@ -104,6 +104,7 @@
     "popMissing": "Sannolikheten för nederbörd saknas",
     "minus": "minus",
     "showHourlyForecast": "Visa timprognos för dagen",
+    "hideHourlyForecast": "Dölj timprognosen för dagen",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",

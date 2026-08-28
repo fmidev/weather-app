@@ -242,6 +242,10 @@ describe('forecast reducer', () => {
           ...Array.from({ length: 22 }).map((_, index) =>
             createStep({
               epochtime: nowSeconds + (index + 3) * 3600,
+              localtime:
+                index === 20
+                  ? '2023-11-15T23:13:20'
+                  : '2023-11-15T22:13:20',
               modtime: '2023-11-14T21:00:00',
               moonPhase: index === 21 ? 1 : 5,
               smartSymbol: 1,
@@ -291,6 +295,34 @@ describe('forecast reducer', () => {
     );
     expect(selectors.selectForecastLastUpdatedMoment(state)).toBeTruthy();
     expect(selectors.selectIsWaningMoonPhase(state)).toBe(true);
+  });
+
+  it('omits a daily forecast without a 23:00 time step', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-11-14T12:00:00Z'));
+    const firstTimestamp = Date.parse('2023-11-15T12:00:00Z') / 1000;
+    const secondTimestamp = firstTimestamp + 24 * 60 * 60;
+    const state = createState({
+      data: {
+        99: [
+          createStep({
+            epochtime: firstTimestamp,
+            localtime: '2023-11-15T23:00:00',
+            modtime: '2023-11-14T12:00:00',
+            temperature: 2,
+          }),
+          createStep({
+            epochtime: secondTimestamp,
+            localtime: '2023-11-16T22:00:00',
+            modtime: '2023-11-14T12:00:00',
+            temperature: 3,
+          }),
+        ],
+      },
+    });
+
+    expect(selectors.selectHeaderLevelForecast(state)).toEqual([
+      expect.objectContaining({ timeStamp: firstTimestamp }),
+    ]);
   });
 
   it('filters old forecasts and reports error when data is empty after loading', () => {

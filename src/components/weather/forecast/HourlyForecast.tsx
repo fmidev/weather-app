@@ -1,14 +1,10 @@
-import React, { memo, useState, useRef, useEffect } from 'react';
+import React, { memo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   StyleSheet,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
   FlatList,
   useWindowDimensions,
-  ScrollView,
-  Pressable,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -28,7 +24,6 @@ import { Config } from '@config';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
 
-import TimeSelectButtonGroup from './TimeSelectButtonGroup';
 import { MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 // import { trackMatomoEvent } from '@utils/matomo';
 
@@ -42,80 +37,22 @@ const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type ModalForecastProps = PropsFromRedux & {
+type HourlyForecastProps = PropsFromRedux & {
   data: TimeStepData[];
-  initialPosition?: 'start' | 'end';
-  maxHeight?: number;
-  onScrollOffsetChange?: (offset: number) => void;
-  onScrollOffsetMaxChange?: (offset: number) => void;
 };
 
-const ModalForecast: React.FC<ModalForecastProps> = ({
+const HourlyForecast: React.FC<HourlyForecastProps> = ({
   data,
   displayParams,
   clockType,
   units,
-  initialPosition,
-  maxHeight,
-  onScrollOffsetChange,
-  onScrollOffsetMaxChange,
 }) => {
   const { fontScale } = useWindowDimensions();
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
   const { excludeDayLength } = Config.get('weather').forecast;
-  const flatListRef = useRef<FlatList<TimeStepData>>(null);
-
-  const { width, height } = useWindowDimensions();
-
-  // keep last tracked timestamp in a ref (doesn’t trigger re-renders)
-  // const lastTracked = useRef(0);
-
-  useEffect(() => {
-    if (!data || data.length === 0) return;
-
-    if (initialPosition === 'start') {
-      setCurrentIndex(0);
-      setTimeout(() => {
-        flatListRef.current?.scrollToIndex({
-          animated: false,
-          index: 0,
-          viewPosition: 0,
-        });
-      }, 50);
-    } else {
-      setCurrentIndex(data.length - 1);
-      setTimeout(() => {
-        flatListRef.current?.scrollToIndex({
-          animated: false,
-          index: data.length - 1,
-          viewPosition: 0,
-        });
-      }, 50);
-    }
-  }, [data, initialPosition]);
 
   if (!data || data.length === 0) return null;
-
-  const startHour = parseInt(data[0].localtime.substring(9, 11), 10);
-  const endHour = parseInt(data[data.length-1].localtime.substring(9, 11), 10);
-
-  const handleOnScroll = ({
-    nativeEvent,
-  }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    // TODO: activates from swipe AND hour -button selections...
-    // trackScroll();
-
-    const { contentOffset } = nativeEvent;
-    const index = Math.round(Math.abs(contentOffset.x / 48));
-    setCurrentIndex(index);
-  };
-
-  const isWideDisplay = width > 500;
-  const timeSelectorHeight = isWideDisplay ? 0 : 48;
-  const modalChromeHeight = 70 + 16 + timeSelectorHeight;
-  const maxTableHeight = Math.max(160, (maxHeight ?? height) - modalChromeHeight);
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
@@ -411,35 +348,25 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
     );
   };
 
-  const modalContent = (
+  return (
     <>
       <View style={styles.row}>
-        <ForecastListHeaderColumn displayParams={displayParams} units={units} modal />
+        <ForecastListHeaderColumn displayParams={displayParams} units={units} compact />
         <View style={styles.listContainer}>
           <FlatList
-            ref={flatListRef}
             data={data}
             keyExtractor={(item) => `${item.epochtime}`}
             renderItem={({ item }: any) => (
-              <Pressable>
-                <ForecastListColumn
-                  clockType={clockType}
-                  data={item}
-                  displayParams={displayParams}
-                  units={units}
-                  modal
-                />
-              </Pressable>
+              <ForecastListColumn
+                clockType={clockType}
+                data={item}
+                displayParams={displayParams}
+                units={units}
+                compact
+              />
             )}
-            onScroll={handleOnScroll}
             horizontal
             showsHorizontalScrollIndicator={false}
-            onScrollToIndexFailed={(info) => {
-              setTimeout(() => {
-                console.log('scrollToIndex failed, retrying');
-                flatListRef.current?.scrollToIndex({ index: info.index, animated: false });
-              }, 100); // Odota että lista ehtii renderöityä
-            }}
           />
         </View>
       </View>
@@ -447,52 +374,9 @@ const ModalForecast: React.FC<ModalForecastProps> = ({
         !excludeDayLength && <DayDurationRow />}
     </>
   );
-
-  return (
-    <>
-      { !isWideDisplay && (
-        <TimeSelectButtonGroup
-          startHour={startHour}
-          endHour={endHour}
-          selectedHour={startHour+currentIndex}
-          onTimeSelect={(hour) => {
-            let index = hour;
-
-            if (data.length !== 24) {
-              const start = 24 - data.length;
-              index = hour - start;
-              if (index < 0) index = 0;
-            }
-
-            setCurrentIndex(index);
-            flatListRef.current?.scrollToIndex({
-              animated: false,
-              index: index,
-              viewPosition: 0,
-            });
-          }}
-        />
-      )}
-      <ScrollView
-        nestedScrollEnabled
-        onContentSizeChange={(_, contentHeight) => {
-          onScrollOffsetMaxChange?.(Math.max(0, contentHeight - maxTableHeight));
-        }}
-        onScroll={({ nativeEvent }) => {
-          onScrollOffsetChange?.(nativeEvent.contentOffset.y);
-        }}
-        scrollEventThrottle={16}
-        style={[styles.table, { maxHeight: maxTableHeight }]}>
-        {modalContent}
-      </ScrollView>
-    </>
-  );
 };
 
 const styles = StyleSheet.create({
-  table: {
-    maxHeight: 500,
-  },
   row: {
     flexDirection: 'row',
   },
@@ -551,4 +435,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(connector(ModalForecast));
+export default memo(connector(HourlyForecast));

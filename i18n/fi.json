@@ -104,6 +104,7 @@
     "popMissing": "Sateen todennäköisyys puuttuu",
     "minus": "miinus",
     "showHourlyForecast": "Näytä päiväkohtainen tuntiennuste",
+    "hideHourlyForecast": "Piilota päiväkohtainen tuntiennuste",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
