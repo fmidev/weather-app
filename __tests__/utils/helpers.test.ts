@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-nitro-geolocation/compat';
 import moment from 'moment';
 import type { TFunction } from 'i18next';
 import {

@@ -16,13 +16,16 @@ jest.mock('react-native-config', () => ({
   },
 }));
 
-jest.mock('@react-native-community/geolocation', () => ({
-  getCurrentPosition: jest.fn(),
-  watchPosition: jest.fn(),
-  clearWatch: jest.fn(),
-  stopObserving: jest.fn(),
-  requestAuthorization: jest.fn(),
-  setRNConfiguration: jest.fn(),
+jest.mock('react-native-nitro-geolocation/compat', () => ({
+  __esModule: true,
+  default: {
+    getCurrentPosition: jest.fn(),
+    watchPosition: jest.fn(),
+    clearWatch: jest.fn(),
+    stopObserving: jest.fn(),
+    requestAuthorization: jest.fn(),
+    setRNConfiguration: jest.fn(),
+  },
 }));
 
 jest.mock('react-native-localize', () => ({

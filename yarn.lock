@@ -1884,11 +1884,6 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
-"@react-native-community/geolocation@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/geolocation/-/geolocation-3.4.0.tgz#8b6ee024a71cf94526ab796af1e9ae140684802c"
-  integrity sha512-bzZH89/cwmpkPMKKveoC72C4JH0yF4St5Ceg/ZM9pA1SqX9MlRIrIrrOGZ/+yi++xAvFDiYfihtn9TvXWU9/rA==
-
 "@react-native-community/netinfo@11.4.1":
   version "11.4.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-11.4.1.tgz#a3c247aceab35f75dd0aa4bfa85d2be5a4508688"
@@ -7821,6 +7816,16 @@ react-native-modal@14.0.0-rc.0:
   integrity sha512-9Wkg77VUdIkkSxnxm6UctRtIzRnnvuE+MbvIOlHkYjGn/W3dJRej6B7GRGhjyn1QPZ/pO4+dixkxjMgyc380lQ==
   dependencies:
     react-native-animatable "1.4.0"
+
+react-native-nitro-geolocation@1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-nitro-geolocation/-/react-native-nitro-geolocation-1.4.3.tgz#90e05137c61526de6b91947d5f5ec06f38f1bc00"
+  integrity sha512-8r09M6fjf7krCXRuF3RskuJpcxE8dvwQtRJnlrk+U3tO4v+ltyXhRRGmAMlO2Y/PEv1II8sgnIgil58RaLPI4A==
+
+react-native-nitro-modules@0.36.5:
+  version "0.36.5"
+  resolved "https://registry.yarnpkg.com/react-native-nitro-modules/-/react-native-nitro-modules-0.36.5.tgz#438c77e4f1e77bd1d3e901eb5b4953762e68a078"
+  integrity sha512-SJby84+hovD70JmQ1fq+56tw3oapJeChehUqXA4Gqjm+ktJhMAcj8LGwoAjStSOUwRaK7czbzBPB0Widj+EDoQ==
 
 react-native-permissions@5.6.1:
   version "5.6.1"

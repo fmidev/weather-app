@@ -96,7 +96,148 @@ describe('map reducer', () => {
     });
   });
 
+  it('preserves state when refreshed WMS overlay data is unchanged', () => {
+    const observation = dummyOverlay.observation as types.Layer;
+    const forecast = dummyOverlay.forecast as types.Layer;
+    const currentOverlay: types.MapOverlay = {
+      ...dummyOverlay,
+      observation: {
+        ...observation,
+        styles: { dark: 'dark', light: 'light' },
+      },
+    };
+    const currentState = {
+      ...initial,
+      overlays: new Map([[1, currentOverlay]]),
+      sliderTime: 123,
+    };
+    const refreshedObservation: types.Layer = {
+      ...observation,
+      styles: { dark: 'dark', light: 'light' },
+    };
+    const refreshedOverlay: types.MapOverlay = {
+      ...currentOverlay,
+      observation: refreshedObservation,
+      forecast: { ...forecast },
+    };
+    const refreshedOverlays = new Map([[1, refreshedOverlay]]);
+
+    const nextState = reducer(currentState, {
+      type: types.UPDATE_OVERLAYS_SUCCESS,
+      overlays: refreshedOverlays,
+    });
+
+    expect(nextState).toBe(currentState);
+    expect(nextState.sliderTime).toBe(123);
+  });
+
+  it('updates state when refreshed WMS overlay data has changed', () => {
+    const forecast = dummyOverlay.forecast as types.Layer;
+    const currentState = {
+      ...initial,
+      overlays: new Map([[1, dummyOverlay]]),
+      sliderTime: 123,
+    };
+    const changedOverlays = new Map<number, types.MapOverlay>([
+      [
+        1,
+        {
+          ...dummyOverlay,
+          forecast: {
+            ...forecast,
+            end: '2021-01-01T02:00:00Z',
+          },
+        },
+      ],
+    ]);
+
+    const nextState = reducer(currentState, {
+      type: types.UPDATE_OVERLAYS_SUCCESS,
+      overlays: changedOverlays,
+    });
+
+    expect(nextState).not.toBe(currentState);
+    expect(nextState.overlays).toBe(changedOverlays);
+    expect(nextState.sliderTime).toBe(0);
+  });
+
+  it('preserves state when refreshed Timeseries ETag is unchanged', () => {
+    const currentOverlay: types.MapOverlay = {
+      type: 'Timeseries',
+      etag: '"timeseries-v1"',
+      step: 60,
+      data: [],
+    };
+    const currentState = {
+      ...initial,
+      overlays: new Map([[8, currentOverlay]]),
+      sliderTime: 123,
+    };
+    const refreshedOverlays = new Map<number, types.MapOverlay>([
+      [8, { ...currentOverlay, data: [] }],
+    ]);
+
+    const nextState = reducer(currentState, {
+      type: types.UPDATE_OVERLAYS_SUCCESS,
+      overlays: refreshedOverlays,
+    });
+
+    expect(nextState).toBe(currentState);
+    expect(nextState.sliderTime).toBe(123);
+  });
+
+  it('updates Timeseries state when ETag changes, is missing or metadata changes', () => {
+    const currentOverlay: types.MapOverlay = {
+      type: 'Timeseries',
+      etag: '"timeseries-v1"',
+      step: 60,
+      data: [],
+    };
+    const currentState = {
+      ...initial,
+      overlays: new Map([[8, currentOverlay]]),
+      sliderTime: 123,
+    };
+    const changedOverlays = new Map<number, types.MapOverlay>([
+      [8, { ...currentOverlay, etag: '"timeseries-v2"', data: [] }],
+    ]);
+    const missingEtagOverlays = new Map<number, types.MapOverlay>([
+      [8, { ...currentOverlay, etag: undefined, data: [] }],
+    ]);
+    const changedMetadataOverlays = new Map<number, types.MapOverlay>([
+      [
+        8,
+        {
+          ...currentOverlay,
+          forecast: { end: '2026-08-17T12:00:00Z' },
+          data: [],
+        },
+      ],
+    ]);
+
+    expect(
+      reducer(currentState, {
+        type: types.UPDATE_OVERLAYS_SUCCESS,
+        overlays: changedOverlays,
+      }).overlays
+    ).toBe(changedOverlays);
+    expect(
+      reducer(currentState, {
+        type: types.UPDATE_OVERLAYS_SUCCESS,
+        overlays: missingEtagOverlays,
+      }).overlays
+    ).toBe(missingEtagOverlays);
+    expect(
+      reducer(currentState, {
+        type: types.UPDATE_OVERLAYS_SUCCESS,
+        overlays: changedMetadataOverlays,
+      }).overlays
+    ).toBe(changedMetadataOverlays);
+  });
+
   it('should handle UPDATE_OVERLAYS and UPDATE_OVERLAYS_ERROR', () => {
+    expect(reducer(initial, { type: types.UPDATE_OVERLAYS })).toBe(initial);
+
     expect(
       reducer({ ...initial, overlaysError: 'failed' }, {
         type: types.UPDATE_OVERLAYS,

@@ -13,12 +13,15 @@ type ConfigProviderProps = {
   timeout?: number;
 };
 
+// This is only interval to check if update is needed,
+// Individual update intervals defined in the config are respected.
+const RELOAD_INTERVAL_MS = 10_000;
+
 const ConfigProvider: React.FC<ConfigProviderProps> = ({
   children,
   defaultConfig,
   timeout,
 }) => {
-  const reloadInterval = 60000;
   const [restored, setRestored] = useState<boolean>(false);
   const [updated, setUpdated] = useState<number>(0);
   const [shouldReload, setShouldReload] = useState<number>(0);
@@ -67,12 +70,10 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
 
         reloadIntervalRef.current = setInterval(
           () => setShouldReload(Date.now()),
-          reloadInterval
+          RELOAD_INTERVAL_MS
         );
-      } else {
-        if (reloadIntervalRef.current) {
-          clearInterval(reloadIntervalRef.current);
-        }
+      } else if (reloadIntervalRef.current) {
+        clearInterval(reloadIntervalRef.current);
       }
     };
     const appStateSubscriber = AppState.addEventListener(
@@ -94,7 +95,7 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({
   useEffect(() => {
     reloadIntervalRef.current = setInterval(
       () => setShouldReload(Date.now()),
-      reloadInterval
+      RELOAD_INTERVAL_MS
     );
 
     // Cleanup on unmount

@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "react": [ "./node_modules/@types/react" ],
+      "react-native-nitro-geolocation/compat": ["./node_modules/react-native-nitro-geolocation/src/compat/index.tsx"],
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
       "@navigators/*": ["./src/navigators/*"],

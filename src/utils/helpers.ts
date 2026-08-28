@@ -1,5 +1,5 @@
 import { Alert, AccessibilityInfo, Platform } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-nitro-geolocation/compat';
 import {
   PERMISSIONS,
   checkMultiple,
@@ -34,7 +34,7 @@ const getPosition = async (
   const isRunningOnMac = await isRunningInIOSCompatibilityMode();
 
   Geolocation.getCurrentPosition(
-    (position) => {
+    (position: { coords: { latitude: number; longitude: number } }) => {
       let { latitude, longitude } = position.coords;
       latitude = roundCoordinates(latitude);
       longitude = roundCoordinates(longitude);
