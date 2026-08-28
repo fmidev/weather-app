@@ -49,12 +49,22 @@ type PlatformSpecificNumber = {
   web?: number;
 };
 
+export type VectorTileSettings = {
+  style?: boolean;
+  value?: string;
+  precision?: number;
+  windDirection?: string;
+  windDirectionFix?: number;
+  maxZoom?: number;
+};
+
 type TemperatureUnit = 'C' | 'F';
 type PrecipitationUnit = 'mm' | 'in';
 type WindUnit = 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
 type PressureUnit = 'hPa' | 'inHg' | 'mmHg' | 'mbar';
 export type MeasurementUnit =
   TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
+export type MapTileFormat = 'png' | 'jpeg' | 'webp' | 'pbf';
 
 interface LayerGroup {
   id: number;
@@ -85,7 +95,8 @@ export interface MapLayer {
   sources: WMSSource[] | TimeseriesSource[];
   times: Times;
   tileSize?: number | PlatformSpecificNumber;
-  tileFormat?: string;
+  tileFormat?: MapTileFormat;
+  mvt?: VectorTileSettings;
 }
 
 export interface BaseMap {
