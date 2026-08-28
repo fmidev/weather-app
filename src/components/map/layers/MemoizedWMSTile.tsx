@@ -9,6 +9,7 @@ import type { MapTileFormat, VectorTileSettings } from '@config';
 import type { VectorLayerStyle } from '@store/map/types';
 
 type MemoizedWMSTileProps = {
+  tileId: string;
   urlTemplate: string;
   tileSize?: number;
   opacity?: number;
@@ -36,6 +37,7 @@ const parseMvtReference = (
 };
 
 const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
+  tileId,
   urlTemplate,
   tileSize,
   opacity,
@@ -46,6 +48,8 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
 }) => {
   const items = urlTemplate.split('?');
   const key = items.length > 1 ? items[1] : urlTemplate;
+  const sourceId = `wms-source-${tileId}`;
+  const layerId = `wms-layer-${tileId}`;
   const { sourceLayer: mvtSourceLayer, property: mvtProperty } =
     parseMvtReference(mvt?.value, 'text');
   const { sourceLayer: windSourceLayer, property: windProperty } =
@@ -66,7 +70,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   if (library === 'maplibre' && tileFormat === 'pbf') {
     return (
       <VectorSource
-        id={`wms-source-${key}`}
+        id={sourceId}
         tiles={[urlTemplate]}
         {...(mvt?.maxZoom !== undefined
           ? { minzoom: 1, maxzoom: mvt.maxZoom }
@@ -83,8 +87,8 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
                 : ['*', baseOpacity, animationOpacity];
           const layerProps = {
             ...layer,
-            id: `wms-layer-${key}-${id ?? index}`,
-            source: `wms-source-${key}`,
+            id: `${layerId}-${id ?? index}`,
+            source: sourceId,
             beforeId: 'places_region',
             paint: {
               ...paint,
@@ -97,15 +101,15 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
           } as React.ComponentProps<typeof Layer>;
 
           return (
-            <Layer {...layerProps} key={`wms-layer-${key}-${id ?? index}`} />
+            <Layer {...layerProps} key={`${layerId}-${id ?? index}`} />
           );
         })}
         {mvtSourceLayer && (
           <Layer
             {...({
-              id: `wms-text-layer-${key}-${mvt?.value}`,
+              id: `wms-text-layer-${tileId}-${mvt?.value}`,
               type: 'symbol',
-              source: `wms-source-${key}`,
+              source: sourceId,
               'source-layer': mvtSourceLayer,
               beforeId: 'places_region',
               layout: {
@@ -132,9 +136,9 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
         {windSourceLayer && (
           <Layer
             {...({
-              id: `wms-wind-arrow-layer-${key}-${mvt?.windDirection}`,
+              id: `wms-wind-arrow-layer-${tileId}-${mvt?.windDirection}`,
               type: 'symbol',
-              source: `wms-source-${key}`,
+              source: sourceId,
               'source-layer': windSourceLayer,
               beforeId: 'places_region',
               layout: {
@@ -165,12 +169,12 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   }
 
   return library === 'maplibre' ? (
-    <RasterSource id={`wms-source-${key}`} tiles={[urlTemplate]} tileSize={512}>
+    <RasterSource id={sourceId} tiles={[urlTemplate]} tileSize={512}>
       <Layer
         type="raster"
-        id={`wms-layer-${key}`}
-        key={`wms-layer-${key}`}
-        source={`wms-source-${key}`}
+        id={layerId}
+        key={layerId}
+        source={sourceId}
         beforeId="places_region"
         paint={{
           'raster-opacity': opacity ?? 0,

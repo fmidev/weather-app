@@ -148,4 +148,52 @@ describe('LayerSelector', () => {
     });
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it('lists groups first and selects the first layer in a group', () => {
+    mockConfigGet.mockReturnValue({
+      layerGroups: [
+        { id: 2, name: { en: 'Wind' }, layers: [4, 5] },
+        { id: 1, name: { en: 'Rain' }, layers: [1, 2] },
+      ],
+      layers: [
+        { id: 8, name: { en: 'Weather forecast on map' } },
+        { id: 1, name: { en: 'Rain 5 min' } },
+        { id: 2, name: { en: 'Rain 15 min' } },
+        { id: 4, name: { en: 'Wind observations' } },
+        { id: 5, name: { en: 'Wind forecast' } },
+      ],
+    });
+    const store = createStore({
+      mock: {
+        activeOverlay: 8,
+        mapLayers: {},
+      },
+    });
+    const onClose = jest.fn();
+
+    const {
+      getAllByA11yRole,
+      getByA11yLabel,
+      queryByText,
+    } = render(
+      <Provider store={store as any}>
+        <LayerSelector onClose={onClose} />
+      </Provider>
+    );
+
+    expect(
+      getAllByA11yRole('button').map((item) => item.props.accessibilityLabel)
+    ).toEqual([
+      'Rain, not selected',
+      'Wind, not selected',
+      'Weather forecast on map',
+    ]);
+    expect(queryByText('Rain 5 min')).toBeNull();
+    expect(queryByText('Rain 15 min')).toBeNull();
+
+    fireEvent.press(getByA11yLabel('Rain, not selected'));
+
+    expect(mockUpdateActiveOverlay).toHaveBeenCalledWith(1);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
 });

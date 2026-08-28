@@ -75,6 +75,14 @@ jest.mock('../../src/components/map/ui/TimeSlider', () => ({
   },
 }));
 
+jest.mock('../../src/components/map/ui/LayerTimeStepSelector', () => ({
+  __esModule: true,
+  default: () => {
+    const { Text: MockText } = require('react-native');
+    return <MockText testID="layer-time-step-selector">time steps</MockText>;
+  },
+}));
+
 describe('MapControls', () => {
   beforeEach(() => {
     mockUseOrientation.mockReset();
@@ -104,6 +112,7 @@ describe('MapControls', () => {
     fireEvent.press(getByTestId('map_layers_button'));
 
     expect(getByTestId('time-slider')).toBeTruthy();
+    expect(getByTestId('layer-time-step-selector')).toBeTruthy();
     expect(handlers.relocate).toHaveBeenCalledTimes(1);
     expect(handlers.onZoomIn).toHaveBeenCalledTimes(1);
     expect(handlers.onZoomOut).toHaveBeenCalledTimes(1);

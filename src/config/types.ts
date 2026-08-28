@@ -66,10 +66,22 @@ export type MeasurementUnit =
   TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
 export type MapTileFormat = 'png' | 'jpeg' | 'webp' | 'pbf';
 
+interface LayerGroup {
+  id: number;
+  name: { [lang: string]: string };
+  layers: number[];
+}
+
 export interface MapLayer {
   id: number;
   type: 'WMS' | 'GeoJSON' | 'Timeseries';
-  name: { [lang: string]: string };
+  name?: { [lang: string]: string };
+  timeButton?: {
+    [lang: string]: {
+      label: string;
+      accessibilityLabel: string;
+    };
+  };
   legend?: {
     hasPrecipitationFin?: boolean;
     hasPrecipitationScan?: boolean;
@@ -343,6 +355,7 @@ export interface ConfigType {
   map: {
     updateInterval: number;
     sources: { [name: string]: string };
+    layerGroups: LayerGroup[];
     layers: MapLayer[];
     baseMap?: BaseMap;
     infoBottomSheet?: MapInfoBottomSheet;

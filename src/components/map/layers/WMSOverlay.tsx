@@ -58,7 +58,10 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
     return { type: 'observation' };
   }, [forecast, observation]);
 
-  const current = useMemo(() => new Date(sliderTime * 1000).toISOString(), [sliderTime]);
+  const current = useMemo(
+    () => new Date(sliderTime * 1000).toISOString(),
+    [sliderTime]
+  );
 
   const currentStep = getSliderStepSeconds(overlay.step);
 
@@ -72,30 +75,41 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
   );
 
   const urlMap = useMemo(() => {
-    const map = new Map<string, {
-      url: string;
-      vectorStyles?: Layer['vectorStyles'];
-    }>();
+    const map = new Map<
+      string,
+      {
+        url: string;
+        vectorStyles?: Layer['vectorStyles'];
+      }
+    >();
     if ((!observation?.url && !forecast?.url) || !borderTime.time) {
       return map;
     }
 
     const theme = dark ? 'dark' : 'light';
 
-    for (let curr = memoizedMinUnix; curr <= memoizedMaxUnix; curr += currentStep) {
+    for (
+      let curr = memoizedMinUnix;
+      curr <= memoizedMaxUnix;
+      curr += currentStep
+    ) {
       const stamp = new Date(curr * 1000).toISOString();
 
-      const isForecast = borderTime.type === 'forecast'
-        ? stamp >= borderTime.time
-        : stamp > borderTime.time;
+      const isForecast =
+        borderTime.type === 'forecast'
+          ? stamp >= borderTime.time
+          : stamp > borderTime.time;
 
       const layer = (isForecast ? forecast : observation) || {};
       if (layer.url) {
-        const styleQuery = overlay.tileFormat === 'pbf'
-          ? ''
-          : `&styles=${
-            typeof layer.styles === 'string' ? layer.styles : layer.styles?.[theme]
-          }`;
+        const styleQuery =
+          overlay.tileFormat === 'pbf'
+            ? ''
+            : `&styles=${
+                typeof layer.styles === 'string'
+                  ? layer.styles
+                  : layer.styles?.[theme]
+              }`;
         map.set(stamp, {
           url: `${layer.url}${styleQuery}&time=${stamp}&who=${packageJSON.name}-${Platform.OS}`,
           vectorStyles: layer.vectorStyles,
@@ -132,11 +146,13 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       (currentTileIndex - 1 + tiles.length) % tiles.length;
     const nextTileIndex = (currentTileIndex + 1) % tiles.length;
 
-    return [...new Set([
-      tiles[currentTileIndex],
-      tiles[previousTileIndex],
-      tiles[nextTileIndex],
-    ])];
+    return [
+      ...new Set([
+        tiles[currentTileIndex],
+        tiles[previousTileIndex],
+        tiles[nextTileIndex],
+      ]),
+    ];
   };
 
   const useTileBuffer =
@@ -149,6 +165,7 @@ const WMSOverlay: React.FC<WMSOverlayProps> = ({
       {renderTiles.map((k) => (
         <MemoizedWMSTile
           key={k}
+          tileId={k}
           urlTemplate={urlMap.get(k)?.url as string}
           opacity={k === current ? 1 : 0}
           tileSize={overlay.tileSize}

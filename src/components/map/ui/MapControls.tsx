@@ -6,6 +6,7 @@ import { useOrientation } from '@utils/hooks';
 
 import MapButton from './MapButton';
 import RelocateButton from './RelocateButton';
+import LayerTimeStepSelector from './LayerTimeStepSelector';
 import TimeSlider from './TimeSlider';
 
 type MapControlsProps = {
@@ -93,6 +94,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         icon="layers"
         iconSize={26}
       />
+      <LayerTimeStepSelector />
       <TimeSlider />
     </View>
   );

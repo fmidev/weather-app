@@ -28,6 +28,7 @@ describe('MemoizedWMSTile', () => {
 
     render(
       <MemoizedWMSTile
+        tileId="precipitation-frame"
         urlTemplate={urlTemplate}
         opacity={0.5}
         tileFormat="pbf"
@@ -76,6 +77,7 @@ describe('MemoizedWMSTile', () => {
 
     render(
       <MemoizedWMSTile
+        tileId="precipitation-frame"
         urlTemplate="https://example.test/wms?format=pbf"
         opacity={0.5}
         tileFormat="pbf"
@@ -105,6 +107,7 @@ describe('MemoizedWMSTile', () => {
 
     render(
       <MemoizedWMSTile
+        tileId="raster-frame"
         urlTemplate={urlTemplate}
         tileFormat="png"
         library="maplibre"
@@ -123,6 +126,7 @@ describe('MemoizedWMSTile', () => {
   it('sets the vector source maxzoom from the MVT configuration', () => {
     render(
       <MemoizedWMSTile
+        tileId="precipitation-frame"
         urlTemplate="https://example.test/wms?format=pbf"
         tileFormat="pbf"
         mvt={{ maxZoom: 6 }}
@@ -140,6 +144,7 @@ describe('MemoizedWMSTile', () => {
 
     render(
       <MemoizedWMSTile
+        tileId="temperature-frame"
         urlTemplate={urlTemplate}
         opacity={0.5}
         tileFormat="pbf"
@@ -169,6 +174,7 @@ describe('MemoizedWMSTile', () => {
   it('preloads inactive PBF text layers with zero opacity', () => {
     render(
       <MemoizedWMSTile
+        tileId="temperature-frame"
         urlTemplate="https://example.test/wms?format=pbf"
         opacity={0}
         tileFormat="pbf"
@@ -193,6 +199,7 @@ describe('MemoizedWMSTile', () => {
   it('uses the speed property for the wind arrow source layer', () => {
     render(
       <MemoizedWMSTile
+        tileId="wind-frame"
         urlTemplate="https://example.test/wms?format=pbf"
         opacity={1}
         tileFormat="pbf"
@@ -222,6 +229,7 @@ describe('MemoizedWMSTile', () => {
   it('adds a rotated wind arrow layer for the configured direction property', () => {
     render(
       <MemoizedWMSTile
+        tileId="wind-frame"
         urlTemplate="https://example.test/wms?format=pbf"
         opacity={0.5}
         tileFormat="pbf"
@@ -250,6 +258,38 @@ describe('MemoizedWMSTile', () => {
         paint: expect.objectContaining({
           'icon-opacity': 0.5,
         }),
+      })
+    );
+  });
+
+  it('keeps MapLibre ids stable when the themed tile URL changes', () => {
+    const tileId = '2025-01-01T00:00:00.000Z';
+    const { rerender } = render(
+      <MemoizedWMSTile
+        tileId={tileId}
+        urlTemplate="https://example.test/wms?styles=light"
+        library="maplibre"
+      />
+    );
+
+    rerender(
+      <MemoizedWMSTile
+        tileId={tileId}
+        urlTemplate="https://example.test/wms?styles=dark"
+        library="maplibre"
+      />
+    );
+
+    expect(mockRasterSource).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        id: `wms-source-${tileId}`,
+        tiles: ['https://example.test/wms?styles=dark'],
+      })
+    );
+    expect(mockLayer).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        id: `wms-layer-${tileId}`,
+        source: `wms-source-${tileId}`,
       })
     );
   });
