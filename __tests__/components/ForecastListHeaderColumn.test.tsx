@@ -102,7 +102,7 @@ describe('ForecastListHeaderColumn', () => {
     expect(view.queryByTestId('icon-time')).toBeNull();
   });
 
-  it('halves the time row height in compact mode', () => {
+  it('keeps the time row height consistent in compact mode', () => {
     const regularView = render(
       <ForecastListHeaderColumn displayParams={[]} />
     );
@@ -116,6 +116,7 @@ describe('ForecastListHeaderColumn', () => {
     const compactStyle = StyleSheet.flatten(
       compactView.getByTestId('forecast-header-time-row').props.style
     );
-    expect(compactStyle.height).toBe(regularStyle.height / 2);
+    expect(compactStyle.height).toBe(regularStyle.height);
+    expect(compactStyle.height).toBeLessThanOrEqual(52);
   });
 });

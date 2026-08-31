@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { FlatList } from 'react-native';
 
 import HourlyForecast from '../../src/components/weather/forecast/HourlyForecast';
 import * as constants from '../../src/store/forecast/constants';
@@ -89,19 +90,26 @@ jest.mock('../../src/components/weather/forecast/ForecastListColumn', () => ({
   },
 }));
 
-jest.mock('../../src/components/weather/forecast/ForecastListHeaderColumn', () => ({
-  __esModule: true,
-  default: (props: any) => {
-    mockForecastListHeaderColumn(props);
-    const { Text } = require('react-native');
-    return <Text testID="forecast-header-column">{props.displayParams.length}</Text>;
-  },
-}));
+jest.mock(
+  '../../src/components/weather/forecast/ForecastListHeaderColumn',
+  () => ({
+    __esModule: true,
+    default: (props: any) => {
+      mockForecastListHeaderColumn(props);
+      const { Text } = require('react-native');
+      return (
+        <Text testID="forecast-header-column">
+          {props.displayParams.length}
+        </Text>
+      );
+    },
+  })
+);
 
 const makeData = (count: number) =>
   Array.from({ length: count }, (_, index) => ({
     epochtime: 2000000000 + index * 3600,
-    localtime: `xxxxxxxxx${index.toString().padStart(2, '0')}`,
+    localtime: `2033-05-18T${index.toString().padStart(2, '0')}:00:00`,
     sunrise: '2033-05-18T03:00:00',
     sunset: '2033-05-18T21:00:00',
     dayLength: 1080,
@@ -168,5 +176,42 @@ describe('HourlyForecast', () => {
     );
 
     expect(view.queryByTestId('day_duration')).toBeNull();
+  });
+
+  it('starts the hourly list at the requested hour when it is available', () => {
+    const view = render(
+      <HourlyForecast
+        data={makeData(12) as any}
+        displayParams={[[0, constants.TEMPERATURE]] as any}
+        clockType={24 as any}
+        units={{} as any}
+        initialScrollHour={8}
+      />
+    );
+
+    const list = view.UNSAFE_getByType(FlatList);
+
+    expect(list.props.initialScrollIndex).toBe(8);
+    expect(list.props.getItemLayout(undefined, 8)).toEqual({
+      index: 8,
+      length: 62,
+      offset: 496,
+    });
+  });
+
+  it('does not set an initial index when the requested hour is unavailable', () => {
+    const view = render(
+      <HourlyForecast
+        data={makeData(3) as any}
+        displayParams={[[0, constants.TEMPERATURE]] as any}
+        clockType={24 as any}
+        units={{} as any}
+        initialScrollHour={8}
+      />
+    );
+
+    expect(
+      view.UNSAFE_getByType(FlatList).props.initialScrollIndex
+    ).toBeUndefined();
   });
 });

@@ -1,8 +1,13 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  View, StyleSheet, Switch, ScrollView, TouchableOpacity, Platform,
-  useWindowDimensions
+  View,
+  StyleSheet,
+  Switch,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -14,11 +19,15 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
-import { selectDisplayParams } from '@store/forecast/selectors';
+import {
+  selectDisplayParams,
+  selectShowSingleHourlyForecast,
+} from '@store/forecast/selectors';
 import { selectUnits } from '@store/settings/selectors';
 import {
   updateDisplayParams as updateDisplayParamsAction,
   restoreDefaultDisplayParams as restoreDefaultDisplayParamsAction,
+  updateShowSingleHourlyForecast as updateShowSingleHourlyForecastAction,
 } from '@store/forecast/actions';
 import constants, {
   RELATIVE_HUMIDITY,
@@ -43,12 +52,14 @@ import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
+  showSingleHourlyForecast: selectShowSingleHourlyForecast(state),
   units: selectUnits(state),
 });
 
 const mapDispatchToProps = {
   updateDisplayParams: updateDisplayParamsAction,
   restoreDefaultDisplayParams: restoreDefaultDisplayParamsAction,
+  updateShowSingleHourlyForecast: updateShowSingleHourlyForecastAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -65,6 +76,8 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   displayParams,
   updateDisplayParams,
   restoreDefaultDisplayParams,
+  showSingleHourlyForecast,
+  updateShowSingleHourlyForecast,
   onClose,
   units,
 }) => {
@@ -72,7 +85,8 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
   const isLandscape = useOrientation();
-  const { data, excludeDayLength } = Config.get('weather').forecast;
+  const weatherConfig = Config.get('weather');
+  const { data, excludeDayLength } = weatherConfig.forecast;
   const activeParameters = data.flatMap(({ parameters }) => parameters);
 
   const regex = new RegExp(
@@ -191,11 +205,13 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         ios_backgroundColor={WHITE}
         value={displayParams.some((arr) => arr.includes(param))}
         onValueChange={() => {
-          const paramStr = 'Forecast parameter '+param+' - ';
-          const onOffStr = displayParams.some((arr) => arr.includes(param)) ? 'OFF':'ON';
+          const paramStr = 'Forecast parameter ' + param + ' - ';
+          const onOffStr = displayParams.some((arr) => arr.includes(param))
+            ? 'OFF'
+            : 'ON';
 
           trackMatomoEvent('User action', 'Weather', paramStr + '' + onOffStr);
-          updateDisplayParams([index, param])
+          updateDisplayParams([index, param]);
         }}
         disabled={displayParams.length === 1 && displayParams[0][1] === param}
       />
@@ -206,8 +222,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
     <SafeAreaView
       testID="weather_params_bottom_sheet"
       edges={['bottom', 'left', 'right']}
-      style={styles.wrapper}
-    >
+      style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -242,8 +257,12 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                 accessibilityRole="button"
                 accessibilityHint={t('paramsBottomSheet.restoreDefaultHint')}
                 onPress={() => {
-                  trackMatomoEvent('User action', 'Weather', 'Restore default parameters');
-                  restoreDefaultDisplayParams()
+                  trackMatomoEvent(
+                    'User action',
+                    'Weather',
+                    'Restore default parameters'
+                  );
+                  restoreDefaultDisplayParams();
                 }}>
                 <Text
                   style={[
@@ -256,6 +275,44 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                 </Text>
               </AccessibleTouchableOpacity>
             </View>
+            {weatherConfig.layout === 'vertical' && (
+              <>
+                <Text
+                  accessibilityRole="header"
+                  style={[
+                    styles.title,
+                    styles.otherSettingsTitle,
+                    { color: colors.primaryText },
+                  ]}>
+                  {t('paramsBottomSheet.otherSettingsTitle')}
+                </Text>
+                <View
+                  style={[styles.row, { borderBottomColor: colors.border }]}>
+                  <Text style={[styles.text, { color: colors.hourListText }]}>
+                    {t('paramsBottomSheet.showSingleHourlyForecast')}
+                  </Text>
+                  <Switch
+                    testID="show_single_hourly_forecast_switch"
+                    accessibilityRole="switch"
+                    accessibilityLabel={t(
+                      'paramsBottomSheet.showSingleHourlyForecast'
+                    )}
+                    trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
+                    thumbColor={WHITE}
+                    ios_backgroundColor={WHITE}
+                    value={showSingleHourlyForecast}
+                    onValueChange={(value) => {
+                      trackMatomoEvent(
+                        'User action',
+                        'Weather',
+                        `Show single hourly forecast - ${value ? 'ON' : 'OFF'}`
+                      );
+                      updateShowSingleHourlyForecast(value);
+                    }}
+                  />
+                </View>
+              </>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -301,6 +358,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+  },
+  otherSettingsTitle: {
+    marginBottom: 4,
   },
   text: {
     fontSize: 16,

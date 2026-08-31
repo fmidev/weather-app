@@ -10,6 +10,7 @@ import {
   RESTORE_DEFAULT_DISPLAY_PARAMS,
   UPDATE_FORECAST_DISPLAY_FORMAT,
   UPDATE_FORECAST_CHART_PARAMETER,
+  UPDATE_SHOW_SINGLE_HOURLY_FORECAST,
   DisplayParameters,
   TimeStepData,
   ForecastLocation,
@@ -25,16 +26,22 @@ const INITIAL_STATE: ForecastState = {
   error: false,
   displayParams: [],
   displayFormat: 'table',
+  showSingleHourlyForecast: false,
   chartDisplayParam: undefined,
   fetchTimestamp: Date.now(),
   fetchSuccessTime: 0,
 };
 
-const formatData = (dataSets: TimeStepDataSet, location: ForecastLocation): WeatherData => {
+const formatData = (
+  dataSets: TimeStepDataSet,
+  location: ForecastLocation
+): WeatherData => {
   const weatherData: WeatherData = {};
   const rawGeoid = location.geoid;
   const normalizedGeoid =
-    typeof rawGeoid === 'number' && Number.isNaN(rawGeoid) ? 0 : rawGeoid ?? 0;
+    typeof rawGeoid === 'number' && Number.isNaN(rawGeoid)
+      ? 0
+      : (rawGeoid ?? 0);
   const id = String(normalizedGeoid);
   const stepsByEpoch = new Map<number, TimeStepData>();
 
@@ -79,7 +86,7 @@ export default (
         },
         auroraBorealisData: {
           ...state.auroraBorealisData,
-          [geoid]: action.data.isAuroraBorealisLikely
+          [geoid]: action.data.isAuroraBorealisLikely,
         },
         fetchTimestamp: action.timestamp,
         fetchSuccessTime: action.timestamp,
@@ -137,6 +144,13 @@ export default (
       };
     }
 
+    case UPDATE_SHOW_SINGLE_HOURLY_FORECAST: {
+      return {
+        ...state,
+        showSingleHourlyForecast: action.value,
+      };
+    }
+
     default: {
       return state;
     }
@@ -145,5 +159,10 @@ export default (
 
 export const forecastPersist: PersistConfig = {
   key: 'forecast',
-  whitelist: ['displayParams', 'displayFormat', 'chartDisplayParam'],
+  whitelist: [
+    'displayParams',
+    'displayFormat',
+    'chartDisplayParam',
+    'showSingleHourlyForecast',
+  ],
 };

@@ -23,6 +23,7 @@ import {
   selectDisplayParams,
   selectForecastByDay,
   selectForecastInvalidData,
+  selectShowSingleHourlyForecast,
 } from '@store/forecast/selectors';
 
 import Icon from '@components/common/ScalableIcon';
@@ -39,6 +40,7 @@ const mapStateToProps = (state: State) => ({
   invalidData: selectForecastInvalidData(state),
   displayParams: selectDisplayParams(state),
   forecastByDay: selectForecastByDay(state),
+  showSingleHourlyForecast: selectShowSingleHourlyForecast(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -66,6 +68,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   units,
   invalidData,
   forecastByDay,
+  showSingleHourlyForecast,
 }) => {
   const { width, fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
@@ -75,7 +78,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const isWideDisplay = () => width > 500;
   const largeFonts = fontScale >= 1.5;
 
-  const activeParameters = Config.get('weather').forecast.data.flatMap(
+  const weatherConfig = Config.get('weather');
+  const activeParameters = weatherConfig.forecast.data.flatMap(
     ({ parameters }) => parameters
   );
 
@@ -181,6 +185,9 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               `${isExpanded ? 'Hide' : 'Show'} hourly forecast - day ${index + 1}`
             );
             setExpandedDayIndexes((currentIndexes) => {
+              if (showSingleHourlyForecast) {
+                return currentIndexes.has(index) ? new Set() : new Set([index]);
+              }
               const nextIndexes = new Set(currentIndexes);
               if (nextIndexes.has(index)) {
                 nextIndexes.delete(index);
@@ -336,7 +343,14 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               styles.hourlyForecastContainer,
               { borderColor: colors.border },
             ]}>
-            <HourlyForecast data={hourlyForecast} />
+            <HourlyForecast
+              data={hourlyForecast}
+              initialScrollHour={
+                weatherConfig.layout === 'vertical' && !isWideDisplay()
+                  ? 8
+                  : undefined
+              }
+            />
           </View>
         )}
       </View>

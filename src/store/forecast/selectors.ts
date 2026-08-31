@@ -44,11 +44,12 @@ export const selectForecast = createSelector(
     const now = new Date();
 
     if (items) {
-      const locationItems = items[typeof geoid === 'number' && Number.isNaN(geoid) ? 0 : geoid];
+      const locationItems =
+        items[typeof geoid === 'number' && Number.isNaN(geoid) ? 0 : geoid];
 
       if (!locationItems?.[0]?.modtime) return [];
 
-      const modtime = moment(locationItems?.[0]?.modtime+'Z');
+      const modtime = moment(locationItems?.[0]?.modtime + 'Z');
       const duration = moment.duration(moment().diff(modtime));
       if (duration.asHours() > forecastMaxAge) {
         return [];
@@ -67,13 +68,14 @@ export const selectForecast = createSelector(
 
 export const selectError = createSelector(
   [selectForecastDomain, selectForecast],
-  (forecast, data) => forecast.error || (forecast.loading === false && data.length === 0)
+  (forecast, data) =>
+    forecast.error || (forecast.loading === false && data.length === 0)
 );
 
 export const selectIsAuroraBorealisLikely = createSelector(
   [selectAuroraBorealisData, selectGeoid],
   (items, geoid) => {
-    return items?.[geoid] || false
+    return items?.[geoid] || false;
   }
 );
 
@@ -124,7 +126,7 @@ export const selectIsWaningMoonPhase = createSelector(
     forecast[23]?.moonPhase !== undefined &&
     forecast[0]?.moonPhase !== undefined &&
     forecast[23].moonPhase < forecast[0].moonPhase
-)
+);
 
 const hasEndOfDayForecast = (forecast: TimeStepData[]) =>
   forecast.some(({ localtime }) => {
@@ -137,48 +139,50 @@ export const selectHeaderLevelForecast = createSelector(
   (forecastByDay) =>
     forecastByDay &&
     Object.keys(forecastByDay)
-    .filter((key) => hasEndOfDayForecast(forecastByDay[key]))
-    .map((key: string) => {
-      const dayArr = forecastByDay[key];
-      const tempArray = dayArr.map((h) => h.temperature || 0);
-      const windArray = dayArr.map((h) => h.windSpeedMS || 0);
+      .filter((key) => hasEndOfDayForecast(forecastByDay[key]))
+      .map((key: string) => {
+        const dayArr = forecastByDay[key];
+        const tempArray = dayArr.map((h) => h.temperature || 0);
+        const windArray = dayArr.map((h) => h.windSpeedMS || 0);
 
-      // get forecasted min and max temps for current day
-      const maxTemperature = Math.max(...tempArray);
-      const minTemperature = Math.min(...tempArray);
-      const maxWindSpeed = Math.max(...windArray);
-      const minWindSpeed = Math.min(...windArray);
+        // get forecasted min and max temps for current day
+        const maxTemperature = Math.max(...tempArray);
+        const minTemperature = Math.min(...tempArray);
+        const maxWindSpeed = Math.max(...windArray);
+        const minWindSpeed = Math.min(...windArray);
 
-      // calculate total precipitation
-      const sumPrecipitation = dayArr
-        .map((h) => h.precipitation1h || 0)
-        .reduce((acc, curr) => acc + curr, 0);
+        // calculate total precipitation
+        const sumPrecipitation = dayArr
+          .map((h) => h.precipitation1h || 0)
+          .reduce((acc, curr) => acc + curr, 0);
 
-      const precipitationMissing = dayArr.every(item => item.precipitation1h === null);
+        const precipitationMissing = dayArr.every(
+          (item) => item.precipitation1h === null
+        );
 
-      const roundedTotalPrecipitation =
-        Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
-      const index = getIndexForDaySmartSymbol(dayArr);
+        const roundedTotalPrecipitation =
+          Math.round((sumPrecipitation + Number.EPSILON) * 100) / 100;
+        const index = getIndexForDaySmartSymbol(dayArr);
 
-      const { smartSymbol } = dayArr[index];
-      const timeStamp = dayArr[0].epochtime;
-      const precipitationArr = dayArr.map((h) => ({
-        precipitation: h.precipitation1h,
-        timestamp: h.epochtime,
-      }));
+        const { smartSymbol } = dayArr[index];
+        const timeStamp = dayArr[0].epochtime;
+        const precipitationArr = dayArr.map((h) => ({
+          precipitation: h.precipitation1h,
+          timestamp: h.epochtime,
+        }));
 
-      return {
-        maxTemperature,
-        minTemperature,
-        maxWindSpeed,
-        minWindSpeed,
-        totalPrecipitation: roundedTotalPrecipitation,
-        precipitationMissing,
-        timeStamp,
-        smartSymbol,
-        precipitationData: precipitationArr,
-      };
-    })
+        return {
+          maxTemperature,
+          minTemperature,
+          maxWindSpeed,
+          minWindSpeed,
+          totalPrecipitation: roundedTotalPrecipitation,
+          precipitationMissing,
+          timeStamp,
+          smartSymbol,
+          precipitationData: precipitationArr,
+        };
+      })
 );
 
 export const selectForecastLastUpdatedMoment = createSelector(
@@ -253,6 +257,11 @@ export const selectUniqueSmartSymbols = createSelector(
 export const selectDisplayFormat = createSelector(
   selectForecastDomain,
   (forecast) => forecast.displayFormat
+);
+
+export const selectShowSingleHourlyForecast = createSelector(
+  selectForecastDomain,
+  (forecast) => forecast.showSingleHourlyForecast
 );
 
 export const selectChartDisplayParameter = createSelector(

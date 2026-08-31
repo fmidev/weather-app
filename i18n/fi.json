@@ -135,6 +135,8 @@
       "pressure": "Ilmanpaine ({{ unit }})",
       "uvCumulated": "UV indeksi",
       "dayLength": "Päivän pituus",
+      "otherSettingsTitle": "Muut asetukset",
+      "showSingleHourlyForecast": "Näytä vain yksi tuntiennuste",
       "selectAccessibilityHint": "Kaksoisnapauta valitaksesi",
       "unSelectAccessibilityHint": "Kaksoisnapauta poistaaksesi valinta",
       "restoreDefaultHint": "Palauta oletusvalinta"
@@ -446,7 +448,7 @@
         "arrow4": "Kovaa tuulta 14-21 m/s",
         "arrow5": "Myrskyä 21-32 m/s",
         "arrow6": "Hirmumyrskyä 32-> m/s",
-        "layerInfo" : {
+        "layerInfo": {
           "short": "Tasolla esitetään tuulen suunta ja voimakkuus 1h aika-askeleella seuraavasta alkavasta tunnista 24h eteenpäin.",
           "long": "Tasolla esitetään tuulen suunta ja voimakkuus 3h aika-askeleella seuraavasta alkavasta tunnista kolme päivää eteenpäin."
         }
@@ -458,7 +460,7 @@
         "temperatureMinus20": "-10°C",
         "temperature0": "0°C",
         "temperature20": "20°C",
-        "layerInfo" : {
+        "layerInfo": {
           "short": "Tasolla esitetään lämpötila 1h aika-askeleella seuraavasta alkavasta tunnista 24h eteenpäin.",
           "long": "Tasolla esitetään lämpötila 3h aika-askeleella seuraavasta alkavasta tunnista kolme päivää eteenpäin."
         }
@@ -737,8 +739,7 @@
     "hoursSpoken": "tuntia",
     "minutesSpoken": "minuuttia"
   },
-  "unitAbbreviations": {
-  },
+  "unitAbbreviations": {},
   "markdownRenderer": {
     "radarLegendDescription": "Sateen voimakkuuden asteikko"
   }

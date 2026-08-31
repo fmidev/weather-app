@@ -1,11 +1,6 @@
 import React, { memo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  useWindowDimensions,
-} from 'react-native';
+import { View, StyleSheet, FlatList, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
@@ -39,6 +34,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type HourlyForecastProps = PropsFromRedux & {
   data: TimeStepData[];
+  initialScrollHour?: number;
 };
 
 const HourlyForecast: React.FC<HourlyForecastProps> = ({
@@ -46,6 +42,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   displayParams,
   clockType,
   units,
+  initialScrollHour,
 }) => {
   const { fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
@@ -53,6 +50,17 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   const { excludeDayLength } = Config.get('weather').forecast;
 
   if (!data || data.length === 0) return null;
+
+  const initialScrollIndex =
+    initialScrollHour === undefined
+      ? -1
+      : data.findIndex(({ localtime }) => {
+          const localMoment = moment(localtime, moment.ISO_8601, true);
+          return (
+            localMoment.isValid() && localMoment.hour() === initialScrollHour
+          );
+        });
+  const hourColumnWidth = Math.min(fontScale * 48, 62);
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
@@ -94,13 +102,13 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
     const lightGradient = [
       'rgba(238, 239, 241, 0.64)',
       'rgba(244, 245, 247, 0.48)',
-      'rgba(255, 255, 255, 0.80)'
+      'rgba(255, 255, 255, 0.80)',
     ];
 
     const darkGradient = [
       'rgba(25, 25, 25, 0.64)',
       'rgba(32, 32, 32, 0.48)',
-      'rgba(40, 40, 40, 0.80)'
+      colors.background,
     ];
 
     const iconSize = 14;
@@ -109,241 +117,237 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
     return (
       <View
         testID="day_duration"
-        style={[
-          styles.dayLengthContainer,
-          styles.forecastHeader,
-        ]}>
-          <View style={[styles.symbolBlock, { width: headerWidth }]}>
-            <LinearGradient
-              colors={ dark ? darkGradient : lightGradient }
-              start={{ x: 1, y: 0 }}
-              end={{ x: 0, y: 0 }}
-              style={[styles.gradient, { width: headerWidth }]}
-            >
-              <Icon
-                name="sun"
-                color={colors.hourListText}
-                width={24}
-                height={24}
-                maxScaleFactor={1.5}
-              />
-            </LinearGradient>
-          </View>
-          <View
-            style={[styles.row, styles.listContainer, styles.paddingHorizontal]}>
-            {isPolarNight && !isMidnightSun && (
-              <>
-                <View
-                  accessible
-                  style={[styles.row, styles.alignCenter, styles.listContainer]}>
-                  <Icon
-                    width={iconSize}
-                    height={iconSize}
-                    maxScaleFactor={1.5}
-                    name="polar-night"
-                    style={[
-                      styles.withMarginRight,
-                      {
-                        color: colors.hourListText,
-                      },
-                    ]}
-                  />
-                  <Text
-                    maxFontSizeMultiplier={1.5}
-                    style={[
-                      styles.panelText,
-                      styles.bold,
-                      { color: colors.hourListText },
-                    ]}>
-                    {t('weatherInfoBottomSheet.polarNight')}
-                  </Text>
-                </View>
-                <View style={[styles.row, styles.alignCenter]} accessible>
-                  <Icon
-                    width={iconSize}
-                    height={iconSize}
-                    maxScaleFactor={1.5}
-                    name="sun-arrow-up"
-                    style={[
-                      styles.withMarginRight,
-                      {
-                        color: colors.hourListText,
-                      },
-                    ]}
-                  />
-                  <Text
-                    maxFontSizeMultiplier={1.5}
-                    accessibilityLabel={`${t('sunrise')} ${t(
-                      'at'
-                    )} ${sunrise.format(dateFormat)}`}
-                    style={[
-                      styles.panelText,
-                      styles.bold,
-                      { color: colors.hourListText },
-                    ]}>
-                    {sunrise.format(dateFormat)}
-                  </Text>
-                </View>
-              </>
-            )}
-            {isMidnightSun && !isPolarNight && (
-              <>
-                <View
-                  accessible
-                  style={[styles.row, styles.alignCenter, styles.listContainer]}>
-                  <Icon
-                    width={iconSize}
-                    height={iconSize}
-                    maxScaleFactor={1.5}
-                    name="midnight-sun"
-                    style={[
-                      styles.withMarginRight,
-                      {
-                        color: colors.hourListText,
-                      },
-                    ]}
-                  />
-                  <Text
-                    maxFontSizeMultiplier={1.5}
-                    style={[
-                      styles.panelText,
-                      styles.bold,
-                      { color: colors.hourListText },
-                    ]}>
-                    {t('weatherInfoBottomSheet.nightlessNight')}
-                  </Text>
-                </View>
-                <View style={[styles.row, styles.alignCenter]} accessible>
-                  <Icon
-                    width={iconSize}
-                    height={iconSize}
-                    maxScaleFactor={1.5}
-                    name="sun-arrow-down"
-                    style={[
-                      styles.withMarginRight,
-                      {
-                        color: colors.hourListText,
-                      },
-                    ]}
-                  />
-                  <Text
-                    maxFontSizeMultiplier={1.5}
-                    accessibilityLabel={`${t('sunset')} ${t(
-                      'at'
-                    )} ${sunset.format(dateFormat)}`}
-                    style={[
-                      styles.panelText,
-                      styles.bold,
-                      { color: colors.hourListText },
-                    ]}>
-                    {sunset.format(dateFormat)}
-                  </Text>
-                </View>
-              </>
-            )}
-            {!isPolarNight && !isMidnightSun && (
+        style={[styles.dayLengthContainer, styles.forecastHeader]}>
+        <View style={[styles.symbolBlock, { width: headerWidth }]}>
+          <LinearGradient
+            colors={dark ? darkGradient : lightGradient}
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            style={[styles.gradient, { width: headerWidth }]}>
+            <Icon
+              name="sun"
+              color={colors.hourListText}
+              width={24}
+              height={24}
+              maxScaleFactor={1.5}
+            />
+          </LinearGradient>
+        </View>
+        <View
+          style={[styles.row, styles.listContainer, styles.paddingHorizontal]}>
+          {isPolarNight && !isMidnightSun && (
+            <>
+              <View
+                accessible
+                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
+                  name="polar-night"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  maxFontSizeMultiplier={1.5}
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {t('weatherInfoBottomSheet.polarNight')}
+                </Text>
+              </View>
+              <View style={[styles.row, styles.alignCenter]} accessible>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
+                  name="sun-arrow-up"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  maxFontSizeMultiplier={1.5}
+                  accessibilityLabel={`${t('sunrise')} ${t(
+                    'at'
+                  )} ${sunrise.format(dateFormat)}`}
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {sunrise.format(dateFormat)}
+                </Text>
+              </View>
+            </>
+          )}
+          {isMidnightSun && !isPolarNight && (
+            <>
+              <View
+                accessible
+                style={[styles.row, styles.alignCenter, styles.listContainer]}>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
+                  name="midnight-sun"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  maxFontSizeMultiplier={1.5}
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {t('weatherInfoBottomSheet.nightlessNight')}
+                </Text>
+              </View>
+              <View style={[styles.row, styles.alignCenter]} accessible>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
+                  name="sun-arrow-down"
+                  style={[
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
+                  ]}
+                />
+                <Text
+                  maxFontSizeMultiplier={1.5}
+                  accessibilityLabel={`${t('sunset')} ${t(
+                    'at'
+                  )} ${sunset.format(dateFormat)}`}
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {sunset.format(dateFormat)}
+                </Text>
+              </View>
+            </>
+          )}
+          {!isPolarNight && !isMidnightSun && (
+            <View
+              style={[
+                styles.row,
+                styles.listContainer,
+                styles.maxWidth,
+                styles.justifyContentCenter,
+                styles.wrap,
+              ]}>
               <View
                 style={[
                   styles.row,
-                  styles.listContainer,
-                  styles.maxWidth,
-                  styles.justifyContentCenter,
-                  styles.wrap,
-                ]}>
-                <View
+                  styles.alignCenter,
+                  styles.withMarginRight10,
+                ]}
+                accessible>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
+                  name="sun-arrow-up"
                   style={[
-                    styles.row,
-                    styles.alignCenter,
-                    styles.withMarginRight10,
+                    styles.withMarginRight,
+                    {
+                      color: colors.hourListText,
+                    },
                   ]}
-                  accessible>
-                  <Icon
-                    width={iconSize}
-                    height={iconSize}
-                    maxScaleFactor={1.5}
-                    name="sun-arrow-up"
-                    style={[
-                      styles.withMarginRight,
-                      {
-                        color: colors.hourListText,
-                      },
-                    ]}
-                  />
-                  <Text
-                    maxFontSizeMultiplier={1.5}
-                    accessibilityLabel={`${t('sunrise')} ${t(
-                      'at'
-                    )} ${sunrise.format(timeFormat)}`}
-                    style={[
-                      styles.panelText,
-                      styles.bold,
-                      { color: colors.hourListText },
-                    ]}>
-                    {sunrise.format(timeFormat)}
-                  </Text>
-                </View>
-                <View style={[styles.row, styles.alignCenter]} accessible>
-                  <Icon
-                    width={iconSize}
-                    height={iconSize}
-                    maxScaleFactor={1.5}
-                    name="sun-arrow-down"
-                    style={[
-                      styles.withMarginRight,
-                      { color: colors.hourListText },
-                    ]}
-                  />
-                  <Text
-                    maxFontSizeMultiplier={1.5}
-                    accessibilityLabel={`${t('sunset')} ${t(
-                      'at'
-                    )} ${sunset.format(timeFormat)}`}
-                    style={[
-                      styles.panelText,
-                      styles.bold,
-                      { color: colors.hourListText },
-                    ]}>
-                    {sunset.format(timeFormat)}
-                  </Text>
-                </View>
-                {(excludeDayDuration === undefined || !excludeDayDuration) && (
-                  <>
-                    <View
-                      style={[
-                        styles.row,
-                        styles.alignCenter,
-                        styles.withMarginLeft10,
-                      ]}
-                      accessible>
-                      <Icon
-                        width={iconSize}
-                        height={iconSize}
-                        maxScaleFactor={1.5}
-                        name="time"
-                        style={[
-                          styles.alignCenter,
-                          styles.withMarginRight,
-                          { color: colors.hourListText },
-                        ]}
-                      />
-                      <Text
-                        maxFontSizeMultiplier={1.5}
-                        accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
-                          'hours'
-                        )} ${dayMinutes} ${t('minutes')}`}
-                        style={[
-                          styles.panelText,
-                          styles.bold,
-                          { color: colors.hourListText },
-                        ]}>
-                        {`${dayHours} h ${dayMinutes} min`}
-                      </Text>
-                    </View>
-                  </>
-                )}
+                />
+                <Text
+                  maxFontSizeMultiplier={1.5}
+                  accessibilityLabel={`${t('sunrise')} ${t(
+                    'at'
+                  )} ${sunrise.format(timeFormat)}`}
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {sunrise.format(timeFormat)}
+                </Text>
               </View>
-            )}
-          </View>
+              <View style={[styles.row, styles.alignCenter]} accessible>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
+                  name="sun-arrow-down"
+                  style={[
+                    styles.withMarginRight,
+                    { color: colors.hourListText },
+                  ]}
+                />
+                <Text
+                  maxFontSizeMultiplier={1.5}
+                  accessibilityLabel={`${t('sunset')} ${t(
+                    'at'
+                  )} ${sunset.format(timeFormat)}`}
+                  style={[
+                    styles.panelText,
+                    styles.bold,
+                    { color: colors.hourListText },
+                  ]}>
+                  {sunset.format(timeFormat)}
+                </Text>
+              </View>
+              {(excludeDayDuration === undefined || !excludeDayDuration) && (
+                <>
+                  <View
+                    style={[
+                      styles.row,
+                      styles.alignCenter,
+                      styles.withMarginLeft10,
+                    ]}
+                    accessible>
+                    <Icon
+                      width={iconSize}
+                      height={iconSize}
+                      maxScaleFactor={1.5}
+                      name="time"
+                      style={[
+                        styles.alignCenter,
+                        styles.withMarginRight,
+                        { color: colors.hourListText },
+                      ]}
+                    />
+                    <Text
+                      maxFontSizeMultiplier={1.5}
+                      accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
+                        'hours'
+                      )} ${dayMinutes} ${t('minutes')}`}
+                      style={[
+                        styles.panelText,
+                        styles.bold,
+                        { color: colors.hourListText },
+                      ]}>
+                      {`${dayHours} h ${dayMinutes} min`}
+                    </Text>
+                  </View>
+                </>
+              )}
+            </View>
+          )}
+        </View>
       </View>
     );
   };
@@ -351,10 +355,22 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   return (
     <>
       <View style={styles.row}>
-        <ForecastListHeaderColumn displayParams={displayParams} units={units} compact />
+        <ForecastListHeaderColumn
+          displayParams={displayParams}
+          units={units}
+          compact
+        />
         <View style={styles.listContainer}>
           <FlatList
             data={data}
+            initialScrollIndex={
+              initialScrollIndex >= 0 ? initialScrollIndex : undefined
+            }
+            getItemLayout={(_, index) => ({
+              length: hourColumnWidth,
+              offset: index * hourColumnWidth,
+              index,
+            })}
             keyExtractor={(item) => `${item.epochtime}`}
             renderItem={({ item }: any) => (
               <ForecastListColumn
@@ -370,7 +386,9 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
           />
         </View>
       </View>
-      {displayParams.map((displayParam) => displayParam[1]).includes(DAY_LENGTH) &&
+      {displayParams
+        .map((displayParam) => displayParam[1])
+        .includes(DAY_LENGTH) &&
         !excludeDayLength && <DayDurationRow />}
     </>
   );

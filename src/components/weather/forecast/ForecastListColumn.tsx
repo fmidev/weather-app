@@ -12,7 +12,11 @@ import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
-import { isOdd, getWindDirection, formatAccessibleTemperature } from '@utils/helpers';
+import {
+  isOdd,
+  getWindDirection,
+  formatAccessibleTemperature,
+} from '@utils/helpers';
 import { roundToNearestTen } from '@utils/number';
 import { Config } from '@config';
 import {
@@ -57,7 +61,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   );
 
   const height = Math.min(fontScale * 52, 78);
-  const timeRowHeight = compact ? height / 2 : height;
+  const timeRowHeight = Math.min(fontScale * 52, 52);
   const width = Math.min(fontScale * 52, 62);
   const compactWidth = Math.min(fontScale * 48, 62);
   const windIconSize = Math.min(fontScale * 20, 30);
@@ -78,7 +82,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               },
             ]
           : [{ borderColor: colors.border }]),
-        { width: compact ? compactWidth : width }
+        { width: compact ? compactWidth : width },
       ]}>
       <View
         testID="forecast-time-row"
@@ -110,7 +114,9 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     height,
                   },
                 ]}>
-                {SmartSymbol ? <SmartSymbol width={symbolSize} height={symbolSize} /> : null}
+                {SmartSymbol ? (
+                  <SmartSymbol width={symbolSize} height={symbolSize} />
+                ) : null}
               </View>
             );
           }
@@ -177,7 +183,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             );
           }
           if (param === constants.TEMPERATURE) {
-            const temperatureUnit = units?.temperature.unitAbb ?? defaultUnits.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ?? defaultUnits.temperature;
             const convertedTemperature =
               data.temperature || data.temperature === 0
                 ? toPrecision(
@@ -202,7 +209,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
@@ -213,7 +220,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             );
           }
           if (param === constants.FEELS_LIKE) {
-            const temperatureUnit = units?.temperature.unitAbb ?? defaultUnits.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ?? defaultUnits.temperature;
             const convertedFeelsLike =
               data.feelsLike || data.feelsLike === 0
                 ? toPrecision(
@@ -238,7 +246,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
@@ -251,7 +259,8 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
           }
 
           if (param === constants.DEW_POINT) {
-            const temperatureUnit = units?.temperature.unitAbb ?? defaultUnits.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ?? defaultUnits.temperature;
             const convertedDewPoint =
               data.dewPoint || data.dewPoint === 0
                 ? toPrecision(
@@ -265,18 +274,18 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                 key={`${param}-${i}`}
                 accessible
                 accessibilityLabel={t('forecast:params:dewpoint', {
-                    value: formatAccessibleTemperature(convertedDewPoint, t),
-                    unit: t(
-                      `forecast:${getForecastParameterUnitTranslationKey(
-                        temperatureUnit
-                      )}`
-                    ),
-                  })}
+                  value: formatAccessibleTemperature(convertedDewPoint, t),
+                  unit: t(
+                    `forecast:${getForecastParameterUnitTranslationKey(
+                      temperatureUnit
+                    )}`
+                  ),
+                })}
                 style={[
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
@@ -302,20 +311,21 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
-                  accessibilityLabel={formattedValue === '-'
-                    ? t('forecast:popMissing')
-                    : t('forecast:params:pop', {
-                      value: formattedValue,
-                      unit: '%',
-                    })}
-                  style={[
-                    styles.regularText,
-                    { color: colors.hourListText },
-                  ]}>{formattedValue}</Text>
+                  accessibilityLabel={
+                    formattedValue === '-'
+                      ? t('forecast:popMissing')
+                      : t('forecast:params:pop', {
+                          value: formattedValue,
+                          unit: '%',
+                        })
+                  }
+                  style={[styles.regularText, { color: colors.hourListText }]}>
+                  {formattedValue}
+                </Text>
               </View>
             );
           }
@@ -343,7 +353,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text

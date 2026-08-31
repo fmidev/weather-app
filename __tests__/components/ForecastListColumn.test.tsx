@@ -201,7 +201,7 @@ describe('ForecastListColumn', () => {
     expect(missingPop.getByA11yLabel('forecast:popMissing')).toBeTruthy();
   });
 
-  it('halves the time row height in compact mode', () => {
+  it('keeps the time row height consistent in compact mode', () => {
     const regularView = render(
       <ForecastListColumn
         clockType={24 as any}
@@ -224,6 +224,7 @@ describe('ForecastListColumn', () => {
     const compactStyle = StyleSheet.flatten(
       compactView.getByTestId('forecast-time-row').props.style
     );
-    expect(compactStyle.height).toBe(regularStyle.height / 2);
+    expect(compactStyle.height).toBe(regularStyle.height);
+    expect(compactStyle.height).toBeLessThanOrEqual(52);
   });
 });
