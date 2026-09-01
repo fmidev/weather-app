@@ -333,6 +333,61 @@ describe('Vertical10DaysForecast', () => {
     expect(view.getByTestId('hourly-forecast-1')).toBeTruthy();
   });
 
+  it('collapses previously expanded forecasts when single forecast mode is enabled', () => {
+    const firstTimestamp = 2000000000;
+    const secondTimestamp = firstTimestamp + 24 * 60 * 60;
+    const dayData = [firstTimestamp, secondTimestamp].map((timeStamp) => ({
+      maxTemperature: 10,
+      minTemperature: 4,
+      minWindSpeed: 2,
+      maxWindSpeed: 5,
+      totalPrecipitation: 1.5,
+      precipitationMissing: false,
+      timeStamp,
+      smartSymbol: 3,
+      precipitationData: [{ precipitation: 1, timestamp: timeStamp }],
+    }));
+    const units = {
+      temperature: { unitAbb: 'C' },
+      wind: { unitAbb: 'm/s' },
+      precipitation: { unitAbb: 'mm' },
+    } as any;
+    const forecastByDay = {
+      '18.5.': [{ epochtime: firstTimestamp }],
+      '19.5.': [{ epochtime: secondTimestamp }],
+    } as any;
+
+    const view = render(
+      <Vertical10DaysForecast
+        dayData={dayData as any}
+        units={units}
+        invalidData={false}
+        displayParams={[0, 1, 2] as any}
+        showSingleHourlyForecast={false}
+        forecastByDay={forecastByDay}
+      />
+    );
+
+    fireEvent.press(view.getAllByHintText('Show hourly forecast')[0]);
+    fireEvent.press(view.getByHintText('Show hourly forecast'));
+    expect(view.getByTestId('hourly-forecast-0')).toBeTruthy();
+    expect(view.getByTestId('hourly-forecast-1')).toBeTruthy();
+
+    view.rerender(
+      <Vertical10DaysForecast
+        dayData={dayData as any}
+        units={units}
+        invalidData={false}
+        displayParams={[0, 1, 2] as any}
+        showSingleHourlyForecast
+        forecastByDay={forecastByDay}
+      />
+    );
+
+    expect(view.getByTestId('hourly-forecast-0')).toBeTruthy();
+    expect(view.queryByTestId('hourly-forecast-1')).toBeNull();
+  });
+
   it('does not scroll the hourly forecast to 8 on wide displays', () => {
     jest
       .spyOn(require('react-native'), 'useWindowDimensions')

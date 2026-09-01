@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import moment from '@utils/moment';
 import { useTheme } from '@react-navigation/native';
@@ -93,6 +93,19 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const [expandedDayIndexes, setExpandedDayIndexes] = useState<Set<number>>(
     () => new Set()
   );
+
+  useEffect(() => {
+    if (!showSingleHourlyForecast) return;
+
+    setExpandedDayIndexes((currentIndexes) => {
+      if (currentIndexes.size <= 1) return currentIndexes;
+
+      const firstExpandedIndex = currentIndexes.values().next().value;
+      return firstExpandedIndex === undefined
+        ? new Set()
+        : new Set([firstExpandedIndex]);
+    });
+  }, [showSingleHourlyForecast]);
 
   const rowRenderer = ({
     item,
