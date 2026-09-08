@@ -1,5 +1,7 @@
 # AGENTS.md
+
 ## Project overview
+
 This is a open source React Native weather application.
 The app shows weather forecasts, weather observations, warnings and weather animations.
 The app aims to be an easy-to-use and reliable weather app for the general public.
@@ -7,6 +9,7 @@ The app is used by several meteorological institutes through their own forks.
 Accessibility is important, because the application is provided by public authorities.
 
 ## Tech stack
+
 - React Native
 - TypeScript
 - React Navigation
@@ -69,7 +72,7 @@ Run linting: yarn lint
 ## Testing
 
 - Create tests for new features.
-- Unit tests should be placed in __tests__ directory.
+- Unit tests should be placed in **tests** directory, for widgets use their conventions.
 - One test file for one component or ts-module.
 - Don't combine tests for multiple components or modules in one test file.
 
