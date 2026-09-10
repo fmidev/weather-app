@@ -166,7 +166,6 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
     smartSymbol = smartSymbol - 100; // Convert to day variant
   }
 
-
   const totalCloudCover = nextHourForecast?.totalCloudCover;
   const auroraBorealis =
     smartSymbol > 100 &&
@@ -311,13 +310,14 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
               {t(`symbols:${smartSymbol.toString()}`)}
             </Text>
           </View>
-          <View style={styles.row}>
-            <View style={[styles.row, styles.alignStart]}>
-              <Text
-                maxFontSizeMultiplier={1.5}
-                style={[styles.temperatureText, { color: textColor }]}>
-                {numericOrDash(temperatureValue)}
-              </Text>
+          <View style={styles.temperatureRow}>
+            <View style={styles.temperatureSideColumn} />
+            <Text
+              maxFontSizeMultiplier={1.5}
+              style={[styles.temperatureText, { color: textColor }]}>
+              {numericOrDash(temperatureValue)}
+            </Text>
+            <View style={styles.temperatureSideColumn}>
               <Text
                 maxFontSizeMultiplier={1.5}
                 style={[styles.unitText, { color: textColor }]}>
@@ -378,7 +378,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
   },
-  alignStart: {
+  temperatureRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  temperatureSideColumn: {
+    flex: 1,
     alignItems: 'flex-start',
   },
   forecastVerticalSpace: {
