@@ -3,6 +3,7 @@ import {
   AccessibilityInfo,
   Animated,
   DimensionValue,
+  Platform,
   StyleProp,
   StyleSheet,
   ViewStyle,
@@ -27,6 +28,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
   testID = 'skeleton',
 }) => {
   const { dark } = useTheme() as CustomTheme;
+  const shouldAnimate = Platform.OS !== 'android';
   const opacity = useRef(new Animated.Value(1)).current;
   const [reduceMotionEnabled, setReduceMotionEnabled] = useState(false);
 
@@ -49,7 +51,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
   }, []);
 
   useEffect(() => {
-    if (reduceMotionEnabled) {
+    if (!shouldAnimate || reduceMotionEnabled) {
       opacity.stopAnimation();
       opacity.setValue(1);
       return undefined;
@@ -72,7 +74,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
 
     animation.start();
     return () => animation.stop();
-  }, [opacity, reduceMotionEnabled]);
+  }, [opacity, reduceMotionEnabled, shouldAnimate]);
 
   return (
     <Animated.View
