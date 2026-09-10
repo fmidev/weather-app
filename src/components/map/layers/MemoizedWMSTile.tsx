@@ -3,6 +3,7 @@ import { WMSTile } from 'react-native-maps';
 import { Layer, RasterSource } from '@maplibre/maplibre-react-native';
 
 type MemoizedWMSTileProps = {
+  tileId: string;
   urlTemplate: string;
   tileSize?: number;
   opacity?: number;
@@ -10,6 +11,7 @@ type MemoizedWMSTileProps = {
 };
 
 const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
+  tileId,
   urlTemplate,
   tileSize,
   opacity,
@@ -17,18 +19,20 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
 }) => {
   const items = urlTemplate.split('?');
   const key = items.length > 1 ? items[1] : urlTemplate;
+  const sourceId = `wms-source-${tileId}`;
+  const layerId = `wms-layer-${tileId}`;
 
   return library === 'maplibre' ? (
     <RasterSource
-      id={`wms-source-${key}`}
+      id={sourceId}
       tiles={[urlTemplate]}
       tileSize={512}
     >
       <Layer
         type="raster"
-        id={`wms-layer-${key}`}
-        key={`wms-layer-${key}`}
-        source={`wms-source-${key}`}
+        id={layerId}
+        key={layerId}
+        source={sourceId}
         beforeId="places_region"
         paint={{
           "raster-opacity": opacity ?? 0,

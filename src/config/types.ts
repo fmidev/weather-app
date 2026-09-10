@@ -53,12 +53,25 @@ type TemperatureUnit = 'C' | 'F';
 type PrecipitationUnit = 'mm' | 'in';
 type WindUnit = 'm/s' | 'km/h' | 'mph' | 'bft' | 'kn';
 type PressureUnit = 'hPa' | 'inHg' | 'mmHg' | 'mbar';
-export type MeasurementUnit = TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
+export type MeasurementUnit =
+  TemperatureUnit | PrecipitationUnit | WindUnit | PressureUnit;
+
+interface LayerGroup {
+  id: number;
+  name: { [lang: string]: string };
+  layers: number[];
+}
 
 export interface MapLayer {
   id: number;
   type: 'WMS' | 'GeoJSON' | 'Timeseries';
-  name: { [lang: string]: string };
+  name?: { [lang: string]: string };
+  timeButton?: {
+    [lang: string]: {
+      label: string;
+      accessibilityLabel: string;
+    };
+  };
   legend?: {
     hasPrecipitationFin?: boolean;
     hasPrecipitationScan?: boolean;
@@ -294,8 +307,27 @@ interface DateTimeSettings {
 // this way it's easier to see stuff in Matomo web UI.
 //
 // Category = who, Action = where, Name = what was done.
-export type AnalyticCategories = 'User action' | 'Init' | 'Notice' | 'Warning' | 'Error';
-export type AnalyticActions = 'Weather' | 'Map' | 'Warnings' | 'Other' | 'Search' | 'Settings' | 'Navigation' | 'Geolocation' | 'News' | 'Platform' | 'Announcements' | 'Autocomplete' | 'Timeseries' | 'WMS' | 'DynamicConfig' | 'Snapshot' | 'Onboarding' | 'Not specified';
+export type AnalyticCategories =
+  'User action' | 'Init' | 'Notice' | 'Warning' | 'Error';
+export type AnalyticActions =
+  | 'Weather'
+  | 'Map'
+  | 'Warnings'
+  | 'Other'
+  | 'Search'
+  | 'Settings'
+  | 'Navigation'
+  | 'Geolocation'
+  | 'News'
+  | 'Platform'
+  | 'Announcements'
+  | 'Autocomplete'
+  | 'Timeseries'
+  | 'WMS'
+  | 'DynamicConfig'
+  | 'Snapshot'
+  | 'Onboarding'
+  | 'Not specified';
 
 export interface ConfigType {
   dynamicConfig: DynamicConfigEnabled | DynamicConfigDisabled;
@@ -312,6 +344,7 @@ export interface ConfigType {
   map: {
     updateInterval: number;
     sources: { [name: string]: string };
+    layerGroups: LayerGroup[];
     layers: MapLayer[];
     baseMap?: BaseMap;
     infoBottomSheet?: MapInfoBottomSheet;

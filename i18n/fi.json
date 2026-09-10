@@ -375,6 +375,10 @@
       "forecast": "ennuste",
       "observation": "havainto"
     },
+    "timeStepSelector": {
+      "minutesAccessibilityLabel": "{{count}} minuutin aika-askel",
+      "selectAccessibilityHint": "Paina valitaksesi aika-askel"
+    },
     "layersBottomSheet": {
       "closeAccessibilityLabel": "Sulje karttatasojen valinnat",
       "locationTitle": "Oma sijainti",

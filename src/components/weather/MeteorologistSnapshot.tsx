@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
@@ -7,7 +6,11 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import { State } from '@store/types';
-import { selectLoading, selectError, selectMeteorologistSnapshot } from '@store/meteorologist/selector';
+import {
+  selectLoading,
+  selectError,
+  selectMeteorologistSnapshot,
+} from '@store/meteorologist/selector';
 import { selectClockType } from '@store/settings/selectors';
 import { CustomTheme } from '@assets/colors';
 import Text from '@components/common/AppText';
@@ -46,12 +49,12 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const marginLeft = gridLayout ? 8 : insets.left + 16;
   const marginRight = gridLayout ? insets.right : insets.right + 16;
+  const marginTop = 16;
   const minHeight = gridLayout ? 160 : 150;
 
   if (loading) {
     return (
-      // eslint-disable-next-line react-native/no-inline-styles
-      <View style={{ marginLeft, marginRight, marginTop: 16 }}>
+      <View style={{ marginLeft, marginRight, marginTop }}>
         <Skeleton width="100%" height={minHeight} radius={10} />
       </View>
     );
@@ -59,56 +62,80 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
 
   if (error || !snapshot) {
     return (
-      <View style={[styles.box, styles.content, {
-        backgroundColor: colors.meteorologistSnapshotCard,
-        marginLeft,
-        marginRight,
-        minHeight
-      }]}>
-        <Text style={[styles.title, { color: colors.primaryText }]}>Meteorologin sääkatsaus</Text>
-        <Text style={[styles.text, { color: colors.primaryText }]}>Sääkatsauksen hakeminen epäonnistui</Text>
+      <View
+        style={[
+          styles.box,
+          styles.content,
+          {
+            backgroundColor: colors.meteorologistSnapshotCard,
+            marginLeft,
+            marginRight,
+            minHeight,
+          },
+        ]}>
+        <Text style={[styles.title, { color: colors.primaryText }]}>
+          Meteorologin sääkatsaus
+        </Text>
+        <Text style={[styles.text, { color: colors.primaryText }]}>
+          Sääkatsauksen hakeminen epäonnistui
+        </Text>
       </View>
-    )
+    );
   }
 
   if (snapshot) {
     const updatedMoment = moment(snapshot.date);
 
     return (
-      <View style={[styles.box, styles.content, {
-        backgroundColor: colors.meteorologistSnapshotCard,
-        marginLeft,
-        marginRight,
-        minHeight,
-      }]}>
+      <View
+        style={[
+          styles.box,
+          styles.content,
+          {
+            backgroundColor: colors.meteorologistSnapshotCard,
+            marginLeft,
+            marginRight,
+            minHeight,
+          },
+        ]}>
         <Text
           accessibilityRole="header"
-          style={[styles.title, { color: colors.primaryText }]}
-        >
+          style={[styles.title, { color: colors.primaryText }]}>
           Meteorologin sääkatsaus
         </Text>
-        { snapshot.hasAlert && (
+        {snapshot.hasAlert && (
           <Icon
             accessible={true}
             accessibilityRole="image"
             style={styles.warningIcon}
             accessibilityLabel="Sääkatsaus sisältää varoituksia"
-            name="warnings" size={24}
+            name="warnings"
+            size={24}
             color={colors.primaryText}
           />
         )}
         <Text
-          accessibilityLabel={formatAccessibleDateTime(updatedMoment, t, clockType === 24)}
+          accessibilityLabel={formatAccessibleDateTime(
+            updatedMoment,
+            t,
+            clockType === 24
+          )}
           style={[styles.updated, { color: colors.primaryText }]}>
-          { updatedMoment.formatDateTime('longDateTime', i18n.language, clockType) }
+          {updatedMoment.formatDateTime(
+            'longDateTime',
+            i18n.language,
+            clockType
+          )}
         </Text>
-        <Text style={[styles.text, { color: colors.primaryText }]}>{snapshot.text}</Text>
+        <Text style={[styles.text, { color: colors.primaryText }]}>
+          {snapshot.text}
+        </Text>
       </View>
-    )
+    );
   }
 
   return null;
-}
+};
 
 const styles = StyleSheet.create({
   box: {

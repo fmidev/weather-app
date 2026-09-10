@@ -375,6 +375,10 @@
       "forecast": "forecast",
       "observation": "observation"
     },
+    "timeStepSelector": {
+      "minutesAccessibilityLabel": "{{count}} minute time step",
+      "selectAccessibilityHint": "Tap to select time step"
+    },
     "layersBottomSheet": {
       "closeAccessibilityLabel": "Close map layers selection",
       "locationTitle": "My location",
