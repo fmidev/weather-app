@@ -210,7 +210,12 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               return nextIndexes;
             });
           }}>
-          <View style={[styles.container, { height: rowHeight }]}>
+          <View
+            style={[
+              styles.container,
+              { height: rowHeight },
+              isExpanded && { backgroundColor: colors.listTint },
+            ]}>
             <View
               testID={`daily-forecast-row-${index}`}
               style={[
@@ -416,7 +421,7 @@ const styles = StyleSheet.create({
     width: 58,
   },
   hourlyForecastContainer: {
-    paddingVertical: 8,
+    paddingBottom: 8,
     borderBottomWidth: 1,
     overflow: 'hidden',
   },
