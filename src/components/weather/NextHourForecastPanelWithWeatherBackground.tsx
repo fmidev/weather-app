@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  ActivityIndicator, View, StyleSheet, ImageBackground, useWindowDimensions, Platform
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  ImageBackground,
+  useWindowDimensions,
+  Platform,
 } from 'react-native';
 import {
   useNavigation,
@@ -20,7 +25,7 @@ import {
   selectNextHourForecast,
 } from '@store/forecast/selectors';
 import { selectTimeZone, selectCurrent } from '@store/location/selector';
-import { selectUnits } from '@store/settings/selectors';
+import { selectClockType, selectUnits } from '@store/settings/selectors';
 import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 import { selectIsAuroraBorealisLikely } from '@store/forecast/selectors';
 import { weatherBackgroundGetter } from '@assets/images/backgrounds';
@@ -34,7 +39,10 @@ import {
   toPrecision,
   getForecastParameterUnitTranslationKey,
 } from '@utils/units';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import IconButton from '@components/common/IconButton';
 import NextHoursForecast from './NextHoursForecast';
@@ -43,16 +51,22 @@ import NextHourForecastBar from './forecast/NextHourForecastBar';
 import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
 import type { WeatherStackParamList } from '@navigators/stacks/types';
-import { LIGHT_FONT, REGULAR_FONT, BOLD_FONT, MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
+import {
+  LIGHT_FONT,
+  REGULAR_FONT,
+  BOLD_FONT,
+  MAC_CONTENT_SIZE_MULTIPLIER,
+} from '@assets/constants';
 import { numericOrDash } from '@utils/number';
 
 const mapStateToProps = (state: State) => ({
+  clockType: selectClockType(state),
   loading: selectLoading(state),
   nextHourForecast: selectNextHourForecast(state),
   timezone: selectTimeZone(state),
   units: selectUnits(state),
   location: selectCurrent(state),
-  isAuroraBorealisLikely : selectIsAuroraBorealisLikely(state)
+  isAuroraBorealisLikely: selectIsAuroraBorealisLikely(state),
 });
 
 const mapDispatchToProps = {
@@ -67,7 +81,12 @@ type NextHourForecastPanelProps = PropsFromRedux & {
   currentHour: number;
 };
 
-const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanelProps> = ({
+const BACKGROUND_IMAGE_HEIGHT = 400;
+
+const NextHourForecastPanelWithWeatherBackground: React.FC<
+  NextHourForecastPanelProps
+> = ({
+  clockType,
   loading,
   nextHourForecast,
   timezone,
@@ -77,7 +96,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   isAuroraBorealisLikely,
   currentHour, // To force re-render when the hour changes
 }) => {
-  const { t } = useTranslation('forecast');
+  const { t, i18n } = useTranslation('forecast');
   useEffect(() => {
     moment.tz.setDefault(timezone);
   }, [timezone]);
@@ -93,11 +112,14 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
 
   if (loading || !nextHourForecast) {
     return (
-      <View style={[
-        styles.container,
-        styles.column,
-        !backgroundImagesEnabled && { backgroundColor: colors.screenBackground },
-      ]}>
+      <View
+        style={[
+          styles.container,
+          styles.column,
+          !backgroundImagesEnabled && {
+            backgroundColor: colors.screenBackground,
+          },
+        ]}>
         <ActivityIndicator accessibilityLabel={t('weather:loading')} />
       </View>
     );
@@ -135,35 +157,52 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
   const sunrise = moment(`${nextHourForecast.sunrise}Z`);
   const sunset = moment(`${nextHourForecast.sunset}Z`);
 
-  if (moment().isAfter(sunrise) && moment().isBefore(sunset)
-    && nextHourForecast?.sunsetToday === 1 && smartSymbol > 100) {
+  if (
+    moment().isAfter(sunrise) &&
+    moment().isBefore(sunset) &&
+    nextHourForecast?.sunsetToday === 1 &&
+    smartSymbol > 100
+  ) {
     smartSymbol = smartSymbol - 100; // Convert to day variant
   }
 
-  const auroraBorealis = smartSymbol && smartSymbol > 100
-                          && nextHourForecast?.totalCloudCover
-                          && nextHourForecast?.totalCloudCover <= 50
-                          && isAuroraBorealisLikely;
+  const totalCloudCover = nextHourForecast?.totalCloudCover;
+  const auroraBorealis =
+    smartSymbol > 100 &&
+    typeof totalCloudCover === 'number' &&
+    totalCloudCover <= 50 &&
+    isAuroraBorealisLikely;
   const isWideDisplay = () => width > 500;
   const weatherBackground = backgroundImagesEnabled
     ? weatherBackgroundGetter(
-      auroraBorealis ? 'aurora' : smartSymbol.toString(),
-      isWideDisplay(),
-    )
+        auroraBorealis ? 'aurora' : smartSymbol.toString(),
+        isWideDisplay()
+      )
     : undefined;
   const textColor = WHITE;
   const imageOverlayColor = 'rgba(0,0,0,0.3)';
-  const largeFonts = fontScale >= 1.5;
-  const contentHeight = largeFonts ? 600 : 420;
-  const iconSize = Math.min(isRunningOnMac ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER * 22 : fontScale * 22, 44);
-  const accessibleHeaderLabel =
-    `${t('nextHourForecastDescription')} ${t(`symbols:${smartSymbol.toString()}`)} 
+  const contentHeight = Math.max(
+    BACKGROUND_IMAGE_HEIGHT,
+    Math.max(Math.min(fontScale, 1.5), 1) * BACKGROUND_IMAGE_HEIGHT
+  );
+  const iconSize = Math.min(
+    isRunningOnMac
+      ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER * 22
+      : fontScale * 22,
+    44
+  );
+  const accessibleHeaderLabel = `${t('nextHourForecastDescription')} ${t(`symbols:${smartSymbol.toString()}`)} 
       ${formatAccessibleTemperature(temperatureValue, t)} 
       ${t(getForecastParameterUnitTranslationKey(`°${temperatureUnit}`))}`;
 
-  const locationName = location.name === location.area || !location.area
-    ? location.name
-    : `${location.name}, ${location.area}`;
+  const locationName =
+    location.name === location.area || !location.area
+      ? location.name
+      : `${location.name}, ${location.area}`;
+  const forecastTime = moment
+    .unix(nextHourForecast.epochtime)
+    .tz(timezone)
+    .formatDateTime('time', i18n.language, clockType);
 
   const content = (
     <>
@@ -187,7 +226,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             paddingTop: paddingTop,
             paddingBottom: paddingBottom,
             height: contentHeight,
-          }
+          },
         ]}>
         <View style={[styles.row]}>
           <IconButton
@@ -206,12 +245,15 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
           <View style={styles.locationTextContainer}>
             <AccessibleTouchableOpacity
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Open search - location');
+                trackMatomoEvent(
+                  'User action',
+                  'Weather',
+                  'Open search - location'
+                );
                 navigation.navigate('Search');
               }}
               accessibilityRole="button"
-              accessibilityLabel={`${locationName}, ${t('navigation:search')}`}
-            >
+              accessibilityLabel={`${locationName}, ${t('navigation:search')}`}>
               <Text
                 numberOfLines={1}
                 style={[
@@ -231,48 +273,65 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
             iconColor={textColor}
             backgroundColor={imageOverlayColor}
             onPress={() => {
-              trackMatomoEvent('User action', 'Weather', 'Open search - button');
-              navigation.navigate('Search')
+              trackMatomoEvent(
+                'User action',
+                'Weather',
+                'Open search - button'
+              );
+              navigation.navigate('Search');
             }}
             iconSize={iconSize}
             circular
           />
         </View>
+        <View style={styles.alignCenter}>
+          <Text
+            testID="next-hour-forecast-time"
+            style={[
+              styles.largeText,
+              styles.centeredText,
+              { color: textColor },
+            ]}>
+            {`${t('at')} ${forecastTime}`}
+          </Text>
+        </View>
         <View
           accessible
           accessibilityRole="header"
-          accessibilityLabel={accessibleHeaderLabel}
-        >
+          accessibilityLabel={accessibleHeaderLabel}>
           <View style={[styles.alignCenter, styles.forecastVerticalSpace]}>
             <Text
               numberOfLines={1}
-              maxFontSizeMultiplier={1.5}
-              style={[styles.largeText, styles.centeredText, { color: textColor }]}>
-              {t(`symbols:${smartSymbol.toString() }`)}
+              style={[
+                styles.largeText,
+                styles.centeredText,
+                { color: textColor },
+              ]}>
+              {t(`symbols:${smartSymbol.toString()}`)}
             </Text>
           </View>
-          <View style={styles.row}>
-            <View style={[styles.row, styles.alignStart]}>
+          <View style={styles.temperatureRow}>
+            <View style={styles.temperatureSideColumn} />
+            <Text
+              maxFontSizeMultiplier={1.5}
+              style={[styles.temperatureText, { color: textColor }]}>
+              {numericOrDash(temperatureValue)}
+            </Text>
+            <View style={styles.temperatureSideColumn}>
               <Text
                 maxFontSizeMultiplier={1.5}
-                style={[
-                  styles.temperatureText,
-                  { color: textColor }
-                ]}>
-                {numericOrDash(temperatureValue)}
-              </Text>
-              <Text
-                maxFontSizeMultiplier={1.5}
-                style={[styles.unitText, { color: textColor }]}
-                >
+                style={[styles.unitText, { color: textColor }]}>
                 {`°${t(`unitAbbreviations:${temperatureUnit}`)}`}
               </Text>
             </View>
           </View>
         </View>
       </SafeAreaView>
-      <View style={[styles.overlay, {backgroundColor: imageOverlayColor}]}>
-        <NextHourForecastBar forecast={nextHourForecast} wide={isWideDisplay()} />
+      <View style={[styles.overlay, { backgroundColor: imageOverlayColor }]}>
+        <NextHourForecastBar
+          forecast={nextHourForecast}
+          wide={isWideDisplay()}
+        />
         <NextHoursForecast currentHour={currentHour} />
       </View>
     </>
@@ -283,8 +342,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
       testID="next-hour-forecast-background"
       source={weatherBackground}
       resizeMode="cover"
-      style={styles.backgroundImage}
-    >
+      style={styles.backgroundImage}>
       {content}
     </ImageBackground>
   ) : (
@@ -293,8 +351,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<NextHourForecastPanel
       style={[
         styles.backgroundImage,
         { backgroundColor: colors.forecastBackground },
-      ]}
-    >
+      ]}>
       {content}
     </View>
   );
@@ -321,7 +378,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
   },
-  alignStart: {
+  temperatureRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  temperatureSideColumn: {
+    flex: 1,
     alignItems: 'flex-start',
   },
   forecastVerticalSpace: {
@@ -357,12 +419,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   overlay: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     bottom: 0,
     width: '100%',
     paddingVertical: 16,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
 });
 

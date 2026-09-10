@@ -44,6 +44,7 @@ jest.mock('@store/location/selector', () => ({
 }));
 
 jest.mock('@store/settings/selectors', () => ({
+  selectClockType: jest.fn(),
   selectUnits: jest.fn(),
 }));
 
@@ -73,13 +74,18 @@ jest.mock('react-i18next', () => ({
       key.startsWith('unitAbbreviations:')
         ? key.replace('unitAbbreviations:', '')
         : key,
+    i18n: { language: 'en' },
   }),
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
   SafeAreaView: ({ children, style }: any) => {
     const { View } = require('react-native');
-    return <View testID="safe-area" style={style}>{children}</View>;
+    return (
+      <View testID="safe-area" style={style}>
+        {children}
+      </View>
+    );
   },
   useSafeAreaInsets: () => ({
     left: 0,
@@ -103,7 +109,11 @@ jest.mock('react-native-linear-gradient', () => ({
   __esModule: true,
   default: ({ children, colors }: any) => {
     const { View } = require('react-native');
-    return <View testID="linear-gradient" data-colors={colors}>{children}</View>;
+    return (
+      <View testID="linear-gradient" data-colors={colors}>
+        {children}
+      </View>
+    );
   },
 }));
 
@@ -157,7 +167,11 @@ jest.mock('@components/common/AccessibleTouchableOpacity', () => ({
   __esModule: true,
   default: ({ children, onPress, ...props }: any) => {
     const { Pressable } = require('react-native');
-    return <Pressable onPress={onPress} {...props}>{children}</Pressable>;
+    return (
+      <Pressable onPress={onPress} {...props}>
+        {children}
+      </Pressable>
+    );
   },
 }));
 
@@ -232,12 +246,15 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
     mockGetForecastParameterUnitTranslationKey.mockImplementation(
       (unit: string) => unit
     );
-    mockFormatAccessibleTemperature.mockImplementation((value: string) => value);
+    mockFormatAccessibleTemperature.mockImplementation(
+      (value: string) => value
+    );
   });
 
   it('renders loading indicator when forecast is missing', () => {
     const view = render(
       <NextHourForecastPanelWithWeatherBackground
+        clockType={24}
         loading
         nextHourForecast={undefined as any}
         timezone="Europe/Helsinki"
@@ -255,6 +272,7 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
   it('renders weather background panel, child forecasts and navigation actions', () => {
     const view = render(
       <NextHourForecastPanelWithWeatherBackground
+        clockType={24}
         loading={false}
         nextHourForecast={forecast as any}
         timezone="Europe/Helsinki"
@@ -267,6 +285,9 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
     );
 
     expect(view.getByText('Helsinki, Uusimaa')).toBeTruthy();
+    expect(view.getByTestId('next-hour-forecast-time').props.children).toBe(
+      'at 06:33'
+    );
     expect(view.getByText('symbols:101')).toBeTruthy();
     expect(view.getByText('5')).toBeTruthy();
     expect(view.getByText('°C')).toBeTruthy();
@@ -300,7 +321,9 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
       expect.any(Function)
     );
 
-    fireEvent.press(view.getByLabelText('Helsinki, Uusimaa, navigation:search'));
+    fireEvent.press(
+      view.getByLabelText('Helsinki, Uusimaa, navigation:search')
+    );
     fireEvent.press(view.getByTestId('search_button'));
     expect(mockNavigate).toHaveBeenCalledWith('Search');
     expect(mockNavigate).toHaveBeenCalledTimes(2);
@@ -316,8 +339,11 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
 
     const view = render(
       <NextHourForecastPanelWithWeatherBackground
+        clockType={24}
         loading={false}
-        nextHourForecast={{ ...forecast, smartSymbol: 2, totalCloudCover: 90 } as any}
+        nextHourForecast={
+          { ...forecast, smartSymbol: 2, totalCloudCover: 90 } as any
+        }
         timezone="Europe/Helsinki"
         units={{ temperature: { unitAbb: 'C' } } as any}
         location={{ name: 'Tampere', area: 'Tampere' } as any}
@@ -352,6 +378,7 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
 
     const view = render(
       <NextHourForecastPanelWithWeatherBackground
+        clockType={24}
         loading={false}
         nextHourForecast={forecast as any}
         timezone="Europe/Helsinki"
@@ -364,7 +391,9 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
     );
 
     expect(view.UNSAFE_queryByType(ImageBackground)).toBeNull();
-    expect(view.getByTestId('next-hour-forecast-background').props.style).toEqual(
+    expect(
+      view.getByTestId('next-hour-forecast-background').props.style
+    ).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ backgroundColor: '#cccccc' }),
       ])
