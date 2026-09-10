@@ -1,10 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { fireEvent, render } from '@testing-library/react-native';
 import { FlatList } from 'react-native';
 
 import HourlyForecast from '../../src/components/weather/forecast/HourlyForecast';
 import * as constants from '../../src/store/forecast/constants';
 
+let mockBackground = '#ffffff';
+let mockDark = false;
 const mockForecastListColumn = jest.fn();
 const mockForecastListHeaderColumn = jest.fn();
 
@@ -25,8 +27,9 @@ jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({
     colors: {
       hourListText: '#111111',
+      background: mockBackground,
     },
-    dark: false,
+    dark: mockDark,
   }),
 }));
 
@@ -38,9 +41,9 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('react-native-linear-gradient', () => ({
   __esModule: true,
-  default: ({ children }: any) => {
+  default: ({ children, ...props }: any) => {
     const { View } = require('react-native');
-    return <View testID="linear-gradient">{children}</View>;
+    return <View testID="linear-gradient" {...props}>{children}</View>;
   },
 }));
 
@@ -117,6 +120,8 @@ const makeData = (count: number) =>
 
 describe('HourlyForecast', () => {
   beforeEach(() => {
+    mockBackground = '#ffffff';
+    mockDark = false;
     mockForecastListColumn.mockClear();
     mockForecastListHeaderColumn.mockClear();
   });
@@ -214,4 +219,108 @@ describe('HourlyForecast', () => {
       view.UNSAFE_getByType(FlatList).props.initialScrollIndex
     ).toBeUndefined();
   });
+
+  it.each([
+    [0, false, true],
+    [200, true, true],
+    [700, true, false],
+    [-20, false, true],
+    [720, true, false],
+  ])('shows available scroll directions at offset %s', (offset, left, right) => {
+    const view = render(
+      <HourlyForecast
+        data={makeData(24) as any}
+        displayParams={[[0, constants.TEMPERATURE]] as any}
+        clockType={24 as any}
+        units={{} as any}
+        initialScrollHour={8}
+      />
+    );
+
+    fireEvent.scroll(view.getByTestId('hourly-forecast-list'), {
+      nativeEvent: {
+        contentOffset: { x: offset, y: 0 },
+        contentSize: { width: 1000, height: 200 },
+        layoutMeasurement: { width: 300, height: 200 },
+      },
+    });
+
+    expect(!!view.queryByTestId('hourly-forecast-left-fade')).toBe(left);
+    expect(!!view.queryByTestId('hourly-forecast-right-fade')).toBe(right);
+  });
+
+  it('updates fades on layout and content changes without scrolling', () => {
+    const view = render(
+      <HourlyForecast
+        data={makeData(24) as any}
+        displayParams={[[0, constants.TEMPERATURE]] as any}
+        clockType={24 as any}
+        units={{} as any}
+      />
+    );
+    const list = view.getByTestId('hourly-forecast-list');
+    const layout = (width: number) =>
+      fireEvent(list, 'layout', {
+        nativeEvent: { layout: { width, height: 200, x: 0, y: 0 } },
+      });
+
+    expect(view.queryByTestId('hourly-forecast-left-fade')).toBeNull();
+    expect(view.queryByTestId('hourly-forecast-right-fade')).toBeNull();
+    fireEvent(list, 'contentSizeChange', 1000, 200);
+    layout(300);
+    expect(view.queryByTestId('hourly-forecast-left-fade')).toBeNull();
+    expect(view.getByTestId('hourly-forecast-right-fade')).toBeTruthy();
+
+    layout(1200);
+    expect(view.queryByTestId('hourly-forecast-left-fade')).toBeNull();
+    expect(view.queryByTestId('hourly-forecast-right-fade')).toBeNull();
+
+    layout(300);
+    expect(view.getByTestId('hourly-forecast-right-fade')).toBeTruthy();
+    fireEvent(list, 'contentSizeChange', 200, 200);
+    expect(view.queryByTestId('hourly-forecast-left-fade')).toBeNull();
+    expect(view.queryByTestId('hourly-forecast-right-fade')).toBeNull();
+  });
+
+  it.each([
+    { background: '#ffffff', rgb: '255, 255, 255', dark: false },
+    { background: '#000000', rgb: '0, 0, 0', dark: true },
+    { background: '#0F0F2D', rgb: '15, 15, 45', dark: true },
+  ])('uses theme background $background for decorative fades', ({ background, rgb, dark }) => {
+    mockBackground = background;
+    mockDark = dark;
+    const view = render(
+      <HourlyForecast
+        data={makeData(24) as any}
+        displayParams={[[0, constants.TEMPERATURE]] as any}
+        clockType={24 as any}
+        units={{} as any}
+      />
+    );
+    fireEvent.scroll(view.getByTestId('hourly-forecast-list'), {
+      nativeEvent: {
+        contentOffset: { x: 200, y: 0 },
+        contentSize: { width: 1000, height: 200 },
+        layoutMeasurement: { width: 300, height: 200 },
+      },
+    });
+
+    const left = view.getByTestId('hourly-forecast-left-fade');
+    const right = view.getByTestId('hourly-forecast-right-fade');
+    const transparent = `rgba(${rgb}, 0)`;
+    const expectedColors = dark
+      ? [background, `rgba(${rgb}, 0.65)`, transparent]
+      : [background, transparent];
+    expect(left.props.colors).toEqual(expectedColors);
+    expect(right.props.colors).toEqual([...expectedColors].reverse());
+    expect(left.props.locations).toEqual(dark ? [0, 0.45, 1] : undefined);
+    expect(right.props.locations).toEqual(dark ? [0, 0.55, 1] : undefined);
+    [left, right].forEach((fade) => {
+      expect(fade.props.pointerEvents).toBe('none');
+      expect(fade.props.accessible).toBe(false);
+      expect(fade.props.accessibilityElementsHidden).toBe(true);
+      expect(fade.props.importantForAccessibility).toBe('no-hide-descendants');
+    });
+  });
+
 });
