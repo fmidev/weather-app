@@ -104,6 +104,7 @@
     "popMissing": "Sannolikheten för nederbörd saknas",
     "minus": "minus",
     "showHourlyForecast": "Visa timprognos för dagen",
+    "hideHourlyForecast": "Dölj timprognosen för dagen",
     "params": {
       "temperature": "temperatur: {{ value }} {{ unit }}.",
       "feelsLike": "känns som: {{ value }} {{ unit }}.",
@@ -134,6 +135,8 @@
       "pressure": "Lufttryck ({{ unit }})",
       "uvCumulated": "UV index",
       "dayLength": "Dagens längd",
+      "otherSettingsTitle": "Övriga inställningar",
+      "showSingleHourlyForecast": "Visa endast en timprognos",
       "selectAccessibilityHint": "Dubbelklicka för att välja",
       "unSelectAccessibilityHint": "Dubbelklicka för att ta bort valet",
       "restoreDefaultHint": "Återställ standardval"
@@ -445,7 +448,7 @@
         "arrow4": "Hård vind 14-21 m/s",
         "arrow5": "Storm 21-32 m/s",
         "arrow6": "Orkan 32-> m/s",
-        "layerInfo" : {
+        "layerInfo": {
           "short": "Lagret visar vindriktning och styrka med 1 timmes tidssteg från nästa timme och 24 timmar framåt.",
           "long": "Lagret visar vindriktning och styrka med 3 timmars tidssteg från nästa timme och tre dagar framåt."
         }
@@ -457,7 +460,7 @@
         "temperatureMinus20": "-10°C",
         "temperature0": "0°C",
         "temperature20": "20°C",
-        "layerInfo" : {
+        "layerInfo": {
           "short": "Lagret visar temperatur med 1 timmes tidssteg från nästa timme och 24 timmar framåt.",
           "long": "Lagret visar temperatur med 3 timmars tidssteg från nästa timme och tre dagar framåt."
         }
@@ -735,8 +738,7 @@
     "hoursSpoken": "timmar",
     "minutesSpoken": "minuter"
   },
-  "unitAbbreviations": {
-  },
+  "unitAbbreviations": {},
   "markdownRenderer": {
     "radarLegendDescription": "Nederbördsintensitetsskala"
   }

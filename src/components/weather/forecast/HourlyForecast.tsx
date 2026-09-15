@@ -1,12 +1,10 @@
-import React, { memo, useState, useRef, useEffect } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
-  Text,
   StyleSheet,
-  VirtualizedList,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
+  FlatList,
+  processColor,
   useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -14,25 +12,21 @@ import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 
-import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
+import Icon from '@components/common/ScalableIcon';
 import { State } from '@store/types';
 import { TimeStepData } from '@store/forecast/types';
 import { selectDisplayParams } from '@store/forecast/selectors';
-import { selectUnits } from '@store/settings/selectors';
-import {
-  BLACK_OPACITY,
-  WHITE_TRANSPARENT,
-  BLACK_TRANSPARENT,
-  CustomTheme,
-} from '@assets/colors';
+import { selectUnits, selectClockType } from '@store/settings/selectors';
+import { CustomTheme } from '@assets/colors';
 
-import { isOdd } from '@utils/helpers';
 import { DAY_LENGTH } from '@store/forecast/constants';
-import { selectClockType } from '@store/settings/selectors';
 import { Config } from '@config';
 import ForecastListColumn from './ForecastListColumn';
 import ForecastListHeaderColumn from './ForecastListHeaderColumn';
+
 import { MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
+// import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -44,100 +38,77 @@ const connector = connect(mapStateToProps, {});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type ForecastByHourListProps = PropsFromRedux & {
+type HourlyForecastProps = PropsFromRedux & {
   data: TimeStepData[];
-  isOpen: boolean;
-  activeDayIndex: number;
-  setActiveDayIndex: (i: number) => void;
-  daySelectionRequest?: number;
-  dayStartIndexes?: number[];
-  currentDayOffset: number;
-  currentHour: number;
+  initialScrollHour?: number;
 };
 
-const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
+const HourlyForecast: React.FC<HourlyForecastProps> = ({
   data,
-  isOpen,
-  activeDayIndex,
-  setActiveDayIndex,
-  daySelectionRequest = 0,
-  dayStartIndexes,
-  currentDayOffset,
   displayParams,
   clockType,
   units,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  currentHour, // just for re-rendering every hour
+  initialScrollHour,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const { fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
-  const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { excludeDayLength } = Config.get('weather').forecast;
 
-  const virtualizedList = useRef<VirtualizedList<TimeStepData>>(null);
-  const handledDaySelectionRequest = useRef(0);
-  const programmaticScrollTarget = useRef<number | null>(null);
-  const hourColumnWidth = Math.min(fontScale * 52, 62);
+  const scrollMetrics = useRef({ width: 0, contentWidth: 0, offset: 0 });
+  const [scrollEdges, setScrollEdges] = useState({ left: false, right: false });
+  const updateScrollEdges = useCallback(
+    (metrics: Partial<typeof scrollMetrics.current>) => {
+      scrollMetrics.current = { ...scrollMetrics.current, ...metrics };
+      const { width, contentWidth, offset } = scrollMetrics.current;
+      const maxOffset = Math.max(0, contentWidth - width);
+      const clampedOffset = Math.max(0, Math.min(offset, maxOffset));
+      // Allow for fractional layout values and overscroll at either end.
+      const left = width > 0 && clampedOffset > 1;
+      const right = width > 0 && maxOffset - clampedOffset > 1;
+      setScrollEdges((current) =>
+        current.left === left && current.right === right
+          ? current
+          : { left, right }
+      );
+    },
+    []
+  );
 
-  useEffect(() => {
-    const isNewDaySelection =
-      daySelectionRequest !== handledDaySelectionRequest.current;
+  if (!data || data.length === 0) return null;
 
-    if (
-      (activeDayIndex !== currentIndex || isNewDaySelection) &&
-      data.length > 0
-    ) {
-      const calculatedIndex =
-        dayStartIndexes?.[activeDayIndex] ??
-        (!activeDayIndex ? 0 : currentDayOffset + (activeDayIndex - 1) * 24);
+  const backgroundColor = processColor(colors.background);
+  const backgroundRgb =
+    typeof backgroundColor === 'number'
+      // Decode the packed native color so the fade keeps the same RGB values.
+      // eslint-disable-next-line no-bitwise
+      ? `${(backgroundColor >>> 16) & 255}, ${(backgroundColor >>> 8) & 255}, ${backgroundColor & 255}`
+      : undefined;
+  const transparentBackground = backgroundRgb
+    ? `rgba(${backgroundRgb}, 0)`
+    : 'transparent';
+  const fadeColors = dark
+    ? [
+        colors.background,
+        backgroundRgb ? `rgba(${backgroundRgb}, 0.65)` : colors.background,
+        transparentBackground,
+      ]
+    : [colors.background, transparentBackground];
 
-      const index =
-        calculatedIndex > data.length ? data.length - 1 : calculatedIndex;
-      if (index >= 0 && virtualizedList.current) {
-        if (isNewDaySelection) {
-          programmaticScrollTarget.current = activeDayIndex;
-        }
-        virtualizedList.current.scrollToIndex({
-          index,
-          animated: isNewDaySelection,
+  const initialScrollIndex =
+    initialScrollHour === undefined
+      ? -1
+      : data.findIndex(({ localtime }) => {
+          const localMoment = moment(localtime, moment.ISO_8601, true);
+          return (
+            localMoment.isValid() && localMoment.hour() === initialScrollHour
+          );
         });
-      }
-    }
-    handledDaySelectionRequest.current = daySelectionRequest;
-  }, [
-    activeDayIndex,
-    currentIndex,
-    data,
-    currentDayOffset,
-    dayStartIndexes,
-    daySelectionRequest,
-  ]);
-
-  if (!isOpen && !data) return null;
+  const hourColumnWidth = Math.min(fontScale * 48, 62);
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
-    const calculatedStepIndex =
-      (dayStartIndexes?.[currentIndex] ??
-        (!currentIndex ? 0 : currentDayOffset + (currentIndex - 1) * 24)) + 12;
-    const adjustedStepIndex =
-      calculatedStepIndex > data.length ? data.length - 1 : calculatedStepIndex;
-
-    // get day's first timestep
-    let step = data[adjustedStepIndex];
-    // get step hour (works in selected location's timezone)
-    const stepHour = Number.parseInt(
-      moment.unix(step.epochtime).format('H'),
-      10
-    );
-    // do not use 00-05 steps for the FIRST DAY due to possible errors (data is fetched in UTC + daylight savings)
-    if (adjustedStepIndex === 0 && stepHour < 6) {
-      // use 06 step instead!
-      step = data[6 - stepHour];
-    }
-
+    const step = data[data.length - 1];
     const sunrise = moment(`${step.sunrise}Z`);
     const sunset = moment(`${step.sunset}Z`);
     const sunriseSunsetDiff = Math.abs(sunset.diff(sunrise, 'hours'));
@@ -168,31 +139,43 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     const dateFormat =
       clockType === 12
         ? `D.M.YYYY [${t('at')}] h.mm a`
-        : `D.M.YYYY [${t('at')}] HH:mm`;
+        : `D.M.YYYY [${t('at')}] HH.mm`;
 
-    const timeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
+    const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
+
+    const lightGradient = [
+      'rgba(238, 239, 241, 0.64)',
+      'rgba(244, 245, 247, 0.48)',
+      'rgba(255, 255, 255, 0.80)',
+    ];
+
+    const darkGradient = [
+      'rgba(25, 25, 25, 0.64)',
+      'rgba(32, 32, 32, 0.48)',
+      colors.background,
+    ];
+
+    const iconSize = 14;
+    const headerWidth = Math.min(fontScale * 38, 64);
 
     return (
       <View
-        testID="forecast_table"
-        style={[
-          styles.dayLengthContainer,
-          styles.forecastHeader,
-          {
-            borderColor: colors.border,
-            backgroundColor: !isOdd(displayParams.length)
-              ? colors.listTint
-              : undefined,
-          },
-        ]}>
-        <View
-          style={[
-            styles.symbolBlock,
-            {
-              borderColor: colors.border,
-            },
-          ]}>
-          <Icon name="sun" color={colors.hourListText} />
+        testID="day_duration"
+        style={[styles.dayLengthContainer, styles.forecastHeader]}>
+        <View style={[styles.symbolBlock, { width: headerWidth }]}>
+          <LinearGradient
+            colors={dark ? darkGradient : lightGradient}
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+            style={[styles.gradient, { width: headerWidth }]}>
+            <Icon
+              name="sun"
+              color={colors.hourListText}
+              width={24}
+              height={24}
+              maxScaleFactor={1.5}
+            />
+          </LinearGradient>
         </View>
         <View
           style={[styles.row, styles.listContainer, styles.paddingHorizontal]}>
@@ -202,8 +185,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 accessible
                 style={[styles.row, styles.alignCenter, styles.listContainer]}>
                 <Icon
-                  width={24}
-                  height={24}
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
                   name="polar-night"
                   style={[
                     styles.withMarginRight,
@@ -213,6 +197,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   style={[
                     styles.panelText,
                     styles.bold,
@@ -223,8 +208,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               </View>
               <View style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
-                  width={14}
-                  height={14}
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
                   name="sun-arrow-up"
                   style={[
                     styles.withMarginRight,
@@ -234,6 +220,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   accessibilityLabel={`${t('sunrise')} ${t(
                     'at'
                   )} ${sunrise.format(dateFormat)}`}
@@ -253,8 +240,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 accessible
                 style={[styles.row, styles.alignCenter, styles.listContainer]}>
                 <Icon
-                  width={24}
-                  height={24}
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
                   name="midnight-sun"
                   style={[
                     styles.withMarginRight,
@@ -264,6 +252,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   style={[
                     styles.panelText,
                     styles.bold,
@@ -274,8 +263,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               </View>
               <View style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
-                  width={14}
-                  height={14}
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
                   name="sun-arrow-down"
                   style={[
                     styles.withMarginRight,
@@ -285,6 +275,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   accessibilityLabel={`${t('sunset')} ${t(
                     'at'
                   )} ${sunset.format(dateFormat)}`}
@@ -305,17 +296,19 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 styles.listContainer,
                 styles.maxWidth,
                 styles.justifyContentCenter,
+                styles.wrap,
               ]}>
               <View
                 style={[
                   styles.row,
                   styles.alignCenter,
-                  styles.withMarginRight20,
+                  styles.withMarginRight10,
                 ]}
                 accessible>
                 <Icon
-                  width={14}
-                  height={14}
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
                   name="sun-arrow-up"
                   style={[
                     styles.withMarginRight,
@@ -325,6 +318,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   accessibilityLabel={`${t('sunrise')} ${t(
                     'at'
                   )} ${sunrise.format(timeFormat)}`}
@@ -338,8 +332,9 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
               </View>
               <View style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
-                  width={14}
-                  height={14}
+                  width={iconSize}
+                  height={iconSize}
+                  maxScaleFactor={1.5}
                   name="sun-arrow-down"
                   style={[
                     styles.withMarginRight,
@@ -347,6 +342,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  maxFontSizeMultiplier={1.5}
                   accessibilityLabel={`${t('sunset')} ${t(
                     'at'
                   )} ${sunset.format(timeFormat)}`}
@@ -364,12 +360,13 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                     style={[
                       styles.row,
                       styles.alignCenter,
-                      styles.withMarginLeft20,
+                      styles.withMarginLeft10,
                     ]}
                     accessible>
                     <Icon
-                      width={24}
-                      height={24}
+                      width={iconSize}
+                      height={iconSize}
+                      maxScaleFactor={1.5}
                       name="time"
                       style={[
                         styles.alignCenter,
@@ -378,6 +375,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                       ]}
                     />
                     <Text
+                      maxFontSizeMultiplier={1.5}
                       accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
                         'hours'
                       )} ${dayMinutes} ${t('minutes')}`}
@@ -386,7 +384,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                         styles.bold,
                         { color: colors.hourListText },
                       ]}>
-                      {`${dayHours} ${unitTranslate('h')} ${dayMinutes} ${unitTranslate('min')}`}
+                      {`${dayHours} h ${dayMinutes} min`}
                     </Text>
                   </View>
                 </>
@@ -398,106 +396,96 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
     );
   };
 
-  const handleOnScroll = ({
-    nativeEvent,
-  }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (programmaticScrollTarget.current !== null) return;
-
-    const { contentOffset } = nativeEvent;
-    const firstVisibleItemIndex = Math.floor(
-      (contentOffset.x + 1) / hourColumnWidth
-    );
-    let dayIndex = dayStartIndexes
-      ? dayStartIndexes.reduce(
-          (selectedIndex, startIndex, index) =>
-            startIndex <= firstVisibleItemIndex ? index : selectedIndex,
-          0
-        )
-      : Math.ceil((firstVisibleItemIndex - currentDayOffset) / 24);
-    dayIndex = Math.max(dayIndex, 0);
-
-    if (dayIndex !== currentIndex) setCurrentIndex(dayIndex);
-    if (dayIndex !== activeDayIndex) {
-      setActiveDayIndex(dayIndex);
-    }
-  };
-
-  const handleMomentumScrollEnd = () => {
-    const targetDayIndex = programmaticScrollTarget.current;
-    if (targetDayIndex === null) return;
-
-    programmaticScrollTarget.current = null;
-    setCurrentIndex(targetDayIndex);
-  };
-
-  const handleScrollBeginDrag = () => {
-    programmaticScrollTarget.current = null;
-  };
-
-  if (!isOpen) return null;
-
   return (
-    <View style={[!isOpen && styles.displayNone]}>
+    <>
       <View style={styles.row}>
-        <ForecastListHeaderColumn displayParams={displayParams} units={units} />
+        <ForecastListHeaderColumn
+          displayParams={displayParams}
+          units={units}
+          compact
+        />
         <View style={styles.listContainer}>
-          <VirtualizedList
-            ref={virtualizedList}
+          <FlatList
+            testID="hourly-forecast-list"
+            onLayout={({ nativeEvent }) =>
+              updateScrollEdges({ width: nativeEvent.layout.width })
+            }
+            onContentSizeChange={(contentWidth) =>
+              updateScrollEdges({ contentWidth })
+            }
+            onScroll={({ nativeEvent }) =>
+              updateScrollEdges({
+                width: nativeEvent.layoutMeasurement.width,
+                contentWidth: nativeEvent.contentSize.width,
+                offset: nativeEvent.contentOffset.x,
+              })
+            }
+            scrollEventThrottle={16}
             data={data}
+            initialScrollIndex={
+              initialScrollIndex >= 0 ? initialScrollIndex : undefined
+            }
+            getItemLayout={(_, index) => ({
+              length: hourColumnWidth,
+              offset: index * hourColumnWidth,
+              index,
+            })}
             keyExtractor={(item) => `${item.epochtime}`}
-            getItem={(items, index) => items[index]}
-            getItemCount={(items) => items && items.length}
-            onScrollToIndexFailed={({ index }) => {
-              console.warn(`scroll to index: ${index} failed`);
-            }}
             renderItem={({ item }: any) => (
               <ForecastListColumn
                 clockType={clockType}
                 data={item}
                 displayParams={displayParams}
                 units={units}
+                compact
               />
             )}
             horizontal
             showsHorizontalScrollIndicator={false}
-            onScroll={handleOnScroll}
-            onScrollBeginDrag={handleScrollBeginDrag}
-            onMomentumScrollEnd={handleMomentumScrollEnd}
-            getItemLayout={(_, index: number) => ({
-              length: hourColumnWidth,
-              offset: index * hourColumnWidth,
-              index,
-            })}
           />
+          {scrollEdges.left && (
+            <LinearGradient
+              testID="hourly-forecast-left-fade"
+              pointerEvents="none"
+              accessible={false}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              colors={fadeColors}
+              locations={dark ? [0, 0.45, 1] : undefined}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[
+                styles.scrollFade,
+                dark && styles.darkScrollFade,
+                styles.leftFade,
+              ]}
+            />
+          )}
+          {scrollEdges.right && (
+            <LinearGradient
+              testID="hourly-forecast-right-fade"
+              pointerEvents="none"
+              accessible={false}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              colors={[...fadeColors].reverse()}
+              locations={dark ? [0, 0.55, 1] : undefined}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[
+                styles.scrollFade,
+                dark && styles.darkScrollFade,
+                styles.rightFade,
+              ]}
+            />
+          )}
         </View>
       </View>
       {displayParams
         .map((displayParam) => displayParam[1])
         .includes(DAY_LENGTH) &&
         !excludeDayLength && <DayDurationRow />}
-      <LinearGradient
-        pointerEvents="none"
-        style={[styles.gradient, styles.gradientLeft]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
-        colors={
-          dark
-            ? [BLACK_OPACITY, BLACK_TRANSPARENT]
-            : [BLACK_OPACITY, WHITE_TRANSPARENT]
-        }
-      />
-      <LinearGradient
-        pointerEvents="none"
-        style={[styles.gradient, styles.gradientRight]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
-        colors={
-          dark
-            ? [BLACK_TRANSPARENT, BLACK_OPACITY]
-            : [WHITE_TRANSPARENT, BLACK_OPACITY]
-        }
-      />
-    </View>
+    </>
   );
 };
 
@@ -505,12 +493,30 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+  wrap: {
+    flexWrap: 'wrap',
+  },
   dayLengthContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   listContainer: {
     flex: 1,
+  },
+  scrollFade: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 20,
+  },
+  darkScrollFade: {
+    width: 28,
+  },
+  leftFade: {
+    left: 0,
+  },
+  rightFade: {
+    right: 0,
   },
   justifyContentCenter: {
     justifyContent: 'center',
@@ -522,22 +528,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: MEDIUM_FONT,
   },
-  withMarginRight20: {
-    marginRight: 20,
+  withMarginRight10: {
+    marginRight: 10,
   },
-  withMarginLeft20: {
-    marginLeft: 20,
+  withMarginLeft10: {
+    marginLeft: 10,
   },
   withMarginRight: {
-    marginRight: 6,
+    marginRight: 2,
   },
   forecastHeader: {
     height: 52,
-    borderLeftWidth: 1,
-    borderBottomWidth: 1,
-  },
-  displayNone: {
-    display: 'none',
   },
   maxWidth: {
     width: '100%',
@@ -547,27 +548,19 @@ const styles = StyleSheet.create({
   },
   symbolBlock: {
     height: '100%',
-    width: 51,
+    width: 38,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRightWidth: 1,
   },
   paddingHorizontal: {
     paddingHorizontal: 16,
   },
   gradient: {
-    position: 'absolute',
-    width: 32,
-    zIndex: 3,
-    top: 1,
-    bottom: 1,
-  },
-  gradientLeft: {
-    left: 52,
-  },
-  gradientRight: {
-    right: 0,
+    flex: 1,
+    width: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
-export default memo(connector(ForecastByHourList));
+export default memo(connector(HourlyForecast));

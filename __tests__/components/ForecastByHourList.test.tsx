@@ -18,7 +18,10 @@ jest.mock('react-native', () => {
     }));
 
     return (
-      <ReactNative.ScrollView testID="virtualized-list" onScroll={props.onScroll}>
+      <ReactNative.ScrollView
+        testID="virtualized-list"
+        onScroll={props.onScroll}
+        onMomentumScrollEnd={props.onMomentumScrollEnd}>
         {props.data.map((item: any, index: number) =>
           ReactActual.createElement(
             ReactActual.Fragment,
@@ -76,9 +79,10 @@ jest.mock('react-native-linear-gradient', () => ({
   __esModule: true,
   default: ({ children, style }: any) => {
     const { View } = require('react-native');
-    const side = Array.isArray(style) && style.some((entry) => entry?.left === 52)
-      ? 'left'
-      : 'right';
+    const side =
+      Array.isArray(style) && style.some((entry) => entry?.left === 52)
+        ? 'left'
+        : 'right';
     return <View testID={`gradient-${side}`}>{children}</View>;
   },
 }));
@@ -117,18 +121,29 @@ jest.mock('../../src/components/weather/forecast/ForecastListColumn', () => ({
   default: (props: any) => {
     mockForecastListColumn(props);
     const { Text } = require('react-native');
-    return <Text testID={`forecast-column-${props.data.epochtime}`}>{props.data.epochtime}</Text>;
+    return (
+      <Text testID={`forecast-column-${props.data.epochtime}`}>
+        {props.data.epochtime}
+      </Text>
+    );
   },
 }));
 
-jest.mock('../../src/components/weather/forecast/ForecastListHeaderColumn', () => ({
-  __esModule: true,
-  default: (props: any) => {
-    mockForecastListHeaderColumn(props);
-    const { Text } = require('react-native');
-    return <Text testID="forecast-header-column">{props.displayParams.length}</Text>;
-  },
-}));
+jest.mock(
+  '../../src/components/weather/forecast/ForecastListHeaderColumn',
+  () => ({
+    __esModule: true,
+    default: (props: any) => {
+      mockForecastListHeaderColumn(props);
+      const { Text } = require('react-native');
+      return (
+        <Text testID="forecast-header-column">
+          {props.displayParams.length}
+        </Text>
+      );
+    },
+  })
+);
 
 const makeData = (count: number) =>
   Array.from({ length: count }, (_, index) => ({
@@ -177,10 +192,12 @@ describe('ForecastByHourList', () => {
         currentDayOffset={0}
         currentHour={12}
         clockType={24 as any}
-        displayParams={[
-          [0, constants.TEMPERATURE],
-          [1, constants.DAY_LENGTH],
-        ] as any}
+        displayParams={
+          [
+            [0, constants.TEMPERATURE],
+            [1, constants.DAY_LENGTH],
+          ] as any
+        }
         units={{ temperature: { unitAbb: 'C' } } as any}
       />
     );
@@ -254,5 +271,68 @@ describe('ForecastByHourList', () => {
       index: 27,
       animated: false,
     });
+  });
+
+  it('uses actual day start indexes instead of assuming 24-hour days', () => {
+    render(
+      <ForecastByHourList
+        data={makeData(50) as any}
+        isOpen
+        activeDayIndex={2}
+        setActiveDayIndex={jest.fn()}
+        dayStartIndexes={[0, 3, 25]}
+        currentDayOffset={3}
+        currentHour={12}
+        clockType={24 as any}
+        displayParams={[[0, constants.TEMPERATURE]] as any}
+        units={{} as any}
+      />
+    );
+
+    expect(mockScrollToIndex).toHaveBeenCalledWith({
+      index: 25,
+      animated: false,
+    });
+  });
+
+  it('scrolls to the day start when the already active day is selected again', () => {
+    const setActiveDayIndex = jest.fn();
+    const props = {
+      data: makeData(24) as any,
+      isOpen: true,
+      activeDayIndex: 0,
+      setActiveDayIndex,
+      currentDayOffset: 0,
+      currentHour: 12,
+      clockType: 24 as any,
+      displayParams: [[0, constants.TEMPERATURE]] as any,
+      units: {} as any,
+    };
+    const view = render(
+      <ForecastByHourList {...props} daySelectionRequest={0} />
+    );
+
+    expect(mockScrollToIndex).not.toHaveBeenCalled();
+
+    view.rerender(<ForecastByHourList {...props} daySelectionRequest={1} />);
+
+    expect(mockScrollToIndex).toHaveBeenCalledWith({
+      index: 0,
+      animated: true,
+    });
+
+    const list = view.getByTestId('virtualized-list');
+    const scrollEvent = {
+      nativeEvent: {
+        contentOffset: { x: 52 * 23, y: 0 },
+      },
+    };
+
+    fireEvent.scroll(list, scrollEvent);
+    expect(setActiveDayIndex).not.toHaveBeenCalled();
+
+    fireEvent(list, 'momentumScrollEnd', scrollEvent);
+    fireEvent.scroll(list, scrollEvent);
+    expect(setActiveDayIndex).toHaveBeenCalledWith(1);
   });
 });

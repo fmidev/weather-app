@@ -14,6 +14,7 @@ import {
   ForecastLocation,
   UPDATE_FORECAST_DISPLAY_FORMAT,
   UPDATE_FORECAST_CHART_PARAMETER,
+  UPDATE_SHOW_SINGLE_HOURLY_FORECAST,
   DisplayParameters,
 } from './types';
 
@@ -31,7 +32,11 @@ export const fetchForecast =
         timestamp: Date.now(),
       });
     } catch (error) {
-      dispatch({ type: FETCH_FORECAST_ERROR, error: error as Error, timestamp: Date.now() });
+      dispatch({
+        type: FETCH_FORECAST_ERROR,
+        error: error as Error,
+        timestamp: Date.now(),
+      });
     }
   };
 
@@ -55,4 +60,9 @@ export const updateDisplayFormat =
 export const updateChartParameter =
   (value: ChartType) => (dispatch: Dispatch<ForecastActionTypes>) => {
     dispatch({ type: UPDATE_FORECAST_CHART_PARAMETER, value });
+  };
+
+export const updateShowSingleHourlyForecast =
+  (value: boolean) => (dispatch: Dispatch<ForecastActionTypes>) => {
+    dispatch({ type: UPDATE_SHOW_SINGLE_HOURLY_FORECAST, value });
   };

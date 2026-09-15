@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 
 import Vertical10DaysForecast from '../../src/components/weather/forecast/Vertical10DaysForecast';
 
@@ -8,6 +9,8 @@ const mockTrackMatomoEvent = jest.fn();
 const mockConverter = jest.fn();
 const mockToPrecision = jest.fn();
 const mockGetForecastParameterUnitTranslationKey = jest.fn();
+const mockHourlyForecast = jest.fn();
+let mockWeatherLayout = 'vertical';
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
@@ -23,7 +26,9 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: any) => {
       if (key === 'forecast:showHourlyForecast') return 'Show hourly forecast';
-      if (key === 'forecast:precipitationMissing') return 'Missing precipitation';
+      if (key === 'forecast:hideHourlyForecast') return 'Hide hourly forecast';
+      if (key === 'forecast:precipitationMissing')
+        return 'Missing precipitation';
       if (options?.value) return `${key}:${options.value}`;
       return key;
     },
@@ -37,7 +42,6 @@ jest.mock('@react-navigation/native', () => ({
       primaryText: '#111111',
       hourListText: '#444444',
       border: '#cccccc',
-      modalBackground: '#ffffff',
     },
     dark: false,
   }),
@@ -71,7 +75,8 @@ jest.mock('@utils/units', () => ({
 jest.mock('@utils/helpers', () => ({
   formatAccessibleDate: () => 'Accessible date',
   formatAccessibleTemperature: (value: string) => value,
-  uppercaseFirst: (value: string) => value.charAt(0).toUpperCase() + value.slice(1),
+  uppercaseFirst: (value: string) =>
+    value.charAt(0).toUpperCase() + value.slice(1),
 }));
 
 jest.mock('@utils/matomo', () => ({
@@ -102,14 +107,6 @@ jest.mock('@components/common/ScalableIcon', () => ({
   },
 }));
 
-jest.mock('react-native-modal', () => ({
-  __esModule: true,
-  default: ({ children, isVisible }: any) => {
-    const { View } = require('react-native');
-    return isVisible ? <View testID="forecast-modal">{children}</View> : null;
-  },
-}));
-
 jest.mock('../../src/components/weather/forecast/PrecipitationStrip', () => ({
   __esModule: true,
   default: () => {
@@ -118,11 +115,12 @@ jest.mock('../../src/components/weather/forecast/PrecipitationStrip', () => ({
   },
 }));
 
-jest.mock('../../src/components/weather/forecast/ModalContent', () => ({
+jest.mock('../../src/components/weather/forecast/HourlyForecast', () => ({
   __esModule: true,
-  default: () => {
+  default: (props: any) => {
     const { Text } = require('react-native');
-    return <Text testID="modal-content">content</Text>;
+    mockHourlyForecast(props);
+    return <Text testID="hourly-forecast-content">forecast</Text>;
   },
 }));
 
@@ -133,10 +131,17 @@ describe('Vertical10DaysForecast', () => {
     mockConverter.mockReset();
     mockToPrecision.mockReset();
     mockGetForecastParameterUnitTranslationKey.mockReset();
+    mockHourlyForecast.mockClear();
+    mockWeatherLayout = 'vertical';
+
+    jest
+      .spyOn(require('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 390, height: 800, fontScale: 1, scale: 1 });
 
     mockConfigGet.mockImplementation((key: string) => {
       if (key === 'weather') {
         return {
+          layout: mockWeatherLayout,
           forecast: {
             data: [
               {
@@ -159,11 +164,19 @@ describe('Vertical10DaysForecast', () => {
     });
 
     mockConverter.mockImplementation((_unit: string, value: any) => value);
-    mockToPrecision.mockImplementation((_type: string, _unit: string, value: any) => `${value}`);
-    mockGetForecastParameterUnitTranslationKey.mockImplementation((value: string) => value);
+    mockToPrecision.mockImplementation(
+      (_type: string, _unit: string, value: any) => `${value}`
+    );
+    mockGetForecastParameterUnitTranslationKey.mockImplementation(
+      (value: string) => value
+    );
   });
 
-  it('renders forecast row and opens modal on press', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('renders the hourly forecast below the selected day and collapses it', () => {
     const dayData = [
       {
         maxTemperature: 10,
@@ -177,23 +190,32 @@ describe('Vertical10DaysForecast', () => {
         precipitationData: [{ precipitation: 1, timestamp: 2000000000 }],
       },
     ];
+    const hourlyData = [{ epochtime: 2000000000 }];
 
-    const { getByHintText, getByTestId, getByText } = render(
+    const { getByHintText, getByTestId, getByText, queryByTestId } = render(
       <Vertical10DaysForecast
         dayData={dayData as any}
-        units={{
-          temperature: { unitAbb: 'C' },
-          wind: { unitAbb: 'm/s' },
-          precipitation: { unitAbb: 'mm' },
-        } as any}
+        units={
+          {
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+            precipitation: { unitAbb: 'mm' },
+          } as any
+        }
         invalidData={false}
         displayParams={[0, 1, 2] as any}
+        showSingleHourlyForecast={false}
+        forecastByDay={{ '18.5.': hourlyData } as any}
       />
     );
 
     expect(getByTestId('weather-symbol-3')).toBeTruthy();
     expect(getByText(/4°/)).toBeTruthy();
     expect(getByTestId('precipitation-strip')).toBeTruthy();
+    expect(
+      StyleSheet.flatten(getByTestId('daily-forecast-row-0').props.style)
+        .borderBottomWidth
+    ).toBe(1);
 
     fireEvent.press(getByHintText('Show hourly forecast'));
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
@@ -201,6 +223,217 @@ describe('Vertical10DaysForecast', () => {
       'Weather',
       'Show hourly forecast - day 1'
     );
-    expect(getByTestId('forecast-modal')).toBeTruthy();
+    expect(getByTestId('hourly-forecast-0')).toBeTruthy();
+    expect(getByTestId('hourly-forecast-content')).toBeTruthy();
+    expect(
+      StyleSheet.flatten(getByTestId('daily-forecast-row-0').props.style)
+        .borderBottomWidth
+    ).toBe(0);
+    expect(mockHourlyForecast).toHaveBeenCalledWith({
+      data: hourlyData,
+      initialScrollHour: 8,
+    });
+
+    fireEvent.press(getByHintText('Hide hourly forecast'));
+    expect(mockTrackMatomoEvent).toHaveBeenLastCalledWith(
+      'User action',
+      'Weather',
+      'Hide hourly forecast - day 1'
+    );
+    expect(queryByTestId('hourly-forecast-0')).toBeNull();
+  });
+
+  it('keeps previously opened hourly forecasts expanded', () => {
+    const firstTimestamp = 2000000000;
+    const secondTimestamp = firstTimestamp + 24 * 60 * 60;
+    const dayData = [firstTimestamp, secondTimestamp].map(
+      (timeStamp, index) => ({
+        maxTemperature: 10 + index,
+        minTemperature: 4 + index,
+        minWindSpeed: 2,
+        maxWindSpeed: 5,
+        totalPrecipitation: 1.5,
+        precipitationMissing: false,
+        timeStamp,
+        smartSymbol: 3,
+        precipitationData: [{ precipitation: 1, timestamp: timeStamp }],
+      })
+    );
+
+    const view = render(
+      <Vertical10DaysForecast
+        dayData={dayData as any}
+        units={
+          {
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+            precipitation: { unitAbb: 'mm' },
+          } as any
+        }
+        invalidData={false}
+        displayParams={[0, 1, 2] as any}
+        showSingleHourlyForecast={false}
+        forecastByDay={
+          {
+            '18.5.': [{ epochtime: firstTimestamp }],
+            '19.5.': [{ epochtime: secondTimestamp }],
+          } as any
+        }
+      />
+    );
+
+    fireEvent.press(view.getAllByHintText('Show hourly forecast')[0]);
+    fireEvent.press(view.getByHintText('Show hourly forecast'));
+
+    expect(view.getByTestId('hourly-forecast-0')).toBeTruthy();
+    expect(view.getByTestId('hourly-forecast-1')).toBeTruthy();
+  });
+
+  it('keeps only one hourly forecast expanded when the setting is enabled', () => {
+    const firstTimestamp = 2000000000;
+    const secondTimestamp = firstTimestamp + 24 * 60 * 60;
+    const dayData = [firstTimestamp, secondTimestamp].map((timeStamp) => ({
+      maxTemperature: 10,
+      minTemperature: 4,
+      minWindSpeed: 2,
+      maxWindSpeed: 5,
+      totalPrecipitation: 1.5,
+      precipitationMissing: false,
+      timeStamp,
+      smartSymbol: 3,
+      precipitationData: [{ precipitation: 1, timestamp: timeStamp }],
+    }));
+
+    const view = render(
+      <Vertical10DaysForecast
+        dayData={dayData as any}
+        units={
+          {
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+            precipitation: { unitAbb: 'mm' },
+          } as any
+        }
+        invalidData={false}
+        displayParams={[0, 1, 2] as any}
+        showSingleHourlyForecast
+        forecastByDay={
+          {
+            '18.5.': [{ epochtime: firstTimestamp }],
+            '19.5.': [{ epochtime: secondTimestamp }],
+          } as any
+        }
+      />
+    );
+
+    fireEvent.press(view.getAllByHintText('Show hourly forecast')[0]);
+    fireEvent.press(view.getByHintText('Show hourly forecast'));
+
+    expect(view.queryByTestId('hourly-forecast-0')).toBeNull();
+    expect(view.getByTestId('hourly-forecast-1')).toBeTruthy();
+  });
+
+  it('collapses previously expanded forecasts when single forecast mode is enabled', () => {
+    const firstTimestamp = 2000000000;
+    const secondTimestamp = firstTimestamp + 24 * 60 * 60;
+    const dayData = [firstTimestamp, secondTimestamp].map((timeStamp) => ({
+      maxTemperature: 10,
+      minTemperature: 4,
+      minWindSpeed: 2,
+      maxWindSpeed: 5,
+      totalPrecipitation: 1.5,
+      precipitationMissing: false,
+      timeStamp,
+      smartSymbol: 3,
+      precipitationData: [{ precipitation: 1, timestamp: timeStamp }],
+    }));
+    const units = {
+      temperature: { unitAbb: 'C' },
+      wind: { unitAbb: 'm/s' },
+      precipitation: { unitAbb: 'mm' },
+    } as any;
+    const forecastByDay = {
+      '18.5.': [{ epochtime: firstTimestamp }],
+      '19.5.': [{ epochtime: secondTimestamp }],
+    } as any;
+
+    const view = render(
+      <Vertical10DaysForecast
+        dayData={dayData as any}
+        units={units}
+        invalidData={false}
+        displayParams={[0, 1, 2] as any}
+        showSingleHourlyForecast={false}
+        forecastByDay={forecastByDay}
+      />
+    );
+
+    fireEvent.press(view.getAllByHintText('Show hourly forecast')[0]);
+    fireEvent.press(view.getByHintText('Show hourly forecast'));
+    expect(view.getByTestId('hourly-forecast-0')).toBeTruthy();
+    expect(view.getByTestId('hourly-forecast-1')).toBeTruthy();
+
+    view.rerender(
+      <Vertical10DaysForecast
+        dayData={dayData as any}
+        units={units}
+        invalidData={false}
+        displayParams={[0, 1, 2] as any}
+        showSingleHourlyForecast
+        forecastByDay={forecastByDay}
+      />
+    );
+
+    expect(view.getByTestId('hourly-forecast-0')).toBeTruthy();
+    expect(view.queryByTestId('hourly-forecast-1')).toBeNull();
+  });
+
+  it('does not scroll the hourly forecast to 8 on wide displays', () => {
+    jest
+      .spyOn(require('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 768, height: 1024, fontScale: 1, scale: 2 });
+
+    const timeStamp = 2000000000;
+    const view = render(
+      <Vertical10DaysForecast
+        dayData={
+          [
+            {
+              maxTemperature: 10,
+              minTemperature: 4,
+              minWindSpeed: 2,
+              maxWindSpeed: 5,
+              totalPrecipitation: 1.5,
+              precipitationMissing: false,
+              timeStamp,
+              smartSymbol: 3,
+              precipitationData: [{ precipitation: 1, timestamp: timeStamp }],
+            },
+          ] as any
+        }
+        units={
+          {
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+            precipitation: { unitAbb: 'mm' },
+          } as any
+        }
+        invalidData={false}
+        displayParams={[0, 1, 2] as any}
+        showSingleHourlyForecast={false}
+        forecastByDay={
+          {
+            '18.5.': [{ epochtime: timeStamp }],
+          } as any
+        }
+      />
+    );
+
+    fireEvent.press(view.getByHintText('Show hourly forecast'));
+
+    expect(mockHourlyForecast).toHaveBeenCalledWith({
+      data: [{ epochtime: timeStamp }],
+      initialScrollHour: undefined,
+    });
   });
 });

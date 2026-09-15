@@ -8,6 +8,8 @@ const mockConfigGet = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
 const mockUpdateDisplayParams = jest.fn();
 const mockRestoreDefaultDisplayParams = jest.fn();
+const mockUpdateShowSingleHourlyForecast = jest.fn();
+let mockWeatherLayout = 'vertical';
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
@@ -15,6 +17,7 @@ jest.mock('react-redux', () => ({
 
 jest.mock('@store/forecast/selectors', () => ({
   selectDisplayParams: jest.fn(),
+  selectShowSingleHourlyForecast: jest.fn(),
 }));
 
 jest.mock('@store/settings/selectors', () => ({
@@ -25,6 +28,8 @@ jest.mock('@store/forecast/actions', () => ({
   updateDisplayParams: (...args: any[]) => mockUpdateDisplayParams(...args),
   restoreDefaultDisplayParams: (...args: any[]) =>
     mockRestoreDefaultDisplayParams(...args),
+  updateShowSingleHourlyForecast: (...args: any[]) =>
+    mockUpdateShowSingleHourlyForecast(...args),
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -120,6 +125,8 @@ describe('ParamsBottomSheet', () => {
     mockTrackMatomoEvent.mockClear();
     mockUpdateDisplayParams.mockClear();
     mockRestoreDefaultDisplayParams.mockClear();
+    mockUpdateShowSingleHourlyForecast.mockClear();
+    mockWeatherLayout = 'vertical';
 
     jest
       .spyOn(require('react-native'), 'useWindowDimensions')
@@ -128,6 +135,7 @@ describe('ParamsBottomSheet', () => {
     mockConfigGet.mockImplementation((key: string) => {
       if (key === 'weather') {
         return {
+          layout: mockWeatherLayout,
           forecast: {
             excludeDayLength: false,
             data: [
@@ -167,27 +175,40 @@ describe('ParamsBottomSheet', () => {
         displayParams={[[0, 'temperature']] as any}
         updateDisplayParams={mockUpdateDisplayParams as any}
         restoreDefaultDisplayParams={mockRestoreDefaultDisplayParams as any}
-        units={{
-          precipitation: { unitAbb: 'mm' },
-          pressure: { unitAbb: 'hPa' },
-          temperature: { unitAbb: 'C' },
-          wind: { unitAbb: 'm/s' },
-        } as any}
+        showSingleHourlyForecast={false}
+        updateShowSingleHourlyForecast={
+          mockUpdateShowSingleHourlyForecast as any
+        }
+        units={
+          {
+            precipitation: { unitAbb: 'mm' },
+            pressure: { unitAbb: 'hPa' },
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+          } as any
+        }
         onClose={onClose}
       />
     );
 
     expect(view.getByTestId('weather_params_bottom_sheet')).toBeTruthy();
     expect(view.getByText('paramsBottomSheet.title')).toBeTruthy();
+    expect(view.getByText('paramsBottomSheet.otherSettingsTitle')).toBeTruthy();
     expect(
       view.getByText('paramsBottomSheet.temperature:unitAbbreviations:C')
     ).toBeTruthy();
     expect(
-      view.getByText('paramsBottomSheet.windSpeedMSwindDirection:unitAbbreviations:m/s')
+      view.getByText(
+        'paramsBottomSheet.windSpeedMSwindDirection:unitAbbreviations:m/s'
+      )
     ).toBeTruthy();
-    expect(view.getByText('paramsBottomSheet.dayLength:unitAbbreviations:null')).toBeTruthy();
+    expect(
+      view.getByText('paramsBottomSheet.dayLength:unitAbbreviations:null')
+    ).toBeTruthy();
 
-    fireEvent.press(view.getByTestId('weather_params_bottom_sheet_close_button'));
+    fireEvent.press(
+      view.getByTestId('weather_params_bottom_sheet_close_button')
+    );
 
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -198,12 +219,18 @@ describe('ParamsBottomSheet', () => {
         displayParams={[[0, 'temperature']] as any}
         updateDisplayParams={mockUpdateDisplayParams as any}
         restoreDefaultDisplayParams={mockRestoreDefaultDisplayParams as any}
-        units={{
-          precipitation: { unitAbb: 'mm' },
-          pressure: { unitAbb: 'hPa' },
-          temperature: { unitAbb: 'C' },
-          wind: { unitAbb: 'm/s' },
-        } as any}
+        showSingleHourlyForecast={false}
+        updateShowSingleHourlyForecast={
+          mockUpdateShowSingleHourlyForecast as any
+        }
+        units={
+          {
+            precipitation: { unitAbb: 'mm' },
+            pressure: { unitAbb: 'hPa' },
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+          } as any
+        }
         onClose={jest.fn()}
       />
     );
@@ -239,12 +266,18 @@ describe('ParamsBottomSheet', () => {
         displayParams={[[0, 'temperature']] as any}
         updateDisplayParams={mockUpdateDisplayParams as any}
         restoreDefaultDisplayParams={mockRestoreDefaultDisplayParams as any}
-        units={{
-          precipitation: { unitAbb: 'mm' },
-          pressure: { unitAbb: 'hPa' },
-          temperature: { unitAbb: 'C' },
-          wind: { unitAbb: 'm/s' },
-        } as any}
+        showSingleHourlyForecast={false}
+        updateShowSingleHourlyForecast={
+          mockUpdateShowSingleHourlyForecast as any
+        }
+        units={
+          {
+            precipitation: { unitAbb: 'mm' },
+            pressure: { unitAbb: 'hPa' },
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+          } as any
+        }
         onClose={jest.fn()}
       />
     );
@@ -255,5 +288,69 @@ describe('ParamsBottomSheet', () => {
     );
 
     expect(temperatureSwitch?.props.disabled).toBe(true);
+  });
+
+  it('updates the single hourly forecast setting and tracks the event', () => {
+    const view = render(
+      <ParamsBottomSheet
+        displayParams={[[0, 'temperature']] as any}
+        updateDisplayParams={mockUpdateDisplayParams as any}
+        restoreDefaultDisplayParams={mockRestoreDefaultDisplayParams as any}
+        showSingleHourlyForecast={false}
+        updateShowSingleHourlyForecast={
+          mockUpdateShowSingleHourlyForecast as any
+        }
+        units={
+          {
+            precipitation: { unitAbb: 'mm' },
+            pressure: { unitAbb: 'hPa' },
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+          } as any
+        }
+        onClose={jest.fn()}
+      />
+    );
+
+    fireEvent(
+      view.getByTestId('show_single_hourly_forecast_switch'),
+      'valueChange',
+      true
+    );
+
+    expect(mockUpdateShowSingleHourlyForecast).toHaveBeenCalledWith(true);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+      'User action',
+      'Weather',
+      'Show single hourly forecast - ON'
+    );
+  });
+
+  it('hides the other settings section outside the vertical layout', () => {
+    mockWeatherLayout = 'default';
+
+    const view = render(
+      <ParamsBottomSheet
+        displayParams={[[0, 'temperature']] as any}
+        updateDisplayParams={mockUpdateDisplayParams as any}
+        restoreDefaultDisplayParams={mockRestoreDefaultDisplayParams as any}
+        showSingleHourlyForecast={false}
+        updateShowSingleHourlyForecast={
+          mockUpdateShowSingleHourlyForecast as any
+        }
+        units={
+          {
+            precipitation: { unitAbb: 'mm' },
+            pressure: { unitAbb: 'hPa' },
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+          } as any
+        }
+        onClose={jest.fn()}
+      />
+    );
+
+    expect(view.queryByText('paramsBottomSheet.otherSettingsTitle')).toBeNull();
+    expect(view.queryByTestId('show_single_hourly_forecast_switch')).toBeNull();
   });
 });

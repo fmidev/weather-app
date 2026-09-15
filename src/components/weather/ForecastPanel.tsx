@@ -79,6 +79,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
   const [activeDayIndex, setActiveDayIndex] = useState<number>(0);
+  const [daySelectionRequest, setDaySelectionRequest] = useState(0);
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
@@ -87,6 +88,11 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   const { ageWarning, forecastLengthTitle } = Config.get('weather').forecast;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
+
+  const selectDay = (index: number) => {
+    setActiveDayIndex(index);
+    setDaySelectionRequest((request) => request + 1);
+  };
 
   useEffect(() => {
     if (forecastByDay) {
@@ -105,6 +111,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       day: k,
       data: forecastByDay[k],
     }));
+  const dayStartIndexes = sections
+    ? sections.map((_, index) =>
+        sections
+          .slice(0, index)
+          .reduce((total, section) => total + section.data.length, 0)
+      )
+    : undefined;
 
   const forecastLastUpdated = {
     time: forecastLastUpdatedMoment
@@ -270,7 +283,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         {headerLevelForecast && headerLevelForecast.length > 0 && (
           <DaySelectorList
             activeDayIndex={activeDayIndex}
-            setActiveDayIndex={setActiveDayIndex}
+            setActiveDayIndex={selectDay}
             dayData={headerLevelForecast}
           />
         )}
@@ -285,6 +298,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             isOpen
             activeDayIndex={activeDayIndex}
             setActiveDayIndex={(i:number) => setActiveDayIndex(i)}
+            daySelectionRequest={daySelectionRequest}
+            dayStartIndexes={dayStartIndexes}
             currentDayOffset={sections[0].data.length}
             currentHour={currentHour}
           />

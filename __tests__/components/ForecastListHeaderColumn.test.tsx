@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 
 import ForecastListHeaderColumn from '../../src/components/weather/forecast/ForecastListHeaderColumn';
 import * as constants from '../../src/store/forecast/constants';
@@ -99,5 +100,23 @@ describe('ForecastListHeaderColumn', () => {
     expect(view.getByText('hPa')).toBeTruthy();
     expect(view.getByText('UV')).toBeTruthy();
     expect(view.queryByTestId('icon-time')).toBeNull();
+  });
+
+  it('keeps the time row height consistent in compact mode', () => {
+    const regularView = render(
+      <ForecastListHeaderColumn displayParams={[]} />
+    );
+    const compactView = render(
+      <ForecastListHeaderColumn compact displayParams={[]} />
+    );
+
+    const regularStyle = StyleSheet.flatten(
+      regularView.getByTestId('forecast-header-time-row').props.style
+    );
+    const compactStyle = StyleSheet.flatten(
+      compactView.getByTestId('forecast-header-time-row').props.style
+    );
+    expect(compactStyle.height).toBe(regularStyle.height);
+    expect(compactStyle.height).toBeLessThanOrEqual(52);
   });
 });

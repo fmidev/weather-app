@@ -126,7 +126,9 @@ jest.mock('../../src/components/weather/forecast/DaySelectorList', () => ({
     mockDaySelectorList(props);
     const { Pressable, Text } = require('react-native');
     return (
-      <Pressable testID="day-selector" onPress={() => props.setActiveDayIndex(1)}>
+      <Pressable
+        testID="day-selector"
+        onPress={() => props.setActiveDayIndex(1)}>
         <Text>{props.activeDayIndex}</Text>
       </Pressable>
     );
@@ -234,9 +236,32 @@ describe('ForecastPanel', () => {
     expect(mockForecastByHourList).toHaveBeenLastCalledWith(
       expect.objectContaining({
         data: baseProps.data,
+        dayStartIndexes: [0],
         isOpen: true,
         currentDayOffset: 2,
         currentHour: 12,
+      })
+    );
+  });
+
+  it('creates a new hourly-list scroll request on every day selection', () => {
+    const view = render(<ForecastPanel {...baseProps} />);
+
+    fireEvent.press(view.getByTestId('day-selector'));
+
+    expect(mockForecastByHourList).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        activeDayIndex: 1,
+        daySelectionRequest: 1,
+      })
+    );
+
+    fireEvent.press(view.getByTestId('day-selector'));
+
+    expect(mockForecastByHourList).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        activeDayIndex: 1,
+        daySelectionRequest: 2,
       })
     );
   });
@@ -265,11 +290,7 @@ describe('ForecastPanel', () => {
 
   it('renders chart view and loading state when configured', () => {
     const view = render(
-      <ForecastPanel
-        {...baseProps}
-        loading
-        displayFormat="chart"
-      />
+      <ForecastPanel {...baseProps} loading displayFormat="chart" />
     );
 
     expect(view.getByA11yLabel('weather:loading')).toBeTruthy();

@@ -31,6 +31,7 @@ const defaultState: types.ForecastState = {
   error: false,
   displayParams: [],
   displayFormat: 'table',
+  showSingleHourlyForecast: false,
   chartDisplayParam: 'temperature',
   fetchTimestamp: Date.now(),
   fetchSuccessTime: 0,
@@ -44,7 +45,10 @@ describe('forecast reducer', () => {
     mockConfigGet.mockReturnValue({
       forecast: {
         data: [
-          { parameters: [constants.SMART_SYMBOL, constants.TEMPERATURE], producer: 'harmonie' },
+          {
+            parameters: [constants.SMART_SYMBOL, constants.TEMPERATURE],
+            producer: 'harmonie',
+          },
           { parameters: [constants.PRECIPITATION_1H], producer: 'ecmwf' },
         ],
         defaultParameters: [
@@ -58,9 +62,12 @@ describe('forecast reducer', () => {
 
   it('should handle FETCH_FORECAST', () => {
     expect(
-      reducer({ ...defaultState, error: 'failed', loading: false }, {
-        type: types.FETCH_FORECAST,
-      })
+      reducer(
+        { ...defaultState, error: 'failed', loading: false },
+        {
+          type: types.FETCH_FORECAST,
+        }
+      )
     ).toMatchObject({
       error: false,
       loading: true,
@@ -69,30 +76,28 @@ describe('forecast reducer', () => {
 
   it('should handle FETCH_FORECAST_SUCCESS and merge datasets by epochtime', () => {
     const state = reducer(
-        {
-          ...defaultState,
-          data: {
-            99: [
-              createStep({ epochtime: 10, temperature: 1 }),
-            ],
-          },
+      {
+        ...defaultState,
+        data: {
+          99: [createStep({ epochtime: 10, temperature: 1 })],
         },
-        {
-          type: types.FETCH_FORECAST_SUCCESS,
-          data: {
-            location: { geoid: 99 },
-            forecast: [
-              [
-                createStep({ epochtime: 10, smartSymbol: 1 }),
-                createStep({ epochtime: 20, temperature: 2 }),
-              ],
-              [createStep({ epochtime: 10, precipitation1h: 0.2 })],
+      },
+      {
+        type: types.FETCH_FORECAST_SUCCESS,
+        data: {
+          location: { geoid: 99 },
+          forecast: [
+            [
+              createStep({ epochtime: 10, smartSymbol: 1 }),
+              createStep({ epochtime: 20, temperature: 2 }),
             ],
-            isAuroraBorealisLikely: true,
-          },
-          timestamp: 123,
-        }
-      );
+            [createStep({ epochtime: 10, precipitation1h: 0.2 })],
+          ],
+          isAuroraBorealisLikely: true,
+        },
+        timestamp: 123,
+      }
+    );
 
     expect(state).toMatchObject({
       auroraBorealisData: { 99: true },
@@ -242,6 +247,8 @@ describe('forecast reducer', () => {
           ...Array.from({ length: 22 }).map((_, index) =>
             createStep({
               epochtime: nowSeconds + (index + 3) * 3600,
+              localtime:
+                index === 20 ? '2023-11-15T23:13:20' : '2023-11-15T22:13:20',
               modtime: '2023-11-14T21:00:00',
               moonPhase: index === 21 ? 1 : 5,
               smartSymbol: 1,
@@ -266,6 +273,7 @@ describe('forecast reducer', () => {
     expect(selectors.selectForecastInvalidData(state)).toBe(false);
     expect(selectors.selectUniqueSmartSymbols(state)).toEqual([1, 2]);
     expect(selectors.selectDisplayFormat(state)).toBe('chart');
+    expect(selectors.selectShowSingleHourlyForecast(state)).toBe(false);
     expect(selectors.selectChartDisplayParameter(state)).toBe('temperature');
     expect(selectors.selectMinimumsAndMaximums(state)).toMatchObject({
       precipitationMax: 0.3,
@@ -291,6 +299,34 @@ describe('forecast reducer', () => {
     );
     expect(selectors.selectForecastLastUpdatedMoment(state)).toBeTruthy();
     expect(selectors.selectIsWaningMoonPhase(state)).toBe(true);
+  });
+
+  it('omits a daily forecast without a 23:00 time step', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-11-14T12:00:00Z'));
+    const firstTimestamp = Date.parse('2023-11-15T12:00:00Z') / 1000;
+    const secondTimestamp = firstTimestamp + 24 * 60 * 60;
+    const state = createState({
+      data: {
+        99: [
+          createStep({
+            epochtime: firstTimestamp,
+            localtime: '2023-11-15T23:00:00',
+            modtime: '2023-11-14T12:00:00',
+            temperature: 2,
+          }),
+          createStep({
+            epochtime: secondTimestamp,
+            localtime: '2023-11-16T22:00:00',
+            modtime: '2023-11-14T12:00:00',
+            temperature: 3,
+          }),
+        ],
+      },
+    });
+
+    expect(selectors.selectHeaderLevelForecast(state)).toEqual([
+      expect.objectContaining({ timeStamp: firstTimestamp }),
+    ]);
   });
 
   it('filters old forecasts and reports error when data is empty after loading', () => {
@@ -372,6 +408,7 @@ describe('forecast reducer', () => {
     actions.restoreDefaultDisplayParams()(dispatch);
     actions.updateDisplayFormat('chart')(dispatch);
     actions.updateChartParameter('temperature' as any)(dispatch);
+    actions.updateShowSingleHourlyForecast(true)(dispatch);
 
     expect(dispatch).toHaveBeenCalledWith({
       defaultParameters: [
@@ -393,6 +430,21 @@ describe('forecast reducer', () => {
       type: types.UPDATE_FORECAST_CHART_PARAMETER,
       value: 'temperature',
     });
+    expect(dispatch).toHaveBeenCalledWith({
+      type: types.UPDATE_SHOW_SINGLE_HOURLY_FORECAST,
+      value: true,
+    });
+  });
+
+  it('should update the single hourly forecast setting', () => {
+    expect(
+      reducer(undefined, {
+        type: types.UPDATE_SHOW_SINGLE_HOURLY_FORECAST,
+        value: true,
+      })
+    ).toMatchObject({
+      showSingleHourlyForecast: true,
+    });
   });
 });
 
@@ -412,11 +464,9 @@ const createStep = (
     sunset: '16:00',
     sunsetToday: 16,
     ...overrides,
-  } as types.TimeStepData);
+  }) as types.TimeStepData;
 
-const createState = (
-  forecastOverrides: Partial<types.ForecastState> = {}
-) =>
+const createState = (forecastOverrides: Partial<types.ForecastState> = {}) =>
   ({
     forecast: {
       ...defaultState,
@@ -427,4 +477,4 @@ const createState = (
         id: 99,
       },
     },
-  } as any);
+  }) as any;

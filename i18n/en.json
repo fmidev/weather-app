@@ -104,6 +104,7 @@
     "popMissing": "Precipitation probability missing",
     "minus": "minus",
     "showHourlyForecast": "Show hourly forecast for the day",
+    "hideHourlyForecast": "Hide hourly forecast for the day",
     "params": {
       "temperature": "temperature: {{ value }} {{ unit }}.",
       "feelsLike": "feels like: {{ value }} {{ unit }}.",
@@ -134,6 +135,8 @@
       "pressure": "Pressure ({{ unit }})",
       "uvCumulated": "UV index",
       "dayLength": "Day length",
+      "otherSettingsTitle": "Other settings",
+      "showSingleHourlyForecast": "Show only one hourly forecast",
       "selectAccessibilityHint": "Double tap to select parameter",
       "unSelectAccessibilityHint": "Double tap to deselect parameter",
       "restoreDefaultHint": "Restore default selection"
@@ -257,7 +260,7 @@
       "km/h": "kilometers per hour",
       "mph": "miles per hour",
       "bft": "beaufort",
-      "kn" : "knots",
+      "kn": "knots",
       "hPa": "hectopascal",
       "mbar": "millibars",
       "mmHg": "millimeters of mercury",
@@ -445,7 +448,7 @@
         "arrow4": "Gale 14-21 m/s",
         "arrow5": "Storm 21-32 m/s",
         "arrow6": "Hurricane 32-> m/s",
-        "layerInfo" : {
+        "layerInfo": {
           "short": "The layer shows wind direction and strength on a 1-hour time step from the next hour onward for 24 hours.",
           "long": "The layer shows wind direction and strength on a 3-hour time step from the next hour onward for three days."
         }
@@ -457,7 +460,7 @@
         "temperatureMinus20": "-10°C",
         "temperature0": "0°C",
         "temperature20": "20°C",
-        "layerInfo" : {
+        "layerInfo": {
           "short": "The layer displays temperature on a 1-hour time step from the next hour onward for 24 hours.",
           "long": "The layer displays temperature on a 3-hour time step from the next hour onward for three days."
         }
@@ -736,8 +739,7 @@
     "hoursSpoken": "hours",
     "minutesSpoken": "minutes"
   },
-  "unitAbbreviations": {
-  },
+  "unitAbbreviations": {},
   "markdownRenderer": {
     "radarLegendDescription": "Precipitation intensity scale"
   }
