@@ -49,7 +49,7 @@ const axiosClient = async (
           trackMatomoEvent('Error', action, `${error.response.status}: ${errorMsg}`);
         } else {
           // log error with analyticsAction
-          trackMatomoEvent('Error', action, error);
+          trackMatomoEvent('Error', action, error.message);
         }
       } else {
         if(!options.params?.ignoreError400) {
