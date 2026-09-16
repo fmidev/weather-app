@@ -154,8 +154,9 @@ describe('axiosClient', () => {
     );
   });
 
-  it('tracks response error object when no header error exists', async () => {
+  it('tracks response error message when no header error exists', async () => {
     const error = {
+      message: 'Request failed with status code 500',
       response: {
         headers: {},
         status: 500,
@@ -170,7 +171,7 @@ describe('axiosClient', () => {
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
       'Error',
       'Not specified',
-      error
+      'Request failed with status code 500'
     );
   });
 
