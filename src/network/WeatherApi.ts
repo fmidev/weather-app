@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { isAxiosError } from 'axios';
+import Ajv from 'ajv/dist/2020';
 
 import { ForecastLocation, TimeStepDataSet } from '@store/forecast/types';
 import {
@@ -9,29 +10,42 @@ import {
 import { Config } from '@config';
 import i18n from '@i18n';
 import axiosClient from '@utils/axiosClient';
+import { trackMatomoEvent } from '@utils/matomo';
 import { TimeseriesLocation } from '@store/location/types';
 import packageJSON from '../../package.json';
-import { findNearestGeoMagneticObservationStation, GeoMagneticStation, isAuroraBorealisLikely } from '@utils/geoMagneticStations';
+import forecastSchema from '../schemas/timeseries-forecast.schema.json';
+import uvSchema from '../schemas/timeseries-uv.schema.json';
+import {
+  findNearestGeoMagneticObservationStation,
+  GeoMagneticStation,
+  isAuroraBorealisLikely,
+} from '@utils/geoMagneticStations';
+
+const ajv = new Ajv();
+const validateForecast = ajv.compile(forecastSchema);
+const validateUVForecast = ajv.compile(uvSchema);
 
 const isLocationValid = (
   location: ForecastLocation | ObservationLocation
-): boolean =>
-  location.latlon !== undefined;
+): boolean => location.latlon !== undefined;
 
 export const getForecast = async (
   location: ForecastLocation,
-  country: string,
-  retry: string | false = false // producer name or false if not a retry
-): Promise<{forecast: TimeStepDataSet, location: ForecastLocation, isAuroraBorealisLikely: boolean}> => {
+  country: string
+): Promise<{
+  forecast: TimeStepDataSet;
+  location: ForecastLocation;
+  isAuroraBorealisLikely: boolean;
+}> => {
   const { language } = i18n;
   const {
     apiUrl,
     forecast: { timePeriod, data: dataSettings },
-    observation: { geoMagneticObservations }
+    observation: { geoMagneticObservations },
   } = Config.get('weather');
 
   if (!isLocationValid(location)) {
-    return {forecast: [], location, isAuroraBorealisLikely: false};
+    return { forecast: [], location, isAuroraBorealisLikely: false };
   }
 
   const params = {
@@ -40,7 +54,7 @@ export const getForecast = async (
     format: 'json',
     lang: language,
     tz: 'utc',
-    who: `${packageJSON.name}-${Platform.OS}${retry ? '-retry' : ''}`,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
 
   const metaParams = [
@@ -59,9 +73,9 @@ export const getForecast = async (
     ['epochtime'],
   ];
 
-  const queries = dataSettings.flatMap(({ parameters, producer }, index) =>
-    !retry || producer === retry ?
-      axiosClient({
+  const queries = dataSettings.map(({ parameters, producer }, index) =>
+    axiosClient(
+      {
         url: apiUrl,
         params: {
           ...params,
@@ -70,8 +84,8 @@ export const getForecast = async (
         },
       },
       undefined,
-      'Timeseries')
-    : []
+      'Timeseries'
+    )
   );
 
   // Aurora borealis information is required for the forecast
@@ -79,10 +93,10 @@ export const getForecast = async (
 
   let nearestGeoMagneticStation: GeoMagneticStation | undefined;
 
-  const geoMagneticObservationsEnabled = geoMagneticObservations?.countryCodes.includes(country)
-                                          && location.latlon !== undefined
-                                          && geoMagneticObservations?.enabled === true
-                                          && retry === false;
+  const geoMagneticObservationsEnabled =
+    geoMagneticObservations?.countryCodes.includes(country) &&
+    location.latlon !== undefined &&
+    geoMagneticObservations?.enabled === true;
 
   if (geoMagneticObservationsEnabled && location.latlon) {
     const [lat, lon] = location.latlon.split(',');
@@ -93,7 +107,13 @@ export const getForecast = async (
   }
   const geoMagneticParams = {
     starttime: '-1h',
-    param: ['distance','epochtime','fmisid','name','geomagneticRIndex'].join(','),
+    param: [
+      'distance',
+      'epochtime',
+      'fmisid',
+      'name',
+      'geomagneticRIndex',
+    ].join(','),
     fmisid: nearestGeoMagneticStation?.fmisid,
     producer: geoMagneticObservations?.producer,
     who: packageJSON.name,
@@ -105,8 +125,12 @@ export const getForecast = async (
 
   queries.push(
     geoMagneticObservationsEnabled
-      ? axiosClient({ url: apiUrl, params: geoMagneticParams }, undefined, 'Timeseries')
-      : Promise.resolve({ data: {} }),
+      ? axiosClient(
+          { url: apiUrl, params: geoMagneticParams },
+          undefined,
+          'Timeseries'
+        )
+      : Promise.resolve({ data: {} })
   );
 
   const results = await Promise.allSettled(queries);
@@ -119,6 +143,19 @@ export const getForecast = async (
       return [];
     }
     if (result.status === 'fulfilled') {
+      const producer = dataSettings[index].producer || 'default';
+      if (producer === 'default' && !validateForecast(result.value.data)) {
+        error += `Forecast validation failed: ${ajv.errorsText(
+          validateForecast.errors
+        )}\n`;
+        return [];
+      }
+      if (producer === 'uv' && !validateUVForecast(result.value.data)) {
+        error += `UV forecast validation failed: ${ajv.errorsText(
+          validateUVForecast.errors
+        )}\n`;
+        return [];
+      }
       return result.value;
     }
     if (result.status === 'rejected') {
@@ -128,7 +165,10 @@ export const getForecast = async (
         error += 'Code: ' + reason.code + '\n';
         error += 'Url: ' + reason.config?.url + '\n';
         error += 'Status: ' + reason.response?.status + '\n';
-        error += 'Data: ' + String(reason.response?.data ?? '').substring(0, 100) + '\n';
+        error +=
+          'Data: ' +
+          String(reason.response?.data ?? '').substring(0, 100) +
+          '\n';
       } else {
         error += 'Message: ' + String(reason) + '\n';
       }
@@ -137,21 +177,32 @@ export const getForecast = async (
   });
 
   if (error) {
+    trackMatomoEvent('Error', 'Timeseries', error);
     throw new Error(error);
   }
 
   const geoMagneticResult = results[lastIndex];
-  const geoMagneticObservationData = geoMagneticObservationsEnabled && geoMagneticResult.status === 'fulfilled' ? geoMagneticResult.value : null;
+  const geoMagneticObservationData =
+    geoMagneticObservationsEnabled && geoMagneticResult.status === 'fulfilled'
+      ? geoMagneticResult.value
+      : null;
 
   const forecast = forecastData.map(({ data }) => data);
 
-  if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
-    && geoMagneticObservationData !== null && geoMagneticObservationData.data.length > 0) {
+  if (
+    geoMagneticObservationsEnabled &&
+    nearestGeoMagneticStation &&
+    geoMagneticObservationData !== null &&
+    geoMagneticObservationData.data.length > 0
+  ) {
     const { data } = geoMagneticObservationData;
     return {
       location,
       forecast,
-      isAuroraBorealisLikely: isAuroraBorealisLikely(data[data.length - 1].geomagneticRIndex, nearestGeoMagneticStation),
+      isAuroraBorealisLikely: isAuroraBorealisLikely(
+        data[data.length - 1].geomagneticRIndex,
+        nearestGeoMagneticStation
+      ),
     };
   }
 
@@ -229,7 +280,11 @@ export const getObservation = async (
   const [observationData, dailyObservationData] = await Promise.all([
     axiosClient({ url: apiUrl, params: hourlyParams }, undefined, 'Timeseries'),
     dailyObservationsEnabled
-      ? axiosClient({ url: apiUrl, params: dailyParams }, undefined, 'Timeseries')
+      ? axiosClient(
+          { url: apiUrl, params: dailyParams },
+          undefined,
+          'Timeseries'
+        )
       : Promise.resolve({ data: {} }),
   ]);
 
@@ -273,10 +328,14 @@ export const getCurrentPosition = async (
     ...(maxDistance !== undefined ? { maxdistance: maxDistance } : {}),
   };
 
-  const { data } = await axiosClient({
-    url: apiUrl,
-    params,
-  }, undefined, 'Timeseries');
+  const { data } = await axiosClient(
+    {
+      url: apiUrl,
+      params,
+    },
+    undefined,
+    'Timeseries'
+  );
 
   return data;
 };
@@ -293,7 +352,11 @@ export const getLocationsLocales = async (
     lang: language,
   };
 
-  const { data } = await axiosClient({ url: apiUrl, params }, undefined, 'Timeseries');
+  const { data } = await axiosClient(
+    { url: apiUrl, params },
+    undefined,
+    'Timeseries'
+  );
 
   return data;
 };
