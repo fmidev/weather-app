@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Smartmet Server geomagnetic observations",
+  "title": "Smartmet Server timeseries geomagnetic observations",
   "type": "array",
   "items": {
     "type": "object",

@@ -15,6 +15,10 @@ import { TimeseriesLocation } from '@store/location/types';
 import packageJSON from '../../package.json';
 import forecastSchema from '../schemas/timeseries-forecast.schema.json';
 import uvSchema from '../schemas/timeseries-uv.schema.json';
+import geoMagneticObservationsSchema from '../schemas/timeseries-geomagnetic-observations.schema.json';
+import observationsSchema from '../schemas/timeseries-observations.schema.json';
+import dailyObservationsSchema from '../schemas/timeseries-daily-observations.schema.json';
+import reverseGeolocationSchema from '../schemas/timeseries-reverse-geolocation.schema.json';
 import {
   findNearestGeoMagneticObservationStation,
   GeoMagneticStation,
@@ -24,6 +28,14 @@ import {
 const ajv = new Ajv();
 const validateForecast = ajv.compile(forecastSchema);
 const validateUVForecast = ajv.compile(uvSchema);
+const validateGeoMagneticObservations = ajv.compile(
+  geoMagneticObservationsSchema
+);
+const validateObservations = ajv.compile(observationsSchema);
+const validateDailyObservations = ajv.compile(dailyObservationsSchema);
+const validateReverseGeolocation = ajv.compile<{
+  [geoid: string]: TimeseriesLocation[];
+}>(reverseGeolocationSchema);
 
 const isLocationValid = (
   location: ForecastLocation | ObservationLocation
@@ -183,7 +195,9 @@ export const getForecast = async (
 
   const geoMagneticResult = results[lastIndex];
   const geoMagneticObservationData =
-    geoMagneticObservationsEnabled && geoMagneticResult.status === 'fulfilled'
+    geoMagneticObservationsEnabled &&
+    geoMagneticResult.status === 'fulfilled' &&
+    validateGeoMagneticObservations(geoMagneticResult.value.data)
       ? geoMagneticResult.value
       : null;
 
@@ -289,7 +303,31 @@ export const getObservation = async (
   ]);
 
   if (observationData === null || dailyObservationData === null) {
+    trackMatomoEvent(
+      'Error',
+      'Timeseries',
+      'Observation data retrieval failed'
+    );
     throw new Error('Observation data retrieval failed');
+  }
+
+  let error = '';
+  if (!validateObservations(observationData.data)) {
+    error += `Observation validation failed: ${ajv.errorsText(
+      validateObservations.errors
+    )}\n`;
+  }
+  if (
+    dailyObservationsEnabled &&
+    !validateDailyObservations(dailyObservationData.data)
+  ) {
+    error += `Daily observation validation failed: ${ajv.errorsText(
+      validateDailyObservations.errors
+    )}\n`;
+  }
+  if (error) {
+    trackMatomoEvent('Error', 'Timeseries', error);
+    throw new Error(error);
   }
 
   return [observationData.data, dailyObservationData.data];
@@ -336,6 +374,14 @@ export const getCurrentPosition = async (
     undefined,
     'Timeseries'
   );
+
+  if (!validateReverseGeolocation(data)) {
+    const error = `Reverse geolocation validation failed: ${ajv.errorsText(
+      validateReverseGeolocation.errors
+    )}\n`;
+    trackMatomoEvent('Error', 'Timeseries', error);
+    throw new Error(error);
+  }
 
   return data;
 };

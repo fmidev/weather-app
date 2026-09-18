@@ -34,6 +34,7 @@
     "@testing-library/react-native": "8.0.0",
     "@types/supercluster": "5.0.3",
     "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "axios": "1.19.0",
     "axios-cache-interceptor": "1.12.3",
     "fast-xml-parser": "5.10.1",
