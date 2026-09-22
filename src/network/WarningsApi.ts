@@ -22,7 +22,7 @@ const getWarnings = async ({
   country,
 }: Location): Promise<{ data: WarningsData }> => {
   const { language } = i18n;
-  const { apiUrl } = Config.get('warnings');
+  const { apiUrl, schemaValidation } = Config.get('warnings');
 
   const url = apiUrl?.[country];
 
@@ -34,7 +34,7 @@ const getWarnings = async ({
 
   const { data } = await axiosClient({ url, params }, undefined, 'Warnings');
 
-  if (!validateWarnings(data)) {
+  if (schemaValidation !== false && !validateWarnings(data)) {
     const error = `Warnings validation failed: ${ajv.errorsText(
       validateWarnings.errors
     )}\n`;

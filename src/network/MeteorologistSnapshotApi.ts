@@ -22,7 +22,10 @@ const getMeteorologistSnapshot = async (): Promise<MeteorologistSnapshot> => {
   const url = meteorologist.url;
   const { data } = await axiosClient({ url }, undefined, 'Snapshot');
 
-  if (!validateMeteorologistSnapshot(data)) {
+  if (
+    meteorologist?.schemaValidation !== false &&
+    !validateMeteorologistSnapshot(data)
+  ) {
     const error = `Meteorologist snapshot validation failed: ${ajv.errorsText(
       validateMeteorologistSnapshot.errors
     )}\n`;

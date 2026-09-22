@@ -98,6 +98,7 @@ interface GeoMagneticObservations {
   enabled: boolean;
   producer: string;
   countryCodes: string[];
+  schemaValidation?: boolean;
 }
 
 interface Observation {
@@ -111,6 +112,7 @@ interface Observation {
   dailyParameters?: (keyof DailyObservationParameters)[];
   geoMagneticObservations?: GeoMagneticObservations;
   lazyLoad?: boolean;
+  schemaValidation?: boolean;
 }
 
 interface ObservationEnabled extends Observation {
@@ -159,6 +161,7 @@ interface Warnings {
   ageWarning?: number;
   webViewUrl?: string;
   capViewSettings?: CapViewSettings;
+  schemaValidation?: boolean;
 }
 
 interface WarningsEnabled extends Warnings {
@@ -171,6 +174,7 @@ interface WarningsDisabled extends Partial<Warnings> {
 
 interface Announcements {
   updateInterval: number;
+  schemaValidation?: boolean;
   api: {
     [locale: string]: string;
   };
@@ -251,6 +255,7 @@ interface News {
   numberOfNews: number;
   updateInterval: number;
   outdated: number;
+  schemaValidation?: boolean;
 }
 
 interface NewsEnabled extends News {
@@ -264,6 +269,7 @@ interface NewsDisabled extends Partial<News> {
 interface MeteorologistSnapshotConfig {
   url: string;
   updateInterval: number;
+  schemaValidation?: boolean;
 }
 
 interface Analytics {
@@ -340,6 +346,7 @@ export interface ConfigType {
     maxFavorite: number;
     maxDistance?: number;
     useInKeyword?: boolean;
+    schemaValidation?: boolean;
   };
   map: {
     updateInterval: number;
@@ -370,6 +377,7 @@ export interface ConfigType {
       infoBottomSheet?: {
         showAllSymbols?: boolean;
       };
+      schemaValidation?: boolean;
     };
     observation: ObservationEnabled | ObservationDisabled;
     meteorologist?: MeteorologistSnapshotConfig;

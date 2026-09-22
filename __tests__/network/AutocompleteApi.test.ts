@@ -86,6 +86,42 @@ describe('AutocompleteApi', () => {
     expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
   });
 
+  it('skips validation when schemaValidation is false', async () => {
+    mockConfigGet.mockReturnValue({
+      apiUrl: 'https://example.test/autocomplete',
+      keyword: 'place',
+      schemaValidation: false,
+    });
+    const data = { autocomplete: { result: [] } };
+    mockAxiosClient.mockResolvedValueOnce({ data });
+
+    await expect(getAutocomplete('hel')).resolves.toBe(data);
+    expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
+  });
+
+  it.each([true, undefined, null, 0, 'false'])(
+    'validates when schemaValidation is %j',
+    async (schemaValidation) => {
+      mockConfigGet.mockReturnValue({
+        apiUrl: 'https://example.test/autocomplete',
+        keyword: 'place',
+        schemaValidation,
+      });
+      mockAxiosClient.mockResolvedValueOnce({
+        data: { autocomplete: { result: [] } },
+      });
+
+      await expect(getAutocomplete('hel')).rejects.toThrow(
+        'Autocomplete validation failed:'
+      );
+      expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+        'Error',
+        'Autocomplete',
+        expect.stringContaining('Autocomplete validation failed:')
+      );
+    }
+  );
+
   it.each<[string, unknown]>([
     ['null response', null],
     ['missing data', undefined],

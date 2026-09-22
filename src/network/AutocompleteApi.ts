@@ -14,7 +14,7 @@ const validateAutocomplete = ajv.compile<AutoComplete>(autocompleteSchema);
 let abortController: AbortController | undefined;
 
 const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
-  const { keyword, apiUrl } = Config.get('location');
+  const { keyword, apiUrl, schemaValidation } = Config.get('location');
   const { language } = i18n;
 
   const params = {
@@ -40,7 +40,7 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
     'Autocomplete'
   );
 
-  if (!validateAutocomplete(data)) {
+  if (schemaValidation !== false && !validateAutocomplete(data)) {
     const error = `Autocomplete validation failed: ${ajv.errorsText(
       validateAutocomplete.errors
     )}\n`;
