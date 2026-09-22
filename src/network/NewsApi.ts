@@ -44,7 +44,11 @@ const getNews = async (language: string): Promise<NewsItem[]> => {
   }
 
   const url = `${apiUrl[language]}${apiUrl[language].includes('?') ? `&limit=${numberOfNews}` : `?limit=${numberOfNews}`}`;
-  const { data } = await axiosClient({ url }, undefined, 'News');
+  const { data }: { data: NewsResponse } = await axiosClient(
+    { url },
+    undefined,
+    'News'
+  );
 
   if (schemaValidation !== false && !validateNews(data)) {
     const error = `News validation failed: ${ajv.errorsText(
