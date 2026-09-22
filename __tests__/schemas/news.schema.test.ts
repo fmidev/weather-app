@@ -64,6 +64,16 @@ describe('news response schema', () => {
     expect(validateNews(withThumbnail(thumbnail))).toBe(true);
   });
 
+  it('accepts an image without alt text', () => {
+    expect(
+      validateNews(
+        withThumbnail({
+          fields: { image: { fields: { file: imageFields.file } } },
+        })
+      )
+    ).toBe(true);
+  });
+
   it.each<[string, unknown]>([
     ['null response', null],
     ['missing items', {}],
@@ -107,12 +117,6 @@ describe('news response schema', () => {
     [
       'missing image file',
       withThumbnail({ fields: { image: { fields: { altText: '' } } } }),
-    ],
-    [
-      'missing image alt text',
-      withThumbnail({
-        fields: { image: { fields: { file: imageFields.file } } },
-      }),
     ],
     [
       'absolute image URL',
