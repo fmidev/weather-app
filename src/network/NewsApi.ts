@@ -67,7 +67,7 @@ const getNews = async (language: string): Promise<NewsItem[]> => {
       title: item.fields.title,
       type: item.fields.type,
       imageUrl: image ? `https:${image.fields.file.url}` : null,
-      imageAlt: image ? image.fields.altText : '',
+      imageAlt: image?.fields.altText ?? '',
       createdAt: item.sys.createdAt,
       updatedAt: item.sys.updatedAt,
       language: item.fields.site,
