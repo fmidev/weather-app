@@ -274,6 +274,41 @@ describe('WeatherApi', () => {
     expect(mockIsAuroraBorealisLikely).not.toHaveBeenCalled();
   });
 
+  it.each([false, true, undefined])(
+    'uses geomagnetic schemaValidation=%s to control validation',
+    async (schemaValidation) => {
+      mockConfigGet.mockReturnValue({
+        ...weatherConfig,
+        observation: {
+          ...weatherConfig.observation,
+          geoMagneticObservations: {
+            ...weatherConfig.observation.geoMagneticObservations,
+            enabled: true,
+            schemaValidation,
+          },
+        },
+      });
+      const station = { fmisid: 101, name: 'Geo station' };
+      mockFindNearestGeoMagneticObservationStation.mockReturnValue(station);
+      mockIsAuroraBorealisLikely.mockReturnValue(true);
+      mockAxiosClient
+        .mockResolvedValueOnce({ data: [{ epochtime: 1, temperature: 5 }] })
+        .mockResolvedValueOnce({ data: [{ epochtime: 1, windSpeedMS: 4 }] })
+        .mockResolvedValueOnce({
+          data: [{ ...geoMagneticObservation, unexpected: 1 }],
+        });
+
+      const result = await getForecast({ latlon: '68.0,24.0' }, 'FI');
+
+      expect(result.isAuroraBorealisLikely).toBe(schemaValidation === false);
+      if (schemaValidation === false) {
+        expect(mockIsAuroraBorealisLikely).toHaveBeenCalledWith(7, station);
+      } else {
+        expect(mockIsAuroraBorealisLikely).not.toHaveBeenCalled();
+      }
+    }
+  );
+
   it('throws formatted Axios error details when forecast request fails', async () => {
     const responseData = 'x'.repeat(120);
     const axiosError = {
@@ -649,8 +684,6 @@ describe('WeatherApi', () => {
 
   describe('reverse geolocation validation', () => {
     it.each([
-      ['empty response', {}],
-      ['empty location array', { 123: [] }],
       ['negative geoid', { '-123': [positionData] }],
       ['null timezone', { 123: [{ ...positionData, localtz: null }] }],
     ])('accepts %s', async (_description, data) => {
@@ -661,6 +694,8 @@ describe('WeatherApi', () => {
     });
 
     it.each<[string, unknown]>([
+      ['empty response', {}],
+      ['empty location array', { 123: [] }],
       ['array response', []],
       ['null response', null],
       ['missing data', undefined],

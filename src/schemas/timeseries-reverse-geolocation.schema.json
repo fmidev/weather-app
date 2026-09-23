@@ -2,12 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Smartmet Server timeseries reverse geolocation",
   "type": "object",
+  "minProperties": 1,
   "propertyNames": {
     "maxLength": 12
   },
   "patternProperties": {
     "^-?[0-9]+$": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,

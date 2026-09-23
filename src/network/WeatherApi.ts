@@ -197,7 +197,8 @@ export const getForecast = async (
   const geoMagneticObservationData =
     geoMagneticObservationsEnabled &&
     geoMagneticResult.status === 'fulfilled' &&
-    validateGeoMagneticObservations(geoMagneticResult.value.data)
+    (geoMagneticObservations?.schemaValidation === false ||
+      validateGeoMagneticObservations(geoMagneticResult.value.data))
       ? geoMagneticResult.value
       : null;
 
