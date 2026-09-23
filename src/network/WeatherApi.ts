@@ -322,7 +322,10 @@ export const getObservation = async (
   }
 
   let error = '';
-  if (schemaValidation !== false && !validateObservations(observationData.data)) {
+  if (
+    schemaValidation !== false &&
+    !validateObservations(observationData.data)
+  ) {
     error += `Observation validation failed: ${ajv.errorsText(
       validateObservations.errors
     )}\n`;
@@ -366,7 +369,8 @@ export const getCurrentPosition = async (
   longitude: number
 ): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
   const { apiUrl } = Config.get('weather');
-  const { useInKeyword, keyword, maxDistance } = Config.get('location');
+  const { useInKeyword, keyword, maxDistance, schemaValidation } =
+    Config.get('location');
   const { language } = i18n;
 
   const params = {
@@ -386,7 +390,7 @@ export const getCurrentPosition = async (
     'Timeseries'
   );
 
-  if (!validateReverseGeolocation(data)) {
+  if (schemaValidation !== false && !validateReverseGeolocation(data)) {
     const error = `Reverse geolocation validation failed: ${ajv.errorsText(
       validateReverseGeolocation.errors
     )}\n`;
