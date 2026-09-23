@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "News API response",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sys", "fields"],
+        "properties": {
+          "sys": {
+            "type": "object",
+            "required": ["id", "createdAt", "updatedAt"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "createdAt": { "type": "string", "format": "date-time" },
+              "updatedAt": { "type": "string", "format": "date-time" }
+            }
+          },
+          "fields": {
+            "type": "object",
+            "required": ["title", "type", "site"],
+            "properties": {
+              "title": { "type": "string", "minLength": 1 },
+              "type": { "type": "string", "minLength": 1 },
+              "site": { "type": "string", "minLength": 1 },
+              "showEditedDatetime": { "type": "boolean" },
+              "thumbnail": {
+                "type": ["object", "null"],
+                "properties": {
+                  "fields": {
+                    "type": ["object", "null"],
+                    "properties": {
+                      "image": {
+                        "type": ["object", "null"],
+                        "required": ["fields"],
+                        "properties": {
+                          "fields": {
+                            "type": "object",
+                            "required": ["file"],
+                            "properties": {
+                              "altText": { "type": "string" },
+                              "file": {
+                                "type": "object",
+                                "required": ["url"],
+                                "properties": {
+                                  "url": {
+                                    "description": "Protocol-relative image URL; getNews prepends https:.",
+                                    "type": "string",
+                                    "format": "uri-reference",
+                                    "pattern": "^//[^/?#]"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
