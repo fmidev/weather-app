@@ -52,7 +52,7 @@ export const getForecast = async (
   const { language } = i18n;
   const {
     apiUrl,
-    forecast: { timePeriod, data: dataSettings },
+    forecast: { timePeriod, data: dataSettings, schemaValidation },
     observation: { geoMagneticObservations },
   } = Config.get('weather');
 
@@ -156,13 +156,21 @@ export const getForecast = async (
     }
     if (result.status === 'fulfilled') {
       const producer = dataSettings[index].producer || 'default';
-      if (producer === 'default' && !validateForecast(result.value.data)) {
+      if (
+        schemaValidation !== false &&
+        producer === 'default' &&
+        !validateForecast(result.value.data)
+      ) {
         error += `Forecast validation failed: ${ajv.errorsText(
           validateForecast.errors
         )}\n`;
         return [];
       }
-      if (producer === 'uv' && !validateUVForecast(result.value.data)) {
+      if (
+        schemaValidation !== false &&
+        producer === 'uv' &&
+        !validateUVForecast(result.value.data)
+      ) {
         error += `UV forecast validation failed: ${ajv.errorsText(
           validateUVForecast.errors
         )}\n`;

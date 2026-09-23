@@ -346,6 +346,41 @@ describe('WeatherApi', () => {
     );
   });
 
+  it.each([false, true, undefined])(
+    'uses forecast schemaValidation=%s to control default and UV validation',
+    async (schemaValidation) => {
+      mockConfigGet.mockReturnValue({
+        ...weatherConfig,
+        forecast: {
+          ...weatherConfig.forecast,
+          schemaValidation,
+          data: [
+            { producer: 'default', parameters: ['temperature'] },
+            { producer: 'uv', parameters: ['uvCumulated'] },
+          ],
+        },
+      });
+      const forecastData = [{ ...forecastStep, unexpected: 1 }];
+      const uvData = [{ epochtime: 1, uvCumulated: 2, unexpected: 1 }];
+      mockAxiosClient
+        .mockResolvedValueOnce({ data: forecastData })
+        .mockResolvedValueOnce({ data: uvData });
+
+      const result = getForecast({ latlon: '60,25' }, 'FI');
+
+      if (schemaValidation === false) {
+        await expect(result).resolves.toEqual(
+          expect.objectContaining({ forecast: [forecastData, uvData] })
+        );
+        expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
+      } else {
+        await expect(result).rejects.toThrow('Forecast validation failed:');
+        await expect(result).rejects.toThrow('UV forecast validation failed:');
+        expect(mockTrackMatomoEvent).toHaveBeenCalledTimes(1);
+      }
+    }
+  );
+
   describe('default producer validation', () => {
     beforeEach(() => {
       mockConfigGet.mockReturnValue({
