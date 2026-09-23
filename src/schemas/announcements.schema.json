@@ -22,7 +22,8 @@
       "link": {
         "type": "string",
         "maxLength": 1000,
-        "format": "uri"
+        "format": "uri",
+        "pattern": "^https?://"
       }
     }
   }
