@@ -56,6 +56,9 @@
         "epochtime": {
           "type": "integer"
         },
+        "cloudHeight": {
+          "$ref": "#/$defs/nullableNumber"
+        },
         "dewPoint": {
           "$ref": "#/$defs/nullableNumber"
         },
@@ -63,6 +66,9 @@
           "$ref": "#/$defs/nullableNumber"
         },
         "precipitation1h": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "precipitationIntensity": {
           "$ref": "#/$defs/nullableNumber"
         },
         "pressure": {

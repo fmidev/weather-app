@@ -246,6 +246,7 @@ export const getObservation = async (
       timePeriod,
       parameters,
       dailyParameters,
+      schemaValidation,
       identifier = 'fmisid',
     },
   } = Config.get('weather');
@@ -321,12 +322,13 @@ export const getObservation = async (
   }
 
   let error = '';
-  if (!validateObservations(observationData.data)) {
+  if (schemaValidation !== false && !validateObservations(observationData.data)) {
     error += `Observation validation failed: ${ajv.errorsText(
       validateObservations.errors
     )}\n`;
   }
   if (
+    schemaValidation !== false &&
     dailyObservationsEnabled &&
     !validateDailyObservations(dailyObservationData.data)
   ) {

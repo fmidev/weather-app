@@ -592,6 +592,34 @@ describe('WeatherApi', () => {
     );
   });
 
+  it.each([false, true, undefined])(
+    'uses observation schemaValidation=%s to control hourly and daily validation',
+    async (schemaValidation) => {
+      mockConfigGet.mockReturnValue({
+        ...weatherConfig,
+        observation: { ...weatherConfig.observation, schemaValidation },
+      });
+      const hourly = stationObservations([{ ...observationStep, unexpected: 1 }]);
+      const daily = stationObservations([
+        { ...dailyObservationStep, unexpected: 1 },
+      ]);
+      mockAxiosClient
+        .mockResolvedValueOnce({ data: hourly })
+        .mockResolvedValueOnce({ data: daily });
+
+      const result = getObservation({ latlon: '60,25' }, 'FI');
+
+      if (schemaValidation === false) {
+        await expect(result).resolves.toEqual([hourly, daily]);
+        expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
+      } else {
+        await expect(result).rejects.toThrow('Observation validation failed:');
+        await expect(result).rejects.toThrow('Daily observation validation failed:');
+        expect(mockTrackMatomoEvent).toHaveBeenCalledTimes(1);
+      }
+    }
+  );
+
   describe.each([
     ['hourly', observationStep, 'Observation validation failed:'],
     ['daily', dailyObservationStep, 'Daily observation validation failed:'],
@@ -649,6 +677,41 @@ describe('WeatherApi', () => {
       );
     });
   });
+
+  describe.each(['cloudHeight', 'precipitationIntensity'])(
+    'optional observation parameter %s',
+    (parameter) => {
+      it.each([1.5, null])('accepts %s', async (value) => {
+        const data = stationObservations([
+          { ...observationStep, [parameter]: value },
+        ]);
+        mockAxiosClient.mockResolvedValueOnce({ data });
+
+        await expect(getObservation({ latlon: '60,25' }, 'SE')).resolves.toEqual([
+          data,
+          {},
+        ]);
+        expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
+      });
+
+      it('rejects string values and tracks the validation error', async () => {
+        mockAxiosClient.mockResolvedValueOnce({
+          data: stationObservations([{ ...observationStep, [parameter]: '1.5' }]),
+        });
+
+        const result = getObservation({ latlon: '60,25' }, 'SE');
+
+        await expect(result).rejects.toThrow('Observation validation failed:');
+        await expect(result).rejects.toThrow(parameter);
+        expect(mockTrackMatomoEvent).toHaveBeenCalledTimes(1);
+        expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+          'Error',
+          'Timeseries',
+          expect.stringContaining(parameter)
+        );
+      });
+    }
+  );
 
   it('returns hourly observations when daily observations are disabled', async () => {
     const hourly = stationObservations([observationStep]);
