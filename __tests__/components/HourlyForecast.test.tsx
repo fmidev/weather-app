@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import HourlyForecast from '../../src/components/weather/forecast/HourlyForecast';
 import * as constants from '../../src/store/forecast/constants';
@@ -28,6 +28,7 @@ jest.mock('@react-navigation/native', () => ({
     colors: {
       hourListText: '#111111',
       background: mockBackground,
+      dayForecastBackground: '#dddddd',
     },
     dark: mockDark,
   }),
@@ -157,6 +158,11 @@ describe('HourlyForecast', () => {
     expect(view.getByTestId('forecast-header-column')).toBeTruthy();
     expect(view.getByTestId('forecast-column-2000000000')).toBeTruthy();
     expect(view.getByTestId('day_duration')).toBeTruthy();
+    expect(
+      StyleSheet.flatten(view.getByTestId('day-duration-symbol').props.style)
+        .backgroundColor
+    ).toBe('#dddddd');
+    expect(view.queryByTestId('linear-gradient')).toBeNull();
     expect(view.getByText('18 h 0 min')).toBeTruthy();
     expect(mockForecastListHeaderColumn).toHaveBeenCalledWith(
       expect.objectContaining({ displayParams, compact: true })

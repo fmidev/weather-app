@@ -214,7 +214,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
             style={[
               styles.container,
               { height: rowHeight },
-              isExpanded && { backgroundColor: colors.listTint },
+              isExpanded && { backgroundColor: colors.dayForecastBackground },
             ]}>
             <View
               testID={`daily-forecast-row-${index}`}
