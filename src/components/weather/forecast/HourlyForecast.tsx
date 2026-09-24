@@ -55,7 +55,21 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   const { t } = useTranslation('forecast');
   const { excludeDayLength } = Config.get('weather').forecast;
 
-  const scrollMetrics = useRef({ width: 0, contentWidth: 0, offset: 0 });
+  const initialScrollIndex =
+    initialScrollHour === undefined || !data?.length
+      ? -1
+      : data.findIndex(({ localtime }) => {
+          const localMoment = moment(localtime, moment.ISO_8601, true);
+          return (
+            localMoment.isValid() && localMoment.hour() === initialScrollHour
+          );
+        });
+  const hourColumnWidth = Math.min(fontScale * 48, 62);
+  const scrollMetrics = useRef({
+    width: 0,
+    contentWidth: 0,
+    offset: Math.max(0, initialScrollIndex) * hourColumnWidth,
+  });
   const [scrollEdges, setScrollEdges] = useState({ left: false, right: false });
   const updateScrollEdges = useCallback(
     (metrics: Partial<typeof scrollMetrics.current>) => {
@@ -94,17 +108,6 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
         transparentBackground,
       ]
     : [colors.background, transparentBackground];
-
-  const initialScrollIndex =
-    initialScrollHour === undefined
-      ? -1
-      : data.findIndex(({ localtime }) => {
-          const localMoment = moment(localtime, moment.ISO_8601, true);
-          return (
-            localMoment.isValid() && localMoment.hour() === initialScrollHour
-          );
-        });
-  const hourColumnWidth = Math.min(fontScale * 48, 62);
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {

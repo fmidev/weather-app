@@ -210,6 +210,36 @@ describe('HourlyForecast', () => {
     });
   });
 
+  it('shows the left fade at the initial hour before a scroll event', () => {
+    const view = render(
+      <HourlyForecast
+        data={makeData(24) as any}
+        displayParams={[[0, constants.TEMPERATURE]] as any}
+        clockType={24 as any}
+        units={{} as any}
+        initialScrollHour={8}
+      />
+    );
+    const list = view.getByTestId('hourly-forecast-list');
+
+    fireEvent(list, 'contentSizeChange', 1000, 200);
+    fireEvent(list, 'layout', {
+      nativeEvent: { layout: { width: 300, height: 200, x: 0, y: 0 } },
+    });
+
+    expect(view.getByTestId('hourly-forecast-left-fade')).toBeTruthy();
+    expect(view.getByTestId('hourly-forecast-right-fade')).toBeTruthy();
+
+    fireEvent.scroll(list, {
+      nativeEvent: {
+        contentOffset: { x: 0, y: 0 },
+        contentSize: { width: 1000, height: 200 },
+        layoutMeasurement: { width: 300, height: 200 },
+      },
+    });
+    expect(view.queryByTestId('hourly-forecast-left-fade')).toBeNull();
+  });
+
   it('does not set an initial index when the requested hour is unavailable', () => {
     const view = render(
       <HourlyForecast
