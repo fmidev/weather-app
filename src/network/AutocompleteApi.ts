@@ -8,7 +8,7 @@ import packageJSON from '../../package.json';
 let abortController: AbortController | undefined;
 
 const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
-  const { keyword, apiUrl } = Config.get('location');
+  const { keyword, apiUrl, fmiApiKey } = Config.get('location');
   const { language } = i18n;
 
   const params = {
@@ -29,6 +29,9 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
     {
       url: apiUrl,
       params,
+      ...(fmiApiKey !== undefined
+        ? { headers: { 'fmi-apikey': fmiApiKey } }
+        : {}),
     },
     abortController,
     'Autocomplete'
