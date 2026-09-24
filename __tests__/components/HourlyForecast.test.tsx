@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import HourlyForecast from '../../src/components/weather/forecast/HourlyForecast';
 import * as constants from '../../src/store/forecast/constants';
@@ -28,6 +28,7 @@ jest.mock('@react-navigation/native', () => ({
     colors: {
       hourListText: '#111111',
       background: mockBackground,
+      dayForecastBackground: '#dddddd',
     },
     dark: mockDark,
   }),
@@ -157,6 +158,11 @@ describe('HourlyForecast', () => {
     expect(view.getByTestId('forecast-header-column')).toBeTruthy();
     expect(view.getByTestId('forecast-column-2000000000')).toBeTruthy();
     expect(view.getByTestId('day_duration')).toBeTruthy();
+    expect(
+      StyleSheet.flatten(view.getByTestId('day-duration-symbol').props.style)
+        .backgroundColor
+    ).toBe('#dddddd');
+    expect(view.queryByTestId('linear-gradient')).toBeNull();
     expect(view.getByText('18 h 0 min')).toBeTruthy();
     expect(mockForecastListHeaderColumn).toHaveBeenCalledWith(
       expect.objectContaining({ displayParams, compact: true })
@@ -202,6 +208,36 @@ describe('HourlyForecast', () => {
       length: 62,
       offset: 496,
     });
+  });
+
+  it('shows the left fade at the initial hour before a scroll event', () => {
+    const view = render(
+      <HourlyForecast
+        data={makeData(24) as any}
+        displayParams={[[0, constants.TEMPERATURE]] as any}
+        clockType={24 as any}
+        units={{} as any}
+        initialScrollHour={8}
+      />
+    );
+    const list = view.getByTestId('hourly-forecast-list');
+
+    fireEvent(list, 'contentSizeChange', 1000, 200);
+    fireEvent(list, 'layout', {
+      nativeEvent: { layout: { width: 300, height: 200, x: 0, y: 0 } },
+    });
+
+    expect(view.getByTestId('hourly-forecast-left-fade')).toBeTruthy();
+    expect(view.getByTestId('hourly-forecast-right-fade')).toBeTruthy();
+
+    fireEvent.scroll(list, {
+      nativeEvent: {
+        contentOffset: { x: 0, y: 0 },
+        contentSize: { width: 1000, height: 200 },
+        layoutMeasurement: { width: 300, height: 200 },
+      },
+    });
+    expect(view.queryByTestId('hourly-forecast-left-fade')).toBeNull();
   });
 
   it('does not set an initial index when the requested hour is unavailable', () => {
