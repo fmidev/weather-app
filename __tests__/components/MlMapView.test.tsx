@@ -231,6 +231,7 @@ describe('MlMapView', () => {
       name: 'Cookie',
       value: 'smartmet-session-id=1234567',
     });
+    expect(mockAddHeader).toHaveBeenCalledTimes(1);
 
     await act(async () => {
       lastMapProps.onDidFinishLoadingStyle();
@@ -245,6 +246,81 @@ describe('MlMapView', () => {
         })
       );
     });
+  });
+
+  it('adds source-specific API keys only to matching WMS GetMap requests', () => {
+    const mapConfig = {
+      updateInterval: 5,
+      sources: {
+        smartmet: 'https://data.fmi.fi/api',
+        geoserver: 'https://wms.fmi.fi/geoserver',
+      },
+      fmiApiKey: {
+        smartmet: 'smartmet-key',
+        geoserver: 'geoserver-key',
+      },
+      baseMap: {
+        url: 'https://maps.example/',
+        darkStyle: 'dark',
+        lightStyle: 'light',
+      },
+    };
+    mockConfigGet.mockImplementation((key: string) => {
+      if (key === 'map') return mapConfig;
+      if (key === 'location') {
+        return { default: { lat: 60.1699, lon: 24.9384 } };
+      }
+      return {};
+    });
+
+    const store = createStore({
+      mock: {
+        currentLocation: undefined,
+        displayLocation: false,
+        overlay: undefined,
+        activeOverlay: undefined,
+        timezone: 'Europe/Helsinki',
+        sessionId: 1234567,
+      },
+    });
+    const { unmount } = render(
+      <Provider store={store as any}>
+        <MlMapView
+          infoSheetRef={{ current: null }}
+          mapLayersSheetRef={{ current: null }}
+        />
+      </Provider>
+    );
+
+    const headers = mockAddHeader.mock.calls.map(([header]) => header);
+    expect(headers).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: 'fmi-apikey-smartmet',
+        name: 'fmi-apikey',
+        value: 'smartmet-key',
+      }),
+      expect.objectContaining({
+        id: 'fmi-apikey-geoserver',
+        name: 'fmi-apikey',
+        value: 'geoserver-key',
+      }),
+    ]));
+
+    const smartmetHeader = headers.find(({ id }) => id === 'fmi-apikey-smartmet');
+    const geoserverHeader = headers.find(({ id }) => id === 'fmi-apikey-geoserver');
+    const matches = (header: { match: string }, url: string) =>
+      new RegExp(header.match.replace(/^\(\?i\)/, ''), 'i').test(url);
+
+    expect(matches(smartmetHeader, 'https://data.fmi.fi/api/wms?service=WMS&request=GetMap')).toBe(true);
+    expect(matches(smartmetHeader, 'https://wms.fmi.fi/geoserver/wms?request=GetMap')).toBe(false);
+    expect(matches(smartmetHeader, 'https://data.fmi.fi/api/wms?request=GetCapabilities')).toBe(false);
+    expect(matches(smartmetHeader, 'https://dataXfmiXfi/api/wms?request=GetMap')).toBe(false);
+    expect(matches(geoserverHeader, 'https://wms.fmi.fi/geoserver/wms?REQUEST=GETMAP')).toBe(true);
+    expect(matches(geoserverHeader, 'https://data.fmi.fi/api/wms?request=GetMap')).toBe(false);
+
+    unmount();
+    expect(mockRemoveHeader).toHaveBeenCalledWith('fmi-apikey-smartmet');
+    expect(mockRemoveHeader).toHaveBeenCalledWith('fmi-apikey-geoserver');
   });
 
   it('updates overlays when the update interval has elapsed', () => {
