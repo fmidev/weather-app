@@ -35,8 +35,8 @@ class NavigationBarModule(reactContext: ReactApplicationContext) :
         WindowCompat.getInsetsController(window, window.decorView)
             .isAppearanceLightNavigationBars = !isDark
 
-        // Older Android versions use an opaque bar; keep the icons readable.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        // Before Android 15, the bar can remain opaque; keep the icons readable.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
             window.navigationBarColor =
                 if (isDark || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) Color.BLACK
                 else Color.WHITE
