@@ -129,6 +129,118 @@ describe('map helper functions', () => {
     expect(forecastLayer?.url).not.toContain('reference_time=');
   });
 
+  it('should build Mapbox vector tile URLs for PBF layers', async () => {
+    const xml = fs.readFileSync(
+      path.join(__dirname, '../data/GetCapabilities.xml'),
+      'utf8'
+    );
+    const mapboxStyle = {
+      layers: [
+        {
+          id: 'precipitation',
+          source: 'weatherapp:scandinavia:precipitationForecast',
+          'source-layer': 'precipitation_rate',
+          type: 'fill',
+          paint: { 'fill-color': '#123456', 'fill-opacity': 0.85 },
+        },
+      ],
+    };
+
+    (axiosClient as jest.Mock)
+      .mockResolvedValueOnce({ data: xml })
+      .mockResolvedValueOnce({ data: mapboxStyle })
+      .mockResolvedValueOnce({ data: xml });
+
+    const pbfLayer = {
+      id: 42,
+      type: 'WMS',
+      name: { en: 'Vector precipitation' },
+      times: { timeStep: 60, forecast: 8 },
+      tileFormat: 'pbf',
+      mvt: { value: 'temperature_numeric_pos' },
+      sources: [
+        {
+          source: 'smartmet',
+          layer: 'weatherapp:scandinavia:precipitationForecast',
+          type: 'forecast',
+        },
+      ],
+    } as any;
+    const sources = { smartmet: 'https://example.test' };
+
+    const result = await getWMSLayerUrlsAndBounds(sources, pbfLayer, 'maplibre');
+
+    const parsedOverlay = result?.get(42);
+    expect(parsedOverlay?.tileFormat).toBe('pbf');
+    expect(parsedOverlay?.mvt).toEqual({ value: 'temperature_numeric_pos' });
+    expect((parsedOverlay?.forecast as any)?.url).toContain(
+      '/tiles/collections/weatherapp:scandinavia:precipitationForecast/' +
+      'tiles/EPSG:3857/{z}/{y}/{x}?f=application/vnd.mapbox-vector-tile'
+    );
+    expect((parsedOverlay?.forecast as any)?.vectorStyles.light).toEqual([
+      expect.objectContaining({
+        'source-layer': 'precipitation_rate',
+        type: 'fill',
+      }),
+    ]);
+    expect((parsedOverlay?.forecast as any)?.vectorStyles.light[0]).not.toHaveProperty(
+      'source'
+    );
+
+    const nativeMapsResult = await getWMSLayerUrlsAndBounds(
+      sources,
+      pbfLayer,
+      'react-native-maps'
+    );
+    const nativeMapsOverlay = nativeMapsResult?.get(42);
+    expect(nativeMapsOverlay?.tileFormat).toBe('webp');
+    expect((nativeMapsOverlay?.forecast as any)?.url).toContain(
+      'format=image/webp'
+    );
+  });
+
+  it('should not load a Mapbox style when mvt.style is false', async () => {
+    const xml = fs.readFileSync(
+      path.join(__dirname, '../data/GetCapabilities.xml'),
+      'utf8'
+    );
+    (axiosClient as jest.Mock).mockResolvedValueOnce({ data: xml });
+
+    const pbfLayer = {
+      id: 42,
+      type: 'WMS',
+      name: { en: 'Vector wind' },
+      times: { timeStep: 60, forecast: 8 },
+      tileFormat: 'pbf',
+      mvt: {
+        value: 'windarrow_forecast.speed',
+        precision: 0,
+        style: false,
+      },
+      sources: [
+        {
+          source: 'smartmet',
+          layer: 'weatherapp:scandinavia:windForecast2',
+          type: 'forecast',
+        },
+      ],
+    } as any;
+
+    const result = await getWMSLayerUrlsAndBounds(
+      { smartmet: 'https://example.test' },
+      pbfLayer,
+      'maplibre'
+    );
+    const forecastLayer = result?.get(42)?.forecast as any;
+    const requestedUrls = (axiosClient as jest.Mock).mock.calls.map(
+      ([request]) => request?.url ?? ''
+    );
+
+    expect(axiosClient).toHaveBeenCalledTimes(1);
+    expect(requestedUrls.some((url) => url.includes('/styles/'))).toBe(false);
+    expect(forecastLayer?.vectorStyles).toBeUndefined();
+  });
+
   it('should get timeseries data for map markers', async () => {
     const timeseriesData = JSON.parse(
       fs.readFileSync(path.join(__dirname, '../data/timeseries.json'), 'utf8')
