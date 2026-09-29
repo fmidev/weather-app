@@ -190,8 +190,8 @@ jobs:
    if: contains(fromJson('["iOS", "Android and iOS"]'), github.event.inputs.name)
    # needs: test
    name: IOS-build
-   # Set MacOs version
-   runs-on: macos-15
+   # Select the Xcode 27 runner
+   runs-on: xcode-27
    # Node version matrix
    strategy:
         matrix:
@@ -204,7 +204,9 @@ jobs:
           submodules: true
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: 'latest-stable'
+          xcode-version: '27.0'
+      - name: Verify Xcode version
+        run: xcodebuild -version
        # Setup Node
       - uses: actions/setup-node@v4
         with:
