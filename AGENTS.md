@@ -30,8 +30,8 @@ The app includes custom feature flag implementation and settings are defined in 
 
 The app uses Smartmet Server as backend, documentation:
 
-https://github.com/fmidev/smartmet-plugin-timeseries
-https://github.com/fmidev/smartmet-plugin-wms
+- https://github.com/fmidev/smartmet-plugin-timeseries
+- https://github.com/fmidev/smartmet-plugin-wms
 
 When making API calls, follow the best practices described in the [HTTP Caching Guide](https://github.com/fmidev/smartmet-server/blob/master/docs/HTTP-Caching-Guide.md).
 
