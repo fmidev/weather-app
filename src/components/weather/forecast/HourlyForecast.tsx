@@ -55,7 +55,21 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   const { t } = useTranslation('forecast');
   const { excludeDayLength } = Config.get('weather').forecast;
 
-  const scrollMetrics = useRef({ width: 0, contentWidth: 0, offset: 0 });
+  const initialScrollIndex =
+    initialScrollHour === undefined || !data?.length
+      ? -1
+      : data.findIndex(({ localtime }) => {
+          const localMoment = moment(localtime, moment.ISO_8601, true);
+          return (
+            localMoment.isValid() && localMoment.hour() === initialScrollHour
+          );
+        });
+  const hourColumnWidth = Math.min(fontScale * 48, 62);
+  const scrollMetrics = useRef({
+    width: 0,
+    contentWidth: 0,
+    offset: Math.max(0, initialScrollIndex) * hourColumnWidth,
+  });
   const [scrollEdges, setScrollEdges] = useState({ left: false, right: false });
   const updateScrollEdges = useCallback(
     (metrics: Partial<typeof scrollMetrics.current>) => {
@@ -80,9 +94,9 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   const backgroundColor = processColor(colors.background);
   const backgroundRgb =
     typeof backgroundColor === 'number'
-      // Decode the packed native color so the fade keeps the same RGB values.
-      // eslint-disable-next-line no-bitwise
-      ? `${(backgroundColor >>> 16) & 255}, ${(backgroundColor >>> 8) & 255}, ${backgroundColor & 255}`
+      ? // Decode the packed native color so the fade keeps the same RGB values.
+        // eslint-disable-next-line no-bitwise
+        `${(backgroundColor >>> 16) & 255}, ${(backgroundColor >>> 8) & 255}, ${backgroundColor & 255}`
       : undefined;
   const transparentBackground = backgroundRgb
     ? `rgba(${backgroundRgb}, 0)`
@@ -94,17 +108,6 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
         transparentBackground,
       ]
     : [colors.background, transparentBackground];
-
-  const initialScrollIndex =
-    initialScrollHour === undefined
-      ? -1
-      : data.findIndex(({ localtime }) => {
-          const localMoment = moment(localtime, moment.ISO_8601, true);
-          return (
-            localMoment.isValid() && localMoment.hour() === initialScrollHour
-          );
-        });
-  const hourColumnWidth = Math.min(fontScale * 48, 62);
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
@@ -143,18 +146,6 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
 
     const timeFormat = clockType === 12 ? 'h.mm a' : 'HH.mm';
 
-    const lightGradient = [
-      'rgba(238, 239, 241, 0.64)',
-      'rgba(244, 245, 247, 0.48)',
-      'rgba(255, 255, 255, 0.80)',
-    ];
-
-    const darkGradient = [
-      'rgba(25, 25, 25, 0.64)',
-      'rgba(32, 32, 32, 0.48)',
-      colors.background,
-    ];
-
     const iconSize = 14;
     const headerWidth = Math.min(fontScale * 38, 64);
 
@@ -162,20 +153,22 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
       <View
         testID="day_duration"
         style={[styles.dayLengthContainer, styles.forecastHeader]}>
-        <View style={[styles.symbolBlock, { width: headerWidth }]}>
-          <LinearGradient
-            colors={dark ? darkGradient : lightGradient}
-            start={{ x: 1, y: 0 }}
-            end={{ x: 0, y: 0 }}
-            style={[styles.gradient, { width: headerWidth }]}>
-            <Icon
-              name="sun"
-              color={colors.hourListText}
-              width={24}
-              height={24}
-              maxScaleFactor={1.5}
-            />
-          </LinearGradient>
+        <View
+          testID="day-duration-symbol"
+          style={[
+            styles.symbolBlock,
+            {
+              width: headerWidth,
+              backgroundColor: colors.dayForecastBackground,
+            },
+          ]}>
+          <Icon
+            name="sun"
+            color={colors.hourListText}
+            width={24}
+            height={24}
+            maxScaleFactor={1.5}
+          />
         </View>
         <View
           style={[styles.row, styles.listContainer, styles.paddingHorizontal]}>
@@ -507,10 +500,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     bottom: 0,
-    width: 20,
+    width: 30,
   },
   darkScrollFade: {
-    width: 28,
+    width: 40,
   },
   leftFade: {
     left: 0,
@@ -554,12 +547,6 @@ const styles = StyleSheet.create({
   },
   paddingHorizontal: {
     paddingHorizontal: 16,
-  },
-  gradient: {
-    flex: 1,
-    width: 38,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 

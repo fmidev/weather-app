@@ -10,7 +10,6 @@ import { isOdd } from '@utils/helpers';
 import { DisplayParameters } from '@store/forecast/types';
 import { Config } from '@config';
 import { UnitMap } from '@store/settings/types';
-import LinearGradient from 'react-native-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import { MEDIUM_FONT } from '@assets/constants';
 
@@ -26,21 +25,9 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
   compact,
 }) => {
   const { fontScale } = useWindowDimensions();
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const defaultUnits = Config.get('settings').units;
   const { t } = useTranslation('unitAbbreviations');
-
-  const lightGradient = [
-    'rgba(238, 239, 241, 0.64)',
-    'rgba(244, 245, 247, 0.48)',
-    'rgba(255, 255, 255, 0.80)',
-  ];
-
-  const darkGradient = [
-    'rgba(25, 25, 25, 0.64)',
-    'rgba(32, 32, 32, 0.48)',
-    colors.background,
-  ];
 
   const height = Math.min(fontScale * 52, 78);
   const timeRowHeight = Math.min(fontScale * 52, 52);
@@ -49,20 +36,19 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
 
   return (
     <View
+      testID="forecast-header-column"
       accessible={false}
       accessibilityElementsHidden
       style={[
         compact ? styles.compactColumn : styles.iconColumn,
         {
           borderColor: colors.border,
+          backgroundColor: colors.dayForecastBackground,
           width: compact ? compactWidth : width,
         },
       ]}>
-      <LinearGradient
-        colors={dark ? darkGradient : lightGradient}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0, y: 0 }}
-        style={[styles.gradient, { width: compact ? compactWidth : width }]}>
+      <View
+        style={[styles.columnContent, { width: compact ? compactWidth : width }]}>
         <View
           testID="forecast-header-time-row"
           style={[
@@ -245,7 +231,7 @@ const ForecastListHeaderColumn: React.FC<ForecastListHeaderColumnProps> = ({
               </View>
             );
           })}
-      </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -277,7 +263,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 4,
   },
-  gradient: {
+  columnContent: {
     flex: 1,
     width: 38,
     justifyContent: 'center',

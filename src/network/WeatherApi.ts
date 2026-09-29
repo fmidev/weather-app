@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { isAxiosError } from 'axios';
+import Ajv from 'ajv/dist/2020';
 
 import { ForecastLocation, TimeStepDataSet } from '@store/forecast/types';
 import {
@@ -9,13 +10,32 @@ import {
 import { Config } from '@config';
 import i18n from '@i18n';
 import axiosClient from '@utils/axiosClient';
+import { trackMatomoEvent } from '@utils/matomo';
 import { TimeseriesLocation } from '@store/location/types';
 import packageJSON from '../../package.json';
+import forecastSchema from '../schemas/timeseries-forecast.schema.json';
+import uvSchema from '../schemas/timeseries-uv.schema.json';
+import geoMagneticObservationsSchema from '../schemas/timeseries-geomagnetic-observations.schema.json';
+import observationsSchema from '../schemas/timeseries-observations.schema.json';
+import dailyObservationsSchema from '../schemas/timeseries-daily-observations.schema.json';
+import reverseGeolocationSchema from '../schemas/timeseries-reverse-geolocation.schema.json';
 import {
   findNearestGeoMagneticObservationStation,
   GeoMagneticStation,
   isAuroraBorealisLikely,
 } from '@utils/geoMagneticStations';
+
+const ajv = new Ajv();
+const validateForecast = ajv.compile(forecastSchema);
+const validateUVForecast = ajv.compile(uvSchema);
+const validateGeoMagneticObservations = ajv.compile(
+  geoMagneticObservationsSchema
+);
+const validateObservations = ajv.compile(observationsSchema);
+const validateDailyObservations = ajv.compile(dailyObservationsSchema);
+const validateReverseGeolocation = ajv.compile<{
+  [geoid: string]: TimeseriesLocation[];
+}>(reverseGeolocationSchema);
 
 const isLocationValid = (
   location: ForecastLocation | ObservationLocation
@@ -23,8 +43,7 @@ const isLocationValid = (
 
 export const getForecast = async (
   location: ForecastLocation,
-  country: string,
-  retry: string | false = false // producer name or false if not a retry
+  country: string
 ): Promise<{
   forecast: TimeStepDataSet;
   location: ForecastLocation;
@@ -34,7 +53,7 @@ export const getForecast = async (
   const {
     apiUrl,
     fmiApiKey,
-    forecast: { timePeriod, data: dataSettings },
+    forecast: { timePeriod, data: dataSettings, schemaValidation },
     observation: { geoMagneticObservations },
   } = Config.get('weather');
 
@@ -48,7 +67,7 @@ export const getForecast = async (
     format: 'json',
     lang: language,
     tz: 'utc',
-    who: `${packageJSON.name}-${Platform.OS}${retry ? '-retry' : ''}`,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
   const apiKeyConfig =
     fmiApiKey !== undefined ? { headers: { 'fmi-apikey': fmiApiKey } } : {};
@@ -69,24 +88,20 @@ export const getForecast = async (
     ['epochtime'],
   ];
 
-  const queries = dataSettings.flatMap(({ parameters, producer }, index) =>
-    !retry || producer === retry
-      ? axiosClient(
-          {
-            url: apiUrl,
-            ...apiKeyConfig,
-            params: {
-              ...params,
-              producer: producer || 'default',
-              param: [...metaParams[index === 0 ? 0 : 1], ...parameters].join(
-                ','
-              ),
-            },
-          },
-          undefined,
-          'Timeseries'
-        )
-      : []
+  const queries = dataSettings.map(({ parameters, producer }, index) =>
+    axiosClient(
+      {
+        url: apiUrl,
+        ...apiKeyConfig,
+        params: {
+          ...params,
+          producer: producer || 'default',
+          param: [...metaParams[index === 0 ? 0 : 1], ...parameters].join(','),
+        },
+      },
+      undefined,
+      'Timeseries'
+    )
   );
 
   // Aurora borealis information is required for the forecast
@@ -97,8 +112,7 @@ export const getForecast = async (
   const geoMagneticObservationsEnabled =
     geoMagneticObservations?.countryCodes.includes(country) &&
     location.latlon !== undefined &&
-    geoMagneticObservations?.enabled === true &&
-    retry === false;
+    geoMagneticObservations?.enabled === true;
 
   if (geoMagneticObservationsEnabled && location.latlon) {
     const [lat, lon] = location.latlon.split(',');
@@ -145,6 +159,27 @@ export const getForecast = async (
       return [];
     }
     if (result.status === 'fulfilled') {
+      const producer = dataSettings[index].producer || 'default';
+      if (
+        schemaValidation !== false &&
+        producer === 'default' &&
+        !validateForecast(result.value.data)
+      ) {
+        error += `Forecast validation failed: ${ajv.errorsText(
+          validateForecast.errors
+        )}\n`;
+        return [];
+      }
+      if (
+        schemaValidation !== false &&
+        producer === 'uv' &&
+        !validateUVForecast(result.value.data)
+      ) {
+        error += `UV forecast validation failed: ${ajv.errorsText(
+          validateUVForecast.errors
+        )}\n`;
+        return [];
+      }
       return result.value;
     }
     if (result.status === 'rejected') {
@@ -166,12 +201,16 @@ export const getForecast = async (
   });
 
   if (error) {
+    trackMatomoEvent('Error', 'Timeseries', error);
     throw new Error(error);
   }
 
   const geoMagneticResult = results[lastIndex];
   const geoMagneticObservationData =
-    geoMagneticObservationsEnabled && geoMagneticResult.status === 'fulfilled'
+    geoMagneticObservationsEnabled &&
+    geoMagneticResult.status === 'fulfilled' &&
+    (geoMagneticObservations?.schemaValidation === false ||
+      validateGeoMagneticObservations(geoMagneticResult.value.data))
       ? geoMagneticResult.value
       : null;
 
@@ -212,6 +251,7 @@ export const getObservation = async (
       timePeriod,
       parameters,
       dailyParameters,
+      schemaValidation,
       identifier = 'fmisid',
     },
   } = Config.get('weather');
@@ -285,7 +325,35 @@ export const getObservation = async (
   ]);
 
   if (observationData === null || dailyObservationData === null) {
+    trackMatomoEvent(
+      'Error',
+      'Timeseries',
+      'Observation data retrieval failed'
+    );
     throw new Error('Observation data retrieval failed');
+  }
+
+  let error = '';
+  if (
+    schemaValidation !== false &&
+    !validateObservations(observationData.data)
+  ) {
+    error += `Observation validation failed: ${ajv.errorsText(
+      validateObservations.errors
+    )}\n`;
+  }
+  if (
+    schemaValidation !== false &&
+    dailyObservationsEnabled &&
+    !validateDailyObservations(dailyObservationData.data)
+  ) {
+    error += `Daily observation validation failed: ${ajv.errorsText(
+      validateDailyObservations.errors
+    )}\n`;
+  }
+  if (error) {
+    trackMatomoEvent('Error', 'Timeseries', error);
+    throw new Error(error);
   }
 
   return [observationData.data, dailyObservationData.data];
@@ -313,7 +381,8 @@ export const getCurrentPosition = async (
   longitude: number
 ): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
   const { apiUrl, fmiApiKey } = Config.get('weather');
-  const { useInKeyword, keyword, maxDistance } = Config.get('location');
+  const { useInKeyword, keyword, maxDistance, schemaValidation } =
+    Config.get('location');
   const { language } = i18n;
 
   const params = {
@@ -335,6 +404,14 @@ export const getCurrentPosition = async (
     undefined,
     'Timeseries'
   );
+
+  if (schemaValidation !== false && !validateReverseGeolocation(data)) {
+    const error = `Reverse geolocation validation failed: ${ajv.errorsText(
+      validateReverseGeolocation.errors
+    )}\n`;
+    trackMatomoEvent('Error', 'Timeseries', error);
+    throw new Error(error);
+  }
 
   return data;
 };

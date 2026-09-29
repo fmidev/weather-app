@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weather warnings",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["updated", "warnings", "startTime", "endTime"],
+      "properties": {
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "warnings": {
+          "type": "array",
+          "maxItems": 500,
+          "items": {
+            "$ref": "#/$defs/warning"
+          }
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "warning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "language", "severity", "description", "duration"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "language": {
+          "type": "string",
+          "maxLength": 2
+        },
+        "severity": {
+          "type": "string",
+          "maxLength": 12
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "duration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["startTime", "endTime"],
+          "properties": {
+            "startTime": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "endTime": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "physical": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

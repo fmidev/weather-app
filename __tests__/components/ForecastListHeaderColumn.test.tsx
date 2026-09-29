@@ -11,6 +11,7 @@ jest.mock('@react-navigation/native', () => ({
       border: '#cccccc',
       hourListText: '#111111',
       listTint: '#eeeeee',
+      dayForecastBackground: '#dddddd',
     },
     dark: false,
   }),
@@ -20,14 +21,6 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
   }),
-}));
-
-jest.mock('react-native-linear-gradient', () => ({
-  __esModule: true,
-  default: ({ children }: any) => {
-    const { View } = require('react-native');
-    return <View testID="linear-gradient">{children}</View>;
-  },
 }));
 
 jest.mock('@components/common/AppText', () => ({
@@ -87,7 +80,11 @@ describe('ForecastListHeaderColumn', () => {
       />
     );
 
-    expect(view.getByTestId('linear-gradient')).toBeTruthy();
+    expect(
+      StyleSheet.flatten(view.getByTestId('forecast-header-column').props.style)
+        .backgroundColor
+    ).toBe('#dddddd');
+    expect(view.queryByTestId('linear-gradient')).toBeNull();
     expect(view.getByTestId('icon-clock')).toBeTruthy();
     expect(view.getByTestId('icon-wind')).toBeTruthy();
     expect(view.getByTestId('icon-gust')).toBeTruthy();

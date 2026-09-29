@@ -88,8 +88,10 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         testID="forecast-time-row"
         style={[
           styles.hourBlock,
-          { height: timeRowHeight },
-          !compact && { backgroundColor: colors.listTint },
+          {
+            height: timeRowHeight,
+            backgroundColor: colors.listTint,
+          },
         ]}>
         <Text
           accessibilityLabel={`${t('forecast:at')} ${time}`}
