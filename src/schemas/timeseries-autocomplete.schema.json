@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Smartmet Server autocomplete response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["autocomplete"],
+  "properties": {
+    "autocomplete": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["found-results", "max-results", "result"],
+      "properties": {
+        "found-results": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max-results": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/location"
+          },
+          "maxItems": 100
+        }
+      }
+    }
+  },
+  "$defs": {
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "area",
+        "country",
+        "feature",
+        "id",
+        "lat",
+        "lon",
+        "name",
+        "population",
+        "timezone"
+      ],
+      "properties": {
+        "area": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "feature": {
+          "type": "string",
+          "maxLength": 5
+        },
+        "id": {
+          "type": "integer"
+        },
+        "lat": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "lon": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "population": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        }
+      }
+    }
+  }
+}

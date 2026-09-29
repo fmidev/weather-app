@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Smartmet Server timeseries forecast",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "epochtime",
+      "localtime",
+      "sunrise",
+      "sunset",
+      "sunriseToday",
+      "sunsetToday",
+      "dayLength",
+      "moonPhase",
+      "modtime",
+      "dark",
+      "temperature",
+      "feelsLike",
+      "dewPoint",
+      "smartSymbol",
+      "windDirection",
+      "windSpeedMS",
+      "pop",
+      "hourlymaximumgust",
+      "relativeHumidity",
+      "pressure",
+      "precipitation1h",
+      "windCompass8",
+      "totalCloudCover"
+    ],
+    "properties": {
+      "epochtime": {
+        "type": "integer"
+      },
+      "localtime": {
+        "$ref": "#/$defs/timestamp"
+      },
+      "sunrise": {
+        "$ref": "#/$defs/nullableTimestamp"
+      },
+      "sunset": {
+        "$ref": "#/$defs/nullableTimestamp"
+      },
+      "sunriseToday": {
+        "$ref": "#/$defs/nullableFlag"
+      },
+      "sunsetToday": {
+        "$ref": "#/$defs/nullableFlag"
+      },
+      "dayLength": {
+        "$ref": "#/$defs/nullableInteger"
+      },
+      "moonPhase": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "modtime": {
+        "$ref": "#/$defs/nullableTimestamp"
+      },
+      "dark": {
+        "$ref": "#/$defs/nullableFlag"
+      },
+      "temperature": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "feelsLike": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "dewPoint": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "smartSymbol": {
+        "$ref": "#/$defs/nullableInteger"
+      },
+      "windDirection": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "windSpeedMS": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "pop": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "hourlymaximumgust": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "relativeHumidity": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "pressure": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "precipitation1h": {
+        "$ref": "#/$defs/nullableNumber"
+      },
+      "windCompass8": {
+        "type": ["string", "null"],
+        "maxLength": 2
+      },
+      "totalCloudCover": {
+        "$ref": "#/$defs/nullableNumber"
+      }
+    }
+  },
+  "$defs": {
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{8}T[0-9]{6}$",
+      "examples": ["20260916T160000"]
+    },
+    "nullableTimestamp": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableNumber": {
+      "type": ["number", "null"]
+    },
+    "nullableInteger": {
+      "type": ["integer", "null"]
+    },
+    "nullableFlag": {
+      "type": ["integer", "null"],
+      "enum": [0, 1, null]
+    }
+  }
+}

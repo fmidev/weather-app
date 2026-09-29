@@ -72,6 +72,7 @@ import { lightTheme, darkTheme } from '../assets/themes';
 import { TabParamList, LaunchArgs } from './types';
 import WarningsTabIcon from './WarningsTabIcon';
 import { sendMatomoEvents, trackMatomoEvent } from '@utils/matomo';
+import { setNavigationBarTheme } from '@utils/navigationBar';
 import HeaderBackImage from '@components/common/HeaderBackImage';
 import HeaderTitle from '@components/common/HeaderTitle';
 import packageJSON from '../../package.json';
@@ -221,6 +222,10 @@ const Navigator: React.FC<Props> = ({
       setUseDarkTheme(isDark(theme));
     }
   }, [theme]);
+
+  useEffect(() => {
+    setNavigationBarTheme(useDarkTheme);
+  }, [useDarkTheme]);
 
   const CommonHeaderOptions: StackNavigationOptions = useMemo(
     () => ({
