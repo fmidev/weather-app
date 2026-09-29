@@ -54,7 +54,6 @@ target 'MobileWeather' do
             minimum_ios.to_s
         end
       end
-      
     end
 
     react_native_post_install(
