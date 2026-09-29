@@ -173,7 +173,35 @@ describe('WeatherApi', () => {
       location,
       isAuroraBorealisLikely: false,
     });
+    mockAxiosClient.mock.calls.forEach(([options]) => {
+      expect(options.headers).toBeUndefined();
+    });
     expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
+  });
+
+  it('sends the FMI API key with forecast and geomagnetic requests', async () => {
+    mockConfigGet.mockReturnValue({
+      ...weatherConfig,
+      fmiApiKey: 'test-api-key',
+      observation: {
+        ...weatherConfig.observation,
+        geoMagneticObservations: {
+          ...weatherConfig.observation.geoMagneticObservations,
+          enabled: true,
+        },
+      },
+    });
+    mockAxiosClient
+      .mockResolvedValueOnce({ data: [] })
+      .mockResolvedValueOnce({ data: [] })
+      .mockResolvedValueOnce({ data: [] });
+
+    await getForecast({ latlon: '60,25' }, 'FI');
+
+    expect(mockAxiosClient).toHaveBeenCalledTimes(3);
+    mockAxiosClient.mock.calls.forEach(([options]) => {
+      expect(options.headers).toEqual({ 'fmi-apikey': 'test-api-key' });
+    });
   });
 
   it('adds geomagnetic request to forecast and resolves aurora likelihood', async () => {
@@ -590,6 +618,26 @@ describe('WeatherApi', () => {
         param: expect.stringContaining('rrday'),
       })
     );
+    mockAxiosClient.mock.calls.forEach(([options]) => {
+      expect(options.headers).toBeUndefined();
+    });
+  });
+
+  it('sends the FMI API key with hourly and daily observation requests', async () => {
+    mockConfigGet.mockReturnValue({
+      ...weatherConfig,
+      fmiApiKey: 'test-api-key',
+    });
+    mockAxiosClient
+      .mockResolvedValueOnce({ data: stationObservations([observationStep]) })
+      .mockResolvedValueOnce({ data: stationObservations([dailyObservationStep]) });
+
+    await getObservation({ latlon: '60.1,24.9' }, 'FI');
+
+    expect(mockAxiosClient).toHaveBeenCalledTimes(2);
+    mockAxiosClient.mock.calls.forEach(([options]) => {
+      expect(options.headers).toEqual({ 'fmi-apikey': 'test-api-key' });
+    });
   });
 
   it.each([false, true, undefined])(
@@ -778,6 +826,36 @@ describe('WeatherApi', () => {
         lang: 'en',
       })
     );
+    expect(mockAxiosClient.mock.calls[1][0].headers).toBeUndefined();
+  });
+
+  it('sends the FMI API key with the current-position request', async () => {
+    mockConfigGet.mockImplementation((key: string) =>
+      key === 'location'
+        ? { keyword: 'extended_names' }
+        : { ...weatherConfig, fmiApiKey: 'test-api-key' }
+    );
+    mockAxiosClient.mockResolvedValueOnce({ data: { 123: [positionData] } });
+
+    await getCurrentPosition(60.1, 24.9);
+
+    expect(mockAxiosClient.mock.calls[0][0].headers).toEqual({
+      'fmi-apikey': 'test-api-key',
+    });
+  });
+
+  it('sends the FMI API key with the location-locales request', async () => {
+    mockConfigGet.mockReturnValue({
+      ...weatherConfig,
+      fmiApiKey: 'test-api-key',
+    });
+    mockAxiosClient.mockResolvedValueOnce({ data: {} });
+
+    await getLocationsLocales([123, 456]);
+
+    expect(mockAxiosClient.mock.calls[0][0].headers).toEqual({
+      'fmi-apikey': 'test-api-key',
+    });
   });
 
   describe('reverse geolocation validation', () => {

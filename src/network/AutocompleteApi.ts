@@ -14,7 +14,8 @@ const validateAutocomplete = ajv.compile<AutoComplete>(autocompleteSchema);
 let abortController: AbortController | undefined;
 
 const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
-  const { keyword, apiUrl, schemaValidation } = Config.get('location');
+  const { keyword, apiUrl, fmiApiKey, schemaValidation } =
+    Config.get('location');
   const { language } = i18n;
 
   const params = {
@@ -35,6 +36,9 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
     {
       url: apiUrl,
       params,
+      ...(fmiApiKey !== undefined
+        ? { headers: { 'fmi-apikey': fmiApiKey } }
+        : {}),
     },
     abortController,
     'Autocomplete'

@@ -52,6 +52,7 @@ export const getForecast = async (
   const { language } = i18n;
   const {
     apiUrl,
+    fmiApiKey,
     forecast: { timePeriod, data: dataSettings, schemaValidation },
     observation: { geoMagneticObservations },
   } = Config.get('weather');
@@ -68,6 +69,8 @@ export const getForecast = async (
     tz: 'utc',
     who: `${packageJSON.name}-${Platform.OS}`,
   };
+  const apiKeyConfig =
+    fmiApiKey !== undefined ? { headers: { 'fmi-apikey': fmiApiKey } } : {};
 
   const metaParams = [
     [
@@ -89,6 +92,7 @@ export const getForecast = async (
     axiosClient(
       {
         url: apiUrl,
+        ...apiKeyConfig,
         params: {
           ...params,
           producer: producer || 'default',
@@ -138,7 +142,7 @@ export const getForecast = async (
   queries.push(
     geoMagneticObservationsEnabled
       ? axiosClient(
-          { url: apiUrl, params: geoMagneticParams },
+          { url: apiUrl, ...apiKeyConfig, params: geoMagneticParams },
           undefined,
           'Timeseries'
         )
@@ -238,6 +242,7 @@ export const getObservation = async (
 ): Promise<Array<ObservationDataRaw | boolean>> => {
   const {
     apiUrl,
+    fmiApiKey,
     observation: {
       enabled,
       numberOfStations,
@@ -255,6 +260,9 @@ export const getObservation = async (
   if (!enabled || !isLocationValid(location)) {
     return [{}, {}];
   }
+
+  const apiKeyConfig =
+    fmiApiKey !== undefined ? { headers: { 'fmi-apikey': fmiApiKey } } : {};
 
   let observationProducer = producer;
   if (typeof producer === 'object') {
@@ -302,10 +310,14 @@ export const getObservation = async (
   };
 
   const [observationData, dailyObservationData] = await Promise.all([
-    axiosClient({ url: apiUrl, params: hourlyParams }, undefined, 'Timeseries'),
+    axiosClient(
+      { url: apiUrl, ...apiKeyConfig, params: hourlyParams },
+      undefined,
+      'Timeseries'
+    ),
     dailyObservationsEnabled
       ? axiosClient(
-          { url: apiUrl, params: dailyParams },
+          { url: apiUrl, ...apiKeyConfig, params: dailyParams },
           undefined,
           'Timeseries'
         )
@@ -368,7 +380,7 @@ export const getCurrentPosition = async (
   latitude: number,
   longitude: number
 ): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
-  const { apiUrl } = Config.get('weather');
+  const { apiUrl, fmiApiKey } = Config.get('weather');
   const { useInKeyword, keyword, maxDistance, schemaValidation } =
     Config.get('location');
   const { language } = i18n;
@@ -385,6 +397,9 @@ export const getCurrentPosition = async (
     {
       url: apiUrl,
       params,
+      ...(fmiApiKey !== undefined
+        ? { headers: { 'fmi-apikey': fmiApiKey } }
+        : {}),
     },
     undefined,
     'Timeseries'
@@ -404,7 +419,7 @@ export const getCurrentPosition = async (
 export const getLocationsLocales = async (
   geoids: number[]
 ): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
-  const { apiUrl } = Config.get('weather');
+  const { apiUrl, fmiApiKey } = Config.get('weather');
   const { language } = i18n;
 
   const params = {
@@ -414,7 +429,13 @@ export const getLocationsLocales = async (
   };
 
   const { data } = await axiosClient(
-    { url: apiUrl, params },
+    {
+      url: apiUrl,
+      params,
+      ...(fmiApiKey !== undefined
+        ? { headers: { 'fmi-apikey': fmiApiKey } }
+        : {}),
+    },
     undefined,
     'Timeseries'
   );

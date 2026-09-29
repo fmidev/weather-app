@@ -341,6 +341,7 @@ export interface ConfigType {
     source: 'smartmet' | 'json';
     default: Location;
     apiUrl: string;
+    fmiApiKey?: string;
     keyword: string;
     maxRecent: number;
     maxFavorite: number;
@@ -351,6 +352,7 @@ export interface ConfigType {
   map: {
     updateInterval: number;
     sources: { [name: string]: string };
+    fmiApiKey?: { [name: string]: string };
     layerGroups: LayerGroup[];
     layers: MapLayer[];
     baseMap?: BaseMap;
@@ -358,6 +360,7 @@ export interface ConfigType {
   };
   weather: {
     apiUrl: string;
+    fmiApiKey?: string;
     layout?: 'default' | 'vertical' | 'legacyWithoutBackgroundColor';
     backgroundImagesEnabled?: boolean;
     forecast: {

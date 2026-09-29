@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text } from 'react-native';
 import {
@@ -36,7 +42,7 @@ import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
-import type { Position } from "geojson";
+import type { Position } from 'geojson';
 import { trackMatomoEvent } from '@utils/matomo';
 
 import type RBSheet from 'react-native-raw-bottom-sheet';
@@ -78,8 +84,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MapViewProps = PropsFromRedux & {
-  infoSheetRef: React.RefObject<RBSheet | null>,
-  mapLayersSheetRef: React.RefObject<RBSheet | null>
+  infoSheetRef: React.RefObject<RBSheet | null>;
+  mapLayersSheetRef: React.RefObject<RBSheet | null>;
 };
 
 // MapView using Maplibre
@@ -99,13 +105,15 @@ const MlMapView: React.FC<MapViewProps> = ({
   const { dark } = useTheme();
   const isFocused = useIsFocused();
   const { shouldReload } = useReloader();
-  const { updateInterval } = Config.get('map');
+  const { updateInterval, sources, fmiApiKey } = Config.get('map');
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM_LEVEL);
   const mapRef = useRef<MapRef>(null);
   const cameraRef = useRef<CameraRef>(null);
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
-  const [mapBounds, setMapBounds] = useState<[northEast: Position, southWest: Position] | undefined>(undefined);
+  const [mapBounds, setMapBounds] = useState<
+    [northEast: Position, southWest: Position] | undefined
+  >(undefined);
   const [styleReady, setStyleReady] = useState(false);
   const [mapReady, setMapReady] = useState(false);
 
@@ -123,16 +131,38 @@ const MlMapView: React.FC<MapViewProps> = ({
     return () => TransformRequestManager.removeHeader(SESSION_COOKIE_HEADER_ID);
   }, [sessionId]);
 
-  const initialRegion = useMemo(() => ({
-    latitude: location.lat ?? INITIAL_REGION.latitude,
-    longitude: location.lon ?? INITIAL_REGION.longitude,
-    longitudeDelta: location
-      ? ANIMATE_ZOOM.longitudeDelta
-      : INITIAL_REGION.longitudeDelta,
-    latitudeDelta: location
-      ? ANIMATE_ZOOM.latitudeDelta
-      : INITIAL_REGION.latitudeDelta,
-  }), [location]);
+  useEffect(() => {
+    const headerIds = Object.entries(fmiApiKey ?? {}).flatMap(([source, key]) => {
+      const baseUrl = sources?.[source]?.replace(/\/+$/, '');
+      if (!baseUrl || !key) return [];
+
+      const id = `fmi-apikey-${source}`;
+      const escapedUrl = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      TransformRequestManager.addHeader({
+        id,
+        match: `(?i)^${escapedUrl}/wms\\?(?:[^#]*&)?request=GetMap(?:&|$)`,
+        name: 'fmi-apikey',
+        value: key,
+      });
+      return [id];
+    });
+
+    return () => headerIds.forEach((id) => TransformRequestManager.removeHeader(id));
+  }, [sources, fmiApiKey]);
+
+  const initialRegion = useMemo(
+    () => ({
+      latitude: location.lat ?? INITIAL_REGION.latitude,
+      longitude: location.lon ?? INITIAL_REGION.longitude,
+      longitudeDelta: location
+        ? ANIMATE_ZOOM.longitudeDelta
+        : INITIAL_REGION.longitudeDelta,
+      latitudeDelta: location
+        ? ANIMATE_ZOOM.latitudeDelta
+        : INITIAL_REGION.latitudeDelta,
+    }),
+    [location]
+  );
 
   useEffect(() => {
     if (activeOverlay) {
@@ -188,27 +218,32 @@ const MlMapView: React.FC<MapViewProps> = ({
     }
   }, [mapReady, updateBoundsFromRef]);
 
-  const onRegionDidChange = useCallback((event: any) => {
-    if (!styleReady || !mapReady) return;
+  const onRegionDidChange = useCallback(
+    (event: any) => {
+      if (!styleReady || !mapReady) return;
 
-    const { zoom, bounds } = event.nativeEvent;
+      const { zoom, bounds } = event.nativeEvent;
 
-    if (!bounds) return;
-    const northEast: Position = [bounds[2], bounds[3]];
-    const southWest: Position = [bounds[0], bounds[1]];
-    setMapBounds([northEast, southWest]);
+      if (!bounds) return;
+      const northEast: Position = [bounds[2], bounds[3]];
+      const southWest: Position = [bounds[0], bounds[1]];
+      setMapBounds([northEast, southWest]);
 
-    const [lon, lat] = event.nativeEvent.center;
-    const distance = getDistance(initialRegion, {latitude: lat, longitude: lon});
-    if (distance >= 10000) {
-      setMarkerOutOfBounds(true);
-    } else {
-      setMarkerOutOfBounds(false);
-    }
+      const [lon, lat] = event.nativeEvent.center;
+      const distance = getDistance(initialRegion, {
+        latitude: lat,
+        longitude: lon,
+      });
+      if (distance >= 10000) {
+        setMarkerOutOfBounds(true);
+      } else {
+        setMarkerOutOfBounds(false);
+      }
 
-    if (zoom) setZoomLevel(zoom);
-
-  }, [styleReady, mapReady, initialRegion]);
+      if (zoom) setZoomLevel(zoom);
+    },
+    [styleReady, mapReady, initialRegion]
+  );
 
   const animateToCurrentLocation = () => {
     cameraRef.current?.flyTo({
@@ -243,11 +278,15 @@ const MlMapView: React.FC<MapViewProps> = ({
   }, [location]);
 
   if (!baseMap) {
-    return <Text>MapLibre requires baseMap configuration</Text>
+    return <Text>MapLibre requires baseMap configuration</Text>;
   }
 
-  const mapStyle = baseMap.url+(dark ? baseMap.darkStyle : baseMap.lightStyle)
-                    .replace('{lang}', i18n.language);
+  const mapStyle =
+    baseMap.url +
+    (dark ? baseMap.darkStyle : baseMap.lightStyle).replace(
+      '{lang}',
+      i18n.language
+    );
 
   return (
     <View style={styles.mapContainer}>
@@ -262,8 +301,7 @@ const MlMapView: React.FC<MapViewProps> = ({
         touchRotate={false}
         touchPitch={false}
         attribution={false}
-        logo={false}
-      >
+        logo={false}>
         <Camera
           ref={cameraRef}
           initialViewState={cameraDefaults}
@@ -272,7 +310,9 @@ const MlMapView: React.FC<MapViewProps> = ({
           duration={0}
         />
 
-        {styleReady && overlay?.type === 'WMS' && <WMSOverlay overlay={overlay} library="maplibre" />}
+        {styleReady && overlay?.type === 'WMS' && (
+          <WMSOverlay overlay={overlay} library="maplibre" />
+        )}
         {styleReady && overlay?.type === 'Timeseries' && mapBounds && (
           <TimeseriesOverlay
             overlay={overlay}
@@ -285,8 +325,7 @@ const MlMapView: React.FC<MapViewProps> = ({
           <ViewAnnotation
             id="location-marker"
             lngLat={[initialRegion.longitude, initialRegion.latitude]}
-            anchor="bottom"
-          >
+            anchor="bottom">
             <Icon name="map-marker" size={22} />
           </ViewAnnotation>
         )}
@@ -295,13 +334,13 @@ const MlMapView: React.FC<MapViewProps> = ({
         onLayersPressed={() => mapLayersSheetRef.current?.open()}
         onInfoPressed={() => {
           trackMatomoEvent('User action', 'Map', 'Open info panel');
-          infoSheetRef.current?.open()
+          infoSheetRef.current?.open();
         }}
         onZoomIn={() => {
           trackMatomoEvent('User action', 'Map', 'Zoom IN');
           handleZoomIn();
         }}
-        onZoomOut={() =>{
+        onZoomOut={() => {
           trackMatomoEvent('User action', 'Map', 'Zoom OUT');
           handleZoomOut();
         }}
@@ -327,8 +366,8 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 });
 
 export default connector(MlMapView);

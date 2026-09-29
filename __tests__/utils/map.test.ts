@@ -20,12 +20,18 @@ import {
 } from '../../src/utils/map';
 
 import axiosClient from '../../src/utils/axiosClient';
+import { Config } from '@config';
 
 jest.mock('../../src/utils/axiosClient', () => jest.fn());
 
 describe('map helper functions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(Config, 'get').mockReturnValue({} as any);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('should parse WMS GetCapabilities and build layer url + time bounds', async () => {
@@ -69,6 +75,7 @@ describe('map helper functions', () => {
     const parsedOverlay = result?.get(42);
 
     expect(axiosClient).toHaveBeenCalledTimes(1);
+    expect((axiosClient as jest.Mock).mock.calls[0][0].headers).toBeUndefined();
     expect(parsedOverlay?.type).toBe('WMS');
     expect(parsedOverlay?.step).toBe(60);
     expect(parsedOverlay?.forecast?.start).toBe('2026-02-26T07:00:00Z');
@@ -80,6 +87,61 @@ describe('map helper functions', () => {
     );
     expect(forecastLayer?.url).toContain(
       'dim_reference_time=2026-03-03T07:40:00Z'
+    );
+  });
+
+  it('sends the configured API key for each WMS source', async () => {
+    const xml = fs.readFileSync(
+      path.join(__dirname, '../data/GetCapabilities.xml'),
+      'utf8'
+    );
+    (axiosClient as jest.Mock).mockResolvedValue({ data: xml });
+    (Config.get as jest.Mock).mockReturnValue({
+      fmiApiKey: {
+        smartmet: 'smartmet-key',
+        geoserver: 'geoserver-key',
+      },
+    });
+
+    const sources = {
+      smartmet: 'https://data.fmi.fi',
+      geoserver: 'https://wms.fmi.fi/geoserver',
+    };
+    const overlay = {
+      id: 42,
+      type: 'WMS',
+      times: { timeStep: 60, forecast: 8 },
+      sources: [
+        {
+          source: 'smartmet',
+          layer: 'weatherapp:scandinavia:precipitationForecast',
+          type: 'observation',
+        },
+        {
+          source: 'geoserver',
+          layer: 'weatherapp:scandinavia:precipitationForecast',
+          type: 'forecast',
+        },
+      ],
+    } as any;
+
+    await getWMSLayerUrlsAndBounds(sources, overlay, 'maplibre');
+
+    expect(axiosClient).toHaveBeenCalledTimes(2);
+    const requests = (axiosClient as jest.Mock).mock.calls.map(
+      ([options]) => options
+    );
+    expect(requests).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          url: 'https://data.fmi.fi/wms',
+          headers: { 'fmi-apikey': 'smartmet-key' },
+        }),
+        expect.objectContaining({
+          url: 'https://wms.fmi.fi/geoserver/wms',
+          headers: { 'fmi-apikey': 'geoserver-key' },
+        }),
+      ])
     );
   });
 
@@ -143,36 +205,36 @@ describe('map helper functions', () => {
       smartmet: 'https://example.test',
     };
 
-  const overlay = {
+    const overlay = {
       id: 8,
-      type: "Timeseries",
+      type: 'Timeseries',
       name: {
-        en: "Weather forecast on map",
-        fi: "Sääennuste kartalla",
-        sv: "Vädersymbolen på kartan"
+        en: 'Weather forecast on map',
+        fi: 'Sääennuste kartalla',
+        sv: 'Vädersymbolen på kartan',
       },
       sources: [
         {
-          source: "smartmet",
-          type: "forecast",
+          source: 'smartmet',
+          type: 'forecast',
           parameters: [
-            "smartSymbol",
-            "temperature",
-            "windSpeedMS",
-            "windDirection"
+            'smartSymbol',
+            'temperature',
+            'windSpeedMS',
+            'windDirection',
           ],
-          keyword: ["weather_app"]
-        }
+          keyword: ['weather_app'],
+        },
       ],
       times: {
         timeStep: 60,
-        forecast: 8
+        forecast: 8,
       },
       tileSize: {
         android: 256,
-        ios: 1024
+        ios: 1024,
       },
-      tileFormat: "png"
+      tileFormat: 'png',
     } as any;
 
     const now = Math.floor(Date.now() / 1000);
@@ -180,12 +242,16 @@ describe('map helper functions', () => {
     const parsedOverlay = result?.get(8);
 
     expect(axiosClient).toHaveBeenCalledTimes(1);
-    const [requestOptions, , analyticsAction] = (axiosClient as jest.Mock).mock.calls[0];
+    const [requestOptions, , analyticsAction] = (axiosClient as jest.Mock).mock
+      .calls[0];
     expect(requestOptions.url).toBe('https://example.test/timeseries');
+    expect(requestOptions.headers).toBeUndefined();
     expect(requestOptions.params.starttime % 3600).toBe(0);
     expect(requestOptions.params.starttime).toBeGreaterThan(now);
     expect(requestOptions.params.starttime).toBeLessThanOrEqual(now + 3600);
-    expect(requestOptions.params.param).toContain('lonlat,population,name,epochtime');
+    expect(requestOptions.params.param).toContain(
+      'lonlat,population,name,epochtime'
+    );
     expect(analyticsAction).toBe('Timeseries');
 
     expect(parsedOverlay?.type).toBe('Timeseries');
@@ -202,6 +268,38 @@ describe('map helper functions', () => {
       windSpeedMS: 5,
       windDirection: 213,
     });
+  });
+
+  it('sends the smartmet API key for timeseries source', async () => {
+    (Config.get as jest.Mock).mockReturnValue({
+      fmiApiKey: { smartmet: 'smartmet-key' },
+    });
+    (axiosClient as jest.Mock).mockResolvedValue({ data: {} });
+
+    const sources = {
+      smartmet: 'https://data.fmi.fi',
+      other: 'https://other.example',
+    };
+    const overlay = {
+      id: 8,
+      times: { timeStep: 60, forecast: 8 },
+      sources: [
+        {
+          source: 'smartmet',
+          type: 'forecast',
+          parameters: ['temperature'],
+          keyword: 'weather_app',
+        },
+      ],
+    } as any;
+
+    await getTimeseriesData(sources, overlay);
+    expect((axiosClient as jest.Mock).mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        url: 'https://data.fmi.fi/timeseries',
+        headers: { 'fmi-apikey': 'smartmet-key' },
+      })
+    );
   });
 
   it('should calculate bounding box from coordinates', () => {
@@ -233,31 +331,19 @@ describe('map helper functions', () => {
     };
 
     expect(
-      isPointInsideBoundingBox(
-        { latitude: 60.1699, longitude: 24.9384 },
-        bbox
-      )
+      isPointInsideBoundingBox({ latitude: 60.1699, longitude: 24.9384 }, bbox)
     ).toBe(true);
 
     expect(
-      isPointInsideBoundingBox(
-        { latitude: 59.437, longitude: 23.761 },
-        bbox
-      )
+      isPointInsideBoundingBox({ latitude: 59.437, longitude: 23.761 }, bbox)
     ).toBe(true);
 
     expect(
-      isPointInsideBoundingBox(
-        { latitude: 66, longitude: 24.9384 },
-        bbox
-      )
+      isPointInsideBoundingBox({ latitude: 66, longitude: 24.9384 }, bbox)
     ).toBe(false);
 
     expect(
-      isPointInsideBoundingBox(
-        { latitude: 60.1699, longitude: 26 },
-        bbox
-      )
+      isPointInsideBoundingBox({ latitude: 60.1699, longitude: 26 }, bbox)
     ).toBe(false);
   });
 });

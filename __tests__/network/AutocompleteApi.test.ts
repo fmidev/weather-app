@@ -74,6 +74,22 @@ describe('AutocompleteApi', () => {
       expect.any(AbortController),
       'Autocomplete'
     );
+    expect(mockAxiosClient.mock.calls[0][0].headers).toBeUndefined();
+  });
+
+  it('sends the configured FMI API key in a request header', async () => {
+    mockConfigGet.mockReturnValue({
+      apiUrl: 'https://example.test/autocomplete',
+      keyword: 'place',
+      fmiApiKey: 'test-api-key',
+    });
+    mockAxiosClient.mockResolvedValueOnce({ data: { autocomplete } });
+
+    await getAutocomplete('hel');
+
+    expect(mockAxiosClient.mock.calls[0][0].headers).toEqual({
+      'fmi-apikey': 'test-api-key',
+    });
   });
 
   it('accepts an empty result', async () => {
