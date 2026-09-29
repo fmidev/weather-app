@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Smartmet Server timeseries geomagnetic observations",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "distance",
+      "epochtime",
+      "fmisid",
+      "name",
+      "geomagneticRIndex"
+    ],
+    "properties": {
+      "distance": {
+        "type": ["number", "null"]
+      },
+      "epochtime": {
+        "type": "integer"
+      },
+      "fmisid": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 50
+      },
+      "geomagneticRIndex": {
+        "type": ["number", "null"]
+      }
+    }
+  }
+}

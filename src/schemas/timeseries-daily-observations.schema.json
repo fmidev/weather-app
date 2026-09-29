@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Smartmet Server timeseries daily observations",
+  "type": "object",
+  "propertyNames": {
+    "pattern": "^[0-9]+$",
+    "maxLength": 100
+  },
+  "additionalProperties": {
+    "$ref": "#/$defs/stationNames"
+  },
+  "$defs": {
+    "stationNames": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/stationTypes"
+      }
+    },
+    "stationTypes": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/distances"
+      }
+    },
+    "distances": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[0-9]+(\\.[0-9]+)?$",
+        "maxLength": 10
+      },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/observation"
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "epochtime",
+        "rrday",
+        "maximumTemperature",
+        "minimumTemperature",
+        "minimumGroundTemperature06",
+        "snowDepth06"
+      ],
+      "properties": {
+        "epochtime": {
+          "type": "integer"
+        },
+        "rrday": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "maximumTemperature": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "minimumTemperature": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "minimumGroundTemperature06": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "snowDepth06": {
+          "$ref": "#/$defs/nullableNumber"
+        }
+      }
+    },
+    "nullableNumber": {
+      "type": ["number", "null"]
+    }
+  }
+}

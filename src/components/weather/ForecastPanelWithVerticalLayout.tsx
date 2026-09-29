@@ -118,7 +118,12 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   };
 
   const accessibleLastUpdated = forecastLastUpdatedMoment
-    ? formatAccessibleDateTime(forecastLastUpdatedMoment, t, clockType === 24, false)
+    ? formatAccessibleDateTime(
+        forecastLastUpdatedMoment,
+        t,
+        clockType === 24,
+        false
+      )
     : '';
 
   return (
@@ -134,7 +139,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
       ]}>
       <PanelHeader
         title={t('panelHeader', { forecastLength: forecastLengthTitle || 10 })}
-        accessibleTitle={t('accessiblePanelHeader', { forecastLength: forecastLengthTitle || 10 })}
+        accessibleTitle={t('accessiblePanelHeader', {
+          forecastLength: forecastLengthTitle || 10,
+        })}
         lastUpdated={forecastLastUpdated}
         accessibleLastUpdated={accessibleLastUpdated}
         thin
@@ -150,8 +157,12 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               }`}
               activeOpacity={1}
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Show forecast in TABLE format');
-                updateDisplayFormat(TABLE)
+                trackMatomoEvent(
+                  'User action',
+                  'Weather',
+                  'Show forecast in TABLE format'
+                );
+                updateDisplayFormat(TABLE);
               }}
               style={styles.withMarginRight}>
               <View
@@ -160,7 +171,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                   {
                     backgroundColor:
                       displayFormat === TABLE
-                        ? colors.timeStepBackground : colors.inputButtonBackground,
+                        ? colors.timeStepBackground
+                        : colors.inputButtonBackground,
                     borderColor:
                       displayFormat === TABLE
                         ? colors.chartSecondaryLine
@@ -191,8 +203,12 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               }`}
               activeOpacity={1}
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Show forecast in CHART format');
-                updateDisplayFormat(CHART)
+                trackMatomoEvent(
+                  'User action',
+                  'Weather',
+                  'Show forecast in CHART format'
+                );
+                updateDisplayFormat(CHART);
               }}>
               <View
                 style={[
@@ -200,7 +216,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                   {
                     backgroundColor:
                       displayFormat === CHART
-                        ? colors.timeStepBackground : colors.inputButtonBackground,
+                        ? colors.timeStepBackground
+                        : colors.inputButtonBackground,
                     borderColor:
                       displayFormat === CHART
                         ? colors.chartSecondaryLine
@@ -232,7 +249,11 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               accessibilityHint={t('paramsBottomSheet.subTitle')}
               style={styles.bottomSheetButton}
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Open forecast parameter settings');
+                trackMatomoEvent(
+                  'User action',
+                  'Weather',
+                  'Open forecast parameter settings'
+                );
                 paramSheetRef.current?.open();
               }}
               disabled={displayFormat === CHART}>
@@ -255,7 +276,11 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               accessibilityHint={t('infoAccessibilityHint')}
               style={styles.bottomSheetButton}
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Open forecast info bottomsheet');
+                trackMatomoEvent(
+                  'User action',
+                  'Weather',
+                  'Open forecast info bottomsheet'
+                );
                 weatherInfoSheetRef.current?.open();
               }}
               disabled={displayFormat === CHART}>
@@ -278,9 +303,11 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
         {loading && (
           <ActivityIndicator accessibilityLabel={t('weather:loading')} />
         )}
-        {headerLevelForecast && headerLevelForecast.length > 0 && displayFormat === TABLE && (
-          <Vertical10DaysForecast dayData={headerLevelForecast} />
-        )}
+        {headerLevelForecast &&
+          headerLevelForecast.length > 0 &&
+          displayFormat === TABLE && (
+            <Vertical10DaysForecast dayData={headerLevelForecast} />
+          )}
         {sections &&
           sections.length > 0 &&
           headerLevelForecast &&
@@ -289,7 +316,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
             <ChartList
               data={data}
               activeDayIndex={activeDayIndex}
-              setActiveDayIndex={(i:number) => setActiveDayIndex(i)}
+              setActiveDayIndex={(i: number) => setActiveDayIndex(i)}
               currentDayOffset={sections[0].data.length}
             />
           )}
