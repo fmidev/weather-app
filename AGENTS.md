@@ -63,6 +63,7 @@ Run linting: yarn lint
 - Use standard Date API instead of moment.js when possible.
 - Comment code in english.
 - Use async/await instead of chained promises.
+- When modifying Android widgets, review and update the R8 rules in `android/widgets/consumer-rules.pro` as needed to match the implementation.
 
 ## UI and Design Rules
 
