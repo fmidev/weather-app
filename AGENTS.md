@@ -108,5 +108,5 @@ Run linting: yarn lint
 
 Run relevant checks when possible:
 
-yarn lint
-yarn test
+- yarn lint
+- yarn test
