@@ -1,5 +1,6 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react-native';
+import { Appearance } from 'react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 
 import TabNavigator from '../../src/navigators/TabNavigator';
 import { MacContentSizeProvider } from '../../src/components/common/MacContentSizeContext';
@@ -16,6 +17,7 @@ const mockSetCurrentLocation = jest.fn();
 const mockSetNavigationTab = jest.fn();
 const mockTabScreens = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
+const mockSetNavigationBarTheme = jest.fn();
 const mockWarningsTabIcon = jest.fn();
 let mockTranslationReady = true;
 
@@ -161,6 +163,10 @@ jest.mock('@utils/helpers', () => ({
 jest.mock('@utils/matomo', () => ({
   sendMatomoEvents: jest.fn(),
   trackMatomoEvent: (...args: any[]) => mockTrackMatomoEvent(...args),
+}));
+
+jest.mock('@utils/navigationBar', () => ({
+  setNavigationBarTheme: (...args: any[]) => mockSetNavigationBarTheme(...args),
 }));
 
 jest.mock('@components/common/ScalableIcon', () => ({
@@ -315,6 +321,7 @@ describe('TabNavigator', () => {
     mockSetNavigationTab.mockClear();
     mockTabScreens.mockClear();
     mockTrackMatomoEvent.mockClear();
+    mockSetNavigationBarTheme.mockClear();
     mockWarningsTabIcon.mockClear();
     mockTranslationReady = true;
 
@@ -325,6 +332,57 @@ describe('TabNavigator', () => {
       if (key === 'weather') return { layout: 'default' };
       return {};
     });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('updates navigation bar icons when the app theme changes', () => {
+    jest.spyOn(Appearance, 'getColorScheme').mockReturnValue('dark');
+    const props = {
+      initialTab: 'Weather',
+      didLaunchApp: false,
+      termsOfUseAccepted: false,
+      setCurrentLocation: mockSetCurrentLocation,
+      setNavigationTab: mockSetNavigationTab,
+      fetchAnnouncements: mockFetchAnnouncements,
+    };
+    const view = render(<TabNavigator {...props} theme="light" />);
+    expect(mockSetNavigationBarTheme).toHaveBeenLastCalledWith(false);
+
+    view.rerender(<TabNavigator {...props} theme="dark" />);
+    expect(mockSetNavigationBarTheme).toHaveBeenLastCalledWith(true);
+
+    view.rerender(<TabNavigator {...props} theme="light" />);
+    expect(mockSetNavigationBarTheme).toHaveBeenLastCalledWith(false);
+  });
+
+  it('updates navigation bar icons with the system theme in automatic mode', () => {
+    jest.spyOn(Appearance, 'getColorScheme').mockReturnValue('light');
+    const listenerSpy = jest.spyOn(Appearance, 'addChangeListener');
+    render(
+      <TabNavigator
+        initialTab="Weather"
+        theme="automatic"
+        didLaunchApp={false}
+        termsOfUseAccepted={false}
+        setCurrentLocation={mockSetCurrentLocation as any}
+        setNavigationTab={mockSetNavigationTab as any}
+        fetchAnnouncements={mockFetchAnnouncements as any}
+      />
+    );
+    expect(mockSetNavigationBarTheme).toHaveBeenLastCalledWith(false);
+
+    act(() => {
+      listenerSpy.mock.calls[0][0]({ colorScheme: 'dark' });
+    });
+    expect(mockSetNavigationBarTheme).toHaveBeenLastCalledWith(true);
+
+    act(() => {
+      listenerSpy.mock.calls[0][0]({ colorScheme: 'light' });
+    });
+    expect(mockSetNavigationBarTheme).toHaveBeenLastCalledWith(false);
   });
 
   it('returns null while translations or theme are not ready', () => {
