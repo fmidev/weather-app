@@ -33,6 +33,8 @@ The app uses Smartmet Server as backend, documentation:
 https://github.com/fmidev/smartmet-plugin-timeseries
 https://github.com/fmidev/smartmet-plugin-wms
 
+When making API calls, follow the best practices described in the [HTTP Caching Guide](https://github.com/fmidev/smartmet-server/blob/master/docs/HTTP-Caching-Guide.md).
+
 # Architecture
 
 - Use `src/screens` for app screens.
@@ -73,7 +75,7 @@ Run linting: yarn lint
 ## Testing
 
 - Create tests for new features.
-- Unit tests should be placed in **__tests__** directory; for widgets use their conventions.
+- Unit tests should be placed in ****tests**** directory; for widgets use their conventions.
 - One test file for one component or ts-module.
 - Don't combine tests for multiple components or modules in one test file.
 
