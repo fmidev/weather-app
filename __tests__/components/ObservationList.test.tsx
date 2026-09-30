@@ -247,6 +247,11 @@ describe('Observation List', () => {
     ).toBe(true);
     expect(
       StyleSheet.flatten(
+        view.getByTestId('observation_list_row_2000001600').props.style
+      ).flex
+    ).toBeUndefined();
+    expect(
+      StyleSheet.flatten(
         view.getByTestId('observation_list_row_content_2000001600').props.style
       ).maxHeight
     ).toBe(50);
@@ -266,7 +271,10 @@ describe('Observation List', () => {
         parameter="daily"
         preferredDailyParameters={['daily']}
         units={{} as any}
-        data={[{ epochtime: 2000001600, rrday: 1 }] as any}
+        data={[
+          { epochtime: 2000001600, rrday: 1 },
+          { epochtime: 2000088000, rrday: 2 },
+        ] as any}
       />
     );
 
@@ -279,8 +287,18 @@ describe('Observation List', () => {
     ).toBe(false);
     expect(
       StyleSheet.flatten(
+        view.getByTestId('observation_list_row_2000001600').props.style
+      ).flex
+    ).toBeUndefined();
+    expect(
+      StyleSheet.flatten(
         view.getByTestId('observation_list_row_content_2000001600').props.style
       ).maxHeight
     ).toBeUndefined();
+    const dateHeaderStyle = StyleSheet.flatten(
+      view.getByTestId('observation_list_date_header_2000088000').props.style
+    );
+    expect(dateHeaderStyle.flex).toBeUndefined();
+    expect(dateHeaderStyle.maxHeight).toBeUndefined();
   });
 });
