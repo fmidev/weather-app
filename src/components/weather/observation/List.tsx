@@ -418,16 +418,14 @@ const List: React.FC<ListProps> = ({
           <View key={timeStep.epochtime}>
             {i > 0 && time.day() !== previousTime.day() && (
               <View
+                testID={`observation_list_date_header_${timeStep.epochtime}`}
                 style={[
-                  styles.row,
-                  styles.observationRow,
+                  styles.dateHeader,
                   { backgroundColor: colors.timeStepBackground },
                 ]}>
                 <Text
                   style={[
                     styles.listText,
-                    styles.rowItem,
-                    styles.time,
                     styles.bold,
                     styles.capitalize,
                     { color: colors.hourListText },
@@ -438,7 +436,7 @@ const List: React.FC<ListProps> = ({
             )}
             <View
               testID={`observation_list_row_${timeStep.epochtime}`}
-              style={styles.row}
+              style={isDaily ? styles.dailyRow : styles.row}
               accessible={!useCompactDailyLayout}>
               <View
                 testID={`observation_list_row_content_${timeStep.epochtime}`}
@@ -496,6 +494,12 @@ const styles = StyleSheet.create({
   currentDay: {
     paddingLeft: 8,
     fontSize: 16,
+  },
+  dateHeader: {
+    padding: 8,
+  },
+  dailyRow: {
+    flexDirection: 'row',
   },
   headerText: {
     maxHeight: 50,
