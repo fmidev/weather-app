@@ -31,7 +31,7 @@ import { Config } from '@config';
 import { ObservationParameters } from '@store/observation/types';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectClockType } from '@store/settings/selectors';
-import Chart from './charts/Chart';
+import Chart from './charts-xl/Chart';
 import { ChartType } from './charts/types';
 import ParameterSelector from './common/ParameterSelector';
 import CollapsibleHeader from './common/CollapsibleHeader';
@@ -41,7 +41,7 @@ import Text from '@components/common/AppText';
 import List from './observation/List';
 import Latest from './observation/Latest';
 import ObservationStationListBottomSheet from './sheets/ObservationStationListBottomSheet';
-import { observationTypeParameters } from './charts/settings';
+import { observationTypeParameters } from './charts-xl/settings';
 import { trackMatomoEvent } from '@utils/matomo';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 

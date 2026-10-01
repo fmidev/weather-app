@@ -9,10 +9,10 @@ import { selectChartDisplayParameter } from '@store/forecast/selectors';
 import { updateChartParameter as updateChartParameterAction } from '@store/forecast/actions';
 
 import { Config } from '@config';
-import Chart from '../charts/Chart';
+import Chart from '../charts-xl/Chart';
 import { ChartType } from '../charts/types';
 import ParameterSelector from '../common/ParameterSelector';
-import { forecastTypeParameters } from '../charts/settings';
+import { forecastTypeParameters } from '../charts-xl/settings';
 
 const mapStateToProps = (state: State) => ({
   chartParameter: selectChartDisplayParameter(state),

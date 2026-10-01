@@ -18,7 +18,7 @@ jest.mock('@store/forecast/actions', () => ({
   })),
 }));
 
-jest.mock('../../src/components/weather/charts/settings', () => ({
+jest.mock('../../src/components/weather/charts-xl/settings', () => ({
   forecastTypeParameters: {
     temperature: ['temperature'],
     wind: ['windSpeedMS'],
@@ -35,7 +35,7 @@ jest.mock('@config', () => ({
   },
 }));
 
-jest.mock('../../src/components/weather/charts/Chart', () => ({
+jest.mock('../../src/components/weather/charts-xl/Chart', () => ({
   __esModule: true,
   default: (props: any) => {
     mockChart(props);

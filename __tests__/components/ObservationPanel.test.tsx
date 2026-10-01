@@ -101,7 +101,7 @@ jest.mock('@utils/matomo', () => ({
   trackMatomoEvent: (...args: any[]) => mockTrackMatomoEvent(...args),
 }));
 
-jest.mock('../../src/components/weather/charts/settings', () => ({
+jest.mock('../../src/components/weather/charts-xl/settings', () => ({
   observationTypeParameters: {
     weather: ['temperature', 'dewPoint', 'precipitation1h'],
     wind: ['windSpeedMS'],
@@ -180,7 +180,7 @@ jest.mock('../../src/components/weather/common/ParameterSelector', () => ({
   },
 }));
 
-jest.mock('../../src/components/weather/charts/Chart', () => ({
+jest.mock('../../src/components/weather/charts-xl/Chart', () => ({
   __esModule: true,
   default: (props: any) => {
     mockChart(props);

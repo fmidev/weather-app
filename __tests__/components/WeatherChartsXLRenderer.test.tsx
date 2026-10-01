@@ -1,0 +1,444 @@
+import React from 'react';
+import { render } from '@testing-library/react-native';
+import moment from 'moment';
+
+import ChartDataRenderer from '@components/weather/charts-xl/ChartDataRenderer';
+
+const mockCartesianChart = jest.fn();
+const mockLine = jest.fn();
+const mockPath = jest.fn();
+const mockRect = jest.fn();
+
+jest.mock('../../src/assets/fonts/Roboto-Regular.ttf', () => 1);
+jest.mock('../../src/assets/fonts/Roboto-Bold.ttf', () => 2);
+
+jest.mock('@config', () => ({
+  Config: { get: () => ({ units: { precipitation: 'mm', pressure: 'hPa' } }) },
+}));
+
+jest.mock('@react-navigation/native', () => ({
+  useTheme: () => ({
+    colors: {
+      chartGrid: '#ddd',
+      chartGridDay: '#bbb',
+      hourListText: '#111',
+      chartPrimaryLine: '#00f',
+      chartSecondaryLine: '#f00',
+      secondaryBorder: '#999',
+      primaryText: '#111',
+      rain: ['transparent', '#00f'],
+    },
+  }),
+}));
+
+jest.mock('@components/common/MacContentSizeContext', () => ({
+  useIsRunningOnMac: () => false,
+}));
+
+jest.mock('@shopify/react-native-skia', () => {
+  const { View } = require('react-native');
+  const shape = () => <View />;
+  return {
+    useFont: (asset: number) => ({
+      asset,
+      getSize: () => 14,
+      getGlyphIDs: (label: string) => Array.from(label),
+      getGlyphWidths: (glyphs: string[]) => glyphs.map(() => 7),
+    }),
+    DashPathEffect: shape,
+    Path: (props: any) => {
+      mockPath(props);
+      return <View />;
+    },
+    Rect: (props: any) => {
+      mockRect(props);
+      return <View />;
+    },
+    Text: shape,
+    Skia: {
+      PathBuilder: {
+        Make: () => {
+          const commands: Array<{ type: string; x?: number; y?: number }> = [];
+          return {
+            moveTo: (x: number, y: number) => { commands.push({ type: 'moveTo', x, y }); },
+            lineTo: (x: number, y: number) => { commands.push({ type: 'lineTo', x, y }); },
+            close: () => { commands.push({ type: 'close' }); },
+            build: () => ({ commands }),
+          };
+        },
+      },
+    },
+  };
+});
+
+jest.mock('victory-native', () => {
+  const { View } = require('react-native');
+  return {
+    CartesianChart: (props: any) => {
+      mockCartesianChart(props);
+      const sortedData = [...props.data].sort((a: any, b: any) => a.x - b.x);
+      const points = Object.fromEntries(props.yKeys.map((key: string) => [
+        key,
+        sortedData.map((item: any, index: number) => ({
+          x: index * 10, xValue: item.x, y: item[key] == null ? null : 90 - item[key],
+          yValue: item[key],
+        })),
+      ]));
+      const chartArgs = {
+        points,
+        chartBounds: { left: 0, right: 200, top: 20, bottom: 100 },
+        yScale: (value: number) => 90 - value,
+        xScale: (value: number) => value / 100,
+      };
+      return (
+        <View testID="xl-chart">
+          {props.children(chartArgs)}
+          {props.renderOutside?.(chartArgs)}
+        </View>
+      );
+    },
+    Line: (props: any) => {
+      mockLine(props);
+      return <View testID="xl-line">{props.children}</View>;
+    },
+    Bar: () => <View />,
+    Scatter: () => <View />,
+  };
+});
+
+test('renders temperature data through CartesianChart and Line', () => {
+  const { getByTestId } = render(
+    <ChartDataRenderer
+      data={[{ x: 1000, temperature: 4, dewPoint: null }]}
+      chartType="temperature"
+      domain={{ x: [1000, 2000], y: [0, 10] }}
+      tickValues={[1000, 2000]}
+      width={300}
+      locale="en"
+      clockType={24}
+      isDaily={false}
+      observation={false}
+      precipitationValues={[null]}
+    />
+  );
+
+  expect(getByTestId('xl-chart')).toBeTruthy();
+  expect(mockCartesianChart.mock.calls[0][0]).toEqual(expect.objectContaining({
+    xKey: 'x',
+    yKeys: ['temperature', 'feelsLike', 'dewPoint'],
+  }));
+  expect(mockLine).toHaveBeenCalledTimes(1);
+});
+
+test('uses zero-aligned temperature ticks for the grid', () => {
+  mockCartesianChart.mockClear();
+  render(
+    <ChartDataRenderer
+      data={[{ x: 1000, temperature: 4 }]}
+      chartType="temperature"
+      domain={{ x: [1000, 2000], y: [-5, 15] }}
+      tickValues={[1000, 2000]}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily={false}
+      observation={false}
+      precipitationValues={[null]}
+    />
+  );
+
+  const { tickValues, tickCount } = mockCartesianChart.mock.calls[0][0].yAxis[0];
+  expect(tickValues).toEqual([-5, 0, 5, 10, 15]);
+  expect(tickCount).toBe(tickValues.length);
+});
+
+test('uses five-hPa ticks in pressure observation charts', () => {
+  mockCartesianChart.mockClear();
+  render(
+    <ChartDataRenderer
+      data={[{ x: 1000, pressure: 1010 }]}
+      chartType="pressure"
+      domain={{ x: [1000, 2000], y: [1005, 1015] }}
+      tickValues={[1000, 2000]}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily={false}
+      observation
+      precipitationValues={[null]}
+    />
+  );
+
+  expect(mockCartesianChart.mock.calls[0][0].yAxis[0].tickValues).toEqual([1005, 1010, 1015]);
+});
+
+test('draws smaller wind arrows above the plot and uses five-unit wind ticks', () => {
+  mockCartesianChart.mockClear();
+  mockPath.mockClear();
+  const time = moment('2026-10-01 12:00').valueOf();
+  render(
+    <ChartDataRenderer
+      data={[{ x: time, windSpeedMS: 4, windGust: 7, windDirection: 0 }]}
+      chartType="wind"
+      domain={{ x: [time, time + 3600000], y: [0, 20] }}
+      tickValues={[time, time + 3600000]}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily={false}
+      observation={false}
+      precipitationValues={[null]}
+    />
+  );
+
+  const chartProps = mockCartesianChart.mock.calls[0][0];
+  expect(chartProps.yAxis[0].tickValues).toEqual([0, 5, 10, 15, 20]);
+  expect(chartProps.viewport).toEqual({ y: [0, 20] });
+  expect(chartProps.padding.left).toBeGreaterThanOrEqual(10);
+  expect(chartProps.padding.right).toBeGreaterThanOrEqual(10);
+  const arrows = mockPath.mock.calls.map(([props]) => props).filter((props) => props.strokeWidth === 1.5);
+  expect(arrows).toHaveLength(1);
+  const arrow = arrows[0];
+  expect(arrow.strokeWidth).toBe(1.5);
+  expect(arrow.path.commands.every(({ y }: { y: number }) => y < 20)).toBe(true);
+  const area = mockPath.mock.calls
+    .map(([props]) => props)
+    .find((props) => props.color === '#d8d8d8');
+  expect(area.path.commands.at(-1).type).toBe('close');
+});
+
+test('caps the visible wind scale at 15 when its domain ends there', () => {
+  mockCartesianChart.mockClear();
+  render(
+    <ChartDataRenderer
+      data={[{ x: 1000, windSpeedMS: 4 }]}
+      chartType="wind"
+      domain={{ x: [1000, 2000], y: [0, 15] }}
+      tickValues={[1000, 2000]}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily={false}
+      observation={false}
+      precipitationValues={[null]}
+    />
+  );
+
+  const chartProps = mockCartesianChart.mock.calls[0][0];
+  expect(chartProps.yAxis[0].tickValues).toEqual([0, 5, 10, 15]);
+  expect(chartProps.viewport).toEqual({ y: [0, 15] });
+});
+
+test('draws wind observation arrows every full hour', () => {
+  const start = moment('2026-10-02 00:00');
+  const hours = Array.from({ length: 4 }, (_, index) => start.clone().add(index, 'hours').valueOf());
+  const halfHour = start.clone().add(3, 'hours').add(30, 'minutes').valueOf();
+  const data = [...hours, halfHour].map((x) => ({ x, windSpeedMS: 4, windDirection: 90 }));
+
+  for (const [observation, expectedArrowCount] of [[true, 4], [false, 2]] as const) {
+    mockPath.mockClear();
+    render(
+      <ChartDataRenderer
+        data={data}
+        chartType="wind"
+        domain={{ x: [hours[0], halfHour], y: [0, 20] }}
+        tickValues={hours}
+        width={50}
+        locale="fi"
+        clockType={24}
+        isDaily={false}
+        observation={observation}
+        precipitationValues={data.map(() => null)}
+      />
+    );
+
+    const arrows = mockPath.mock.calls
+      .map(([props]) => props)
+      .filter((props) => props.strokeWidth === 1.5);
+    expect(arrows).toHaveLength(expectedArrowCount);
+  }
+});
+
+test('shows forecast hours every three hours and weekday with date at midnight', () => {
+  mockCartesianChart.mockClear();
+  const start = moment('2026-10-01 01:00');
+  const ticks = Array.from({ length: 49 }, (_, hour) =>
+    start.clone().add(hour, 'hours').valueOf()
+  );
+
+  render(
+    <ChartDataRenderer
+      data={[{ x: ticks[0], temperature: 4 }]}
+      chartType="temperature"
+      domain={{ x: [ticks[0], ticks[ticks.length - 1]], y: [0, 10] }}
+      tickValues={ticks}
+      width={300}
+      locale="fi"
+      clockType={12}
+      isDaily={false}
+      observation={false}
+      precipitationValues={[null]}
+    />
+  );
+
+  const { tickValues, tickCount, formatXLabel, labelRenderer } = mockCartesianChart.mock.calls[0][0].xAxis;
+  expect(tickValues).toHaveLength(16);
+  expect(tickCount).toBe(tickValues.length);
+  expect(tickValues.map(formatXLabel)).toEqual([
+    '03', '06', '09', '12', '15', '18', '21', 'Pe\n2.10',
+    '03', '06', '09', '12', '15', '18', '21', 'La\n3.10',
+  ]);
+
+  const dayText = formatXLabel(tickValues[7]);
+  const dayLayout = labelRenderer.measure({ text: dayText });
+  const dayLabels = labelRenderer.render({
+    text: dayText, value: tickValues[7], x: 0, y: 0,
+    width: dayLayout.width, color: '#111',
+    chartBounds: { left: 0, right: 300 },
+  }) as React.ReactElement<{ font: { asset: number } }>[];
+  expect(dayLabels.map((label) => label.props.font.asset)).toEqual([2, 2]);
+
+  const hourText = formatXLabel(tickValues[0]);
+  const hourLayout = labelRenderer.measure({ text: hourText });
+  const hourLabels = labelRenderer.render({
+    text: hourText, value: tickValues[0], x: 0, y: 0,
+    width: hourLayout.width, color: '#111',
+    chartBounds: { left: 0, right: 300 },
+  }) as React.ReactElement<{ font: { asset: number } }>[];
+  expect(hourLabels.map((label) => label.props.font.asset)).toEqual([1]);
+});
+
+test('bolds both date lines in hourly observation charts but keeps hours regular', () => {
+  mockCartesianChart.mockClear();
+  const midnight = moment('2026-10-02 00:00').valueOf();
+  const hour = moment('2026-10-02 03:00').valueOf();
+  render(
+    <ChartDataRenderer
+      data={[{ x: midnight, temperature: 4 }]}
+      chartType="temperature"
+      domain={{ x: [midnight, hour], y: [0, 10] }}
+      tickValues={[midnight, hour]}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily={false}
+      observation
+      precipitationValues={[null]}
+    />
+  );
+
+  const { padding, xAxis } = mockCartesianChart.mock.calls[0][0];
+  const dateText = xAxis.formatXLabel(midnight);
+  const dateLayout = xAxis.labelRenderer.measure({ text: dateText });
+  const dateLabels = xAxis.labelRenderer.render({
+    text: dateText, value: midnight, x: 0, y: 0,
+    width: dateLayout.width, color: '#111',
+    chartBounds: { left: padding.left, right: 300 - padding.right },
+  }) as React.ReactElement<{ font: { asset: number } }>[];
+  expect(dateText).toContain('\n');
+  expect(dateLabels.map((label) => label.props.font.asset)).toEqual([2, 2]);
+  expect(padding.left).toBeGreaterThanOrEqual(dateLayout.width / 2);
+
+  const hourText = xAxis.formatXLabel(hour);
+  const hourLayout = xAxis.labelRenderer.measure({ text: hourText });
+  const hourLabels = xAxis.labelRenderer.render({
+    text: hourText, value: hour, x: 0, y: 0,
+    width: hourLayout.width, color: '#111',
+    chartBounds: { left: padding.left, right: 300 - padding.right },
+  }) as React.ReactElement<{ font: { asset: number } }>[];
+  expect(hourText).toBe('03');
+  expect(hourLabels.map((label) => label.props.font.asset)).toEqual([1]);
+});
+
+test('bolds dates in daily observation charts', () => {
+  mockCartesianChart.mockClear();
+  const ticks = ['2026-10-01', '2026-10-02', '2026-10-03'].map((date) => moment(date).valueOf());
+  render(
+    <ChartDataRenderer
+      data={[{ x: ticks[1], maximumTemperature: 4 }]}
+      chartType="daily"
+      domain={{ x: [ticks[0], ticks[2]], y: [0, 10] }}
+      tickValues={ticks}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily
+      observation
+      precipitationValues={[null]}
+    />
+  );
+
+  const { formatXLabel, labelRenderer } = mockCartesianChart.mock.calls[0][0].xAxis;
+  expect(formatXLabel(ticks[0])).toBe('');
+  expect(formatXLabel(ticks[2])).toBe('');
+  const text = formatXLabel(ticks[1]);
+  const layout = labelRenderer.measure({ text });
+  const labels = labelRenderer.render({
+    text, value: ticks[1], x: 0, y: 0,
+    width: layout.width, color: '#111', chartBounds: { left: 0, right: 300 },
+  }) as React.ReactElement<{ font: { asset: number } }>[];
+  expect(labels.map((label) => label.props.font.asset)).toEqual([2, 2]);
+});
+
+test('draws daily rain on its own day from the rain zero level', () => {
+  mockRect.mockClear();
+  const ticks = ['2026-09-28', '2026-09-29', '2026-09-30', '2026-10-01']
+    .map((date) => moment(date).valueOf());
+  render(
+    <ChartDataRenderer
+      data={[
+        { x: ticks[3], rrday: null },
+        { x: ticks[2], rrday: -5 },
+        { x: ticks[1], rrday: -2 },
+        { x: ticks[0], rrday: -6 },
+      ]}
+      chartType="daily"
+      domain={{ x: [ticks[0], ticks[3]], y: [-5, 20] }}
+      tickValues={ticks}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily
+      observation
+      precipitationValues={[null, null, null, null]}
+    />
+  );
+
+  const rainBars = mockRect.mock.calls
+    .map(([props]) => props)
+    .filter((props) => props.color === 'rgb(30, 110, 214)');
+  expect(rainBars).toEqual([expect.objectContaining({ x: 10, y: 92, width: 10, height: 3 })]);
+});
+
+test('centers the last forecast hour on its tick while keeping it inside the canvas', () => {
+  mockCartesianChart.mockClear();
+  const start = moment('2026-10-01 12:00');
+  const ticks = Array.from({ length: 4 }, (_, hour) => start.clone().add(hour, 'hours').valueOf());
+
+  render(
+    <ChartDataRenderer
+      data={[{ x: ticks[0], temperature: 4 }]}
+      chartType="temperature"
+      domain={{ x: [ticks[0], ticks[3]], y: [-5, 15] }}
+      tickValues={ticks}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily={false}
+      observation={false}
+      precipitationValues={[null]}
+    />
+  );
+
+  const { padding, xAxis } = mockCartesianChart.mock.calls[0][0];
+  const label = xAxis.formatXLabel(ticks[3]);
+  const layout = xAxis.labelRenderer.measure({ text: label });
+  const chartBounds = { left: padding.left, right: 300 - padding.right };
+  const rendered = xAxis.labelRenderer.render({
+    text: label, value: ticks[3], x: chartBounds.right - layout.width,
+    y: 0, width: layout.width, color: '#111', chartBounds,
+  }) as React.ReactElement<{ x: number }>[];
+
+  expect(rendered[0].props.x + layout.width / 2).toBeCloseTo(chartBounds.right);
+  expect(rendered[0].props.x + layout.width).toBeLessThanOrEqual(300);
+});
