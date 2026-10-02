@@ -107,21 +107,23 @@ const ChartDataRenderer: React.FC<Props> = ({
   const font = useFont(require('../../../assets/fonts/Roboto-Regular.ttf'), fontSize);
   const boldFont = useFont(require('../../../assets/fonts/Roboto-Bold.ttf'), fontSize);
   const xDomain = domain.x ?? [tickValues[0], tickValues[tickValues.length - 1]];
-  const xTickValues = !observation && !isDaily
+  const forecastXAxis = !observation && !isDaily;
+  const forecastTickInterval = clockType === 12 ? 6 : 3;
+  const forecastTickValues = forecastXAxis
     ? tickValues.filter((value) => {
       const time = moment(value);
-      return time.minutes() === 0 && time.seconds() === 0 && time.hours() % 3 === 0;
+      return time.minutes() === 0 && time.seconds() === 0 &&
+        time.hours() % forecastTickInterval === 0;
     })
-    : tickValues;
-  const formatForecastLabel = (value: number) => {
-    const time = moment(value);
-    return time.hours() === 0
-      ? `${time.formatDateTime('weekdayAbbreviation', locale)}\n${time.format('D.M')}`
-      : time.format('HH');
-  };
-  const forecastXAxis = !observation && !isDaily;
+    : [];
+  let xTickValues = tickValues;
+  if (forecastXAxis) {
+    xTickValues = forecastTickValues.length > 0 ? forecastTickValues : tickValues.slice(0, 1);
+  }
   const formatXAxisLabel = (value: number) => {
-    if (forecastXAxis) return formatForecastLabel(value);
+    if (forecastXAxis && forecastTickValues.length === 0) {
+      return moment(value).formatDateTime('time', locale, clockType);
+    }
     const index = tickValues.indexOf(value);
     if (isDaily && (index === 0 || index === tickValues.length - 1)) return '';
     return String(tickFormat(value, locale, clockType, isDaily, observation));

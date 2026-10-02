@@ -259,7 +259,7 @@ test('draws wind observation arrows every full hour', () => {
   }
 });
 
-test('shows forecast hours every three hours and weekday with date at midnight', () => {
+test('shows 12-hour forecast labels every six hours and configured dates at midnight', () => {
   mockCartesianChart.mockClear();
   const start = moment('2026-10-01 01:00');
   const ticks = Array.from({ length: 49 }, (_, hour) =>
@@ -282,17 +282,17 @@ test('shows forecast hours every three hours and weekday with date at midnight',
   );
 
   const { tickValues, tickCount, formatXLabel, labelRenderer } = mockCartesianChart.mock.calls[0][0].xAxis;
-  expect(tickValues).toHaveLength(16);
+  expect(tickValues).toHaveLength(8);
   expect(tickCount).toBe(tickValues.length);
   expect(tickValues.map(formatXLabel)).toEqual([
-    '03', '06', '09', '12', '15', '18', '21', 'Pe\n2.10',
-    '03', '06', '09', '12', '15', '18', '21', 'La\n3.10',
+    '6 am', '12 pm', '6 pm', 'Pe\n2.10.',
+    '6 am', '12 pm', '6 pm', 'La\n3.10.',
   ]);
 
-  const dayText = formatXLabel(tickValues[7]);
+  const dayText = formatXLabel(tickValues[3]);
   const dayLayout = labelRenderer.measure({ text: dayText });
   const dayLabels = labelRenderer.render({
-    text: dayText, value: tickValues[7], x: 0, y: 0,
+    text: dayText, value: tickValues[3], x: 0, y: 0,
     width: dayLayout.width, color: '#111',
     chartBounds: { left: 0, right: 300 },
   }) as React.ReactElement<{ font: { asset: number } }>[];
@@ -306,6 +306,55 @@ test('shows forecast hours every three hours and weekday with date at midnight',
     chartBounds: { left: 0, right: 300 },
   }) as React.ReactElement<{ font: { asset: number } }>[];
   expect(hourLabels.map((label) => label.props.font.asset)).toEqual([1]);
+});
+
+test('shows the configured English date and three-hour labels with a 24-hour clock', () => {
+  mockCartesianChart.mockClear();
+  const start = moment('2026-10-01 21:00');
+  const ticks = Array.from({ length: 7 }, (_, hour) => start.clone().add(hour, 'hours').valueOf());
+
+  render(
+    <ChartDataRenderer
+      data={[{ x: ticks[0], temperature: 4 }]}
+      chartType="temperature"
+      domain={{ x: [ticks[0], ticks[6]], y: [0, 10] }}
+      tickValues={ticks}
+      width={300}
+      locale="en"
+      clockType={24}
+      isDaily={false}
+      observation={false}
+      precipitationValues={[null]}
+    />
+  );
+
+  const { tickValues, formatXLabel } = mockCartesianChart.mock.calls[0][0].xAxis;
+  expect(tickValues.map(formatXLabel)).toEqual(['21', 'Fri\n2 Oct', '03']);
+});
+
+test('keeps a time label when a short forecast has no aligned ticks', () => {
+  mockCartesianChart.mockClear();
+  const start = moment('2026-10-01 10:30').valueOf();
+  const end = moment('2026-10-01 11:30').valueOf();
+
+  render(
+    <ChartDataRenderer
+      data={[{ x: start, temperature: 4 }]}
+      chartType="temperature"
+      domain={{ x: [start, end], y: [0, 10] }}
+      tickValues={[start, end]}
+      width={300}
+      locale="en"
+      clockType={12}
+      isDaily={false}
+      observation={false}
+      precipitationValues={[null]}
+    />
+  );
+
+  const { tickValues, formatXLabel } = mockCartesianChart.mock.calls[0][0].xAxis;
+  expect(tickValues).toEqual([start]);
+  expect(tickValues.map(formatXLabel)).toEqual(['10:30 am']);
 });
 
 test('bolds both date lines in hourly observation charts but keeps hours regular', () => {
