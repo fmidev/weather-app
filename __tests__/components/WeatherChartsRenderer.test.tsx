@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import moment from 'moment';
 
-import ChartDataRenderer from '@components/weather/charts-xl/ChartDataRenderer';
+import ChartDataRenderer from '@components/weather/charts/ChartDataRenderer';
 
 const mockCartesianChart = jest.fn();
 const mockLine = jest.fn();

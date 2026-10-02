@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { render } from '@testing-library/react-native';
 
-import ChartYAxis from '@components/weather/charts-xl/ChartYAxis';
+import ChartYAxis from '@components/weather/charts/ChartYAxis';
 
 jest.mock('@config', () => ({
   Config: { get: () => ({ units: { precipitation: 'mm', pressure: 'hPa' } }) },

@@ -75,7 +75,7 @@
     "redux-thunk": "2.4.0",
     "reselect": "4.1.4",
     "supercluster": "7.1.4",
-    "victory-native": "^42.0.1"
+    "victory-native": "42.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.29.7",

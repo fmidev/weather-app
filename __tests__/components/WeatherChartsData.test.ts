@@ -1,6 +1,6 @@
 import { Config } from '@config';
-import { ChartData } from '@components/weather/charts-xl/types';
-import { limitUvForecast, prepareChartData } from '@components/weather/charts-xl/data';
+import { ChartData } from '@components/weather/charts/types';
+import { limitUvForecast, prepareChartData } from '@components/weather/charts/data';
 
 jest.mock('@config', () => ({
   Config: {

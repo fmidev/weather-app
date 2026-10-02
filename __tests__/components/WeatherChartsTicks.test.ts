@@ -3,7 +3,7 @@ import {
   alignTemperatureDomain,
   alignWindDomain,
   getChartYTicks,
-} from '@components/weather/charts-xl/ticks';
+} from '@components/weather/charts/ticks';
 
 test('includes the freezing point in evenly spaced temperature ticks', () => {
   const domain = alignTemperatureDomain({ y: [-5, 15] }, 'temperature');

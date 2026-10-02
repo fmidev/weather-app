@@ -5,31 +5,26 @@ import React, {
   useRef,
   useState,
 } from 'react';
-
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import moment from 'moment';
-
 import {
-  chartTickValues,
-  dailyChartTickValues,
-  chartXDomain,
-  chartYDomain,
-  secondaryYDomainForWeatherChart,
-} from '@utils/chart';
-
-import { Config } from '@config';
-import { converter, resolveUnitParameterName } from '@utils/units';
-import { State } from '@store/types';
-import { selectClockType } from '@store/settings/selectors';
-import { selectUnits } from '@store/settings/selectors';
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
-import { ChartData, ChartType, ChartValues, ChartMinMax } from './types';
-import ChartLegend from './Legend';
-import chartSettings from './settings';
+
+import { State } from '@store/types';
+import { selectClockType, selectUnits } from '@store/settings/selectors';
+import { selectPreferredDailyParameters } from '@store/observation/selector';
+import { Config } from '@config';
+import { chartTickValues, dailyChartTickValues } from '@utils/chart';
+import { ChartData, ChartType } from './types';
+import { limitUvForecast, prepareChartData } from './data';
 import ChartDataRenderer from './ChartDataRenderer';
 import ChartYAxis from './ChartYAxis';
-import { selectPreferredDailyParameters } from '@store/observation/selector';
+import ChartLegend from './Legend';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -53,47 +48,33 @@ const Chart: React.FC<ChartProps> = ({
   clockType,
   data,
   chartType,
-  observation,
+  observation = false,
   activeDayIndex,
   setActiveDayIndex,
   currentDayOffset,
   preferredDailyParameters,
   units,
 }) => {
+  const scrollRef = useRef<ScrollView>(null);
+  const [scrollIndex, setScrollIndex] = useState(observation ? 480 : 0);
+  const [yScale, setYScale] = useState<{
+    domain: [number, number];
+    range: [number, number];
+  }>();
+  const { t, i18n } = useTranslation('weather');
+  const { timePeriod } = Config.get('weather').observation;
   const isDaily =
     chartType === 'daily' || preferredDailyParameters.includes(chartType);
-
-  const scrollRef = useRef<ScrollView>(null)
-  const [scrollIndex, setScrollIndex] = useState<number>(
-    observation ? 24 * 20 : 0
-  );
-  const { t, i18n } = useTranslation('weather');
-  moment.locale(i18n.language);
-
-  const defaultUnits = useMemo(() => Config.get('settings').units, []);
-  const { timePeriod } = Config.get('weather').observation;
-
   const tickInterval = observation && timePeriod && timePeriod > 24 ? 1 : 3;
   const stepLength = tickInterval === 1 ? 20 : 8;
-  const dailyObservationStepLength = 24;
-
-  const chartDimensions = useMemo(
-    () => ({
-      y: 300,
-      x:
-        observation && timePeriod
-          ? timePeriod * (isDaily ? dailyObservationStepLength : stepLength)
-          : data.length * (isDaily ? dailyObservationStepLength : stepLength),
-    }),
-    [
-      observation,
-      data,
-      stepLength,
-      timePeriod,
-      isDaily,
-      dailyObservationStepLength,
-    ]
+  const chartData = useMemo(
+    () => limitUvForecast(data, chartType, observation),
+    [data, chartType, observation]
   );
+  const width =
+    observation && timePeriod
+      ? timePeriod * (isDaily ? 24 : stepLength)
+      : chartData.length * (isDaily ? 24 : stepLength);
 
   const calculateDayIndex = useCallback(
     (index: number) =>
@@ -104,192 +85,140 @@ const Chart: React.FC<ChartProps> = ({
   useEffect(() => {
     if (currentDayOffset && activeDayIndex !== undefined) {
       const dayIndex = calculateDayIndex(scrollIndex);
-      if (activeDayIndex === 0 && dayIndex !== activeDayIndex && scrollRef.current) {
-        scrollRef.current.scrollTo({ x: 0, animated: true });
-        setScrollIndex(0);
-      }
-      if (activeDayIndex > 0 && dayIndex !== activeDayIndex && scrollRef.current) {
-        const off = currentDayOffset * stepLength;
-        const offsetX = off + (activeDayIndex - 1) * 24 * stepLength;
+      if (dayIndex !== activeDayIndex && scrollRef.current) {
+        const offsetX =
+          activeDayIndex === 0
+            ? 0
+            : currentDayOffset * stepLength +
+              (activeDayIndex - 1) * 24 * stepLength;
         scrollRef.current.scrollTo({ x: offsetX, animated: true });
         setScrollIndex(offsetX);
       }
     }
   }, [
     activeDayIndex,
-    stepLength,
+    calculateDayIndex,
     currentDayOffset,
     scrollIndex,
-    calculateDayIndex,
+    stepLength,
   ]);
-
-  const { Component, params } = useMemo(
-    () => chartSettings(chartType, observation),
-    [chartType, observation]
-  );
-
-  const { chartValues, chartMinMax } = useMemo(() => {
-    const minMax: ChartMinMax = [];
-    const values: ChartValues = {};
-
-    params.forEach((param) => {
-      const unitParameterName = resolveUnitParameterName(param.toString());
-      let unit: string | undefined;
-
-      if (unitParameterName) {
-        if (units && units[unitParameterName])
-          unit = units[unitParameterName].unitAbb;
-        else if (Object.keys(defaultUnits).includes(unitParameterName))
-          // @ts-ignore
-          unit = defaultUnits[unitParameterName].unitAbb;
-      }
-
-      values[param] = (
-        data?.map((step) => {
-          const x = step.epochtime * 1000;
-          // @ts-ignore
-          const y = converter(unit, step[param]);
-          if (param !== 'windDirection' && param !== 'pop') {
-            minMax.push(y);
-          }
-          return { x, y };
-        }) || []
-      ).filter(({ y }) => y !== undefined);
-    });
-
-    return { chartValues: values, chartMinMax: minMax };
-  }, [data, params, units, defaultUnits]);
 
   const tickValues = useMemo(
     () =>
       isDaily
         ? dailyChartTickValues(30)
         : chartTickValues(
-            data,
+            chartData,
             tickInterval,
-            observation ?? false,
+            observation,
             timePeriod ?? 24
           ),
-    [data, tickInterval, observation, timePeriod, isDaily]
+    [chartData, isDaily, observation, tickInterval, timePeriod]
   );
-
-  const chartDomain = useMemo(
+  const prepared = useMemo(
+    () => prepareChartData(chartData, chartType, observation, units),
+    [chartData, chartType, observation, units]
+  );
+  const domain = useMemo(
     () => ({
-      ...chartYDomain(chartMinMax, chartType, units),
-      ...chartXDomain(tickValues),
+      ...prepared.domain,
+      x: [tickValues[0], tickValues[tickValues.length - 1]] as [number, number],
     }),
-    [chartType, chartMinMax, tickValues, units]
+    [prepared.domain, tickValues]
+  );
+  const secondaryParameterMissing =
+    chartType === 'precipitation' &&
+    prepared.points.every((point) => point.pop == null);
+
+  const onYScaleChange = useCallback(
+    (scaleDomain: [number, number], scaleRange: [number, number]) => {
+      setYScale((previous) =>
+        previous?.domain[0] === scaleDomain[0] &&
+        previous?.domain[1] === scaleDomain[1] &&
+        previous?.range[0] === scaleRange[0] &&
+        previous?.range[1] === scaleRange[1]
+          ? previous
+          : { domain: scaleDomain, range: scaleRange }
+      );
+    },
+    []
   );
 
-  const precipitationUnit =
-    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
-
-  const secondaryChartDomain = useMemo(
-    () =>
-      chartType === 'weather'
-        ? {
-            ...secondaryYDomainForWeatherChart(
-              data?.map((step) =>
-                step.precipitation1h
-                  ? converter(precipitationUnit, step.precipitation1h)
-                  : 0
-              ),
-              chartDomain
-            ),
-            ...chartXDomain(tickValues),
-          }
-        : undefined,
-    [chartType, data, chartDomain, tickValues, precipitationUnit]
-  );
-
-  const secondaryParameterMissing = useMemo(
-    () =>
-      chartType === 'precipitation'
-        ? chartValues.pop.every((p) => p.y === null)
-        : false,
-    [chartType, chartValues.pop]
-  );
-
-  const onMomentumScrollEnd = ({ nativeEvent }: any) => {
-    const { contentOffset } = nativeEvent;
-    setScrollIndex(contentOffset.x);
+  const onMomentumScrollEnd = ({
+    nativeEvent,
+  }: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const index = nativeEvent.contentOffset.x;
+    setScrollIndex(index);
     if (currentDayOffset && setActiveDayIndex) {
-      let dayIndex = calculateDayIndex(contentOffset.x);
-      dayIndex = dayIndex >= 0 ? dayIndex : 0;
-
-      if (dayIndex !== activeDayIndex) {
-        setActiveDayIndex(dayIndex);
-      }
+      const dayIndex = Math.max(0, calculateDayIndex(index));
+      if (dayIndex !== activeDayIndex) setActiveDayIndex(dayIndex);
     }
   };
 
-  const onLayout = () => {
-    if (observation && scrollRef.current) {
-      scrollRef.current.scrollToEnd();
-    }
-  };
-
-  if (chartDomain.x?.[0] === undefined) {
-    return null;
-  }
+  if (tickValues.length === 0) return null;
 
   return (
     <View
       testID={`chart_${chartType}`}
       accessible
-      accessibilityLabel={
+      accessibilityLabel={t(
         observation
-          ? t('charts.observationAccessibilityLabel', {
-              parameter: t(`charts.${chartType}`),
-            })
-          : t('charts.forecastAccessibilityLabel', {
-              parameter: t(`charts.${chartType}`),
-            })
-      }
-      accessibilityHint={
+          ? 'charts.observationAccessibilityLabel'
+          : 'charts.forecastAccessibilityLabel',
+        {
+          parameter: t(`charts.${chartType}`),
+        }
+      )}
+      accessibilityHint={t(
         observation
-          ? t('charts.observationAccessibilityHint')
-          : t('charts.forecastAccessibilityHint')
-      }>
-      <View style={styles.chartRowContainer}>
+          ? 'charts.observationAccessibilityHint'
+          : 'charts.forecastAccessibilityHint'
+      )}
+      style={styles.container}>
+      <View style={styles.row}>
         <ChartYAxis
-          chartDimensions={chartDimensions}
           chartType={chartType}
-          chartDomain={chartDomain}
-          chartMinMax={chartMinMax}
-          observation={observation ?? false}
+          domain={domain}
+          yScale={yScale}
+          observation={observation}
           units={units}
+          precipitationMaximum={prepared.precipitationMaximum}
         />
         <ScrollView
           ref={scrollRef}
-          onLayout={onLayout}
-          onMomentumScrollEnd={onMomentumScrollEnd}
           horizontal
+          onLayout={() => {
+            if (observation)
+              scrollRef.current?.scrollToEnd({ animated: false });
+          }}
+          onMomentumScrollEnd={onMomentumScrollEnd}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chartContainer}>
+          contentContainerStyle={styles.scrollContent}>
           <ChartDataRenderer
-            chartDimensions={chartDimensions}
-            tickValues={tickValues}
-            chartDomain={chartDomain}
+            data={prepared.points}
             chartType={chartType}
-            Component={Component}
-            chartValues={chartValues}
+            domain={domain}
+            onYScaleChange={onYScaleChange}
+            tickValues={tickValues}
+            width={Math.max(width, 1)}
             locale={i18n.language}
             clockType={clockType}
             isDaily={isDaily}
-            units={units}
             observation={observation}
+            units={units}
+            precipitationValues={prepared.precipitationValues}
           />
         </ScrollView>
         <ChartYAxis
-          chartDimensions={chartDimensions}
           chartType={chartType}
-          chartDomain={secondaryChartDomain || chartDomain}
-          chartMinMax={chartMinMax}
-          observation={observation ?? false}
+          domain={domain}
+          yScale={yScale}
+          secondaryDomain={prepared.secondaryDomain}
+          observation={observation}
           right
           units={units}
           secondaryParameterMissing={secondaryParameterMissing}
+          precipitationMaximum={prepared.precipitationMaximum}
         />
       </View>
       <ChartLegend
@@ -303,15 +232,9 @@ const Chart: React.FC<ChartProps> = ({
 };
 
 const styles = StyleSheet.create({
-  chartRowContainer: {
-    flexDirection: 'row',
-  },
-  chartContainer: {
-    paddingStart: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 10,
-  },
+  container: { marginTop: 16 },
+  row: { flexDirection: 'row' },
+  scrollContent: { alignItems: 'center', paddingBottom: 10 },
 });
 
 export default connector(Chart);

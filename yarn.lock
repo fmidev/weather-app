@@ -8907,7 +8907,7 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-victory-native@^42.0.1:
+victory-native@42.0.1:
   version "42.0.1"
   resolved "https://registry.yarnpkg.com/victory-native/-/victory-native-42.0.1.tgz#f77afd6400a5c8fd720df11b05bc23a7ee00b212"
   integrity sha512-W3dNBMeRtZ8AQGBkV1PrYYKLFSstTy6uulmlJJFch4hvPX/R1xH1VJXzZopK6GGbcq/ejcr8WwntWwhqTo0lzA==
