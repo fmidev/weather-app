@@ -1,21 +1,5 @@
-import React from 'react';
-import { TimeStepData as ForDataStep } from '@store/forecast/types';
-import { TimeStepData as ObsDataStep } from '@store/observation/types';
-import { UnitMap } from '@store/settings/types';
-
-export interface ChartValue {
-  x: number;
-  y: number | null;
-}
-
-export type Parameter = keyof ForDataStep | keyof ObsDataStep;
-
-export type ChartTypes = {
-  [key in ChartType]: Parameter[];
-};
-export interface ChartValues {
-  [key: string]: ChartValue[] | [];
-}
+import { TimeStepData as ForecastTimeStepData } from '@store/forecast/types';
+import { TimeStepData as ObservationTimeStepData } from '@store/observation/types';
 
 export type ChartType =
   | 'humidity'
@@ -30,28 +14,38 @@ export type ChartType =
   | 'weather'
   | 'daily';
 
-export type ChartSettings = {
-  params: Parameter[];
-  Component: React.FC<ChartDataProps>;
-};
-
-export type ChartDomain =
-  | {
-      x: [number, number];
-      y?: [number, number];
-    }
-  | {
-      x?: [number, number];
-      y: [number, number];
-    };
-
+export type Parameter = keyof ForecastTimeStepData | keyof ObservationTimeStepData;
+export type ChartData = ForecastTimeStepData[] | ObservationTimeStepData[];
 export type ChartMinMax = (number | null)[];
 
-export type ChartData = ForDataStep[] | ObsDataStep[];
+export type ChartDomain =
+  | { x: [number, number]; y?: [number, number] }
+  | { x?: [number, number]; y: [number, number] };
 
-export type ChartDataProps = {
-  chartValues: ChartValues;
-  chartDomain: ChartDomain;
-  chartWidth: number;
-  units?: UnitMap;
+export type ChartPoint = {
+  x: number;
+  temperature?: number | null;
+  feelsLike?: number | null;
+  dewPoint?: number | null;
+  precipitation1h?: number | null;
+  pop?: number | null;
+  windSpeedMS?: number | null;
+  windGust?: number | null;
+  hourlymaximumgust?: number | null;
+  windDirection?: number | null;
+  humidity?: number | null;
+  relativeHumidity?: number | null;
+  pressure?: number | null;
+  visibility?: number | null;
+  totalCloudCover?: number | null;
+  cloudHeight?: number | null;
+  snowDepth?: number | null;
+  snowDepth06?: number | null;
+  uvCumulated?: number | null;
+  rrday?: number | null;
+  maximumTemperature?: number | null;
+  minimumTemperature?: number | null;
+  minimumGroundTemperature06?: number | null;
 };
+
+export type ChartKey = Exclude<keyof ChartPoint, 'x'>;

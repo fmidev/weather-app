@@ -1,156 +1,140 @@
-import React, { memo } from 'react';
-import { useWindowDimensions } from 'react-native';
-import { VictoryAxis, VictoryLabel } from 'victory-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-
-import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
-import { calculateTemperatureTickCount, chartYLabelText } from '@utils/chart';
 import { useTranslation } from 'react-i18next';
-import { ChartDomain, ChartMinMax, ChartType } from './types';
-import { UnitMap } from '@store/settings/types';
-import { Config } from '@config';
-import { REGULAR_FONT, MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
-import { CustomTheme } from '@assets/colors';
 
-type ChartYAxisProps = {
+import Text from '@components/common/AppText';
+import { CustomTheme } from '@assets/colors';
+import { MAC_CONTENT_SIZE_MULTIPLIER, REGULAR_FONT } from '@assets/constants';
+import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
+import { UnitMap } from '@store/settings/types';
+import { chartYLabelText } from '@utils/chart';
+import { Config } from '@config';
+import { ChartDomain, ChartType } from './types';
+import { getChartYTicks } from './ticks';
+import { CHART_HEIGHT, CHART_TOP_PADDING } from './layout';
+
+const TICK_FONT_SIZE = 14;
+const TITLE_FONT_SIZE = 13;
+const MAX_TICK_FONT_SIZE = 20;
+const MAX_TITLE_FONT_SIZE = 18;
+
+type Props = {
   chartType: ChartType;
-  chartDimensions: {
-    y: number;
-    x: number;
-  };
-  chartDomain: ChartDomain;
-  chartMinMax?: ChartMinMax;
+  domain: ChartDomain;
+  yScale?: { domain: [number, number]; range: [number, number] };
+  secondaryDomain?: ChartDomain;
   observation: boolean;
   right?: boolean;
   units?: UnitMap;
   secondaryParameterMissing?: boolean;
+  precipitationMaximum: number;
+  height?: number;
+  onTopPaddingChange?: (padding: number) => void;
 };
 
-const ChartYAxis: React.FC<ChartYAxisProps> = ({
-  chartType,
-  chartDimensions,
-  chartDomain,
-  chartMinMax,
-  observation,
-  right,
-  units,
-  secondaryParameterMissing,
+const ChartYAxis: React.FC<Props> = ({
+  chartType, domain, yScale, secondaryDomain, observation, right,
+  units, secondaryParameterMissing, precipitationMaximum,
+  height = CHART_HEIGHT, onTopPaddingChange,
 }) => {
-  const isRunningOnMac = useIsRunningOnMac();
-  const { fontScale } = useWindowDimensions();
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
+  const isRunningOnMac = useIsRunningOnMac();
+  const precipitationUnit = units?.precipitation.unitAbb ?? Config.get('settings').units.precipitation;
+  const [tickHeight, setTickHeight] = useState<number>();
+  const [titleHeight, setTitleHeight] = useState(0);
+  // AppText applies the Mac multiplier; account for it only in the native scaling limits.
+  const platformFontMultiplier = isRunningOnMac ? MAC_CONTENT_SIZE_MULTIPLIER : 1;
+  const tickBaseHeight = TICK_FONT_SIZE * platformFontMultiplier;
+  const tickMaxFontSizeMultiplier = MAX_TICK_FONT_SIZE / tickBaseHeight;
+  const titleMaxFontSizeMultiplier = MAX_TITLE_FONT_SIZE / (TITLE_FONT_SIZE * platformFontMultiplier);
 
-  const defaultUnits = Config.get('settings').units;
-  const precipitationUnit =
-    units?.precipitation.unitAbb ?? defaultUnits.precipitation;
+  const hidden = right && (
+    (observation && !['visCloud', 'daily', 'weather'].includes(chartType)) ||
+    (!observation && chartType !== 'precipitation') ||
+    secondaryParameterMissing
+  );
 
-  if (
-    right &&
-    ((observation && !['visCloud', 'daily', 'weather'].includes(chartType)) ||
-      (!observation && chartType !== 'precipitation') ||
-      secondaryParameterMissing)
-  ) {
-    return null;
-  }
+  useEffect(() => {
+    // Leave room above the top tick for the full title and a visible gap.
+    onTopPaddingChange?.(hidden ? 0 : Math.max(
+      CHART_TOP_PADDING, titleHeight + (tickHeight ?? MAX_TICK_FONT_SIZE) / 2 + 8
+    ));
+  }, [hidden, onTopPaddingChange, tickHeight, titleHeight]);
 
-  let labelText: any = chartYLabelText(chartType, units, unitTranslate)[right ? 1 : 0];
-  labelText =
-    labelText.indexOf(':') > 0
-      ? t(labelText).toLocaleLowerCase().split(' ')
-      : labelText;
-  let axisTickValues: number[] | undefined;
-  let maxTick: number = 5;
+  if (hidden) return null;
 
-  if (chartType === 'precipitation') {
-    if (precipitationUnit === 'in') {
-      axisTickValues = [0, 0.05, 0.1, 0.15, 0.2, 0.25];
-      maxTick = 0.25;
-    } else {
-      axisTickValues = [0, 0.2, 0.4, 0.6, 0.8, 1];
-      maxTick =
-        precipitationUnit === 'in'
-          ? 1
-          : Math.ceil(
-              (Math.max(
-                ...[...(chartMinMax || []), maxTick - 1].filter(
-                  (v): v is number => v !== undefined && v !== null
-                )
-              ) +
-                1) /
-                5
-            ) * 5;
-    }
-  }
-
-  if (chartType === 'visCloud') {
-    axisTickValues = [0, 0.25, 0.5, 0.75, 1];
-  }
-
-  const labelStyles = {
-    textAnchor: right ? 'start' : 'end',
-    angle: 0,
-    fill: colors.hourListText,
-    fontSize: Math.min(isRunningOnMac ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER * 12 : fontScale * 12, 20),
-    fontFamily: REGULAR_FONT,
-  };
-
-  const tickFormat = (tick: any) => {
+  const rawTitle = chartYLabelText(chartType, units, unitTranslate)[right ? 1 : 0] ?? '';
+  const title = rawTitle.includes(':') ? t(rawTitle).toLocaleLowerCase() : rawTitle;
+  const range = domain.y ?? [0, 10];
+  const ticks = getChartYTicks(
+    domain,
+    chartType,
+    units?.pressure.unitAbb ?? Config.get('settings').units.pressure,
+    observation
+  ).filter((tick) => chartType !== 'weather' || !right || tick >= 0).reverse();
+  const format = (value: number) => {
     if (chartType === 'precipitation') {
-      if (precipitationUnit === 'in') {
-        return right ? tick * 400 : tick;
-      }
-      return right ? tick * 100 : tick * maxTick;
-    }
-    if (chartType === 'visCloud') {
-      return right ? `${tick * 8}/8` : tick * 60;
-    }
-    if (chartType === 'daily') {
       return right
-        ? tick -
-            Math.min(
-              (chartDomain.y && chartDomain?.y[0]) ?? 0,
-              (chartDomain.y && chartDomain?.y[1]) ?? 0
-            )
-        : tick;
+        ? value * (precipitationUnit === 'in' ? 400 : 100)
+        : value * (precipitationUnit === 'in' ? 1 : precipitationMaximum);
     }
-    return tick;
+    if (chartType === 'visCloud') return right ? `${Math.round(value * 8)}/8` : value * 60;
+    if (chartType === 'weather' && right) {
+      const secondary = secondaryDomain?.y ?? [0, 10];
+      return value / range[1] * (secondary[1] - secondary[0]);
+    }
+    if (chartType === 'daily' && right) return value - range[0];
+    return value;
   };
-
-  const tickCount =
-    chartType === 'weather' && !right
-      ? calculateTemperatureTickCount(chartDomain)
-      : undefined;
-
   return (
-    <VictoryAxis
-      width={45}
-      height={chartDimensions.y}
-      dependentAxis
-      orientation={right ? 'right' : 'left'}
-      domain={chartDomain}
-      tickValues={axisTickValues}
-      tickCount={tickCount}
-      tickFormat={tickFormat}
-      label={labelText}
-      style={{
-        tickLabels: {
-          fontSize: Math.min(isRunningOnMac ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER * 14 : fontScale * 14, 20),
-          fontFamily: REGULAR_FONT,
-          fill: colors.hourListText,
-        },
-      }}
-      axisLabelComponent={
-        <VictoryLabel
-          x={right ? 0 : 45}
-          y={35}
-          verticalAnchor="end"
-          style={labelStyles}
-        />
-      }
-    />
+    <View style={[styles.axis, { height }]}>
+      <Text
+        maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
+        onLayout={({ nativeEvent }) => setTitleHeight(nativeEvent.layout.height)}
+        style={[styles.title, right ? styles.rightTick : styles.leftTick, {
+          color: colors.hourListText, fontSize: TITLE_FONT_SIZE,
+        }]}>
+        {title}
+      </Text>
+      {yScale && ticks.map((tick, index) => {
+          const value = format(tick);
+          const label = typeof value === 'string'
+            ? value
+            : Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+          const fraction = yScale.domain[1] === yScale.domain[0]
+            ? 0.5
+            : (tick - yScale.domain[0]) / (yScale.domain[1] - yScale.domain[0]);
+          const y = yScale.range[0] + fraction * (yScale.range[1] - yScale.range[0]);
+          return (
+            <Text
+              key={index}
+              maxFontSizeMultiplier={tickMaxFontSizeMultiplier}
+              onLayout={index === 0 ? ({ nativeEvent }) => {
+                const measuredHeight = nativeEvent.layout.height;
+                setTickHeight((previous) => previous === measuredHeight ? previous : measuredHeight);
+              } : undefined}
+              style={[styles.tick, right ? styles.rightTick : styles.leftTick, {
+                color: colors.hourListText,
+                fontSize: TICK_FONT_SIZE,
+                top: y - (tickHeight ?? tickBaseHeight) / 2,
+              }]}>
+              {label}
+            </Text>
+          );
+        })}
+    </View>
   );
 };
 
-export default memo(ChartYAxis);
+const styles = StyleSheet.create({
+  axis: { width: 45 },
+  title: { fontFamily: REGULAR_FONT, top: 0, width: '100%', position: 'absolute' },
+  tick: { fontFamily: REGULAR_FONT, position: 'absolute', left: 0, right: 0 },
+  leftTick: { textAlign: 'right' },
+  rightTick: { textAlign: 'left' },
+});
+
+export default ChartYAxis;
