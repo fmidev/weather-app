@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +13,11 @@ import { Config } from '@config';
 import { ChartDomain, ChartType } from './types';
 import { getChartYTicks } from './ticks';
 import { CHART_HEIGHT, CHART_TOP_PADDING } from './layout';
+
+const TICK_FONT_SIZE = 14;
+const TITLE_FONT_SIZE = 13;
+const MAX_TICK_FONT_SIZE = 20;
+const MAX_TITLE_FONT_SIZE = 18;
 
 type Props = {
   chartType: ChartType;
@@ -36,14 +41,15 @@ const ChartYAxis: React.FC<Props> = ({
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
-  const { fontScale } = useWindowDimensions();
   const isRunningOnMac = useIsRunningOnMac();
   const precipitationUnit = units?.precipitation.unitAbb ?? Config.get('settings').units.precipitation;
   const [tickHeight, setTickHeight] = useState<number>();
   const [titleHeight, setTitleHeight] = useState(0);
-  const scaledFontSize = fontScale * (isRunningOnMac ? MAC_CONTENT_SIZE_MULTIPLIER : 1);
-  const tickFontSize = Math.min(scaledFontSize * 14, 20);
-  const titleFontSize = Math.min(scaledFontSize * 13, 18);
+  // AppText applies the Mac multiplier; account for it only in the native scaling limits.
+  const platformFontMultiplier = isRunningOnMac ? MAC_CONTENT_SIZE_MULTIPLIER : 1;
+  const tickBaseHeight = TICK_FONT_SIZE * platformFontMultiplier;
+  const tickMaxFontSizeMultiplier = MAX_TICK_FONT_SIZE / tickBaseHeight;
+  const titleMaxFontSizeMultiplier = MAX_TITLE_FONT_SIZE / (TITLE_FONT_SIZE * platformFontMultiplier);
 
   const hidden = right && (
     (observation && !['visCloud', 'daily', 'weather'].includes(chartType)) ||
@@ -54,9 +60,9 @@ const ChartYAxis: React.FC<Props> = ({
   useEffect(() => {
     // Leave room above the top tick for the full title and a visible gap.
     onTopPaddingChange?.(hidden ? 0 : Math.max(
-      CHART_TOP_PADDING, titleHeight + (tickHeight ?? tickFontSize) / 2 + 8
+      CHART_TOP_PADDING, titleHeight + (tickHeight ?? MAX_TICK_FONT_SIZE) / 2 + 8
     ));
-  }, [hidden, onTopPaddingChange, tickFontSize, tickHeight, titleHeight]);
+  }, [hidden, onTopPaddingChange, tickHeight, titleHeight]);
 
   if (hidden) return null;
 
@@ -86,9 +92,10 @@ const ChartYAxis: React.FC<Props> = ({
   return (
     <View style={[styles.axis, { height }]}>
       <Text
+        maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
         onLayout={({ nativeEvent }) => setTitleHeight(nativeEvent.layout.height)}
         style={[styles.title, right ? styles.rightTick : styles.leftTick, {
-          color: colors.hourListText, fontSize: titleFontSize,
+          color: colors.hourListText, fontSize: TITLE_FONT_SIZE,
         }]}>
         {title}
       </Text>
@@ -104,14 +111,15 @@ const ChartYAxis: React.FC<Props> = ({
           return (
             <Text
               key={index}
+              maxFontSizeMultiplier={tickMaxFontSizeMultiplier}
               onLayout={index === 0 ? ({ nativeEvent }) => {
                 const measuredHeight = nativeEvent.layout.height;
                 setTickHeight((previous) => previous === measuredHeight ? previous : measuredHeight);
               } : undefined}
               style={[styles.tick, right ? styles.rightTick : styles.leftTick, {
                 color: colors.hourListText,
-                fontSize: tickFontSize,
-                top: y - (tickHeight ?? tickFontSize) / 2,
+                fontSize: TICK_FONT_SIZE,
+                top: y - (tickHeight ?? tickBaseHeight) / 2,
               }]}>
               {label}
             </Text>

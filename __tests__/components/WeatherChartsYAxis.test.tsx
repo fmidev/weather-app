@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import ChartYAxis from '@components/weather/charts/ChartYAxis';
+import { MacContentSizeProvider } from '@components/common/MacContentSizeContext';
 
 jest.mock('@config', () => ({
   Config: { get: () => ({ units: { precipitation: 'mm', pressure: 'hPa' } }) },
@@ -18,16 +19,51 @@ jest.mock('react-i18next', () => ({
     key === 'weather:charts:totalCloudCover' ? 'Total cloud cover' : key }),
 }));
 
-jest.mock('@components/common/MacContentSizeContext', () => ({
-  useIsRunningOnMac: () => false,
-}));
-
 jest.mock('@utils/chart', () => ({
   chartYLabelText: (type: string) => type === 'visCloud'
     ? ['km', 'weather:charts:totalCloudCover'] : ['°C', 'mm'],
 }));
 
 afterEach(() => jest.restoreAllMocks());
+
+test.each([
+  [false, 1], [false, 2], [false, 3],
+  [true, 1], [true, 2], [true, 3],
+])('scales labels once on Mac=%s at font scale %s', (isRunningOnMac, fontScale) => {
+  jest.spyOn(ReactNative, 'useWindowDimensions').mockReturnValue({
+    width: 390, height: 844, scale: 3, fontScale,
+  });
+  const view = render(
+    <MacContentSizeProvider isRunningOnMac={isRunningOnMac} isPlatformDetectionComplete>
+      <ChartYAxis
+        chartType="temperature"
+        domain={{ y: [-5, 15] }}
+        yScale={{ domain: [-5, 15], range: [248, 40] }}
+        observation={false}
+        precipitationMaximum={5}
+      />
+    </MacContentSizeProvider>
+  );
+
+  const platformMultiplier = isRunningOnMac ? 1.3 : 1;
+  const tick = view.getByText('15');
+  const title = view.getByText('°C');
+  const tickStyle = StyleSheet.flatten(tick.props.style);
+  const titleStyle = StyleSheet.flatten(title.props.style);
+  expect(tick.props.allowFontScaling).toBe(true);
+  expect(title.props.allowFontScaling).toBe(true);
+  expect(tickStyle.fontSize).toBeCloseTo(14 * platformMultiplier);
+  expect(titleStyle.fontSize).toBeCloseTo(13 * platformMultiplier);
+  // These are the inputs to native Text scaling, including AppText's Mac adjustment.
+  expect(tickStyle.fontSize * Math.min(fontScale, tick.props.maxFontSizeMultiplier))
+    .toBeCloseTo(Math.min(14 * platformMultiplier * fontScale, 20));
+  expect(titleStyle.fontSize * Math.min(fontScale, title.props.maxFontSizeMultiplier))
+    .toBeCloseTo(Math.min(13 * platformMultiplier * fontScale, 18));
+
+  fireEvent(tick, 'layout', { nativeEvent: { layout: { height: 24 } } });
+  const measuredStyle = StyleSheet.flatten(view.getByText('15').props.style);
+  expect(measuredStyle.top + 12).toBe(40);
+});
 
 test('aligns precipitation zero with temperature zero and hides negative precipitation ticks', () => {
   const props = {
