@@ -249,10 +249,12 @@ const ChartDataRenderer: React.FC<Props> = ({
             moment(datum.x).hours() % windArrowInterval !== 0) {
             return null;
           }
+          // The path points north, so remove the legacy icon's 45-degree correction.
+          const rotation = getWindDirection(direction) - 45;
           return (
             <Path
               key={`direction-${index}`}
-              path={arrowPath(xScale(datum.x), chartBounds.top - 10, getWindDirection(direction))}
+              path={arrowPath(xScale(datum.x), chartBounds.top - 10, rotation)}
               color={colors.primaryText}
               style="stroke"
               strokeWidth={1.5}

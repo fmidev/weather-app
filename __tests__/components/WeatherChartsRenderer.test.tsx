@@ -10,6 +10,7 @@ const mockCartesianChart = jest.fn();
 const mockLine = jest.fn();
 const mockPath = jest.fn();
 const mockRect = jest.fn();
+let mockUseCardinalsForWindDirection = false;
 
 jest.mock('../../src/assets/fonts/Roboto-Regular.ttf', () => 1);
 jest.mock('../../src/assets/fonts/Roboto-Bold.ttf', () => 2);
@@ -17,8 +18,13 @@ jest.mock('../../src/assets/fonts/Roboto-Bold.ttf', () => 2);
 jest.mock('@config', () => ({
   Config: { get: () => ({
     units: { temperature: 'C', precipitation: 'mm', wind: 'm/s', pressure: 'hPa' },
+    useCardinalsForWindDirection: mockUseCardinalsForWindDirection,
   }) },
 }));
+
+beforeEach(() => {
+  mockUseCardinalsForWindDirection = false;
+});
 
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({
@@ -234,6 +240,54 @@ test('caps the visible wind scale at 15 when its domain ends there', () => {
   const chartProps = mockCartesianChart.mock.calls[0][0];
   expect(chartProps.yAxis[0].tickValues).toEqual([0, 5, 10, 15]);
   expect(chartProps.viewport).toEqual({ y: [0, 15] });
+});
+
+test.each([
+  [false, false],
+  [false, true],
+  [true, false],
+  [true, true],
+])('points wind arrows downwind with cardinals=%s and observations=%s', (cardinals, observation) => {
+  mockUseCardinalsForWindDirection = cardinals;
+  mockPath.mockClear();
+  const start = moment('2026-10-02 00:00');
+  const data = [0, 90, 180, 270, 30].map((windDirection, hour) => ({
+    x: start.clone().add(hour, 'hours').valueOf(),
+    windSpeedMS: 4,
+    windDirection,
+  }));
+
+  render(
+    <ChartDataRenderer
+      data={data}
+      chartType="wind"
+      domain={{ x: [data[0].x, data[4].x], y: [0, 20] }}
+      tickValues={data.map(({ x }) => x)}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily={false}
+      observation={observation}
+      precipitationValues={data.map(() => null)}
+    />
+  );
+
+  const arrows = mockPath.mock.calls
+    .map(([props]) => props)
+    .filter((props) => props.strokeWidth === 1.5);
+  const expectedVectors = [
+    [0, 12], // Wind from north points south.
+    [-12, 0],
+    [0, -12],
+    [12, 0],
+    cardinals ? [-6 * Math.sqrt(2), 6 * Math.sqrt(2)] : [-6, 6 * Math.sqrt(3)],
+  ];
+  expect(arrows).toHaveLength(expectedVectors.length);
+  arrows.forEach(({ path }, index) => {
+    const [tail, tip] = path.commands;
+    expect(tip.x - tail.x).toBeCloseTo(expectedVectors[index][0]);
+    expect(tip.y - tail.y).toBeCloseTo(expectedVectors[index][1]);
+  });
 });
 
 test('draws wind observation arrows every full hour', () => {
