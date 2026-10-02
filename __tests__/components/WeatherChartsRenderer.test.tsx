@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import ChartDataRenderer from '@components/weather/charts/ChartDataRenderer';
 import { prepareChartData } from '@components/weather/charts/data';
-import { ChartData } from '@components/weather/charts/types';
+import { ChartData, ChartKey, ChartPoint, ChartType } from '@components/weather/charts/types';
 
 const mockCartesianChart = jest.fn();
 const mockLine = jest.fn();
@@ -167,7 +167,8 @@ test('uses zero-aligned temperature ticks for the grid', () => {
 
 test('uses five-hPa ticks in pressure observation charts', () => {
   mockCartesianChart.mockClear();
-  render(
+  mockLine.mockClear();
+  const { getAllByTestId } = render(
     <ChartDataRenderer
       data={[{ x: 1000, pressure: 1010 }]}
       chartType="pressure"
@@ -183,6 +184,80 @@ test('uses five-hPa ticks in pressure observation charts', () => {
   );
 
   expect(mockCartesianChart.mock.calls[0][0].yAxis[0].tickValues).toEqual([1005, 1010, 1015]);
+  expect(getAllByTestId('xl-line')).toHaveLength(1);
+  expect(mockLine).toHaveBeenCalledTimes(1);
+  expect(mockLine.mock.calls[0][0]).toEqual(expect.objectContaining({
+    color: '#00f',
+    points: [expect.objectContaining({ xValue: 1000, yValue: 1010, y: expect.any(Number) })],
+  }));
+});
+
+test.each<{
+  name: string;
+  chartType: ChartType;
+  parameter: ChartKey;
+  values: Array<number | null>;
+  otherValues?: Partial<ChartPoint>;
+  domain: [number, number];
+  observation: boolean;
+  color: string;
+}>([
+  {
+    name: 'observation humidity in preference to relative humidity',
+    chartType: 'humidity', parameter: 'humidity', values: [80, null, 0],
+    otherValues: { relativeHumidity: 95 }, domain: [0, 100], observation: true, color: '#00f',
+  },
+  {
+    name: 'forecast relative humidity when humidity is missing',
+    chartType: 'humidity', parameter: 'relativeHumidity', values: [70, null, 0],
+    otherValues: { humidity: null }, domain: [0, 100], observation: false, color: '#00f',
+  },
+  {
+    name: 'observation cloud height',
+    chartType: 'cloud', parameter: 'cloudHeight', values: [1500, null, 0],
+    domain: [0, 2000], observation: true, color: '#111',
+  },
+  {
+    name: 'forecast UV index',
+    chartType: 'uv', parameter: 'uvCumulated', values: [3, null, 0],
+    domain: [0, 10], observation: false, color: '#00f',
+  },
+  {
+    name: 'forecast pressure',
+    chartType: 'pressure', parameter: 'pressure', values: [1010, null, 1005],
+    domain: [1000, 1020], observation: false, color: '#00f',
+  },
+])('renders $name as a line with the correct values and missing-data gaps', ({
+  chartType, parameter, values, otherValues, domain, observation, color,
+}) => {
+  mockLine.mockClear();
+  const ticks = [1000, 2000, 3000];
+  const { getAllByTestId } = render(
+    <ChartDataRenderer
+      data={values.map((value, index) => ({
+        x: ticks[index], ...otherValues, [parameter]: value,
+      }))}
+      chartType={chartType}
+      domain={{ x: [ticks[0], ticks[2]], y: domain }}
+      tickValues={ticks}
+      width={300}
+      locale="fi"
+      clockType={24}
+      isDaily={false}
+      observation={observation}
+      precipitationValues={values.map(() => null)}
+    />
+  );
+
+  expect(getAllByTestId('xl-line')).toHaveLength(1);
+  expect(mockLine).toHaveBeenCalledTimes(1);
+  const lineProps = mockLine.mock.calls[0][0];
+  expect(lineProps.color).toBe(color);
+  expect(lineProps.points.map(({ xValue }: { xValue: number }) => xValue)).toEqual(ticks);
+  expect(lineProps.points.map(({ yValue }: { yValue: number | null }) => yValue)).toEqual(values);
+  expect(lineProps.points[0].y).toEqual(expect.any(Number));
+  expect(lineProps.points[1].y).toBeNull();
+  expect(lineProps.points[2].y).toEqual(expect.any(Number));
 });
 
 test('draws smaller wind arrows above the plot and uses five-unit wind ticks', () => {
