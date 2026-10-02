@@ -79,14 +79,26 @@ const arrowPath = (x: number, y: number, degrees: number) => {
 
 const windAreaPath = (speed: PointsArray, gust: PointsArray) => {
   const builder = Skia.PathBuilder.Make();
-  const pairs = speed
-    .map((point, index) => ({ speed: point, gust: gust[index] }))
-    .filter(({ speed: low, gust: high }) => low?.y != null && high?.y != null);
-  if (pairs.length === 0) return builder.build();
-  builder.moveTo(pairs[0].speed.x, pairs[0].speed.y as number);
-  pairs.forEach(({ speed: point }) => builder.lineTo(point.x, point.y as number));
-  pairs.reverse().forEach(({ gust: point }) => builder.lineTo(point.x, point.y as number));
-  builder.close();
+  let segment: Array<{ speed: PointsArray[number]; gust: PointsArray[number] }> = [];
+
+  const closeSegment = () => {
+    if (segment.length === 0) return;
+    builder.moveTo(segment[0].speed.x, segment[0].speed.y as number);
+    segment.forEach(({ speed: point }) => builder.lineTo(point.x, point.y as number));
+    [...segment].reverse().forEach(({ gust: point }) => builder.lineTo(point.x, point.y as number));
+    builder.close();
+    segment = [];
+  };
+
+  speed.forEach((point, index) => {
+    const gustPoint = gust[index];
+    if (point?.y == null || gustPoint?.y == null) {
+      closeSegment();
+      return;
+    }
+    segment.push({ speed: point, gust: gustPoint });
+  });
+  closeSegment();
   return builder.build();
 };
 
