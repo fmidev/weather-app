@@ -3,6 +3,8 @@ import { render } from '@testing-library/react-native';
 import moment from 'moment';
 
 import ChartDataRenderer from '@components/weather/charts/ChartDataRenderer';
+import { prepareChartData } from '@components/weather/charts/data';
+import { ChartData } from '@components/weather/charts/types';
 
 const mockCartesianChart = jest.fn();
 const mockLine = jest.fn();
@@ -13,7 +15,9 @@ jest.mock('../../src/assets/fonts/Roboto-Regular.ttf', () => 1);
 jest.mock('../../src/assets/fonts/Roboto-Bold.ttf', () => 2);
 
 jest.mock('@config', () => ({
-  Config: { get: () => ({ units: { precipitation: 'mm', pressure: 'hPa' } }) },
+  Config: { get: () => ({
+    units: { temperature: 'C', precipitation: 'mm', wind: 'm/s', pressure: 'hPa' },
+  }) },
 }));
 
 jest.mock('@react-navigation/native', () => ({
@@ -26,7 +30,7 @@ jest.mock('@react-navigation/native', () => ({
       chartSecondaryLine: '#f00',
       secondaryBorder: '#999',
       primaryText: '#111',
-      rain: ['transparent', '#00f'],
+      rain: Array.from({ length: 9 }, (_, level) => `rain-${level}`),
     },
   }),
 }));
@@ -114,6 +118,8 @@ test('renders temperature data through CartesianChart and Line', () => {
       domain={{ x: [1000, 2000], y: [0, 10] }}
       tickValues={[1000, 2000]}
       width={300}
+      topPadding={80}
+      height={360}
       locale="en"
       clockType={24}
       isDaily={false}
@@ -126,6 +132,7 @@ test('renders temperature data through CartesianChart and Line', () => {
   expect(mockCartesianChart.mock.calls[0][0]).toEqual(expect.objectContaining({
     xKey: 'x',
     yKeys: ['temperature', 'feelsLike', 'dewPoint'],
+    padding: expect.objectContaining({ top: 80 }),
   }));
   expect(mockLine).toHaveBeenCalledTimes(1);
 });
@@ -457,6 +464,46 @@ test('draws daily rain on its own day from the rain zero level', () => {
     .map(([props]) => props)
     .filter((props) => props.color === 'rgb(30, 110, 214)');
   expect(rainBars).toEqual([expect.objectContaining({ x: 10, y: 92, width: 10, height: 3 })]);
+});
+
+test('uses each observation timestamp’s precipitation level for its rain bar', () => {
+  mockRect.mockClear();
+  const data = [
+    { epochtime: 500, temperature: -2, precipitation1h: null },
+    { epochtime: 400, temperature: -1, precipitation1h: 0 },
+    { epochtime: 300, temperature: 3, precipitation1h: 10 },
+    { epochtime: 200, temperature: 2, precipitation1h: 0.2 },
+    { epochtime: 100, temperature: 1, precipitation1h: 4 },
+  ] as unknown as ChartData;
+  const prepared = prepareChartData(data, 'weather', true);
+
+  render(
+    <ChartDataRenderer
+      data={prepared.points}
+      chartType="weather"
+      domain={{ x: [100000, 500000], y: prepared.domain.y ?? [0, 10] }}
+      tickValues={[100000, 200000, 300000, 400000, 500000]}
+      width={300}
+      locale="en"
+      clockType={24}
+      isDaily={false}
+      observation
+      precipitationValues={prepared.precipitationValues}
+    />
+  );
+
+  const rainBars = mockRect.mock.calls
+    .map(([props]) => props)
+    .filter((props) => typeof props.color === 'string' && props.color.startsWith('rain-'));
+  expect(rainBars.map(({ x, color }) => ({ x, color }))).toEqual([
+    { x: -3, color: 'rain-6' },
+    { x: 7, color: 'rain-2' },
+    { x: 17, color: 'rain-8' },
+    { x: 27, color: 'rain-0' },
+  ]);
+  // The mock scale maps temperature zero to y=90, above the chart bottom (y=100).
+  rainBars.forEach(({ y, height }) => expect(y + height).toBeCloseTo(90));
+  expect(rainBars[3].height).toBe(0);
 });
 
 test('centers the last forecast hour on its tick while keeping it inside the canvas', () => {

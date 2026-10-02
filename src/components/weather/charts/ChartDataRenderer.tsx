@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import moment from '@utils/moment';
 import {
@@ -28,6 +28,7 @@ import { tickFormat } from '@utils/chart';
 import { Config } from '@config';
 import { ChartDomain, ChartKey, ChartPoint, ChartType } from './types';
 import { getChartYTicks } from './ticks';
+import { CHART_HEIGHT, CHART_TOP_PADDING } from './layout';
 
 type Props = {
   data: ChartPoint[];
@@ -35,6 +36,8 @@ type Props = {
   domain: ChartDomain;
   tickValues: number[];
   width: number;
+  height?: number;
+  topPadding?: number;
   locale: string;
   clockType: ClockType;
   isDaily: boolean;
@@ -108,6 +111,7 @@ const labelWidth = (label: string, font: ReturnType<typeof useFont>) =>
 const ChartDataRenderer: React.FC<Props> = ({
   data, chartType, domain, tickValues, width, locale, clockType,
   isDaily, observation, units, precipitationValues, onYScaleChange,
+  height = CHART_HEIGHT, topPadding = CHART_TOP_PADDING,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { fontScale } = useWindowDimensions();
@@ -208,7 +212,7 @@ const ChartDataRenderer: React.FC<Props> = ({
   );
 
   return (
-    <View style={[styles.chart, { width }]}>
+    <View style={{ width, height }}>
       <CartesianChart
         data={data}
         onScaleChange={(_, yScale) => onYScaleChange?.(
@@ -219,7 +223,7 @@ const ChartDataRenderer: React.FC<Props> = ({
         yKeys={yKeys}
         domain={{ x: xDomain, y: yDomain }}
         viewport={chartType === 'wind' ? { y: yDomain } : undefined}
-        padding={{ top: 20, bottom: 20, ...chartPadding }}
+        padding={{ top: topPadding, bottom: 20, ...chartPadding }}
         xAxis={{
           font,
           labelRenderer: xAxisLabelRenderer,
@@ -257,6 +261,7 @@ const ChartDataRenderer: React.FC<Props> = ({
         })}>
         {({ points, chartBounds, xScale, yScale }) => {
           const rain = points.precipitation1h;
+          const weatherRainBaseline = yScale(0);
           const rainBars = rain?.map((point, index) => {
             if (point.y == null) return null;
             const amount = precipitationValues[index] ?? 0;
@@ -265,9 +270,9 @@ const ChartDataRenderer: React.FC<Props> = ({
                 <Rect
                   key={`rain-${index}`}
                   x={point.x - 3}
-                  y={Math.min(point.y, chartBounds.bottom)}
+                  y={Math.min(point.y, weatherRainBaseline)}
                   width={6}
-                  height={Math.abs(chartBounds.bottom - point.y)}
+                  height={Math.abs(weatherRainBaseline - point.y)}
                   color={colors.rain[getPrecipitationLevel(amount, precipitationUnit)]}
                 />
               ) : (
@@ -389,7 +394,3 @@ const ChartDataRenderer: React.FC<Props> = ({
 };
 
 export default ChartDataRenderer;
-
-const styles = StyleSheet.create({
-  chart: { height: 300 },
-});

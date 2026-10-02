@@ -18,7 +18,8 @@ export const alignTemperatureDomain = (
 ): ChartDomain => {
   if (!['temperature', 'weather'].includes(chartType) || !domain.y) return domain;
 
-  const [minimum, maximum] = domain.y;
+  const minimum = chartType === 'weather' ? Math.min(0, domain.y[0]) : domain.y[0];
+  const maximum = chartType === 'weather' ? Math.max(5, domain.y[1]) : domain.y[1];
   const step = fiveBasedStep(maximum - minimum);
   return {
     ...domain,

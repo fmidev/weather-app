@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,7 @@ import { chartYLabelText } from '@utils/chart';
 import { Config } from '@config';
 import { ChartDomain, ChartType } from './types';
 import { getChartYTicks } from './ticks';
+import { CHART_HEIGHT, CHART_TOP_PADDING } from './layout';
 
 type Props = {
   chartType: ChartType;
@@ -23,11 +24,14 @@ type Props = {
   units?: UnitMap;
   secondaryParameterMissing?: boolean;
   precipitationMaximum: number;
+  height?: number;
+  onTopPaddingChange?: (padding: number) => void;
 };
 
 const ChartYAxis: React.FC<Props> = ({
   chartType, domain, yScale, secondaryDomain, observation, right,
   units, secondaryParameterMissing, precipitationMaximum,
+  height = CHART_HEIGHT, onTopPaddingChange,
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation();
@@ -36,12 +40,25 @@ const ChartYAxis: React.FC<Props> = ({
   const isRunningOnMac = useIsRunningOnMac();
   const precipitationUnit = units?.precipitation.unitAbb ?? Config.get('settings').units.precipitation;
   const [tickHeight, setTickHeight] = useState<number>();
+  const [titleHeight, setTitleHeight] = useState(0);
+  const scaledFontSize = fontScale * (isRunningOnMac ? MAC_CONTENT_SIZE_MULTIPLIER : 1);
+  const tickFontSize = Math.min(scaledFontSize * 14, 20);
+  const titleFontSize = Math.min(scaledFontSize * 13, 18);
 
-  if (right && (
+  const hidden = right && (
     (observation && !['visCloud', 'daily', 'weather'].includes(chartType)) ||
     (!observation && chartType !== 'precipitation') ||
     secondaryParameterMissing
-  )) return null;
+  );
+
+  useEffect(() => {
+    // Leave room above the top tick for the full title and a visible gap.
+    onTopPaddingChange?.(hidden ? 0 : Math.max(
+      CHART_TOP_PADDING, titleHeight + (tickHeight ?? tickFontSize) / 2 + 8
+    ));
+  }, [hidden, onTopPaddingChange, tickFontSize, tickHeight, titleHeight]);
+
+  if (hidden) return null;
 
   const rawTitle = chartYLabelText(chartType, units, unitTranslate)[right ? 1 : 0] ?? '';
   const title = rawTitle.includes(':') ? t(rawTitle).toLocaleLowerCase() : rawTitle;
@@ -51,7 +68,7 @@ const ChartYAxis: React.FC<Props> = ({
     chartType,
     units?.pressure.unitAbb ?? Config.get('settings').units.pressure,
     observation
-  ).reverse();
+  ).filter((tick) => chartType !== 'weather' || !right || tick >= 0).reverse();
   const format = (value: number) => {
     if (chartType === 'precipitation') {
       return right
@@ -61,18 +78,18 @@ const ChartYAxis: React.FC<Props> = ({
     if (chartType === 'visCloud') return right ? `${Math.round(value * 8)}/8` : value * 60;
     if (chartType === 'weather' && right) {
       const secondary = secondaryDomain?.y ?? [0, 10];
-      return (value - range[0]) / (range[1] - range[0]) * (secondary[1] - secondary[0]);
+      return value / range[1] * (secondary[1] - secondary[0]);
     }
     if (chartType === 'daily' && right) return value - range[0];
     return value;
   };
-  const scaledFontSize = fontScale * (isRunningOnMac ? MAC_CONTENT_SIZE_MULTIPLIER : 1);
-  const tickFontSize = Math.min(scaledFontSize * 14, 20);
-  const titleFontSize = Math.min(scaledFontSize * 13, 18);
-
   return (
-    <View style={styles.axis}>
-      <Text style={[styles.title, { color: colors.hourListText, fontSize: titleFontSize }]}>
+    <View style={[styles.axis, { height }]}>
+      <Text
+        onLayout={({ nativeEvent }) => setTitleHeight(nativeEvent.layout.height)}
+        style={[styles.title, right ? styles.rightTick : styles.leftTick, {
+          color: colors.hourListText, fontSize: titleFontSize,
+        }]}>
         {title}
       </Text>
       {yScale && ticks.map((tick, index) => {
@@ -88,8 +105,8 @@ const ChartYAxis: React.FC<Props> = ({
             <Text
               key={index}
               onLayout={index === 0 ? ({ nativeEvent }) => {
-                const height = nativeEvent.layout.height;
-                setTickHeight((previous) => previous === height ? previous : height);
+                const measuredHeight = nativeEvent.layout.height;
+                setTickHeight((previous) => previous === measuredHeight ? previous : measuredHeight);
               } : undefined}
               style={[styles.tick, right ? styles.rightTick : styles.leftTick, {
                 color: colors.hourListText,
@@ -105,8 +122,8 @@ const ChartYAxis: React.FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
-  axis: { width: 45, height: 300 },
-  title: { fontFamily: REGULAR_FONT, height: 20, textAlign: 'right', width: '100%', position: 'absolute' },
+  axis: { width: 45 },
+  title: { fontFamily: REGULAR_FONT, top: 0, width: '100%', position: 'absolute' },
   tick: { fontFamily: REGULAR_FONT, position: 'absolute', left: 0, right: 0 },
   leftTick: { textAlign: 'right' },
   rightTick: { textAlign: 'left' },

@@ -64,7 +64,7 @@ export const chartYDomain = (
 
   return {
     y: [
-      ['precipitation', 'uv'].includes(chartType)
+      ['precipitation', 'uv'].includes(chartType) || (chartType === 'weather' && min >= 0)
         ? 0
         : Math.floor((min - 1) / 5) * 5,
       Math.ceil((max + 1) / 5) * 5,

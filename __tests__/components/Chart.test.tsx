@@ -1,8 +1,10 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 
 import Chart from '@components/weather/charts/Chart';
+import ChartYAxis from '@components/weather/charts/ChartYAxis';
+import ChartDataRenderer from '@components/weather/charts/ChartDataRenderer';
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: React.ComponentType) => Component,
@@ -59,6 +61,27 @@ const baseProps = {
 };
 
 afterEach(() => jest.restoreAllMocks());
+
+test('shares the larger axis title space and preserves the chart drawing height', () => {
+  const view = render(<Chart {...baseProps} />);
+  const axes = view.UNSAFE_getAllByType(ChartYAxis);
+  const initial = view.UNSAFE_getByType(ChartDataRenderer).props;
+
+  act(() => {
+    axes[0].props.onTopPaddingChange(40);
+    axes[1].props.onTopPaddingChange(80);
+  });
+
+  const renderer = view.UNSAFE_getByType(ChartDataRenderer).props;
+  expect(renderer.topPadding).toBe(80);
+  expect(renderer.height - renderer.topPadding).toBe(initial.height - initial.topPadding);
+  view.UNSAFE_getAllByType(ChartYAxis).forEach((axis) => {
+    expect(axis.props.height).toBe(renderer.height);
+  });
+
+  act(() => axes[1].props.onTopPaddingChange(0));
+  expect(view.UNSAFE_getByType(ChartDataRenderer).props.topPadding).toBe(40);
+});
 
 test('updates the active day after momentum scrolling and skips unchanged days', () => {
   const setActiveDayIndex = jest.fn();

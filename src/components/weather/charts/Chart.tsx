@@ -25,6 +25,7 @@ import { limitUvForecast, prepareChartData } from './data';
 import ChartDataRenderer from './ChartDataRenderer';
 import ChartYAxis from './ChartYAxis';
 import ChartLegend from './Legend';
+import { CHART_HEIGHT, CHART_TOP_PADDING } from './layout';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
@@ -57,6 +58,10 @@ const Chart: React.FC<ChartProps> = ({
 }) => {
   const scrollRef = useRef<ScrollView>(null);
   const [scrollIndex, setScrollIndex] = useState(observation ? 480 : 0);
+  const [leftTopPadding, setLeftTopPadding] = useState(CHART_TOP_PADDING);
+  const [rightTopPadding, setRightTopPadding] = useState(0);
+  const topPadding = Math.max(CHART_TOP_PADDING, leftTopPadding, rightTopPadding);
+  const chartHeight = CHART_HEIGHT + topPadding - CHART_TOP_PADDING;
   const [yScale, setYScale] = useState<{
     domain: [number, number];
     range: [number, number];
@@ -177,6 +182,8 @@ const Chart: React.FC<ChartProps> = ({
       style={styles.container}>
       <View style={styles.row}>
         <ChartYAxis
+          height={chartHeight}
+          onTopPaddingChange={setLeftTopPadding}
           chartType={chartType}
           domain={domain}
           yScale={yScale}
@@ -195,6 +202,8 @@ const Chart: React.FC<ChartProps> = ({
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}>
           <ChartDataRenderer
+            height={chartHeight}
+            topPadding={topPadding}
             data={prepared.points}
             chartType={chartType}
             domain={domain}
@@ -210,6 +219,8 @@ const Chart: React.FC<ChartProps> = ({
           />
         </ScrollView>
         <ChartYAxis
+          height={chartHeight}
+          onTopPaddingChange={setRightTopPadding}
           chartType={chartType}
           domain={domain}
           yScale={yScale}

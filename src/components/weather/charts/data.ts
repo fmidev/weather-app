@@ -53,10 +53,12 @@ export const prepareChartData = (
     });
     return point;
   });
+  converted.sort((a, b) => a.x - b.x);
 
   const values = converted.flatMap((point) =>
     parameters
-      .filter((parameter) => parameter !== 'windDirection' && parameter !== 'pop')
+      .filter((parameter) => parameter !== 'windDirection' && parameter !== 'pop' &&
+        (chartType !== 'weather' || parameter !== 'precipitation1h'))
       .map((parameter) => point[parameter as ChartKey] ?? null)
   );
   const maximumWindValue = chartType === 'wind'
@@ -108,14 +110,13 @@ export const prepareChartData = (
       };
     }
     if (chartType === 'weather') {
-      const minimum = yDomain.y?.[0] ?? 0;
-      const range = (yDomain.y?.[1] ?? 1) - minimum;
+      const maximum = yDomain.y?.[1] ?? 1;
       const divider = secondaryDomain?.y?.[1] ?? 1;
       return {
         ...point,
         precipitation1h: point.precipitation1h == null
           ? null
-          : minimum + (point.precipitation1h / divider) * range,
+          : (point.precipitation1h / divider) * maximum,
       };
     }
     if (chartType === 'daily') {

@@ -19,6 +19,14 @@ test('expands a wider temperature domain to whole tick intervals', () => {
   expect(getChartYTicks(domain, 'weather')).toEqual([-10, 0, 10, 20, 30]);
 });
 
+test('weather charts keep room above zero for rain even when all temperatures are negative', () => {
+  const domain = alignTemperatureDomain({ y: [-20, -5] }, 'weather');
+
+  expect(domain.y).toEqual([-20, 5]);
+  expect(getChartYTicks(domain, 'weather')).toContain(0);
+  expect(alignTemperatureDomain({ y: [5, 20] }, 'weather').y).toEqual([0, 20]);
+});
+
 test('retains the existing tick spacing for other chart types', () => {
   expect(getChartYTicks({ y: [0, 100] }, 'humidity')).toEqual([0, 20, 40, 60, 80, 100]);
   expect(getChartYTicks({ y: [0, 1] }, 'visCloud')).toEqual([0, 0.25, 0.5, 0.75, 1]);

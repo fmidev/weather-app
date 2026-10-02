@@ -31,20 +31,57 @@ test('precipitation and probability use the same y scale while missing values st
   expect(result.points[1]).toMatchObject({ precipitation1h: null, pop: null });
 });
 
-test('weather precipitation is scaled into the temperature domain', () => {
+test('keeps precipitation amounts aligned with newest-first observation points', () => {
   const data = [
-    { epochtime: 100, temperature: -2, dewPoint: -3, precipitation1h: 2 },
+    { epochtime: 300, precipitation1h: 10 },
+    { epochtime: 200, precipitation1h: 0.2 },
+    { epochtime: 100, precipitation1h: 4 },
+  ] as unknown as ChartData;
+
+  const result = prepareChartData(data, 'precipitation', true);
+
+  expect(result.points.map((point) => point.x)).toEqual([100000, 200000, 300000]);
+  expect(result.precipitationValues).toEqual([4, 0.2, 10]);
+  expect(result.points.map((point) => point.precipitation1h)).toEqual([
+    4 / result.precipitationMaximum,
+    0.2 / result.precipitationMaximum,
+    10 / result.precipitationMaximum,
+  ]);
+  expect(data.map((step) => step.epochtime)).toEqual([300, 200, 100]);
+});
+
+test.each([0, 0.5, 5])('weather axes start at zero when the minimum temperature is %s', (minimum) => {
+  const data = [
+    { epochtime: 100, temperature: 12, dewPoint: minimum, precipitation1h: 0 },
+    { epochtime: 200, temperature: 16, dewPoint: 10, precipitation1h: 25.5 },
   ] as unknown as ChartData;
 
   const result = prepareChartData(data, 'weather', true);
-  const minimum = result.domain.y?.[0] ?? 0;
+
+  expect(result.domain.y).toEqual([0, 20]);
+  expect(result.secondaryDomain?.y?.[0]).toBe(0);
+  expect(result.points[0].precipitation1h).toBe(0);
+});
+
+test('weather precipitation starts at zero while negative temperatures remain visible', () => {
+  const data = [
+    { epochtime: 100, temperature: -2, dewPoint: -3, precipitation1h: 2 },
+    { epochtime: 200, temperature: -1, dewPoint: -2, precipitation1h: 0 },
+    { epochtime: 300, temperature: -3, dewPoint: -4, precipitation1h: null },
+  ] as unknown as ChartData;
+
+  const result = prepareChartData(data, 'weather', true);
   const maximum = result.domain.y?.[1] ?? 0;
   const rainMaximum = result.secondaryDomain?.y?.[1] ?? 1;
 
   expect(result.points[0].temperature).toBe(-2);
   expect(result.points[0].precipitation1h).toBeCloseTo(
-    minimum + (2 / rainMaximum) * (maximum - minimum)
+    (2 / rainMaximum) * maximum
   );
+  expect(result.points[1].precipitation1h).toBe(0);
+  expect(result.points[2].precipitation1h).toBeNull();
+  expect(result.domain.y?.[0]).toBeLessThan(0);
+  expect(maximum).toBeGreaterThan(0);
 });
 
 test('temperature data keeps a domain aligned to five degree ticks', () => {
