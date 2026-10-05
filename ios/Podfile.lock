@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.11.1)
+  - Alamofire (5.12.2)
   - AsyncLocationKit (1.6.3)
   - BVLinearGradient (2.8.3):
     - React-Core
@@ -12,17 +12,17 @@ PODS:
     - libavif/core
     - libdav1d (>= 0.6.0)
   - libdav1d (1.2.0)
-  - libwebp (1.5.0):
-    - libwebp/demux (= 1.5.0)
-    - libwebp/mux (= 1.5.0)
-    - libwebp/sharpyuv (= 1.5.0)
-    - libwebp/webp (= 1.5.0)
-  - libwebp/demux (1.5.0):
+  - libwebp (1.6.0):
+    - libwebp/demux (= 1.6.0)
+    - libwebp/mux (= 1.6.0)
+    - libwebp/sharpyuv (= 1.6.0)
+    - libwebp/webp (= 1.6.0)
+  - libwebp/demux (1.6.0):
     - libwebp/webp
-  - libwebp/mux (1.5.0):
+  - libwebp/mux (1.6.0):
     - libwebp/demux
-  - libwebp/sharpyuv (1.5.0)
-  - libwebp/webp (1.5.0):
+  - libwebp/sharpyuv (1.6.0)
+  - libwebp/webp (1.6.0):
     - libwebp/sharpyuv
   - logicwind-react-native-matomo-tracker (0.3.13):
     - hermes-engine
@@ -161,7 +161,7 @@ PODS:
     - React-utils
     - ReactNativeDependencies
     - Yoga
-  - React-Core-prebuilt (0.86.2):
+  - React-Core-prebuilt (0.86.3):
     - ReactNativeDependencies
   - React-Core/CoreModulesHeaders (0.86.3):
     - hermes-engine
@@ -2926,14 +2926,14 @@ CHECKOUT OPTIONS:
     :tag: 1.6.4
 
 SPEC CHECKSUMS:
-  Alamofire: eec6cd8f73b242b59e34153a606a909eb9864b14
+  Alamofire: c5f37d8f438dc1d7fd3ff767f2f80fd01ca381d7
   AsyncLocationKit: b34a2ee37910405a98401021b6aedeb37440a1a2
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   FBLazyVector: 2138c6c2ab66c31bf5754dc18097fbc498a49c7f
   hermes-engine: 63c5db7d529c36335fada6582fd293ae2a105d77
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
-  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
+  libwebp: af5937a13536ef73f3784d69cc342b98961acf33
   logicwind-react-native-matomo-tracker: 8f702572bf2d185af34b0cb7ce92b27995e580a1
   MapLibreReactNative: 8a209d4fb313a40b90bfef163228a6a42e6de94e
   MatomoTracker: dbf4093d2c36b78244ce481d7a10086fad825c7f
@@ -2947,7 +2947,7 @@ SPEC CHECKSUMS:
   React: 52dce66f71097ed7a4968673d95eeb8095ded74e
   React-callinvoker: afa0525ab27f4ffbb4c377f855fe9368edb099bc
   React-Core: fdb67992e049f2526ade3e258c21b8404e7943a3
-  React-Core-prebuilt: 405cf395d66cf694faf9aed3483a21b5515cec85
+  React-Core-prebuilt: 9abc518a8aa7aa4fa3bbbe52bc825bcd9fb3c3ce
   React-CoreModules: 456d91152aa283ddc6ae8abfcec3292af88912f6
   React-cxxreact: 73a20c0dde5ec221f98d5e4da0e71349ab48353d
   React-debug: d06757ac6c78b84af0c31e513a83662d6b8d0ac7
