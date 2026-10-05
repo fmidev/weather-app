@@ -138,6 +138,19 @@ describe('AutocompleteApi', () => {
     }
   );
 
+  it.each([
+    ['an empty array', []],
+    ['null', null],
+  ])('normalizes an empty response with %s results', async (_description, result) => {
+    const data = { autocomplete: { ...autocomplete, 'found-results': 0, result } };
+    mockAxiosClient.mockResolvedValueOnce({ data });
+
+    await expect(getAutocomplete('no-matches')).resolves.toEqual({
+      autocomplete: { ...autocomplete, 'found-results': 0, result: [] },
+    });
+    expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
+  });
+
   it.each<[string, unknown]>([
     ['null response', null],
     ['missing data', undefined],
@@ -147,6 +160,7 @@ describe('AutocompleteApi', () => {
     ['negative result count', { autocomplete: { ...autocomplete, 'found-results': -1 } }],
     ['excessive result limit', { autocomplete: { ...autocomplete, 'max-results': 101 } }],
     ['non-array results', { autocomplete: { ...autocomplete, result: {} } }],
+    ['null results with a positive result count', { autocomplete: { ...autocomplete, result: null } }],
     ['excessive results', { autocomplete: { ...autocomplete, result: Array(101).fill(location) } }],
     ...[
       ['missing required fields', { name: 'Helsinki' }],

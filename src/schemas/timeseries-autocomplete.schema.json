@@ -20,11 +20,21 @@
           "maximum": 100
         },
         "result": {
-          "type": "array",
+          "type": ["array", "null"],
           "items": {
             "$ref": "#/$defs/location"
           },
           "maxItems": 100
+        }
+      },
+      "if": {
+        "properties": {
+          "found-results": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "then": {
+        "properties": {
+          "result": { "type": "array" }
         }
       }
     }

@@ -52,6 +52,7 @@ Start Metro: yarn start
 Run iOS: yarn ios
 Run Android: yarn android`
 Run tests: yarn test
+Run integration tests: yarn test:integration:live
 Run linting: yarn lint
 
 ## Coding conventions
@@ -78,6 +79,7 @@ Run linting: yarn lint
 - Unit tests should be placed in `__tests__` directory; for widgets use their conventions.
 - One test file for one component or ts-module.
 - Don't combine tests for multiple components or modules in one test file.
+- Live integration tests are placed in `__tests__/integration/live` directory. Don't create new integration tests if not asked, but check that current integration tests are relevant after changing or adding features.
 
 # Localization
 
