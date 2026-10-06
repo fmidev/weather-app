@@ -9,7 +9,12 @@ import packageJSON from '../../package.json';
 import autocompleteSchema from '../schemas/timeseries-autocomplete.schema.json';
 
 const ajv = new Ajv();
-const validateAutocomplete = ajv.compile<AutoComplete>(autocompleteSchema);
+type AutocompleteResponse = {
+  autocomplete: Omit<AutoComplete['autocomplete'], 'result'> & {
+    result: AutoComplete['autocomplete']['result'] | null;
+  };
+};
+const validateAutocomplete = ajv.compile<AutocompleteResponse>(autocompleteSchema);
 
 let abortController: AbortController | undefined;
 
@@ -52,6 +57,14 @@ const getAutocomplete = async (pattern: string): Promise<AutoComplete> => {
     throw new Error(error);
   }
 
+  // SmartMet uses null for an empty result set. Keep the application's result
+  // type consistent after validating the response metadata.
+  if (data?.autocomplete?.result === null) {
+    return {
+      ...data,
+      autocomplete: { ...data.autocomplete, result: [] },
+    };
+  }
   return data;
 };
 

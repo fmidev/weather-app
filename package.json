@@ -8,6 +8,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest --verbose",
+    "test:integration:live": "jest --config jest.live.config.js --runInBand --watchman=false --verbose",
     "lint": "tsc --noEmit && eslint .",
     "lint-fix": "eslint --fix .",
     "lint:js": "eslint .",
@@ -136,7 +137,8 @@
     },
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/e2e/"
+      "/e2e/",
+      "/__tests__/integration/live/"
     ],
     "transform": {
       "/node_modules/react-native-config/index.js": "babel-jest"
