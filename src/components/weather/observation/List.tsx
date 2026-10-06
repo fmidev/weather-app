@@ -136,12 +136,12 @@ const List: React.FC<ListProps> = ({
         if (param === 'maximumTemperature') {
           return (
             <Text
+              numberOfLines={2}
               maxFontSizeMultiplier={1.2}
               key={param}
               style={[
                 styles.rowItem,
                 styles.listText,
-                styles.headerText,
                 styles.bold,
                 { color: colors.hourListText },
               ]}>
@@ -156,11 +156,11 @@ const List: React.FC<ListProps> = ({
 
         return (
           <Text
+            numberOfLines={2}
             maxFontSizeMultiplier={1.2}
             key={param}
             style={[
               styles.rowItem,
-              styles.headerText,
               styles.listText,
               styles.bold,
               { color: colors.hourListText },
@@ -374,8 +374,7 @@ const List: React.FC<ListProps> = ({
         <View
           testID={`observation_list_header_${parameter}`}
           style={[
-            styles.row,
-            styles.observationRow,
+            styles.observationHeader,
             {
               borderBottomColor: colors.border,
             },
@@ -383,6 +382,7 @@ const List: React.FC<ListProps> = ({
           {!isDaily && (
             <View style={styles.time}>
               <Text
+                numberOfLines={2}
                 maxFontSizeMultiplier={1.2}
                 style={[
                   styles.rowItem,
@@ -441,9 +441,8 @@ const List: React.FC<ListProps> = ({
               <View
                 testID={`observation_list_row_content_${timeStep.epochtime}`}
                 style={[
-                  styles.row,
-                  styles.observationRow,
-                  useCompactDailyLayout && styles.compactDailyObservationRow,
+                  useCompactDailyLayout ? styles.compactDailyObservationRow : styles.row,
+                  isDaily ? styles.dailyObservationRow : styles.observationRow,
                   {
                     backgroundColor:
                       !isDaily && i % 2 !== 0 ? GRAY_1_OPACITY : undefined,
@@ -501,8 +500,9 @@ const styles = StyleSheet.create({
   dailyRow: {
     flexDirection: 'row',
   },
-  headerText: {
-    maxHeight: 50,
+  observationHeader: {
+    flexDirection: 'row',
+    padding: 8,
   },
   listText: {
     fontSize: 16,
@@ -540,8 +540,11 @@ const styles = StyleSheet.create({
     maxHeight: 50,
     padding: 8,
   },
+  dailyObservationRow: {
+    padding: 8,
+  },
   compactDailyObservationRow: {
-    maxHeight: undefined,
+    width: '100%',
   },
   capitalize: {
     textTransform: 'capitalize',
