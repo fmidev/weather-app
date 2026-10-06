@@ -172,6 +172,7 @@ const ChartDataRenderer: React.FC<Props> = ({
       const lines = text.split('\n');
       const labelFont = lines.length > 1 ? boldFont : font;
       if (!labelFont) return null;
+      const dateOffset = forecastXAxis && lines.length > 1 ? 16 : 0;
       const [minimum, maximum] = xDomain;
       const tickX = maximum === minimum
         ? chartBounds.left
@@ -182,7 +183,7 @@ const ChartDataRenderer: React.FC<Props> = ({
           key={`${text}-${index}`}
           text={lineText}
           x={tickX - labelWidth(lineText, labelFont) / 2}
-          y={y + (index + 1) * fontSize}
+          y={y + (index + 1) * fontSize + dateOffset}
           font={labelFont}
           color={color}
         />
