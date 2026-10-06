@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import ObservationList from '../../src/components/weather/observation/List';
@@ -125,6 +125,7 @@ describe('Observation List', () => {
             parameters: [
               'temperature',
               'dewPoint',
+              'precipitation1h',
               'windSpeedMS',
               'windGust',
               'windDirection',
@@ -213,6 +214,42 @@ describe('Observation List', () => {
     expect(view.getByA11yLabel('windDirection.S.')).toBeTruthy();
   });
 
+  it.each([
+    [390, 1],
+    [320, 2],
+  ])('allows weather column headers to wrap without clipping at width %s and font scale %s', (width, fontScale) => {
+    jest.spyOn(require('react-native'), 'useWindowDimensions').mockReturnValue({
+      width, height: 844, scale: 3, fontScale,
+    });
+    const view = render(
+      <ObservationList
+        clockType={24 as any}
+        parameter="weather"
+        preferredDailyParameters={[]}
+        units={{} as any}
+        data={[{ epochtime: 2000001600, temperature: 5.2, dewPoint: 1.1, precipitation1h: 0.2 }] as any}
+      />
+    );
+    const header = view.getByTestId('observation_list_header_weather');
+    const style = StyleSheet.flatten(header.props.style);
+    expect(style.flex).toBeUndefined();
+    expect(style.maxHeight).toBeUndefined();
+    expect(style.padding).toBe(8);
+    [
+      'time',
+      'measurements.temperature °C',
+      'measurements.dewPoint °C',
+      'measurements.precipitation mm',
+    ].forEach((label) => {
+      const text = view.getByText(label);
+      expect(text.props.numberOfLines).toBe(2);
+      expect(StyleSheet.flatten(text.props.style).maxHeight).toBeUndefined();
+    });
+    // Header growth must leave the observation values on their own next row.
+    expect(view.getByText('5.2')).toBeTruthy();
+    expect(view.getByText('0.2')).toBeTruthy();
+  });
+
   it('renders daily rows once per day for daily parameters', () => {
     jest.spyOn(require('react-native'), 'useWindowDimensions').mockReturnValue({
       width: 768,
@@ -247,9 +284,14 @@ describe('Observation List', () => {
     ).toBe(true);
     expect(
       StyleSheet.flatten(
+        view.getByTestId('observation_list_row_2000001600').props.style
+      ).flex
+    ).toBeUndefined();
+    expect(
+      StyleSheet.flatten(
         view.getByTestId('observation_list_row_content_2000001600').props.style
       ).maxHeight
-    ).toBe(50);
+    ).toBeUndefined();
   });
 
   it('uses labeled daily rows and hides the table header on narrow displays', () => {
@@ -266,7 +308,10 @@ describe('Observation List', () => {
         parameter="daily"
         preferredDailyParameters={['daily']}
         units={{} as any}
-        data={[{ epochtime: 2000001600, rrday: 1 }] as any}
+        data={[
+          { epochtime: 2000001600, rrday: 1 },
+          { epochtime: 2000088000, rrday: 2 },
+        ] as any}
       />
     );
 
@@ -279,8 +324,54 @@ describe('Observation List', () => {
     ).toBe(false);
     expect(
       StyleSheet.flatten(
+        view.getByTestId('observation_list_row_2000001600').props.style
+      ).flex
+    ).toBeUndefined();
+    expect(
+      StyleSheet.flatten(
         view.getByTestId('observation_list_row_content_2000001600').props.style
       ).maxHeight
     ).toBeUndefined();
+    const dateHeaderStyle = StyleSheet.flatten(
+      view.getByTestId('observation_list_date_header_2000088000').props.style
+    );
+    expect(dateHeaderStyle.flex).toBeUndefined();
+    expect(dateHeaderStyle.maxHeight).toBeUndefined();
+  });
+
+  it.each([
+    [390, 1],
+    [320, 2],
+    [768, 2],
+  ])('allows daily content to grow before the next date header at width %s and font scale %s', (width, fontScale) => {
+    jest.spyOn(require('react-native'), 'useWindowDimensions').mockReturnValue({
+      width, height: 1024, scale: 2, fontScale,
+    });
+    const epochs = [2000001600, 2000088000, 2000174400];
+    const view = render(
+      <ObservationList
+        clockType={24 as any}
+        parameter="daily"
+        preferredDailyParameters={['daily']}
+        units={{} as any}
+        data={epochs.map((epochtime) => ({ epochtime, rrday: 1 })) as any}
+      />
+    );
+
+    epochs.forEach((epochtime) => {
+      const contentStyles = view.getByTestId(`observation_list_row_content_${epochtime}`).props.style;
+      // Native style arrays must not receive an inherited height cap, even
+      // when a later style sets maxHeight to undefined.
+      contentStyles.filter(Boolean).forEach((style: ViewStyle) => {
+        expect(StyleSheet.flatten(style).maxHeight).toBeUndefined();
+      });
+      if (width <= 500) {
+        const style = StyleSheet.flatten(contentStyles);
+        expect(style.flex).toBeUndefined();
+        expect(style.width).toBe('100%');
+      }
+    });
+    expect(view.getByTestId(`observation_list_date_header_${epochs[1]}`)).toBeTruthy();
+    expect(view.getByTestId(`observation_list_date_header_${epochs[2]}`)).toBeTruthy();
   });
 });
