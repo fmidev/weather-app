@@ -1,8 +1,11 @@
 import '@testing-library/react-native/dont-cleanup-after-each';
 import './weatherScreenNativeMocks';
 
-import { cleanup, waitFor } from '@testing-library/react-native';
+import { cleanup, fireEvent, waitFor, within } from '@testing-library/react-native';
 import Ajv from 'ajv/dist/2020';
+import ChartDataRenderer from '@components/weather/charts/ChartDataRenderer';
+import type { ChartPoint } from '@components/weather/charts/types';
+import type { PointsArray } from 'victory-native';
 import { Config } from '@config';
 import i18n from '@i18n';
 import { mountScreen } from './weatherScreenHarness';
@@ -20,6 +23,24 @@ const expectApiSuccess = (name: string, error: unknown) => {
     throw new Error(`${name}: ${message}`);
   }
   expect(error).toBe(false);
+};
+
+const expectLiveChart = (observation: boolean, timestamps: number[]) => {
+  const renderer = screen.view.UNSAFE_getAllByType(ChartDataRenderer)
+    .find((node) => node.props.observation === observation);
+  expect(renderer).toBeDefined();
+  const chart = within(renderer!);
+  const data: ChartPoint[] = chart.getByTestId('live-cartesian-chart').props.data;
+  expect(data.length).toBeGreaterThan(0);
+  expect(data.every(({ x }) => Number.isFinite(x) && timestamps.includes(x))).toBe(true);
+  const sample = data.find(({ temperature }) => typeof temperature === 'number' && Number.isFinite(temperature));
+  expect(sample).toBeDefined();
+  const points: PointsArray = chart.getAllByTestId('live-chart-line').flatMap((line) => line.props.points);
+  expect(points).toContainEqual(expect.objectContaining({
+    xValue: sample!.x,
+    yValue: sample!.temperature,
+    y: expect.any(Number),
+  }));
 };
 
 describe('WeatherScreen with live defaultConfig APIs', () => {
@@ -43,7 +64,7 @@ describe('WeatherScreen with live defaultConfig APIs', () => {
 
   afterAll(() => cleanup());
 
-  it('validates live forecast and UV responses and renders the default location', () => {
+  it('validates live forecast and UV responses and renders the default location and forecast chart', () => {
     const { forecast } = screen.store.getState();
     expectApiSuccess('Forecast/UV', forecast.error);
     const steps = forecast.data?.[defaultConfig.location.default.id];
@@ -53,9 +74,13 @@ describe('WeatherScreen with live defaultConfig APIs', () => {
     expect(screen.view.getByText(defaultConfig.location.default.name)).toBeTruthy();
     expect(screen.view.getByTestId('next-hour-forecast-time')).toBeTruthy();
     expect(screen.view.getByTestId('forecast_table_button')).toBeTruthy();
+    fireEvent.press(screen.view.getByTestId('forecast_chart_button'));
+    expect(screen.store.getState().forecast.displayFormat).toBe('chart');
+    expectLiveChart(false, steps!.map(({ epochtime }) => epochtime * 1000));
+    fireEvent.press(screen.view.getByTestId('forecast_table_button'));
   });
 
-  it('validates live hourly and daily observations and renders an observation station', () => {
+  it('validates live hourly and daily observations and renders an observation station and chart', () => {
     const { observation } = screen.store.getState();
     expectApiSuccess('Observations', observation.error);
     expect(observation.id).toBe(defaultConfig.location.default.id);
@@ -68,6 +93,7 @@ describe('WeatherScreen with live defaultConfig APIs', () => {
     expect(screen.view.getByTestId('observation_list_button')).toBeTruthy();
     expect(screen.view.getAllByText(new RegExp(station!.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).length)
       .toBeGreaterThan(0);
+    expectLiveChart(true, observation.data![stationId].map(({ epochtime }) => epochtime * 1000));
   });
 
   it('receives and validates the live geomagnetic observations used by the forecast', () => {

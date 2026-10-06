@@ -1,6 +1,7 @@
 // Keep live-test application components, Redux, translations and API modules real.
 // Replace native rendering/services that are unavailable in Jest.
 import React from 'react';
+import './chartNativeMocks';
 
 export const mockNavigation = { navigate: jest.fn() };
 export const mockFocus = { current: true };
@@ -51,13 +52,4 @@ jest.mock('react-native-raw-bottom-sheet', () => {
     ReactActual.useImperativeHandle(ref, () => ({ open: mockBottomSheetOpen, close: jest.fn() }));
     return null;
   });
-});
-
-jest.mock('victory-native', () => {
-  const { View } = require('react-native');
-  return Object.fromEntries([
-    'VictoryArea', 'VictoryAxis', 'VictoryBar', 'VictoryChart',
-    'VictoryGroup', 'VictoryLabel', 'VictoryLine', 'VictoryScatter',
-    'VictoryVoronoiContainer',
-  ].map((name) => [name, View]));
 });
