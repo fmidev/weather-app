@@ -711,11 +711,6 @@
     "checkConnection": "Tarkista internet-yhteytesi ja yritä uudelleen.",
     "tryAgain": "Yritä uudelleen"
   },
-  "accessibility": {
-    "link1": "Laki digitaalisten palvelujen tarjoamisesta (306/2019)",
-    "link2": "Saavutettavuusvaatimukset-verkkosivusto",
-    "openInBrowser": "Avaa selaimessa"
-  },
   "announcements": {
     "crisisPrefix": "Varoitus:",
     "maintenancePrefix": "Huomio:",
@@ -741,6 +736,7 @@
   },
   "unitAbbreviations": {},
   "markdownRenderer": {
-    "radarLegendDescription": "Sateen voimakkuuden asteikko"
+    "radarLegendDescription": "Sateen voimakkuuden asteikko",
+    "version": "versio"
   }
 }

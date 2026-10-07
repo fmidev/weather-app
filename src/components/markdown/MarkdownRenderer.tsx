@@ -15,6 +15,7 @@ const HEX_RE = /^#[0-9a-fA-F]{6}$/;
 const ICON_TOKEN_RE = /\[icon:([a-z0-9-]+)(?:\|(\d+)(?:\|(\d+))?)?\]/g;
 const CUSTOM_LEGEND_TOKEN_RE = /\[((?:radar-legend|legend):[^\]]+)\]\(([^)]+)\)/g;
 const TEMPERATURE_LEGEND_TOKEN = '[temperature-legend]';
+const ACCESSIBILITY_FEEDBACK_TOKEN = '[accessibility-feedback]';
 const URL_WITH_SCHEME_RE = /^(https?:\/\/|mailto:|tel:)/i;
 
 type ParsedTrackedLink = {
@@ -139,6 +140,10 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
 
   private headingColor?: string;
 
+  private accessibilityEmail = '';
+
+  private accessibilitySubject = '';
+
   private keyCounter = 0;
 
   private t?: (text: string) => string;
@@ -159,6 +164,14 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
 
   setHeadingColor(color: string) {
     this.headingColor = color;
+  }
+
+  setAccessibilityEmail(email: string) {
+    this.accessibilityEmail = email;
+  }
+
+  setAccessibilitySubject(subject: string) {
+    this.accessibilitySubject = subject;
   }
 
   setTranslationFunction(t: (text: string) => string) {
@@ -193,6 +206,7 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     if (
       !text.includes('[icon:')
       && !text.includes(TEMPERATURE_LEGEND_TOKEN)
+      && !text.includes(ACCESSIBILITY_FEEDBACK_TOKEN)
       && !text.includes('[radar-legend:')
       && !text.includes('[legend:')
     ) {
@@ -213,12 +227,13 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
       const iconMatch = ICON_TOKEN_RE.exec(rest);
       const radarLegendMatch = CUSTOM_LEGEND_TOKEN_RE.exec(rest);
       const legendIndex = rest.indexOf(TEMPERATURE_LEGEND_TOKEN);
+      const feedbackIndex = rest.indexOf(ACCESSIBILITY_FEEDBACK_TOKEN);
 
       const nextIconIndex = iconMatch ? iconMatch.index : -1;
       const nextRadarLegendIndex = radarLegendMatch ? radarLegendMatch.index : -1;
       const nextLegendIndex = legendIndex;
 
-      if (nextIconIndex === -1 && nextLegendIndex === -1 && nextRadarLegendIndex === -1) {
+      if (nextIconIndex === -1 && nextLegendIndex === -1 && nextRadarLegendIndex === -1 && feedbackIndex === -1) {
         nodes.push(
           <Text
             key={`txt-end-${tokenIndex}`}
@@ -230,7 +245,7 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
         break;
       }
 
-      const nextTokenIndex = [nextIconIndex, nextLegendIndex, nextRadarLegendIndex]
+      const nextTokenIndex = [nextIconIndex, nextLegendIndex, nextRadarLegendIndex, feedbackIndex]
         .filter((index) => index !== -1)
         .sort((a, b) => a - b)[0];
 
@@ -248,7 +263,21 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
         );
       }
 
-      if (useLegend) {
+      if (nextTokenIndex === feedbackIndex) {
+        const versionLabel = this.t?.('markdownRenderer:version') ?? 'version';
+        const subject = `${this.accessibilitySubject} [${versionLabel}: ${packageJSON.version}]`.trim();
+        nodes.push(
+          <React.Fragment key={`accessibility-feedback-${tokenIndex}`}>
+            {this.accessibilityEmail
+              ? this.link(
+                this.accessibilityEmail,
+                `mailto:${this.accessibilityEmail}?subject=${encodeURIComponent(subject)}|Settings`
+              )
+              : this.text('E-mail not configured')}
+          </React.Fragment>
+        );
+        rest = rest.slice(nextTokenIndex + ACCESSIBILITY_FEEDBACK_TOKEN.length);
+      } else if (useLegend) {
         nodes.push(
           <View key={`temperature-legend-${tokenIndex}`} style={styles.blockToken}>
             <TemperatureLegend />
