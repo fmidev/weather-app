@@ -195,6 +195,8 @@ jest.mock('@components/markdown/MarkdownRenderer', () => ({
     setHeadingColor: jest.fn(),
     setTextColor: jest.fn(),
     setTranslationFunction: jest.fn(),
+    setAccessibilityEmail: jest.fn(),
+    setAccessibilitySubject: jest.fn(),
   })),
 }));
 
@@ -202,6 +204,7 @@ jest.mock('@assets/markdown', () => ({
   accessibilityDocuments: {
     en: 'accessibility markdown en',
     fi: 'accessibility markdown fi',
+    sv: 'accessibility markdown sv',
   },
   aboutTheApplicationDocuments: {
     en: 'about markdown en',
@@ -211,11 +214,6 @@ jest.mock('@assets/markdown', () => ({
     en: 'terms markdown en',
     fi: 'terms markdown fi',
   },
-}));
-
-jest.mock('@components/others/AccessibilityStatement', () => ({
-  __esModule: true,
-  default: mockTextComponent('accessibility-statement'),
 }));
 
 jest.mock('@components/common/AppText', () => ({

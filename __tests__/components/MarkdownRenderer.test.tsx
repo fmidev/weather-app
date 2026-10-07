@@ -1,6 +1,11 @@
 import React from 'react';
 import { Linking } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
+import { createInstance } from 'i18next';
+import packageJSON from '../../package.json';
+import fi from '../../i18n/fi.json';
+import sv from '../../i18n/sv.json';
+import en from '../../i18n/en.json';
 
 const mockTrackMatomoEvent = jest.fn();
 const mockIcon = jest.fn((props) => {
@@ -91,6 +96,88 @@ describe('MarkdownRenderer', () => {
     expect(getByText('Medium')).toBeTruthy();
     expect(getByText('High')).toBeTruthy();
     expect(getByA11yLabel('Radar legend description')).toBeTruthy();
+  });
+
+  it.each([
+    ['fi', 'versio'],
+    ['sv', 'version'],
+    ['en', 'version'],
+  ])('renders accessibility feedback with an encoded subject and localized app version (%s)', async (language, versionLabel) => {
+    const translator = createInstance();
+    await translator.init({
+      lng: language,
+      fallbackLng: 'en',
+      resources: { fi, sv, en },
+      defaultNS: 'navigation',
+    });
+    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const renderer = new MarkdownRenderer();
+    renderer.setTranslationFunction((key: string) => translator.t(key));
+    renderer.setAccessibilityEmail('accessibility@example.test');
+    renderer.setAccessibilitySubject('Saavutettavuus: sää & tuuli | palaute?');
+    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
+    const url = `mailto:accessibility@example.test?subject=Saavutettavuus%3A%20s%C3%A4%C3%A4%20%26%20tuuli%20%7C%20palaute%3F%20%5B${versionLabel}%3A%20${packageJSON.version}%5D`;
+
+    try {
+      const { getByText, getByA11yRole, queryByText, queryByTestId } = render(
+        renderer.text('Before [accessibility-feedback] After')
+      );
+
+      expect(getByText('Before ')).toBeTruthy();
+      expect(getByText('accessibility@example.test')).toBeTruthy();
+      expect(getByText(' After')).toBeTruthy();
+      expect(queryByText('[accessibility-feedback]')).toBeNull();
+      expect(queryByTestId('icon-open-in-new')).toBeNull();
+      fireEvent.press(getByA11yRole('link'));
+
+      expect(openURLSpy).toHaveBeenCalledWith(url);
+      expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Settings', `Open URL - ${url}`);
+    } finally {
+      openURLSpy.mockRestore();
+    }
+  });
+
+  it('renders repeated accessibility feedback tokens alongside other custom tokens with an empty subject', () => {
+    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const renderer = new MarkdownRenderer();
+    renderer.setAccessibilityEmail('accessibility@example.test');
+    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
+
+    try {
+      const { getAllByText, getAllByA11yRole, getByTestId } = render(renderer.text(
+        '[icon:wind-dark] [accessibility-feedback] [temperature-legend] [accessibility-feedback]'
+      ));
+
+      expect(getByTestId('icon-wind-dark')).toBeTruthy();
+      expect(getByTestId('temperature-legend')).toBeTruthy();
+      expect(getAllByText('accessibility@example.test')).toHaveLength(2);
+      getAllByA11yRole('link').forEach((link) => fireEvent.press(link));
+      expect(openURLSpy).toHaveBeenCalledTimes(2);
+      expect(openURLSpy).toHaveBeenCalledWith(
+        `mailto:accessibility@example.test?subject=%5Bversion%3A%20${packageJSON.version}%5D`
+      );
+    } finally {
+      openURLSpy.mockRestore();
+    }
+  });
+
+  it.each([false, true])('renders a non-interactive fallback for an empty accessibility email (cleared: %s)', (cleared) => {
+    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const renderer = new MarkdownRenderer();
+    if (cleared) {
+      renderer.setAccessibilityEmail('accessibility@example.test');
+      renderer.setAccessibilityEmail('');
+    }
+    renderer.setAccessibilitySubject('Accessibility feedback');
+    renderer.setTextColor('#112233');
+
+    const { getByText, queryByA11yRole } = render(renderer.text('[accessibility-feedback]'));
+
+    const fallback = getByText('E-mail not configured');
+    const mergedStyle = Object.assign({}, ...fallback.props.style);
+    expect(mergedStyle.color).toBe('#112233');
+    expect(queryByA11yRole('link')).toBeNull();
+    expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
   });
 
   it('opens tracked external link and sends matomo event', async () => {

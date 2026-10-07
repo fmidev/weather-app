@@ -711,11 +711,6 @@
     "checkConnection": "Please check your connection and try again.",
     "tryAgain": "Try again"
   },
-  "accessibility": {
-    "link1": "Act on the Provision of Digital Services (306/2019)",
-    "link2": "Website on accessibility requirements",
-    "openInBrowser": "Open in browser"
-  },
   "announcements": {
     "crisisPrefix": "Warning:",
     "maintenancePrefix": "Attention:",
@@ -741,6 +736,7 @@
   },
   "unitAbbreviations": {},
   "markdownRenderer": {
-    "radarLegendDescription": "Precipitation intensity scale"
+    "radarLegendDescription": "Precipitation intensity scale",
+    "version": "version"
   }
 }

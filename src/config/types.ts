@@ -246,6 +246,12 @@ interface Feedback {
   faqUrl?: {
     [locale: string]: string;
   };
+  accessibility?: {
+    [locale: string]: {
+      email: string;
+      subject: string;
+    };
+  };
 }
 
 interface News {
