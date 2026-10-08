@@ -12,6 +12,8 @@ import {
 const INITIAL_STATE: WarningsState = {
   data: {},
   capData: undefined,
+  updated: undefined,
+  updatedRequestKey: undefined,
   loading: false,
   error: false,
   fetchTimestamp: Date.now(),
@@ -33,10 +35,22 @@ export default (
     }
 
     case FETCH_WARNINGS_SUCCESS: {
+      if (
+        state.updated === action.data.updated &&
+        state.updatedRequestKey === action.requestKey &&
+        state.data[action.id]
+      ) {
+        // Background refreshes keep the exact state; retries still finish loading.
+        return !state.loading && !state.error
+          ? state
+          : { ...state, loading: false, error: false };
+      }
       return {
         ...state,
         error: false,
         loading: false,
+        updated: action.data.updated,
+        updatedRequestKey: action.requestKey,
         data: {
           ...state.data,
           [action.id]: action.data,
