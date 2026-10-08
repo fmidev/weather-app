@@ -17,6 +17,7 @@ interface FetchWarningsSuccess {
   data: WarningsData;
   id: number | string;
   timestamp: number;
+  requestKey: string;
 }
 
 interface FetchWarningsError {
@@ -110,6 +111,8 @@ export interface Error {
 export interface WarningsState {
   data: LocationWarnings;
   capData: CapWarning[] | undefined;
+  updated: string | undefined;
+  updatedRequestKey: string | undefined;
   loading: boolean;
   error: boolean | Error | string;
   fetchTimestamp: number;

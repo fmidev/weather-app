@@ -2,6 +2,8 @@ import { Dispatch } from 'redux';
 import getWarnings from '@network/WarningsApi';
 import { Location } from '@store/location/types';
 import getCapWarnings from '@network/CapWarningsApi';
+import i18n from '@i18n';
+import { State } from '@store/types';
 import {
   Error,
   FETCH_CAP_WARNINGS,
@@ -13,21 +15,29 @@ import {
 } from './types';
 
 const fetchWarnings =
-  (location: Location) => (dispatch: Dispatch<WarningsActionTypes>) => {
-    dispatch({ type: FETCH_WARNINGS });
+  (location: Location) => async (
+    dispatch: Dispatch<WarningsActionTypes>,
+    getState: () => Pick<State, 'warnings'>
+  ) => {
+    // Publication times are shared across locations and languages.
+    const requestKey = JSON.stringify([location.id, location.lat, location.lon, i18n.language]);
+    const { warnings } = getState();
+    if (warnings.updatedRequestKey !== requestKey || !warnings.data[location.id] || warnings.error) {
+      dispatch({ type: FETCH_WARNINGS });
+    }
 
-    getWarnings(location)
-      .then(({ data }) => {
-        dispatch({
-          type: FETCH_WARNINGS_SUCCESS,
-          data,
-          id: location.id,
-          timestamp: Date.now(),
-        });
-      })
-      .catch((error: Error) => {
-        dispatch({ type: FETCH_WARNINGS_ERROR, error, timestamp: Date.now() });
+    try {
+      const { data } = await getWarnings(location);
+      dispatch({
+        type: FETCH_WARNINGS_SUCCESS,
+        data,
+        id: location.id,
+        timestamp: Date.now(),
+        requestKey,
       });
+    } catch (error) {
+      dispatch({ type: FETCH_WARNINGS_ERROR, error: error as Error, timestamp: Date.now() });
+    }
   };
 
 const fetchCapWarnings = () => (dispatch: Dispatch<WarningsActionTypes>) => {

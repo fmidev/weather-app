@@ -59,6 +59,7 @@ describe('warnings store', () => {
         data: warningsData,
         id: 99,
         timestamp: 123,
+        requestKey: 'location-99-fi',
       })
     ).toMatchObject({
       data: { 99: warningsData },
@@ -66,6 +67,7 @@ describe('warnings store', () => {
       fetchSuccessTime: 123,
       fetchTimestamp: 123,
       loading: false,
+      updated: warningsData.updated,
     });
 
     expect(
@@ -82,8 +84,15 @@ describe('warnings store', () => {
   });
 
   it('handles CAP warnings success', () => {
+    const state = reducer(undefined, {
+      type: types.FETCH_WARNINGS_SUCCESS,
+      data: warningsData,
+      id: 99,
+      timestamp: 123,
+      requestKey: 'location-99-fi',
+    });
     expect(
-      reducer(undefined, {
+      reducer(state, {
         type: types.FETCH_CAP_WARNINGS_SUCCESS,
         data: [capWarning],
         timestamp: 789,
@@ -94,6 +103,8 @@ describe('warnings store', () => {
       fetchSuccessTime: 789,
       fetchTimestamp: 789,
       loading: false,
+      updated: warningsData.updated,
+      updatedRequestKey: 'location-99-fi',
     });
   });
 
