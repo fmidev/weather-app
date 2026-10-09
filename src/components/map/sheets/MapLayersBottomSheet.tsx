@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, ScrollView, StyleSheet, Switch, useWindowDimensions } from 'react-native';
+import { View, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
 import Text from '@components/common/AppText';
+import AccessibleSwitch from '@components/common/AccessibleSwitch';
 import CloseButton from '@components/common/CloseButton';
 import SpeedSelector from '@components/map/ui/SpeedSelector';
 import LayerSelector from '@components/map/ui/LayerSelector';
@@ -17,15 +18,10 @@ import {
   updateAnimationSpeed as updateAnimationSpeedAction,
 } from '@store/map/actions';
 
-import {
-  WHITE,
-  SECONDARY_BLUE,
-  GRAYISH_BLUE,
-  CustomTheme,
-} from '@assets/colors';
+import { CustomTheme } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
+import { BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
@@ -81,7 +77,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
 
         <View style={styles.flexRowWithWrap}>
           <View style={{ width: columnWidth, marginRight: columnMargin }}>
-            <View style={styles.sheetTitle}>
+            <View style={[styles.sheetTitle, styles.topTitle]}>
               <Text
                 maxFontSizeMultiplier={1.5}
                 style={[styles.title, { color: colors.text }]}
@@ -95,41 +91,20 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 styles.withBorderBottom,
                 { borderBottomColor: colors.border },
               ]}>
-              <View
-                style={styles.row}
-                accessible
-                accessibilityState={{ selected: mapLayers.location }}
+              <AccessibleSwitch
+                label={t('map:layersBottomSheet:locationHint')}
+                value={mapLayers.location}
+                style={styles.locationSwitch}
                 accessibilityHint={
                   mapLayers.location
                     ? t('map:layersBottomSheet:hideLocationAccessibilityHint')
                     : t('map:layersBottomSheet:showLocationAccessibilityHint')
                 }
-                onAccessibilityTap={() =>
-                  updateMapLayers({
-                    ...mapLayers,
-                    location: !mapLayers.location,
-                  })
-                }>
-                <Text
-                  maxFontSizeMultiplier={1.5}
-                  style={[styles.text, { color: colors.hourListText }]}
-                >
-                  {t('map:layersBottomSheet:locationHint')}
-                </Text>
-                <Switch
-                  trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-                  thumbColor={WHITE}
-                  ios_backgroundColor={WHITE}
-                  value={mapLayers.location}
-                  onValueChange={() => {
-                    trackMatomoEvent('User action', 'Map', 'Show own location - '+!mapLayers.location);
-                    updateMapLayers({
-                      ...mapLayers,
-                      location: !mapLayers.location,
-                    });
-                  }}
-                />
-              </View>
+                onValueChange={(value) => {
+                  trackMatomoEvent('User action', 'Map', `Show own location - ${value}`);
+                  updateMapLayers({ ...mapLayers, location: value });
+                }}
+              />
             </View>
 
             <View style={styles.sheetTitle}>
@@ -144,7 +119,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
           </View>
 
           <View style={[styles.withMarginBottom, { width: columnWidth, marginLeft: columnMargin }]}>
-            <View style={styles.sheetTitle}>
+            <View style={[styles.sheetTitle, isWideDisplay() && styles.topTitle]}>
               <Text
                 maxFontSizeMultiplier={1.5}
                 style={[styles.title, { color: colors.text }]}
@@ -167,13 +142,12 @@ const styles = StyleSheet.create({
   },
   sheetListContainer: {
     flex: 1,
-    marginTop: -10,
     paddingHorizontal: 20,
     paddingBottom: 8,
   },
   closeButtonContainer: {
     position: 'absolute',
-    top: -10,
+    top: 0,
     right: 8,
   },
   sheetTitle: {
@@ -181,6 +155,11 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     alignItems: 'center',
     justifyContent: 'flex-start',
+  },
+  // Keep the close button's full hit area above the first controls for Android Tab order.
+  topTitle: {
+    minHeight: 44,
+    paddingRight: 44,
   },
   withMarginBottom: {
     marginBottom: 14,
@@ -193,22 +172,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 8,
-    paddingBottom: 16,
+  locationSwitch: {
+    marginBottom: 8,
     width: '100%',
   },
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
-  },
-  text: {
-    fontSize: 16,
-    fontFamily: REGULAR_FONT,
-    flexShrink: 1,
   },
 });
 
