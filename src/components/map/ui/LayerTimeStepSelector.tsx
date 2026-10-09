@@ -51,9 +51,11 @@ const LayerTimeStepSelector: React.FC<Props> = ({
     maximumFractionDigits: 2,
   });
 
+  // Keep a native group so Android traverses this entire row before the time slider.
   return (
     <View
       testID="map_layer_time_step_selector"
+      collapsable={false}
       pointerEvents="box-none"
       style={[styles.wrapper, { left: insets.left + 12 }]}>
       {groupLayers.map((layer, index) => {
