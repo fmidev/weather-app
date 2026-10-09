@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ReactTestInstance } from 'react-test-renderer';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
 
@@ -109,6 +109,7 @@ const parentViewStyle = (node: ReactTestInstance) => {
 
 describe('MapLayersBottomSheet', () => {
   beforeEach(() => {
+    jest.replaceProperty(Platform, 'OS', 'android');
     jest.clearAllMocks();
     mockWindowDimensions.mockReturnValue({ width: 390, height: 844 });
     mockSafeAreaInsets.mockReturnValue({

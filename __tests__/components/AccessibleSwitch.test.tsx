@@ -3,12 +3,28 @@ import { Platform, StyleSheet, Switch } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import AccessibleSwitch from '../../src/components/common/AccessibleSwitch';
+import fi from '../../i18n/fi.json';
+import sv from '../../i18n/sv.json';
+import en from '../../i18n/en.json';
+
+const mockTranslations = { fi: fi.accessibility, sv: sv.accessibility, en: en.accessibility };
+let mockLanguage: keyof typeof mockTranslations = 'fi';
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => (mockTranslations[mockLanguage] as Record<string, string>)[key],
+  }),
+}));
 
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({ colors: { text: '#111111', hourListText: '#333333' } }),
 }));
 
 describe('AccessibleSwitch', () => {
+  beforeEach(() => {
+    mockLanguage = 'fi';
+    jest.replaceProperty(Platform, 'OS', 'android');
+  });
   afterEach(() => jest.restoreAllMocks());
 
   it.each([
@@ -26,7 +42,12 @@ describe('AccessibleSwitch', () => {
     const control = getByA11yLabel('Show my location');
     expect(control.props.accessible).toBe(true);
     expect(control.props.focusable).toBe(true);
-    expect(control.props.accessibilityState).toEqual({ checked: value, disabled: false });
+    expect(control.props.accessibilityState).toEqual(
+      platform === 'ios' ? { disabled: false } : { checked: value, disabled: false }
+    );
+    expect(control.props.accessibilityValue?.text).toBe(
+      platform === 'ios' ? (value ? 'Päällä' : 'Pois päältä') : undefined
+    );
     expect(StyleSheet.flatten(control.props.style)).toMatchObject({ minWidth: 44, minHeight: 44 });
     expect(queryByType(Switch)).toBeNull();
     expect(control.children[0]).toMatchObject({ props: {
@@ -34,6 +55,32 @@ describe('AccessibleSwitch', () => {
       accessibilityElementsHidden: true,
       importantForAccessibility: 'no-hide-descendants',
     } });
+  });
+
+  it.each([
+    ['fi', 'Päällä', 'Pois päältä'],
+    ['sv', 'På', 'Av'],
+    ['en', 'On', 'Off'],
+  ] as const)('exposes localized iOS values in %s without the numeric checked state', (language, on, off) => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    mockLanguage = language;
+    const onValueChange = jest.fn();
+    const { getByA11yLabel, rerender } = render(
+      <AccessibleSwitch label="Location" value={false} onValueChange={onValueChange} />
+    );
+    const control = getByA11yLabel('Location');
+    expect(control.props.accessibilityRole).toBe('switch');
+    expect(control.props.accessibilityState.checked).toBeUndefined();
+    expect(control.props.accessibilityValue).toEqual({ text: off });
+    fireEvent.press(control);
+    expect(onValueChange).toHaveBeenLastCalledWith(true);
+
+    rerender(<AccessibleSwitch label="Location" value onValueChange={onValueChange} />);
+    expect(getByA11yLabel('Location')).toBe(control);
+    expect(control.props.accessibilityState.checked).toBeUndefined();
+    expect(control.props.accessibilityValue).toEqual({ text: on });
+    fireEvent.press(control);
+    expect(onValueChange).toHaveBeenLastCalledWith(false);
   });
 
   it('reports the next value and preserves the same control across checked state changes', () => {

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import {
   Pressable,
+  Platform,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import AppText from './AppText';
 import {
@@ -38,7 +40,9 @@ const AccessibleSwitch: React.FC<AccessibleSwitchProps> = ({
   testID,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+  const { t } = useTranslation('accessibility');
   const [focused, setFocused] = useState(false);
+  const isIOS = Platform.OS === 'ios';
 
   return (
     <Pressable
@@ -49,7 +53,11 @@ const AccessibleSwitch: React.FC<AccessibleSwitchProps> = ({
       accessibilityRole="switch"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
-      accessibilityState={{ checked: value, disabled }}
+      // On iOS, checked would override the spoken value with "0" or "1".
+      accessibilityState={isIOS ? { disabled } : { checked: value, disabled }}
+      accessibilityValue={
+        isIOS ? { text: t(value ? 'switchOn' : 'switchOff') } : undefined
+      }
       disabled={disabled}
       onPress={() => onValueChange(!value)}
       onFocus={() => setFocused(true)}
