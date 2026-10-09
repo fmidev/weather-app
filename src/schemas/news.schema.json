@@ -49,7 +49,7 @@
                                   "url": {
                                     "description": "Protocol-relative image URL; getNews prepends https:.",
                                     "type": "string",
-                                    "format": "uri-reference",
+                                    "format": "iri-reference",
                                     "pattern": "^//[^/?#]"
                                   }
                                 }

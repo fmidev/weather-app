@@ -43,7 +43,10 @@ describe('NewsApi', () => {
     });
   });
 
-  it('fetches news with limit and maps validated items with extra metadata', async () => {
+  it.each([
+    '//images.example/image.jpg',
+    '//images.example/sääkuva.jpg',
+  ])('fetches news with limit and maps validated items with image %s', async (imageUrl) => {
     mockAxiosClient.mockResolvedValueOnce({
       data: {
         total: 1,
@@ -59,7 +62,7 @@ describe('NewsApi', () => {
                   image: {
                     fields: {
                       altText: 'Alt',
-                      file: { url: '//images.example/image.jpg' },
+                      file: { url: imageUrl },
                     },
                   },
                 },
@@ -75,7 +78,7 @@ describe('NewsApi', () => {
         id: '1',
         title: 'News title',
         type: 'article',
-        imageUrl: 'https://images.example/image.jpg',
+        imageUrl: `https:${imageUrl}`,
         imageAlt: 'Alt',
         createdAt: newsItem.sys.createdAt,
         updatedAt: newsItem.sys.updatedAt,
