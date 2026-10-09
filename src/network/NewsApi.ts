@@ -4,6 +4,7 @@ import { Config } from '@config';
 import axiosClient from '@utils/axiosClient';
 import { trackMatomoEvent } from '@utils/matomo';
 import { NewsItem } from '@store/news/types';
+import { isIRIReference } from '@utils/iriReference';
 import newsSchema from '../schemas/news.schema.json';
 
 interface NewsResponse {
@@ -33,7 +34,8 @@ interface NewsResponse {
 }
 
 const ajv = new Ajv();
-addFormats(ajv, ['date-time', 'uri-reference']);
+addFormats(ajv, ['date-time']);
+ajv.addFormat('iri-reference', isIRIReference);
 const validateNews = ajv.compile<NewsResponse>(newsSchema);
 
 const getNews = async (language: string): Promise<NewsItem[]> => {
