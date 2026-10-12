@@ -42,15 +42,14 @@ export default (
         state.data[action.id]
       ) {
         const sameDay = moment(state.fetchTimestamp).isSame(action.timestamp, 'day');
-        // Preserve unchanged data, but advance the calendar window after midnight.
-        return !state.loading && !state.error && sameDay
-          ? state
-          : {
-              ...state,
-              loading: false,
-              error: false,
-              fetchTimestamp: sameDay ? state.fetchTimestamp : action.timestamp,
-            };
+        // Record every successful refresh while preserving data and the calendar day.
+        return {
+          ...state,
+          loading: false,
+          error: false,
+          fetchTimestamp: sameDay ? state.fetchTimestamp : action.timestamp,
+          fetchSuccessTime: action.timestamp,
+        };
       }
       return {
         ...state,

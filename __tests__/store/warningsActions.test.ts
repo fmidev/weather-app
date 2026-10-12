@@ -66,7 +66,7 @@ describe('fetchWarnings', () => {
     });
   });
 
-  it('keeps the entire state and derived day data unchanged when the publication time is unchanged', async () => {
+  it('refreshes the success time while preserving warning data and the day list for unchanged responses', async () => {
     const store = createWarningsStore();
     await store.dispatch(fetchWarnings(location));
     const previous = store.getState();
@@ -74,13 +74,20 @@ describe('fetchWarnings', () => {
     const days = selectDailyWarningData(selectorState as Parameters<typeof selectDailyWarningData>[0]);
     // A fresh response object must not replace the stored data on the same timestamp.
     mockGetWarnings.mockResolvedValue({ data: { ...data, warnings: [...data.warnings] } });
-    jest.spyOn(Date, 'now').mockReturnValue(new Date(2026, 9, 8, 15).getTime());
+    const refreshTime = new Date(2026, 9, 8, 15).getTime();
+    jest.spyOn(Date, 'now').mockReturnValue(refreshTime);
     const pending = store.dispatch(fetchWarnings(location));
     expect(store.getState()).toBe(previous);
     await pending;
     expect(mockGetWarnings).toHaveBeenCalledTimes(2);
-    expect(store.getState()).toBe(previous);
-    const nextSelectorState = { ...store.getState(), location: { current: location } };
+    const next = store.getState();
+    expect(next.warnings.fetchSuccessTime).toBe(refreshTime);
+    expect(next.warnings.fetchSuccessTime).toBeGreaterThan(previous.warnings.fetchSuccessTime);
+    expect(next.warnings.fetchTimestamp).toBe(previous.warnings.fetchTimestamp);
+    expect(next.warnings.data).toBe(previous.warnings.data);
+    expect(next.warnings.data[location.id]).toBe(data);
+    expect(next.warnings.updated).toBe(data.updated);
+    const nextSelectorState = { ...next, location: { current: location } };
     expect(selectDailyWarningData(nextSelectorState as Parameters<typeof selectDailyWarningData>[0])).toBe(days);
   });
 
@@ -123,6 +130,7 @@ describe('fetchWarnings', () => {
     expect(next.warnings.data[location.id]).toBe(data);
     expect(next.warnings.updated).toBe(data.updated);
     expect(next.warnings.fetchTimestamp).toBe(afterMidnight);
+    expect(next.warnings.fetchSuccessTime).toBe(afterMidnight);
     expect(next.warnings.loading).toBe(false);
     const nextSelectorState = { ...next, location: { current: location } };
     const nextDays = selectDailyWarningData(nextSelectorState as Parameters<typeof selectDailyWarningData>[0]);
@@ -258,13 +266,19 @@ describe('fetchWarnings', () => {
     const store = createWarningsStore();
     await store.dispatch(fetchWarnings(location));
     const previousData = store.getState().warnings.data;
+    const previousSuccessTime = store.getState().warnings.fetchSuccessTime;
+    jest.spyOn(Date, 'now').mockReturnValue(new Date(2026, 9, 8, 13).getTime());
     mockGetWarnings.mockRejectedValueOnce({ code: 503, message: 'Unavailable' });
     await store.dispatch(fetchWarnings(location));
     expect(store.getState().warnings.error).toBeTruthy();
+    expect(store.getState().warnings.fetchSuccessTime).toBe(previousSuccessTime);
+    const retryTime = new Date(2026, 9, 8, 14).getTime();
+    jest.spyOn(Date, 'now').mockReturnValue(retryTime);
     const pending = store.dispatch(fetchWarnings(location));
     expect(store.getState().warnings.loading).toBe(true);
     await pending;
     expect(store.getState().warnings).toMatchObject({ loading: false, error: false, updated: data.updated });
     expect(store.getState().warnings.data).toBe(previousData);
+    expect(store.getState().warnings.fetchSuccessTime).toBe(retryTime);
   });
 });

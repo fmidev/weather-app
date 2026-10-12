@@ -14,7 +14,7 @@ import {
   WarningsActionTypes,
 } from './types';
 
-// Keep request bookkeeping outside Redux so unchanged responses preserve state identity.
+// Keep request bookkeeping outside Redux to avoid state updates when starting background requests.
 const activeRequests = new WeakMap<() => Pick<State, 'warnings'>, AbortController>();
 
 const fetchWarnings =
