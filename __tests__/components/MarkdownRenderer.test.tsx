@@ -99,10 +99,10 @@ describe('MarkdownRenderer', () => {
   });
 
   it.each([
-    ['fi', 'versio'],
-    ['sv', 'version'],
-    ['en', 'version'],
-  ])('renders accessibility feedback with an encoded subject and localized app version (%s)', async (language, versionLabel) => {
+    ['fi', 'versio', 'Siirry laitteen sähköpostiohjelmaan'],
+    ['sv', 'version', 'Gå till telefonens e-postprogram'],
+    ['en', 'version', 'Move to your mail application'],
+  ])('renders accessibility feedback with an encoded subject and localized mail hint and app version (%s)', async (language, versionLabel, mailHint) => {
     const translator = createInstance();
     await translator.init({
       lng: language,
@@ -128,6 +128,7 @@ describe('MarkdownRenderer', () => {
       expect(getByText(' After')).toBeTruthy();
       expect(queryByText('[accessibility-feedback]')).toBeNull();
       expect(queryByTestId('icon-open-in-new')).toBeNull();
+      expect(getByA11yRole('link').props.accessibilityHint).toBe(mailHint);
       fireEvent.press(getByA11yRole('link'));
 
       expect(openURLSpy).toHaveBeenCalledWith(url);
@@ -180,12 +181,21 @@ describe('MarkdownRenderer', () => {
     expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
   });
 
-  it('opens tracked external link and sends matomo event', async () => {
+  it.each([
+    ['fi', 'Avaa selaimessa'],
+    ['sv', 'Öppna i webbläsaren'],
+    ['en', 'Open in browser'],
+  ])('opens tracked external link with a localized browser hint (%s)', async (language, browserHint) => {
+    const translator = createInstance();
+    await translator.init({
+      lng: language,
+      fallbackLng: 'en',
+      resources: { fi, sv, en },
+      defaultNS: 'navigation',
+    });
     const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
     const renderer = new MarkdownRenderer();
-    renderer.setTranslationFunction((key: string) =>
-      key === 'markdonwRenderer.openInBrowser' ? 'Open in browser' : key
-    );
+    renderer.setTranslationFunction((key: string) => translator.t(key));
     renderer.setTextColor('#445566');
     const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
 
@@ -194,7 +204,7 @@ describe('MarkdownRenderer', () => {
     );
 
     expect(getByTestId('icon-open-in-new')).toBeTruthy();
-    expect(getByA11yRole('link').props.accessibilityHint).toBe('Open in browser');
+    expect(getByA11yRole('link').props.accessibilityHint).toBe(browserHint);
 
     fireEvent.press(getByA11yRole('link'));
 
@@ -211,6 +221,9 @@ describe('MarkdownRenderer', () => {
   it('formats mailto links with app version and hides external-link icon', () => {
     const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
     const renderer = new MarkdownRenderer();
+    renderer.setTranslationFunction((key: string) =>
+      key === 'markdownRenderer:moveToHint' ? 'Move to your mail application' : key
+    );
     const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
 
     const { getByA11yRole, queryByTestId } = render(
@@ -218,6 +231,7 @@ describe('MarkdownRenderer', () => {
     );
 
     expect(queryByTestId('icon-open-in-new')).toBeNull();
+    expect(getByA11yRole('link').props.accessibilityHint).toBe('Move to your mail application');
 
     fireEvent.press(getByA11yRole('link'));
 

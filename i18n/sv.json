@@ -735,6 +735,8 @@
   },
   "unitAbbreviations": {},
   "markdownRenderer": {
+    "moveToHint": "Gå till telefonens e-postprogram",
+    "openInBrowser": "Öppna i webbläsaren",
     "radarLegendDescription": "Nederbördsintensitetsskala",
     "version": "version"
   }
