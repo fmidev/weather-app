@@ -1,5 +1,6 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk, { ThunkMiddleware } from 'redux-thunk';
+import moment from 'moment-timezone';
 
 import i18n from '@i18n';
 import getWarnings from '@network/WarningsApi';
@@ -35,8 +36,14 @@ const createWarningsStore = () => createStore(
 describe('fetchWarnings', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(Date, 'now').mockReturnValue(new Date(2026, 9, 8, 12).getTime());
     i18n.language = 'fi';
     mockGetWarnings.mockResolvedValue({ data });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+    moment.tz.setDefault();
   });
 
   it('loads initial warnings and saves the publication time from the API', async () => {
@@ -58,6 +65,7 @@ describe('fetchWarnings', () => {
     const days = selectDailyWarningData(selectorState as Parameters<typeof selectDailyWarningData>[0]);
     // A fresh response object must not replace the stored data on the same timestamp.
     mockGetWarnings.mockResolvedValue({ data: { ...data, warnings: [...data.warnings] } });
+    jest.spyOn(Date, 'now').mockReturnValue(new Date(2026, 9, 8, 15).getTime());
     const pending = store.dispatch(fetchWarnings(location));
     expect(store.getState()).toBe(previous);
     await pending;
@@ -65,6 +73,55 @@ describe('fetchWarnings', () => {
     expect(store.getState()).toBe(previous);
     const nextSelectorState = { ...store.getState(), location: { current: location } };
     expect(selectDailyWarningData(nextSelectorState as Parameters<typeof selectDailyWarningData>[0])).toBe(days);
+  });
+
+  it.each([
+    {
+      timezone: 'UTC',
+      beforeMidnight: Date.parse('2026-10-08T23:59:00Z'),
+      afterMidnight: Date.parse('2026-10-09T00:01:00Z'),
+      previousDay: Date.parse('2026-10-08T00:00:00Z'),
+      nextDay: Date.parse('2026-10-09T00:00:00Z'),
+      lastDay: Date.parse('2026-10-13T00:00:00Z'),
+    },
+    {
+      timezone: 'Europe/Helsinki',
+      beforeMidnight: Date.parse('2026-10-08T20:59:00Z'),
+      afterMidnight: Date.parse('2026-10-08T21:01:00Z'),
+      previousDay: Date.parse('2026-10-07T21:00:00Z'),
+      nextDay: Date.parse('2026-10-08T21:00:00Z'),
+      lastDay: Date.parse('2026-10-12T21:00:00Z'),
+    },
+  ])('advances the five-day window after midnight without replacing unchanged warning data ($timezone)', async ({
+    timezone, beforeMidnight, afterMidnight, previousDay, nextDay, lastDay,
+  }) => {
+    moment.tz.setDefault(timezone);
+    jest.spyOn(Date, 'now').mockReturnValue(beforeMidnight);
+    const store = createWarningsStore();
+    await store.dispatch(fetchWarnings(location));
+    const previous = store.getState();
+    const selectorState = { ...previous, location: { current: location } };
+    const days = selectDailyWarningData(selectorState as Parameters<typeof selectDailyWarningData>[0]);
+
+    jest.spyOn(Date, 'now').mockReturnValue(afterMidnight);
+    mockGetWarnings.mockResolvedValue({ data: { ...data, warnings: [...data.warnings] } });
+    const pending = store.dispatch(fetchWarnings(location));
+    expect(store.getState()).toBe(previous);
+    await pending;
+
+    const next = store.getState();
+    expect(next.warnings.data).toBe(previous.warnings.data);
+    expect(next.warnings.data[location.id]).toBe(data);
+    expect(next.warnings.updated).toBe(data.updated);
+    expect(next.warnings.fetchTimestamp).toBe(afterMidnight);
+    expect(next.warnings.loading).toBe(false);
+    const nextSelectorState = { ...next, location: { current: location } };
+    const nextDays = selectDailyWarningData(nextSelectorState as Parameters<typeof selectDailyWarningData>[0]);
+    expect(nextDays).not.toBe(days);
+    expect(nextDays).toHaveLength(5);
+    expect(days[0].date).toBe(previousDay);
+    expect(nextDays[0].date).toBe(nextDay);
+    expect(nextDays[4].date).toBe(lastDay);
   });
 
   it('saves a new publication time and response without toggling background loading', async () => {

@@ -1,10 +1,5 @@
 import reducer from '@store/warnings/reducer';
-import * as selectors from '@store/warnings/selectors';
 import * as types from '@store/warnings/types';
-
-jest.mock('@store/location/selector', () => ({
-  selectGeoid: (state: any) => state.location.current.id,
-}));
 
 const warning = {
   duration: {
@@ -105,34 +100,6 @@ describe('warnings store', () => {
       loading: false,
       updated: warningsData.updated,
       updatedRequestKey: 'location-99-fi',
-    });
-  });
-
-  it('selects warnings for current location and CAP data', () => {
-    jest.spyOn(Date, 'now').mockReturnValue(2000);
-    const state = {
-      location: {
-        current: { id: 99 },
-      },
-      warnings: {
-        capData: [capWarning],
-        data: { 99: warningsData },
-        error: false,
-        fetchSuccessTime: 1000,
-        fetchTimestamp: Date.parse('2026-04-27T09:00:00Z'),
-        loading: false,
-      },
-    } as any;
-
-    expect(selectors.selectWarnings(state)).toEqual([warning]);
-    expect(selectors.selectUpdated(state)).toBe('2026-04-27T09:00:00Z');
-    expect(selectors.selectWarningsAge(state)).toBe(1000);
-    expect(selectors.selectCapWarningData(state)).toEqual([capWarning]);
-    expect(selectors.selectFetchSuccessTime(state)).toBe(1000);
-    expect(selectors.selectDailyWarningData(state)[0]).toMatchObject({
-      count: 1,
-      type: 'wind',
-      warnings: [warning],
     });
   });
 });

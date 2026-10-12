@@ -1,4 +1,5 @@
 import { PersistConfig } from '@store/types';
+import moment from 'moment';
 import {
   WarningsState,
   WarningsActionTypes,
@@ -40,10 +41,16 @@ export default (
         state.updatedRequestKey === action.requestKey &&
         state.data[action.id]
       ) {
-        // Background refreshes keep the exact state; retries still finish loading.
-        return !state.loading && !state.error
+        const sameDay = moment(state.fetchTimestamp).isSame(action.timestamp, 'day');
+        // Preserve unchanged data, but advance the calendar window after midnight.
+        return !state.loading && !state.error && sameDay
           ? state
-          : { ...state, loading: false, error: false };
+          : {
+              ...state,
+              loading: false,
+              error: false,
+              fetchTimestamp: sameDay ? state.fetchTimestamp : action.timestamp,
+            };
       }
       return {
         ...state,
