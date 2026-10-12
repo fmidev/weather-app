@@ -76,6 +76,13 @@ describe('WarningsApi', () => {
     );
   });
 
+  it('forwards the cancellation controller to the HTTP client', async () => {
+    const controller = new AbortController();
+    mockAxiosClient.mockResolvedValueOnce({ data: { data: warningsData } });
+    await getWarnings(location, controller);
+    expect(mockAxiosClient).toHaveBeenCalledWith(expect.any(Object), controller, 'Warnings');
+  });
+
   it.each([
     ['empty warnings', { ...warningsData, warnings: [] }],
     [

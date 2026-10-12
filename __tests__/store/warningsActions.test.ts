@@ -27,6 +27,15 @@ const data: WarningsData = {
   }],
 };
 const mockGetWarnings = jest.mocked(getWarnings);
+const deferredResponse = () => {
+  let resolve!: (response: { data: WarningsData }) => void;
+  let reject!: (error: unknown) => void;
+  const promise = new Promise<{ data: WarningsData }>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+};
 const rootReducer = combineReducers({ warnings: reducer });
 const createWarningsStore = () => createStore(
   rootReducer,
@@ -51,7 +60,7 @@ describe('fetchWarnings', () => {
     const pending = store.dispatch(fetchWarnings(location));
     expect(store.getState().warnings.loading).toBe(true);
     await pending;
-    expect(mockGetWarnings).toHaveBeenCalledWith(location);
+    expect(mockGetWarnings).toHaveBeenCalledWith(location, expect.any(AbortController));
     expect(store.getState().warnings).toMatchObject({
       data: { [location.id]: data }, updated: data.updated, loading: false, error: false,
     });
@@ -163,6 +172,86 @@ describe('fetchWarnings', () => {
     expect(store.getState().warnings).toMatchObject({ loading: false, error, updated: undefined });
     await store.dispatch(fetchWarnings(location));
     expect(store.getState().warnings).toMatchObject({ loading: false, error: false, updated: data.updated });
+  });
+
+  it.each(['same context', 'coordinates', 'language', 'country'])(
+    'cancels the previous request and ignores its late success (%s)', async (context) => {
+      const store = createWarningsStore();
+      const oldResponse = deferredResponse();
+      mockGetWarnings.mockReturnValueOnce(oldResponse.promise);
+      const oldRequest = store.dispatch(fetchWarnings(location));
+      const oldController = mockGetWarnings.mock.calls[0][1]!;
+      let nextLocation = location;
+      if (context === 'coordinates') nextLocation = { ...location, lat: 61.5 };
+      if (context === 'country') nextLocation = { ...location, country: 'SE' };
+      if (context === 'language') i18n.language = 'en';
+      const latestData = { ...data, updated: '2026-10-08T10:00:00Z', warnings: [] };
+      mockGetWarnings.mockResolvedValueOnce({ data: latestData });
+
+      await store.dispatch(fetchWarnings(nextLocation));
+      expect(oldController.signal.aborted).toBe(true);
+      expect(mockGetWarnings.mock.calls[1][1]!.signal.aborted).toBe(false);
+      const latestState = store.getState();
+      expect(latestState.warnings.data[location.id]).toBe(latestData);
+
+      // Resolve despite cancellation to exercise the independent stale-response guard.
+      oldResponse.resolve({ data });
+      await oldRequest;
+      expect(store.getState()).toBe(latestState);
+    }
+  );
+
+  it.each(['cancellation', 'network error'])(
+    'ignores an old %s after the latest request succeeds', async (errorType) => {
+      const store = createWarningsStore();
+      const oldResponse = deferredResponse();
+      mockGetWarnings.mockReturnValueOnce(oldResponse.promise);
+      const oldRequest = store.dispatch(fetchWarnings(location));
+      await store.dispatch(fetchWarnings(location));
+      const latestState = store.getState();
+
+      oldResponse.reject({
+        code: errorType === 'cancellation' ? 'ERR_CANCELED' : 'ERR_NETWORK',
+        message: errorType,
+      });
+      await oldRequest;
+      expect(store.getState()).toBe(latestState);
+    }
+  );
+
+  it('keeps the latest request active when an older request finishes', async () => {
+    const store = createWarningsStore();
+    const first = deferredResponse();
+    const second = deferredResponse();
+    mockGetWarnings.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+    const firstRequest = store.dispatch(fetchWarnings(location));
+    const secondRequest = store.dispatch(fetchWarnings(location));
+    const pendingState = store.getState();
+    first.reject({ code: 'ERR_CANCELED' });
+    await firstRequest;
+    expect(store.getState()).toBe(pendingState);
+    expect(store.getState().warnings.loading).toBe(true);
+
+    await store.dispatch(fetchWarnings(location));
+    expect(mockGetWarnings.mock.calls[1][1]!.signal.aborted).toBe(true);
+    const latestState = store.getState();
+    second.resolve({ data: { ...data, warnings: [] } });
+    await secondRequest;
+    expect(store.getState()).toBe(latestState);
+  });
+
+  it('keeps requests in separate stores independent', async () => {
+    const firstStore = createWarningsStore();
+    const secondStore = createWarningsStore();
+    const first = deferredResponse();
+    mockGetWarnings.mockReturnValueOnce(first.promise);
+    const firstRequest = firstStore.dispatch(fetchWarnings(location));
+    await secondStore.dispatch(fetchWarnings(location));
+    expect(mockGetWarnings.mock.calls[0][1]!.signal.aborted).toBe(false);
+    first.resolve({ data });
+    await firstRequest;
+    expect(firstStore.getState().warnings.data[location.id]).toBe(data);
+    expect(secondStore.getState().warnings.data[location.id]).toBe(data);
   });
 
   it('clears a background error on a successful retry without replacing unchanged warning data', async () => {

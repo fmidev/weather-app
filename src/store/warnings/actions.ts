@@ -14,11 +14,19 @@ import {
   WarningsActionTypes,
 } from './types';
 
+// Keep request bookkeeping outside Redux so unchanged responses preserve state identity.
+const activeRequests = new WeakMap<() => Pick<State, 'warnings'>, AbortController>();
+
 const fetchWarnings =
   (location: Location) => async (
     dispatch: Dispatch<WarningsActionTypes>,
     getState: () => Pick<State, 'warnings'>
   ) => {
+    const previousController = activeRequests.get(getState);
+    const controller = new AbortController();
+    activeRequests.set(getState, controller);
+    previousController?.abort();
+
     // Publication times are shared across locations and languages.
     const requestKey = JSON.stringify([
       location.id,
@@ -33,7 +41,8 @@ const fetchWarnings =
     }
 
     try {
-      const { data } = await getWarnings(location);
+      const { data } = await getWarnings(location, controller);
+      if (activeRequests.get(getState) !== controller) return;
       dispatch({
         type: FETCH_WARNINGS_SUCCESS,
         data,
@@ -42,7 +51,12 @@ const fetchWarnings =
         requestKey,
       });
     } catch (error) {
+      if (activeRequests.get(getState) !== controller) return;
       dispatch({ type: FETCH_WARNINGS_ERROR, error: error as Error, timestamp: Date.now() });
+    } finally {
+      if (activeRequests.get(getState) === controller) {
+        activeRequests.delete(getState);
+      }
     }
   };
 
