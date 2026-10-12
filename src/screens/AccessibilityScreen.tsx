@@ -21,10 +21,8 @@ const AccessibilityScreen: React.FC = () => {
   renderer.setTextColor(colors.primaryText);
   renderer.setTranslationFunction(t);
 
-  if (feedbackEmail?.email && feedbackEmail?.subject) {
-    renderer.setAccessibilityEmail(feedbackEmail.email);
-    renderer.setAccessibilitySubject(feedbackEmail.subject);
-  }
+  renderer.setAccessibilityEmail(feedbackEmail?.email ?? '');
+  renderer.setAccessibilitySubject(feedbackEmail?.subject ?? '');
 
   return (
     <View
