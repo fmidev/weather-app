@@ -291,7 +291,7 @@ interface MapInfoBottomSheet {
 interface MarkdownSettings {
   termsOfUse: boolean;
   aboutTheApplication: boolean;
-  accessibility: boolean;
+  accessibility?: boolean; // For backward compatibility
 }
 
 interface DateTimeFormats {

@@ -10,6 +10,7 @@ export const mockSetItem = jest.fn();
 export const mockTrackMatomoEvent = jest.fn();
 export const mockUseFocusEffect = jest.fn((callback) => callback());
 export const mockUseReloader = jest.fn();
+export const mockNavigation = { addListener: jest.fn() };
 
 export const mockState = {
   dark: false,
@@ -134,6 +135,7 @@ jest.mock('@config', () => ({
 }));
 
 jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => mockNavigation,
   useFocusEffect: (effect: any) => mockUseFocusEffect(effect),
   useIsFocused: () => mockState.focused,
   useTheme: () => ({

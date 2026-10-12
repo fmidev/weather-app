@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking } from 'react-native';
+import { Linking, View, type Text as RNText } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 import { createInstance } from 'i18next';
 import packageJSON from '../../package.json';
@@ -53,6 +53,26 @@ describe('MarkdownRenderer', () => {
 
     expect(mergedStyle.color).toBe('#112233');
     expect(mergedStyle.fontFamily).toBe('Roboto-Regular');
+  });
+
+  it('exposes only the first main heading as the focus target and clears it on unmount', () => {
+    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const headingRef = React.createRef<RNText>();
+    const onHeadingLayout = jest.fn();
+    const renderer = new MarkdownRenderer({ headingRef, onHeadingLayout });
+    const { getByText, unmount } = render(<View>
+      {renderer.heading('Subtitle', undefined, 2)}
+      {renderer.heading('Main title', undefined, 1)}
+      {renderer.heading('Another main title', undefined, 1)}
+    </View>);
+    expect(headingRef.current?.props.children).toEqual(['Main title']);
+    expect(getByText('Main title').props.accessibilityRole).toBe('header');
+    fireEvent(getByText('Another main title'), 'layout');
+    expect(onHeadingLayout).not.toHaveBeenCalled();
+    fireEvent(getByText('Main title'), 'layout');
+    expect(onHeadingLayout).toHaveBeenCalledTimes(1);
+    unmount();
+    expect(headingRef.current).toBeNull();
   });
 
   it('renders inline icon and temperature legend tokens', () => {

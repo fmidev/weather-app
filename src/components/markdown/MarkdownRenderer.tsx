@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import { View, StyleSheet, type TextStyle, Linking } from 'react-native';
+import React, { ReactNode, type RefObject } from 'react';
+import { View, StyleSheet, type TextStyle, type Text as RNText, Linking } from 'react-native';
 import { Renderer, type RendererInterface } from 'react-native-marked';
 
 import Icon from '@components/common/ScalableIcon';
@@ -133,6 +133,10 @@ function IconInline(
 export class MarkdownRenderer extends Renderer implements RendererInterface {
   private readonly textStyle?: TextStyle;
 
+  private readonly headingRef?: RefObject<RNText | null>;
+
+  private readonly onHeadingLayout?: () => void;
+
   private textColor?: string;
 
   private headingColor?: string;
@@ -145,9 +149,15 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
 
   private t?: (text: string) => string;
 
-  constructor(options?: { textStyle?: TextStyle }) {
+  constructor(options?: {
+    textStyle?: TextStyle;
+    headingRef?: RefObject<RNText | null>;
+    onHeadingLayout?: () => void;
+  }) {
     super();
     this.textStyle = options?.textStyle;
+    this.headingRef = options?.headingRef;
+    this.onHeadingLayout = options?.onHeadingLayout;
   }
 
   private nextKey() {
@@ -180,6 +190,15 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     stylesOverride?: TextStyle,
     level?: number
   ) => {
+    // Only the first mounted main heading owns the document's focus target.
+    let headingNode: RNText | null = null;
+    const headingRef = level === 1 ? this.headingRef : undefined;
+    const setHeadingRef = headingRef ? (node: RNText | null) => {
+      if (node && !headingRef.current) headingRef.current = node;
+      else if (!node && headingRef.current === headingNode) headingRef.current = null;
+      headingNode = node;
+    } : undefined;
+
     const size =
       level === 1
         ? 24
@@ -196,6 +215,10 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     return (
       <Text
         key={this.nextKey()}
+        ref={setHeadingRef}
+        onLayout={headingRef ? () => {
+          if (headingNode && headingRef.current === headingNode) this.onHeadingLayout?.();
+        } : undefined}
         style={[
           styles.heading,
           { fontSize: size },
