@@ -71,7 +71,7 @@ const canonicalJson = (value: unknown): string => {
       .map(([key, item]) => `${JSON.stringify(key)}:${canonicalJson(item)}`)
       .join(',')}}`;
   }
-  return JSON.stringify(value);
+  return JSON.stringify(value) ?? 'undefined';
 };
 
 const uniqueOverlayId = (id: string, reserved: Set<string>) => {
