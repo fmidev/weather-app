@@ -6,7 +6,7 @@ import { act, render } from '@testing-library/react-native';
 
 import AccessibilityScreen from '../../src/screens/AccessibilityScreen';
 import { MarkdownRenderer } from '@components/markdown/MarkdownRenderer';
-import { mockState, mockNavigation, mockUseFocusEffect, resetScreenMocks } from './screenTestMocks';
+import { mockState, mockNavigation, mockUseFocusEffect, mockConfigGet, resetScreenMocks } from './screenTestMocks';
 
 type RendererOptions = NonNullable<ConstructorParameters<typeof MarkdownRenderer>[0]>;
 const ReactNative = require('react-native') as typeof import('react-native');
@@ -14,6 +14,19 @@ const mockTransitionListeners = new Map<string, (event: { data: { closing: boole
 const mockFrames = new Map<number, FrameRequestCallback>();
 let mockNextFrame = 0;
 const getRendererOptions = (): RendererOptions => jest.mocked(MarkdownRenderer).mock.calls[0][0]!;
+const getRenderer = (): jest.Mocked<MarkdownRenderer> => jest.mocked(MarkdownRenderer).mock.results[0].value;
+const accessibilityFeedback = {
+  fi: { email: 'saavutettavuus@example.test', subject: 'Saavutettavuuspalaute' },
+  sv: { email: 'tillganglighet@example.test', subject: 'Tillgänglighetsrespons' },
+  en: { email: 'accessibility@example.test', subject: 'Accessibility feedback' },
+};
+const configureFeedback = (accessibility: Partial<typeof accessibilityFeedback> | undefined) => {
+  mockConfigGet.mockImplementation((key: string) => (key === 'feedback' ? {
+    email: 'general-feedback@example.test',
+    subject: { fi: 'General feedback fi', sv: 'General feedback sv', en: 'General feedback en' },
+    accessibility,
+  } : {}));
+};
 const layoutHeading = () => {
   const options = getRendererOptions();
   options.headingRef!.current = {} as RNText;
@@ -77,6 +90,51 @@ describe('AccessibilityScreen', () => {
     expect(getByTestId('markdown').props.children).toBe(
       'accessibility markdown en'
     );
+  });
+
+  it.each([
+    ['fi', 'saavutettavuus@example.test', 'Saavutettavuuspalaute'],
+    ['sv', 'tillganglighet@example.test', 'Tillgänglighetsrespons'],
+    ['en', 'accessibility@example.test', 'Accessibility feedback'],
+  ])('passes the configured accessibility email and subject to the renderer (%s)', (language, email, subject) => {
+    configureFeedback(accessibilityFeedback);
+    mockState.language = language;
+    render(<AccessibilityScreen />);
+
+    expect(mockConfigGet).toHaveBeenCalledWith('feedback');
+    expect(getRenderer().setAccessibilityEmail).toHaveBeenCalledWith(email);
+    expect(getRenderer().setAccessibilitySubject).toHaveBeenCalledWith(subject);
+  });
+
+  it.each(['missing locale', 'missing accessibility configuration'])(
+    'passes empty accessibility values without using general feedback or another locale (%s)', (missing) => {
+      configureFeedback(missing === 'missing locale' ? { en: accessibilityFeedback.en } : undefined);
+      mockState.language = 'sv';
+      render(<AccessibilityScreen />);
+
+      expect(getRenderer().setAccessibilityEmail).toHaveBeenCalledWith('');
+      expect(getRenderer().setAccessibilitySubject).toHaveBeenCalledWith('');
+    }
+  );
+
+  it('updates localized accessibility values on language change and clears them for a missing locale', () => {
+    configureFeedback(accessibilityFeedback);
+    mockState.language = 'fi';
+    const screen = render(<AccessibilityScreen />);
+    const renderer = getRenderer();
+    expect(renderer.setAccessibilityEmail).toHaveBeenLastCalledWith('saavutettavuus@example.test');
+    expect(renderer.setAccessibilitySubject).toHaveBeenLastCalledWith('Saavutettavuuspalaute');
+
+    mockState.language = 'sv';
+    screen.rerender(<AccessibilityScreen />);
+    expect(renderer.setAccessibilityEmail).toHaveBeenLastCalledWith('tillganglighet@example.test');
+    expect(renderer.setAccessibilitySubject).toHaveBeenLastCalledWith('Tillgänglighetsrespons');
+
+    mockState.language = 'unknown';
+    screen.rerender(<AccessibilityScreen />);
+    expect(MarkdownRenderer).toHaveBeenCalledTimes(1);
+    expect(renderer.setAccessibilityEmail).toHaveBeenLastCalledWith('');
+    expect(renderer.setAccessibilitySubject).toHaveBeenLastCalledWith('');
   });
 
   it.each(['layout first', 'transition first'])('focuses the title only after layout and opening transition (%s)', (order) => {
