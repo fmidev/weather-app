@@ -640,7 +640,7 @@ describe('MlMapView', () => {
     expect(mockWMSOverlay).not.toHaveBeenCalled();
   });
 
-  it.each(['overlay load failure', 'merge failure', 'empty overlay'])(
+  it.each(['overlay load failure', 'merge failure', 'empty overlay', 'background-only overlay'])(
     'retains the base label boundary after %s', async (scenario) => {
       configureStyleOverlay();
       const labeledBase: StyleSpecification = {
@@ -654,12 +654,14 @@ describe('MlMapView', () => {
         if (!url.includes('/overlay_')) return labeledBase;
         if (scenario === 'overlay load failure') throw new Error('Style unavailable');
         if (scenario === 'merge failure') return { ...overlayStyle, glyphs: 'https://other.example/fonts/{fontstack}/{range}.pbf' };
+        if (scenario === 'background-only overlay') return { version: 8, sources: {}, layers: [{ id: 'overlay-background', type: 'background' }] };
         return { version: 8, sources: {}, layers: [] };
       });
       renderStyleMap();
       await act(async () => {});
       act(() => lastMapProps.onDidFinishLoadingStyle());
       expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: 'places_region' }));
+      expect(lastMapProps.mapStyle.layers.map(({ id }: { id: string }) => id)).toEqual(['earth', 'places_region']);
     }
   );
 

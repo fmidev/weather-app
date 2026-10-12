@@ -87,6 +87,10 @@ export const mergeMapStyles = (
   base: StyleSpecification,
   overlay: StyleSpecification
 ) => {
+  // The base map supplies the background; overlay backgrounds could hide WMS.
+  const contentLayers = overlay.layers.filter((layer) => layer.type !== 'background');
+  if (contentLayers.length === 0) return { style: base, beforeId: undefined };
+
   // A native style has one global font endpoint and sprite definition. Never
   // silently replace resources used by the base map with incompatible ones.
   if (base.glyphs && overlay.glyphs && base.glyphs !== overlay.glyphs) {
@@ -120,9 +124,9 @@ export const mergeMapStyles = (
   const baseLayerIds = new Set(base.layers.map(({ id }) => id));
   const reservedLayers = new Set([
     ...baseLayerIds,
-    ...overlay.layers.map(({ id }) => id),
+    ...contentLayers.map(({ id }) => id),
   ]);
-  const overlayLayers = overlay.layers.map((layer) => ({
+  const overlayLayers = contentLayers.map((layer) => ({
     ...layer,
     id: baseLayerIds.has(layer.id)
       ? uniqueOverlayId(layer.id, reservedLayers)

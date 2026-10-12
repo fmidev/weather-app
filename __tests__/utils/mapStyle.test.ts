@@ -125,6 +125,52 @@ describe('map styles', () => {
     expect(result.beforeId).toBeUndefined();
   });
 
+  it('removes all overlay backgrounds while preserving the base background and content order', () => {
+    const baseWithBackground: StyleSpecification = {
+      ...base,
+      layers: [{ id: 'base-background', type: 'background', paint: { 'background-color': '#ffffff' } }, ...base.layers],
+    };
+    const overlayWithBackgrounds: StyleSpecification = {
+      ...overlay,
+      layers: [
+        { id: 'overlay-background', type: 'background', paint: { 'background-color': '#000000' } },
+        overlay.layers[0],
+        { id: 'another-background', type: 'background' },
+        overlay.layers[1],
+      ],
+    };
+    const originalOverlay = JSON.stringify(overlayWithBackgrounds);
+    const result = mergeMapStyles(baseWithBackground, overlayWithBackgrounds);
+    expect(result.style.layers.map(({ id }) => id)).toEqual(['base-background', 'earth', 'roads', 'places']);
+    expect(result.style.layers[0]).toBe(baseWithBackground.layers[0]);
+    expect(result.beforeId).toBe('roads');
+    expect(JSON.stringify(overlayWithBackgrounds)).toBe(originalOverlay);
+  });
+
+  it('derives the insertion target after filtering and renaming conflicting content layers', () => {
+    const result = mergeMapStyles(base, {
+      ...overlay,
+      layers: [
+        { id: 'overlay-earth', type: 'background' },
+        { ...overlay.layers[0], id: 'earth' },
+      ],
+    });
+    expect(result.style.layers.map(({ id }) => id)).toEqual(['earth', 'overlay-earth']);
+    expect(result.beforeId).toBe('overlay-earth');
+  });
+
+  it('treats a background-only overlay as empty without replacing base resources', () => {
+    const result = mergeMapStyles(base, {
+      version: 8,
+      sources: {},
+      glyphs: 'https://other.example/fonts/{fontstack}/{range}.pbf',
+      sprite: 'https://other.example/sprite',
+      layers: [{ id: 'background', type: 'background' }],
+    });
+    expect(result.style).toBe(base);
+    expect(result.beforeId).toBeUndefined();
+  });
+
   it('uses overlay resources when the base has none', () => {
     const { style } = mergeMapStyles(
       { version: 8, sources: {}, layers: [] },
