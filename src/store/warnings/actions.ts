@@ -20,7 +20,13 @@ const fetchWarnings =
     getState: () => Pick<State, 'warnings'>
   ) => {
     // Publication times are shared across locations and languages.
-    const requestKey = JSON.stringify([location.id, location.lat, location.lon, i18n.language]);
+    const requestKey = JSON.stringify([
+      location.id,
+      location.lat,
+      location.lon,
+      location.country,
+      i18n.language,
+    ]);
     const { warnings } = getState();
     if (warnings.updatedRequestKey !== requestKey || !warnings.data[location.id] || warnings.error) {
       dispatch({ type: FETCH_WARNINGS });
