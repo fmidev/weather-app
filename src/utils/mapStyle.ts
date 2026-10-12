@@ -5,6 +5,8 @@ import type {
 } from '@maplibre/maplibre-react-native';
 import type { MapStyle } from '@config';
 
+export const DEFAULT_WMS_BEFORE_ID = 'places_region';
+
 export const getMapStyleUrl = (
   config: MapStyle | undefined,
   dark: boolean,

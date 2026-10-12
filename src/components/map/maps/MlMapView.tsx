@@ -44,7 +44,7 @@ import {
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import getMapStyle from '@network/MapStyleApi';
-import { getMapStyleUrl, mergeMapStyles } from '@utils/mapStyle';
+import { DEFAULT_WMS_BEFORE_ID, getMapStyleUrl, mergeMapStyles } from '@utils/mapStyle';
 import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
 import type { Position } from 'geojson';
@@ -338,6 +338,15 @@ const MlMapView: React.FC<MapViewProps> = ({
     return <Text>MapLibre requires baseMap configuration</Text>;
   }
 
+  const overlayBeforeId = loadedStyle?.key === styleKey ? loadedStyle.beforeId : undefined;
+  // URL styles retain the historical boundary. For loaded JSON, only use it
+  // when it exists; minimal base styles must still be able to render WMS.
+  const beforeId = overlayBeforeId ?? (
+    typeof mapStyle === 'string' || mapStyle.layers.some(({ id }) => id === DEFAULT_WMS_BEFORE_ID)
+      ? DEFAULT_WMS_BEFORE_ID
+      : null
+  );
+
   return (
     <View style={styles.mapContainer}>
       <Map
@@ -365,7 +374,7 @@ const MlMapView: React.FC<MapViewProps> = ({
           <WMSOverlay
             overlay={overlay}
             library="maplibre"
-            beforeId={loadedStyle?.key === styleKey ? loadedStyle.beforeId : undefined}
+            beforeId={beforeId}
           />
         )}
         {styleReady && overlay?.type === 'Timeseries' && mapBounds && (

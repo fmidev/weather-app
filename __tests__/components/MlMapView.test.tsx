@@ -525,6 +525,8 @@ describe('MlMapView', () => {
     renderStyleMap();
     expect(lastMapProps.mapStyle).toBe('https://maps.example/light');
     expect(mockGetMapStyle).not.toHaveBeenCalled();
+    act(() => lastMapProps.onDidFinishLoadingStyle());
+    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: 'places_region' }));
   });
 
   it('combines base and overlay layers and inserts WMS below every overlay layer after style loading', async () => {
@@ -594,7 +596,7 @@ describe('MlMapView', () => {
     await act(async () => {});
     expect(lastMapProps.mapStyle).toEqual(failed === 'overlay' ? baseStyle : 'https://maps.example/base_light_en.json');
     act(() => lastMapProps.onDidFinishLoadingStyle());
-    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: undefined }));
+    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: failed === 'overlay' ? null : 'places_region' }));
   });
 
   it('falls back to the base map when global style resources cannot be merged', async () => {
@@ -606,6 +608,8 @@ describe('MlMapView', () => {
     await act(async () => {});
     expect(lastMapProps.mapStyle.layers.map((layer: any) => layer.id)).toEqual(['earth']);
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith('Error', 'Map', expect.stringContaining('Map style merge failed'));
+    act(() => lastMapProps.onDidFinishLoadingStyle());
+    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: null }));
   });
 
   it('returns to the base URL when overlayMap is removed', async () => {
@@ -620,7 +624,7 @@ describe('MlMapView', () => {
     expect(lastMapProps.mapStyle).toBe('https://maps.example/base_light_en.json');
     expect(screen.queryByTestId('wms-overlay-maplibre')).toBeNull();
     act(() => lastMapProps.onDidFinishLoadingStyle());
-    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: undefined }));
+    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: 'places_region' }));
     expect(mockGetMapStyle).toHaveBeenCalledTimes(2);
   });
 
@@ -635,6 +639,29 @@ describe('MlMapView', () => {
     expect(lastMapProps).toBe(initialProps);
     expect(mockWMSOverlay).not.toHaveBeenCalled();
   });
+
+  it.each(['overlay load failure', 'merge failure', 'empty overlay'])(
+    'retains the base label boundary after %s', async (scenario) => {
+      configureStyleOverlay();
+      const labeledBase: StyleSpecification = {
+        ...baseStyle,
+        glyphs: 'https://maps.example/fonts/{fontstack}/{range}.pbf',
+        layers: [...baseStyle.layers, {
+          id: 'places_region', type: 'symbol', source: 'vector', 'source-layer': 'places',
+        }],
+      };
+      mockGetMapStyle.mockImplementation(async (url) => {
+        if (!url.includes('/overlay_')) return labeledBase;
+        if (scenario === 'overlay load failure') throw new Error('Style unavailable');
+        if (scenario === 'merge failure') return { ...overlayStyle, glyphs: 'https://other.example/fonts/{fontstack}/{range}.pbf' };
+        return { version: 8, sources: {}, layers: [] };
+      });
+      renderStyleMap();
+      await act(async () => {});
+      act(() => lastMapProps.onDidFinishLoadingStyle());
+      expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: 'places_region' }));
+    }
+  );
 
   it('centers repeated requests at the unchanged location once each and consumes them', async () => {
     const state = { mock: {

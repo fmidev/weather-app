@@ -27,7 +27,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type WMSOverlayProps = PropsFromRedux & {
   overlay: MapOverlay;
   library?: 'maplibre' | 'react-native-maps';
-  beforeId?: string;
+  beforeId?: string | null;
 };
 
 const WMSOverlay: React.FC<WMSOverlayProps> = ({
