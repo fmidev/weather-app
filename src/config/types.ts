@@ -88,7 +88,7 @@ export interface MapLayer {
   tileFormat?: string;
 }
 
-export interface BaseMap {
+export interface MapStyle {
   url: string;
   lightStyle: string;
   darkStyle: string;
@@ -355,7 +355,8 @@ export interface ConfigType {
     fmiApiKey?: { [name: string]: string };
     layerGroups: LayerGroup[];
     layers: MapLayer[];
-    baseMap?: BaseMap;
+    baseMap?: MapStyle;
+    overlayMap?: MapStyle;
     infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {

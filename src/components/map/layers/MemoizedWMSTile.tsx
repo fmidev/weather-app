@@ -8,6 +8,7 @@ type MemoizedWMSTileProps = {
   tileSize?: number;
   opacity?: number;
   library?: 'maplibre' | 'react-native-maps';
+  beforeId?: string;
 };
 
 const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
@@ -16,6 +17,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   tileSize,
   opacity,
   library = 'react-native-maps',
+  beforeId,
 }) => {
   const items = urlTemplate.split('?');
   const key = items.length > 1 ? items[1] : urlTemplate;
@@ -33,7 +35,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
         id={layerId}
         key={layerId}
         source={sourceId}
-        beforeId="places_region"
+        beforeId={beforeId}
         paint={{
           "raster-opacity": opacity ?? 0,
           "raster-opacity-transition": {

@@ -225,4 +225,15 @@ describe('WMSOverlay', () => {
     expect(toJSON()).toBeNull();
     expect(mockMemoizedWMSTile).not.toHaveBeenCalled();
   });
+
+  it('passes the overlay insertion boundary to every MapLibre WMS frame', () => {
+    const store = createStore({ mock: { activeOverlayId: 1, sliderTime: 1735693200 } });
+    render(<Provider store={store as any}>
+      <WMSOverlay overlay={overlay} library="maplibre" beforeId="overlay-roads" />
+    </Provider>);
+    expect(mockMemoizedWMSTile).toHaveBeenCalledTimes(4);
+    mockMemoizedWMSTile.mock.calls.forEach(([props]) => {
+      expect(props).toMatchObject({ beforeId: 'overlay-roads', library: 'maplibre' });
+    });
+  });
 });

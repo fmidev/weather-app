@@ -4,12 +4,32 @@ import { act, render, waitFor } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
 
 import MlMapView from '../../src/components/map/maps/MlMapView';
+import getMapStyle from '@network/MapStyleApi';
+import type { StyleSpecification } from '@maplibre/maplibre-react-native';
+
+jest.mock('@network/MapStyleApi', () => ({ __esModule: true, default: jest.fn() }));
+const mockGetMapStyle = jest.mocked(getMapStyle);
+const mockAppearance = { dark: false, language: 'en' };
+const baseStyle: StyleSpecification = {
+  version: 8,
+  sources: { vector: { type: 'vector', url: 'https://maps.example/tiles.json' } },
+  layers: [{ id: 'earth', type: 'fill', source: 'vector', 'source-layer': 'earth' }],
+};
+const overlayStyle: StyleSpecification = {
+  ...baseStyle,
+  layers: [
+    { id: 'roads', type: 'line', source: 'vector', 'source-layer': 'roads' },
+    { id: 'places', type: 'symbol', source: 'vector', 'source-layer': 'places' },
+  ],
+};
 
 const mockSelectCurrent = jest.fn((state: any) => state.mock.currentLocation);
 const mockSelectTimeZone = jest.fn((state: any) => state.mock.timezone);
 const mockSelectDisplayLocation = jest.fn((state: any) => state.mock.displayLocation);
 const mockSelectOverlay = jest.fn((state: any) => state.mock.overlay);
 const mockSelectActiveOverlay = jest.fn((state: any) => state.mock.activeOverlay);
+const mockSelectAnimateToArea = jest.fn((state: any) => state.mock.animateToArea ?? false);
+const mockSetAnimateToArea = jest.fn((animate: boolean) => ({ type: 'ANIMATE_TO_AREA', animate }));
 const mockSelectSessionId = jest.fn((state: any) => state.mock.sessionId);
 const mockUpdateOverlays = jest.fn((...args: any[]) => ({
   type: 'MAP/UPDATE_OVERLAYS',
@@ -53,6 +73,7 @@ jest.mock('@store/map/selectors', () => ({
   selectDisplayLocation: (state: any) => mockSelectDisplayLocation(state),
   selectOverlay: (state: any) => mockSelectOverlay(state),
   selectActiveOverlay: (state: any) => mockSelectActiveOverlay(state),
+  selectAnimateToArea: (state: any) => mockSelectAnimateToArea(state),
 }));
 
 jest.mock('@store/settings/selectors', () => ({
@@ -63,6 +84,7 @@ jest.mock('@store/map/actions', () => ({
   updateOverlays: (...args: any[]) => mockUpdateOverlays(...args),
   updateRegion: jest.fn(() => ({ type: 'MAP/UPDATE_REGION' })),
   updateSelectedCallout: jest.fn(() => ({ type: 'MAP/UPDATE_SELECTED_CALLOUT' })),
+  setAnimateToArea: (animate: boolean) => mockSetAnimateToArea(animate),
 }));
 
 jest.mock('@utils/matomo', () => ({
@@ -75,7 +97,7 @@ jest.mock('geolib', () => ({
 
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({
-    dark: false,
+    dark: mockAppearance.dark,
   }),
   useIsFocused: () => mockUseIsFocused(),
 }));
@@ -93,7 +115,7 @@ jest.mock('@config', () => ({
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     i18n: {
-      language: 'en',
+      language: mockAppearance.language,
     },
   }),
 }));
@@ -167,9 +189,33 @@ const createStore = (state: any) => ({
   subscribe: () => () => {},
 });
 
+const configureStyleOverlay = () => {
+  const originalConfig = mockConfigGet.getMockImplementation()!;
+  mockConfigGet.mockImplementation((key: string) => (key === 'map' ? {
+    ...originalConfig(key),
+    baseMap: { url: 'https://maps.example/', lightStyle: 'base_light_{lang}.json', darkStyle: 'base_dark_{lang}.json' },
+    overlayMap: { url: 'https://maps.example/', lightStyle: 'overlay_light_{lang}.json', darkStyle: 'overlay_dark_{lang}.json' },
+  } : originalConfig(key)));
+};
+const renderStyleMap = () => {
+  const store = createStore({ mock: {
+    currentLocation: { lat: 60.17, lon: 24.94 }, displayLocation: false,
+    overlay: { type: 'WMS', step: 60 }, activeOverlay: undefined,
+    timezone: 'Europe/Helsinki', sessionId: 123,
+  } });
+  const element = () => <Provider store={store as any}>
+    <MlMapView infoSheetRef={{ current: null }} mapLayersSheetRef={{ current: null }} />
+  </Provider>;
+  const screen = render(element());
+  return { ...screen, refresh: () => screen.rerender(element()) };
+};
+
 describe('MlMapView', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockAppearance.dark = false;
+    mockAppearance.language = 'en';
+    mockGetMapStyle.mockImplementation(async (url) => (url.includes('/overlay_') ? overlayStyle : baseStyle));
     lastMapProps = undefined;
     mockMapRefApi.getBounds.mockResolvedValue([23, 59, 25, 61]);
     mockMapRefApi.getZoom.mockResolvedValue(8);
@@ -473,5 +519,164 @@ describe('MlMapView', () => {
     unmount();
 
     expect(mockRemoveHeader).toHaveBeenCalledWith('smartmet-session-cookie');
+  });
+
+  it('uses the base URL directly without overlayMap and does not fetch JSON styles', () => {
+    renderStyleMap();
+    expect(lastMapProps.mapStyle).toBe('https://maps.example/light');
+    expect(mockGetMapStyle).not.toHaveBeenCalled();
+  });
+
+  it('combines base and overlay layers and inserts WMS below every overlay layer after style loading', async () => {
+    configureStyleOverlay();
+    const screen = renderStyleMap();
+    act(() => lastMapProps.onDidFinishLoadingStyle());
+    expect(screen.queryByTestId('wms-overlay-maplibre')).toBeNull();
+    await act(async () => {});
+    await waitFor(() => expect(lastMapProps.mapStyle.layers?.map((layer: any) => layer.id)).toEqual(['earth', 'roads', 'places']));
+    expect(mockGetMapStyle).toHaveBeenCalledWith('https://maps.example/base_light_en.json');
+    expect(mockGetMapStyle).toHaveBeenCalledWith('https://maps.example/overlay_light_en.json');
+    expect(screen.queryByTestId('wms-overlay-maplibre')).toBeNull();
+    act(() => lastMapProps.onDidFinishLoadingStyle());
+    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: 'roads' }));
+    expect(Object.keys(lastMapProps.mapStyle.sources)).toEqual(['vector']);
+  });
+
+  it('reloads themed and localized styles without resetting the camera and waits for each new style', async () => {
+    configureStyleOverlay();
+    const screen = renderStyleMap();
+    await act(async () => {});
+    await waitFor(() => expect(lastMapProps.mapStyle.layers).toBeDefined());
+    await act(async () => {
+      lastMapProps.onDidFinishLoadingStyle();
+      lastMapProps.onDidFinishRenderingFrameFully();
+    });
+    const initialCamera = lastMapProps.children[0].props.initialViewState;
+    const initialFlyCount = mockCameraRefApi.flyTo.mock.calls.length;
+    const initialStyle = lastMapProps.mapStyle;
+    mockAppearance.dark = true;
+    mockAppearance.language = 'fi';
+    screen.refresh();
+    expect(screen.queryByTestId('wms-overlay-maplibre')).toBeNull();
+    await act(async () => {});
+    await waitFor(() => expect(lastMapProps.mapStyle).not.toBe(initialStyle));
+    expect(mockGetMapStyle).toHaveBeenCalledWith('https://maps.example/base_dark_fi.json');
+    expect(mockGetMapStyle).toHaveBeenCalledWith('https://maps.example/overlay_dark_fi.json');
+    expect(lastMapProps.children[0].props.initialViewState).toBe(initialCamera);
+    expect(mockCameraRefApi.flyTo).toHaveBeenCalledTimes(initialFlyCount);
+    expect(screen.queryByTestId('wms-overlay-maplibre')).toBeNull();
+    act(() => lastMapProps.onDidFinishLoadingStyle());
+    expect(screen.getByTestId('wms-overlay-maplibre')).toBeTruthy();
+  });
+
+  it('ignores an old style request completing after a newer locale has loaded', async () => {
+    configureStyleOverlay();
+    let resolveOld!: (style: StyleSpecification) => void;
+    mockGetMapStyle.mockReturnValueOnce(new Promise((resolve) => { resolveOld = resolve; }));
+    const screen = renderStyleMap();
+    mockAppearance.language = 'fi';
+    screen.refresh();
+    await act(async () => {});
+    await waitFor(() => expect(lastMapProps.mapStyle.layers).toBeDefined());
+    const latestStyle = lastMapProps.mapStyle;
+    await act(async () => resolveOld({ ...baseStyle, layers: [{ id: 'old-base', type: 'background' }] }));
+    expect(lastMapProps.mapStyle).toBe(latestStyle);
+    expect(lastMapProps.mapStyle.layers[0].id).toBe('earth');
+  });
+
+  it.each(['overlay', 'base'])('falls back to the base map and keeps WMS usable after %s loading fails', async (failed) => {
+    configureStyleOverlay();
+    mockGetMapStyle.mockImplementation(async (url) => {
+      if (url.includes(`/${failed}_`)) throw new Error('Style unavailable');
+      return url.includes('/overlay_') ? overlayStyle : baseStyle;
+    });
+    renderStyleMap();
+    await act(async () => {});
+    expect(lastMapProps.mapStyle).toEqual(failed === 'overlay' ? baseStyle : 'https://maps.example/base_light_en.json');
+    act(() => lastMapProps.onDidFinishLoadingStyle());
+    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: undefined }));
+  });
+
+  it('falls back to the base map when global style resources cannot be merged', async () => {
+    configureStyleOverlay();
+    mockGetMapStyle.mockImplementation(async (url) => (url.includes('/overlay_')
+      ? { ...overlayStyle, glyphs: 'https://other.example/fonts/{fontstack}/{range}.pbf' }
+      : { ...baseStyle, glyphs: 'https://maps.example/fonts/{fontstack}/{range}.pbf' }));
+    renderStyleMap();
+    await act(async () => {});
+    expect(lastMapProps.mapStyle.layers.map((layer: any) => layer.id)).toEqual(['earth']);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('Error', 'Map', expect.stringContaining('Map style merge failed'));
+  });
+
+  it('returns to the base URL when overlayMap is removed', async () => {
+    configureStyleOverlay();
+    const screen = renderStyleMap();
+    await act(async () => {});
+    expect(lastMapProps.mapStyle.layers).toHaveLength(3);
+    act(() => lastMapProps.onDidFinishLoadingStyle());
+    const previousConfig = mockConfigGet.getMockImplementation()!;
+    mockConfigGet.mockImplementation((key: string) => ({ ...previousConfig(key), ...(key === 'map' ? { overlayMap: undefined } : {}) }));
+    screen.refresh();
+    expect(lastMapProps.mapStyle).toBe('https://maps.example/base_light_en.json');
+    expect(screen.queryByTestId('wms-overlay-maplibre')).toBeNull();
+    act(() => lastMapProps.onDidFinishLoadingStyle());
+    expect(mockWMSOverlay).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: undefined }));
+    expect(mockGetMapStyle).toHaveBeenCalledTimes(2);
+  });
+
+  it('ignores styles completing after the map unmounts', async () => {
+    configureStyleOverlay();
+    let resolveStyle!: (style: StyleSpecification) => void;
+    mockGetMapStyle.mockReturnValueOnce(new Promise((resolve) => { resolveStyle = resolve; }));
+    const screen = renderStyleMap();
+    const initialProps = lastMapProps;
+    screen.unmount();
+    await act(async () => resolveStyle(baseStyle));
+    expect(lastMapProps).toBe(initialProps);
+    expect(mockWMSOverlay).not.toHaveBeenCalled();
+  });
+
+  it('centers repeated requests at the unchanged location once each and consumes them', async () => {
+    const state = { mock: {
+      currentLocation: { lat: 60.17, lon: 24.94 }, displayLocation: false,
+      overlay: undefined, activeOverlay: undefined, timezone: 'Europe/Helsinki', sessionId: 123,
+      animateToArea: false,
+    } };
+    const element = () => <Provider store={createStore(state) as any}>
+      <MlMapView infoSheetRef={{ current: null }} mapLayersSheetRef={{ current: null }} />
+    </Provider>;
+    const screen = render(element());
+    await act(async () => lastMapProps.onDidFinishRenderingFrameFully());
+    mockCameraRefApi.flyTo.mockClear();
+
+    for (let request = 0; request < 2; request += 1) {
+      state.mock.animateToArea = true;
+      screen.rerender(element());
+      expect(mockSetAnimateToArea).toHaveBeenLastCalledWith(false);
+      state.mock.animateToArea = false;
+      screen.rerender(element());
+      expect(mockCameraRefApi.flyTo).toHaveBeenCalledTimes(request + 1);
+    }
+    expect(mockCameraRefApi.flyTo).toHaveBeenLastCalledWith({ center: [24.94, 60.17], zoom: 8, duration: 1000 });
+  });
+
+  it('waits until the map is ready and focused before consuming a center request', async () => {
+    mockUseIsFocused.mockReturnValue(false);
+    const state = { mock: {
+      currentLocation: { lat: 60.17, lon: 24.94 }, displayLocation: false,
+      overlay: undefined, activeOverlay: undefined, timezone: 'Europe/Helsinki', sessionId: 123,
+      animateToArea: true,
+    } };
+    const element = () => <Provider store={createStore(state) as any}>
+      <MlMapView infoSheetRef={{ current: null }} mapLayersSheetRef={{ current: null }} />
+    </Provider>;
+    const screen = render(element());
+    expect(mockSetAnimateToArea).not.toHaveBeenCalled();
+    mockUseIsFocused.mockReturnValue(true);
+    screen.rerender(element());
+    expect(mockCameraRefApi.flyTo).not.toHaveBeenCalled();
+    await act(async () => lastMapProps.onDidFinishRenderingFrameFully());
+    expect(mockCameraRefApi.flyTo).toHaveBeenCalledTimes(1);
+    expect(mockSetAnimateToArea).toHaveBeenCalledWith(false);
   });
 });

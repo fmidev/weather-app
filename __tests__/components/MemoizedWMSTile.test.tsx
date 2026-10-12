@@ -51,4 +51,9 @@ describe('MemoizedWMSTile', () => {
       })
     );
   });
+
+  it.each(['overlay-roads', undefined])('positions the raster layer using the supplied overlay boundary (%s)', (beforeId) => {
+    render(<MemoizedWMSTile tileId="frame" urlTemplate="https://maps.example/wms" library="maplibre" beforeId={beforeId} />);
+    expect(mockLayer).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId }));
+  });
 });
