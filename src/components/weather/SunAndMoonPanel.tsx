@@ -16,7 +16,7 @@ import Text from '@components/common/AppText';
 import Skeleton from '@components/common/Skeleton';
 import Icon from '@assets/Icon';
 import { Config } from '@config';
-import { formatAccessibleDateTime } from '@utils/helpers';
+import { formatAccessibleDateTime } from '@utils/accessibility';
 import { REGULAR_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({

@@ -33,7 +33,7 @@ jest.mock('@utils/matomo', () => ({
   trackMatomoEvent: (...args: any[]) => mockTrackMatomoEvent(...args),
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/accessibility', () => ({
   formatAccessibleDate: (...args: any[]) => mockFormatAccessibleDate(...args),
 }));
 

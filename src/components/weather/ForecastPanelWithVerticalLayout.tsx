@@ -34,7 +34,7 @@ import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 import Vertical10DaysForecast from './forecast/Vertical10DaysForecast';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackMatomoEvent } from '@utils/matomo';
-import { formatAccessibleDateTime } from '@utils/helpers';
+import { formatAccessibleDateTime } from '@utils/accessibility';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const TABLE = 'table';

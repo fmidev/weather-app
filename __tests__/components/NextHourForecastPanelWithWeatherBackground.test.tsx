@@ -13,6 +13,7 @@ const mockNextHoursForecast = jest.fn();
 const mockSetCurrentLocation = jest.fn();
 const mockToPrecision = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
+let mockLanguage = 'en';
 let mockTheme = {
   colors: {
     primaryText: '#111111',
@@ -68,15 +69,33 @@ jest.mock('@react-navigation/native', () => ({
   useTheme: () => mockTheme,
 }));
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) =>
-      key.startsWith('unitAbbreviations:')
-        ? key.replace('unitAbbreviations:', '')
-        : key,
-    i18n: { language: 'en' },
-  }),
-}));
+jest.mock('react-i18next', () => {
+  const i18n = jest.requireActual('i18next').createInstance();
+  i18n.init({
+    initImmediate: false,
+    lng: 'en',
+    defaultNS: 'forecast',
+    resources: {
+      fi: require('../../i18n/fi.json'),
+      en: require('../../i18n/en.json'),
+      sv: require('../../i18n/sv.json'),
+    },
+  });
+
+  return {
+    useTranslation: () => ({
+      t: (key: string, options?: { time: string }) => {
+        if (key === 'nextHourForecastDescription' || key.startsWith('time:')) {
+          return i18n.t(key, { ...options, lng: mockLanguage });
+        }
+        return key.startsWith('unitAbbreviations:')
+          ? key.replace('unitAbbreviations:', '')
+          : key;
+      },
+      i18n: { language: mockLanguage },
+    }),
+  };
+});
 
 jest.mock('react-native-safe-area-context', () => ({
   SafeAreaView: ({ children, style }: any) => {
@@ -123,9 +142,13 @@ jest.mock('@assets/images/backgrounds', () => ({
   }),
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/accessibility', () => ({
+  ...jest.requireActual('@utils/accessibility'),
   formatAccessibleTemperature: (...args: any[]) =>
     mockFormatAccessibleTemperature(...args),
+}));
+
+jest.mock('@utils/helpers', () => ({
   getGeolocation: (...args: any[]) => mockGetGeolocation(...args),
 }));
 
@@ -208,6 +231,7 @@ const forecast = {
 
 describe('NextHourForecastPanelWithWeatherBackground', () => {
   beforeEach(() => {
+    mockLanguage = 'en';
     mockConfigGet.mockReset();
     mockConverter.mockReset();
     mockFormatAccessibleTemperature.mockReset();
@@ -328,6 +352,46 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
     expect(mockNavigate).toHaveBeenCalledWith('Search');
     expect(mockNavigate).toHaveBeenCalledTimes(2);
   });
+
+  it.each<[string, 12 | 24, string, string]>([
+    ['fi', 24, 'Europe/Helsinki', 'Sääennuste kello 10:00'],
+    ['en', 24, 'Europe/Helsinki', 'Weather forecast at 10:00'],
+    ['sv', 24, 'Europe/Helsinki', 'Väderprognos klockan 10:00'],
+    ['fi', 12, 'Europe/Helsinki', 'Sääennuste kello 10:00 aamulla'],
+    ['en', 12, 'Europe/Helsinki', 'Weather forecast at 10:00 in the morning'],
+    ['sv', 12, 'Europe/Helsinki', 'Väderprognos klockan 10:00 på morgonen'],
+    ['en', 24, 'UTC', 'Weather forecast at 7:00'],
+  ])(
+    'includes forecast time in the accessible description for %s, %s-hour clock and %s',
+    (language, clockType, timezone, description) => {
+      mockLanguage = language;
+      const view = render(
+        <NextHourForecastPanelWithWeatherBackground
+          clockType={clockType}
+          loading={false}
+          nextHourForecast={
+            {
+              ...forecast,
+              epochtime: Date.parse('2035-06-01T07:00:00Z') / 1000,
+            } as any
+          }
+          timezone={timezone}
+          units={{ temperature: { unitAbb: 'C' } } as any}
+          location={{ name: 'Helsinki', area: 'Uusimaa' } as any}
+          setCurrentLocation={mockSetCurrentLocation as any}
+          isAuroraBorealisLikely={false}
+          currentHour={13}
+        />
+      );
+
+      expect(
+        view
+          .getByA11yLabel(new RegExp(`^${description}`))
+          .props.accessibilityLabel.replace(/\s+/g, ' ')
+          .trim()
+      ).toBe(`${description} symbols:101 5 °C`);
+    }
+  );
 
   it('uses wide background and passes wide flag on wide displays', () => {
     mockWindowDimensions = {

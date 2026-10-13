@@ -13,7 +13,7 @@ import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, getForecastParameterUnitTranslationKey, toPrecision } from '@utils/units';
 import Text from '@components/common/AppText';
-import { formatAccessibleTemperature } from '@utils/helpers';
+import { formatAccessibleTemperature } from '@utils/accessibility';
 import { MEDIUM_FONT, SEMIBOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
