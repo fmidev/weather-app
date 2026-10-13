@@ -87,9 +87,12 @@ jest.mock('@utils/units', () => ({
     mockGetForecastParameterUnitTranslationKey(...args),
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/accessibility', () => ({
   formatAccessibleDate: () => 'Accessible date',
   formatAccessibleTemperature: (value: string) => value,
+}));
+
+jest.mock('@utils/helpers', () => ({
   uppercaseFirst: (value: string) =>
     value.charAt(0).toUpperCase() + value.slice(1),
 }));

@@ -51,7 +51,7 @@ jest.mock('@utils/units', () => ({
     mockGetForecastParameterUnitTranslationKey(...args),
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/accessibility', () => ({
   formatAccessibleTemperature: (value: string) => value,
 }));
 

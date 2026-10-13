@@ -56,7 +56,7 @@
   },
   "forecast": {
     "nextHourForecast": "Prognos",
-    "nextHourForecastDescription": "Vädret just nu",
+    "nextHourForecastDescription": "Väderprognos klockan {{time}}",
     "precipitation": "regn",
     "celsius": "Celsius grader",
     "fahrenheit": "Fahrenheit grader",
