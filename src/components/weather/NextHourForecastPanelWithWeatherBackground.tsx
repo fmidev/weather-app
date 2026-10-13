@@ -30,7 +30,11 @@ import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 import { selectIsAuroraBorealisLikely } from '@store/forecast/selectors';
 import { weatherBackgroundGetter } from '@assets/images/backgrounds';
 
-import { formatAccessibleTemperature, getGeolocation } from '@utils/helpers';
+import {
+  formatAccessibleTemperature,
+  formatAccessibleTime,
+} from '@utils/accessibility';
+import { getGeolocation } from '@utils/helpers';
 import { CustomTheme, WHITE } from '@assets/colors';
 
 import { Config } from '@config';
@@ -191,18 +195,24 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
       : fontScale * 22,
     44
   );
-  const accessibleHeaderLabel = `${t('nextHourForecastDescription')} ${t(`symbols:${smartSymbol.toString()}`)} 
-      ${formatAccessibleTemperature(temperatureValue, t)} 
-      ${t(getForecastParameterUnitTranslationKey(`°${temperatureUnit}`))}`;
-
   const locationName =
     location.name === location.area || !location.area
       ? location.name
       : `${location.name}, ${location.area}`;
-  const forecastTime = moment
-    .unix(nextHourForecast.epochtime)
-    .tz(timezone)
-    .formatDateTime('time', i18n.language, clockType);
+  const forecastMoment = moment.unix(nextHourForecast.epochtime).tz(timezone);
+  const forecastTime = forecastMoment.formatDateTime(
+    'time',
+    i18n.language,
+    clockType
+  );
+  const accessibleForecastTime = formatAccessibleTime(
+    forecastMoment,
+    t,
+    clockType === 24
+  );
+  const accessibleHeaderLabel = `${t('nextHourForecastDescription', { time: accessibleForecastTime })} ${t(`symbols:${smartSymbol.toString()}`)}
+      ${formatAccessibleTemperature(temperatureValue, t)}
+      ${t(getForecastParameterUnitTranslationKey(`°${temperatureUnit}`))}`;
 
   const content = (
     <>
@@ -287,6 +297,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
         <View style={styles.alignCenter}>
           <Text
             testID="next-hour-forecast-time"
+            accessible={false}
             style={[
               styles.largeText,
               styles.centeredText,

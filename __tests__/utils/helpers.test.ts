@@ -13,7 +13,6 @@ import { Config } from '../../src/config';
 import {
   convertValueToUnitPrecision,
   getFeelsLikeIconName,
-  formatAccessibleTemperature,
   getGeolocation,
   getSeveritiesForDays,
   getSeveritiesForTimePeriod,
@@ -132,27 +131,6 @@ describe('helpers convertValueToUnitPrecision', () => {
   it('returns null for undefined or null input', () => {
     expect(convertValueToUnitPrecision('temperature', 'F', undefined)).toBeNull();
     expect(convertValueToUnitPrecision('temperature', 'F', null)).toBeNull();
-  });
-});
-
-describe('helpers formatAccessibleTemperature', () => {
-  const t = (key: string) => (key === 'forecast:minus' ? 'minus' : key);
-
-  it('converts negative temperature to spoken minus format', () => {
-    expect(formatAccessibleTemperature(-7, t)).toBe('minus 7');
-    expect(formatAccessibleTemperature('-3', t)).toBe('minus 3');
-  });
-
-  it('returns plain value for zero and positive values', () => {
-    expect(formatAccessibleTemperature(0, t)).toBe('0');
-    expect(formatAccessibleTemperature(12, t)).toBe('12');
-  });
-
-  it('returns dash for invalid values', () => {
-    expect(formatAccessibleTemperature('', t)).toBe('-');
-    expect(formatAccessibleTemperature(undefined, t)).toBe('-');
-    expect(formatAccessibleTemperature(null, t)).toBe('-');
-    expect(formatAccessibleTemperature('not-a-number', t)).toBe('-');
   });
 });
 

@@ -30,7 +30,7 @@ import Icon from '@components/common/ScalableIcon';
 import {
   formatAccessibleDate,
   formatAccessibleTemperature,
-} from '@utils/helpers';
+} from '@utils/accessibility';
 import HourlyForecast from './HourlyForecast';
 import { trackMatomoEvent } from '@utils/matomo';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';

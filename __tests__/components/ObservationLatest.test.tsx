@@ -51,10 +51,13 @@ jest.mock('@utils/chart', () => ({
   capitalize: (value: string) => value.charAt(0).toUpperCase() + value.slice(1),
 }));
 
+jest.mock('@utils/accessibility', () => ({
+  formatAccessibleDateTime: () => 'accessible observation time',
+}));
+
 jest.mock('@utils/helpers', () => ({
   getLatestObservationAvoidingMissingValues: (...args: any[]) =>
     mockLatestObservation(...args),
-  formatAccessibleDateTime: () => 'accessible observation time',
   getParameterUnit: (parameter: string) => {
     const units: Record<string, string> = {
       humidity: '%',

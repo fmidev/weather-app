@@ -80,7 +80,7 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/accessibility', () => ({
   formatAccessibleDateTime: (...args: any[]) =>
     mockFormatAccessibleDateTime(...args),
 }));
