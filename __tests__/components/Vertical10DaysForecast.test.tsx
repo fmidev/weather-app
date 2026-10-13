@@ -88,6 +88,7 @@ jest.mock('@utils/units', () => ({
 }));
 
 jest.mock('@utils/accessibility', () => ({
+  ...jest.requireActual('@utils/accessibility'),
   formatAccessibleDate: () => 'Accessible date',
   formatAccessibleTemperature: (value: string) => value,
 }));

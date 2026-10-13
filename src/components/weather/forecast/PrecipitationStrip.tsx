@@ -12,7 +12,7 @@ import { selectUnits } from '@store/settings/selectors';
 import {
   formatAccessiblePrecipitation,
   PrecipitationData,
-} from '@utils/precipitationAccessibility';
+} from '@utils/accessibility';
 
 type PrecipitationStripProps = {
   precipitationData: PrecipitationData;

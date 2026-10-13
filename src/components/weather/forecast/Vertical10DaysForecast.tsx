@@ -13,7 +13,6 @@ import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';
 import PrecipitationStrip from './PrecipitationStrip';
-import { formatAccessiblePrecipitation } from '@utils/precipitationAccessibility';
 import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import {
@@ -26,6 +25,7 @@ import {
 import Icon from '@components/common/ScalableIcon';
 import {
   formatAccessibleDate,
+  formatAccessiblePrecipitation,
   formatAccessibleTemperature,
 } from '@utils/accessibility';
 import HourlyForecast from './HourlyForecast';
