@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import AccessibleBottomSheet from '@components/common/AccessibleBottomSheet';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, ModalProps } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -73,6 +73,7 @@ type ObservationPanelProps = PropsFromRedux;
 
 const LIST = 'table';
 const CHART = 'chart';
+const STATION_SHEET_OPEN_DURATION = 300;
 
 const ObservationPanel: React.FC<ObservationPanelProps> = ({
   loading,
@@ -97,7 +98,42 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
-  const stationSheetRef = useRef<RBSheet>(null);
+  const stationSheetRef = useRef<AccessibleBottomSheet>(null);
+  const [stationSheetOpen, setStationSheetOpen] = useState(false);
+  const stationSheetOpenTimer = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const resetStationSheetFocus = useCallback(() => {
+    if (stationSheetOpenTimer.current !== null) {
+      clearTimeout(stationSheetOpenTimer.current);
+      stationSheetOpenTimer.current = null;
+    }
+    setStationSheetOpen(false);
+  }, []);
+  const closeStationSheet = useCallback(() => {
+    resetStationSheetFocus();
+    stationSheetRef.current?.close();
+  }, [resetStationSheetFocus]);
+  // RBSheet supports customModalProps at runtime, but its bundled types omit it.
+  const stationSheetModalProps: { customModalProps: ModalProps } = {
+    customModalProps: {
+      onShow: () => {
+        resetStationSheetFocus();
+        stationSheetOpenTimer.current = setTimeout(() => {
+          stationSheetOpenTimer.current = null;
+          setStationSheetOpen(true);
+        }, STATION_SHEET_OPEN_DURATION);
+      },
+      onRequestClose: closeStationSheet,
+    },
+  };
+  useEffect(
+    () => () => {
+      if (stationSheetOpenTimer.current !== null)
+        clearTimeout(stationSheetOpenTimer.current);
+    },
+    []
+  );
   const { enabled, parameters } = Config.get('weather').observation;
   const { layout } = Config.get('weather');
 
@@ -349,8 +385,12 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         </View>
       )}
 
-      <RBSheet
+      <AccessibleBottomSheet
+        {...stationSheetModalProps}
         ref={stationSheetRef}
+        openDuration={STATION_SHEET_OPEN_DURATION}
+        onOpen={resetStationSheetFocus}
+        onClose={resetStationSheetFocus}
         height={600}
         closeOnDragDown
         dragFromTopOnly
@@ -362,9 +402,10 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
           draggableIcon: styles.draggableIcon,
         }}>
         <ObservationStationListBottomSheet
-          onClose={() => stationSheetRef.current?.close()}
+          isOpen={stationSheetOpen}
+          onClose={closeStationSheet}
         />
-      </RBSheet>
+      </AccessibleBottomSheet>
     </View>
   );
 };

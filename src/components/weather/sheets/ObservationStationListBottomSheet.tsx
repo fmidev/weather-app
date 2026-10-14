@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  AccessibilityInfo,
+  Platform,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -39,23 +45,75 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type ObservationStationListBottomSheetProps = PropsFromRedux & {
   onClose: () => void;
+  isOpen: boolean;
 };
 
 const ObservationStationListBottomSheet: React.FC<
   ObservationStationListBottomSheetProps
-> = ({ onClose, dataId, stationId, setStationId, stationList }) => {
+> = ({ onClose, isOpen, dataId, stationId, setStationId, stationList }) => {
   const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
   const { colors } = useTheme() as CustomTheme;
 
   const decimalSeparator = locale === 'en' ? '.' : ',';
+  const selectedStationRef = useRef<View>(null);
+  const scrollRef = useRef<ScrollView>(null);
+  const contentRef = useRef<View>(null);
+  const [layoutReady, setLayoutReady] = useState(false);
+  const hasFocused = useRef(false);
+
+  // Move accessibility focus to the selected station when the sheet opens
+  useEffect(() => {
+    if (!isOpen) {
+      hasFocused.current = false;
+      return undefined;
+    }
+    const selectedStation = selectedStationRef.current;
+    const content = contentRef.current;
+    const scroll = scrollRef.current;
+    if (
+      !layoutReady ||
+      hasFocused.current ||
+      !selectedStation ||
+      !content ||
+      !scroll
+    ) {
+      return undefined;
+    }
+
+    let cancelled = false;
+    let focusFrame: number | undefined;
+    selectedStation.measureLayout(content, (_x, y) => {
+      if (cancelled) return;
+      scroll.scrollTo({ y: Math.max(0, y), animated: false });
+      focusFrame = requestAnimationFrame(() => {
+        if (cancelled) return;
+        // This prop requests native focus on Android even outside Android TV.
+        // View.focus() is disabled by a React Native feature flag in this version.
+        if (Platform.OS === 'android') {
+          selectedStation.setNativeProps({ hasTVPreferredFocus: true });
+        }
+        AccessibilityInfo.sendAccessibilityEvent(selectedStation, 'focus');
+        hasFocused.current = true;
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      if (focusFrame !== undefined) cancelAnimationFrame(focusFrame);
+    };
+  }, [isOpen, layoutReady, stationId, stationList]);
 
   return (
-    <View style={[styles.wrapper, {
-      paddingLeft: insets.left,
-      paddingRight: insets.right
-    }]}>
+    <View
+      style={[
+        styles.wrapper,
+        {
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+      ]}>
       <View style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
@@ -71,50 +129,64 @@ const ObservationStationListBottomSheet: React.FC<
             {t('observation:observationStation')}
           </Text>
         </View>
-        <ScrollView>
-          {stationList.length > 0 && stationList.map((station) => (
-            <AccessibleTouchableOpacity
-              accessible
-              accessibilityRole="checkbox"
-              accessibilityState={{ selected: station.id === stationId }}
-              accessibilityLabel={`${station.name} – ${t(
-                'observation:distance'
-              )} ${station.distance} km`}
-              accessibilityHint={
-                station.id === stationId
-                  ? ''
-                  : t('observation:selectStationAccessibilityHint')
-              }
-              key={station.id}
-              onPress={() => {
-                if (station.id === stationId) return;
-                trackMatomoEvent('User action', 'Weather', 'Select observation station');
-                setStationId(dataId, station.id);
-                onClose();
-              }}>
-              <View style={styles.row}>
-                <Text
-                  style={[styles.text, { color: colors.text }]}>
-                  {`${station.name} – ${t(
-                    'observation:distance'
-                  )} ${toStringWithDecimal(
-                    station.distance,
-                    decimalSeparator
-                  )} km`}
-                </Text>
-                <Icon
-                  name={
-                    station.id === stationId
-                      ? 'radio-button-on'
-                      : 'radio-button-off'
+        <ScrollView ref={scrollRef} removeClippedSubviews={false}>
+          <View
+            ref={contentRef}
+            collapsable={false}
+            testID="observation-station-list-content"
+            onLayout={() => setLayoutReady(true)}>
+            {stationList.length > 0 &&
+              stationList.map((station, index) => (
+                <AccessibleTouchableOpacity
+                  ref={
+                    station.id === stationId ? selectedStationRef : undefined
                   }
-                  style={{
-                    color: station.id === stationId ? colors.primary : GRAY_1,
-                  }}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          ))}
+                  accessible
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ selected: station.id === stationId }}
+                  accessibilityLabel={`${station.name} – ${t(
+                    'observation:distance'
+                  )} ${station.distance} km, ${index + 1}/${stationList.length}`}
+                  accessibilityHint={
+                    station.id === stationId
+                      ? ''
+                      : t('observation:selectStationAccessibilityHint')
+                  }
+                  key={station.id}
+                  onPress={() => {
+                    if (station.id === stationId) return;
+                    trackMatomoEvent(
+                      'User action',
+                      'Weather',
+                      'Select observation station'
+                    );
+                    setStationId(dataId, station.id);
+                    onClose();
+                  }}>
+                  <View style={styles.row}>
+                    <Text style={[styles.text, { color: colors.text }]}>
+                      {`${station.name} – ${t(
+                        'observation:distance'
+                      )} ${toStringWithDecimal(
+                        station.distance,
+                        decimalSeparator
+                      )} km`}
+                    </Text>
+                    <Icon
+                      name={
+                        station.id === stationId
+                          ? 'radio-button-on'
+                          : 'radio-button-off'
+                      }
+                      style={{
+                        color:
+                          station.id === stationId ? colors.primary : GRAY_1,
+                      }}
+                    />
+                  </View>
+                </AccessibleTouchableOpacity>
+              ))}
+          </View>
         </ScrollView>
       </View>
     </View>

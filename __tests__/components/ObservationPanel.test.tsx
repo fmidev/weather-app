@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react-native';
+import { act, fireEvent, render } from '@testing-library/react-native';
 
 import ObservationPanel from '../../src/components/weather/ObservationPanel';
 
@@ -11,6 +11,7 @@ const mockParameterSelector = jest.fn();
 const mockPanelHeader = jest.fn();
 const mockRBSheetClose = jest.fn();
 const mockRBSheetOpen = jest.fn();
+const mockRBSheetProps = jest.fn();
 const mockSetStationId = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
 const mockUpdateChartParameter = jest.fn();
@@ -135,11 +136,12 @@ jest.mock('@components/common/AppText', () => ({
   },
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/AccessibleBottomSheet', () => {
   const ReactActual = require('react');
   return {
     __esModule: true,
-    default: ReactActual.forwardRef(({ children }: any, ref: any) => {
+    default: ReactActual.forwardRef(({ children, ...props }: any, ref: any) => {
+      mockRBSheetProps(props);
       ReactActual.useImperativeHandle(ref, () => ({
         close: mockRBSheetClose,
         open: mockRBSheetOpen,
@@ -207,17 +209,23 @@ jest.mock('../../src/components/weather/observation/Latest', () => ({
   },
 }));
 
-jest.mock('../../src/components/weather/sheets/ObservationStationListBottomSheet', () => ({
-  __esModule: true,
-  default: ({ onClose }: any) => {
-    const { Pressable, Text } = require('react-native');
-    return (
-      <Pressable testID="station-sheet" onPress={onClose}>
-        <Text>stations</Text>
-      </Pressable>
-    );
-  },
-}));
+jest.mock(
+  '../../src/components/weather/sheets/ObservationStationListBottomSheet',
+  () => ({
+    __esModule: true,
+    default: ({ onClose, isOpen }: any) => {
+      const { Pressable, Text } = require('react-native');
+      return (
+        <Pressable
+          testID="station-sheet"
+          onPress={onClose}
+          data-is-open={isOpen}>
+          <Text>stations</Text>
+        </Pressable>
+      );
+    },
+  })
+);
 
 const baseData = [
   {
@@ -255,6 +263,7 @@ describe('ObservationPanel', () => {
     mockPanelHeader.mockClear();
     mockRBSheetClose.mockClear();
     mockRBSheetOpen.mockClear();
+    mockRBSheetProps.mockClear();
     mockSetStationId.mockClear();
     mockTrackMatomoEvent.mockClear();
     mockUpdateChartParameter.mockClear();
@@ -277,6 +286,49 @@ describe('ObservationPanel', () => {
       }
       return {};
     });
+  });
+
+  afterEach(() => jest.useRealTimers());
+
+  it('enables selected-station focus after the modal shows and the opening animation finishes', () => {
+    jest.useFakeTimers();
+    const view = render(<ObservationPanel {...baseProps} />);
+    const sheetProps = mockRBSheetProps.mock.calls.at(-1)?.[0];
+    expect(view.getByTestId('station-sheet').props['data-is-open']).toBe(false);
+    act(() => sheetProps.onOpen());
+    act(() => jest.advanceTimersByTime(sheetProps.openDuration));
+    expect(view.getByTestId('station-sheet').props['data-is-open']).toBe(false);
+    act(() => sheetProps.customModalProps.onShow());
+    act(() => jest.advanceTimersByTime(sheetProps.openDuration - 1));
+    expect(view.getByTestId('station-sheet').props['data-is-open']).toBe(false);
+    act(() => jest.advanceTimersByTime(1));
+    expect(view.getByTestId('station-sheet').props['data-is-open']).toBe(true);
+    act(() => sheetProps.onClose());
+    expect(view.getByTestId('station-sheet').props['data-is-open']).toBe(false);
+    act(() => sheetProps.customModalProps.onShow());
+    act(() => jest.advanceTimersByTime(sheetProps.openDuration));
+    expect(view.getByTestId('station-sheet').props['data-is-open']).toBe(true);
+  });
+
+  it('cancels pending station focus when closed before the opening animation ends', () => {
+    jest.useFakeTimers();
+    const view = render(<ObservationPanel {...baseProps} />);
+    const sheetProps = mockRBSheetProps.mock.calls.at(-1)?.[0];
+    act(() => sheetProps.customModalProps.onShow());
+    fireEvent.press(view.getByTestId('station-sheet'));
+    act(() => jest.advanceTimersByTime(sheetProps.openDuration));
+    expect(view.getByTestId('station-sheet').props['data-is-open']).toBe(false);
+    expect(mockRBSheetClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('cancels the opening focus timer when the observation panel unmounts', () => {
+    jest.useFakeTimers();
+    const view = render(<ObservationPanel {...baseProps} />);
+    const sheetProps = mockRBSheetProps.mock.calls.at(-1)?.[0];
+    act(() => sheetProps.customModalProps.onShow());
+    expect(jest.getTimerCount()).toBeGreaterThan(0);
+    view.unmount();
+    expect(jest.getTimerCount()).toBe(0);
   });
 
   it('returns null when observations are disabled', () => {
@@ -304,7 +356,9 @@ describe('ObservationPanel', () => {
         'observationStation: Station One – distance 1.2 unitAbbreviations:km'
       )
     ).toBeTruthy();
-    expect(view.getByText('Station One – distance 1.2 unitAbbreviations:km')).toBeTruthy();
+    expect(
+      view.getByText('Station One – distance 1.2 unitAbbreviations:km')
+    ).toBeTruthy();
     expect(view.getByTestId('latest-observation')).toBeTruthy();
     expect(view.getByTestId('parameter-selector')).toBeTruthy();
     expect(view.getByTestId('observation-list')).toBeTruthy();
@@ -334,18 +388,15 @@ describe('ObservationPanel', () => {
   });
 
   it('sets initial station when station id is missing', () => {
-    render(
-      <ObservationPanel
-        {...baseProps}
-        stationId={undefined as any}
-      />
-    );
+    render(<ObservationPanel {...baseProps} stationId={undefined as any} />);
 
     expect(mockSetStationId).toHaveBeenCalledWith('obs-1', 'station-1');
   });
 
   it('switches between chart and list formats with tracking', () => {
-    const view = render(<ObservationPanel {...baseProps} displayFormat="chart" />);
+    const view = render(
+      <ObservationPanel {...baseProps} displayFormat="chart" />
+    );
 
     expect(view.getByTestId('observation-chart')).toBeTruthy();
     expect(mockChart).toHaveBeenCalledWith(
