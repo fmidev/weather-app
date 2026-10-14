@@ -136,7 +136,7 @@ describe('PrecipitationStrip', () => {
 
     expect(
       view.getByA11yLabel(
-        'Sadetta aamupäivällä ja yöllä, kokonaissademäärä 2,0 millimetriä'
+        'Sadetta yöllä ja aamupäivällä, kokonaissademäärä 2,0 millimetriä'
       )
     ).toBeTruthy();
   });
@@ -201,7 +201,7 @@ describe('PrecipitationStrip', () => {
 
     expect(
       view.getByA11yLabel(
-        'Sadetta aamupäivällä, iltapäivällä, illalla ja yöllä, kokonaissademäärä puuttuu'
+        'Sadetta yöllä, aamupäivällä, iltapäivällä ja illalla, kokonaissademäärä puuttuu'
       )
     ).toBeTruthy();
   });
