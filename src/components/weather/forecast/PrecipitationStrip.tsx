@@ -90,6 +90,8 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
     <View
       accessible={accessible}
       focusable={false}
+      accessibilityElementsHidden={!accessible}
+      importantForAccessibility={accessible ? 'auto' : 'no-hide-descendants'}
       accessibilityRole="image"
       accessibilityLabel={accessibilityLabel}
       style={[

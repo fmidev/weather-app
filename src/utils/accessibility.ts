@@ -52,10 +52,10 @@ export type PrecipitationData =
   { precipitation: number | undefined | null; timestamp: number }[] | false;
 
 const DAY_PERIODS = [
+  { key: 'night', start: 0, end: 6 },
   { key: 'morning', start: 6, end: 12 },
   { key: 'afternoon', start: 12, end: 18 },
   { key: 'evening', start: 18, end: 24 },
-  { key: 'night', start: 0, end: 6 },
 ];
 
 export const formatAccessiblePrecipitation = (

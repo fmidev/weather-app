@@ -416,5 +416,7 @@ describe('PrecipitationStrip', () => {
 
     expect(strip.props.accessible).toBe(false);
     expect(strip.props.focusable).toBe(false);
+    expect(strip.props.accessibilityElementsHidden).toBe(true);
+    expect(strip.props.importantForAccessibility).toBe('no-hide-descendants');
   });
 });
