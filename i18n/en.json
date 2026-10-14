@@ -111,6 +111,7 @@
       "rainAllDay": "Precipitation throughout the day",
       "rainAlmostAllDay": "Precipitation for most of the day",
       "noRainAllDay": "No precipitation all day",
+      "noRainDuring": "No precipitation {{periods}}",
       "totalPrecipitation": "total precipitation {{amount}} {{unit}}",
       "missingTotal": "total precipitation amount missing"
     },

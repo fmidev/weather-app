@@ -79,25 +79,31 @@ export const formatAccessiblePrecipitation = (
           precipitation >= 0
       )
     : [];
-  const rainyPeriods = DAY_PERIODS.filter(({ start, end }) =>
-    validPrecipitationData.some(
-      ({ hour, precipitation }) =>
-        hour >= start && hour < end && (precipitation ?? 0) > 0
+  const availablePeriods = DAY_PERIODS.filter(({ start, end }) =>
+    validPrecipitationData.some(({ hour }) => hour >= start && hour < end)
+  );
+  const coversAllPeriods = availablePeriods.length === DAY_PERIODS.length;
+  const rainyPeriods = availablePeriods
+    .filter(({ start, end }) =>
+      validPrecipitationData.some(
+        ({ hour, precipitation }) =>
+          hour >= start && hour < end && (precipitation ?? 0) > 0
+      )
     )
-  ).map(({ key }) => t(`forecast:precipitationStrip.${key}`));
+    .map(({ key }) => t(`forecast:precipitationStrip.${key}`));
 
   let accessibilityLabel = t('forecast:precipitationMissing');
   if (validPrecipitationData.length > 0) {
     const hasMissingData =
       validPrecipitationData.length !==
       (precipitationHourArr ? precipitationHourArr.length : 0);
-    const periodsDescription =
-      rainyPeriods.length > 1
+    const describePeriods = (periods: string[]): string =>
+      periods.length > 1
         ? t('forecast:precipitationStrip.periodList', {
-            first: rainyPeriods.slice(0, -1).join(', '),
-            last: rainyPeriods[rainyPeriods.length - 1],
+            first: periods.slice(0, -1).join(', '),
+            last: periods[periods.length - 1],
           })
-        : rainyPeriods[0];
+        : periods[0];
     const rainsEveryHour =
       !hasMissingData &&
       validPrecipitationData.every(
@@ -106,14 +112,30 @@ export const formatAccessiblePrecipitation = (
     const hasDryHours = validPrecipitationData.some(
       ({ precipitation }) => precipitation === 0
     );
-    let rainDescription = t('forecast:precipitationStrip.noRainAllDay');
-    if (rainyPeriods.length === DAY_PERIODS.length && rainsEveryHour) {
+    let rainDescription = coversAllPeriods
+      ? t('forecast:precipitationStrip.noRainAllDay')
+      : t('forecast:precipitationStrip.noRainDuring', {
+          periods: describePeriods(
+            availablePeriods.map(({ key }) =>
+              t(`forecast:precipitationStrip.${key}`)
+            )
+          ),
+        });
+    if (
+      coversAllPeriods &&
+      rainyPeriods.length === DAY_PERIODS.length &&
+      rainsEveryHour
+    ) {
       rainDescription = t('forecast:precipitationStrip.rainAllDay');
-    } else if (rainyPeriods.length === DAY_PERIODS.length && hasDryHours) {
+    } else if (
+      coversAllPeriods &&
+      rainyPeriods.length === DAY_PERIODS.length &&
+      hasDryHours
+    ) {
       rainDescription = t('forecast:precipitationStrip.rainAlmostAllDay');
     } else if (rainyPeriods.length > 0) {
       rainDescription = t('forecast:precipitationStrip.rainDuring', {
-        periods: periodsDescription,
+        periods: describePeriods(rainyPeriods),
       });
     }
 

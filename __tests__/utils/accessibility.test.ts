@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import moment from 'moment-timezone';
 import en from '../../i18n/en.json';
 import fi from '../../i18n/fi.json';
+import sv from '../../i18n/sv.json';
 import {
   formatAccessibleDateTime,
   formatAccessiblePrecipitation,
@@ -90,7 +91,7 @@ describe('formatAccessiblePrecipitation', () => {
     lng: 'en',
     // Callers include both a forecast-scoped strip and a daily row with another namespace.
     defaultNS: 'navigation',
-    resources: { en, fi },
+    resources: { en, fi, sv },
   });
   const precipitationData = [
     {
@@ -131,4 +132,91 @@ describe('formatAccessiblePrecipitation', () => {
       'Precipitation amount missing'
     );
   });
+
+  it.each([
+    {
+      hours: [12, 18],
+      amount: 0,
+      label:
+        'Ei sadetta iltapäivällä ja illalla, kokonaissademäärä 0,0 millimetriä',
+    },
+    {
+      hours: [12, 18],
+      amount: 1,
+      label:
+        'Sadetta iltapäivällä ja illalla, kokonaissademäärä 2,0 millimetriä',
+    },
+    {
+      hours: [0, 6, 12],
+      amount: 0,
+      label:
+        'Ei sadetta yöllä, aamupäivällä ja iltapäivällä, kokonaissademäärä 0,0 millimetriä',
+    },
+    {
+      hours: [0, 6, 12],
+      amount: 1,
+      label:
+        'Sadetta yöllä, aamupäivällä ja iltapäivällä, kokonaissademäärä 3,0 millimetriä',
+    },
+    {
+      hours: [6],
+      amount: 0,
+      label: 'Ei sadetta aamupäivällä, kokonaissademäärä 0,0 millimetriä',
+    },
+  ])(
+    'describes the available periods for a partial day ($hours, $amount)',
+    ({ hours, amount, label }) => {
+      const data = hours.map((hour) => ({
+        precipitation: amount,
+        timestamp: moment.utc('2035-06-01').hour(hour).unix(),
+      }));
+
+      expect(
+        formatAccessiblePrecipitation(data, 'mm', 'fi', i18n.getFixedT('fi'))
+      ).toBe(label);
+    }
+  );
+
+  it.each([
+    [
+      'en',
+      'No precipitation in the afternoon and in the evening, total precipitation 0.0 millimeters',
+    ],
+    [
+      'sv',
+      'Ingen nederbörd på eftermiddagen och på kvällen, total nederbörd 0,0 millimeter',
+    ],
+  ])('localizes a dry partial day for %s', (language, label) => {
+    const data = [12, 18].map((hour) => ({
+      precipitation: 0,
+      timestamp: moment.utc('2035-06-01').hour(hour).unix(),
+    }));
+
+    expect(
+      formatAccessiblePrecipitation(
+        data,
+        'mm',
+        language,
+        i18n.getFixedT(language)
+      )
+    ).toBe(label);
+  });
+
+  it.each([0, 1])(
+    'allows an all-day description when timestamps cover every period (%s)',
+    (amount) => {
+      const data = [0, 6, 12, 18].map((hour) => ({
+        precipitation: amount,
+        timestamp: moment.utc('2035-06-01').hour(hour).unix(),
+      }));
+      const expected =
+        amount === 0
+          ? 'Ei sadetta koko päivänä, kokonaissademäärä 0,0 millimetriä'
+          : 'Sataa koko päivän ajan, kokonaissademäärä 4,0 millimetriä';
+
+      expect(
+        formatAccessiblePrecipitation(data, 'mm', 'fi', i18n.getFixedT('fi'))
+      ).toBe(expected);
+    }
+  );
 });

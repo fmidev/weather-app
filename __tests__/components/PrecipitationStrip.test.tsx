@@ -276,6 +276,32 @@ describe('PrecipitationStrip', () => {
     ).toBeTruthy();
   });
 
+  it('describes only the available periods for a dry partial day', () => {
+    const view = render(
+      <PrecipitationStrip precipitationData={makeDay().slice(12)} />
+    );
+
+    expect(
+      view.getByA11yLabel(
+        'Ei sadetta iltapäivällä ja illalla, kokonaissademäärä 0,0 millimetriä'
+      )
+    ).toBeTruthy();
+  });
+
+  it('lists periods for a partially wet forecast without a whole-day description', () => {
+    const view = render(
+      <PrecipitationStrip
+        precipitationData={makeDay({ 12: 1, 18: 1 }).slice(12)}
+      />
+    );
+
+    expect(
+      view.getByA11yLabel(
+        'Sadetta iltapäivällä ja illalla, kokonaissademäärä 2,0 millimetriä'
+      )
+    ).toBeTruthy();
+  });
+
   it.each([undefined, null, NaN, -1])(
     'announces missing totals for an invalid amount (%s)',
     (missing) => {

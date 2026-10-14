@@ -195,7 +195,7 @@ describe('DaySelectorList', () => {
       'en',
       'mm',
       0,
-      'No precipitation all day, total precipitation 0.0 millimeters',
+      'No precipitation in the morning, total precipitation 0.0 millimeters',
     ],
     ['en', 'mm', null, 'Precipitation amount missing'],
   ])(

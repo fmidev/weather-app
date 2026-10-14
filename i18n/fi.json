@@ -111,6 +111,7 @@
       "rainAllDay": "Sataa koko päivän ajan",
       "rainAlmostAllDay": "Sataa lähes koko päivän ajan",
       "noRainAllDay": "Ei sadetta koko päivänä",
+      "noRainDuring": "Ei sadetta {{periods}}",
       "totalPrecipitation": "kokonaissademäärä {{amount}} {{unit}}",
       "missingTotal": "kokonaissademäärä puuttuu"
     },

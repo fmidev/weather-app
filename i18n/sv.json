@@ -111,6 +111,7 @@
       "rainAllDay": "Nederbörd under hela dagen",
       "rainAlmostAllDay": "Nederbörd under nästan hela dagen",
       "noRainAllDay": "Ingen nederbörd under hela dagen",
+      "noRainDuring": "Ingen nederbörd {{periods}}",
       "totalPrecipitation": "total nederbörd {{amount}} {{unit}}",
       "missingTotal": "total nederbörd saknas"
     },
