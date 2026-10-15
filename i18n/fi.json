@@ -56,7 +56,7 @@
   },
   "forecast": {
     "nextHourForecast": "Ennuste",
-    "nextHourForecastDescription": "Sää tällä hetkellä",
+    "nextHourForecastDescription": "Sääennuste kello {{time}}",
     "precipitation": "sadetta",
     "celsius": "Celsius-astetta",
     "fahrenheit": "Fahrenheit-astetta",

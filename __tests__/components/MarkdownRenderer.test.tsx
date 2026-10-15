@@ -5,7 +5,11 @@ import { fireEvent, render } from '@testing-library/react-native';
 const mockTrackMatomoEvent = jest.fn();
 const mockIcon = jest.fn((props) => {
   const { Text: MockText } = require('react-native');
-  return <MockText {...props} testID={`icon-${props.name}`}>{props.name}</MockText>;
+  return (
+    <MockText {...props} testID={`icon-${props.name}`}>
+      {props.name}
+    </MockText>
+  );
 });
 
 jest.mock('react-native-marked', () => ({
@@ -35,7 +39,9 @@ describe('MarkdownRenderer', () => {
   });
 
   it('renders plain text with configured text color', () => {
-    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const {
+      MarkdownRenderer,
+    } = require('../../src/components/markdown/MarkdownRenderer');
     const renderer = new MarkdownRenderer();
     renderer.setTextColor('#112233');
 
@@ -51,7 +57,9 @@ describe('MarkdownRenderer', () => {
   });
 
   it('renders inline icon and temperature legend tokens', () => {
-    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const {
+      MarkdownRenderer,
+    } = require('../../src/components/markdown/MarkdownRenderer');
     const renderer = new MarkdownRenderer();
 
     const { getByText, getByTestId } = render(
@@ -72,7 +80,9 @@ describe('MarkdownRenderer', () => {
   });
 
   it('renders radar legend from markdown link syntax', () => {
-    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const {
+      MarkdownRenderer,
+    } = require('../../src/components/markdown/MarkdownRenderer');
     const renderer = new MarkdownRenderer();
     renderer.setTranslationFunction((key: string) =>
       key === 'markdownRenderer.radarLegendDescription'
@@ -81,10 +91,7 @@ describe('MarkdownRenderer', () => {
     );
 
     const { getByText, getByA11yLabel } = render(
-      renderer.link(
-        'legend:#111111,#222222,#333333',
-        '/Low|Medium|High'
-      )
+      renderer.link('legend:#111111,#222222,#333333', '/Low|Medium|High')
     );
 
     expect(getByText('Low')).toBeTruthy();
@@ -94,20 +101,26 @@ describe('MarkdownRenderer', () => {
   });
 
   it('opens tracked external link and sends matomo event', async () => {
-    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const {
+      MarkdownRenderer,
+    } = require('../../src/components/markdown/MarkdownRenderer');
     const renderer = new MarkdownRenderer();
     renderer.setTranslationFunction((key: string) =>
       key === 'markdonwRenderer.openInBrowser' ? 'Open in browser' : key
     );
     renderer.setTextColor('#445566');
-    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
+    const openURLSpy = jest
+      .spyOn(Linking, 'openURL')
+      .mockResolvedValueOnce(undefined);
 
     const { getByA11yRole, getByTestId } = render(
       renderer.link('Documentation', 'https://example.test/docs|Map')
     );
 
     expect(getByTestId('icon-open-in-new')).toBeTruthy();
-    expect(getByA11yRole('link').props.accessibilityHint).toBe('Open in browser');
+    expect(getByA11yRole('link').props.accessibilityHint).toBe(
+      'Open in browser'
+    );
 
     fireEvent.press(getByA11yRole('link'));
 
@@ -122,12 +135,19 @@ describe('MarkdownRenderer', () => {
   });
 
   it('formats mailto links with app version and hides external-link icon', () => {
-    const { MarkdownRenderer } = require('../../src/components/markdown/MarkdownRenderer');
+    const {
+      MarkdownRenderer,
+    } = require('../../src/components/markdown/MarkdownRenderer');
     const renderer = new MarkdownRenderer();
-    const openURLSpy = jest.spyOn(Linking, 'openURL').mockResolvedValueOnce(undefined);
+    const openURLSpy = jest
+      .spyOn(Linking, 'openURL')
+      .mockResolvedValueOnce(undefined);
 
     const { getByA11yRole, queryByTestId } = render(
-      renderer.link('Email support', 'mailto:test@example.com?body=v{version}|Other')
+      renderer.link(
+        'Email support',
+        'mailto:test@example.com?body=v{version}|Other'
+      )
     );
 
     expect(queryByTestId('icon-open-in-new')).toBeNull();
@@ -135,7 +155,7 @@ describe('MarkdownRenderer', () => {
     fireEvent.press(getByA11yRole('link'));
 
     expect(openURLSpy).toHaveBeenCalledWith(
-      expect.stringContaining('v6.1.') // Full version is something like v6.0.12
+      expect.stringContaining('v6.2.') // Full version is something like v6.0.12
     );
 
     openURLSpy.mockRestore();
