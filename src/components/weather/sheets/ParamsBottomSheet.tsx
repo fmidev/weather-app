@@ -3,10 +3,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   StyleSheet,
-  Switch,
   ScrollView,
   TouchableOpacity,
-  Platform,
   useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import AccessibleSwitch from '@components/common/AccessibleSwitch';
 import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
@@ -39,12 +38,7 @@ import constants, {
 } from '@store/forecast/constants';
 
 import { useOrientation } from '@utils/hooks';
-import {
-  WHITE,
-  SECONDARY_BLUE,
-  GRAYISH_BLUE,
-  CustomTheme,
-} from '@assets/colors';
+import { CustomTheme } from '@assets/colors';
 import { Config } from '@config';
 import { DisplayParameters } from '@store/forecast/types';
 import { trackMatomoEvent } from '@utils/matomo';
@@ -69,8 +63,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ParamsBottomSheetProps = PropsFromRedux & {
   onClose: () => void;
 };
-
-const disabledStyle = Platform.OS === 'android' ? { opacity: 0.5 } : {};
 
 const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   displayParams,
@@ -123,19 +115,13 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
 
   const rowRenderer = (param: DisplayParameters, index: number) => (
     <View
-      accessible
-      accessibilityState={{
-        selected: displayParams.some((arr) => arr.includes(param)),
-      }}
-      accessibilityHint={
-        displayParams.some((arr) => arr.includes(param))
-          ? t('paramsBottomSheet.unSelectAccessibilityHint')
-          : t('paramsBottomSheet.selectAccessibilityHint')
-      }
-      onAccessibilityTap={() => updateDisplayParams([index, param])}
       key={String(param)}
       style={[styles.row, { borderBottomColor: colors.border }]}>
-      <View style={styles.innerRow}>
+      <View
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.innerRow}>
         {param !== RELATIVE_HUMIDITY &&
           param !== PRESSURE &&
           param !== UV_CUMULATED && (
@@ -185,30 +171,23 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
             UV
           </Text>
         )}
-        <Text style={[styles.text, { color: colors.hourListText }]}>
-          {t(`paramsBottomSheet.${param}`, {
-            unit: t(`unitAbbreviations:${getUnitForParameter(param)}`),
-          })}
-        </Text>
       </View>
 
-      <Switch
+      <AccessibleSwitch
         testID={`weather_params_switch_${param}`}
-        accessibilityRole="switch"
-        style={
-          displayParams.length === 1 && displayParams[0][1] === param
-            ? disabledStyle
-            : {}
+        label={t(`paramsBottomSheet.${param}`, {
+          unit: t(`unitAbbreviations:${getUnitForParameter(param)}`),
+        })}
+        accessibilityHint={
+          displayParams.some((arr) => arr.includes(param))
+            ? t('paramsBottomSheet.unSelectAccessibilityHint')
+            : t('paramsBottomSheet.selectAccessibilityHint')
         }
-        trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-        thumbColor={WHITE}
-        ios_backgroundColor={WHITE}
+        style={styles.switch}
         value={displayParams.some((arr) => arr.includes(param))}
-        onValueChange={() => {
+        onValueChange={(value) => {
           const paramStr = 'Forecast parameter ' + param + ' - ';
-          const onOffStr = displayParams.some((arr) => arr.includes(param))
-            ? 'OFF'
-            : 'ON';
+          const onOffStr = value ? 'ON' : 'OFF';
 
           trackMatomoEvent('User action', 'Weather', paramStr + '' + onOffStr);
           updateDisplayParams([index, param]);
@@ -288,18 +267,10 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                 </Text>
                 <View
                   style={[styles.row, { borderBottomColor: colors.border }]}>
-                  <Text style={[styles.text, { color: colors.hourListText }]}>
-                    {t('paramsBottomSheet.showSingleHourlyForecast')}
-                  </Text>
-                  <Switch
+                  <AccessibleSwitch
                     testID="show_single_hourly_forecast_switch"
-                    accessibilityRole="switch"
-                    accessibilityLabel={t(
-                      'paramsBottomSheet.showSingleHourlyForecast'
-                    )}
-                    trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-                    thumbColor={WHITE}
-                    ios_backgroundColor={WHITE}
+                    label={t('paramsBottomSheet.showSingleHourlyForecast')}
+                    style={styles.switch}
                     value={showSingleHourlyForecast}
                     onValueChange={(value) => {
                       trackMatomoEvent(
@@ -345,19 +316,22 @@ const styles = StyleSheet.create({
   },
   innerRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  switch: {
     flex: 1,
-    maxWidth: '70%',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 4,
     borderBottomWidth: 1,
   },
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   otherSettingsTitle: {
     marginBottom: 4,
