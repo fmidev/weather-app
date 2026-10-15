@@ -17,7 +17,7 @@ import Text from '@components/common/AppText';
 import Skeleton from '@components/common/Skeleton';
 import Icon from '@assets/Icon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { formatAccessibleDateTime } from '@utils/helpers';
+import { formatAccessibleDateTime } from '@utils/accessibility';
 import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
