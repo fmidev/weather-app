@@ -10,8 +10,8 @@ import {
   getObservationCellValue,
   getParameterUnit,
   getLatestObservationAvoidingMissingValues,
-  formatAccessibleDateTime,
 } from '@utils/helpers';
+import { formatAccessibleDateTime } from '@utils/accessibility';
 
 import { capitalize } from '@utils/chart';
 import { Config } from '@config';

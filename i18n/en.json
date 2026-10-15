@@ -56,7 +56,7 @@
   },
   "forecast": {
     "nextHourForecast": "Forecast",
-    "nextHourForecastDescription": "Current weather",
+    "nextHourForecastDescription": "Weather forecast at {{time}}",
     "precipitation": "precipitation",
     "celsius": "degrees Celsius",
     "fahrenheit": "degrees Fahrenheit",

@@ -364,20 +364,6 @@ export const getParameterUnit = (
   }
 };
 
-export const formatAccessibleTemperature = (
-  val: string | number | undefined | null,
-  t: (key: string) => string
-): string => {
-  if (val === null || val === undefined || val === '') return '-';
-
-  const num = Number(val);
-  if (isNaN(num)) return '-';
-
-  const valuePart =
-    num < 0 ? `${t('forecast:minus')} ${Math.abs(num)}` : `${num}`;
-  return `${valuePart}`;
-};
-
 // https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
 const getEaster = (year: number): Date => {
   const f = Math.floor;
@@ -604,30 +590,4 @@ export const msToBeaufort = (speed: number): number => {
   ];
 
   return thresholds.findIndex((limit) => speed < limit);
-};
-
-export const formatAccessibleDate = (
-  m: moment.Moment,
-  includeYear = true
-): string => {
-  return m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
-};
-
-export const formatAccessibleDateTime = (
-  m: moment.Moment,
-  t: (key: string) => string,
-  is24Hour = true,
-  includeYear = true
-): string => {
-  const datePart = m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
-
-  if (is24Hour) return datePart + ' ' + m.format('H:mm');
-
-  return (
-    datePart +
-    ' ' +
-    m.format('h:mm ') +
-    ' ' +
-    (m.hours() >= 12 ? t('time:pmSpoken') : t('time:amSpoken'))
-  );
 };
