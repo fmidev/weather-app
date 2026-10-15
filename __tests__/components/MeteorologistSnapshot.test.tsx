@@ -76,7 +76,7 @@ jest.mock('@assets/Icon', () => ({
   },
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/accessibility', () => ({
   formatAccessibleDateTime: (...args: any[]) =>
     mockFormatAccessibleDateTime(...args),
 }));
