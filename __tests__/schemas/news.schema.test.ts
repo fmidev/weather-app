@@ -1,9 +1,11 @@
 import Ajv from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import newsSchema from '../../src/schemas/news.schema.json';
+import { isIRIReference } from '../../src/utils/iriReference';
 
 const ajv = new Ajv();
-addFormats(ajv, ['date-time', 'uri-reference']);
+addFormats(ajv, ['date-time']);
+ajv.addFormat('iri-reference', isIRIReference);
 const validateNews = ajv.compile(newsSchema);
 
 const newsItem = {
@@ -72,6 +74,16 @@ describe('news response schema', () => {
         })
       )
     ).toBe(true);
+  });
+
+  it.each([
+    '//images.example/sääkuva.jpg',
+    '//kuvat.例え/天気.jpg',
+    '//images.example/🌦️.jpg',
+  ])('accepts an international image reference %s', (url) => {
+    expect(validateNews(withThumbnail({
+      fields: { image: { fields: { file: { url } } } },
+    }))).toBe(true);
   });
 
   it.each<[string, unknown]>([
