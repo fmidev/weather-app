@@ -195,6 +195,24 @@ describe('location reducer', () => {
     });
   });
 
+  it.each(['lat', 'lon'] as const)('updates new GPS %s within the same named location', (coordinate) => {
+    const previous = { ...defaultState, isGeolocation: true };
+    const nextLocation = { ...location, [coordinate]: location[coordinate] + 0.001234 };
+    const next = reducer(previous, { type: types.SET_CURRENT_LOCATION, location: nextLocation, isGeolocation: true });
+    expect(next).not.toBe(previous);
+    expect(next.current?.[coordinate]).toBe(location[coordinate] + 0.0012);
+    expect(next.current?.id).toBe(location.id);
+  });
+
+  it('keeps the location unchanged when GPS differences round to the same coordinates', () => {
+    const previous = { ...defaultState, isGeolocation: true };
+    expect(reducer(previous, {
+      type: types.SET_CURRENT_LOCATION,
+      location: { ...location, lat: location.lat + 0.000001, lon: location.lon + 0.000001 },
+      isGeolocation: true,
+    })).toBe(previous);
+  });
+
   it('should handle DELETE_ALL_RECENT_SEARCHES', () => {
     expect(
       reducer(defaultState, {

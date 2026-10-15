@@ -1,6 +1,7 @@
 import React from 'react';
 import { WMSTile } from 'react-native-maps';
 import { Layer, RasterSource } from '@maplibre/maplibre-react-native';
+import { DEFAULT_WMS_BEFORE_ID } from '@utils/mapStyle';
 
 type MemoizedWMSTileProps = {
   tileId: string;
@@ -8,6 +9,8 @@ type MemoizedWMSTileProps = {
   tileSize?: number;
   opacity?: number;
   library?: 'maplibre' | 'react-native-maps';
+  // null disables the legacy boundary when a loaded style has no such layer.
+  beforeId?: string | null;
 };
 
 const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
@@ -16,6 +19,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   tileSize,
   opacity,
   library = 'react-native-maps',
+  beforeId = DEFAULT_WMS_BEFORE_ID,
 }) => {
   const items = urlTemplate.split('?');
   const key = items.length > 1 ? items[1] : urlTemplate;
@@ -33,7 +37,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
         id={layerId}
         key={layerId}
         source={sourceId}
-        beforeId="places_region"
+        beforeId={beforeId ?? undefined}
         paint={{
           "raster-opacity": opacity ?? 0,
           "raster-opacity-transition": {
