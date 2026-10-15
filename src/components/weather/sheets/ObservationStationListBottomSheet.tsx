@@ -136,7 +136,7 @@ const ObservationStationListBottomSheet: React.FC<
             testID="observation-station-list-content"
             onLayout={() => setLayoutReady(true)}>
             {stationList.length > 0 &&
-              stationList.map((station, index) => (
+              stationList.map((station) => (
                 <AccessibleTouchableOpacity
                   ref={
                     station.id === stationId ? selectedStationRef : undefined
@@ -146,7 +146,7 @@ const ObservationStationListBottomSheet: React.FC<
                   accessibilityState={{ selected: station.id === stationId }}
                   accessibilityLabel={`${station.name} – ${t(
                     'observation:distance'
-                  )} ${station.distance} km, ${index + 1}/${stationList.length}`}
+                  )} ${station.distance} km`}
                   accessibilityHint={
                     station.id === stationId
                       ? ''
