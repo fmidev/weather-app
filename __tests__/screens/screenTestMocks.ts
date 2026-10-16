@@ -290,6 +290,7 @@ jest.mock('@utils/matomo', () => ({
 }));
 
 jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
   useOrientation: () => false,
 }));
 

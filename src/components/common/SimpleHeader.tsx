@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
+import AccessibleView from '@components/common/AccessibleView';
 import { CustomTheme } from '@assets/colors';
 import { BOLD_FONT } from '@assets/constants';
 
@@ -22,7 +23,7 @@ const SimpleHeader: React.FC<SimpleHeaderProps> = ({
 }) => {
   const { colors } = useTheme() as CustomTheme;
   return (
-    <View
+    <AccessibleView
       accessible
       accessibilityRole="header"
       accessibilityLabel={title}
@@ -34,7 +35,7 @@ const SimpleHeader: React.FC<SimpleHeaderProps> = ({
       ]}>
       <Text style={[styles.headerTitle, { color: colors.primaryText }]}>{title}</Text>
       {additionalContent}
-    </View>
+    </AccessibleView>
   );
 };
 

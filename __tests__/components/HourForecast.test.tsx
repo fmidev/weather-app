@@ -52,6 +52,7 @@ jest.mock('@utils/units', () => ({
 }));
 
 jest.mock('@utils/accessibility', () => ({
+  ...jest.requireActual('@utils/accessibility'),
   formatAccessibleTemperature: (value: string) => value,
 }));
 

@@ -1,8 +1,18 @@
 import moment from 'moment-timezone';
+import { createInstance, type i18n } from 'i18next';
+import {
+  AppState,
+  DeviceEventEmitter,
+  NativeModules,
+  Platform,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   formatAccessibleDateTime,
   formatAccessibleTemperature,
   formatAccessibleTime,
+  setAndroidAppLanguage,
+  syncAndroidAppLanguage,
 } from '../../src/utils/accessibility';
 
 const translateTime = (key: string) =>
@@ -76,5 +86,126 @@ describe('formatAccessibleTemperature', () => {
     expect(formatAccessibleTemperature(undefined, t)).toBe('-');
     expect(formatAccessibleTemperature(null, t)).toBe('-');
     expect(formatAccessibleTemperature('not-a-number', t)).toBe('-');
+  });
+});
+
+const originalPlatform = Platform.OS;
+const originalModule = NativeModules.AppLanguage;
+const flushPromises = () =>
+  new Promise<void>((resolve) => setImmediate(resolve));
+
+describe('Android app language', () => {
+  let instance: i18n;
+  let stopSyncing: (() => void) | undefined;
+  const setLanguage = jest.fn();
+
+  beforeEach(async () => {
+    jest.clearAllMocks();
+    Object.defineProperty(Platform, 'OS', { value: 'android' });
+    NativeModules.AppLanguage = { setLanguage };
+    setLanguage.mockResolvedValue(undefined);
+    instance = createInstance();
+    await instance.init({
+      lng: 'fi',
+      fallbackLng: 'fi',
+      resources: { fi: {}, sv: {}, en: {} },
+    });
+  });
+
+  afterEach(() => {
+    stopSyncing?.();
+    stopSyncing = undefined;
+    jest.restoreAllMocks();
+    Object.defineProperty(Platform, 'OS', { value: originalPlatform });
+    NativeModules.AppLanguage = originalModule;
+  });
+
+  it.each(['fi', 'sv', 'en'])(
+    'sets Android to the app language %s',
+    async (language) => {
+      await setAndroidAppLanguage(language);
+
+      expect(setLanguage).toHaveBeenCalledWith(language);
+    }
+  );
+
+  it.each(['ios', 'android'] as const)(
+    'works without the native module on %s',
+    async (os) => {
+      Object.defineProperty(Platform, 'OS', { value: os });
+      NativeModules.AppLanguage = undefined;
+
+      await setAndroidAppLanguage('sv');
+      stopSyncing = syncAndroidAppLanguage(instance);
+      await instance.changeLanguage('en');
+
+      expect(setLanguage).not.toHaveBeenCalled();
+    }
+  );
+
+  it('never calls the Android module on iOS even if it is available', async () => {
+    Object.defineProperty(Platform, 'OS', { value: 'ios' });
+
+    await setAndroidAppLanguage('sv');
+    stopSyncing = syncAndroidAppLanguage(instance);
+    await instance.changeLanguage('en');
+
+    expect(setLanguage).not.toHaveBeenCalled();
+  });
+
+  it.each(['fi', 'sv', 'en'])(
+    'synchronizes an in-app language change to %s',
+    async (language) => {
+      stopSyncing = syncAndroidAppLanguage(instance);
+
+      await instance.changeLanguage(language);
+
+      expect(setLanguage).toHaveBeenCalledWith(language);
+    }
+  );
+
+  it('keeps the app language when Android settings change or the app resumes', async () => {
+    const appStateSubscription = jest.spyOn(AppState, 'addEventListener');
+    stopSyncing = syncAndroidAppLanguage(instance);
+
+    DeviceEventEmitter.emit('appLanguageChanged');
+    DeviceEventEmitter.emit('appStateDidChange', { app_state: 'active' });
+    await flushPromises();
+
+    expect(instance.language).toBe('fi');
+    expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+    expect(setLanguage).not.toHaveBeenCalled();
+    expect(appStateSubscription).not.toHaveBeenCalled();
+  });
+
+  it('reports a native write failure without rejecting the i18next language change', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    stopSyncing = syncAndroidAppLanguage(instance);
+    setLanguage.mockRejectedValueOnce(new Error('Native failure'));
+
+    await instance.changeLanguage('sv');
+    await flushPromises();
+
+    expect(instance.language).toBe('sv');
+    expect(console.error).toHaveBeenCalledWith(
+      'Failed to update the Android app language:',
+      expect.any(Error)
+    );
+  });
+
+  it('keeps initialization working if the native language write fails', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    setLanguage.mockRejectedValueOnce(new Error('Native failure'));
+
+    await expect(setAndroidAppLanguage('sv')).resolves.toBeUndefined();
+  });
+
+  it('removes the i18next listener on disposal', async () => {
+    stopSyncing = syncAndroidAppLanguage(instance);
+    stopSyncing();
+
+    await instance.changeLanguage('sv');
+
+    expect(setLanguage).not.toHaveBeenCalled();
   });
 });

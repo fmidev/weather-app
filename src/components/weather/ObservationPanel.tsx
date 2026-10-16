@@ -18,6 +18,7 @@ import {
   selectPreferredDailyParameters,
 } from '@store/observation/selector';
 
+import AccessibleView from '@components/common/AccessibleView';
 import {
   setStationId as setStationIdAction,
   updateChartParameter as updateChartParameterAction,
@@ -198,7 +199,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       <View style={styles.panelContainer}>
         {loading && <ActivityIndicator />}
         {stationList.length > 0 && (
-          <View
+          <AccessibleView
             accessible
             accessibilityRole="menu"
             accessibilityLabel={`${t('observationStation')}: ${title}`}
@@ -216,7 +217,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 rounded={layout === 'vertical'}
               />
             </View>
-          </View>
+          </AccessibleView>
         )}
         <Latest data={data} dailyData={dailyData} />
       </View>
