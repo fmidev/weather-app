@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import NetInfo from '@react-native-community/netinfo';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { selectError as selectForecastError } from '@store/forecast/selectors';
@@ -84,6 +85,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
   currentRoute,
   mapLibrary,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const activeRoute = navReady ? (currentRoute?.name ?? '') : '';
 
   const { t, i18n } = useTranslation('error');
@@ -199,7 +201,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
   return errorType ? (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.title}>{messages[errorType]?.title}</Text>
+        <Text accessibilityLanguage={accessibilityLanguage} style={styles.title}>{messages[errorType]?.title}</Text>
         <AccessibleTouchableOpacity
           onPress={() => setErrorType(undefined)}
           style={styles.closeButton}>
@@ -207,11 +209,11 @@ const ErrorComponent: React.FC<ErrorProps> = ({
         </AccessibleTouchableOpacity>
       </View>
       { verboseErrorMessages && messages[errorType]?.message && (
-        <Text>{messages[errorType]?.message}</Text>
+        <Text accessibilityLanguage={accessibilityLanguage}>{messages[errorType]?.message}</Text>
       )}
       {['noInternet', 'outOfServiceArea'].includes(errorType) &&
       messages[errorType]?.additionalInfo ? (
-        <Text style={styles.text}>{messages[errorType]?.additionalInfo}</Text>
+        <Text accessibilityLanguage={accessibilityLanguage} style={styles.text}>{messages[errorType]?.additionalInfo}</Text>
       ) : (
         <>
           {errorType !== 'outOfServiceArea' && errorType !== 'noInternet' && (
@@ -219,7 +221,9 @@ const ErrorComponent: React.FC<ErrorProps> = ({
               onPress={() => tryAgainFunctions[errorType]()}>
               <View style={styles.tryAgainButton}>
                 <View style={styles.textContainer}>
-                  <Text style={styles.buttonText}>{t('tryAgain')}</Text>
+                  <Text
+                    accessibilityLanguage={accessibilityLanguage}
+                    style={styles.buttonText}>{t('tryAgain')}</Text>
                 </View>
               </View>
             </AccessibleTouchableOpacity>

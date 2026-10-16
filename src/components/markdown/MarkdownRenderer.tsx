@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { View, StyleSheet, type TextStyle, Linking } from 'react-native';
 import { Renderer, type RendererInterface } from 'react-native-marked';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Icon from '@components/common/ScalableIcon';
 import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
@@ -78,8 +79,8 @@ function RadarScaleLegend(props: Readonly<{
   const right = labels.length >= 3 ? labels[labels.length - 1] : '';
 
   return (
-    <View style={styles.legendRoot} accessible accessibilityRole="text">
-      <View
+    <AccessibleView style={styles.legendRoot} accessible accessibilityRole="text">
+      <AccessibleView
         style={styles.scaleRow}
         accessibilityLabel={accessibilityLabel}
       >
@@ -89,7 +90,7 @@ function RadarScaleLegend(props: Readonly<{
             style={[styles.scaleSegment, { backgroundColor: c }]}
           />
         ))}
-      </View>
+      </AccessibleView>
 
       <View style={styles.labelsRow}>
         <Text style={[styles.labelText, textStyle]} numberOfLines={1}>
@@ -102,7 +103,7 @@ function RadarScaleLegend(props: Readonly<{
           {right}
         </Text>
       </View>
-    </View>
+    </AccessibleView>
   );
 }
 
@@ -124,11 +125,11 @@ function IconInline(props: Readonly<{
   }
 
   return (
-    <View style={styles.iconInlineRow} accessible accessibilityRole="text">
+    <AccessibleView style={styles.iconInlineRow} accessible accessibilityRole="text">
       <View style={styles.iconWrap}>
         <Icon name={name} width={width} height={height} />
       </View>
-    </View>
+    </AccessibleView>
   );
 }
 

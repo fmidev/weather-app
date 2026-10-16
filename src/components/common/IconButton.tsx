@@ -7,6 +7,7 @@ import {
   ColorValue,
 } from 'react-native';
 
+import AccessibleView from '@components/common/AccessibleView';
 import { LIGHT_BLUE, PRIMARY_BLUE } from '@assets/colors';
 
 import Icon from '@assets/Icon';
@@ -39,7 +40,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   const hitSlop = circular && iconSize ? iconSize/22 * 6 : 6;
 
   return onPress ? (
-    <View
+    <AccessibleView
       accessible
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -67,7 +68,7 @@ const IconButton: React.FC<IconButtonProps> = ({
           />
         </View>
       </AccessibleTouchableOpacity>
-    </View>
+    </AccessibleView>
   ) : (
     <View
       style={[

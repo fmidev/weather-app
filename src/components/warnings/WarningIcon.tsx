@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, useWindowDimensions } from 'react-native';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { GREEN, ORANGE, RED, YELLOW, WHITE } from '@assets/colors';
 import Icon from '@components/common/ScalableIcon';
 import type { Severity, WarningPhysical, WarningType } from '@store/warnings/types';
@@ -28,6 +29,7 @@ const showPhysical = (type: WarningType): boolean => {
 const WarningIcon: React.FC<WarningIconProps> = (
   { severity, severityDescription, type, physical, maxScaleFactor = 2 }
 ) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { fontScale } = useWindowDimensions();
   const scaleFactor = Math.min(fontScale, maxScaleFactor);
 
@@ -54,7 +56,10 @@ const WarningIcon: React.FC<WarningIconProps> = (
         } : {}}/>
       )}
       { severityValue > 0 && physical?.windIntensity && showPhysical(type) && (
-        <Text maxFontSizeMultiplier={1.5} style={[styles.text, { width: size }]}>
+        <Text
+          accessibilityLanguage={accessibilityLanguage}
+          maxFontSizeMultiplier={1.5}
+          style={[styles.text, { width: size }]}>
           {physical?.windIntensity}
         </Text>
       )}

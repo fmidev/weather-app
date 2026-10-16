@@ -12,6 +12,7 @@ import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import { State } from '@store/types';
@@ -174,7 +175,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
           style={[styles.row, styles.listContainer, styles.paddingHorizontal]}>
           {isPolarNight && !isMidnightSun && (
             <>
-              <View
+              <AccessibleView
                 accessible
                 style={[styles.row, styles.alignCenter, styles.listContainer]}>
                 <Icon
@@ -198,8 +199,8 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                   ]}>
                   {t('weatherInfoBottomSheet.polarNight')}
                 </Text>
-              </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              </AccessibleView>
+              <AccessibleView style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={iconSize}
                   height={iconSize}
@@ -224,12 +225,12 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                   ]}>
                   {sunrise.format(dateFormat)}
                 </Text>
-              </View>
+              </AccessibleView>
             </>
           )}
           {isMidnightSun && !isPolarNight && (
             <>
-              <View
+              <AccessibleView
                 accessible
                 style={[styles.row, styles.alignCenter, styles.listContainer]}>
                 <Icon
@@ -253,8 +254,8 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                   ]}>
                   {t('weatherInfoBottomSheet.nightlessNight')}
                 </Text>
-              </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              </AccessibleView>
+              <AccessibleView style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={iconSize}
                   height={iconSize}
@@ -279,7 +280,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                   ]}>
                   {sunset.format(dateFormat)}
                 </Text>
-              </View>
+              </AccessibleView>
             </>
           )}
           {!isPolarNight && !isMidnightSun && (
@@ -291,7 +292,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                 styles.justifyContentCenter,
                 styles.wrap,
               ]}>
-              <View
+              <AccessibleView
                 style={[
                   styles.row,
                   styles.alignCenter,
@@ -322,8 +323,8 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                   ]}>
                   {sunrise.format(timeFormat)}
                 </Text>
-              </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              </AccessibleView>
+              <AccessibleView style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={iconSize}
                   height={iconSize}
@@ -346,10 +347,10 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                   ]}>
                   {sunset.format(timeFormat)}
                 </Text>
-              </View>
+              </AccessibleView>
               {(excludeDayDuration === undefined || !excludeDayDuration) && (
                 <>
-                  <View
+                  <AccessibleView
                     style={[
                       styles.row,
                       styles.alignCenter,
@@ -379,7 +380,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
                       ]}>
                       {`${dayHours} h ${dayMinutes} min`}
                     </Text>
-                  </View>
+                  </AccessibleView>
                 </>
               )}
             </View>

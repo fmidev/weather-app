@@ -4,6 +4,8 @@ import { View, ScrollView, StyleSheet, Switch, useWindowDimensions } from 'react
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
 import SpeedSelector from '@components/map/ui/SpeedSelector';
@@ -52,6 +54,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
   mapLayers,
   updateMapLayers,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
@@ -95,7 +98,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 styles.withBorderBottom,
                 { borderBottomColor: colors.border },
               ]}>
-              <View
+              <AccessibleView
                 style={styles.row}
                 accessible
                 accessibilityState={{ selected: mapLayers.location }}
@@ -116,7 +119,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 >
                   {t('map:layersBottomSheet:locationHint')}
                 </Text>
-                <Switch
+                <Switch accessibilityLanguage={accessibilityLanguage}
                   trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
                   thumbColor={WHITE}
                   ios_backgroundColor={WHITE}
@@ -129,7 +132,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                     });
                   }}
                 />
-              </View>
+              </AccessibleView>
             </View>
 
             <View style={styles.sheetTitle}>

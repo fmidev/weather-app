@@ -6,6 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
 
 import {
@@ -75,6 +76,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   updateDisplayFormat,
   currentHour, // just for re-rendering every hour
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
@@ -173,14 +175,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                   },
                 ]}>
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   style={[
                     styles.forecastText,
                     displayFormat === TABLE && styles.selectedText,
                     {
                       color:
-                        displayFormat === TABLE
-                          ? colors.primaryText
-                          : colors.hourListText,
+                        displayFormat === TABLE ? colors.primaryText : colors.hourListText,
                     },
                   ]}>
                   {t('table')}
@@ -213,14 +214,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                   },
                 ]}>
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   style={[
                     styles.forecastText,
                     displayFormat === CHART && styles.selectedText,
                     {
                       color:
-                        displayFormat === CHART
-                          ? colors.primaryText
-                          : colors.hourListText,
+                        displayFormat === CHART ? colors.primaryText : colors.hourListText,
                     },
                   ]}>
                   {t('chart')}
@@ -290,7 +290,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       </View>
       <View style={[styles.forecastContainer]}>
         {loading && (
-          <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+          <ActivityIndicator
+            accessibilityLanguage={accessibilityLanguage}
+            accessibilityLabel={t('weather:loading')}
+          />
         )}
         {sections && sections.length > 0 && displayFormat === TABLE && (
           <ForecastByHourList

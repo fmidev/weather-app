@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
@@ -99,6 +101,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   setLoading,
   navigation,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const isRunningOnMac = useIsRunningOnMac();
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
@@ -175,6 +178,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           style={[styles.searchIcon, { color: colors.text }]}
         />
         <TextInput
+          accessibilityLanguage={accessibilityLanguage}
           testID="search_input"
           maxFontSizeMultiplier={2}
           accessibilityRole="search"
@@ -194,7 +198,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           onChangeText={(text) => setValue(text)}
           underlineColorAndroid="transparent"
         />
-        {loading && <ActivityIndicator accessibilityLabel={t('loading')} />}
+        {loading && <ActivityIndicator
+                      accessibilityLanguage={accessibilityLanguage}
+                      accessibilityLabel={t('loading')}
+                    />}
         {value.length > 0 && (
           <CloseButton
             testID="search_clear_button"
@@ -235,7 +242,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           {!loading && !/^\s*$/.test(value) && search.length === 0 && (
             <Text style={{ color: colors.text }}>{t('noResults')}</Text>
           )}
-          <View
+          <AccessibleView
             style={styles.locateRow}
             accessible
             accessibilityRole="button"
@@ -258,7 +265,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                 navigation.goBack();
               }}
             />
-          </View>
+          </AccessibleView>
           {favorites.length > 0 && (
             <AreaList
               elements={favorites}
