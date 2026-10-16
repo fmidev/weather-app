@@ -3,6 +3,8 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme, useNavigation, NavigationProp } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import { CustomTheme } from '@assets/colors';
 import { State } from '@store/types';
 import {
@@ -42,6 +44,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   error,
   gridLayout,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
@@ -88,7 +91,9 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   return (
-    <TouchableOpacity onPress={openWarnings}>
+    <TouchableOpacity
+      accessibilityLanguage={accessibilityLanguage}
+      onPress={openWarnings}>
       <View
         testID="warnings_panel"
         // eslint-disable-next-line react-native/no-inline-styles
@@ -99,7 +104,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
         }]}
       >
         <View style={styles.cardContainer}>
-          <View
+          <AccessibleView
             accessible
             accessibilityRole="header">
             <Text
@@ -112,7 +117,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
               {t('panelTitleSlim')}
             </Text>
             <DayDetailsDescription warnings={dailyWarnings[0].warnings} />
-          </View>
+          </AccessibleView>
           <View
             style={[
               styles.weekWarningsContainer,
@@ -128,7 +133,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                 },
               ]}>
               {dailyWarnings.map(({ severity, type, date, count, warnings }, index) => (
-                <View
+                <AccessibleView
                   key={date}
                   accessible
                   accessibilityLabel={`${moment(date).format('dddd DD MMMM')}, ${t('hasWarnings')}: ${count}${
@@ -183,7 +188,7 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                       />
                     </View>
                   </View>
-                </View>
+                </AccessibleView>
               ))}
             </View>
           </View>

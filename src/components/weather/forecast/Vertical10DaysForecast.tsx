@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import AccessibleView from '@components/common/AccessibleView';
 import moment from '@utils/moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -223,7 +224,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                 isExpanded ? styles.expandedRow : styles.collapsedRow,
                 { borderColor: colors.border },
               ]}>
-              <View
+              <AccessibleView
                 accessible
                 accessibilityLabel={formatAccessibleDate(stepMoment, false)}
                 style={styles.day}>
@@ -240,12 +241,12 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                   style={[styles.text, { color: colors.primaryText }]}>
                   {stepMoment.formatDateTime('date', locale)}
                 </Text>
-              </View>
-              <View accessible accessibilityLabel={t(`symbols:${smartSymbol}`)}>
+              </AccessibleView>
+              <AccessibleView accessible accessibilityLabel={t(`symbols:${smartSymbol}`)}>
                 {DaySmartSymbol ? (
                   <DaySmartSymbol width={symbolSize} height={symbolSize} />
                 ) : null}
-              </View>
+              </AccessibleView>
               {activeParameters.includes('temperature') && (
                 <Text
                   style={[

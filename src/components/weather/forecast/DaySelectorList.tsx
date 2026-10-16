@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';
@@ -48,6 +50,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   units,
   invalidData,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
@@ -113,7 +116,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
     const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
 
     return (
-      <View
+      <AccessibleView
         key={timeStamp}
         accessible
         accessibilityRole="button"
@@ -134,35 +137,35 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
           accessibilityState={{ selected: isActive }}
           onPress={() => setActiveDayIndex(index)}>
           <Text
+            accessibilityLanguage={accessibilityLanguage}
             style={[
               styles.dateText,
               {
                 color: colors.primaryText,
               },
             ]}
-            accessibilityLabel={stepMoment
-              .locale(locale)
-              .format('dddd, Do MMMM')}>
+            accessibilityLabel={stepMoment.locale(locale).format('dddd, Do MMMM')}>
             {stepMoment.locale(locale).format(weekdayAbbreviationFormat)}{' '}
-            <Text style={[styles.bold, { color: colors.primaryText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.bold, { color: colors.primaryText }]}>
               {stepMoment.locale(locale).format(dateFormat)}
             </Text>
           </Text>
-          <View
+          <AccessibleView
             style={styles.alignCenter}
             accessibilityLabel={`${t(`symbols:${smartSymbol}`)}`}>
             {DaySmartSymbol ? <DaySmartSymbol width={40} height={40} /> : null}
-          </View>
+          </AccessibleView>
           {activeParameters.includes('temperature') && (
             <Text
+              accessibilityLanguage={accessibilityLanguage}
               style={[styles.forecastText, { color: colors.primaryText }]}
               accessibilityLabel={t('forecast:fromTo', {
                 min: convertedMinTemperature,
                 max: convertedMaxTemperature,
                 unit: t(
-                  temperatureUnit === 'C'
-                    ? 'forecast:celsius'
-                    : 'forecast:fahrenheit'
+                  temperatureUnit === 'C' ? 'forecast:celsius' : 'forecast:fahrenheit'
                 ),
               })}>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${t(`unitAbbreviations:${temperatureUnit}`)}`}</Text>
           )}
@@ -173,7 +176,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             style={styles.precipitationStrip}
           />
         )}
-      </View>
+      </AccessibleView>
     );
   };
 

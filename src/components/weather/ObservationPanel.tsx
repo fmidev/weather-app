@@ -5,6 +5,8 @@ import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
@@ -18,7 +20,6 @@ import {
   selectPreferredDailyParameters,
 } from '@store/observation/selector';
 
-import AccessibleView from '@components/common/AccessibleView';
 import {
   setStationId as setStationIdAction,
   updateChartParameter as updateChartParameterAction,
@@ -90,6 +91,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   clockType,
   preferredDailyParameters,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const isDaily =
     chartParameter === 'daily' ||
     (chartParameter && preferredDailyParameters.includes(chartParameter));
@@ -197,7 +199,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       }>
       <PanelHeader title={t('panelHeader')} thin={layout === 'vertical'} />
       <View style={styles.panelContainer}>
-        {loading && <ActivityIndicator />}
+        {loading && <ActivityIndicator accessibilityLanguage={accessibilityLanguage} />}
         {stationList.length > 0 && (
           <AccessibleView
             accessible

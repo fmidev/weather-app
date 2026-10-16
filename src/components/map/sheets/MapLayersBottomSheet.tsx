@@ -4,6 +4,7 @@ import { View, ScrollView, StyleSheet, Switch, useWindowDimensions } from 'react
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
@@ -53,6 +54,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
   mapLayers,
   updateMapLayers,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
@@ -117,7 +119,7 @@ const MapLayersBottomSheet: React.FC<MapLayersBottomSheetProps> = ({
                 >
                   {t('map:layersBottomSheet:locationHint')}
                 </Text>
-                <Switch
+                <Switch accessibilityLanguage={accessibilityLanguage}
                   trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
                   thumbColor={WHITE}
                   ios_backgroundColor={WHITE}

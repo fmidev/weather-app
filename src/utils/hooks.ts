@@ -6,6 +6,23 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import type { LayoutChangeEvent, ViewProps } from 'react-native';
+import { useTranslation } from 'react-i18next';
+
+const ACCESSIBILITY_LOCALES: Record<string, string> = {
+  fi: 'fi-FI',
+  sv: 'sv-SE',
+  en: 'en-GB',
+};
+
+export const useAccessibilityLanguage = (): string | undefined => {
+  const { i18n } = useTranslation();
+  const language = i18n?.resolvedLanguage || i18n?.language;
+
+  // Android uses the native app locale; VoiceOver reads the locale of each element.
+  return Platform.OS === 'ios' && language
+    ? ACCESSIBILITY_LOCALES[language] || language
+    : undefined;
+};
 
 export const useOrientation = () => {
   const { width, height } = useWindowDimensions();

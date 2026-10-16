@@ -18,8 +18,8 @@ type WarningsWebViewPanelProps = {
 };
 
 const InvalidURLView = () => (
-  <Text>Invalid webview URL blocked</Text>
-)
+  <Text accessibilityLanguage="en-GB">Invalid webview URL blocked</Text>
+);
 
 const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
   updateInterval

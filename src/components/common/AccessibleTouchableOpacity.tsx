@@ -5,10 +5,14 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import { useAccessibilityHintLanguage } from '@utils/hooks';
+import {
+  useAccessibilityHintLanguage,
+  useAccessibilityLanguage,
+} from '@utils/hooks';
 
 const AccessibleTouchableOpacity: React.FC<TouchableOpacityProps> = (props) => {
   const { style } = props;
+  const accessibilityLanguage = useAccessibilityLanguage();
   const onLayout = useAccessibilityHintLanguage(
     props.accessibilityHint,
     props.onLayout
@@ -16,6 +20,9 @@ const AccessibleTouchableOpacity: React.FC<TouchableOpacityProps> = (props) => {
   return (
     <TouchableOpacity
       {...props}
+      accessibilityLanguage={
+        props.accessibilityLanguage ?? accessibilityLanguage
+      }
       onLayout={onLayout}
       style={[styles.minDimensions, style]}
     />
