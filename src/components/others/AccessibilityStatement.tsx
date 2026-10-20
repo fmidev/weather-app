@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
-import type { Text as RNText } from 'react-native';
+import type { TextInstance } from 'react-native';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Text from '@components/common/AppText';
@@ -26,7 +26,7 @@ const AccessibilityStatement: React.FC = () => {
     i18n: { language },
   } = useTranslation('accessibility');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef<RNText>(null);
+  const titleRef = useRef<TextInstance>(null);
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {

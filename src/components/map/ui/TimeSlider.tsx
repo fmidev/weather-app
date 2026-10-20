@@ -13,6 +13,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   ScrollView,
+  ScrollViewInstance,
   ActivityIndicator,
   Platform,
   AppState,
@@ -100,7 +101,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
 
   const multiplier = Math.round(width / 400);
 
-  const sliderRef = useRef<ScrollView>(null);
+  const sliderRef = useRef<ScrollViewInstance>(null);
 
   const observationEndUnix =
     (overlay?.observation &&

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  View, ScrollView, StyleSheet, Platform, useWindowDimensions, NativeSyntheticEvent, NativeScrollEvent
+  View, ViewInstance, ScrollView, ScrollViewInstance, StyleSheet, Platform, useWindowDimensions, NativeSyntheticEvent, NativeScrollEvent
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -71,8 +71,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const [meteorologistUpdated, setMeteorologistUpdated] = useState<number>(Date.now());
   const [newsUpdated, setNewsUpdated] = useState<number>(Date.now());
   const [observationVisible, setObservationVisible] = useState(false);
-  const observationRef = useRef<View>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const observationRef = useRef<ViewInstance>(null);
+  const scrollViewRef = useRef<ScrollViewInstance>(null);
   const { shouldReload } = useReloader();
 
   const { weather: weatherConfig, warnings: warningsConfig, news: newsConfig } = Config.getAll();
@@ -196,7 +196,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const viewportHeight = e.nativeEvent.layoutMeasurement.height;
 
-    //@ts-ignore
     scrollViewRef.current?.measure((_sx, _sy, _sw, _svH, _spx, svPageY) => {
       observationRef.current?.measure((_x, _y, _w, targetH, _px, targetPageY) => {
         const elementTopInViewport = targetPageY - svPageY;

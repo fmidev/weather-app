@@ -3,7 +3,7 @@ import { useTheme } from '@react-navigation/native';
 import { Severity, CapWarning } from '@store/warnings/types';
 import { CustomTheme } from '@assets/colors';
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollViewInstance } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import { getSeveritiesForDays, selectCapInfoByLanguage } from '@utils/helpers';
@@ -36,7 +36,7 @@ function WarningBlock({
   const { default: defaultLocation } = Config.get('location');
   const [open, setOpen] = useState(false);
   const { colors } = useTheme() as CustomTheme;
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ScrollViewInstance>(null);
   const { i18n } = useTranslation();
   const locale = i18n.language;
 

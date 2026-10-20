@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Markdown from "react-native-marked";
-import type { Text as RNText } from 'react-native';
+import type { TextInstance } from 'react-native';
 
 import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
@@ -34,7 +34,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
   const [errorMessage, setErrorMessage] = React.useState<string>('');
   const { t, i18n } = useTranslation('termsAndConditions');
   const { colors } = useTheme() as CustomTheme;
-  const titleRef = useRef<RNText>(null);
+  const titleRef = useRef<TextInstance>(null);
   const insets = useSafeAreaInsets();
   const { markdown } = Config.get('settings');
 
