@@ -246,6 +246,12 @@ interface Feedback {
   faqUrl?: {
     [locale: string]: string;
   };
+  accessibility?: {
+    [locale: string]: {
+      email: string;
+      subject: string;
+    };
+  };
 }
 
 interface News {
@@ -356,6 +362,7 @@ export interface ConfigType {
     layerGroups: LayerGroup[];
     layers: MapLayer[];
     baseMap?: BaseMap;
+    overlayMap?: BaseMap;
     infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {

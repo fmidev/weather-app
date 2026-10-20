@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, ScrollViewInstance, useWindowDimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -18,7 +18,7 @@ type WarningItemProps = {
   areasDescription?: string;
   warning: CapWarning;
   warningCount?: number;
-  scrollViewRef?: React.RefObject<ScrollView | null>;
+  scrollViewRef?: React.RefObject<ScrollViewInstance | null>;
   timespan: string;
   includeSeverityBars: boolean;
   dailySeverities?: number[][];

@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   VirtualizedList,
+  VirtualizedListInstance,
   NativeSyntheticEvent,
   NativeScrollEvent,
   useWindowDimensions,
@@ -76,7 +77,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { excludeDayLength } = Config.get('weather').forecast;
 
-  const virtualizedList = useRef<VirtualizedList<TimeStepData>>(null);
+  const virtualizedList = useRef<VirtualizedListInstance>(null);
   const handledDaySelectionRequest = useRef(0);
   const programmaticScrollTarget = useRef<number | null>(null);
   const hourColumnWidth = Math.min(fontScale * 52, 62);

@@ -7,7 +7,6 @@ import {
   StyleProp,
   ViewStyle,
   AppState,
-  AppStateStatus
 } from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
@@ -50,7 +49,6 @@ import { getGeolocation } from '@utils/helpers';
 import {
   PRIMARY_BLUE,
   WHITE,
-  HEADER_DARK,
   GRAY_1,
   TRANSPARENT,
   SHADOW_DARK,
@@ -117,7 +115,7 @@ const Navigator: React.FC<Props> = ({
   const navigationRef = useNavigationContainerRef();
   const [navReady, setNavReady] = React.useState(false);
   const [currentRoute, setCurrentRoute] = React.useState<Route<string> | null>(null);
-  const appState = useRef<AppStateStatus>(AppState.currentState);
+  const appState = useRef(AppState.currentState);
   const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
     ((!currentTheme || currentTheme === 'automatic') &&
@@ -189,7 +187,7 @@ const Navigator: React.FC<Props> = ({
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (appState.current.match(/active/) && nextAppState === 'background') {
+      if (appState.current?.match(/active/) && nextAppState === 'background') {
         // Make sure that events are sent before app goes to background
         sendMatomoEvents();
       }
@@ -390,7 +388,6 @@ const Navigator: React.FC<Props> = ({
   return (
     <>
       <StatusBar
-        backgroundColor={useDarkTheme ? HEADER_DARK : WHITE}
         barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
       />
       <NavigationContainer

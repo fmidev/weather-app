@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
+  ViewInstance,
   StyleSheet,
   AccessibilityInfo,
   findNodeHandle,
@@ -54,7 +55,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const infoSheetRef = useRef<RBSheet>(null);
-  const headerRef = useRef<View>(null);
+  const headerRef = useRef<ViewInstance>(null);
 
   moment.locale(i18n.language);
 
