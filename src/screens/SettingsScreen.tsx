@@ -199,10 +199,12 @@ const SettingsScreen: React.FC<Props> = ({
           <UnitSettings units={units} onChangeUnits={onChangeUnits} />
         )}
 
-        <MapSettings
-          mapLibrary={mapLibrary}
-          updateMapLibrary={updateMapLibrary}
-        />
+        {Config.get('map').baseMap && (
+          <MapSettings
+            mapLibrary={mapLibrary}
+            updateMapLibrary={updateMapLibrary}
+          />
+        )}
       </ScrollView>
     </View>
   );
