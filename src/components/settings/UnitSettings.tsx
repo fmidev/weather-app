@@ -63,18 +63,14 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
         </View>
       </View>
       <View>
-        {unitKeys.map((key, i) =>
+        {unitKeys.map((key) =>
           hiddenUnits.includes(key) ? null : (
             <View
               key={key}
               style={[
                 styles.rowWrapper,
-                i < unitKeys.length - 1
-                  ? {
-                      ...styles.withBorderBottom,
-                      borderBottomColor: colors.border,
-                    }
-                  : null,
+                styles.withBorderBottom,
+                { borderBottomColor: colors.border },
               ]}>
               <AccessibleTouchableOpacity
                 onPress={() => {
@@ -180,6 +176,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   rowWrapper: {
     marginHorizontal: 20,

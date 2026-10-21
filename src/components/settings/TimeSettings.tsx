@@ -66,11 +66,7 @@ const TimeSettings: React.FC<Props> = ({ clockType, updateClockType }) => {
               {t('12-hour-clock')}
             </Text>
             {clockType === 12 && (
-              <Icon
-                name="checkmark"
-                size={22}
-                style={{ color: colors.text }}
-              />
+              <Icon name="checkmark" size={22} style={{ color: colors.text }} />
             )}
           </View>
         </AccessibleTouchableOpacity>
@@ -96,11 +92,7 @@ const TimeSettings: React.FC<Props> = ({ clockType, updateClockType }) => {
               {t('settings:24-hour-clock')}
             </Text>
             {clockType === 24 && (
-              <Icon
-                name="checkmark"
-                size={22}
-                style={{ color: colors.text }}
-              />
+              <Icon name="checkmark" size={22} style={{ color: colors.text }} />
             )}
           </View>
         </AccessibleTouchableOpacity>
@@ -113,6 +105,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   rowWrapper: {
     marginHorizontal: 20,

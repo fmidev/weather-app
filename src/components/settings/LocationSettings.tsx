@@ -61,7 +61,11 @@ const LocationSettings: React.FC<Props> = ({
             accessibilityHint={t('settings:locationSettingHint')}>
             <View style={styles.row}>
               <Text
-                style={[styles.text, styles.settingName, { color: colors.text }]}>
+                style={[
+                  styles.text,
+                  styles.settingName,
+                  { color: colors.text },
+                ]}>
                 {locationPermission
                   ? locationPermissionsDisplayString[locationPermission]
                   : '-'}
@@ -91,6 +95,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   rowWrapper: {
     marginHorizontal: 20,

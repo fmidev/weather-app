@@ -25,7 +25,11 @@ import {
   selectNextHourForecast,
 } from '@store/forecast/selectors';
 import { selectTimeZone, selectCurrent } from '@store/location/selector';
-import { selectClockType, selectUnits } from '@store/settings/selectors';
+import {
+  selectClockType,
+  selectUnits,
+  selectForecastBackgroundImages,
+} from '@store/settings/selectors';
 import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 import { selectIsAuroraBorealisLikely } from '@store/forecast/selectors';
 import { weatherBackgroundGetter } from '@assets/images/backgrounds';
@@ -65,6 +69,7 @@ import { numericOrDash } from '@utils/number';
 
 const mapStateToProps = (state: State) => ({
   clockType: selectClockType(state),
+  forecastBackgroundImages: selectForecastBackgroundImages(state),
   loading: selectLoading(state),
   nextHourForecast: selectNextHourForecast(state),
   timezone: selectTimeZone(state),
@@ -91,6 +96,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
   NextHourForecastPanelProps
 > = ({
   clockType,
+  forecastBackgroundImages,
   loading,
   nextHourForecast,
   timezone,
@@ -112,7 +118,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
   const { colors } = useTheme() as CustomTheme;
   const weatherConfig = Config.get('weather');
   const backgroundImagesEnabled =
-    weatherConfig.backgroundImagesEnabled !== false;
+    weatherConfig.backgroundImagesEnabled !== false && forecastBackgroundImages;
 
   if (loading || !nextHourForecast) {
     return (
@@ -216,19 +222,23 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
 
   const content = (
     <>
-      <LinearGradient
-        colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.2)']}
-        start={{ x: 0.5, y: 1 }}
-        end={{ x: 0.5, y: 0 }}
-        style={StyleSheet.absoluteFill}
-      />
-      <LinearGradient
-        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
-        locations={[0.4024, 1]}
-        start={{ x: 0.5, y: 1 }}
-        end={{ x: 0.5, y: 0 }}
-        style={StyleSheet.absoluteFill}
-      />
+      {backgroundImagesEnabled && (
+        <>
+          <LinearGradient
+            colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.2)']}
+            start={{ x: 0.5, y: 1 }}
+            end={{ x: 0.5, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+          <LinearGradient
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.4)']}
+            locations={[0.4024, 1]}
+            start={{ x: 0.5, y: 1 }}
+            end={{ x: 0.5, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </>
+      )}
       <SafeAreaView
         style={[
           styles.container,

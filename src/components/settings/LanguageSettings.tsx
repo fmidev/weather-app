@@ -23,18 +23,21 @@ const LanguageSettings: React.FC<Props> = ({
   const { colors } = useTheme();
   const { t } = useTranslation('settings');
 
-  const changeLanguage = useCallback((language: string) => {
-    if (currentLanguage !== language) {
-      onChangeLanguage(language);
-      setTimeout(() => {
-        trackMatomoEvent(
-          'User action',
-          'Settings',
-          `Select language - ${language}`
-        );
-      }, 50);
-    }
-  }, [currentLanguage, onChangeLanguage]);
+  const changeLanguage = useCallback(
+    (language: string) => {
+      if (currentLanguage !== language) {
+        onChangeLanguage(language);
+        setTimeout(() => {
+          trackMatomoEvent(
+            'User action',
+            'Settings',
+            `Select language - ${language}`
+          );
+        }, 50);
+      }
+    },
+    [currentLanguage, onChangeLanguage]
+  );
 
   return (
     <>
@@ -98,6 +101,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   rowWrapper: {
     marginHorizontal: 20,
