@@ -543,6 +543,11 @@ jest.mock('@components/weather/NextHourForecastPanel', () => ({
   default: mockTextComponent('next-hour-forecast-panel'),
 }));
 
+jest.mock('@components/weather/FavoritesPanel', () => ({
+  __esModule: true,
+  default: mockTextComponent('favorites-panel'),
+}));
+
 jest.mock('@components/weather/NextHourForecastPanelWithWeatherBackground', () => ({
   __esModule: true,
   default: mockTextComponent('next-hour-weather-background-panel'),

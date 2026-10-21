@@ -19,9 +19,14 @@ import {
 } from './types';
 
 export const fetchForecast =
-  (location: ForecastLocation, country: string) =>
+  (
+    location: ForecastLocation,
+    country: string,
+    options?: { background?: boolean }
+  ) =>
   async (dispatch: Dispatch<ForecastActionTypes>) => {
-    dispatch({ type: FETCH_FORECAST });
+    const requestMeta = options?.background ? { background: true } : {};
+    dispatch({ type: FETCH_FORECAST, ...requestMeta });
 
     try {
       const data = await getForecast(location, country);
@@ -30,12 +35,14 @@ export const fetchForecast =
         type: FETCH_FORECAST_SUCCESS,
         data,
         timestamp: Date.now(),
+        ...requestMeta,
       });
     } catch (error) {
       dispatch({
         type: FETCH_FORECAST_ERROR,
         error: error as Error,
         timestamp: Date.now(),
+        ...requestMeta,
       });
     }
   };

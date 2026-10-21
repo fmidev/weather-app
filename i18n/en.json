@@ -1,5 +1,8 @@
 {
   "weather": {
+    "favoriteLocations": "Favorite locations",
+    "forecastUnavailable": "Forecast unavailable",
+    "selectFavoriteLocationHint": "Show this location's forecast and scroll to the top",
     "charts": {
       "forecastAccessibilityLabel": "10 day weather forecast as a graph",
       "observationAccessibilityLabel": "{{ parameter }} observation as a graph",

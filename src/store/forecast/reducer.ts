@@ -69,6 +69,8 @@ export default (
 ): ForecastState => {
   switch (action.type) {
     case FETCH_FORECAST: {
+      if (action.background) return state;
+
       return {
         ...state,
         loading: true,
@@ -88,14 +90,20 @@ export default (
           ...state.auroraBorealisData,
           [geoid]: action.data.isAuroraBorealisLikely,
         },
-        fetchTimestamp: action.timestamp,
-        fetchSuccessTime: action.timestamp,
-        loading: false,
-        error: false,
+        ...(action.background
+          ? {}
+          : {
+              fetchTimestamp: action.timestamp,
+              fetchSuccessTime: action.timestamp,
+              loading: false,
+              error: false,
+            }),
       };
     }
 
     case FETCH_FORECAST_ERROR: {
+      if (action.background) return state;
+
       return {
         ...state,
         loading: false,

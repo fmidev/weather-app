@@ -21,10 +21,12 @@ export type DisplayParameters = (typeof displayParameters)[Exclude<
 
 interface FetchForecast {
   type: typeof FETCH_FORECAST;
+  background?: boolean;
 }
 
 interface FetchForecastSuccess {
   type: typeof FETCH_FORECAST_SUCCESS;
+  background?: boolean;
   data: {
     location: ForecastLocation;
     forecast: TimeStepDataSet;
@@ -35,6 +37,7 @@ interface FetchForecastSuccess {
 
 interface FetchForecastError {
   type: typeof FETCH_FORECAST_ERROR;
+  background?: boolean;
   error: Error;
   timestamp: number;
 }

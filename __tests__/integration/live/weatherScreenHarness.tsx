@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -42,13 +42,13 @@ export const mountScreen = () => {
   const view = render(screen());
   // React Native's Jest host methods do not invoke measurement callbacks.
   // Supply native coordinates while retaining WeatherScreen's visibility logic.
-  view.UNSAFE_getByType(ScrollView).instance.measure.mockImplementation(
-    (callback: (...values: number[]) => void) => callback(0, 0, 390, 800, 0, 0)
+  view.UNSAFE_getByType(ScrollView).instance.getNativeScrollRef.mockReturnValue({
+    measure: jest.fn((callback: (...values: number[]) => void) => callback(0, 0, 390, 800, 0, 0)),
+  });
+  const observationView = view.UNSAFE_getAllByType(View).find(
+    (node) => node.props.testID === 'observation-panel-container'
   );
-  const observationView = view.getByTestId('weather_view').findAll(
-    (node) => node.props.collapsable === false && typeof node.instance?.measure === 'function'
-  )[0];
-  observationView?.instance.measure.mockImplementation(
+  observationView!.instance.measure = jest.fn(
     (callback: (...values: number[]) => void) => callback(0, 0, 390, 300, 0, observationTop)
   );
   const scrollToObservations = () => {

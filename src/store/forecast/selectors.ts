@@ -1,7 +1,7 @@
 import { Selector, createSelector } from 'reselect';
 import moment from 'moment';
 
-import { selectGeoid } from '@store/location/selector';
+import { selectFavorites, selectGeoid } from '@store/location/selector';
 import { Config } from '@config';
 import { getIndexForDaySmartSymbol } from '@utils/helpers';
 import { State } from '../types';
@@ -36,34 +36,32 @@ export const selectForecastAge = createSelector(
   (forecast) => Date.now() - forecast.fetchSuccessTime
 );
 
+const getValidForecast = (items?: TimeStepData[]): TimeStepData[] => {
+  const { maxAge } = Config.get('weather').forecast;
+  if (!items?.[0]?.modtime) return [];
+
+  const modtime = moment(`${items[0].modtime}Z`);
+  const duration = moment.duration(moment().diff(modtime));
+  if (duration.asHours() > (maxAge || FORECAST_MAX_AGE)) return [];
+
+  return items.filter((step) => step.epochtime * 1000 > Date.now());
+};
+
 export const selectForecast = createSelector(
   [selectData, selectGeoid, selectHour],
-  (items, geoid) => {
-    const { maxAge } = Config.get('weather').forecast;
-    const forecastMaxAge = maxAge || FORECAST_MAX_AGE;
-    const now = new Date();
+  (items, geoid) =>
+    getValidForecast(
+      items?.[typeof geoid === 'number' && Number.isNaN(geoid) ? 0 : geoid]
+    )
+);
 
-    if (items) {
-      const locationItems =
-        items[typeof geoid === 'number' && Number.isNaN(geoid) ? 0 : geoid];
-
-      if (!locationItems?.[0]?.modtime) return [];
-
-      const modtime = moment(locationItems?.[0]?.modtime + 'Z');
-      const duration = moment.duration(moment().diff(modtime));
-      if (duration.asHours() > forecastMaxAge) {
-        return [];
-      }
-
-      // filter out outdated items
-      const filtered = locationItems?.filter(
-        (i) => i.epochtime * 1000 > now.getTime()
-      );
-
-      return filtered || [];
-    }
-    return [];
-  }
+export const selectFavoriteForecasts = createSelector(
+  [selectData, selectFavorites, selectHour],
+  (data, favorites) =>
+    favorites.map((location) => ({
+      location,
+      forecast: getValidForecast(data?.[location.id])[0],
+    }))
 );
 
 export const selectError = createSelector(
