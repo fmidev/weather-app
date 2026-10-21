@@ -47,6 +47,7 @@ jest.mock('@store/location/selector', () => ({
 jest.mock('@store/settings/selectors', () => ({
   selectClockType: jest.fn(),
   selectUnits: jest.fn(),
+  selectForecastBackgroundImages: jest.fn(),
 }));
 
 jest.mock('@store/location/actions', () => ({
@@ -278,6 +279,7 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
   it('renders loading indicator when forecast is missing', () => {
     const view = render(
       <NextHourForecastPanelWithWeatherBackground
+        forecastBackgroundImages
         clockType={24}
         loading
         nextHourForecast={undefined as any}
@@ -296,6 +298,7 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
   it('renders weather background panel, child forecasts and navigation actions', () => {
     const view = render(
       <NextHourForecastPanelWithWeatherBackground
+        forecastBackgroundImages
         clockType={24}
         loading={false}
         nextHourForecast={forecast as any}
@@ -367,6 +370,7 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
       mockLanguage = language;
       const view = render(
         <NextHourForecastPanelWithWeatherBackground
+          forecastBackgroundImages
           clockType={clockType}
           loading={false}
           nextHourForecast={
@@ -403,6 +407,7 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
 
     const view = render(
       <NextHourForecastPanelWithWeatherBackground
+        forecastBackgroundImages
         clockType={24}
         loading={false}
         nextHourForecast={
@@ -428,7 +433,7 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
     });
   });
 
-  it('uses theme screen background when background images are disabled', () => {
+  it('uses the theme forecast background without gradient overlays when background images are disabled', () => {
     mockConfigGet.mockImplementation((key: string) => {
       if (key === 'weather') {
         return { backgroundImagesEnabled: false };
@@ -442,6 +447,7 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
 
     const view = render(
       <NextHourForecastPanelWithWeatherBackground
+        forecastBackgroundImages
         clockType={24}
         loading={false}
         nextHourForecast={forecast as any}
@@ -462,6 +468,47 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
         expect.objectContaining({ backgroundColor: '#cccccc' }),
       ])
     );
+    expect(view.queryAllByTestId('linear-gradient')).toHaveLength(0);
+  });
+
+  it('switches between the image and background color when the stored preference changes', () => {
+    const props = {
+      clockType: 24,
+      loading: false,
+      nextHourForecast: forecast,
+      timezone: 'Europe/Helsinki',
+      units: { temperature: { unitAbb: 'C' } },
+      location: { name: 'Helsinki', area: 'Uusimaa' },
+      setCurrentLocation: mockSetCurrentLocation,
+      isAuroraBorealisLikely: false,
+      currentHour: 13,
+    };
+    const view = render(
+      <NextHourForecastPanelWithWeatherBackground {...props} forecastBackgroundImages />
+    );
+    expect(view.UNSAFE_getByType(ImageBackground)).toBeTruthy();
+    expect(view.queryAllByTestId('linear-gradient')).toHaveLength(2);
+
+    view.rerender(
+      <NextHourForecastPanelWithWeatherBackground {...props} forecastBackgroundImages={false} />
+    );
+    expect(view.UNSAFE_queryByType(ImageBackground)).toBeNull();
+    expect(view.queryAllByTestId('linear-gradient')).toHaveLength(0);
+    expect(
+      view.getByTestId('next-hour-forecast-background').props.style
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ backgroundColor: '#cccccc' }),
+      ])
+    );
+    expect(view.getByText('Helsinki, Uusimaa')).toBeTruthy();
+    expect(view.getByTestId('next-hour-bar')).toBeTruthy();
+    expect(view.getByTestId('next-hours')).toBeTruthy();
+
+    view.rerender(
+      <NextHourForecastPanelWithWeatherBackground {...props} forecastBackgroundImages />
+    );
+    expect(view.UNSAFE_getByType(ImageBackground)).toBeTruthy();
     expect(view.queryAllByTestId('linear-gradient')).toHaveLength(2);
   });
 });
