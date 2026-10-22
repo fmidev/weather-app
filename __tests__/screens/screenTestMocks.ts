@@ -462,6 +462,7 @@ jest.mock('@store/warnings/actions', () => ({
 
 jest.mock('@store/forecast/actions', () => ({
   fetchForecast: jest.fn(),
+  fetchFavoriteForecasts: jest.fn(),
 }));
 
 jest.mock('@store/observation/actions', () => ({

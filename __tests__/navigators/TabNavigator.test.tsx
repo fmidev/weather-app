@@ -21,6 +21,10 @@ const mockSetNavigationBarTheme = jest.fn();
 const mockWarningsTabIcon = jest.fn();
 let mockTranslationReady = true;
 
+jest.mock('@react-navigation/elements', () => ({
+  HeaderBackButton: () => null,
+}));
+
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
 }));

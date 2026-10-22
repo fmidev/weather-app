@@ -9,6 +9,10 @@ import forecastReducer from '../../src/store/forecast/reducer';
 import locationReducer from '../../src/store/location/reducer';
 import settingsReducer from '../../src/store/settings/reducer';
 import { FETCH_FORECAST_SUCCESS } from '../../src/store/forecast/types';
+import {
+  ADD_FAVORITE,
+  DELETE_ALL_FAVORITES,
+} from '../../src/store/location/types';
 import type { TimeStepData, WeatherData } from '../../src/store/forecast/types';
 import type { Location } from '../../src/store/location/types';
 import type { UnitMap } from '../../src/store/settings/types';
@@ -117,7 +121,11 @@ const mountPanel = (
   const store = createStore(reducer, {
     ...initial,
     forecast: { ...initial.forecast, data: options.data },
-    location: { ...initial.location, favorites: options.favorites ?? [] },
+    location: {
+      ...initial.location,
+      current: helsinki,
+      favorites: options.favorites ?? [],
+    },
     settings: { ...initial.settings, units: options.units },
   });
   const onSelectLocation = jest.fn();
@@ -148,13 +156,32 @@ describe('FavoritesPanel', () => {
   ])('renders an accessible title in %s', (language, title) => {
     mockLanguage = language;
 
-    const { getByText, getByA11yRole } = mountPanel();
+    const { getByText, getByA11yRole } = mountPanel({ favorites: [helsinki] });
 
     expect(getByText(title)).toBeTruthy();
     expect(getByA11yRole('header').props.accessibilityLabel).toBe(title);
   });
 
-  it('shows only favorites with their next future forecast in themed 100x80 boxes', () => {
+  it('shows the panel only while favorites exist', () => {
+    const view = mountPanel();
+
+    expect(view.toJSON()).toBeNull();
+
+    act(() => {
+      view.store.dispatch({ type: ADD_FAVORITE, location: helsinki, max: 10 });
+    });
+
+    expect(view.getByText('Suosikkipaikkakunnat')).toBeTruthy();
+    expect(view.getByText('Helsinki')).toBeTruthy();
+
+    act(() => {
+      view.store.dispatch({ type: DELETE_ALL_FAVORITES });
+    });
+
+    expect(view.toJSON()).toBeNull();
+  });
+
+  it('shows only favorites with their next future forecast in themed 110x80 boxes', () => {
     const view = mountPanel({
       favorites: [tampere, helsinki],
       data: {
@@ -180,7 +207,7 @@ describe('FavoritesPanel', () => {
     expect(
       StyleSheet.flatten(view.getByTestId('favorite-forecast-1').props.style)
     ).toMatchObject({
-      width: 100,
+      width: 110,
       minHeight: 80,
       backgroundColor: mockForecastBackground,
     });
@@ -302,7 +329,7 @@ describe('FavoritesPanel', () => {
     expect(
       StyleSheet.flatten(view.getByTestId('favorite-forecast-1').props.style)
     ).toMatchObject({
-      width: 200,
+      width: 220,
       minHeight: 160,
     });
     expect(view.getByA11yLabel(new RegExp(`^${location.name},`))).toBeTruthy();

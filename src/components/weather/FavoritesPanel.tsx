@@ -1,5 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { connect, ConnectedProps } from 'react-redux';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import PanelHeader from '@components/common/PanelHeader';
 import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
-import { BLACK, WHITE, CustomTheme } from '@assets/colors';
+import { WHITE, CustomTheme } from '@assets/colors';
 import { BOLD_FONT, REGULAR_FONT } from '@assets/constants';
 import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
@@ -34,19 +39,6 @@ type Props = ConnectedProps<typeof connector> & {
 
 const WEATHERSYMBOL_SIZE = 40;
 
-const getTextColor = (background: string, fallback: string) => {
-  const rgb = background.match(/^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
-  if (!rgb) return fallback;
-
-  const channels = rgb.slice(1).map((channel) => {
-    const value = parseInt(channel, 16) / 255;
-    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-  });
-  const luminance =
-    channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
-  return luminance > 0.179 ? BLACK : WHITE;
-};
-
 const FavoritesPanel: React.FC<Props> = ({
   forecasts,
   units,
@@ -55,15 +47,17 @@ const FavoritesPanel: React.FC<Props> = ({
   const { t } = useTranslation('weather');
   const { colors } = useTheme() as CustomTheme;
   const { fontScale } = useWindowDimensions();
+
+  if (forecasts.length === 0) return null;
+
   const scale = Math.max(1, Math.min(fontScale, 2));
-  const textColor = getTextColor(colors.forecastBackground, colors.primaryText);
   const temperatureUnit =
     units?.temperature?.unitAbb ?? Config.get('settings').units.temperature;
 
   return (
     <View>
       <PanelHeader title={t('favoriteLocations')} thin />
-      <View style={styles.grid}>
+      <ScrollView horizontal contentContainerStyle={styles.row}>
         {forecasts.map(({ location, forecast }) => {
           const temperature = forecast?.temperature;
           const convertedTemperature =
@@ -77,10 +71,7 @@ const FavoritesPanel: React.FC<Props> = ({
           const SmartSymbol =
             typeof forecast?.smartSymbol === 'number' &&
             Number.isFinite(forecast.smartSymbol)
-              ? weatherSymbolGetter(
-                  String(forecast.smartSymbol),
-                  textColor === WHITE
-                )
+              ? weatherSymbolGetter(String(forecast.smartSymbol), true)
               : null;
           const temperatureLabel =
             convertedTemperature !== undefined
@@ -111,12 +102,12 @@ const FavoritesPanel: React.FC<Props> = ({
               style={[
                 styles.card,
                 {
-                  width: 100 * scale,
+                  width: 110 * scale,
                   minHeight: 80 * scale,
                   backgroundColor: colors.forecastBackground,
                 },
               ]}>
-              <Text numberOfLines={2} style={[styles.name, { color: WHITE }]}>
+              <Text numberOfLines={1} style={[styles.name, { color: WHITE }]}>
                 {location.name}
               </Text>
               <View style={styles.weather}>
@@ -141,15 +132,14 @@ const FavoritesPanel: React.FC<Props> = ({
             </AccessibleTouchableOpacity>
           );
         })}
-      </View>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  grid: {
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: 8,
     padding: 16,
   },

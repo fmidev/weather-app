@@ -4,6 +4,7 @@ import * as displayParameters from './constants';
 export const FETCH_FORECAST = 'FETCH_FORECAST';
 export const FETCH_FORECAST_SUCCESS = 'FETCH_FORECAST_SUCCESS';
 export const FETCH_FORECAST_ERROR = 'FETCH_FORECAST_ERROR';
+export const FETCH_FAVORITE_FORECASTS_SUCCESS = 'FETCH_FAVORITE_FORECASTS_SUCCESS';
 export const UPDATE_DISPLAY_PARAMS = 'UPDATE_DISPLAY_PARAMETERS';
 export const RESTORE_DEFAULT_DISPLAY_PARAMS =
   'RESTORE_DEFAULT_DISPLAY_PARAMETERS';
@@ -22,6 +23,7 @@ export type DisplayParameters = (typeof displayParameters)[Exclude<
 interface FetchForecast {
   type: typeof FETCH_FORECAST;
   background?: boolean;
+  hasCachedData?: boolean;
 }
 
 interface FetchForecastSuccess {
@@ -40,6 +42,11 @@ interface FetchForecastError {
   background?: boolean;
   error: Error;
   timestamp: number;
+}
+
+interface FetchFavoriteForecastsSuccess {
+  type: typeof FETCH_FAVORITE_FORECASTS_SUCCESS;
+  data: WeatherData;
 }
 
 interface UpdateDisplayParams {
@@ -71,6 +78,7 @@ export type ForecastActionTypes =
   | FetchForecast
   | FetchForecastSuccess
   | FetchForecastError
+  | FetchFavoriteForecastsSuccess
   | UpdateDisplayParams
   | RestoreDefaultDisplayParams
   | UpdateDisplayFormat

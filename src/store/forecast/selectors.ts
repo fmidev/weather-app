@@ -55,6 +55,16 @@ export const selectForecast = createSelector(
     )
 );
 
+export const selectForecastForLocation = (
+  state: State,
+  geoid?: number | string
+) =>
+  getValidForecast(
+    state.forecast.data?.[
+      typeof geoid === 'number' && Number.isNaN(geoid) ? 0 : (geoid ?? 0)
+    ]
+  );
+
 export const selectFavoriteForecasts = createSelector(
   [selectData, selectFavorites, selectHour],
   (data, favorites) =>

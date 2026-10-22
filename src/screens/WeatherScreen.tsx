@@ -17,7 +17,10 @@ import { setCurrentLocation as setCurrentLocationAction } from '@store/location/
 import type { Location } from '@store/location/types';
 import { selectAnnouncements } from '@store/announcements/selectors';
 
-import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
+import {
+  fetchFavoriteForecasts as fetchFavoriteForecastsAction,
+  fetchForecast as fetchForecastAction,
+} from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
 import { resetObservations as resetObservationsAction } from '@store/observation/actions';
 import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
@@ -50,6 +53,7 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = {
   fetchForecast: fetchForecastAction,
+  fetchFavoriteForecasts: fetchFavoriteForecastsAction,
   fetchObservation: fetchObservationAction,
   fetchWarnings: fetchWarningsAction,
   fetchMeteorologistSnapshot: fetchMeteorologistSnapshotAction,
@@ -66,6 +70,7 @@ type WeatherScreenProps = PropsFromRedux;
 
 const WeatherScreen: React.FC<WeatherScreenProps> = ({
   fetchForecast,
+  fetchFavoriteForecasts,
   fetchObservation,
   fetchWarnings,
   fetchMeteorologistSnapshot,
@@ -188,8 +193,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     const updateInterval =
       (weatherConfig.forecast.updateInterval ?? 5) * 60 * 1000;
 
-    favorites.forEach((favorite) => {
-      if (String(favorite.id) === String(location.id)) return;
+    const locationsToFetch = favorites.filter((favorite) => {
+      if (String(favorite.id) === String(location.id)) return false;
 
       const key = `${favorite.id}:${favorite.lat},${favorite.lon}:${favorite.country}:${i18n.language}`;
       const lastUpdated = favoriteForecastUpdated.current.get(key);
@@ -197,22 +202,19 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         lastUpdated !== undefined &&
         Math.max(now, shouldReload) <= lastUpdated + updateInterval
       )
-        return;
+        return false;
 
       favoriteForecastUpdated.current.set(key, now);
-      fetchForecast(
-        { geoid: favorite.id, latlon: `${favorite.lat},${favorite.lon}` },
-        favorite.country,
-        { background: true }
-      );
+      return true;
     });
+    if (locationsToFetch.length > 0) fetchFavoriteForecasts(locationsToFetch);
   }, [
     favorites,
     favoritesVisible,
     isFocused,
     i18n.language,
     location.id,
-    fetchForecast,
+    fetchFavoriteForecasts,
     shouldReload,
     weatherConfig.layout,
     weatherConfig.forecast.updateInterval,
@@ -345,6 +347,17 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         <Announcements style={styles.announcements} />
         <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
         <ForecastPanelWithVerticalLayout currentHour={currentHour} />
+
+        {weatherConfig.favoritesPanelEnabled !== false && (
+          <View
+            ref={favoritesRef}
+            collapsable={false}
+            testID="favorites-panel-container"
+            onLayout={() => updatePanelVisibility()}>
+            <FavoritesPanel onSelectLocation={selectFavoriteLocation} />
+          </View>
+        )}
+
         {isWideDisplay() && showLocalWarnings && showMeteorologistSnapshot ? (
           <View style={styles.grid}>
             <View style={styles.gridItem}>
@@ -360,13 +373,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
             {showMeteorologistSnapshot && <MeteorologistSnapshot />}
           </>
         )}
-        <View
-          ref={favoritesRef}
-          collapsable={false}
-          testID="favorites-panel-container"
-          onLayout={() => updatePanelVisibility()}>
-          <FavoritesPanel onSelectLocation={selectFavoriteLocation} />
-        </View>
         <SunAndMoonPanel />
         <View
           ref={observationRef}

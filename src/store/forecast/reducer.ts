@@ -3,6 +3,7 @@ import {
   FETCH_FORECAST,
   FETCH_FORECAST_SUCCESS,
   FETCH_FORECAST_ERROR,
+  FETCH_FAVORITE_FORECASTS_SUCCESS,
   ForecastActionTypes,
   ForecastState,
   WeatherData,
@@ -73,7 +74,7 @@ export default (
 
       return {
         ...state,
-        loading: true,
+        loading: !action.hasCachedData,
         error: false,
       };
     }
@@ -98,6 +99,13 @@ export default (
               loading: false,
               error: false,
             }),
+      };
+    }
+
+    case FETCH_FAVORITE_FORECASTS_SUCCESS: {
+      return {
+        ...state,
+        data: { ...state.data, ...action.data },
       };
     }
 

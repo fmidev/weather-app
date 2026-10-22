@@ -37,6 +37,7 @@ const mountWithFavorites = (favorites: Location[]) => {
     announcements: undefined,
     favorites,
     fetchForecast: jest.fn(),
+    fetchFavoriteForecasts: jest.fn(),
     fetchMeteorologistSnapshot: jest.fn(),
     fetchNews: jest.fn(),
     fetchObservation: jest.fn(),
@@ -58,10 +59,12 @@ const mountWithFavorites = (favorites: Location[]) => {
   const nativeView = (testID: string) =>
     view.UNSAFE_getAllByType(View).find((node) => node.props.testID === testID)!
       .instance;
-  nativeView('favorites-panel-container').measure = jest.fn(
-    (callback: (...values: number[]) => void) =>
-      callback(0, 0, 390, 100, 0, favoritesTop)
-  );
+  if (view.queryByTestId('favorites-panel-container')) {
+    nativeView('favorites-panel-container').measure = jest.fn(
+      (callback: (...values: number[]) => void) =>
+        callback(0, 0, 390, 100, 0, favoritesTop)
+    );
+  }
   nativeView('observation-panel-container').measure = jest.fn(
     (callback: (...values: number[]) => void) =>
       callback(0, 0, 390, 300, 0, 2000)
@@ -79,10 +82,7 @@ const mountWithFavorites = (favorites: Location[]) => {
         nativeEvent: { layoutMeasurement: { height: 800 } },
       });
     },
-    backgroundCalls: () =>
-      props.fetchForecast.mock.calls.filter(
-        ([, , options]) => options?.background
-      ),
+    backgroundCalls: () => props.fetchFavoriteForecasts.mock.calls,
   };
 };
 
@@ -168,6 +168,48 @@ describe('WeatherScreen', () => {
     expect(queryByTestId('sun-and-moon-panel')).toBeNull();
   });
 
+  describe('favorites panel visibility', () => {
+    it.each([
+      { enabled: true, visible: true },
+      { enabled: false, visible: false },
+      { enabled: undefined, visible: true },
+    ])(
+      'renders visible=$visible when favoritesPanelEnabled=$enabled',
+      ({ enabled, visible }) => {
+        const config = mockConfigGetAll();
+        config.weather.favoritesPanelEnabled = enabled;
+
+        const { view } = mountWithFavorites([favoriteLocation]);
+
+        if (visible) {
+          expect(view.getByTestId('favorites-panel-container')).toBeTruthy();
+          expect(view.getByTestId('favorites-panel')).toBeTruthy();
+        } else {
+          expect(view.queryByTestId('favorites-panel-container')).toBeNull();
+          expect(view.queryByTestId('favorites-panel')).toBeNull();
+        }
+      }
+    );
+
+    it('hides and shows the panel when configuration changes', () => {
+      const config = mockConfigGetAll();
+      const { view, props } = mountWithFavorites([favoriteLocation]);
+      expect(view.getByTestId('favorites-panel')).toBeTruthy();
+
+      config.weather.favoritesPanelEnabled = false;
+      view.rerender(<WeatherScreen {...props} />);
+
+      expect(view.queryByTestId('favorites-panel-container')).toBeNull();
+      expect(view.queryByTestId('favorites-panel')).toBeNull();
+
+      config.weather.favoritesPanelEnabled = true;
+      view.rerender(<WeatherScreen {...props} />);
+
+      expect(view.getByTestId('favorites-panel-container')).toBeTruthy();
+      expect(view.getByTestId('favorites-panel')).toBeTruthy();
+    });
+  });
+
   it.each([currentLocation, favoriteLocation])(
     'selects $name from favorites and scrolls to the top, including the current location',
     (favorite) => {
@@ -243,15 +285,14 @@ describe('WeatherScreen', () => {
 
       screen.scroll(700);
       expect(screen.backgroundCalls()).toEqual([
-        [{ geoid: 2, latlon: '61.5,23.8' }, 'FI', { background: true }],
-        [{ geoid: '3', latlon: '61.5,23.8' }, 'SE', { background: true }],
+        [[favoriteLocation, foreignFavorite]],
       ]);
       expect(screen.props.fetchObservation).not.toHaveBeenCalled();
 
       screen.scroll(600);
       screen.scroll(1000);
       screen.scroll(700);
-      expect(screen.backgroundCalls()).toHaveLength(2);
+      expect(screen.backgroundCalls()).toHaveLength(1);
     });
 
     it.each(['layout', 'contentSizeChange'])(
@@ -286,11 +327,9 @@ describe('WeatherScreen', () => {
       );
 
       expect(screen.backgroundCalls()).toHaveLength(2);
-      expect(screen.props.fetchForecast).toHaveBeenLastCalledWith(
-        { geoid: 3, latlon: '62,25' },
-        'FI',
-        { background: true }
-      );
+      expect(screen.props.fetchFavoriteForecasts).toHaveBeenLastCalledWith([
+        nextFavorite,
+      ]);
     });
 
     it('refreshes visible favorites after the forecast interval and waits while hidden', () => {
