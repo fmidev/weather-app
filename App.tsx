@@ -5,6 +5,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider, useSelector } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
+import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import ReduxThunk from 'redux-thunk';
 
 import '@i18n';
@@ -83,14 +84,16 @@ const App: React.FC = () => {
 
   return (
     <Provider store={store}>
-      <AppContent
-        isPlatformDetectionComplete={isPlatformDetectionComplete}>
-        <PersistGate loading={null} persistor={persistor}>
-          <ConfigProvider defaultConfig={defaultConfig}>
-            <TabNavigator />
-          </ConfigProvider>
-        </PersistGate>
-      </AppContent>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <AppContent
+          isPlatformDetectionComplete={isPlatformDetectionComplete}>
+          <PersistGate loading={null} persistor={persistor}>
+            <ConfigProvider defaultConfig={defaultConfig}>
+              <TabNavigator />
+            </ConfigProvider>
+          </PersistGate>
+        </AppContent>
+      </SafeAreaProvider>
     </Provider>
   );
 };

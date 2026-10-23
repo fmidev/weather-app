@@ -5,6 +5,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { connect, ConnectedProps } from 'react-redux';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -55,7 +56,7 @@ const FavoritesPanel: React.FC<Props> = ({
     units?.temperature?.unitAbb ?? Config.get('settings').units.temperature;
 
   return (
-    <View>
+    <SafeAreaView edges={['left', 'right']}>
       <PanelHeader title={t('favoriteLocations')} thin />
       <ScrollView horizontal contentContainerStyle={styles.row}>
         {forecasts.map(({ location, forecast }) => {
@@ -133,7 +134,7 @@ const FavoritesPanel: React.FC<Props> = ({
           );
         })}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
