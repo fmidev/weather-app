@@ -12,7 +12,9 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { HeaderBackButton } from '@react-navigation/elements';
 import {
+  StackHeaderLeftProps,
   StackHeaderProps,
   StackNavigationOptions,
   StackNavigationProp,
@@ -77,6 +79,11 @@ import HeaderBackImage from '@components/common/HeaderBackImage';
 import HeaderTitle from '@components/common/HeaderTitle';
 import packageJSON from '../../package.json';
 import { MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
+
+// Avoid the iOS pointer hover effect changing Fabric's native child indices.
+const renderSearchBackButton = (props: StackHeaderLeftProps) => (
+  <HeaderBackButton {...props} style={[props.style, styles.searchBackButton]} />
+);
 
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
@@ -297,6 +304,7 @@ const Navigator: React.FC<Props> = ({
       ...CommonHeaderOptions,
       path: 'search',
       headerBackTitleVisible: false,
+      headerLeft: Platform.OS === 'ios' ? renderSearchBackButton : undefined,
       // eslint-disable-next-line react/no-unstable-nested-components
       headerTitle: () => <HeaderTitle title={t('navigation:search')} isDark={useDarkTheme} />,
       // eslint-disable-next-line react/no-unstable-nested-components
@@ -609,6 +617,9 @@ const Navigator: React.FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
+  searchBackButton: {
+    cursor: 'auto',
+  },
   tabText: {
     fontFamily: MEDIUM_FONT,
     fontSize: 14,

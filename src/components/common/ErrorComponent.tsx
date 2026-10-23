@@ -1,13 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import NetInfo from '@react-native-community/netinfo';
 
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
-import { selectError as selectForecastError } from '@store/forecast/selectors';
-import { selectForecastInvalidData as selectForecastInvalidDataError } from '@store/forecast/selectors';
+import {
+  selectError as selectForecastError,
+  selectForecast,
+  selectForecastInvalidData as selectForecastInvalidDataError,
+} from '@store/forecast/selectors';
 import { selectError as selectObservationError } from '@store/observation/selector';
 import { selectError as selectWarningsError } from '@store/warnings/selectors';
 import { selectActiveOverlay, selectOverlaysError } from '@store/map/selectors';
@@ -29,6 +33,7 @@ import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
   forecastError: selectForecastError(state),
+  hasForecast: selectForecast(state).length > 0,
   forecastInvalidDataError: selectForecastInvalidDataError(state),
   observationError: selectObservationError(state),
   warningsError: selectWarningsError(state),
@@ -65,13 +70,14 @@ type Messages = {
 
 type ErrorProps = PropsFromRedux & {
   navReady: boolean;
-  currentRoute: Route<string>| null;
+  currentRoute: Route<string> | null;
 };
 
 const ErrorComponent: React.FC<ErrorProps> = ({
   location,
   activeOverlay,
   forecastError,
+  hasForecast,
   forecastInvalidDataError,
   observationError,
   warningsError,
@@ -95,8 +101,8 @@ const ErrorComponent: React.FC<ErrorProps> = ({
     const geoid = location.id;
     const forecastLocation = {
       geoid,
-      latlon: `${location.lat},${location.lon}`
-    }
+      latlon: `${location.lat},${location.lon}`,
+    };
     fetchForecast(forecastLocation, location.country);
   }, [fetchForecast, location]);
 
@@ -163,7 +169,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
         setErrorType('noInternet');
       }
       if (state.isConnected) {
-        if (forecastError && activeRoute === 'StackWeather') {
+        if (forecastError && !hasForecast && activeRoute === 'StackWeather') {
           if (
             typeof forecastError === 'object' &&
             forecastError.message.includes('400') &&
@@ -188,6 +194,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
     });
   }, [
     forecastError,
+    hasForecast,
     forecastInvalidDataError,
     observationError,
     warningsError,
@@ -197,49 +204,58 @@ const ErrorComponent: React.FC<ErrorProps> = ({
   ]);
 
   return errorType ? (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <Text style={styles.title}>{messages[errorType]?.title}</Text>
-        <AccessibleTouchableOpacity
-          onPress={() => setErrorType(undefined)}
-          style={styles.closeButton}>
-          <Icon name="close-outline" size={24} color={BLACK} />
-        </AccessibleTouchableOpacity>
-      </View>
-      { verboseErrorMessages && messages[errorType]?.message && (
-        <Text>{messages[errorType]?.message}</Text>
-      )}
-      {['noInternet', 'outOfServiceArea'].includes(errorType) &&
-      messages[errorType]?.additionalInfo ? (
-        <Text style={styles.text}>{messages[errorType]?.additionalInfo}</Text>
-      ) : (
-        <>
-          {errorType !== 'outOfServiceArea' && errorType !== 'noInternet' && (
-            <AccessibleTouchableOpacity
-              onPress={() => tryAgainFunctions[errorType]()}>
-              <View style={styles.tryAgainButton}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.buttonText}>{t('tryAgain')}</Text>
+    <SafeAreaView
+      edges={['left', 'right']}
+      pointerEvents="box-none"
+      style={styles.overlay}>
+      <View style={styles.container}>
+        <View style={styles.row}>
+          <Text style={styles.title}>{messages[errorType]?.title}</Text>
+          <AccessibleTouchableOpacity
+            onPress={() => setErrorType(undefined)}
+            style={styles.closeButton}>
+            <Icon name="close-outline" size={24} color={BLACK} />
+          </AccessibleTouchableOpacity>
+        </View>
+        {verboseErrorMessages && messages[errorType]?.message && (
+          <Text>{messages[errorType]?.message}</Text>
+        )}
+        {['noInternet', 'outOfServiceArea'].includes(errorType) &&
+        messages[errorType]?.additionalInfo ? (
+          <Text style={styles.text}>{messages[errorType]?.additionalInfo}</Text>
+        ) : (
+          <>
+            {errorType !== 'outOfServiceArea' && errorType !== 'noInternet' && (
+              <AccessibleTouchableOpacity
+                onPress={() => tryAgainFunctions[errorType]()}>
+                <View style={styles.tryAgainButton}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.buttonText}>{t('tryAgain')}</Text>
+                  </View>
                 </View>
-              </View>
-            </AccessibleTouchableOpacity>
-          )}
-        </>
-      )}
-    </View>
+              </AccessibleTouchableOpacity>
+            )}
+          </>
+        )}
+      </View>
+    </SafeAreaView>
   ) : null;
 };
 
 const styles = StyleSheet.create({
-  container: {
+  overlay: {
     position: 'absolute',
+    top: 0,
     bottom: 90,
-    right: 10,
-    left: 10,
+    right: 0,
+    left: 0,
+    paddingHorizontal: 10,
+    justifyContent: 'flex-end',
+  },
+  container: {
     padding: 12,
     backgroundColor: YELLOW,
     borderWidth: 2,
-    flex: 1,
     borderRadius: 8,
     shadowOffset: {
       width: 0,

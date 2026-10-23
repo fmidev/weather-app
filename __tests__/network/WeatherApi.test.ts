@@ -1,9 +1,11 @@
 import {
   getCurrentPosition,
   getForecast,
+  getFavoriteForecasts,
   getLocationsLocales,
   getObservation,
 } from '../../src/network/WeatherApi';
+import type { Location } from '../../src/store/location/types';
 
 const mockAxiosClient = jest.fn();
 const mockConfigGet = jest.fn();
@@ -147,6 +149,186 @@ describe('WeatherApi', () => {
     mockIsAuroraBorealisLikely.mockReset();
     mockTrackMatomoEvent.mockReset();
     mockConfigGet.mockReturnValue(weatherConfig);
+  });
+
+  describe('favorite forecasts', () => {
+    const tampere: Location = {
+      id: 2,
+      name: 'Tampere',
+      area: '',
+      country: 'FI',
+      lat: 61.5,
+      lon: 23.8,
+      timezone: 'Europe/Helsinki',
+    };
+    const stockholm = {
+      ...tampere,
+      id: '3',
+      name: 'Stockholm',
+      country: 'SE',
+      lat: 59.33,
+      lon: 18.06,
+    };
+    const step = { ...forecastStep };
+
+    it('fetches all configured parameters for multiple countries in one request per producer', async () => {
+      mockConfigGet.mockReturnValue({
+        ...weatherConfig,
+        fmiApiKey: 'test-key',
+      });
+      const foreignStep = { ...step, temperature: null, smartSymbol: null };
+      mockAxiosClient
+        .mockResolvedValueOnce({
+          data: {
+            '59.33000, 18.06000': [foreignStep],
+            '61.50000, 23.80000': [step],
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            '59.33000, 18.06000': [
+              { epochtime: step.epochtime, windSpeedMS: 7 },
+            ],
+            '61.50000, 23.80000': [
+              { epochtime: step.epochtime, windSpeedMS: 8 },
+            ],
+          },
+        });
+
+      await expect(getFavoriteForecasts([tampere, stockholm])).resolves.toEqual(
+        {
+          2: [{ ...step, windSpeedMS: 8 }],
+          3: [{ ...foreignStep, windSpeedMS: 7 }],
+        }
+      );
+      expect(mockAxiosClient).toHaveBeenCalledTimes(2);
+      const requests = mockAxiosClient.mock.calls.map(([request]) => request);
+      requests.forEach((request) => {
+        expect(request).toMatchObject({
+          url: weatherConfig.apiUrl,
+          headers: { 'fmi-apikey': 'test-key' },
+          params: {
+            latlons: '59.33,18.06,61.5,23.8',
+            attributes: 'latlon',
+            endtime: '36h',
+            format: 'json',
+            lang: 'en',
+            tz: 'utc',
+            who: 'MobileWeather-ios',
+          },
+        });
+        expect(request.params.timesteps).toBeUndefined();
+      });
+      expect(requests[0].params.param).toBe(
+        'latlon,epochtime,localtime,sunrise,sunset,sunriseToday,sunsetToday,dayLength,moonPhase,modtime,dark,temperature'
+      );
+      expect(requests[1].params).toMatchObject({
+        producer: 'forecast-b',
+        param: 'latlon,epochtime,windSpeedMS',
+      });
+      expect(
+        mockFindNearestGeoMagneticObservationStation
+      ).not.toHaveBeenCalled();
+    });
+
+    it('deduplicates coordinates and combines parameter blocks from the same producer', async () => {
+      mockConfigGet.mockReturnValue({
+        ...weatherConfig,
+        forecast: {
+          ...weatherConfig.forecast,
+          data: [
+            { producer: 'forecast-a', parameters: ['temperature'] },
+            {
+              producer: 'forecast-a',
+              parameters: ['smartSymbol', 'temperature'],
+            },
+          ],
+        },
+      });
+      mockAxiosClient.mockResolvedValueOnce({
+        data: { '61.50000, 23.80000': [step] },
+      });
+      const duplicate = { ...tampere, id: 'same-coordinates', lat: 61.500001 };
+      await expect(
+        getFavoriteForecasts([tampere, tampere, duplicate, stockholm])
+      ).resolves.toEqual({
+        2: [step],
+        'same-coordinates': [step],
+        3: [],
+      });
+      expect(mockAxiosClient).toHaveBeenCalledTimes(1);
+      const { params } = mockAxiosClient.mock.calls[0][0];
+      expect(params.latlons).toBe('59.33,18.06,61.5,23.8,61.500001,23.8');
+      expect(
+        params.param
+          .split(',')
+          .filter((parameter: string) => parameter === 'temperature')
+      ).toHaveLength(1);
+      expect(params.param).toContain('smartSymbol');
+    });
+
+    it('merges UV data by timestamp and sorts the complete forecast chronologically', async () => {
+      mockConfigGet.mockReturnValue({
+        ...weatherConfig,
+        forecast: {
+          ...weatherConfig.forecast,
+          data: [
+            { producer: 'default', parameters: Object.keys(forecastStep) },
+            { producer: 'uv', parameters: ['uvCumulated'] },
+          ],
+        },
+      });
+      const later = { ...step, epochtime: step.epochtime + 3600 };
+      mockAxiosClient
+        .mockResolvedValueOnce({
+          data: { '61.50000, 23.80000': [later, step] },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            '61.50000, 23.80000': [
+              { epochtime: step.epochtime, uvCumulated: 2 },
+              { epochtime: later.epochtime, uvCumulated: null },
+            ],
+          },
+        });
+      await expect(getFavoriteForecasts([tampere])).resolves.toEqual({
+        2: [
+          { ...step, uvCumulated: 2 },
+          { ...later, uvCumulated: null },
+        ],
+      });
+      expect(mockAxiosClient).toHaveBeenCalledTimes(2);
+    });
+
+    it('makes no request for an empty list or invalid coordinates', async () => {
+      await expect(getFavoriteForecasts([])).resolves.toEqual({});
+      await expect(
+        getFavoriteForecasts([{ ...tampere, lat: NaN }])
+      ).resolves.toEqual({});
+      expect(mockAxiosClient).not.toHaveBeenCalled();
+    });
+
+    it('rejects malformed forecasts and reports validation errors', async () => {
+      mockAxiosClient.mockResolvedValueOnce({
+        data: { '61.50000, 23.80000': [{ ...step, epochtime: 'invalid' }] },
+      });
+      await expect(getFavoriteForecasts([tampere])).rejects.toThrow(
+        'Favorite forecast validation failed'
+      );
+      expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+        'Error',
+        'Timeseries',
+        expect.stringContaining('Favorite forecast validation failed')
+      );
+    });
+
+    it('propagates network failures', async () => {
+      mockAxiosClient.mockRejectedValueOnce(new Error('offline'));
+      await expect(getFavoriteForecasts([tampere, stockholm])).rejects.toThrow(
+        'offline'
+      );
+      expect(mockAxiosClient).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('returns empty forecast for invalid location', async () => {

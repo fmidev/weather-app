@@ -1,5 +1,8 @@
 {
   "weather": {
+    "favoriteLocations": "Favoritorter",
+    "forecastUnavailable": "Prognosen är inte tillgänglig",
+    "selectFavoriteLocationHint": "Visa ortens prognos och gå till början av vyn",
     "charts": {
       "forecastAccessibilityLabel": "Presentation av 10 dygns väderprognos som graf",
       "observationAccessibilityLabel": "{{ Parameter }} observation som graf",

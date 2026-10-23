@@ -462,6 +462,7 @@ jest.mock('@store/warnings/actions', () => ({
 
 jest.mock('@store/forecast/actions', () => ({
   fetchForecast: jest.fn(),
+  fetchFavoriteForecasts: jest.fn(),
 }));
 
 jest.mock('@store/observation/actions', () => ({
@@ -541,6 +542,11 @@ jest.mock('@components/weather/GradientWrapper', () => ({
 jest.mock('@components/weather/NextHourForecastPanel', () => ({
   __esModule: true,
   default: mockTextComponent('next-hour-forecast-panel'),
+}));
+
+jest.mock('@components/weather/FavoritesPanel', () => ({
+  __esModule: true,
+  default: mockTextComponent('favorites-panel'),
 }));
 
 jest.mock('@components/weather/NextHourForecastPanelWithWeatherBackground', () => ({

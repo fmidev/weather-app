@@ -214,6 +214,46 @@ describe('forecast reducer', () => {
     });
   });
 
+  it('makes prefetched favorite forecasts available to all forecast selectors when selected', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-11-14T22:13:20Z'));
+    const primaryStep = createStep({
+      epochtime: Date.now() / 1000 + 3600,
+      temperature: 5,
+    });
+    const favoriteStep = {
+      epochtime: Date.now() / 1000 + 3600,
+      modtime: '2023-11-14T21:00:00',
+      temperature: 9,
+      smartSymbol: 2,
+    };
+    const state = createState({ data: { 99: [primaryStep] } });
+    state.forecast = reducer(state.forecast, {
+      type: types.FETCH_FAVORITE_FORECASTS_SUCCESS,
+      data: { 2: [{ ...primaryStep, ...favoriteStep, uvCumulated: 3 }] },
+    });
+    state.location.favorites = [{ id: 99 }, { id: 2 }];
+
+    expect(
+      selectors.selectFavoriteForecasts(state).map(({ forecast }) => forecast)
+    ).toEqual([
+      primaryStep,
+      { ...primaryStep, ...favoriteStep, uvCumulated: 3 },
+    ]);
+    expect(selectors.selectForecast(state)).toEqual([primaryStep]);
+    const selected = {
+      ...state,
+      location: { ...state.location, current: { id: 2 } },
+    };
+    expect(selectors.selectNextHourForecast(selected)).toMatchObject({
+      temperature: 9,
+      smartSymbol: 2,
+      uvCumulated: 3,
+    });
+    expect(selectors.selectForecastForLocation(state, 2)).toEqual(
+      selectors.selectForecast(selected)
+    );
+  });
+
   it('selects valid forecast data and derived values', () => {
     jest.useFakeTimers().setSystemTime(new Date('2023-11-14T22:13:20Z'));
     const nowSeconds = Math.floor(Date.now() / 1000);
