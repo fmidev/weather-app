@@ -2,6 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
+import { createStore as createReduxStore } from 'redux';
 
 import ErrorComponent from '../../src/components/common/ErrorComponent';
 
@@ -47,7 +48,9 @@ jest.mock('@store/location/selector', () => ({
 
 jest.mock('@store/forecast/selectors', () => ({
   selectError: (state: any) => state.mock.forecastError,
-  selectForecastInvalidData: (state: any) => state.mock.forecastInvalidDataError,
+  selectForecast: (state: any) => state.mock.forecast ?? [],
+  selectForecastInvalidData: (state: any) =>
+    state.mock.forecastInvalidDataError,
 }));
 
 jest.mock('@store/observation/selector', () => ({
@@ -261,5 +264,143 @@ describe('ErrorComponent', () => {
 
     expect(getByText('Choose another location')).toBeTruthy();
     expect(queryByText('Try again')).toBeNull();
+  });
+
+  describe('available forecasts', () => {
+    const forecast = [{ epochtime: 1, temperature: 5 }];
+    const initialState = {
+      mock: {
+        location: { id: 42, lat: 60.1699, lon: 24.9384, country: 'FI' },
+        forecast: [] as typeof forecast,
+        forecastError: { message: '503 forecast request failed' },
+        forecastInvalidDataError: false,
+        observationError: undefined,
+        warningsError: undefined,
+        activeOverlay: 7,
+        overlaysError: undefined,
+        mapLibrary: 'maplibre',
+      },
+    };
+
+    it.each(['503 forecast request failed', '400 unresolved geoid'])(
+      'does not show %s when selectForecast returns data',
+      async (message) => {
+        const store = createStore({
+          mock: {
+            ...initialState.mock,
+            forecast,
+            forecastError: { message },
+          },
+        });
+        const view = render(
+          <Provider store={store as any}>
+            <ErrorComponent
+              navReady
+              currentRoute={{ name: 'StackWeather', key: 'weather' }}
+            />
+          </Provider>
+        );
+
+        await flushEffects();
+
+        expect(view.toJSON()).toBeNull();
+        expect(view.queryByText('Forecast error')).toBeNull();
+        expect(view.queryByText('Outside service area')).toBeNull();
+      }
+    );
+
+    it('hides an existing forecast error when data arrives and shows it again when data is unavailable', async () => {
+      const store = createReduxStore(
+        (
+          state: typeof initialState | undefined,
+          action: { type: string; forecast?: typeof forecast }
+        ) => {
+          const current = state ?? initialState;
+          return action.type === 'TEST/SET_FORECAST'
+            ? {
+                ...current,
+                mock: { ...current.mock, forecast: action.forecast ?? [] },
+              }
+            : current;
+        }
+      );
+      const view = render(
+        <Provider store={store}>
+          <ErrorComponent
+            navReady
+            currentRoute={{ name: 'StackWeather', key: 'weather' }}
+          />
+        </Provider>
+      );
+      await flushEffects();
+      await waitFor(() =>
+        expect(view.getByText('Forecast error')).toBeTruthy()
+      );
+
+      act(() => {
+        store.dispatch({ type: 'TEST/SET_FORECAST', forecast });
+      });
+
+      await flushEffects();
+      await waitFor(() =>
+        expect(view.queryByText('Forecast error')).toBeNull()
+      );
+
+      act(() => {
+        store.dispatch({ type: 'TEST/SET_FORECAST', forecast: [] });
+      });
+
+      await flushEffects();
+      await waitFor(() =>
+        expect(view.getByText('Forecast error')).toBeTruthy()
+      );
+    });
+
+    it('still shows invalid forecast data errors', async () => {
+      const store = createStore({
+        mock: {
+          ...initialState.mock,
+          forecast: [{ epochtime: 1, temperature: null }],
+          forecastInvalidDataError: true,
+        },
+      });
+      const view = render(
+        <Provider store={store as any}>
+          <ErrorComponent
+            navReady
+            currentRoute={{ name: 'StackWeather', key: 'weather' }}
+          />
+        </Provider>
+      );
+
+      await flushEffects();
+      await waitFor(() =>
+        expect(view.getByText('Forecast error')).toBeTruthy()
+      );
+    });
+
+    it('shows an observation error even when a forecast request failed but forecast data is available', async () => {
+      const store = createStore({
+        mock: {
+          ...initialState.mock,
+          forecast,
+          observationError: new Error('Observation request failed'),
+        },
+      });
+      const view = render(
+        <Provider store={store as any}>
+          <ErrorComponent
+            navReady
+            currentRoute={{ name: 'StackWeather', key: 'weather' }}
+          />
+        </Provider>
+      );
+
+      await flushEffects();
+      await waitFor(() =>
+        expect(view.getByText('Observation error')).toBeTruthy()
+      );
+      expect(view.queryByText('Forecast error')).toBeNull();
+    });
   });
 });

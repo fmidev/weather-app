@@ -6,8 +6,11 @@ import NetInfo from '@react-native-community/netinfo';
 
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
-import { selectError as selectForecastError } from '@store/forecast/selectors';
-import { selectForecastInvalidData as selectForecastInvalidDataError } from '@store/forecast/selectors';
+import {
+  selectError as selectForecastError,
+  selectForecast,
+  selectForecastInvalidData as selectForecastInvalidDataError,
+} from '@store/forecast/selectors';
 import { selectError as selectObservationError } from '@store/observation/selector';
 import { selectError as selectWarningsError } from '@store/warnings/selectors';
 import { selectActiveOverlay, selectOverlaysError } from '@store/map/selectors';
@@ -29,6 +32,7 @@ import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 const mapStateToProps = (state: State) => ({
   location: selectCurrent(state),
   forecastError: selectForecastError(state),
+  hasForecast: selectForecast(state).length > 0,
   forecastInvalidDataError: selectForecastInvalidDataError(state),
   observationError: selectObservationError(state),
   warningsError: selectWarningsError(state),
@@ -72,6 +76,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
   location,
   activeOverlay,
   forecastError,
+  hasForecast,
   forecastInvalidDataError,
   observationError,
   warningsError,
@@ -163,7 +168,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
         setErrorType('noInternet');
       }
       if (state.isConnected) {
-        if (forecastError && activeRoute === 'StackWeather') {
+        if (forecastError && !hasForecast && activeRoute === 'StackWeather') {
           if (
             typeof forecastError === 'object' &&
             forecastError.message.includes('400') &&
@@ -188,6 +193,7 @@ const ErrorComponent: React.FC<ErrorProps> = ({
     });
   }, [
     forecastError,
+    hasForecast,
     forecastInvalidDataError,
     observationError,
     warningsError,

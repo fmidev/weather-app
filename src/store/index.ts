@@ -4,6 +4,7 @@ import { persistReducer } from 'redux-persist';
 
 import SettingsReducer, { settingsPersist } from './settings/reducer';
 import ForecastReducer, { forecastPersist } from './forecast/reducer';
+import { migrationStorage } from './migrationStorage';
 import ObservationReducer, { observationPersist } from './observation/reducer';
 import MapReducer, { mapPersist } from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
@@ -38,7 +39,7 @@ export default combineReducers({
     SettingsReducer
   ),
   forecast: persistReducer(
-    persistReducerConfig(forecastPersist),
+    { ...forecastPersist, storage: migrationStorage },
     ForecastReducer
   ),
   observation: persistReducer(

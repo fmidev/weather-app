@@ -1615,7 +1615,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-mmkv (3.3.1):
+  - react-native-mmkv (3.3.3):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2979,7 +2979,7 @@ SPEC CHECKSUMS:
   react-native-config: e89a04d172d648811fc67a07b61434e35441b227
   react-native-launch-arguments: eab68037b01ea7c78a0b3b55da3a5e967e9aaf92
   react-native-maps: 8c646224d4e2fc827836cd48dff4ca4756761ee9
-  react-native-mmkv: d1b6ffd420a8d43f12c1af836bafff833cf251cf
+  react-native-mmkv: ffda49ce01998ce9c48f87cb8413f67300abc206
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 0dd5d7db903a6289e798e934356cd80cf23a31d3
   react-native-skia: f77abf0b3c363632407c5f94bde5b41e1932bae4

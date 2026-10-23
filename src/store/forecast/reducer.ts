@@ -176,9 +176,13 @@ export default (
 export const forecastPersist: PersistConfig = {
   key: 'forecast',
   whitelist: [
+    'data',
+    'auroraBorealisData',
     'displayParams',
     'displayFormat',
     'chartDisplayParam',
     'showSingleHourlyForecast',
+    'fetchTimestamp',
+    'fetchSuccessTime',
   ],
 };
