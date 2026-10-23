@@ -4,6 +4,7 @@ import {
   FETCH_FORECAST_SUCCESS,
   FETCH_FORECAST_ERROR,
   FETCH_FAVORITE_FORECASTS_SUCCESS,
+  RETAIN_FORECAST_LOCATIONS,
   ForecastActionTypes,
   ForecastState,
   WeatherData,
@@ -33,17 +34,28 @@ const INITIAL_STATE: ForecastState = {
   fetchSuccessTime: 0,
 };
 
+const normalizeGeoid = (geoid?: number | string) =>
+  typeof geoid === 'number' && Number.isNaN(geoid) ? 0 : (geoid ?? 0);
+
+const retainLocations = <T>(
+  data: Record<string, T> | undefined,
+  locationIds: Set<string>
+): Record<string, T> | undefined => {
+  if (!data || Object.keys(data).every((id) => locationIds.has(id))) {
+    return data;
+  }
+
+  return Object.fromEntries(
+    Object.entries(data).filter(([id]) => locationIds.has(id))
+  );
+};
+
 const formatData = (
   dataSets: TimeStepDataSet,
   location: ForecastLocation
 ): WeatherData => {
   const weatherData: WeatherData = {};
-  const rawGeoid = location.geoid;
-  const normalizedGeoid =
-    typeof rawGeoid === 'number' && Number.isNaN(rawGeoid)
-      ? 0
-      : (rawGeoid ?? 0);
-  const id = String(normalizedGeoid);
+  const id = String(normalizeGeoid(location.geoid));
   const stepsByEpoch = new Map<number, TimeStepData>();
 
   dataSets.forEach((steps) => {
@@ -80,7 +92,7 @@ export default (
     }
 
     case FETCH_FORECAST_SUCCESS: {
-      const geoid = action.data.location.geoid ?? 0;
+      const geoid = normalizeGeoid(action.data.location.geoid);
       return {
         ...state,
         data: {
@@ -107,6 +119,21 @@ export default (
         ...state,
         data: { ...state.data, ...action.data },
       };
+    }
+
+    case RETAIN_FORECAST_LOCATIONS: {
+      const locationIds = new Set(
+        action.locationIds.map((id) => String(normalizeGeoid(id)))
+      );
+      const data = retainLocations(state.data, locationIds);
+      const auroraBorealisData = retainLocations(
+        state.auroraBorealisData,
+        locationIds
+      );
+
+      return data === state.data && auroraBorealisData === state.auroraBorealisData
+        ? state
+        : { ...state, data, auroraBorealisData };
     }
 
     case FETCH_FORECAST_ERROR: {

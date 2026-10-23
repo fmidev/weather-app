@@ -4,6 +4,7 @@ import {
   FETCH_FORECAST_ERROR,
   FETCH_FORECAST_SUCCESS,
   FETCH_FAVORITE_FORECASTS_SUCCESS,
+  RETAIN_FORECAST_LOCATIONS,
 } from '@store/forecast/types';
 import type {
   ForecastActionTypes,
@@ -22,6 +23,72 @@ const createState = (loading: boolean): ForecastState => ({
   error: 'primary forecast error',
   fetchTimestamp: 100,
   fetchSuccessTime: 50,
+});
+
+describe('forecast cache pruning', () => {
+  it('prunes forecast and aurora data without changing preferences or request status', () => {
+    const state = {
+      ...createState(false),
+      data: { 1: primarySteps, 2: favoriteSteps, 3: favoriteSteps },
+      auroraBorealisData: { 1: true, 2: false, 4: true },
+    };
+
+    const updated = reducer(state, {
+      type: RETAIN_FORECAST_LOCATIONS,
+      locationIds: ['1', 2],
+    });
+
+    expect(updated).toEqual({
+      ...state,
+      data: { 1: primarySteps, 2: favoriteSteps },
+      auroraBorealisData: { 1: true, 2: false },
+    });
+    expect(updated.data?.[1]).toBe(primarySteps);
+    expect(updated.data?.[2]).toBe(favoriteSteps);
+    expect(Object.keys(state.data)).toEqual(['1', '2', '3']);
+    expect(Object.keys(state.auroraBorealisData)).toEqual(['1', '2', '4']);
+  });
+
+  it('keeps the same state when no cached locations need removing', () => {
+    const state = createState(false);
+    expect(
+      reducer(state, { type: RETAIN_FORECAST_LOCATIONS, locationIds: [1, 2] })
+    ).toBe(state);
+  });
+
+  it('handles missing cached data', () => {
+    const state = {
+      ...createState(false),
+      data: undefined,
+      auroraBorealisData: undefined,
+    };
+    expect(
+      reducer(state, { type: RETAIN_FORECAST_LOCATIONS, locationIds: [1] })
+    ).toBe(state);
+  });
+
+  it('stores and retains coordinate forecasts and aurora data under the same key', () => {
+    const state = reducer(createState(false), {
+      type: FETCH_FORECAST_SUCCESS,
+      data: {
+        location: { geoid: NaN, latlon: '60,25' },
+        forecast: [favoriteSteps],
+        isAuroraBorealisLikely: false,
+      },
+      timestamp: 200,
+    });
+    expect(state.auroraBorealisData?.[0]).toBe(false);
+    expect(
+      reducer(state, {
+        type: RETAIN_FORECAST_LOCATIONS,
+        locationIds: [NaN],
+      })
+    ).toEqual({
+      ...state,
+      data: { 0: favoriteSteps },
+      auroraBorealisData: { 0: false },
+    });
+  });
 });
 
 describe('background forecasts in the forecast reducer', () => {
