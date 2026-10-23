@@ -66,9 +66,13 @@ describe('migrationStorage (AsyncStorage to MMKV)', () => {
 
     expect(store.getState()).toMatchObject(preferences);
     await expect(AsyncStorage.getItem(key)).resolves.toBeNull();
-    expect(JSON.parse(new MMKV().getString(key)!)).toEqual(
-      JSON.parse(legacyValue)
-    );
+    expect(JSON.parse(new MMKV().getString(key)!)).toEqual({
+      ...JSON.parse(legacyValue),
+      data: JSON.stringify({}),
+      auroraBorealisData: JSON.stringify({}),
+      fetchTimestamp: JSON.stringify(store.getState().fetchTimestamp),
+      fetchSuccessTime: JSON.stringify(0),
+    });
 
     store.dispatch({ type: UPDATE_FORECAST_DISPLAY_FORMAT, value: 'table' });
     await persistor.flush();
