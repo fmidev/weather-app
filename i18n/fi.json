@@ -743,6 +743,9 @@
   },
   "unitAbbreviations": {},
   "markdownRenderer": {
-    "radarLegendDescription": "Sateen voimakkuuden asteikko"
+    "moveToHint": "Siirry laitteen sähköpostiohjelmaan",
+    "openInBrowser": "Avaa selaimessa",
+    "radarLegendDescription": "Sateen voimakkuuden asteikko",
+    "version": "versio"
   }
 }

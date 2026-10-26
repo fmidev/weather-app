@@ -743,6 +743,9 @@
   },
   "unitAbbreviations": {},
   "markdownRenderer": {
-    "radarLegendDescription": "Precipitation intensity scale"
+    "moveToHint": "Switch to your mail application",
+    "openInBrowser": "Open in browser",
+    "radarLegendDescription": "Precipitation intensity scale",
+    "version": "version"
   }
 }

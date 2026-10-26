@@ -30,6 +30,7 @@ const axiosClient = async (
 
   let output: any;
   let timeoutId: any;
+  let timedOut = false;
 
   const request = axios(requestConfig)
     .then((response) => {
@@ -37,9 +38,13 @@ const axiosClient = async (
       clearTimeout(timeoutId);
     })
     .catch((error) => {
+      clearTimeout(timeoutId);
+      // Superseded requests are expected cancellations, not network failures.
+      if (Axios.isCancel(error) && !timedOut) throw error;
+
       const action = analyticsAction ?? 'Not specified';
 
-      if (error.code === 'ECONNABORTED') {
+      if (timedOut || error.code === 'ECONNABORTED') {
         trackMatomoEvent('Error', action, 'Timeout');
       } else if (error.response) {
         const errorMsg = getErrorMessage(error.response.headers);
@@ -58,12 +63,14 @@ const axiosClient = async (
         }
       }
 
-      clearTimeout(timeoutId);
       throw error;
     });
 
   timeoutId = setTimeout(
-    () => controller.abort(),
+    () => {
+      timedOut = true;
+      controller.abort();
+    },
     timeout
   );
 

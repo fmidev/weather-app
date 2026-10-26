@@ -60,6 +60,7 @@ describe('WarningsScreen with live defaultConfig APIs', () => {
     expect(data).toBeDefined();
     expect(Array.isArray(data?.warnings)).toBe(true);
     expect(Number.isFinite(Date.parse(data?.updated ?? ''))).toBe(true);
+    expect(warnings.updated).toBe(data?.updated);
     expect(warnings.fetchSuccessTime).toBeGreaterThan(0);
     const response = liveResponses.find(({ url }) => url === warningsUrl);
     expect(response?.status).toBe(200);
