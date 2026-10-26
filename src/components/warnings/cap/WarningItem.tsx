@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, ScrollView, ScrollViewInstance, useWindowDimens
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import Icon from '@assets/Icon';
 import { Config } from '@config';
 import { CustomTheme, GRAYISH_BLUE } from '@assets/colors';
@@ -41,6 +42,7 @@ const WarningItem: React.FC<WarningItemProps> = ({
   showDescription,
   showAreas = true,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { width } = useWindowDimensions();
   const { capViewSettings } = Config.get('warnings');
   const { t, i18n } = useTranslation();
@@ -113,7 +115,9 @@ const WarningItem: React.FC<WarningItemProps> = ({
               ))}
             </ScrollView>
           )}
-          <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={[styles.headingTitle, { color: colors.hourListText }]}>
             {(info.event as WarningType) ? info.event : ''}
             {capViewSettings?.warningBlockWarningCountEnabled !== false &&
             warningCount &&
@@ -121,11 +125,15 @@ const WarningItem: React.FC<WarningItemProps> = ({
               ? ` (${warningCount} pcs)`
               : ''}
           </Text>
-          <Text style={[styles.headingText, { color: colors.hourListText }]}>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
           </Text>
           { showAreas && (
-            <Text style={[styles.headingText, { color: colors.hourListText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.headingText, { color: colors.hourListText }]}>
               {capViewSettings?.hideLongArealist &&
               areaCount > MAX_AREA_COUNT_FOR_HIDE_LONG_AREA_LIST
                 ? t('warnings:capInfo:areas', { count: areaCount })
@@ -151,7 +159,9 @@ const WarningItem: React.FC<WarningItemProps> = ({
             styles.warningDescription,
             { backgroundColor: colors.background },
           ]}>
-          <Text style={{ color: colors.hourListText }}>{info.description}</Text>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={{ color: colors.hourListText }}>{info.description}</Text>
         </View>
       )}
     </View>

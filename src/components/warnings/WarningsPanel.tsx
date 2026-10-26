@@ -9,6 +9,7 @@ import {
 import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import AccessibleView from '@components/common/AccessibleView';
 import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { State } from '@store/types';
 import {
@@ -114,7 +115,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
             <View style={[styles.iconPadding]}>
               <View style={styles.filler} />
             </View>
-            <View
+            <AccessibleView
               ref={headerRef}
               style={[styles.flex, styles.alignItems]}
               accessible
@@ -127,7 +128,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                 ]}>
                 {`${t('panelTitle')}, ${location.name}`}
               </Text>
-            </View>
+            </AccessibleView>
             <AccessibleTouchableOpacity
               testID="warnings_info_button"
               accessibilityRole="button"

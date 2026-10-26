@@ -5,26 +5,46 @@ import moment from 'moment';
 import { CustomTheme, GRAY_1 } from '@assets/colors';
 import { getPrecipitationLevel } from '@utils/helpers';
 import { useTheme } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Config } from '@config';
+import { selectUnits } from '@store/settings/selectors';
+import {
+  formatAccessiblePrecipitation,
+  PrecipitationData,
+} from '@utils/accessibility';
 
 type PrecipitationStripProps = {
-  precipitationData:
-    { precipitation: number | undefined; timestamp: number }[] | false;
+  precipitationData: PrecipitationData;
   style?: ViewStyle;
   border?: boolean;
+  accessible?: boolean;
 };
 
 const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
   precipitationData,
   style,
   border,
+  accessible = true,
 }) => {
   const { colors } = useTheme() as CustomTheme;
+  const { t, i18n } = useTranslation('forecast');
+  const units = useSelector(selectUnits);
+  const precipitationUnit =
+    units?.precipitation.unitAbb ?? Config.get('settings').units.precipitation;
   const precipitationHourArr =
     precipitationData &&
     precipitationData.map((item) => ({
       hour: moment(item.timestamp * 1000).hours(),
       precipitation: item.precipitation,
     }));
+
+  const accessibilityLabel = formatAccessiblePrecipitation(
+    precipitationData,
+    precipitationUnit,
+    i18n.language,
+    t
+  );
 
   const normalizedPrecipitationData =
     precipitationHourArr && precipitationHourArr.length < 24
@@ -36,8 +56,8 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
             ) {
               const missing = 24 - precipitationHourArr.length;
               let appendable:
-                | { precipitation?: number; hour: number }
-                | { precipitation?: number; hour: number }[] = curr;
+                | { precipitation?: number | null; hour: number }
+                | { precipitation?: number | null; hour: number }[] = curr;
               for (let j = 0; j < missing; j += 1) {
                 if (!Array.isArray(appendable)) {
                   appendable =
@@ -51,16 +71,16 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
                 }
               }
               return acc.concat(
-                appendable as { precipitation?: number; hour: number }[]
+                appendable as { precipitation?: number | null; hour: number }[]
               );
             }
             return acc.concat(curr);
           },
-          [] as { precipitation?: number; hour: number }[]
+          [] as { precipitation?: number | null; hour: number }[]
         )
       : precipitationHourArr;
 
-  const backgroundStyleGetter = (val: number | undefined): ViewStyle => {
+  const backgroundStyleGetter = (val: number | undefined | null): ViewStyle => {
     if (val === undefined || val === null)
       return { backgroundColor: GRAY_1, opacity: 0.5 };
     return { backgroundColor: colors.rain[getPrecipitationLevel(val)] };
@@ -68,6 +88,12 @@ const PrecipitationStrip: React.FC<PrecipitationStripProps> = ({
 
   return (
     <View
+      accessible={accessible}
+      focusable={false}
+      accessibilityElementsHidden={!accessible}
+      importantForAccessibility={accessible ? 'auto' : 'no-hide-descendants'}
+      accessibilityRole="image"
+      accessibilityLabel={accessibilityLabel}
       style={[
         styles.row,
         style,

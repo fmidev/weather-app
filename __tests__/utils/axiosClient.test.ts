@@ -1,6 +1,7 @@
 jest.mock('axios', () => ({
   __esModule: true,
   default: {
+    isCancel: jest.requireActual('axios').default.isCancel,
     create: (...args: any[]) => {
       const globalMock = globalThis as any;
       if (!globalMock.__mockAxiosCreate) {
@@ -115,6 +116,35 @@ describe('axiosClient', () => {
 
     resolveRequest({ data: 'late' });
     await expect(request).resolves.toEqual({ data: 'late' });
+  });
+
+  it.each([false, true])('does not track intentional cancellation (already aborted: %s)', async (alreadyAborted) => {
+    jest.useFakeTimers();
+    const controller = new AbortController();
+    const error = { __CANCEL__: true, code: 'ERR_CANCELED', message: 'canceled' };
+    mockCachedAxios.mockImplementationOnce(({ signal }) => new Promise((_resolve, reject) => {
+      if (signal.aborted) reject(error);
+      else signal.addEventListener('abort', () => reject(error), { once: true });
+    }));
+    if (alreadyAborted) controller.abort();
+    const request = axiosClient({ url: 'https://example.test' }, controller, 'Warnings');
+    controller.abort();
+    await expect(request).rejects.toBe(error);
+    expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
+    expect(jest.getTimerCount()).toBe(0);
+  });
+
+  it('reports an AbortController timeout as a timeout, not an intentional cancellation', async () => {
+    jest.useFakeTimers();
+    const error = { __CANCEL__: true, code: 'ERR_CANCELED' };
+    mockCachedAxios.mockImplementationOnce(({ signal }) => new Promise((_resolve, reject) => {
+      signal.addEventListener('abort', () => reject(error), { once: true });
+    }));
+    const request = axiosClient({ url: 'https://example.test', timeout: 50 }, undefined, 'Warnings');
+    jest.advanceTimersByTime(50);
+    await expect(request).rejects.toBe(error);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('Error', 'Warnings', 'Timeout');
+    expect(jest.getTimerCount()).toBe(0);
   });
 
   it('tracks timeout errors with analytics action', async () => {

@@ -9,6 +9,8 @@ import 'moment/locale/es';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import { State } from '@store/types';
 
 import {
@@ -58,6 +60,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentHour, // To force re-render when the hour changes
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
@@ -69,7 +72,10 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
   if (loading || !nextHourForecast) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+        <ActivityIndicator
+          accessibilityLanguage={accessibilityLanguage}
+          accessibilityLabel={t('weather:loading')}
+        />
       </View>
     );
   }
@@ -128,48 +134,49 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.alignCenter} accessible accessibilityRole="header">
-        <Text style={[styles.text, styles.bold, { color: colors.primaryText }]}>
+      <AccessibleView style={styles.alignCenter} accessible accessibilityRole="header">
+        <Text
+          accessibilityLanguage={accessibilityLanguage}
+          style={[styles.text, styles.bold, { color: colors.primaryText }]}>
           {t('nextHourForecast')}
         </Text>
         <Text
-          style={[
-            styles.text,
-            styles.bold,
-            { color: colors.primaryText },
-          ]}>{`${t('at')} ${currentTime.format(
+          accessibilityLanguage={accessibilityLanguage}
+          style={[styles.text, styles.bold, { color: colors.primaryText }]}>{`${t('at')} ${currentTime.format(
           clockType === 12 ? 'h.mm a' : 'HH:mm'
         )}`}</Text>
-      </View>
+      </AccessibleView>
       <View style={styles.row}>
-        <View
+        <AccessibleView
           accessible
           accessibilityLabel={`${t(
             `symbols:${nextHourForecast.smartSymbol}`
           )}`}>
           {SmartSymbol ? <SmartSymbol width={100} height={100} /> : null}
-        </View>
+        </AccessibleView>
         {activeParameters.includes('temperature') && (
-          <View style={[styles.row, styles.alignStart]} accessible>
+          <AccessibleView style={[styles.row, styles.alignStart]} accessible>
             <Text
+              accessibilityLanguage={accessibilityLanguage}
               style={[styles.temperatureText, { color: colors.primaryText }]}>
               {numericOrDash(temperatureValue)}
             </Text>
             <Text
+              accessibilityLanguage={accessibilityLanguage}
               style={[styles.unitText, { color: colors.primaryText }]}
               accessibilityLabel={`${numericOrDash(temperatureValue)} ${t(
                 getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
               )} `}>
               °{t(`unitAbbreviations:${temperatureUnit}`)}
             </Text>
-          </View>
+          </AccessibleView>
         )}
       </View>
       <View style={[styles.feelsLikeRow, styles.withMarginBottom]}>
         <View style={[styles.row, styles.alignEnd]}>
           {activeParameters.includes('feelsLike') && (
             <>
-              <View
+              <AccessibleView
                 accessible
                 accessibilityLabel={`${t('feelsLike')} ${numericOrDash(
                   feelsLikeValue
@@ -177,18 +184,23 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
                   getForecastParameterUnitTranslationKey(`°${temperatureUnit}`)
                 )}`}>
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   style={[
                     styles.text,
                     styles.withMarginRight,
                     { color: colors.hourListText },
                   ]}>
                   {t('feelsLike')}{' '}
-                  <Text style={[styles.bold, styles.feelsLikeText]}>
+                  <Text
+                    accessibilityLanguage={accessibilityLanguage}
+                    style={[styles.bold, styles.feelsLikeText]}>
                     {numericOrDash(feelsLikeValue)}
                   </Text>
-                  <Text style={styles.feelsLikeText}>°{t(`unitAbbreviations:${temperatureUnit}`)}</Text>
+                  <Text
+                    accessibilityLanguage={accessibilityLanguage}
+                    style={styles.feelsLikeText}>°{t(`unitAbbreviations:${temperatureUnit}`)}</Text>
                 </Text>
-              </View>
+              </AccessibleView>
               <Icon
                 name={getFeelsLikeIconName(
                   nextHourForecast,
@@ -205,7 +217,7 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
       <View style={[styles.separator]} />
       <View
         style={[styles.row, styles.justifySpaceBetween, styles.bottomInfoRow]}>
-        <View
+        <AccessibleView
           accessible
           style={styles.row}
           accessibilityLabel={
@@ -240,37 +252,33 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
             <View style={styles.alignStart}>
               <View style={styles.row}>
                 <Text
-                  style={[
-                    styles.text,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.text, styles.bold, { color: colors.hourListText }]}>
                   {numericOrDash(windSpeedValue)}
                 </Text>
-                <Text style={[styles.text, { color: colors.hourListText }]}>
+                <Text
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.text, { color: colors.hourListText }]}>
                   {` ${t(`unitAbbreviations:${windUnit}`)}`}
                 </Text>
               </View>
             </View>
           )}
-        </View>
-        <View accessible style={styles.row}>
+        </AccessibleView>
+        <AccessibleView accessible style={styles.row}>
           {activeParameters.includes('precipitation1h') && (
             <>
               <Icon name="precipitation" color={colors.hourListText} />
               <Text
+                accessibilityLanguage={accessibilityLanguage}
                 style={[styles.text, { color: colors.hourListText }]}
                 accessibilityLabel={`${t('forecast:precipitation')} ${
-                  precipitationValue
-                    ?.toString()
-                    .replace('.', decimalSeparator) ||
+                  precipitationValue?.toString().replace('.', decimalSeparator) ||
                   (0).toFixed(1).replace('.', decimalSeparator)
                 } ${t(
-                  `forecast:${getForecastParameterUnitTranslationKey(
-                    precipitationUnit
-                  )}`
+                  `forecast:${getForecastParameterUnitTranslationKey(precipitationUnit)}`
                 )}`}>
-                <Text style={styles.bold}>{`${
+                <Text accessibilityLanguage={accessibilityLanguage} style={styles.bold}>{`${
                   precipitationValue?.replace('.', decimalSeparator) ||
                   (0).toFixed(1).replace('.', decimalSeparator)
                 }`}</Text>
@@ -278,16 +286,17 @@ const NextHourForecastPanel: React.FC<NextHourForecastPanelProps> = ({
               </Text>
             </>
           )}
-        </View>
+        </AccessibleView>
         <View style={styles.row}>
           {activeParameters.includes('uvCumulated') && (
             <Text
+              accessibilityLanguage={accessibilityLanguage}
               style={[styles.text, { color: colors.hourListText }]}
               accessibilityLabel={t('params.uvCumulated', {
                 value: numericOrDash(nextHourForecast.uvCumulated?.toString()),
               })}>
               {'UV '}
-              <Text style={styles.bold}>
+              <Text accessibilityLanguage={accessibilityLanguage} style={styles.bold}>
                 {numericOrDash(nextHourForecast.uvCumulated?.toString())}
               </Text>
             </Text>

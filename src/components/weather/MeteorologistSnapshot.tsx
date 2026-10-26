@@ -105,6 +105,7 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
         </Text>
         {snapshot.hasAlert && (
           <Icon
+            accessibilityLanguage="fi-FI"
             accessible={true}
             accessibilityRole="image"
             style={styles.warningIcon}

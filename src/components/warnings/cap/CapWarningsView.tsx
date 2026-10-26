@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { useAccessibilityLanguage } from '@utils/hooks';
 import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -40,6 +41,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   capWarnings,
   loading,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const legendSheetRef = useRef<RBSheet>(null);
 
   const { t, i18n } = useTranslation('warnings');
@@ -118,6 +120,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
               { !loading && (
                 <>
                   <Text
+                    accessibilityLanguage={accessibilityLanguage}
                     style={[
                       styles.regularFont,
                       {
@@ -127,6 +130,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                     {`${t('capUpdated')} `}
                   </Text>
                   <Text
+                    accessibilityLanguage={accessibilityLanguage}
                     style={[
                       styles.boldFont,
                       {

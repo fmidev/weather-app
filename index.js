@@ -30,8 +30,7 @@ if (defaultConfig.settings.languages.includes('es')) {
 // External libraries use these and warnings are not important for us
 
 LogBox.ignoreLogs([
-  /SafeAreaView has been deprecated.*/,
-  /InteractionManager has been deprecated.*/
-])
+  /ImageBackground is deprecated and will be removed in a future release.*/,
+]);
 
 AppRegistry.registerComponent(appName, () => App);

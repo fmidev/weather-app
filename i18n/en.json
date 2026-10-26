@@ -101,6 +101,20 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "precipitationMissing": "Precipitation amount missing",
+    "precipitationStrip": {
+      "morning": "in the morning",
+      "afternoon": "in the afternoon",
+      "evening": "in the evening",
+      "night": "at night",
+      "periodList": "{{first}} and {{last}}",
+      "rainDuring": "Precipitation {{periods}}",
+      "rainAllDay": "Precipitation throughout the day",
+      "rainAlmostAllDay": "Precipitation for most of the day",
+      "noRainAllDay": "No precipitation all day",
+      "noRainDuring": "No precipitation {{periods}}",
+      "totalPrecipitation": "total precipitation {{amount}} {{unit}}",
+      "missingTotal": "total precipitation amount missing"
+    },
     "popMissing": "Precipitation probability missing",
     "minus": "minus",
     "showHourlyForecast": "Show hourly forecast for the day",
@@ -712,6 +726,8 @@
     "tryAgain": "Try again"
   },
   "accessibility": {
+    "switchOn": "On",
+    "switchOff": "Off",
     "link1": "Act on the Provision of Digital Services (306/2019)",
     "link2": "Website on accessibility requirements",
     "openInBrowser": "Open in browser"
@@ -741,6 +757,9 @@
   },
   "unitAbbreviations": {},
   "markdownRenderer": {
-    "radarLegendDescription": "Precipitation intensity scale"
+    "moveToHint": "Switch to your mail application",
+    "openInBrowser": "Open in browser",
+    "radarLegendDescription": "Precipitation intensity scale",
+    "version": "version"
   }
 }

@@ -1,28 +1,35 @@
 import React, { forwardRef } from 'react';
 import { StyleSheet, Text, TextInstance, TextProps } from 'react-native';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
 import { useIsRunningOnMac } from './MacContentSizeContext';
 
 const DEFAULT_FONT_SIZE = 14;
 
-const AppText = forwardRef<TextInstance, TextProps>(({ children, style, ...rest }, ref) => {
-  const isRunningOnMac = useIsRunningOnMac();
-  const fontSize = StyleSheet.flatten(style)?.fontSize ?? DEFAULT_FONT_SIZE;
-  const macStyle = isRunningOnMac
-    ? { fontSize: fontSize * MAC_CONTENT_SIZE_MULTIPLIER }
-    : undefined;
+const AppText = forwardRef<TextInstance, TextProps>(
+  ({ children, style, ...rest }, ref) => {
+    const isRunningOnMac = useIsRunningOnMac();
+    const accessibilityLanguage = useAccessibilityLanguage();
+    const fontSize = StyleSheet.flatten(style)?.fontSize ?? DEFAULT_FONT_SIZE;
+    const macStyle = isRunningOnMac
+      ? { fontSize: fontSize * MAC_CONTENT_SIZE_MULTIPLIER }
+      : undefined;
 
-  return (
-    <Text
-      allowFontScaling
-      maxFontSizeMultiplier={isRunningOnMac ? 4 : 2}
-      ref={ref}
-      style={macStyle ? [style, macStyle] : style}
-      {...rest}>
-      {children}
-    </Text>
-  );
-});
+    return (
+      <Text
+        allowFontScaling
+        maxFontSizeMultiplier={isRunningOnMac ? 4 : 2}
+        ref={ref}
+        style={macStyle ? [style, macStyle] : style}
+        {...rest}
+        accessibilityLanguage={
+          rest.accessibilityLanguage ?? accessibilityLanguage
+        }>
+        {children}
+      </Text>
+    );
+  }
+);
 
 export default AppText;

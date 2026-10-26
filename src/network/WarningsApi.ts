@@ -16,11 +16,10 @@ const validateWarnings = ajv.compile<{ data: WarningsData }>(
   weatherWarningsSchema
 );
 
-const getWarnings = async ({
-  lat,
-  lon,
-  country,
-}: Location): Promise<{ data: WarningsData }> => {
+const getWarnings = async (
+  { lat, lon, country }: Location,
+  abortController?: AbortController
+): Promise<{ data: WarningsData }> => {
   const { language } = i18n;
   const { apiUrl, schemaValidation } = Config.get('warnings');
 
@@ -32,7 +31,7 @@ const getWarnings = async ({
     who: `${packageJSON.name}-${Platform.OS}`,
   };
 
-  const { data } = await axiosClient({ url, params }, undefined, 'Warnings');
+  const { data } = await axiosClient({ url, params }, abortController, 'Warnings');
 
   if (schemaValidation !== false && !validateWarnings(data)) {
     const error = `Warnings validation failed: ${ajv.errorsText(
