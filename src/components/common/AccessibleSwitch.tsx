@@ -10,6 +10,10 @@ import {
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import {
+  useAccessibilityHintLanguage,
+  useAccessibilityLanguage,
+} from '@utils/hooks';
 import AppText from './AppText';
 import {
   CustomTheme,
@@ -41,6 +45,8 @@ const AccessibleSwitch: React.FC<AccessibleSwitchProps> = ({
 }) => {
   const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('accessibility');
+  const accessibilityLanguage = useAccessibilityLanguage();
+  const onLayout = useAccessibilityHintLanguage(accessibilityHint, undefined);
   const [focused, setFocused] = useState(false);
   const isIOS = Platform.OS === 'ios';
 
@@ -52,6 +58,7 @@ const AccessibleSwitch: React.FC<AccessibleSwitchProps> = ({
       importantForAccessibility="yes"
       accessibilityRole="switch"
       accessibilityLabel={label}
+      accessibilityLanguage={accessibilityLanguage}
       accessibilityHint={accessibilityHint}
       // On iOS, checked would override the spoken value with "0" or "1".
       accessibilityState={isIOS ? { disabled } : { checked: value, disabled }}
@@ -59,6 +66,7 @@ const AccessibleSwitch: React.FC<AccessibleSwitchProps> = ({
         isIOS ? { text: t(value ? 'switchOn' : 'switchOff') } : undefined
       }
       disabled={disabled}
+      onLayout={onLayout}
       onPress={() => onValueChange(!value)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}

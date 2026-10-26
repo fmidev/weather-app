@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StyleSheet, Switch } from 'react-native';
+import { NativeModules, Platform, StyleSheet, Switch } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import AccessibleSwitch from '../../src/components/common/AccessibleSwitch';
@@ -12,6 +12,7 @@ let mockLanguage: keyof typeof mockTranslations = 'fi';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
+    i18n: { language: mockLanguage },
     t: (key: string) => (mockTranslations[mockLanguage] as Record<string, string>)[key],
   }),
 }));
@@ -72,6 +73,9 @@ describe('AccessibleSwitch', () => {
     expect(control.props.accessibilityRole).toBe('switch');
     expect(control.props.accessibilityState.checked).toBeUndefined();
     expect(control.props.accessibilityValue).toEqual({ text: off });
+    expect(control.props.accessibilityLanguage).toBe(
+      { fi: 'fi-FI', sv: 'sv-SE', en: 'en-GB' }[language]
+    );
     fireEvent.press(control);
     expect(onValueChange).toHaveBeenLastCalledWith(true);
 
@@ -114,6 +118,30 @@ describe('AccessibleSwitch', () => {
     fireEvent(getByA11yLabel('Location'), 'click', { nativeEvent: {} });
     expect(onValueChange).toHaveBeenCalledTimes(1);
     expect(onValueChange).toHaveBeenCalledWith(true);
+  });
+
+  it('localizes the Android hint on layout and when the value changes', () => {
+    const originalModule = NativeModules.AppLanguage;
+    const localizeAccessibilityHint = jest.fn();
+    NativeModules.AppLanguage = { localizeAccessibilityHint };
+    jest.spyOn(require('react-native'), 'findNodeHandle').mockReturnValue(42);
+
+    try {
+      const onValueChange = jest.fn();
+      const { getByA11yLabel, rerender } = render(
+        <AccessibleSwitch label="Location" value onValueChange={onValueChange} accessibilityHint="Hide location" />
+      );
+      fireEvent(getByA11yLabel('Location'), 'layout', { currentTarget: {} });
+      expect(localizeAccessibilityHint).toHaveBeenCalledWith(42);
+
+      localizeAccessibilityHint.mockClear();
+      rerender(
+        <AccessibleSwitch label="Location" value={false} onValueChange={onValueChange} accessibilityHint="Show location" />
+      );
+      expect(localizeAccessibilityHint).toHaveBeenCalledWith(42);
+    } finally {
+      NativeModules.AppLanguage = originalModule;
+    }
   });
 
   it('does not change value when disabled and exposes the disabled state', () => {

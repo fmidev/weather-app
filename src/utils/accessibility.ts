@@ -1,9 +1,53 @@
-import type { Moment } from 'moment-timezone';
+import moment from 'moment';
+import {
+  converter,
+  getForecastParameterUnitTranslationKey,
+  toPrecision,
+} from './units';
 
-export const formatAccessibleDate = (
-  m: Moment,
-  includeYear = true
-): string => {
+import type { Moment } from 'moment-timezone';
+import type { i18n } from 'i18next';
+import { NativeModules, Platform } from 'react-native';
+
+type AppLanguageModule = {
+  setLanguage: (language: string) => Promise<void>;
+};
+
+const getNativeModule = (): AppLanguageModule | undefined =>
+  Platform.OS === 'android' ? NativeModules.AppLanguage : undefined;
+
+export const setAndroidAppLanguage = async (
+  language: string
+): Promise<void> => {
+  const nativeModule = getNativeModule();
+  if (!nativeModule) {
+    return;
+  }
+
+  try {
+    await nativeModule.setLanguage(language);
+  } catch (error) {
+    console.error('Failed to update the Android app language:', error);
+  }
+};
+
+export const syncAndroidAppLanguage = (instance: i18n): (() => void) => {
+  if (!getNativeModule()) {
+    return () => {};
+  }
+
+  const onLanguageChanged = (language: string) => {
+    setAndroidAppLanguage(language);
+  };
+
+  instance.on('languageChanged', onLanguageChanged);
+
+  return () => {
+    instance.off('languageChanged', onLanguageChanged);
+  };
+};
+
+export const formatAccessibleDate = (m: Moment, includeYear = true): string => {
   return m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
 };
 
@@ -42,4 +86,126 @@ export const formatAccessibleTemperature = (
   const valuePart =
     num < 0 ? `${t('forecast:minus')} ${Math.abs(num)}` : `${num}`;
   return `${valuePart}`;
+};
+
+export type PrecipitationData =
+  { precipitation: number | undefined | null; timestamp: number }[] | false;
+
+const DAY_PERIODS = [
+  { key: 'night', start: 0, end: 6 },
+  { key: 'morning', start: 6, end: 12 },
+  { key: 'afternoon', start: 12, end: 18 },
+  { key: 'evening', start: 18, end: 24 },
+];
+
+export const formatAccessiblePrecipitation = (
+  precipitationData: PrecipitationData,
+  precipitationUnit: string,
+  language: string,
+  t: (key: string, options?: Record<string, string>) => string
+): string => {
+  const precipitationHourArr =
+    precipitationData &&
+    precipitationData.map((item) => ({
+      hour: moment(item.timestamp * 1000).hours(),
+      precipitation: item.precipitation,
+    }));
+
+  const validPrecipitationData = precipitationHourArr
+    ? precipitationHourArr.filter(
+        ({ precipitation }) =>
+          typeof precipitation === 'number' &&
+          Number.isFinite(precipitation) &&
+          precipitation >= 0
+      )
+    : [];
+  const availablePeriods = DAY_PERIODS.filter(({ start, end }) =>
+    validPrecipitationData.some(({ hour }) => hour >= start && hour < end)
+  );
+  const coversAllPeriods = availablePeriods.length === DAY_PERIODS.length;
+  const rainyPeriods = availablePeriods
+    .filter(({ start, end }) =>
+      validPrecipitationData.some(
+        ({ hour, precipitation }) =>
+          hour >= start && hour < end && (precipitation ?? 0) > 0
+      )
+    )
+    .map(({ key }) => t(`forecast:precipitationStrip.${key}`));
+
+  let accessibilityLabel = t('forecast:precipitationMissing');
+  if (validPrecipitationData.length > 0) {
+    const hasMissingData =
+      validPrecipitationData.length !==
+      (precipitationHourArr ? precipitationHourArr.length : 0);
+    const describePeriods = (periods: string[]): string =>
+      periods.length > 1
+        ? t('forecast:precipitationStrip.periodList', {
+            first: periods.slice(0, -1).join(', '),
+            last: periods[periods.length - 1],
+          })
+        : periods[0];
+    const rainsEveryHour =
+      !hasMissingData &&
+      validPrecipitationData.every(
+        ({ precipitation }) => (precipitation ?? 0) > 0
+      );
+    const hasDryHours = validPrecipitationData.some(
+      ({ precipitation }) => precipitation === 0
+    );
+    let rainDescription = coversAllPeriods
+      ? t('forecast:precipitationStrip.noRainAllDay')
+      : t('forecast:precipitationStrip.noRainDuring', {
+          periods: describePeriods(
+            availablePeriods.map(({ key }) =>
+              t(`forecast:precipitationStrip.${key}`)
+            )
+          ),
+        });
+    if (
+      coversAllPeriods &&
+      rainyPeriods.length === DAY_PERIODS.length &&
+      rainsEveryHour
+    ) {
+      rainDescription = t('forecast:precipitationStrip.rainAllDay');
+    } else if (
+      coversAllPeriods &&
+      rainyPeriods.length === DAY_PERIODS.length &&
+      hasDryHours
+    ) {
+      rainDescription = t('forecast:precipitationStrip.rainAlmostAllDay');
+    } else if (rainyPeriods.length > 0) {
+      rainDescription = t('forecast:precipitationStrip.rainDuring', {
+        periods: describePeriods(rainyPeriods),
+      });
+    }
+
+    if (hasMissingData) {
+      accessibilityLabel =
+        rainyPeriods.length > 0
+          ? `${rainDescription}, ${t('forecast:precipitationStrip.missingTotal')}`
+          : t('forecast:precipitationMissing');
+    } else {
+      const totalPrecipitation = validPrecipitationData.reduce(
+        (total, { precipitation }) => total + (precipitation ?? 0),
+        0
+      );
+      const decimalSeparator = language.split('-')[0] === 'en' ? '.' : ',';
+      const totalDescription = t(
+        'forecast:precipitationStrip.totalPrecipitation',
+        {
+          amount: toPrecision(
+            'precipitation',
+            precipitationUnit,
+            converter(precipitationUnit, totalPrecipitation)
+          ).replace('.', decimalSeparator),
+          unit: t(
+            `forecast:${getForecastParameterUnitTranslationKey(precipitationUnit)}`
+          ),
+        }
+      );
+      accessibilityLabel = `${rainDescription}, ${totalDescription}`;
+    }
+  }
+
+  return accessibilityLabel;
 };

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
@@ -114,7 +115,9 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   const iconSize = Math.min(fontScale * 22, 36);
 
   const rowRenderer = (param: DisplayParameters, index: number) => (
-    <View
+    <AccessibleView
+      accessible={false}
+      focusable={false}
       key={String(param)}
       style={[styles.row, { borderBottomColor: colors.border }]}>
       <View
@@ -194,7 +197,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         }}
         disabled={displayParams.length === 1 && displayParams[0][1] === param}
       />
-    </View>
+    </AccessibleView>
   );
 
   return (
@@ -222,11 +225,11 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                 {t('paramsBottomSheet.title')}
               </Text>
             </View>
-            <View style={styles.descriptionContainer} accessible>
+            <AccessibleView style={styles.descriptionContainer} accessible>
               <Text style={[styles.text, { color: colors.hourListText }]}>
                 {t('paramsBottomSheet.subTitle')}
               </Text>
-            </View>
+            </AccessibleView>
 
             {activeConstants.map(rowRenderer)}
             <View style={styles.lastRow}>

@@ -20,6 +20,7 @@ import { useTheme, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { getDistance } from 'geolib';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import WMSOverlay from '@components/map/layers/WMSOverlay';
 import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
 import MapControls from '@components/map/ui/MapControls';
@@ -101,6 +102,7 @@ const MlMapView: React.FC<MapViewProps> = ({
   infoSheetRef,
   mapLayersSheetRef,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { i18n } = useTranslation();
   const { dark } = useTheme();
   const isFocused = useIsFocused();
@@ -278,7 +280,7 @@ const MlMapView: React.FC<MapViewProps> = ({
   }, [location]);
 
   if (!baseMap) {
-    return <Text>MapLibre requires baseMap configuration</Text>;
+    return <Text accessibilityLanguage={accessibilityLanguage}>MapLibre requires baseMap configuration</Text>;
   }
 
   const mapStyle =

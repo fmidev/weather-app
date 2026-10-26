@@ -2,11 +2,20 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import Icon from '@assets/Icon';
 import { CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/number';
 import PrecipitationStrip from '../forecast/PrecipitationStrip';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Config } from '@config';
+import { selectUnits } from '@store/settings/selectors';
+import {
+  formatAccessiblePrecipitation,
+  PrecipitationData,
+} from '@utils/accessibility';
 
 type CollapsiblePanelHeaderProps = {
   open: boolean;
@@ -16,7 +25,7 @@ type CollapsiblePanelHeaderProps = {
   maxTemp?: string;
   minTemp?: string;
   totalPrecipitation?: number;
-  precipitationDay?: { precipitation: number; timestamp: number }[] | false;
+  precipitationDay?: PrecipitationData;
 };
 
 const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
@@ -29,14 +38,36 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   totalPrecipitation,
   precipitationDay,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors, dark } = useTheme() as CustomTheme;
+  const { t, i18n } = useTranslation();
+  const units = useSelector(selectUnits);
+  const precipitationUnit =
+    units?.precipitation?.unitAbb ?? Config.get('settings').units.precipitation;
+  const precipitationDescription = precipitationDay
+    ? formatAccessiblePrecipitation(
+        precipitationDay,
+        precipitationUnit,
+        i18n.language,
+        t
+      )
+    : '';
+  const headerDescription = [accessibilityLabel, precipitationDescription]
+    .filter(Boolean)
+    .join('. ');
 
   return (
     <TouchableOpacity
+      accessibilityLanguage={accessibilityLanguage}
       activeOpacity={1}
-      accessibilityLabel={accessibilityLabel}
+      accessible
+      accessibilityRole="button"
+      accessibilityState={{ expanded: open }}
+      accessibilityLabel={headerDescription}
       onPress={onPress}>
       <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
         style={[
           styles.row,
           {
@@ -45,7 +76,9 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
           },
         ]}>
         <View style={[styles.rowColumn, styles.alignStart]}>
-          <Text style={[styles.title, { color: colors.primaryText }]}>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={[styles.title, { color: colors.primaryText }]}>
             {title}
           </Text>
         </View>
@@ -63,7 +96,9 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
                   }
                   style={styles.withMarginRight}
                 />
-                <Text style={[styles.text, { color: colors.primaryText }]}>
+                <Text
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.text, { color: colors.primaryText }]}>
                   {maxTemp}
                 </Text>
               </View>
@@ -80,7 +115,9 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
                   }
                   style={styles.withMarginRight}
                 />
-                <Text style={[styles.text, { color: colors.primaryText }]}>
+                <Text
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.text, { color: colors.primaryText }]}>
                   {minTemp}
                 </Text>
               </View>
@@ -94,14 +131,13 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
                     name={dark ? 'rain-dark' : 'rain-white'}
                     style={styles.withMarginRight}
                   />
-                  <Text style={[styles.text, { color: colors.primaryText }]}>
+                  <Text
+                    accessibilityLanguage={accessibilityLanguage}
+                    style={[styles.text, { color: colors.primaryText }]}>
                     {toStringWithDecimal(totalPrecipitation, ',')}{' '}
                     <Text
-                      style={[
-                        styles.text,
-                        styles.regular,
-                        { color: colors.primaryText },
-                      ]}>
+                      accessibilityLanguage={accessibilityLanguage}
+                      style={[styles.text, styles.regular, { color: colors.primaryText }]}>
                       mm
                     </Text>
                   </Text>
@@ -109,7 +145,10 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
               )}
           </View>
           {precipitationDay && (
-            <PrecipitationStrip precipitationData={precipitationDay} />
+            <PrecipitationStrip
+              precipitationData={precipitationDay}
+              accessible={false}
+            />
           )}
         </View>
         <View

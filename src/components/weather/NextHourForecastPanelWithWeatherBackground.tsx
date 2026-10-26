@@ -18,6 +18,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment-timezone';
 import { useTranslation } from 'react-i18next';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import { State } from '@store/types';
 
 import {
@@ -100,6 +102,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
   isAuroraBorealisLikely,
   currentHour, // To force re-render when the hour changes
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { t, i18n } = useTranslation('forecast');
   useEffect(() => {
     moment.tz.setDefault(timezone);
@@ -124,7 +127,10 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
             backgroundColor: colors.screenBackground,
           },
         ]}>
-        <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+        <ActivityIndicator
+          accessibilityLanguage={accessibilityLanguage}
+          accessibilityLabel={t('weather:loading')}
+        />
       </View>
     );
   }
@@ -306,7 +312,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
             {`${t('at')} ${forecastTime}`}
           </Text>
         </View>
-        <View
+        <AccessibleView
           accessible
           accessibilityRole="header"
           accessibilityLabel={accessibleHeaderLabel}>
@@ -336,7 +342,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
               </Text>
             </View>
           </View>
-        </View>
+        </AccessibleView>
       </SafeAreaView>
       <View style={[styles.overlay, { backgroundColor: imageOverlayColor }]}>
         <NextHourForecastBar
