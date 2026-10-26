@@ -1,10 +1,37 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, Platform } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import AccessibleTouchableOpacity from '../../src/components/common/AccessibleTouchableOpacity';
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ i18n: { resolvedLanguage: 'fi' } }),
+}));
+
 describe('AccessibleTouchableOpacity', () => {
+  it('uses the app language on iOS and allows a language override', () => {
+    const originalPlatform = Platform.OS;
+    Object.defineProperty(Platform, 'OS', { value: 'ios' });
+    try {
+      const view = render(
+        <AccessibleTouchableOpacity testID="touchable" />
+      );
+      expect(view.getByTestId('touchable').props.accessibilityLanguage).toBe(
+        'fi-FI'
+      );
+      view.rerender(
+        <AccessibleTouchableOpacity
+          testID="touchable"
+          accessibilityLanguage="sv-SE" />
+      );
+      expect(view.getByTestId('touchable').props.accessibilityLanguage).toBe(
+        'sv-SE'
+      );
+    } finally {
+      Object.defineProperty(Platform, 'OS', { value: originalPlatform });
+    }
+  });
+
   it('applies minimum accessible touch dimensions', () => {
     const { getByTestId } = render(
       <AccessibleTouchableOpacity testID="touchable">
@@ -34,8 +61,7 @@ describe('AccessibleTouchableOpacity', () => {
       <AccessibleTouchableOpacity
         testID="touchable"
         // eslint-disable-next-line react-native/no-inline-styles, react-native/no-color-literals
-        style={{ backgroundColor: 'red' }}
-      >
+        style={{ backgroundColor: 'red' }}>
         <Text>Press</Text>
       </AccessibleTouchableOpacity>
     );
@@ -46,7 +72,9 @@ describe('AccessibleTouchableOpacity', () => {
       : [touchable.props.style];
 
     expect(styleArray).toEqual(
-      expect.arrayContaining([expect.objectContaining({ backgroundColor: 'red' })])
+      expect.arrayContaining([
+        expect.objectContaining({ backgroundColor: 'red' }),
+      ])
     );
     expect(styleArray).toEqual(
       expect.arrayContaining([expect.objectContaining({ minHeight: 44 })])

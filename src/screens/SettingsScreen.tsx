@@ -34,6 +34,7 @@ import TimeSettings from '@components/settings/TimeSettings';
 import ForecastBackgroundSettings from '@components/settings/ForecastBackgroundSettings';
 import defaultConfig from '../../defaultConfig';
 //import MapSettings from '@components/settings/MapSettings';
+import MapSettings from '@components/settings/MapSettings';
 
 const LOCATION_ALWAYS = 'location_always';
 const LOCATION_WHEN_IN_USE = 'location_when_in_use';
@@ -206,16 +207,18 @@ const SettingsScreen: React.FC<Props> = ({
         {showUnitSettings && units && (
           <UnitSettings units={units} onChangeUnits={onChangeUnits} />
         )}
-        {/*
-        <MapSettings
-          mapLibrary={mapLibrary}
-          updateMapLibrary={updateMapLibrary}
-        />
-        */}
+
         {defaultConfig.weather.backgroundImagesEnabled !== false && (
           <ForecastBackgroundSettings
             forecastBackgroundImages={forecastBackgroundImages}
             updateForecastBackgroundImages={updateForecastBackgroundImages}
+          />
+        )}
+
+        {Config.get('map').baseMap && (
+          <MapSettings
+            mapLibrary={mapLibrary}
+            updateMapLibrary={updateMapLibrary}
           />
         )}
       </ScrollView>

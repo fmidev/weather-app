@@ -19,7 +19,7 @@ describe('IconButton', () => {
 
   it('renders touchable circular button, forwards icon props and handles press', () => {
     const onPress = jest.fn();
-    const { getByTestId, getByA11yLabel, toJSON } = render(
+    const { getByTestId, getByA11yLabel, getAllByRole, toJSON } = render(
       <IconButton
         testID="icon-btn"
         onPress={onPress}
@@ -34,7 +34,20 @@ describe('IconButton', () => {
 
     fireEvent.press(getByTestId('icon-btn'));
     expect(onPress).toHaveBeenCalledTimes(1);
-    expect(getByA11yLabel('Open menu')).toBeTruthy();
+    const labelledButton = getByA11yLabel('Open menu');
+    expect(labelledButton).toBe(getByTestId('icon-btn'));
+    expect(labelledButton.props.accessible).toBe(true);
+    expect(labelledButton.props.accessibilityRole).toBe('button');
+    expect(getAllByRole('button')).toHaveLength(1);
+    fireEvent.press(labelledButton);
+    expect(onPress).toHaveBeenCalledTimes(2);
+    const iconContent = labelledButton.find(
+      (node) => node.props.accessibilityElementsHidden === true
+    );
+    expect(iconContent.props.importantForAccessibility).toBe('no-hide-descendants');
+    expect(iconContent.findAll(
+      (node) => node.props.accessible === true || node.props.focusable === true
+    )).toHaveLength(0);
 
     const touchable = getByTestId('icon-btn');
     expect(touchable.props.hitSlop).toEqual({
@@ -55,6 +68,10 @@ describe('IconButton', () => {
 
     const tree = toJSON() as any;
     const containerView = tree;
+    expect(containerView.props.accessible).toBe(false);
+    expect(containerView.props.focusable).toBe(false);
+    expect(containerView.props.accessibilityLabel).toBeUndefined();
+    expect(containerView.props.accessibilityRole).toBeUndefined();
     const styleArray = Array.isArray(containerView.props.style)
       ? containerView.props.style
       : [containerView.props.style];

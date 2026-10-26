@@ -4,7 +4,6 @@ import {
   updateUVForecast,
   updateObservations,
   DataMode,
-  // eslint-disable-next-line import/extensions
 } from './modifiers.mjs';
 import express from 'express';
 import fs from 'fs';

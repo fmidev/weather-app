@@ -9,12 +9,14 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
+  ScrollViewInstance,
   StyleSheet,
   View,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
 
+import AccessibleView from '@components/common/AccessibleView';
 import { State } from '@store/types';
 import { selectClockType, selectUnits } from '@store/settings/selectors';
 import { selectPreferredDailyParameters } from '@store/observation/selector';
@@ -56,7 +58,7 @@ const Chart: React.FC<ChartProps> = ({
   preferredDailyParameters,
   units,
 }) => {
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const [scrollIndex, setScrollIndex] = useState(observation ? 480 : 0);
   const [leftTopPadding, setLeftTopPadding] = useState(CHART_TOP_PADDING);
   const [rightTopPadding, setRightTopPadding] = useState(0);
@@ -163,7 +165,7 @@ const Chart: React.FC<ChartProps> = ({
   if (tickValues.length === 0) return null;
 
   return (
-    <View
+    <AccessibleView
       testID={`chart_${chartType}`}
       accessible
       accessibilityLabel={t(
@@ -238,7 +240,7 @@ const Chart: React.FC<ChartProps> = ({
         units={units}
         secondaryParameterMissing={secondaryParameterMissing}
       />
-    </View>
+    </AccessibleView>
   );
 };
 

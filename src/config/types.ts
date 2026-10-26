@@ -246,6 +246,12 @@ interface Feedback {
   faqUrl?: {
     [locale: string]: string;
   };
+  accessibility?: {
+    [locale: string]: {
+      email: string;
+      subject: string;
+    };
+  };
 }
 
 interface News {
@@ -285,7 +291,7 @@ interface MapInfoBottomSheet {
 interface MarkdownSettings {
   termsOfUse: boolean;
   aboutTheApplication: boolean;
-  accessibility: boolean;
+  accessibility?: boolean; // For backward compatibility
 }
 
 interface DateTimeFormats {
@@ -356,6 +362,7 @@ export interface ConfigType {
     layerGroups: LayerGroup[];
     layers: MapLayer[];
     baseMap?: BaseMap;
+    overlayMap?: BaseMap;
     infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {

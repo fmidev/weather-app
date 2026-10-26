@@ -22,7 +22,7 @@ export const LocationHeaderLeft = memo(function LocateHeaderLeft({
   );
 });
 
-export const LocationHeaderTitle = memo(function LocationHeaderTitle({
+export const LocationHeaderTitle = memo(function LocateHeaderTitle({
   onPress,
 }: {
   onPress: () => void;
