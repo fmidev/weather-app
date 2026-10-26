@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, View, type Text as RNText } from 'react-native';
+import { Linking, View, type TextInstance } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 import { createInstance } from 'i18next';
 import packageJSON from '../../package.json';
@@ -65,7 +65,7 @@ describe('MarkdownRenderer', () => {
     const {
       MarkdownRenderer,
     } = require('../../src/components/markdown/MarkdownRenderer');
-    const headingRef = React.createRef<RNText>();
+    const headingRef = React.createRef<TextInstance>();
     const onHeadingLayout = jest.fn();
     const renderer = new MarkdownRenderer({ headingRef, onHeadingLayout });
     const { getByText, unmount } = render(
@@ -75,7 +75,7 @@ describe('MarkdownRenderer', () => {
         {renderer.heading('Another main title', undefined, 1)}
       </View>
     );
-    expect(headingRef.current?.props.children).toEqual(['Main title']);
+    expect(headingRef.current).toBe(getByText('Main title').instance);
     expect(getByText('Main title').props.accessibilityRole).toBe('header');
     fireEvent(getByText('Another main title'), 'layout');
     expect(onHeadingLayout).not.toHaveBeenCalled();

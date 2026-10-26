@@ -1,7 +1,7 @@
 import './screenTestMocks';
 
 import React from 'react';
-import type { Text as RNText } from 'react-native';
+import type { TextInstance } from 'react-native';
 import { act, render } from '@testing-library/react-native';
 
 import AccessibilityScreen from '../../src/screens/AccessibilityScreen';
@@ -29,7 +29,7 @@ const configureFeedback = (accessibility: Partial<typeof accessibilityFeedback> 
 };
 const layoutHeading = () => {
   const options = getRendererOptions();
-  options.headingRef!.current = {} as RNText;
+  options.headingRef!.current = {} as TextInstance;
   act(() => options.onHeadingLayout!());
 };
 const finishTransition = (closing = false) => act(() => {
@@ -162,6 +162,20 @@ describe('AccessibilityScreen', () => {
     flushFrames();
     expect(MarkdownRenderer).toHaveBeenCalledTimes(1);
     expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits for a native heading handle before focusing', () => {
+    jest.mocked(ReactNative.findNodeHandle).mockReturnValue(undefined);
+    render(<AccessibilityScreen />);
+    layoutHeading();
+    finishTransition();
+    flushFrames();
+    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
+
+    jest.mocked(ReactNative.findNodeHandle).mockReturnValue(42);
+    layoutHeading();
+    flushFrames();
+    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).toHaveBeenCalledWith(42);
   });
 
   it('cancels pending focus on blur and focuses again when returning without a stack transition', () => {

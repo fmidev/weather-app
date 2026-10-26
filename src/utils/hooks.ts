@@ -34,14 +34,14 @@ export const useAccessibilityHintLanguage = (
   hint: string | undefined,
   onLayout: ViewProps['onLayout']
 ): ViewProps['onLayout'] => {
-  const viewTag = useRef<number | null>(null);
+  const viewTag = useRef<number | undefined>(undefined);
   const localized = useRef(false);
 
   const localizeHint = useCallback(() => {
     if (
       Platform.OS === 'android' &&
       (hint || localized.current) &&
-      viewTag.current !== null
+      viewTag.current != null
     ) {
       NativeModules.AppLanguage?.localizeAccessibilityHint?.(viewTag.current);
       localized.current = true;
@@ -52,10 +52,7 @@ export const useAccessibilityHintLanguage = (
 
   const handleLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      // findNodeHandle accepts host instances, but its legacy TypeScript signature omits them.
-      viewTag.current = findNodeHandle(
-        event.currentTarget as unknown as Parameters<typeof findNodeHandle>[0]
-      );
+      viewTag.current = findNodeHandle(event.currentTarget);
       localizeHint();
       onLayout?.(event);
     },

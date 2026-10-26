@@ -172,7 +172,7 @@ describe('useAccessibilityHintLanguage', () => {
     const view = render(<Fixture accessibilityHint="Vaihda kieli" />);
     fireEvent(view.getByTestId('hinted-view'), 'layout', layoutEvent);
     NativeModules.AppLanguage = { localizeAccessibilityHint };
-    jest.mocked(findNodeHandle).mockReturnValue(null);
+    jest.mocked(findNodeHandle).mockReturnValue(undefined);
     fireEvent(view.getByTestId('hinted-view'), 'layout', layoutEvent);
 
     expect(localizeAccessibilityHint).not.toHaveBeenCalled();
