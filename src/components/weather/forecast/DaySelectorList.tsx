@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView, ScrollViewInstance } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -58,7 +58,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
-  const dayStripRef = useRef<ScrollView>(null);
+  const dayStripRef = useRef<ScrollViewInstance>(null);
 
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters

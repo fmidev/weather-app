@@ -363,7 +363,7 @@ describe('Observation List', () => {
       // Native style arrays must not receive an inherited height cap, even
       // when a later style sets maxHeight to undefined.
       contentStyles.filter(Boolean).forEach((style: ViewStyle) => {
-        expect(StyleSheet.flatten(style).maxHeight).toBeUndefined();
+        expect(StyleSheet.flatten(style)?.maxHeight).toBeUndefined();
       });
       if (width <= 500) {
         const style = StyleSheet.flatten(contentStyles);

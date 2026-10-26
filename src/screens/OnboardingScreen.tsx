@@ -8,7 +8,7 @@ import {
   AccessibilityInfo,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { Text as RNText } from 'react-native';
+import type { TextInstance } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -37,7 +37,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const { t, i18n } = useTranslation('onboarding');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
-  const titleRef = useRef<RNText>(null);
+  const titleRef = useRef<TextInstance>(null);
   const isLandscape = useOrientation();
   const insets = useSafeAreaInsets();
 

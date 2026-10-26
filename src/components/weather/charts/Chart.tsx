@@ -9,6 +9,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
+  ScrollViewInstance,
   StyleSheet,
   View,
 } from 'react-native';
@@ -57,7 +58,7 @@ const Chart: React.FC<ChartProps> = ({
   preferredDailyParameters,
   units,
 }) => {
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const [scrollIndex, setScrollIndex] = useState(observation ? 480 : 0);
   const [leftTopPadding, setLeftTopPadding] = useState(CHART_TOP_PADDING);
   const [rightTopPadding, setRightTopPadding] = useState(0);

@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
   type TextStyle,
-  type Text as RNText,
+  type TextInstance,
   Linking,
 } from 'react-native';
 import { Renderer, type RendererInterface } from 'react-native-marked';
@@ -148,7 +148,7 @@ function IconInline(
 export class MarkdownRenderer extends Renderer implements RendererInterface {
   private readonly textStyle?: TextStyle;
 
-  private readonly headingRef?: RefObject<RNText | null>;
+  private readonly headingRef?: RefObject<TextInstance | null>;
 
   private readonly onHeadingLayout?: () => void;
 
@@ -166,7 +166,7 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
 
   constructor(options?: {
     textStyle?: TextStyle;
-    headingRef?: RefObject<RNText | null>;
+    headingRef?: RefObject<TextInstance | null>;
     onHeadingLayout?: () => void;
   }) {
     super();
@@ -206,10 +206,10 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     level?: number
   ) => {
     // Only the first mounted main heading owns the document's focus target.
-    let headingNode: RNText | null = null;
+    let headingNode: TextInstance | null = null;
     const headingRef = level === 1 ? this.headingRef : undefined;
     const setHeadingRef = headingRef
-      ? (node: RNText | null) => {
+      ? (node: TextInstance | null) => {
           if (node && !headingRef.current) headingRef.current = node;
           else if (!node && headingRef.current === headingNode)
             headingRef.current = null;

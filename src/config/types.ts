@@ -362,6 +362,7 @@ export interface ConfigType {
     layerGroups: LayerGroup[];
     layers: MapLayer[];
     baseMap?: BaseMap;
+    overlayMap?: BaseMap;
     infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {
