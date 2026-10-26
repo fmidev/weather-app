@@ -371,7 +371,11 @@
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
     "maplibre": "MapLibre",
-    "mapLibrarySettingHint": "Change map library to:"
+    "mapLibrarySettingHint": "Change map library to:",
+    "forecastBackground": "Next hour forecast background",
+    "forecastBackgroundImage": "Background image",
+    "forecastBackgroundGradient": "Background color",
+    "forecastBackgroundHint": "Change next hour forecast background to:"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Search for a location",

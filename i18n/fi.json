@@ -371,7 +371,11 @@
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
     "maplibre": "MapLibre",
-    "mapLibrarySettingHint": "Vaihda sovelluksen karttakirjastoksi:"
+    "mapLibrarySettingHint": "Vaihda sovelluksen karttakirjastoksi:",
+    "forecastBackground": "Seuraavan tunnin ennusteen tausta",
+    "forecastBackgroundImage": "Taustakuva",
+    "forecastBackgroundGradient": "Taustaväri",
+    "forecastBackgroundHint": "Vaihda seuraavan tunnin ennusteen taustaksi:"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",

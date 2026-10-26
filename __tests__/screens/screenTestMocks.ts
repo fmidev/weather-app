@@ -445,6 +445,7 @@ jest.mock('@store/map/actions', () => ({
 jest.mock('@store/settings/selectors', () => ({
   selectClockType: jest.fn(),
   selectMapLibrary: jest.fn(),
+  selectForecastBackgroundImages: jest.fn(),
   selectTheme: jest.fn(),
   selectUnits: jest.fn(),
 }));
@@ -452,6 +453,7 @@ jest.mock('@store/settings/selectors', () => ({
 jest.mock('@store/settings/actions', () => ({
   updateClockType: jest.fn(),
   updateMapLibrary: jest.fn(),
+  updateForecastBackgroundImages: jest.fn(),
   updateTheme: jest.fn(),
   updateUnits: jest.fn(),
 }));

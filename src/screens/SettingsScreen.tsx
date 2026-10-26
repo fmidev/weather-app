@@ -11,12 +11,14 @@ import {
   selectTheme,
   selectClockType,
   selectMapLibrary,
+  selectForecastBackgroundImages,
 } from '@store/settings/selectors';
 import {
   updateUnits as updateUnitsAction,
   updateTheme as updateThemeAction,
   updateClockType as updateClockTypeAction,
   updateMapLibrary as updateMapLibraryAction,
+  updateForecastBackgroundImages as updateForecastBackgroundImagesAction,
 } from '@store/settings/actions';
 import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
 import { UnitType } from '@store/settings/types';
@@ -29,6 +31,9 @@ import UnitSettings from '@components/settings/UnitSettings';
 import LanguageSettings from '@components/settings/LanguageSettings';
 import ThemeSettings from '@components/settings/ThemeSettings';
 import TimeSettings from '@components/settings/TimeSettings';
+import ForecastBackgroundSettings from '@components/settings/ForecastBackgroundSettings';
+import defaultConfig from '../../defaultConfig';
+//import MapSettings from '@components/settings/MapSettings';
 import MapSettings from '@components/settings/MapSettings';
 
 const LOCATION_ALWAYS = 'location_always';
@@ -41,6 +46,7 @@ const mapStateToProps = (state: State) => ({
   geoids: selectStoredGeoids(state),
   clockType: selectClockType(state),
   mapLibrary: selectMapLibrary(state),
+  forecastBackgroundImages: selectForecastBackgroundImages(state),
 });
 
 const mapDispatchToProps = {
@@ -49,6 +55,7 @@ const mapDispatchToProps = {
   updateLocationsLocales: updateLocationsLocalesAction,
   updateClockType: updateClockTypeAction,
   updateMapLibrary: updateMapLibraryAction,
+  updateForecastBackgroundImages: updateForecastBackgroundImagesAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -62,6 +69,8 @@ const SettingsScreen: React.FC<Props> = ({
   theme,
   geoids,
   units,
+  forecastBackgroundImages,
+  updateForecastBackgroundImages,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mapLibrary,
   updateUnits,
@@ -197,6 +206,13 @@ const SettingsScreen: React.FC<Props> = ({
 
         {showUnitSettings && units && (
           <UnitSettings units={units} onChangeUnits={onChangeUnits} />
+        )}
+
+        {defaultConfig.weather.backgroundImagesEnabled !== false && (
+          <ForecastBackgroundSettings
+            forecastBackgroundImages={forecastBackgroundImages}
+            updateForecastBackgroundImages={updateForecastBackgroundImages}
+          />
         )}
 
         {Config.get('map').baseMap && (

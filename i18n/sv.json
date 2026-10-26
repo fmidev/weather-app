@@ -371,7 +371,11 @@
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
     "maplibre": "MapLibre",
-    "mapLibrarySettingHint": "Byt kartbibliotek till:"
+    "mapLibrarySettingHint": "Byt kartbibliotek till:",
+    "forecastBackground": "Bakgrund för prognosen för nästa timme",
+    "forecastBackgroundImage": "Bakgrundsbild",
+    "forecastBackgroundGradient": "Bakgrundsfärg",
+    "forecastBackgroundHint": "Ändra bakgrunden för prognosen för nästa timme till:"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Sök plats",
