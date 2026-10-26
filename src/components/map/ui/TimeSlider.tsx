@@ -24,6 +24,7 @@ import { useTheme, useIsFocused } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
@@ -86,6 +87,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
   clockType,
   animationSpeed
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
@@ -355,6 +357,7 @@ const TimeSlider: React.FC<TimeSliderProps> = ({
           )}
           {sliderTime === 0 && (
             <ActivityIndicator
+              accessibilityLanguage={accessibilityLanguage}
               size="small"
               style={styles.sliderWrapper}
               pointerEvents="none"

@@ -6,6 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
 
 import {
@@ -78,6 +79,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentHour, // just for re-rendering every hour
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const insets = useSafeAreaInsets();
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
@@ -301,7 +303,10 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
       </View>
       <View style={[styles.forecastContainer]}>
         {loading && (
-          <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+          <ActivityIndicator
+            accessibilityLanguage={accessibilityLanguage}
+            accessibilityLabel={t('weather:loading')}
+          />
         )}
         {headerLevelForecast &&
           headerLevelForecast.length > 0 &&

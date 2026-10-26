@@ -2,6 +2,8 @@ import { Dispatch } from 'redux';
 import getWarnings from '@network/WarningsApi';
 import { Location } from '@store/location/types';
 import getCapWarnings from '@network/CapWarningsApi';
+import i18n from '@i18n';
+import { State } from '@store/types';
 import {
   Error,
   FETCH_CAP_WARNINGS,
@@ -12,22 +14,50 @@ import {
   WarningsActionTypes,
 } from './types';
 
-const fetchWarnings =
-  (location: Location) => (dispatch: Dispatch<WarningsActionTypes>) => {
-    dispatch({ type: FETCH_WARNINGS });
+// Keep request bookkeeping outside Redux to avoid state updates when starting background requests.
+const activeRequests = new WeakMap<() => Pick<State, 'warnings'>, AbortController>();
 
-    getWarnings(location)
-      .then(({ data }) => {
-        dispatch({
-          type: FETCH_WARNINGS_SUCCESS,
-          data,
-          id: location.id,
-          timestamp: Date.now(),
-        });
-      })
-      .catch((error: Error) => {
-        dispatch({ type: FETCH_WARNINGS_ERROR, error, timestamp: Date.now() });
+const fetchWarnings =
+  (location: Location) => async (
+    dispatch: Dispatch<WarningsActionTypes>,
+    getState: () => Pick<State, 'warnings'>
+  ) => {
+    const previousController = activeRequests.get(getState);
+    const controller = new AbortController();
+    activeRequests.set(getState, controller);
+    previousController?.abort();
+
+    // Publication times are shared across locations and languages.
+    const requestKey = JSON.stringify([
+      location.id,
+      location.lat,
+      location.lon,
+      location.country,
+      i18n.language,
+    ]);
+    const { warnings } = getState();
+    if (warnings.updatedRequestKey !== requestKey || !warnings.data[location.id] || warnings.error) {
+      dispatch({ type: FETCH_WARNINGS });
+    }
+
+    try {
+      const { data } = await getWarnings(location, controller);
+      if (activeRequests.get(getState) !== controller) return;
+      dispatch({
+        type: FETCH_WARNINGS_SUCCESS,
+        data,
+        id: location.id,
+        timestamp: Date.now(),
+        requestKey,
       });
+    } catch (error) {
+      if (activeRequests.get(getState) !== controller) return;
+      dispatch({ type: FETCH_WARNINGS_ERROR, error: error as Error, timestamp: Date.now() });
+    } finally {
+      if (activeRequests.get(getState) === controller) {
+        activeRequests.delete(getState);
+      }
+    }
   };
 
 const fetchCapWarnings = () => (dispatch: Dispatch<WarningsActionTypes>) => {

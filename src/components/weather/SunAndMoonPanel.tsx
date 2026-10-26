@@ -4,6 +4,7 @@ import { View, StyleSheet, ImageBackground, useWindowDimensions } from 'react-na
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
+import AccessibleView from '@components/common/AccessibleView';
 import { State } from '@store/types';
 import { selectIsWaningMoonPhase, selectLoading, selectNextHourForecast } from '@store/forecast/selectors';
 import { selectClockType } from '@store/settings/selectors';
@@ -91,7 +92,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 
   return (
     <View style={[styles.container, styles.flex, styles.center, { backgroundColor: colors.background }]}>
-      <View
+      <AccessibleView
         style={[styles.box, styles.sunBox, { width: boxWidth, height: boxHeight }]}
         accessible
       >
@@ -100,14 +101,14 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
           style={styles.flex}
           imageStyle={styles.background}
         >
-          <View style={styles.info} accessible accessibilityRole="header">
+          <AccessibleView style={styles.info} accessible accessibilityRole="header">
             <Text style={[styles.text, { color: colors.primaryText}]}>
               {t('dayLength')}
             </Text>
-          </View>
+          </AccessibleView>
             {isPolarNight && !isMidnightSun && (
-              <View accessible>
-                <View accessible style={styles.sunInfo}>
+              <AccessibleView accessible>
+                <AccessibleView accessible style={styles.sunInfo}>
                   <Icon
                     width={iconSize}
                     height={iconSize}
@@ -117,8 +118,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                   <Text style={[styles.text, { color: colors.primaryText}]}>
                     {t('weatherInfoBottomSheet.polarNight')}
                   </Text>
-                </View>
-                <View style={[styles.sunInfo]} accessible>
+                </AccessibleView>
+                <AccessibleView style={[styles.sunInfo]} accessible>
                   <Icon
                     width={iconSize}
                     height={iconSize}
@@ -130,13 +131,13 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.text, { color: colors.primaryText}]}>
                     {sunrise.format(dateFormat)}
                   </Text>
-                </View>
-              </View>
+                </AccessibleView>
+              </AccessibleView>
             )}
 
             {isMidnightSun && !isPolarNight && (
-              <View accessible>
-                <View accessible style={styles.sunInfo}>
+              <AccessibleView accessible>
+                <AccessibleView accessible style={styles.sunInfo}>
                   <Icon
                     width={iconSize}
                     height={iconSize}
@@ -146,8 +147,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                   <Text style={[styles.text, { color: colors.primaryText}]}>
                     {t('weatherInfoBottomSheet.nightlessNight')}
                   </Text>
-                </View>
-                <View style={[styles.sunInfo]} accessible>
+                </AccessibleView>
+                <AccessibleView style={[styles.sunInfo]} accessible>
                   <Icon
                     width={iconSize}
                     height={iconSize}
@@ -159,14 +160,14 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.text, { color: colors.primaryText}]}>
                     {sunset.format(dateFormat)}
                   </Text>
-                </View>
-              </View>
+                </AccessibleView>
+              </AccessibleView>
             )}
 
             {!isPolarNight && !isMidnightSun && (
               <View>
                 <View style={[styles.row]}>
-                  <View style={[styles.sunInfo]} accessible>
+                  <AccessibleView style={[styles.sunInfo]} accessible>
                     <Icon
                       width={iconSize}
                       height={iconSize}
@@ -190,8 +191,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                         {sunrise.format('a')}
                       </Text>
                     )}
-                  </View>
-                  <View style={[styles.sunInfo]} accessible>
+                  </AccessibleView>
+                  <AccessibleView style={[styles.sunInfo]} accessible>
                     <Icon
                       width={iconSize}
                       height={iconSize}
@@ -215,10 +216,10 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                         {sunset.format('a')}
                       </Text>
                     )}
-                  </View>
+                  </AccessibleView>
                 </View>
                 {(excludeDayDuration === undefined || !excludeDayDuration) && (
-                  <View style={styles.sunInfo} accessible>
+                  <AccessibleView style={styles.sunInfo} accessible>
                     <Icon
                     width={iconSize}
                     height={iconSize}
@@ -232,15 +233,15 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                       style={[styles.text, { color: colors.primaryText}]}>
                       {`${dayHours} h ${dayMinutes} min`}
                     </Text>
-                  </View>
+                  </AccessibleView>
                 )}
               </View>
           )}
         </ImageBackground>
-      </View>
+      </AccessibleView>
       <View style={[styles.box, styles.moonBox, { width: boxWidth, height: boxHeight }]} >
         <ImageBackground source={moonBackground} resizeMode="cover" style={styles.flex} imageStyle={styles.background}>
-          <View style={styles.info} accessible>
+          <AccessibleView style={styles.info} accessible>
             <Text style={[styles.text, { color: WHITE }]}>
               {t('moonPhase')}
             </Text>
@@ -248,7 +249,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
               accessibilityLabel={t(`sunAndMoon.${moonPhase}`)}
               style={[styles.text, styles.moonPhase, { width: moonPhaseWidth }]}>
                 {t(`sunAndMoon.${moonPhase}`)}</Text>
-          </View>
+          </AccessibleView>
         </ImageBackground>
       </View>
     </View>

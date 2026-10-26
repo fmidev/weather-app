@@ -101,6 +101,20 @@
     "today": "Idag",
     "tomorrow": "Imorgon",
     "precipitationMissing": "Nederbörd saknas",
+    "precipitationStrip": {
+      "morning": "på förmiddagen",
+      "afternoon": "på eftermiddagen",
+      "evening": "på kvällen",
+      "night": "på natten",
+      "periodList": "{{first}} och {{last}}",
+      "rainDuring": "Nederbörd {{periods}}",
+      "rainAllDay": "Nederbörd under hela dagen",
+      "rainAlmostAllDay": "Nederbörd under nästan hela dagen",
+      "noRainAllDay": "Ingen nederbörd under hela dagen",
+      "noRainDuring": "Ingen nederbörd {{periods}}",
+      "totalPrecipitation": "total nederbörd {{amount}} {{unit}}",
+      "missingTotal": "total nederbörd saknas"
+    },
     "popMissing": "Sannolikheten för nederbörd saknas",
     "minus": "minus",
     "showHourlyForecast": "Visa timprognos för dagen",
@@ -711,6 +725,8 @@
     "tryAgain": "Försök igen"
   },
   "accessibility": {
+    "switchOn": "På",
+    "switchOff": "Av",
     "link1": "Lagen om tillhandahållande av digitala tjänster (306/2019)",
     "link2": "Webbplatsen Tillgänglighetskrav",
     "openInBrowser": "Öppna i webbläsaren"
@@ -740,6 +756,9 @@
   },
   "unitAbbreviations": {},
   "markdownRenderer": {
-    "radarLegendDescription": "Nederbördsintensitetsskala"
+    "moveToHint": "Gå till telefonens e-postprogram",
+    "openInBrowser": "Öppna i webbläsaren",
+    "radarLegendDescription": "Nederbördsintensitetsskala",
+    "version": "version"
   }
 }

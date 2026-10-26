@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
+import { createStore as createReduxStore } from 'redux';
 
 import LayerTimeStepSelector from '../../src/components/map/ui/LayerTimeStepSelector';
 
@@ -134,6 +135,7 @@ describe('LayerTimeStepSelector', () => {
       expect.objectContaining({ marginLeft: 0 })
     );
     const selector = getByTestId('map_layer_time_step_selector');
+    expect(selector.props.collapsable).toBe(false);
     expect(selector.props.pointerEvents).toBe('box-none');
     expect(selector.props.style).toEqual(
       expect.arrayContaining([expect.objectContaining({ left: 16 })])
@@ -188,6 +190,36 @@ describe('LayerTimeStepSelector', () => {
     expect(getByText('15 min').props.style).toEqual(
       expect.arrayContaining([expect.objectContaining({ color: '#fefefe' })])
     );
+  });
+
+  it('keeps all time step controls in order without remounting them when selecting a layer', () => {
+    const initialState = { mock: { activeOverlay: 1 } };
+    const store = createReduxStore((
+      state: typeof initialState | undefined,
+      action: { type: string; payload?: number },
+    ) => {
+      const currentState = state ?? initialState;
+      return action.type === 'MAP/UPDATE_ACTIVE_OVERLAY' && action.payload !== undefined
+        ? { mock: { activeOverlay: action.payload } }
+        : currentState;
+    });
+    const { getAllByA11yRole, getByTestId } = render(
+      <Provider store={store}>
+        <LayerTimeStepSelector />
+      </Provider>
+    );
+    const controls = getAllByA11yRole('button');
+
+    [1, 0].forEach((selectedIndex) => {
+      fireEvent.press(controls[selectedIndex]);
+      const updatedControls = getAllByA11yRole('button');
+      expect(updatedControls).toHaveLength(3);
+      updatedControls.forEach((control, index) => {
+        expect(control).toBe(controls[index]);
+        expect(control.props.accessibilityState).toEqual({ selected: index === selectedIndex });
+      });
+      expect(getByTestId('map_layer_time_step_selector').props.collapsable).toBe(false);
+    });
   });
 
   it('does not render for a layer outside the configured groups', () => {

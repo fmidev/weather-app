@@ -5,6 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import { connect, ConnectedProps } from 'react-redux';
 import Markdown from 'react-native-marked';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
 import { selectActiveOverlay } from '@store/map/selectors';
 import { getLayerDocumentation } from '@network/MarkdownApi';
@@ -26,6 +27,7 @@ type MarkdownLayerInfoProps = ConnectedProps<typeof connector>;
 const renderer = new MarkdownRenderer();
 
 const MarkdownLayerInfo: React.FC<MarkdownLayerInfoProps> = ({activeOverlay}) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { t, i18n } = useTranslation('map');
   const locale = i18n.language;
   const { layers } = Config.get('map');
@@ -91,7 +93,7 @@ const MarkdownLayerInfo: React.FC<MarkdownLayerInfoProps> = ({activeOverlay}) =>
           }}
         />
       ) : (
-        <Text>{t('infoBottomSheet.markdownLoadingFailed')}</Text>
+        <Text accessibilityLanguage={accessibilityLanguage}>{t('infoBottomSheet.markdownLoadingFailed')}</Text>
       )}
     </SafeAreaView>
   );
