@@ -41,9 +41,8 @@ const IconButton: React.FC<IconButtonProps> = ({
 
   return onPress ? (
     <AccessibleView
-      accessible
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
+      accessible={false}
+      focusable={false}
       style={[
         circular ? styles.circularButton : styles.button,
         circular && iconSize ? {
