@@ -101,6 +101,20 @@
     "today": "Tänään",
     "tomorrow": "Huomenna",
     "precipitationMissing": "Sademäärä puuttuu",
+    "precipitationStrip": {
+      "morning": "aamupäivällä",
+      "afternoon": "iltapäivällä",
+      "evening": "illalla",
+      "night": "yöllä",
+      "periodList": "{{first}} ja {{last}}",
+      "rainDuring": "Sadetta {{periods}}",
+      "rainAllDay": "Sataa koko päivän ajan",
+      "rainAlmostAllDay": "Sataa lähes koko päivän ajan",
+      "noRainAllDay": "Ei sadetta koko päivänä",
+      "noRainDuring": "Ei sadetta {{periods}}",
+      "totalPrecipitation": "kokonaissademäärä {{amount}} {{unit}}",
+      "missingTotal": "kokonaissademäärä puuttuu"
+    },
     "popMissing": "Sateen todennäköisyys puuttuu",
     "minus": "miinus",
     "showHourlyForecast": "Näytä päiväkohtainen tuntiennuste",
@@ -711,11 +725,6 @@
     "checkConnection": "Tarkista internet-yhteytesi ja yritä uudelleen.",
     "tryAgain": "Yritä uudelleen"
   },
-  "accessibility": {
-    "link1": "Laki digitaalisten palvelujen tarjoamisesta (306/2019)",
-    "link2": "Saavutettavuusvaatimukset-verkkosivusto",
-    "openInBrowser": "Avaa selaimessa"
-  },
   "announcements": {
     "crisisPrefix": "Varoitus:",
     "maintenancePrefix": "Huomio:",
@@ -741,6 +750,9 @@
   },
   "unitAbbreviations": {},
   "markdownRenderer": {
-    "radarLegendDescription": "Sateen voimakkuuden asteikko"
+    "moveToHint": "Siirry laitteen sähköpostiohjelmaan",
+    "openInBrowser": "Avaa selaimessa",
+    "radarLegendDescription": "Sateen voimakkuuden asteikko",
+    "version": "versio"
   }
 }

@@ -34,7 +34,6 @@ jest.mock('@utils/matomo', () => ({
 }));
 
 jest.mock('@utils/accessibility', () => ({
-  ...jest.requireActual('@utils/accessibility'),
   formatAccessibleDate: (...args: any[]) => mockFormatAccessibleDate(...args),
 }));
 

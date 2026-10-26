@@ -85,7 +85,6 @@ jest.mock('@utils/moon', () => ({
 }));
 
 jest.mock('@utils/accessibility', () => ({
-  ...jest.requireActual('@utils/accessibility'),
   formatAccessibleDateTime: (...args: any[]) =>
     mockFormatAccessibleDateTime(...args),
 }));

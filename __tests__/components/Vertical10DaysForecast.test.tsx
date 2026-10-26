@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
+import moment from 'moment-timezone';
 
 import Vertical10DaysForecast from '../../src/components/weather/forecast/Vertical10DaysForecast';
 
@@ -11,6 +12,7 @@ const mockToPrecision = jest.fn();
 const mockGetForecastParameterUnitTranslationKey = jest.fn();
 const mockHourlyForecast = jest.fn();
 let mockWeatherLayout = 'vertical';
+let mockActiveParameters = ['temperature', 'windSpeedMS', 'precipitation1h'];
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
@@ -22,19 +24,32 @@ jest.mock('@config', () => ({
   },
 }));
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string, options?: any) => {
-      if (key === 'forecast:showHourlyForecast') return 'Show hourly forecast';
-      if (key === 'forecast:hideHourlyForecast') return 'Hide hourly forecast';
-      if (key === 'forecast:precipitationMissing')
-        return 'Missing precipitation';
-      if (options?.value) return `${key}:${options.value}`;
-      return key;
-    },
-    i18n: { language: 'en' },
-  }),
-}));
+jest.mock('react-i18next', () => {
+  const i18n = jest.requireActual('i18next').createInstance();
+  i18n.init({
+    initImmediate: false,
+    lng: 'en',
+    resources: { en: require('../../i18n/en.json') },
+  });
+  return {
+    useTranslation: () => ({
+      t: (key: string, options?: any) => {
+        if (key === 'forecast:showHourlyForecast')
+          return 'Show hourly forecast';
+        if (key === 'forecast:hideHourlyForecast')
+          return 'Hide hourly forecast';
+        if (key === 'forecast:precipitationMissing')
+          return 'Missing precipitation';
+        if (options?.value) return `${key}:${options.value}`;
+        if (key.startsWith('forecast:') || key.startsWith('symbols:')) {
+          return i18n.t(key, options);
+        }
+        return key;
+      },
+      i18n: { language: 'en' },
+    }),
+  };
+});
 
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({
@@ -113,9 +128,13 @@ jest.mock('@components/common/ScalableIcon', () => ({
 
 jest.mock('../../src/components/weather/forecast/PrecipitationStrip', () => ({
   __esModule: true,
-  default: () => {
+  default: ({ accessible }: any) => {
     const { Text } = require('react-native');
-    return <Text testID="precipitation-strip">strip</Text>;
+    return (
+      <Text testID="precipitation-strip" accessible={accessible}>
+        strip
+      </Text>
+    );
   },
 }));
 
@@ -128,6 +147,36 @@ jest.mock('../../src/components/weather/forecast/HourlyForecast', () => ({
   },
 }));
 
+const accessibilityProps = {
+  dayData: [
+    {
+      maxTemperature: 10,
+      minTemperature: 4,
+      minWindSpeed: 2,
+      maxWindSpeed: 5,
+      totalPrecipitation: 1.2,
+      precipitationMissing: false,
+      timeStamp: Date.parse('2035-06-01T06:00:00Z') / 1000,
+      smartSymbol: 4,
+      precipitationData: [
+        {
+          precipitation: 1.2,
+          timestamp: Date.parse('2035-06-01T06:00:00Z') / 1000,
+        },
+      ],
+    },
+  ],
+  units: {
+    temperature: { unitAbb: 'C' },
+    wind: { unitAbb: 'm/s' },
+    precipitation: { unitAbb: 'mm' },
+  } as any,
+  invalidData: false,
+  displayParams: [0, 1, 2] as any,
+  showSingleHourlyForecast: false,
+  forecastByDay: {},
+};
+
 describe('Vertical10DaysForecast', () => {
   beforeEach(() => {
     mockConfigGet.mockReset();
@@ -137,6 +186,8 @@ describe('Vertical10DaysForecast', () => {
     mockGetForecastParameterUnitTranslationKey.mockReset();
     mockHourlyForecast.mockClear();
     mockWeatherLayout = 'vertical';
+    mockActiveParameters = ['temperature', 'windSpeedMS', 'precipitation1h'];
+    moment.tz.setDefault('UTC');
 
     jest
       .spyOn(require('react-native'), 'useWindowDimensions')
@@ -149,7 +200,7 @@ describe('Vertical10DaysForecast', () => {
           forecast: {
             data: [
               {
-                parameters: ['temperature', 'windSpeedMS', 'precipitation1h'],
+                parameters: mockActiveParameters,
               },
             ],
           },
@@ -172,11 +223,16 @@ describe('Vertical10DaysForecast', () => {
       (_type: string, _unit: string, value: any) => `${value}`
     );
     mockGetForecastParameterUnitTranslationKey.mockImplementation(
-      (value: string) => value
+      (value: string) =>
+        ({
+          mm: 'millimeters',
+          in: 'inches',
+        })[value] ?? value
     );
   });
 
   afterEach(() => {
+    moment.tz.setDefault();
     jest.restoreAllMocks();
   });
 
@@ -190,7 +246,7 @@ describe('Vertical10DaysForecast', () => {
         totalPrecipitation: 1.5,
         precipitationMissing: false,
         timeStamp: 2000000000,
-        smartSymbol: 3,
+        smartSymbol: 4,
         precipitationData: [{ precipitation: 1, timestamp: 2000000000 }],
       },
     ];
@@ -213,9 +269,35 @@ describe('Vertical10DaysForecast', () => {
       />
     );
 
-    expect(getByTestId('weather-symbol-3')).toBeTruthy();
+    expect(getByTestId('weather-symbol-4')).toBeTruthy();
     expect(getByText(/4°/)).toBeTruthy();
     expect(getByTestId('precipitation-strip')).toBeTruthy();
+    const dayButton = getByHintText('Show hourly forecast');
+    expect(dayButton.props.accessible).toBe(true);
+    expect(dayButton.props.accessibilityLabel).toBe(
+      'Accessible date. Partly cloudy. Temperature From 4 degrees Celsius to 10 degrees Celsius. ' +
+        'Precipitation at night, total precipitation 1 millimeters'
+    );
+    expect(dayButton.props.accessibilityState).toEqual({ expanded: false });
+    const hiddenContent = dayButton.find(
+      (node) =>
+        node.props.importantForAccessibility === 'no-hide-descendants' &&
+        node.props.accessibilityElementsHidden === true
+    );
+    expect(
+      hiddenContent.findByProps({ testID: 'precipitation-strip' }).props
+        .accessible
+    ).toBe(false);
+    expect(
+      hiddenContent.findAll(
+        (node) =>
+          node.props.accessible === true || node.props.focusable === true
+      )
+    ).toHaveLength(0);
+    expect(
+      hiddenContent.findByProps({ accessibilityLabel: 'Accessible date' }).props
+        .focusable
+    ).toBe(false);
     expect(
       StyleSheet.flatten(getByTestId('daily-forecast-row-0').props.style)
         .borderBottomWidth
@@ -229,6 +311,12 @@ describe('Vertical10DaysForecast', () => {
     );
     expect(getByTestId('hourly-forecast-0')).toBeTruthy();
     expect(getByTestId('hourly-forecast-content')).toBeTruthy();
+    expect(
+      getByHintText('Hide hourly forecast').props.accessibilityState
+    ).toEqual({ expanded: true });
+    expect(
+      hiddenContent.findAllByProps({ testID: 'hourly-forecast-0' })
+    ).toHaveLength(0);
     expect(
       StyleSheet.flatten(getByTestId('daily-forecast-row-0').props.style)
         .borderBottomWidth
@@ -433,11 +521,75 @@ describe('Vertical10DaysForecast', () => {
       />
     );
 
+    expect(
+      view.getByHintText('Show hourly forecast').props.accessibilityLabel
+    ).toContain('Wind speed From 2 meters per second to 5 meters per second');
     fireEvent.press(view.getByHintText('Show hourly forecast'));
 
     expect(mockHourlyForecast).toHaveBeenCalledWith({
       data: [{ epochtime: timeStamp }],
       initialScrollHour: undefined,
     });
+  });
+
+  it('only includes visible parameters in the day button description', () => {
+    mockActiveParameters = ['temperature'];
+    const view = render(<Vertical10DaysForecast {...accessibilityProps} />);
+
+    expect(
+      view.getByHintText('Show hourly forecast').props.accessibilityLabel
+    ).toBe(
+      'Accessible date. Partly cloudy. Temperature From 4 degrees Celsius to 10 degrees Celsius'
+    );
+  });
+
+  it.each([
+    { invalidData: true, precipitationMissing: false },
+    { invalidData: false, precipitationMissing: true },
+  ])(
+    'does not announce rainfall amounts when data is invalid or missing (%j)',
+    ({ invalidData, precipitationMissing }) => {
+      const view = render(
+        <Vertical10DaysForecast
+          {...accessibilityProps}
+          invalidData={invalidData}
+          dayData={accessibilityProps.dayData.map((day) => ({
+            ...day,
+            precipitationMissing,
+          }))}
+        />
+      );
+      const label = view.getByHintText('Show hourly forecast').props
+        .accessibilityLabel;
+
+      expect(label).toContain('Missing precipitation');
+      expect(label).not.toContain('total precipitation');
+    }
+  );
+
+  it('uses the converted rainfall summary in the day button when inches are selected', () => {
+    mockConverter.mockImplementation((unit: string, value: number) =>
+      unit === 'in' ? value / 25.4 : value
+    );
+    mockToPrecision.mockImplementation(
+      (_type: string, unit: string, value: number) =>
+        unit === 'in' ? value.toFixed(2) : `${value}`
+    );
+    const view = render(
+      <Vertical10DaysForecast
+        {...accessibilityProps}
+        units={{
+          ...accessibilityProps.units,
+          precipitation: { unitAbb: 'in' },
+        }}
+      />
+    );
+
+    expect(
+      view.getByHintText('Show hourly forecast').props.accessibilityLabel
+    ).toBe(
+      'Accessible date. Partly cloudy. Temperature From 4 degrees Celsius to 10 degrees Celsius. ' +
+        'Precipitation in the morning, total precipitation 0.05 inches'
+    );
   });
 });

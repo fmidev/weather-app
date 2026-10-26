@@ -8,6 +8,14 @@ import { CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/number';
 import PrecipitationStrip from '../forecast/PrecipitationStrip';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Config } from '@config';
+import { selectUnits } from '@store/settings/selectors';
+import {
+  formatAccessiblePrecipitation,
+  PrecipitationData,
+} from '@utils/accessibility';
 
 type CollapsiblePanelHeaderProps = {
   open: boolean;
@@ -17,7 +25,7 @@ type CollapsiblePanelHeaderProps = {
   maxTemp?: string;
   minTemp?: string;
   totalPrecipitation?: number;
-  precipitationDay?: { precipitation: number; timestamp: number }[] | false;
+  precipitationDay?: PrecipitationData;
 };
 
 const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
@@ -32,14 +40,34 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
   const { colors, dark } = useTheme() as CustomTheme;
+  const { t, i18n } = useTranslation();
+  const units = useSelector(selectUnits);
+  const precipitationUnit =
+    units?.precipitation?.unitAbb ?? Config.get('settings').units.precipitation;
+  const precipitationDescription = precipitationDay
+    ? formatAccessiblePrecipitation(
+        precipitationDay,
+        precipitationUnit,
+        i18n.language,
+        t
+      )
+    : '';
+  const headerDescription = [accessibilityLabel, precipitationDescription]
+    .filter(Boolean)
+    .join('. ');
 
   return (
     <TouchableOpacity
       accessibilityLanguage={accessibilityLanguage}
       activeOpacity={1}
-      accessibilityLabel={accessibilityLabel}
+      accessible
+      accessibilityRole="button"
+      accessibilityState={{ expanded: open }}
+      accessibilityLabel={headerDescription}
       onPress={onPress}>
       <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
         style={[
           styles.row,
           {
@@ -117,7 +145,10 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
               )}
           </View>
           {precipitationDay && (
-            <PrecipitationStrip precipitationData={precipitationDay} />
+            <PrecipitationStrip
+              precipitationData={precipitationDay}
+              accessible={false}
+            />
           )}
         </View>
         <View

@@ -81,7 +81,6 @@ jest.mock('react-i18next', () => ({
 }));
 
 jest.mock('@utils/accessibility', () => ({
-  ...jest.requireActual('@utils/accessibility'),
   formatAccessibleDateTime: (...args: any[]) =>
     mockFormatAccessibleDateTime(...args),
 }));

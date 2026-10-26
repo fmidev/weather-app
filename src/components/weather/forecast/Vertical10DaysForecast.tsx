@@ -12,11 +12,7 @@ import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOp
 import { CustomTheme } from '@assets/colors';
 import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
-import {
-  converter,
-  getForecastParameterUnitTranslationKey,
-  toPrecision,
-} from '@utils/units';
+import { converter, toPrecision } from '@utils/units';
 import PrecipitationStrip from './PrecipitationStrip';
 import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
@@ -30,6 +26,7 @@ import {
 import Icon from '@components/common/ScalableIcon';
 import {
   formatAccessibleDate,
+  formatAccessiblePrecipitation,
   formatAccessibleTemperature,
 } from '@utils/accessibility';
 import HourlyForecast from './HourlyForecast';
@@ -181,10 +178,56 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
     const hourlyForecast = forecastByDay
       ? (forecastByDay[forecastKey] ?? [])
       : [];
+    const dateDescription = formatAccessibleDate(stepMoment, false);
+    const weatherDescription = t(`symbols:${smartSymbol ?? 0}`);
+    const temperatureDescription = activeParameters.includes('temperature')
+      ? `${t('forecast:temperature')} ${t('forecast:fromTo', {
+          min: formatAccessibleTemperature(convertedMinTemperature, t),
+          max: formatAccessibleTemperature(convertedMaxTemperature, t),
+          unit: t(
+            temperatureUnit === 'C' ? 'forecast:celsius' : 'forecast:fahrenheit'
+          ),
+        })}`
+      : '';
+    const windDescription =
+      isWideDisplay() && activeParameters.includes('windSpeedMS')
+        ? `${t('forecast:windSpeed')} ${t('forecast:fromTo', {
+            min: convertedMinWindSpeed,
+            max: convertedMaxWindSpeed,
+            unit: t(
+              windUnit === 'm/s'
+                ? 'forecast:metersPerSecond'
+                : 'forecast:kilometersPerHour'
+            ),
+          })}`
+        : '';
+    const precipitationDescription = activeParameters.includes(
+      'precipitation1h'
+    )
+      ? invalidData || precipitationMissing
+        ? t('forecast:precipitationMissing')
+        : formatAccessiblePrecipitation(
+            item.precipitationData,
+            precipitationUnit,
+            locale,
+            t
+          )
+      : '';
+    const dailyForecastLabel = [
+      dateDescription,
+      weatherDescription,
+      temperatureDescription,
+      windDescription,
+      precipitationDescription,
+    ]
+      .filter(Boolean)
+      .join('. ');
 
     return (
       <View key={stepMoment.unix()}>
         <AccessibleTouchableOpacity
+          accessible
+          accessibilityLabel={dailyForecastLabel}
           accessibilityRole="button"
           accessibilityHint={t(
             isExpanded
@@ -212,6 +255,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
             });
           }}>
           <View
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
             style={[
               styles.container,
               { height: rowHeight },
@@ -225,8 +270,9 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                 { borderColor: colors.border },
               ]}>
               <AccessibleView
-                accessible
-                accessibilityLabel={formatAccessibleDate(stepMoment, false)}
+                accessible={false}
+                focusable={false}
+                accessibilityLabel={dateDescription}
                 style={styles.day}>
                 <Text
                   style={[
@@ -242,7 +288,10 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                   {stepMoment.formatDateTime('date', locale)}
                 </Text>
               </AccessibleView>
-              <AccessibleView accessible accessibilityLabel={t(`symbols:${smartSymbol}`)}>
+              <AccessibleView
+                accessible={false}
+                focusable={false}
+                accessibilityLabel={weatherDescription}>
                 {DaySmartSymbol ? (
                   <DaySmartSymbol width={symbolSize} height={symbolSize} />
                 ) : null}
@@ -254,24 +303,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                     styles.temperatureWidth,
                     { color: colors.primaryText },
                   ]}
-                  accessibilityLabel={`${t('forecast:temperature')} ${t(
-                    'forecast:fromTo',
-                    {
-                      min: formatAccessibleTemperature(
-                        convertedMinTemperature,
-                        t
-                      ),
-                      max: formatAccessibleTemperature(
-                        convertedMaxTemperature,
-                        t
-                      ),
-                      unit: t(
-                        temperatureUnit === 'C'
-                          ? 'forecast:celsius'
-                          : 'forecast:fahrenheit'
-                      ),
-                    }
-                  )}`}>
+                  accessibilityLabel={temperatureDescription}>
                   {`${convertedMinTemperature}°`}
                   <Text maxFontSizeMultiplier={1.5}> ... </Text>
                   {`${convertedMaxTemperature}°`}
@@ -291,18 +323,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                       styles.windWidth,
                       { color: colors.primaryText },
                     ]}
-                    accessibilityLabel={`${t('forecast:windSpeed')} ${t(
-                      'forecast:fromTo',
-                      {
-                        min: convertedMinWindSpeed,
-                        max: convertedMaxWindSpeed,
-                        unit: t(
-                          windUnit === 'm/s'
-                            ? 'forecast:metersPerSecond'
-                            : 'forecast:kilometersPerHour'
-                        ),
-                      }
-                    )}`}>
+                    accessibilityLabel={windDescription}>
                     {`${convertedMinWindSpeed}`}
                     <Text maxFontSizeMultiplier={1.5}> ... </Text>
                     {`${convertedMaxWindSpeed} ${windUnit}`}
@@ -311,7 +332,11 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               )}
               {activeParameters.includes('precipitation1h') && (
                 <View style={styles.precipitationContainer}>
-                  <View style={[styles.flex, styles.flexRow, styles.center]}>
+                  <View
+                    style={[styles.flex, styles.flexRow, styles.center]}
+                    accessible={false}
+                    accessibilityElementsHidden={true}
+                    importantForAccessibility="no-hide-descendants">
                     {!largeFonts && (
                       <Icon
                         width={18}
@@ -322,21 +347,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                     )}
                     <Text
                       style={[styles.text, { color: colors.hourListText }]}
-                      maxFontSizeMultiplier={1.2}
-                      accessibilityLabel={
-                        precipitationMissing
-                          ? t('forecast:precipitationMissing')
-                          : `${t('forecast:precipitation')} ${
-                              totalPrecipitation
-                                ?.toString()
-                                .replace('.', decimalSeparator) ||
-                              (0).toFixed(1).replace('.', decimalSeparator)
-                            } ${t(
-                              `forecast:${getForecastParameterUnitTranslationKey(
-                                precipitationUnit
-                              )}`
-                            )}`
-                      }>
+                      maxFontSizeMultiplier={1.2}>
                       <Text style={styles.text}>{`${
                         convertedTotalPrecipitation?.replace(
                           '.',
@@ -348,6 +359,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
                   </View>
                   <PrecipitationStrip
                     precipitationData={item.precipitationData}
+                    accessible={false}
                     border
                   />
                 </View>
