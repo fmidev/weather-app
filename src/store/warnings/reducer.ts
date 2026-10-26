@@ -1,4 +1,5 @@
 import { PersistConfig } from '@store/types';
+import moment from 'moment';
 import {
   WarningsState,
   WarningsActionTypes,
@@ -12,6 +13,8 @@ import {
 const INITIAL_STATE: WarningsState = {
   data: {},
   capData: undefined,
+  updated: undefined,
+  updatedRequestKey: undefined,
   loading: false,
   error: false,
   fetchTimestamp: Date.now(),
@@ -33,10 +36,27 @@ export default (
     }
 
     case FETCH_WARNINGS_SUCCESS: {
+      if (
+        state.updated === action.data.updated &&
+        state.updatedRequestKey === action.requestKey &&
+        state.data[action.id]
+      ) {
+        const sameDay = moment(state.fetchTimestamp).isSame(action.timestamp, 'day');
+        // Record every successful refresh while preserving data and the calendar day.
+        return {
+          ...state,
+          loading: false,
+          error: false,
+          fetchTimestamp: sameDay ? state.fetchTimestamp : action.timestamp,
+          fetchSuccessTime: action.timestamp,
+        };
+      }
       return {
         ...state,
         error: false,
         loading: false,
+        updated: action.data.updated,
+        updatedRequestKey: action.requestKey,
         data: {
           ...state.data,
           [action.id]: action.data,

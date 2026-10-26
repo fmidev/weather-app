@@ -33,9 +33,9 @@ export const selectUpdated = createSelector(
   (items, geoid) => items?.[geoid]?.updated || null
 );
 
-const selectFetchTimestamp = createSelector(
+const selectFetchDay = createSelector(
   selectWarningsDomain,
-  (warnings) => warnings.fetchTimestamp
+  (warnings) => moment(warnings.fetchTimestamp).startOf('day').valueOf()
 );
 
 export const selectWarningsAge = createSelector(
@@ -104,8 +104,8 @@ const getWarningDataForDays = (
 };
 
 export const selectDailyWarningData = createSelector(
-  [selectWarnings, selectFetchTimestamp],
-  (warnings, fetchTime) => getWarningDataForDays(warnings, 5, fetchTime)
+  [selectWarnings, selectFetchDay],
+  (warnings, fetchDay) => getWarningDataForDays(warnings, 5, fetchDay)
 );
 
 export const selectCurrentDayWarningData = createSelector(
