@@ -132,7 +132,7 @@ describe('MarkdownRenderer', () => {
   it.each([
     ['fi', 'versio', 'Siirry laitteen sähköpostiohjelmaan'],
     ['sv', 'version', 'Gå till telefonens e-postprogram'],
-    ['en', 'version', 'Move to your mail application'],
+    ['en', 'version', 'Switch to your mail application'],
   ])(
     'renders accessibility feedback with an encoded subject and localized mail hint and app version (%s)',
     async (language, versionLabel, mailHint) => {
@@ -289,7 +289,7 @@ describe('MarkdownRenderer', () => {
     const renderer = new MarkdownRenderer();
     renderer.setTranslationFunction((key: string) =>
       key === 'markdownRenderer:moveToHint'
-        ? 'Move to your mail application'
+        ? 'Switch to your mail application'
         : key
     );
     const openURLSpy = jest
@@ -305,7 +305,7 @@ describe('MarkdownRenderer', () => {
 
     expect(queryByTestId('icon-open-in-new')).toBeNull();
     expect(getByA11yRole('link').props.accessibilityHint).toBe(
-      'Move to your mail application'
+      'Switch to your mail application'
     );
 
     fireEvent.press(getByA11yRole('link'));
