@@ -3,10 +3,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   StyleSheet,
-  Switch,
   ScrollView,
   TouchableOpacity,
-  Platform,
   useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +15,7 @@ import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import AccessibleSwitch from '@components/common/AccessibleSwitch';
 import CloseButton from '@components/common/CloseButton';
 
 import { State } from '@store/types';
@@ -39,13 +38,8 @@ import constants, {
   DAY_LENGTH,
 } from '@store/forecast/constants';
 
-import { useOrientation, useAccessibilityLanguage } from '@utils/hooks';
-import {
-  WHITE,
-  SECONDARY_BLUE,
-  GRAYISH_BLUE,
-  CustomTheme,
-} from '@assets/colors';
+import { useOrientation } from '@utils/hooks';
+import { CustomTheme } from '@assets/colors';
 import { Config } from '@config';
 import { DisplayParameters } from '@store/forecast/types';
 import { trackMatomoEvent } from '@utils/matomo';
@@ -71,8 +65,6 @@ type ParamsBottomSheetProps = PropsFromRedux & {
   onClose: () => void;
 };
 
-const disabledStyle = Platform.OS === 'android' ? { opacity: 0.5 } : {};
-
 const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   displayParams,
   updateDisplayParams,
@@ -82,7 +74,6 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   onClose,
   units,
 }) => {
-  const accessibilityLanguage = useAccessibilityLanguage();
   const { fontScale } = useWindowDimensions();
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
@@ -125,19 +116,15 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
 
   const rowRenderer = (param: DisplayParameters, index: number) => (
     <AccessibleView
-      accessible
-      accessibilityState={{
-        selected: displayParams.some((arr) => arr.includes(param)),
-      }}
-      accessibilityHint={
-        displayParams.some((arr) => arr.includes(param))
-          ? t('paramsBottomSheet.unSelectAccessibilityHint')
-          : t('paramsBottomSheet.selectAccessibilityHint')
-      }
-      onAccessibilityTap={() => updateDisplayParams([index, param])}
+      accessible={false}
+      focusable={false}
       key={String(param)}
       style={[styles.row, { borderBottomColor: colors.border }]}>
-      <View style={styles.innerRow}>
+      <View
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.innerRow}>
         {param !== RELATIVE_HUMIDITY &&
           param !== PRESSURE &&
           param !== UV_CUMULATED && (
@@ -187,31 +174,23 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
             UV
           </Text>
         )}
-        <Text style={[styles.text, { color: colors.hourListText }]}>
-          {t(`paramsBottomSheet.${param}`, {
-            unit: t(`unitAbbreviations:${getUnitForParameter(param)}`),
-          })}
-        </Text>
       </View>
 
-      <Switch
-        accessibilityLanguage={accessibilityLanguage}
+      <AccessibleSwitch
         testID={`weather_params_switch_${param}`}
-        accessibilityRole="switch"
-        style={
-          displayParams.length === 1 && displayParams[0][1] === param
-            ? disabledStyle
-            : {}
+        label={t(`paramsBottomSheet.${param}`, {
+          unit: t(`unitAbbreviations:${getUnitForParameter(param)}`),
+        })}
+        accessibilityHint={
+          displayParams.some((arr) => arr.includes(param))
+            ? t('paramsBottomSheet.unSelectAccessibilityHint')
+            : t('paramsBottomSheet.selectAccessibilityHint')
         }
-        trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-        thumbColor={WHITE}
-        ios_backgroundColor={WHITE}
+        style={styles.switch}
         value={displayParams.some((arr) => arr.includes(param))}
-        onValueChange={() => {
+        onValueChange={(value) => {
           const paramStr = 'Forecast parameter ' + param + ' - ';
-          const onOffStr = displayParams.some((arr) => arr.includes(param))
-            ? 'OFF'
-            : 'ON';
+          const onOffStr = value ? 'ON' : 'OFF';
 
           trackMatomoEvent('User action', 'Weather', paramStr + '' + onOffStr);
           updateDisplayParams([index, param]);
@@ -291,17 +270,10 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                 </Text>
                 <View
                   style={[styles.row, { borderBottomColor: colors.border }]}>
-                  <Text style={[styles.text, { color: colors.hourListText }]}>
-                    {t('paramsBottomSheet.showSingleHourlyForecast')}
-                  </Text>
-                  <Switch
-                    accessibilityLanguage={accessibilityLanguage}
+                  <AccessibleSwitch
                     testID="show_single_hourly_forecast_switch"
-                    accessibilityRole="switch"
-                    accessibilityLabel={t('paramsBottomSheet.showSingleHourlyForecast')}
-                    trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
-                    thumbColor={WHITE}
-                    ios_backgroundColor={WHITE}
+                    label={t('paramsBottomSheet.showSingleHourlyForecast')}
+                    style={styles.switch}
                     value={showSingleHourlyForecast}
                     onValueChange={(value) => {
                       trackMatomoEvent(
@@ -347,19 +319,22 @@ const styles = StyleSheet.create({
   },
   innerRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  switch: {
     flex: 1,
-    maxWidth: '70%',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 4,
     borderBottomWidth: 1,
   },
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   otherSettingsTitle: {
     marginBottom: 4,

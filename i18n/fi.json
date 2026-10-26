@@ -725,6 +725,13 @@
     "checkConnection": "Tarkista internet-yhteytesi ja yritä uudelleen.",
     "tryAgain": "Yritä uudelleen"
   },
+  "accessibility": {
+    "switchOn": "Päällä",
+    "switchOff": "Pois päältä",
+    "link1": "Laki digitaalisten palvelujen tarjoamisesta (306/2019)",
+    "link2": "Saavutettavuusvaatimukset-verkkosivusto",
+    "openInBrowser": "Avaa selaimessa"
+  },
   "announcements": {
     "crisisPrefix": "Varoitus:",
     "maintenancePrefix": "Huomio:",
