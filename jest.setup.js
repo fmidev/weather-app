@@ -1,6 +1,16 @@
 /* global jest */
 
 import '@utils/moment';
+import { createInstance } from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+// Common accessible components subscribe to the app language, even without translated text.
+createInstance().use(initReactI18next).init({
+  lng: 'en',
+  fallbackLng: 'en',
+  initImmediate: false,
+  resources: { en: { translation: {} } },
+});
 
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock')

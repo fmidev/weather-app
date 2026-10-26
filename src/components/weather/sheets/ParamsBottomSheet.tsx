@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
@@ -38,7 +39,7 @@ import constants, {
   DAY_LENGTH,
 } from '@store/forecast/constants';
 
-import { useOrientation } from '@utils/hooks';
+import { useOrientation, useAccessibilityLanguage } from '@utils/hooks';
 import {
   WHITE,
   SECONDARY_BLUE,
@@ -81,6 +82,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   onClose,
   units,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { fontScale } = useWindowDimensions();
   const { t } = useTranslation('forecast');
   const { colors } = useTheme() as CustomTheme;
@@ -122,7 +124,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
   const iconSize = Math.min(fontScale * 22, 36);
 
   const rowRenderer = (param: DisplayParameters, index: number) => (
-    <View
+    <AccessibleView
       accessible
       accessibilityState={{
         selected: displayParams.some((arr) => arr.includes(param)),
@@ -193,6 +195,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
       </View>
 
       <Switch
+        accessibilityLanguage={accessibilityLanguage}
         testID={`weather_params_switch_${param}`}
         accessibilityRole="switch"
         style={
@@ -215,7 +218,7 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
         }}
         disabled={displayParams.length === 1 && displayParams[0][1] === param}
       />
-    </View>
+    </AccessibleView>
   );
 
   return (
@@ -243,11 +246,11 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                 {t('paramsBottomSheet.title')}
               </Text>
             </View>
-            <View style={styles.descriptionContainer} accessible>
+            <AccessibleView style={styles.descriptionContainer} accessible>
               <Text style={[styles.text, { color: colors.hourListText }]}>
                 {t('paramsBottomSheet.subTitle')}
               </Text>
-            </View>
+            </AccessibleView>
 
             {activeConstants.map(rowRenderer)}
             <View style={styles.lastRow}>
@@ -292,11 +295,10 @@ const ParamsBottomSheet: React.FC<ParamsBottomSheetProps> = ({
                     {t('paramsBottomSheet.showSingleHourlyForecast')}
                   </Text>
                   <Switch
+                    accessibilityLanguage={accessibilityLanguage}
                     testID="show_single_hourly_forecast_switch"
                     accessibilityRole="switch"
-                    accessibilityLabel={t(
-                      'paramsBottomSheet.showSingleHourlyForecast'
-                    )}
+                    accessibilityLabel={t('paramsBottomSheet.showSingleHourlyForecast')}
                     trackColor={{ false: GRAYISH_BLUE, true: SECONDARY_BLUE }}
                     thumbColor={WHITE}
                     ios_backgroundColor={WHITE}

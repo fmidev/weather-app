@@ -4,6 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
+import AccessibleView from '@components/common/AccessibleView';
 import { CustomTheme } from '@assets/colors';
 import { ObservationParameters, TimeStepData } from '@store/observation/types';
 import {
@@ -153,7 +154,7 @@ const Latest: React.FC<LatestProps> = ({
         if (value === '-') return null;
 
         return (
-          <View key={parameter} style={styles.observationRow} accessible>
+          <AccessibleView key={parameter} style={styles.observationRow} accessible>
             <View style={styles.flex}>
               <Text
                 style={[
@@ -174,7 +175,7 @@ const Latest: React.FC<LatestProps> = ({
                 {value} {parameter !== 'windDirection' ? unit : ''}
               </Text>
             </View>
-          </View>
+          </AccessibleView>
         );
       }
     );
@@ -190,7 +191,7 @@ const Latest: React.FC<LatestProps> = ({
       {!!latestObservation && hoursSinceLatestObservation <= 2 && (
         <View>
           <View style={[styles.row]}>
-            <View style={[styles.latestObservation]} accessible>
+            <AccessibleView style={[styles.latestObservation]} accessible>
               <Text style={[styles.panelText, { color: colors.hourListText }]}>
                 {t('latestObservation')}
               </Text>
@@ -205,7 +206,7 @@ const Latest: React.FC<LatestProps> = ({
                   ? capitalize(latestObservationTime)
                   : '-'}
               </Text>
-            </View>
+            </AccessibleView>
           </View>
           <View>{renderRow()}</View>
         </View>

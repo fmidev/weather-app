@@ -3,7 +3,9 @@ import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { useAccessibilityLanguage } from '@utils/hooks';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 
@@ -53,6 +55,7 @@ const List: React.FC<ListProps> = ({
   preferredDailyParameters,
   units,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { fontScale, width } = useWindowDimensions();
   const { t, i18n } = useTranslation('observation');
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
@@ -228,6 +231,7 @@ const List: React.FC<ListProps> = ({
             {activeParameters.includes('windDirection') &&
               typeof timeStep.windDirection === 'number' && (
                 <Icon
+                  accessibilityLanguage={accessibilityLanguage}
                   accessibilityLabel={
                     timeStep.windCompass8
                       ? `${t(`windDirection.${timeStep.windCompass8}`)}.`
@@ -242,9 +246,7 @@ const List: React.FC<ListProps> = ({
                       color: colors.hourListText,
                       transform: [
                         {
-                          rotate: `${getWindDirection(
-                            timeStep.windDirection
-                          )}deg`,
+                          rotate: `${getWindDirection(timeStep.windDirection)}deg`,
                         },
                       ],
                     },
@@ -434,7 +436,7 @@ const List: React.FC<ListProps> = ({
                 </Text>
               </View>
             )}
-            <View
+            <AccessibleView
               testID={`observation_list_row_${timeStep.epochtime}`}
               style={isDaily ? styles.dailyRow : styles.row}
               accessible={!useCompactDailyLayout}>
@@ -479,7 +481,7 @@ const List: React.FC<ListProps> = ({
                   />
                 )}
               </View>
-            </View>
+            </AccessibleView>
           </View>
         );
       })}

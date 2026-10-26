@@ -1,7 +1,14 @@
 import React, { ReactNode, type RefObject } from 'react';
-import { View, StyleSheet, type TextStyle, type Text as RNText, Linking } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  type TextStyle,
+  type Text as RNText,
+  Linking,
+} from 'react-native';
 import { Renderer, type RendererInterface } from 'react-native-marked';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Icon from '@components/common/ScalableIcon';
 import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
@@ -81,15 +88,20 @@ function RadarScaleLegend(
   const right = labels.length >= 3 ? labels[labels.length - 1] : '';
 
   return (
-    <View style={styles.legendRoot} accessible accessibilityRole="text">
-      <View style={styles.scaleRow} accessibilityLabel={accessibilityLabel}>
+    <AccessibleView
+      style={styles.legendRoot}
+      accessible
+      accessibilityRole="text">
+      <AccessibleView
+        style={styles.scaleRow}
+        accessibilityLabel={accessibilityLabel}>
         {colors.map((c, i) => (
           <View
             key={`${c}-${i}`}
             style={[styles.scaleSegment, { backgroundColor: c }]}
           />
         ))}
-      </View>
+      </AccessibleView>
 
       <View style={styles.labelsRow}>
         <Text style={[styles.labelText, textStyle]} numberOfLines={1}>
@@ -102,7 +114,7 @@ function RadarScaleLegend(
           {right}
         </Text>
       </View>
-    </View>
+    </AccessibleView>
   );
 }
 
@@ -122,11 +134,14 @@ function IconInline(
   }
 
   return (
-    <View style={styles.iconInlineRow} accessible accessibilityRole="text">
+    <AccessibleView
+      style={styles.iconInlineRow}
+      accessible
+      accessibilityRole="text">
       <View style={styles.iconWrap}>
         <Icon name={name} width={width} height={height} />
       </View>
-    </View>
+    </AccessibleView>
   );
 }
 
@@ -193,11 +208,14 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     // Only the first mounted main heading owns the document's focus target.
     let headingNode: RNText | null = null;
     const headingRef = level === 1 ? this.headingRef : undefined;
-    const setHeadingRef = headingRef ? (node: RNText | null) => {
-      if (node && !headingRef.current) headingRef.current = node;
-      else if (!node && headingRef.current === headingNode) headingRef.current = null;
-      headingNode = node;
-    } : undefined;
+    const setHeadingRef = headingRef
+      ? (node: RNText | null) => {
+          if (node && !headingRef.current) headingRef.current = node;
+          else if (!node && headingRef.current === headingNode)
+            headingRef.current = null;
+          headingNode = node;
+        }
+      : undefined;
 
     const size =
       level === 1
@@ -216,9 +234,14 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
       <Text
         key={this.nextKey()}
         ref={setHeadingRef}
-        onLayout={headingRef ? () => {
-          if (headingNode && headingRef.current === headingNode) this.onHeadingLayout?.();
-        } : undefined}
+        onLayout={
+          headingRef
+            ? () => {
+                if (headingNode && headingRef.current === headingNode)
+                  this.onHeadingLayout?.();
+              }
+            : undefined
+        }
         style={[
           styles.heading,
           { fontSize: size },
@@ -468,13 +491,11 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
       <AccessibleTouchableOpacity
         key={trackedLink?.url || this.nextKey()}
         accessibilityRole="link"
-        accessibilityHint={
-          this.t?.(
-            isMailLink
-              ? 'markdownRenderer:moveToHint'
-              : 'markdownRenderer:openInBrowser'
-          )
-        }
+        accessibilityHint={this.t?.(
+          isMailLink
+            ? 'markdownRenderer:moveToHint'
+            : 'markdownRenderer:openInBrowser'
+        )}
         onPress={onPress}>
         <View style={[styles.link, { borderBottomColor: this.headingColor }]}>
           <Text

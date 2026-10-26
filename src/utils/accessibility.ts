@@ -6,6 +6,46 @@ import {
 } from './units';
 
 import type { Moment } from 'moment-timezone';
+import type { i18n } from 'i18next';
+import { NativeModules, Platform } from 'react-native';
+
+type AppLanguageModule = {
+  setLanguage: (language: string) => Promise<void>;
+};
+
+const getNativeModule = (): AppLanguageModule | undefined =>
+  Platform.OS === 'android' ? NativeModules.AppLanguage : undefined;
+
+export const setAndroidAppLanguage = async (
+  language: string
+): Promise<void> => {
+  const nativeModule = getNativeModule();
+  if (!nativeModule) {
+    return;
+  }
+
+  try {
+    await nativeModule.setLanguage(language);
+  } catch (error) {
+    console.error('Failed to update the Android app language:', error);
+  }
+};
+
+export const syncAndroidAppLanguage = (instance: i18n): (() => void) => {
+  if (!getNativeModule()) {
+    return () => {};
+  }
+
+  const onLanguageChanged = (language: string) => {
+    setAndroidAppLanguage(language);
+  };
+
+  instance.on('languageChanged', onLanguageChanged);
+
+  return () => {
+    instance.off('languageChanged', onLanguageChanged);
+  };
+};
 
 export const formatAccessibleDate = (m: Moment, includeYear = true): string => {
   return m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');

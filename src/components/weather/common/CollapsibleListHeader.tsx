@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import Icon from '@assets/Icon';
 import { CustomTheme } from '@assets/colors';
 import { toStringWithDecimal } from '@utils/number';
@@ -37,6 +38,7 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
   totalPrecipitation,
   precipitationDay,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const units = useSelector(selectUnits);
@@ -56,6 +58,7 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
 
   return (
     <TouchableOpacity
+      accessibilityLanguage={accessibilityLanguage}
       activeOpacity={1}
       accessible
       accessibilityRole="button"
@@ -73,7 +76,9 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
           },
         ]}>
         <View style={[styles.rowColumn, styles.alignStart]}>
-          <Text style={[styles.title, { color: colors.primaryText }]}>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={[styles.title, { color: colors.primaryText }]}>
             {title}
           </Text>
         </View>
@@ -91,7 +96,9 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
                   }
                   style={styles.withMarginRight}
                 />
-                <Text style={[styles.text, { color: colors.primaryText }]}>
+                <Text
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.text, { color: colors.primaryText }]}>
                   {maxTemp}
                 </Text>
               </View>
@@ -108,7 +115,9 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
                   }
                   style={styles.withMarginRight}
                 />
-                <Text style={[styles.text, { color: colors.primaryText }]}>
+                <Text
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.text, { color: colors.primaryText }]}>
                   {minTemp}
                 </Text>
               </View>
@@ -122,14 +131,13 @@ const CollapsibleListHeader: React.FC<CollapsiblePanelHeaderProps> = ({
                     name={dark ? 'rain-dark' : 'rain-white'}
                     style={styles.withMarginRight}
                   />
-                  <Text style={[styles.text, { color: colors.primaryText }]}>
+                  <Text
+                    accessibilityLanguage={accessibilityLanguage}
+                    style={[styles.text, { color: colors.primaryText }]}>
                     {toStringWithDecimal(totalPrecipitation, ',')}{' '}
                     <Text
-                      style={[
-                        styles.text,
-                        styles.regular,
-                        { color: colors.primaryText },
-                      ]}>
+                      accessibilityLanguage={accessibilityLanguage}
+                      style={[styles.text, styles.regular, { color: colors.primaryText }]}>
                       mm
                     </Text>
                   </Text>

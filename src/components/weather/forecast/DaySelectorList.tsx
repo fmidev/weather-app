@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';
@@ -52,6 +54,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   units,
   invalidData,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
@@ -155,7 +158,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
       .join('. ');
 
     return (
-      <View
+      <AccessibleView
         key={timeStamp}
         accessible={false}
         focusable={false}
@@ -178,6 +181,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
           accessibilityState={{ selected: isActive }}
           onPress={() => setActiveDayIndex(index)}>
           <Text
+            accessibilityLanguage={accessibilityLanguage}
             accessible={false}
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
@@ -189,11 +193,13 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             ]}
             accessibilityLabel={dateDescription}>
             {stepMoment.locale(locale).format(weekdayAbbreviationFormat)}{' '}
-            <Text style={[styles.bold, { color: colors.primaryText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.bold, { color: colors.primaryText }]}>
               {stepMoment.locale(locale).format(dateFormat)}
             </Text>
           </Text>
-          <View
+          <AccessibleView
             accessible={false}
             focusable={false}
             accessibilityElementsHidden
@@ -201,9 +207,10 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             style={styles.alignCenter}
             accessibilityLabel={weatherDescription}>
             {DaySmartSymbol ? <DaySmartSymbol width={40} height={40} /> : null}
-          </View>
+          </AccessibleView>
           {activeParameters.includes('temperature') && (
             <Text
+              accessibilityLanguage={accessibilityLanguage}
               accessible={false}
               accessibilityElementsHidden
               importantForAccessibility="no-hide-descendants"
@@ -220,7 +227,7 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
             style={styles.precipitationStrip}
           />
         )}
-      </View>
+      </AccessibleView>
     );
   };
 
