@@ -10,6 +10,7 @@ export const mockSetItem = jest.fn();
 export const mockTrackMatomoEvent = jest.fn();
 export const mockUseFocusEffect = jest.fn((callback) => callback());
 export const mockUseReloader = jest.fn();
+export const mockNavigation = { addListener: jest.fn() };
 
 export const mockState = {
   dark: false,
@@ -134,6 +135,7 @@ jest.mock('@config', () => ({
 }));
 
 jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => mockNavigation,
   useFocusEffect: (effect: any) => mockUseFocusEffect(effect),
   useIsFocused: () => mockState.focused,
   useTheme: () => ({
@@ -195,6 +197,8 @@ jest.mock('@components/markdown/MarkdownRenderer', () => ({
     setHeadingColor: jest.fn(),
     setTextColor: jest.fn(),
     setTranslationFunction: jest.fn(),
+    setAccessibilityEmail: jest.fn(),
+    setAccessibilitySubject: jest.fn(),
   })),
 }));
 
@@ -202,6 +206,7 @@ jest.mock('@assets/markdown', () => ({
   accessibilityDocuments: {
     en: 'accessibility markdown en',
     fi: 'accessibility markdown fi',
+    sv: 'accessibility markdown sv',
   },
   aboutTheApplicationDocuments: {
     en: 'about markdown en',
@@ -211,11 +216,6 @@ jest.mock('@assets/markdown', () => ({
     en: 'terms markdown en',
     fi: 'terms markdown fi',
   },
-}));
-
-jest.mock('@components/others/AccessibilityStatement', () => ({
-  __esModule: true,
-  default: mockTextComponent('accessibility-statement'),
 }));
 
 jest.mock('@components/common/AppText', () => ({
@@ -290,6 +290,7 @@ jest.mock('@utils/matomo', () => ({
 }));
 
 jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
   useOrientation: () => false,
 }));
 
@@ -444,6 +445,7 @@ jest.mock('@store/map/actions', () => ({
 jest.mock('@store/settings/selectors', () => ({
   selectClockType: jest.fn(),
   selectMapLibrary: jest.fn(),
+  selectForecastBackgroundImages: jest.fn(),
   selectTheme: jest.fn(),
   selectUnits: jest.fn(),
 }));
@@ -451,6 +453,7 @@ jest.mock('@store/settings/selectors', () => ({
 jest.mock('@store/settings/actions', () => ({
   updateClockType: jest.fn(),
   updateMapLibrary: jest.fn(),
+  updateForecastBackgroundImages: jest.fn(),
   updateTheme: jest.fn(),
   updateUnits: jest.fn(),
 }));

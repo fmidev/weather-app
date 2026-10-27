@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { PixelRatio, StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -93,7 +93,9 @@ const ChartYAxis: React.FC<Props> = ({
     <View style={[styles.axis, { height }]}>
       <Text
         maxFontSizeMultiplier={titleMaxFontSizeMultiplier}
-        onLayout={({ nativeEvent }) => setTitleHeight(nativeEvent.layout.height)}
+        onLayout={({ nativeEvent }) => setTitleHeight(
+          PixelRatio.roundToNearestPixel(nativeEvent.layout.height)
+        )}
         style={[styles.title, right ? styles.rightTick : styles.leftTick, {
           color: colors.hourListText, fontSize: TITLE_FONT_SIZE,
         }]}>
@@ -113,7 +115,9 @@ const ChartYAxis: React.FC<Props> = ({
               key={index}
               maxFontSizeMultiplier={tickMaxFontSizeMultiplier}
               onLayout={index === 0 ? ({ nativeEvent }) => {
-                const measuredHeight = nativeEvent.layout.height;
+                // Native layout can report slightly different floats for the same
+                // pixel height as text moves. Do not feed that noise back into layout.
+                const measuredHeight = PixelRatio.roundToNearestPixel(nativeEvent.layout.height);
                 setTickHeight((previous) => previous === measuredHeight ? previous : measuredHeight);
               } : undefined}
               style={[styles.tick, right ? styles.rightTick : styles.leftTick, {

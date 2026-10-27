@@ -52,6 +52,7 @@ jest.mock('@utils/chart', () => ({
 }));
 
 jest.mock('@utils/accessibility', () => ({
+  ...jest.requireActual('@utils/accessibility'),
   formatAccessibleDateTime: () => 'accessible observation time',
 }));
 

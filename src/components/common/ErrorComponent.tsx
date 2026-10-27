@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import NetInfo from '@react-native-community/netinfo';
@@ -26,6 +26,7 @@ import { YELLOW, BLACK } from '@assets/colors';
 
 import { Config } from '@config';
 import Icon from '@assets/Icon';
+import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from './AccessibleTouchableOpacity';
 import type { Route } from '@react-navigation/native';
 import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';

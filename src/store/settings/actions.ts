@@ -8,6 +8,7 @@ import {
   ClockType,
   UPDATE_CLOCK_TYPE,
   UPDATE_MAP_LIBRARY,
+  UPDATE_FORECAST_BACKGROUND_IMAGES,
   MapLibrary,
   SET_IS_RUNNING_ON_MAC,
 } from './types';
@@ -35,4 +36,9 @@ export const updateMapLibrary =
 export const setIsRunningOnMac =
   (isRunningOnMac: boolean) => (dispatch: Dispatch<SettingsActionTypes>) => {
     dispatch({ type: SET_IS_RUNNING_ON_MAC, isRunningOnMac });
+  };
+
+export const updateForecastBackgroundImages =
+  (enabled: boolean) => (dispatch: Dispatch<SettingsActionTypes>) => {
+    dispatch({ type: UPDATE_FORECAST_BACKGROUND_IMAGES, enabled });
   };

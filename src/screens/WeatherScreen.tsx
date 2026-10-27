@@ -2,12 +2,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
+  type ViewInstance,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   Platform,
   useWindowDimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
+  type NativeSyntheticEvent,
+  type NativeScrollEvent,
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -93,10 +95,10 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const [newsUpdated, setNewsUpdated] = useState<number>(Date.now());
   const [observationVisible, setObservationVisible] = useState(false);
   const [favoritesVisible, setFavoritesVisible] = useState(false);
-  const observationRef = useRef<View>(null);
-  const favoritesRef = useRef<View>(null);
+  const observationRef = useRef<ViewInstance>(null);
+  const favoritesRef = useRef<ViewInstance>(null);
   const favoriteForecastUpdated = useRef(new Map<string, number>());
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ScrollViewInstance>(null);
   const { shouldReload } = useReloader();
 
   const {

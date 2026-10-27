@@ -1,10 +1,12 @@
 import React from 'react';
-import { Appearance } from 'react-native';
+import { Appearance, AppState } from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
 import TabNavigator from '../../src/navigators/TabNavigator';
 import { MacContentSizeProvider } from '../../src/components/common/MacContentSizeContext';
+import { sendMatomoEvents } from '@utils/matomo';
 
+const originalAppState = AppState.currentState;
 const mockConfigGet = jest.fn();
 const mockFetchAnnouncements = jest.fn();
 const mockGetGeolocation = jest.fn();
@@ -327,6 +329,7 @@ describe('TabNavigator', () => {
     mockTrackMatomoEvent.mockClear();
     mockSetNavigationBarTheme.mockClear();
     mockWarningsTabIcon.mockClear();
+    jest.mocked(sendMatomoEvents).mockClear();
     mockTranslationReady = true;
 
     mockLaunchArgumentsValue.mockReturnValue({});
@@ -339,7 +342,35 @@ describe('TabNavigator', () => {
   });
 
   afterEach(() => {
+    AppState.currentState = originalAppState;
     jest.restoreAllMocks();
+  });
+
+  it.each([null, undefined])('handles an initial app state of %s before backgrounding', (initialState) => {
+    AppState.currentState = initialState;
+    const listenerSpy = jest.spyOn(AppState, 'addEventListener');
+    render(
+      <TabNavigator
+        initialTab="Weather"
+        theme="light"
+        didLaunchApp={false}
+        termsOfUseAccepted={false}
+        setCurrentLocation={mockSetCurrentLocation}
+        setNavigationTab={mockSetNavigationTab}
+        fetchAnnouncements={mockFetchAnnouncements}
+      />
+    );
+    const listener = listenerSpy.mock.calls.find(([event]) => event === 'change')?.[1];
+    expect(listener).toBeDefined();
+
+    act(() => listener?.('background'));
+    expect(sendMatomoEvents).not.toHaveBeenCalled();
+
+    act(() => {
+      listener?.('active');
+      listener?.('background');
+    });
+    expect(sendMatomoEvents).toHaveBeenCalledTimes(1);
   });
 
   it('updates navigation bar icons when the app theme changes', () => {
