@@ -228,8 +228,10 @@ describe('forecast reducer', () => {
     };
     const state = createState({ data: { 99: [primaryStep] } });
     state.forecast = reducer(state.forecast, {
-      type: types.FETCH_FAVORITE_FORECASTS_SUCCESS,
+      type: types.FETCH_ALL_FORECASTS_SUCCESS,
       data: { 2: [{ ...primaryStep, ...favoriteStep, uvCumulated: 3 }] },
+      timestamp: Date.now(),
+      background: true,
     });
     state.location.favorites = [{ id: 99 }, { id: 2 }];
 

@@ -4,7 +4,7 @@ import * as displayParameters from './constants';
 export const FETCH_FORECAST = 'FETCH_FORECAST';
 export const FETCH_FORECAST_SUCCESS = 'FETCH_FORECAST_SUCCESS';
 export const FETCH_FORECAST_ERROR = 'FETCH_FORECAST_ERROR';
-export const FETCH_FAVORITE_FORECASTS_SUCCESS = 'FETCH_FAVORITE_FORECASTS_SUCCESS';
+export const FETCH_ALL_FORECASTS_SUCCESS = 'FETCH_ALL_FORECASTS_SUCCESS';
 export const RETAIN_FORECAST_LOCATIONS = 'RETAIN_FORECAST_LOCATIONS';
 export const UPDATE_DISPLAY_PARAMS = 'UPDATE_DISPLAY_PARAMETERS';
 export const RESTORE_DEFAULT_DISPLAY_PARAMS =
@@ -45,9 +45,12 @@ interface FetchForecastError {
   timestamp: number;
 }
 
-interface FetchFavoriteForecastsSuccess {
-  type: typeof FETCH_FAVORITE_FORECASTS_SUCCESS;
+interface FetchAllForecastsSuccess {
+  type: typeof FETCH_ALL_FORECASTS_SUCCESS;
   data: WeatherData;
+  auroraBorealisData?: AuroraBorealisData;
+  timestamp: number;
+  background?: boolean;
 }
 
 interface RetainForecastLocations {
@@ -84,7 +87,7 @@ export type ForecastActionTypes =
   | FetchForecast
   | FetchForecastSuccess
   | FetchForecastError
-  | FetchFavoriteForecastsSuccess
+  | FetchAllForecastsSuccess
   | RetainForecastLocations
   | UpdateDisplayParams
   | RestoreDefaultDisplayParams

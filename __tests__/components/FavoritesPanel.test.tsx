@@ -8,10 +8,18 @@ import FavoritesPanel from '../../src/components/weather/FavoritesPanel';
 import forecastReducer from '../../src/store/forecast/reducer';
 import locationReducer from '../../src/store/location/reducer';
 import settingsReducer from '../../src/store/settings/reducer';
+import warningsReducer from '../../src/store/warnings/reducer';
+import { GREEN, ORANGE, RED, TRANSPARENT, YELLOW } from '../../src/assets/colors';
+import {
+  FETCH_FAVORITE_WARNINGS_SUCCESS,
+  LocationWarnings,
+  Warning,
+} from '../../src/store/warnings/types';
 import { FETCH_FORECAST_SUCCESS } from '../../src/store/forecast/types';
 import {
   ADD_FAVORITE,
   DELETE_ALL_FAVORITES,
+  SET_CURRENT_LOCATION,
 } from '../../src/store/location/types';
 import type { TimeStepData, WeatherData } from '../../src/store/forecast/types';
 import type { Location } from '../../src/store/location/types';
@@ -64,6 +72,8 @@ jest.mock('@react-navigation/native', () => ({
       cardHeader: '#f0f0f0',
       border: '#cccccc',
       primaryText: '#101010',
+      secondaryText: '#666666',
+      cardShadow: '#D8E7F2',
       forecastBackground: mockForecastBackground,
     },
   }),
@@ -92,6 +102,7 @@ const reducer = combineReducers({
   forecast: forecastReducer,
   location: locationReducer,
   settings: settingsReducer,
+  warnings: warningsReducer,
 });
 
 const helsinki: Location = {
@@ -114,8 +125,25 @@ const step = (overrides: Partial<TimeStepData> = {}): TimeStepData =>
     ...overrides,
   }) as TimeStepData;
 
+const warning = (overrides: Partial<Warning> = {}): Warning => ({
+  type: 'wind',
+  language: 'fi',
+  severity: 'Moderate',
+  description: 'Wind warning',
+  duration: { startTime: '2030-01-01T12:30:00Z', endTime: '2030-01-01T14:00:00Z' },
+  ...overrides,
+});
+
+const warningsData = (warnings: Warning[]) => ({
+  warnings, updated: '2030-01-01T12:00:00Z', error: 0,
+});
+
 const mountPanel = (
-  options: { favorites?: Location[]; data?: WeatherData; units?: UnitMap } = {}
+  options: {
+    favorites?: Location[]; data?: WeatherData; units?: UnitMap;
+    warnings?: LocationWarnings;
+    scrollToTop?: boolean;
+  } = {}
 ) => {
   const initial = createStore(reducer).getState();
   const store = createStore(reducer, {
@@ -127,11 +155,12 @@ const mountPanel = (
       favorites: options.favorites ?? [],
     },
     settings: { ...initial.settings, units: options.units },
+    warnings: { ...initial.warnings, data: options.warnings ?? {} },
   });
   const onSelectLocation = jest.fn();
   const view = render(
     <Provider store={store}>
-      <FavoritesPanel onSelectLocation={onSelectLocation} />
+      <FavoritesPanel onSelectLocation={onSelectLocation} scrollToTop={options.scrollToTop} />
     </Provider>
   );
   return { store, onSelectLocation, ...view };
@@ -219,6 +248,34 @@ describe('FavoritesPanel', () => {
     ).toBeTruthy();
   });
 
+  it.each([1, '1'])(
+    'borders the selected favorite and follows Redux selection (ID %s)',
+    (id) => {
+      const view = mountPanel({ favorites: [{ ...helsinki, id }, tampere] });
+      const expectSelected = (selectedId?: number | string) => {
+        [id, tampere.id].forEach((favoriteId) => {
+          const card = view.getByTestId(`favorite-forecast-${favoriteId}`);
+          const selected = String(favoriteId) === String(selectedId);
+          expect(StyleSheet.flatten(card.props.style)).toMatchObject({
+            borderWidth: selected ? 2 : 0,
+            borderColor: selected ? '#666666' : TRANSPARENT,
+          });
+          expect(card.props.accessibilityState).toEqual({ selected });
+        });
+      };
+
+      expectSelected(helsinki.id);
+      act(() => {
+        view.store.dispatch({ type: SET_CURRENT_LOCATION, location: tampere });
+      });
+      expectSelected(tampere.id);
+      act(() => {
+        view.store.dispatch({ type: SET_CURRENT_LOCATION, location: { ...helsinki, id: 3 } });
+      });
+      expectSelected();
+    }
+  );
+
   it('updates a favorite when new forecasts arrive in Redux', () => {
     const view = mountPanel({ favorites: [helsinki], data: { 1: [step()] } });
     expect(view.getByText('5°C')).toBeTruthy();
@@ -241,6 +298,154 @@ describe('FavoritesPanel', () => {
     expect(view.getByTestId('weather-symbol-1')).toBeTruthy();
   });
 
+  it.each([
+    { severity: 'Moderate', color: YELLOW },
+    { severity: 'Severe', color: ORANGE },
+    { severity: 'Extreme', color: RED },
+  ] as const)('shows a 6-unit bottom band for an active $severity warning', ({ severity, color }) => {
+    const view = mountPanel({
+      favorites: [helsinki],
+      data: { 1: [step()] },
+      warnings: { 1: warningsData([warning({ severity })]) },
+    });
+
+    expect(StyleSheet.flatten(view.getByTestId('favorite-warning-1').props.style)).toMatchObject({
+      height: 6, position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: color,
+    });
+    expect(StyleSheet.flatten(view.getByTestId('favorite-forecast-1').props.style)).toMatchObject({
+      borderRadius: 8, overflow: 'hidden', minHeight: 80,
+    });
+  });
+
+  it('uses the highest severity active at each favorite forecast time rather than the current time', () => {
+    const view = mountPanel({
+      favorites: [helsinki, tampere],
+      data: { 1: [step()], 2: [step({ epochtime: Date.now() / 1000 + 7200 })] },
+      warnings: {
+        1: warningsData([
+          warning({ severity: 'Extreme', duration: {
+            startTime: '2030-01-01T11:00:00Z', endTime: '2030-01-01T12:30:00Z',
+          } }),
+          warning(),
+          warning({ severity: 'Severe' }),
+          warning({ severity: 'Extreme', duration: {
+            startTime: '2030-01-01T13:30:00Z', endTime: '2030-01-01T15:00:00Z',
+          } }),
+        ]),
+        2: warningsData([warning({ severity: 'Extreme', duration: {
+          startTime: '2030-01-01T13:30:00Z', endTime: '2030-01-01T15:00:00Z',
+        } })]),
+      },
+    });
+
+    expect(StyleSheet.flatten(view.getByTestId('favorite-warning-1').props.style).backgroundColor).toBe(ORANGE);
+    expect(StyleSheet.flatten(view.getByTestId('favorite-warning-2').props.style).backgroundColor).toBe(RED);
+  });
+
+  it.each([
+    { name: 'starts at forecast time', startTime: '2030-01-01T13:00:00Z', endTime: '2030-01-01T14:00:00Z', visible: true },
+    { name: 'ends at forecast time', startTime: '2030-01-01T12:00:00Z', endTime: '2030-01-01T13:00:00Z', visible: false },
+    { name: 'starts later', startTime: '2030-01-01T13:00:01Z', endTime: '2030-01-01T14:00:00Z', visible: false },
+    { name: 'has an invalid time', startTime: 'invalid', endTime: '2030-01-01T14:00:00Z', visible: false },
+    { name: 'uses a timezone offset', startTime: '2030-01-01T15:00:00+02:00', endTime: '2030-01-01T16:00:00+02:00', visible: true },
+  ])('handles a warning that $name', ({ startTime, endTime, visible }) => {
+    const view = mountPanel({
+      favorites: [helsinki], data: { 1: [step()] },
+      warnings: { 1: warningsData([warning({ duration: { startTime, endTime } })]) },
+    });
+    expect(StyleSheet.flatten(view.getByTestId('favorite-warning-1').props.style).backgroundColor)
+      .toBe(visible ? YELLOW : GREEN);
+  });
+
+  it.each(['empty', 'unknown severity', 'missing forecast'])(
+    'shows a green warning band for %s data with no active warnings', (state) => {
+      const view = mountPanel({
+        favorites: [helsinki], data: state === 'missing forecast' ? {} : { 1: [step()] },
+        warnings: { 1: warningsData(
+          state === 'empty' ? [] : [warning(state === 'unknown severity'
+            ? { severity: 'unknown' as Warning['severity'] } : {})]
+        ) },
+      });
+      expect(StyleSheet.flatten(view.getByTestId('favorite-warning-1').props.style).backgroundColor).toBe(GREEN);
+    }
+  );
+
+  it('leaves the band absent only for the favorite without warning data', () => {
+    const view = mountPanel({
+      favorites: [helsinki, tampere], data: { 1: [step()], 2: [step()] },
+      warnings: { 1: warningsData([]) },
+    });
+    expect(view.getByTestId('favorite-warning-1')).toBeTruthy();
+    expect(view.queryByTestId('favorite-warning-2')).toBeNull();
+  });
+
+  it.each([
+    { name: 'empty warning list', warnings: [] },
+    { name: 'non-empty warning list', warnings: [warning()] },
+  ])('hides expired warning data instead of displaying a band ($name)', ({ warnings }) => {
+    const view = mountPanel({
+      favorites: [helsinki], data: { 1: [step()] },
+      warnings: { 1: { ...warningsData(warnings), updated: '2029-12-31T23:59:59Z' } },
+    });
+    expect(view.queryByTestId('favorite-warning-1')).toBeNull();
+  });
+
+  it('uses the current time for warning data when a forecast is unavailable', () => {
+    const view = mountPanel({
+      favorites: [helsinki],
+      warnings: { 1: warningsData([warning({ duration: {
+        startTime: '2030-01-01T11:00:00Z', endTime: '2030-01-01T13:00:00Z',
+      } })]) },
+    });
+    expect(StyleSheet.flatten(view.getByTestId('favorite-warning-1').props.style).backgroundColor).toBe(YELLOW);
+  });
+
+  it('updates the band from missing to warning to green when favorite warnings arrive in Redux', () => {
+    const view = mountPanel({ favorites: [helsinki], data: { 1: [step()] } });
+    expect(view.queryByTestId('favorite-warning-1')).toBeNull();
+    act(() => {
+      view.store.dispatch({
+        type: FETCH_FAVORITE_WARNINGS_SUCCESS,
+        data: { 1: warningsData([warning()]) },
+      });
+    });
+    expect(view.getByTestId('favorite-warning-1')).toBeTruthy();
+    act(() => {
+      view.store.dispatch({
+        type: FETCH_FAVORITE_WARNINGS_SUCCESS, data: { 1: warningsData([]) },
+      });
+    });
+    expect(StyleSheet.flatten(view.getByTestId('favorite-warning-1').props.style).backgroundColor).toBe(GREEN);
+  });
+
+  it.each([
+    ['fi', 'Ei voimassa olevia varoituksia'],
+    ['en', 'No active warnings'],
+    ['sv', 'Inga gällande varningar'],
+  ])('includes the no-warning situation in the accessibility label in %s', (language, label) => {
+    mockLanguage = language;
+    const view = mountPanel({
+      favorites: [helsinki], data: { 1: [step()] }, warnings: { 1: warningsData([]) },
+    });
+    expect(view.getByTestId('favorite-forecast-1').props.accessibilityLabel).toContain(label);
+  });
+
+  it.each([
+    ['fi', 'Varoitukset: Vaarallinen'],
+    ['en', 'Warnings: Dangerous'],
+    ['sv', 'Varningar: Farlig'],
+  ])('includes the warning severity in the card accessibility label in %s', (language, label) => {
+    mockLanguage = language;
+    const view = mountPanel({
+      favorites: [helsinki], data: { 1: [step()] },
+      warnings: { 1: warningsData([warning({ severity: 'Severe' })]) },
+    });
+    expect(view.getByTestId('favorite-forecast-1').props.accessibilityLabel).toContain(label);
+    expect(view.getByTestId('favorite-warning-1').props.accessible).toBe(false);
+    fireEvent.press(view.getByTestId('favorite-forecast-1'));
+    expect(view.onSelectLocation).toHaveBeenCalledWith(helsinki, true);
+  });
+
   it.each([true, false])(
     'selects a favorite with forecast data available=%s',
     (available) => {
@@ -258,7 +463,20 @@ describe('FavoritesPanel', () => {
       fireEvent.press(card);
 
       expect(view.onSelectLocation).toHaveBeenCalledTimes(1);
-      expect(view.onSelectLocation).toHaveBeenCalledWith(tampere);
+      expect(view.onSelectLocation).toHaveBeenCalledWith(tampere, true);
+    }
+  );
+
+  it.each([true, false, undefined])(
+    'forwards scrollToTop=%s with the selected favorite', (scrollToTop) => {
+      const view = mountPanel({ favorites: [tampere], scrollToTop });
+      const card = view.getByTestId('favorite-forecast-2');
+      fireEvent.press(card);
+
+      expect(view.onSelectLocation).toHaveBeenCalledWith(tampere, scrollToTop ?? true);
+      expect(card.props.accessibilityHint).toBe(scrollToTop === false
+        ? 'Näytä paikkakunnan ennuste'
+        : 'Näytä paikkakunnan ennuste ja siirry näkymän alkuun');
     }
   );
 

@@ -3,7 +3,7 @@ import {
   FETCH_FORECAST,
   FETCH_FORECAST_ERROR,
   FETCH_FORECAST_SUCCESS,
-  FETCH_FAVORITE_FORECASTS_SUCCESS,
+  FETCH_ALL_FORECASTS_SUCCESS,
   RETAIN_FORECAST_LOCATIONS,
 } from '@store/forecast/types';
 import type {
@@ -96,14 +96,36 @@ describe('background forecasts in the forecast reducer', () => {
     const state = createState(true);
     const data = { 2: favoriteSteps, 3: favoriteSteps };
     const updated = reducer(state, {
-      type: FETCH_FAVORITE_FORECASTS_SUCCESS,
+      type: FETCH_ALL_FORECASTS_SUCCESS,
       data,
+      timestamp: 200,
+      background: true,
     });
 
     expect(updated).toEqual({ ...state, data: { ...state.data, ...data } });
     expect(updated.data?.[1]).toBe(primarySteps);
     expect(updated.auroraBorealisData).toBe(state.auroraBorealisData);
     expect(state.data).toEqual({ 1: primarySteps });
+  });
+
+  it('completes a primary batch refresh and merges forecasts and aurora data for all locations', () => {
+    const state = createState(true);
+    const updated = reducer(state, {
+      type: FETCH_ALL_FORECASTS_SUCCESS,
+      data: { 1: favoriteSteps, 2: favoriteSteps },
+      auroraBorealisData: { 1: false },
+      timestamp: 200,
+    });
+
+    expect(updated).toEqual({
+      ...state,
+      data: { 1: favoriteSteps, 2: favoriteSteps },
+      auroraBorealisData: { 1: false },
+      fetchTimestamp: 200,
+      fetchSuccessTime: 200,
+      loading: false,
+      error: false,
+    });
   });
 
   it('keeps a prefetched forecast visible while refreshing the selected location', () => {

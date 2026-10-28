@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect, ConnectedProps, useStore } from 'react-redux';
 import {
   ActivityIndicator,
   View,
@@ -109,6 +109,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
   currentHour, // To force re-render when the hour changes
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
+  const store = useStore<State>();
   const { t, i18n } = useTranslation('forecast');
   useEffect(() => {
     moment.tz.setDefault(timezone);
@@ -263,7 +264,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
             backgroundColor={imageOverlayColor}
             onPress={() => {
               trackMatomoEvent('User action', 'Weather', 'Geolocation');
-              getGeolocation(setCurrentLocation, t);
+              getGeolocation(setCurrentLocation, t, undefined, () => store.getState().location.current);
             }}
             iconSize={iconSize}
             circular

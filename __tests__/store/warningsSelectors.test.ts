@@ -67,6 +67,64 @@ describe('warnings selectors', () => {
     expect(days[0].date).toBe(new Date(2026, 3, 27).getTime());
   });
 
+  describe('selectLocationWarnings', () => {
+    const now = Date.parse('2026-04-27T21:00:00Z');
+
+    beforeEach(() => {
+      jest.spyOn(Date, 'now').mockReturnValue(now);
+    });
+
+    it.each([
+      ['recent data', '2026-04-27T20:00:00Z', true],
+      ['exactly twelve hours old', '2026-04-27T09:00:00Z', true],
+      ['older than twelve hours', '2026-04-27T08:59:59.999Z', false],
+      ['a timezone offset at the age limit', '2026-04-27T12:00:00+03:00', true],
+      ['an invalid publication time', 'invalid', false],
+      ['a missing publication time', '', false],
+    ])('filters %s using its publication time', (_description, updated, included) => {
+      const state = createState(now);
+      const data = { ...warningsData, updated: updated as string };
+      state.warnings.data = { 99: data };
+
+      expect(selectors.selectLocationWarnings(state)).toEqual(included ? { 99: data } : {});
+      expect(state.warnings.data[99]).toBe(data);
+    });
+
+    it('filters each location separately and keeps fresh empty warning lists', () => {
+      const state = createState(now);
+      const expired = { ...warningsData, updated: '2026-04-26T21:00:00Z' };
+      const empty = { ...warningsData, warnings: [] };
+      state.warnings.data = { 99: warningsData, 100: expired, 101: empty, 102: undefined };
+
+      const result = selectors.selectLocationWarnings(state);
+      expect(result).toEqual({ 99: warningsData, 101: empty });
+      expect(result[99]).toBe(warningsData);
+      expect(result[101]).toBe(empty);
+      expect(state.warnings.data[100]).toBe(expired);
+      expect(selectors.selectWarnings(state)).toEqual(warningsData.warnings);
+    });
+
+    it('expires data as time advances with the same Redux state', () => {
+      const state = createState(now);
+      expect(selectors.selectLocationWarnings(state)).toEqual({ 99: warningsData });
+
+      jest.mocked(Date.now).mockReturnValue(now + 1);
+      expect(selectors.selectLocationWarnings(state)).toEqual({});
+    });
+
+    it('preserves the result reference while the retained warnings stay the same', () => {
+      const state = createState(now);
+      const expired = { ...warningsData, updated: '2026-04-26T21:00:00Z' };
+      const recent = { ...warningsData, updated: '2026-04-27T20:00:00Z' };
+      state.warnings.data = { 99: recent, 100: expired };
+      const result = selectors.selectLocationWarnings(state);
+
+      jest.mocked(Date.now).mockReturnValue(now + 1);
+      expect(selectors.selectLocationWarnings(state)).toBe(result);
+      expect(selectors.selectLocationWarnings({ ...state })).toBe(result);
+    });
+  });
+
   it('recalculates the five-day window when the local day changes', () => {
     const state = createState(new Date(2026, 3, 27, 23, 59).getTime());
     const days = selectors.selectDailyWarningData(state);

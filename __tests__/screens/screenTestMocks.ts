@@ -2,6 +2,7 @@ export const mockChangeLanguage = jest.fn();
 export const mockConfigGet = jest.fn();
 export const mockConfigGetAll = jest.fn();
 export const mockGetGeolocation = jest.fn();
+export const mockLocationStore = { getState: jest.fn() };
 export const mockInitMatomo = jest.fn();
 export const mockPermissionsCheckMultiple = jest.fn();
 export const mockPermissionsOpenSettings = jest.fn();
@@ -32,6 +33,7 @@ const mockTranslations: { [key: string]: { [key: string]: string } } = {
 
 export const resetScreenMocks = () => {
   jest.clearAllMocks();
+  mockLocationStore.getState.mockReturnValue({ location: { current: undefined } });
   mockState.dark = false;
   mockState.focused = true;
   mockState.language = 'en';
@@ -125,6 +127,7 @@ function mockTextComponent(testID: string) {
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
+  useStore: () => mockLocationStore,
 }));
 
 jest.mock('@config', () => ({
@@ -460,12 +463,13 @@ jest.mock('@store/settings/actions', () => ({
 
 jest.mock('@store/warnings/actions', () => ({
   fetchCapWarnings: jest.fn(),
+  fetchFavoriteWarnings: jest.fn(),
   fetchWarnings: jest.fn(),
 }));
 
 jest.mock('@store/forecast/actions', () => ({
   fetchForecast: jest.fn(),
-  fetchFavoriteForecasts: jest.fn(),
+  fetchAllForecasts: jest.fn(),
 }));
 
 jest.mock('@store/observation/actions', () => ({

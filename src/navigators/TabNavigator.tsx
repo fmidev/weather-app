@@ -8,7 +8,7 @@ import {
   ViewStyle,
   AppState,
 } from 'react-native';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect, ConnectedProps, useStore } from 'react-redux';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HeaderBackButton } from '@react-navigation/elements';
@@ -114,6 +114,7 @@ const Navigator: React.FC<Props> = ({
   fetchAnnouncements,
 }) => {
   const isRunningOnMac = useIsRunningOnMac();
+  const store = useStore<State>();
   const isPlatformDetectionComplete = useIsPlatformDetectionComplete();
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
@@ -179,11 +180,12 @@ const Navigator: React.FC<Props> = ({
       } else {
         trackMatomoEvent('Init', 'Platform', Platform.OS +' - '+packageJSON.version);
       }
-      getGeolocation(setCurrentLocation, t, true);
+      getGeolocation(setCurrentLocation, t, true, () => store.getState().location.current);
       fetchAnnouncements();
     }
   }, [
     didLaunchApp,
+    store,
     setCurrentLocation,
     t,
     didChangeLanguage,
@@ -268,7 +270,7 @@ const Navigator: React.FC<Props> = ({
             icon="locate"
             onPress={() => {
               trackMatomoEvent('User action', 'Map', 'Geolocation');
-              getGeolocation(setCurrentLocation, t);
+              getGeolocation(setCurrentLocation, t, undefined, () => store.getState().location.current);
             }}
           />
         ),
@@ -294,7 +296,7 @@ const Navigator: React.FC<Props> = ({
           />
         ),
       }),
-    [CommonHeaderOptions, setCurrentLocation, t]
+    [CommonHeaderOptions, setCurrentLocation, t, store]
   );
 
   const SearchScreenOptions = useMemo(

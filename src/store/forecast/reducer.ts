@@ -3,7 +3,7 @@ import {
   FETCH_FORECAST,
   FETCH_FORECAST_SUCCESS,
   FETCH_FORECAST_ERROR,
-  FETCH_FAVORITE_FORECASTS_SUCCESS,
+  FETCH_ALL_FORECASTS_SUCCESS,
   RETAIN_FORECAST_LOCATIONS,
   ForecastActionTypes,
   ForecastState,
@@ -114,10 +114,26 @@ export default (
       };
     }
 
-    case FETCH_FAVORITE_FORECASTS_SUCCESS: {
+    case FETCH_ALL_FORECASTS_SUCCESS: {
       return {
         ...state,
         data: { ...state.data, ...action.data },
+        ...(action.auroraBorealisData
+          ? {
+              auroraBorealisData: {
+                ...state.auroraBorealisData,
+                ...action.auroraBorealisData,
+              },
+            }
+          : {}),
+        ...(action.background
+          ? {}
+          : {
+              fetchTimestamp: action.timestamp,
+              fetchSuccessTime: action.timestamp,
+              loading: false,
+              error: false,
+            }),
       };
     }
 

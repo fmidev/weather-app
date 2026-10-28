@@ -102,4 +102,16 @@ describe('warnings store', () => {
       updatedRequestKey: 'location-99-fi',
     });
   });
+
+  it('merges favorite warnings without changing the active request status or timestamps', () => {
+    const previous = reducer(undefined, {
+      type: types.FETCH_WARNINGS_SUCCESS,
+      data: warningsData, id: 99, timestamp: 123, requestKey: 'location-99-fi',
+    });
+    const state = { ...previous, loading: true, error: 'Selected location failed' };
+    const favoriteData = { ...warningsData, updated: '2026-04-27T10:00:00Z', warnings: [] };
+    expect(reducer(state, {
+      type: types.FETCH_FAVORITE_WARNINGS_SUCCESS, data: { 100: favoriteData },
+    })).toEqual({ ...state, data: { 99: warningsData, 100: favoriteData } });
+  });
 });

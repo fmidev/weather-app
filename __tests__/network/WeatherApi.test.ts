@@ -1,7 +1,8 @@
 import {
   getCurrentPosition,
   getForecast,
-  getFavoriteForecasts,
+  getAllForecasts,
+  getAuroraBorealisLikelihood,
   getLocationsLocales,
   getObservation,
 } from '../../src/network/WeatherApi';
@@ -151,7 +152,7 @@ describe('WeatherApi', () => {
     mockConfigGet.mockReturnValue(weatherConfig);
   });
 
-  describe('favorite forecasts', () => {
+  describe('getAllForecasts', () => {
     const tampere: Location = {
       id: 2,
       name: 'Tampere',
@@ -195,7 +196,7 @@ describe('WeatherApi', () => {
           },
         });
 
-      await expect(getFavoriteForecasts([tampere, stockholm])).resolves.toEqual(
+      await expect(getAllForecasts([tampere, stockholm])).resolves.toEqual(
         {
           2: [{ ...step, windSpeedMS: 8 }],
           3: [{ ...foreignStep, windSpeedMS: 7 }],
@@ -250,7 +251,7 @@ describe('WeatherApi', () => {
       });
       const duplicate = { ...tampere, id: 'same-coordinates', lat: 61.500001 };
       await expect(
-        getFavoriteForecasts([tampere, tampere, duplicate, stockholm])
+        getAllForecasts([tampere, tampere, duplicate, stockholm])
       ).resolves.toEqual({
         2: [step],
         'same-coordinates': [step],
@@ -291,7 +292,7 @@ describe('WeatherApi', () => {
             ],
           },
         });
-      await expect(getFavoriteForecasts([tampere])).resolves.toEqual({
+      await expect(getAllForecasts([tampere])).resolves.toEqual({
         2: [
           { ...step, uvCumulated: 2 },
           { ...later, uvCumulated: null },
@@ -301,18 +302,28 @@ describe('WeatherApi', () => {
     });
 
     it('makes no request for an empty list or invalid coordinates', async () => {
-      await expect(getFavoriteForecasts([])).resolves.toEqual({});
+      await expect(getAllForecasts([])).resolves.toEqual({});
       await expect(
-        getFavoriteForecasts([{ ...tampere, lat: NaN }])
+        getAllForecasts([{ ...tampere, lat: NaN }])
       ).resolves.toEqual({});
       expect(mockAxiosClient).not.toHaveBeenCalled();
+    });
+
+    it('stores coordinate locations under the same zero ID used by forecast selectors', async () => {
+      mockAxiosClient.mockResolvedValue({
+        data: { '61.5, 23.8': [step] },
+      });
+
+      await expect(getAllForecasts([{ ...tampere, id: NaN }])).resolves.toEqual({
+        0: [step],
+      });
     });
 
     it('rejects malformed forecasts and reports validation errors', async () => {
       mockAxiosClient.mockResolvedValueOnce({
         data: { '61.50000, 23.80000': [{ ...step, epochtime: 'invalid' }] },
       });
-      await expect(getFavoriteForecasts([tampere])).rejects.toThrow(
+      await expect(getAllForecasts([tampere])).rejects.toThrow(
         'Favorite forecast validation failed'
       );
       expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
@@ -324,7 +335,7 @@ describe('WeatherApi', () => {
 
     it('propagates network failures', async () => {
       mockAxiosClient.mockRejectedValueOnce(new Error('offline'));
-      await expect(getFavoriteForecasts([tampere, stockholm])).rejects.toThrow(
+      await expect(getAllForecasts([tampere, stockholm])).rejects.toThrow(
         'offline'
       );
       expect(mockAxiosClient).toHaveBeenCalledTimes(2);
@@ -339,6 +350,25 @@ describe('WeatherApi', () => {
     });
     expect(mockAxiosClient).not.toHaveBeenCalled();
     expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
+  });
+
+  it('returns a safe aurora value when geomagnetic observations fail', async () => {
+    mockConfigGet.mockReturnValue({
+      ...weatherConfig,
+      observation: {
+        ...weatherConfig.observation,
+        geoMagneticObservations: {
+          ...weatherConfig.observation.geoMagneticObservations,
+          enabled: true,
+        },
+      },
+    });
+    mockFindNearestGeoMagneticObservationStation.mockReturnValue({ fmisid: 101 });
+    mockAxiosClient.mockRejectedValueOnce(new Error('offline'));
+
+    await expect(
+      getAuroraBorealisLikelihood({ latlon: '60.1,24.9' }, 'FI')
+    ).resolves.toBe(false);
   });
 
   it('excludes the geomagnetic placeholder from forecast data', async () => {

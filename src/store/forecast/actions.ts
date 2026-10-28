@@ -1,17 +1,22 @@
 import { Dispatch } from 'redux';
-import { getFavoriteForecasts, getForecast } from '@network/WeatherApi';
+import {
+  getAllForecasts,
+  getAuroraBorealisLikelihood,
+  getForecast,
+} from '@network/WeatherApi';
 import type { Location } from '@store/location/types';
 import type { State } from '@store/types';
 import { ChartType } from '@components/weather/charts/types';
 import { Config } from '@config';
 import { selectForecastForLocation } from './selectors';
+import { selectCurrent } from '@store/location/selector';
 
 import {
   Error,
   FETCH_FORECAST,
   FETCH_FORECAST_SUCCESS,
   FETCH_FORECAST_ERROR,
-  FETCH_FAVORITE_FORECASTS_SUCCESS,
+  FETCH_ALL_FORECASTS_SUCCESS,
   UPDATE_DISPLAY_PARAMS,
   RESTORE_DEFAULT_DISPLAY_PARAMS,
   ForecastActionTypes,
@@ -58,18 +63,53 @@ export const fetchForecast =
     }
   };
 
-export const fetchFavoriteForecasts =
-  (locations: Location[]) => async (dispatch: Dispatch<ForecastActionTypes>) => {
+export const fetchAllForecasts =
+  (locations: Location[]) =>
+  async (dispatch: Dispatch<ForecastActionTypes>, getState: () => State) => {
     if (locations.length === 0) return;
 
-    dispatch({ type: FETCH_FORECAST, background: true });
+    const state = getState();
+    const current = selectCurrent(state);
+    const currentLocation = locations.find(
+      ({ id }) => String(id) === String(current.id)
+    );
+    const requestMeta = currentLocation ? {} : { background: true };
+    const hasCachedData =
+      currentLocation &&
+      selectForecastForLocation(state, currentLocation.id).length > 0;
+    dispatch({
+      type: FETCH_FORECAST,
+      ...requestMeta,
+      ...(hasCachedData ? { hasCachedData: true } : {}),
+    });
     try {
-      const data = await getFavoriteForecasts(locations);
-      dispatch({ type: FETCH_FAVORITE_FORECASTS_SUCCESS, data });
+      const [data, auroraLikely] = await Promise.all([
+        getAllForecasts(locations),
+        currentLocation
+          ? getAuroraBorealisLikelihood(
+              { latlon: `${currentLocation.lat},${currentLocation.lon}` },
+              currentLocation.country
+            )
+          : Promise.resolve(false),
+      ]);
+      const currentId =
+        typeof currentLocation?.id === 'number' &&
+        Number.isNaN(currentLocation.id)
+          ? 0
+          : currentLocation?.id;
+      dispatch({
+        type: FETCH_ALL_FORECASTS_SUCCESS,
+        data,
+        timestamp: Date.now(),
+        ...requestMeta,
+        ...(currentId !== undefined
+          ? { auroraBorealisData: { [currentId]: auroraLikely } }
+          : {}),
+      });
     } catch (error) {
       dispatch({
         type: FETCH_FORECAST_ERROR,
-        background: true,
+        ...requestMeta,
         error: error as Error,
         timestamp: Date.now(),
       });

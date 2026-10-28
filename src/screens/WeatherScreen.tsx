@@ -20,12 +20,15 @@ import type { Location } from '@store/location/types';
 import { selectAnnouncements } from '@store/announcements/selectors';
 
 import {
-  fetchFavoriteForecasts as fetchFavoriteForecastsAction,
+  fetchAllForecasts as fetchAllForecastsAction,
   fetchForecast as fetchForecastAction,
 } from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
 import { resetObservations as resetObservationsAction } from '@store/observation/actions';
-import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
+import {
+  fetchWarnings as fetchWarningsAction,
+  fetchFavoriteWarnings as fetchFavoriteWarningsAction,
+} from '@store/warnings/actions';
 import { fetchMeteorologistSnapshot as fetchMeteorologistSnapshotAction } from '@store/meteorologist/actions';
 import { fetchNews as fetchNewsAction } from '@store/news/actions';
 
@@ -55,9 +58,10 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = {
   fetchForecast: fetchForecastAction,
-  fetchFavoriteForecasts: fetchFavoriteForecastsAction,
+  fetchAllForecasts: fetchAllForecastsAction,
   fetchObservation: fetchObservationAction,
   fetchWarnings: fetchWarningsAction,
+  fetchFavoriteWarnings: fetchFavoriteWarningsAction,
   fetchMeteorologistSnapshot: fetchMeteorologistSnapshotAction,
   fetchNews: fetchNewsAction,
   resetObservations: resetObservationsAction,
@@ -72,9 +76,10 @@ type WeatherScreenProps = PropsFromRedux;
 
 const WeatherScreen: React.FC<WeatherScreenProps> = ({
   fetchForecast,
-  fetchFavoriteForecasts,
+  fetchAllForecasts,
   fetchObservation,
   fetchWarnings,
+  fetchFavoriteWarnings,
   fetchMeteorologistSnapshot,
   fetchNews,
   resetObservations,
@@ -94,10 +99,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   );
   const [newsUpdated, setNewsUpdated] = useState<number>(Date.now());
   const [observationVisible, setObservationVisible] = useState(false);
-  const [favoritesVisible, setFavoritesVisible] = useState(false);
   const observationRef = useRef<ViewInstance>(null);
-  const favoritesRef = useRef<ViewInstance>(null);
-  const favoriteForecastUpdated = useRef(new Map<string, number>());
   const scrollViewRef = useRef<ScrollViewInstance>(null);
   const { shouldReload } = useReloader();
 
@@ -116,33 +118,44 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const isWideDisplay = () => width > 700;
 
   const selectFavoriteLocation = useCallback(
-    (favorite: Location) => {
+    (favorite: Location, scrollToTop = true) => {
       trackMatomoEvent(
         'User action',
         'Weather',
         'Select location - favourites'
       );
       setCurrentLocation({ ...favorite });
-      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      if (scrollToTop) {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      }
     },
     [setCurrentLocation]
   );
 
-  const updateForecast = useCallback(() => {
-    const geoid = location.id;
-    const forecastLocation = {
-      geoid,
-      latlon: `${location.lat},${location.lon}`,
-    };
+  const updateForecasts = useCallback(() => {
+    if (weatherConfig.favoritesPanelEnabled === false) {
+      fetchForecast(
+        { geoid: location.id, latlon: `${location.lat},${location.lon}` },
+        location.country
+      );
+    } else {
+      const locationIds = new Set<string>();
+      const locations = [location, ...favorites].filter(({ id }) => {
+        const key = String(id);
+        if (locationIds.has(key)) return false;
 
-    fetchForecast(forecastLocation, location.country);
+        locationIds.add(key);
+        return true;
+      });
+      fetchAllForecasts(locations);
+    }
     setForecastUpdated(Date.now());
   }, [
     fetchForecast,
-    location.id,
-    location.lat,
-    location.lon,
-    location.country,
+    fetchAllForecasts,
+    favorites,
+    location,
+    weatherConfig.favoritesPanelEnabled,
     setForecastUpdated,
   ]);
 
@@ -166,12 +179,25 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   ]);
 
   const updateWarnings = useCallback(() => {
-    if (warningsConfig.enabled && warningsConfig.apiUrl[location.country]) {
+    if (!warningsConfig.enabled) return;
+
+    if (warningsConfig.apiUrl[location.country]) {
       fetchWarnings(location);
-      setWarningsUpdated(Date.now());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchWarnings, location.lat, location.lon, warningsConfig]);
+    if (weatherConfig.favoritesPanelEnabled !== false) {
+      fetchFavoriteWarnings(
+        favorites.filter(({ id }) => String(id) !== String(location.id))
+      );
+    }
+    setWarningsUpdated(Date.now());
+  }, [
+    fetchWarnings,
+    fetchFavoriteWarnings,
+    favorites,
+    location,
+    warningsConfig,
+    weatherConfig.favoritesPanelEnabled,
+  ]);
 
   const updateMeteorologistSnapshot = useCallback(() => {
     if (showMeteorologistSnapshot) {
@@ -186,41 +212,6 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       setNewsUpdated(Date.now());
     }
   }, [fetchNews, i18n.language, newsConfig.enabled]);
-
-  useEffect(() => {
-    if (!isFocused || !favoritesVisible || weatherConfig.layout !== 'vertical')
-      return;
-
-    const now = Date.now();
-    const updateInterval =
-      (weatherConfig.forecast.updateInterval ?? 5) * 60 * 1000;
-
-    const locationsToFetch = favorites.filter((favorite) => {
-      if (String(favorite.id) === String(location.id)) return false;
-
-      const key = `${favorite.id}:${favorite.lat},${favorite.lon}:${favorite.country}:${i18n.language}`;
-      const lastUpdated = favoriteForecastUpdated.current.get(key);
-      if (
-        lastUpdated !== undefined &&
-        Math.max(now, shouldReload) <= lastUpdated + updateInterval
-      )
-        return false;
-
-      favoriteForecastUpdated.current.set(key, now);
-      return true;
-    });
-    if (locationsToFetch.length > 0) fetchFavoriteForecasts(locationsToFetch);
-  }, [
-    favorites,
-    favoritesVisible,
-    isFocused,
-    i18n.language,
-    location.id,
-    fetchFavoriteForecasts,
-    shouldReload,
-    weatherConfig.layout,
-    weatherConfig.forecast.updateInterval,
-  ]);
 
   useEffect(() => {
     const now = Date.now();
@@ -245,7 +236,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
     if (isFocused) {
       if (now > forecastUpdateTime || shouldReload > forecastUpdateTime) {
-        updateForecast();
+        updateForecasts();
       }
       if (
         (!lazyLoadObservations || observationVisible) &&
@@ -275,7 +266,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     shouldReload,
     weatherConfig,
     warningsConfig,
-    updateForecast,
+    updateForecasts,
     updateObservation,
     updateWarnings,
     updateMeteorologistSnapshot,
@@ -288,13 +279,13 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   useEffect(() => {
     setObservationUpdated(0);
     resetObservations();
-    updateForecast();
+    updateForecasts();
     updateWarnings();
     updateMeteorologistSnapshot();
     updateNews();
   }, [
     location,
-    updateForecast,
+    updateForecasts,
     updateObservation,
     updateWarnings,
     updateMeteorologistSnapshot,
@@ -302,7 +293,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     resetObservations,
   ]);
 
-  const updatePanelVisibility = (viewportHeight?: number) => {
+  const updateObservationVisibility = (viewportHeight?: number) => {
     scrollViewRef.current
       ?.getNativeScrollRef()
       ?.measure((_sx, _sy, _sw, measuredHeight, _spx, svPageY) => {
@@ -316,20 +307,11 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
             setObservationVisible(visible);
           }
         );
-        favoritesRef.current?.measure(
-          (_x, _y, _w, targetH, _px, targetPageY) => {
-            const elementTopInViewport = targetPageY - svPageY;
-            const elementBottomInViewport = elementTopInViewport + targetH;
-            setFavoritesVisible(
-              elementBottomInViewport > 0 && elementTopInViewport < height
-            );
-          }
-        );
       });
   };
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    updatePanelVisibility(e.nativeEvent.layoutMeasurement.height);
+    updateObservationVisibility(e.nativeEvent.layoutMeasurement.height);
   };
 
   const currentHour = new Date().getHours();
@@ -340,25 +322,20 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         testID="weather_scrollview"
         ref={scrollViewRef}
         onScroll={handleScroll}
-        onLayout={() => updatePanelVisibility()}
-        onContentSizeChange={() => updatePanelVisibility()}
+        onLayout={() => updateObservationVisibility()}
+        onContentSizeChange={() => updateObservationVisibility()}
         style={[styles.container]}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={announcements && [0]}>
         <Announcements style={styles.announcements} />
         <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
-        <ForecastPanelWithVerticalLayout currentHour={currentHour} />
 
         {weatherConfig.favoritesPanelEnabled !== false && (
-          <View
-            ref={favoritesRef}
-            collapsable={false}
-            testID="favorites-panel-container"
-            onLayout={() => updatePanelVisibility()}>
-            <FavoritesPanel onSelectLocation={selectFavoriteLocation} />
-          </View>
+          <FavoritesPanel onSelectLocation={selectFavoriteLocation} />
         )}
+
+        <ForecastPanelWithVerticalLayout currentHour={currentHour} />
 
         {isWideDisplay() && showLocalWarnings && showMeteorologistSnapshot ? (
           <View style={styles.grid}>
