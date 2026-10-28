@@ -28,6 +28,7 @@ import type { UnitMap } from '../../src/store/settings/types';
 let mockLanguage = 'fi';
 let mockFontScale = 1;
 let mockForecastBackground = '#93B8D1';
+const mockSelectedFavoriteBorder = '#303193';
 
 jest.mock('@utils/helpers', () => ({
   msToBeaufort: jest.fn(),
@@ -74,6 +75,7 @@ jest.mock('@react-navigation/native', () => ({
       primaryText: '#101010',
       secondaryText: '#666666',
       cardShadow: '#D8E7F2',
+      selectedFavoriteBorder: mockSelectedFavoriteBorder,
       forecastBackground: mockForecastBackground,
     },
   }),
@@ -258,7 +260,7 @@ describe('FavoritesPanel', () => {
           const selected = String(favoriteId) === String(selectedId);
           expect(StyleSheet.flatten(card.props.style)).toMatchObject({
             borderWidth: selected ? 2 : 0,
-            borderColor: selected ? '#666666' : TRANSPARENT,
+            borderColor: selected ? mockSelectedFavoriteBorder : TRANSPARENT,
           });
           expect(card.props.accessibilityState).toEqual({ selected });
         });
