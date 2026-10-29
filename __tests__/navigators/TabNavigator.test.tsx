@@ -13,6 +13,7 @@ const mockGetGeolocation = jest.fn();
 const mockI18nOn = jest.fn();
 const mockI18nOff = jest.fn();
 const mockLaunchArgumentsValue = jest.fn();
+const mockNavigationDispatch = jest.fn();
 const mockRBSheetClose = jest.fn();
 const mockRBSheetOpen = jest.fn();
 const mockSetCurrentLocation = jest.fn();
@@ -21,7 +22,16 @@ const mockTabScreens = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
 const mockSetNavigationBarTheme = jest.fn();
 const mockWarningsTabIcon = jest.fn();
+const mockWeatherStack = jest.fn();
+const mockMapStack = jest.fn();
+const mockWarningsStack = jest.fn();
 let mockTranslationReady = true;
+let mockVerticalBarLayout = false;
+
+jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
+  usesVerticalBarLayout: () => mockVerticalBarLayout,
+}));
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
@@ -67,6 +77,9 @@ jest.mock('react-native-launch-arguments', () => ({
 jest.mock('@react-navigation/native', () => {
   const ReactActual = require('react');
   return {
+    CommonActions: {
+      navigate: (name: string) => ({ type: 'NAVIGATE', payload: { name } }),
+    },
     NavigationContainer: ({ children, onReady, onStateChange, theme }: any) => {
       const didCallReady = ReactActual.useRef(false);
       ReactActual.useEffect(() => {
@@ -95,6 +108,7 @@ jest.mock('@react-navigation/native', () => {
     useNavigationContainerRef: () => ({
       getCurrentRoute: () => ({ name: 'Weather' }),
       navigate: jest.fn(),
+      dispatch: mockNavigationDispatch,
     }),
   };
 });
@@ -193,10 +207,15 @@ jest.mock('@components/common/AccessibleTouchableOpacity', () => ({
 
 jest.mock('@components/common/HeaderButton', () => ({
   __esModule: true,
-  default: ({ icon, onPress, testID }: any) => {
+  default: ({ icon, onPress, testID, accessibilityLabel, accessibilityHint }: any) => {
     const { Pressable, Text } = require('react-native');
     return (
-      <Pressable testID={testID || `header-button-${icon}`} onPress={onPress}>
+      <Pressable
+        testID={testID || `header-button-${icon}`}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
+        onPress={onPress}>
         <Text>{icon}</Text>
       </Pressable>
     );
@@ -258,7 +277,8 @@ jest.mock('@components/search/SearchInfoBottomSheet', () => ({
 
 jest.mock('../../src/navigators/stacks/MapStackScreen', () => ({
   __esModule: true,
-  default: () => {
+  default: (props: any) => {
+    mockMapStack(props);
     const { Text } = require('react-native');
     return <Text testID="map-stack">map</Text>;
   },
@@ -266,7 +286,8 @@ jest.mock('../../src/navigators/stacks/MapStackScreen', () => ({
 
 jest.mock('../../src/navigators/stacks/WeatherStackScreen', () => ({
   __esModule: true,
-  default: () => {
+  default: (props: any) => {
+    mockWeatherStack(props);
     const { Text } = require('react-native');
     return <Text testID="weather-stack">weather</Text>;
   },
@@ -274,7 +295,8 @@ jest.mock('../../src/navigators/stacks/WeatherStackScreen', () => ({
 
 jest.mock('../../src/navigators/stacks/WarningsStackScreen', () => ({
   __esModule: true,
-  default: () => {
+  default: (props: any) => {
+    mockWarningsStack(props);
     const { Text } = require('react-native');
     return <Text testID="warnings-stack">warnings</Text>;
   },
@@ -311,12 +333,14 @@ jest.mock('../../src/navigators/WarningsTabIcon', () => ({
 
 describe('TabNavigator', () => {
   beforeEach(() => {
+    mockVerticalBarLayout = false;
     mockConfigGet.mockReset();
     mockFetchAnnouncements.mockClear();
     mockGetGeolocation.mockClear();
     mockI18nOn.mockClear();
     mockI18nOff.mockClear();
     mockLaunchArgumentsValue.mockReset();
+    mockNavigationDispatch.mockClear();
     mockRBSheetClose.mockClear();
     mockRBSheetOpen.mockClear();
     mockSetCurrentLocation.mockClear();
@@ -325,6 +349,9 @@ describe('TabNavigator', () => {
     mockTrackMatomoEvent.mockClear();
     mockSetNavigationBarTheme.mockClear();
     mockWarningsTabIcon.mockClear();
+    mockWeatherStack.mockClear();
+    mockMapStack.mockClear();
+    mockWarningsStack.mockClear();
     jest.mocked(sendMatomoEvents).mockClear();
     mockTranslationReady = true;
 
@@ -387,6 +414,37 @@ describe('TabNavigator', () => {
 
     view.rerender(<TabNavigator {...props} theme="light" />);
     expect(mockSetNavigationBarTheme).toHaveBeenLastCalledWith(false);
+  });
+
+  it.each(['light', 'dark'] as const)('uses Android header colors for native buttons in the %s theme', (theme) => {
+    mockVerticalBarLayout = true;
+    render(
+      <TabNavigator
+        initialTab="Map"
+        theme={theme}
+        didLaunchApp
+        termsOfUseAccepted
+        setCurrentLocation={mockSetCurrentLocation as any}
+        setNavigationTab={mockSetNavigationTab as any}
+        fetchAnnouncements={mockFetchAnnouncements as any}
+      />
+    );
+    const expectedColor = (theme === 'dark' ? darkTheme : lightTheme).colors.text;
+    const options = [
+      mockMapStack.mock.calls.at(-1)![0].nativeMapOptions,
+      mockWeatherStack.mock.calls.at(-1)![0].nativeWeatherOptions,
+      mockWarningsStack.mock.calls.at(-1)![0].nativeWarningsOptions,
+      mockWeatherStack.mock.calls.at(-1)![0].nativeSearchOptions,
+    ];
+    options.forEach((header) => {
+      const props = { tintColor: header.headerTintColor };
+      const items = [
+        ...(header.unstable_headerLeftItems?.(props) ?? []),
+        ...(header.unstable_headerRightItems?.(props) ?? []),
+      ];
+      expect(items.length).toBeGreaterThan(0);
+      expect(items.every((item: any) => item.tintColor === expectedColor)).toBe(true);
+    });
   });
 
   it('updates navigation bar icons with the system theme in automatic mode', () => {
@@ -518,6 +576,174 @@ describe('TabNavigator', () => {
 
     fireEvent.press(view.getByTestId('search-info-sheet'));
     expect(mockRBSheetClose).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([false, true])('places map location actions for vertical bar layout %s', (verticalBarLayout) => {
+    mockVerticalBarLayout = verticalBarLayout;
+    render(
+      <TabNavigator
+        initialTab="Map"
+        theme="light"
+        didLaunchApp
+        termsOfUseAccepted
+        setCurrentLocation={mockSetCurrentLocation as any}
+        setNavigationTab={mockSetNavigationTab as any}
+        fetchAnnouncements={mockFetchAnnouncements as any}
+      />
+    );
+    const { nativeMapOptions, nativeSearchOptions } = mockMapStack.mock.calls[0][0];
+    expect(nativeMapOptions.headerShown).toBe(true);
+    expect(nativeMapOptions.header).toBeUndefined();
+    expect(nativeMapOptions.headerTitle).toEqual(expect.any(Function));
+    expect(nativeSearchOptions.title).toBe('navigation:search');
+    const leftItems = nativeMapOptions.unstable_headerLeftItems({});
+    const rightItems = nativeMapOptions.unstable_headerRightItems?.({}) ?? [];
+    expect(leftItems).toHaveLength(verticalBarLayout ? 2 : 1);
+    expect(rightItems).toHaveLength(verticalBarLayout ? 0 : 1);
+    const [locate, search] = [...leftItems, ...rightItems];
+    mockGetGeolocation.mockClear();
+    act(() => locate.onPress());
+    expect(mockGetGeolocation).toHaveBeenCalledWith(mockSetCurrentLocation, expect.any(Function));
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Map', 'Geolocation');
+    act(() => search.onPress());
+    expect(mockNavigationDispatch).toHaveBeenCalledWith({ type: 'NAVIGATE', payload: { name: 'Search' } });
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Map', 'Open search - button');
+  });
+
+  it.each([false, true])('places warning location actions for vertical bar layout %s', (verticalBarLayout) => {
+    mockVerticalBarLayout = verticalBarLayout;
+    render(
+      <TabNavigator
+        initialTab="Warnings"
+        theme="light"
+        didLaunchApp
+        termsOfUseAccepted
+        setCurrentLocation={mockSetCurrentLocation as any}
+        setNavigationTab={mockSetNavigationTab as any}
+        fetchAnnouncements={mockFetchAnnouncements as any}
+      />
+    );
+    const { warningsOptions, nativeWarningsOptions, nativeSearchOptions } = mockWarningsStack.mock.calls[0][0];
+    expect(warningsOptions.header).toEqual(expect.any(Function));
+    expect(nativeWarningsOptions.header).toBeUndefined();
+    expect(nativeWarningsOptions.headerShown).toBe(true);
+    expect(nativeWarningsOptions.headerTitle).toEqual(expect.any(Function));
+    expect(nativeSearchOptions.title).toBe('navigation:search');
+    const leftItems = nativeWarningsOptions.unstable_headerLeftItems?.({}) ?? [];
+    const rightItems = nativeWarningsOptions.unstable_headerRightItems({});
+    expect(leftItems).toHaveLength(verticalBarLayout ? 0 : 1);
+    expect(rightItems).toHaveLength(verticalBarLayout ? 2 : 1);
+    const [locate, search] = [...leftItems, ...rightItems];
+    expect(locate).toEqual(expect.objectContaining({
+      type: 'button',
+      accessibilityLabel: 'navigation:locate',
+      accessibilityHint: 'navigation:locateAccessibilityLabel',
+      icon: { type: 'sfSymbol', name: 'dot.scope' },
+    }));
+    expect(search).toEqual(expect.objectContaining({
+      type: 'button',
+      accessibilityLabel: 'navigation:search',
+      accessibilityHint: 'navigation:searchAccessibilityLabel',
+      icon: { type: 'sfSymbol', name: 'magnifyingglass' },
+    }));
+    mockGetGeolocation.mockClear();
+    act(() => locate.onPress());
+    expect(mockGetGeolocation).toHaveBeenCalledWith(mockSetCurrentLocation, expect.any(Function));
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Warnings', 'Geolocation');
+    act(() => search.onPress());
+    expect(mockNavigationDispatch).toHaveBeenCalledWith({ type: 'NAVIGATE', payload: { name: 'Search' } });
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Warnings', 'Open search - button');
+  });
+
+  it.each(['default', 'vertical'])('provides native weather buttons without adding a JS header in the %s layout', (layout) => {
+    mockVerticalBarLayout = true;
+    mockConfigGet.mockImplementation((key: string) => {
+      if (key === 'weather') return { layout };
+      return { enabled: true };
+    });
+    render(
+      <TabNavigator
+        initialTab="Weather"
+        theme="light"
+        didLaunchApp
+        termsOfUseAccepted
+        setCurrentLocation={mockSetCurrentLocation as any}
+        setNavigationTab={mockSetNavigationTab as any}
+        fetchAnnouncements={mockFetchAnnouncements as any}
+      />
+    );
+    const { weatherOptions, nativeWeatherOptions, nativeSearchOptions } = mockWeatherStack.mock.calls[0][0];
+    expect(weatherOptions.headerShown).toBe(layout === 'vertical' ? false : undefined);
+    expect(nativeWeatherOptions.headerShown).toBe(true);
+    expect(nativeWeatherOptions.headerTransparent).toBe(layout === 'vertical');
+    expect(typeof nativeWeatherOptions.headerTitle).toBe(layout === 'vertical' ? 'undefined' : 'function');
+    expect(nativeWeatherOptions.headerRight).toBeUndefined();
+
+    const [locate, search] = nativeWeatherOptions.unstable_headerRightItems({});
+    expect(locate).toEqual(expect.objectContaining({
+      type: 'button',
+      icon: { type: 'sfSymbol', name: 'dot.scope' },
+      label: 'navigation:locate',
+      accessibilityLabel: 'navigation:locate',
+      accessibilityHint: 'navigation:locateAccessibilityLabel',
+    }));
+    expect(search).toEqual(expect.objectContaining({
+      type: 'button',
+      icon: { type: 'sfSymbol', name: 'magnifyingglass' },
+      label: 'navigation:search',
+      accessibilityLabel: 'navigation:search',
+      accessibilityHint: 'navigation:searchAccessibilityLabel',
+    }));
+
+    mockGetGeolocation.mockClear();
+    act(() => locate.onPress());
+    expect(mockGetGeolocation).toHaveBeenCalledTimes(1);
+    expect(mockGetGeolocation).toHaveBeenCalledWith(mockSetCurrentLocation, expect.any(Function));
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Weather', 'Geolocation');
+
+    act(() => search.onPress());
+    expect(mockNavigationDispatch).toHaveBeenCalledWith({
+      type: 'NAVIGATE',
+      payload: { name: 'Search' },
+    });
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Weather', 'Open search - button');
+
+    const [info] = nativeSearchOptions.unstable_headerRightItems({});
+    act(() => info.onPress());
+    expect(mockRBSheetOpen).toHaveBeenCalledTimes(1);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Search', 'Open search info bottomsheet');
+  });
+
+  it.each(['default', 'vertical'])('shows native weather actions only with the sidebar in the %s layout', (layout) => {
+    mockConfigGet.mockImplementation((key: string) => {
+      if (key === 'weather') return { layout };
+      return { enabled: true };
+    });
+    const navigator = (
+      <TabNavigator
+        initialTab="Weather"
+        theme="light"
+        didLaunchApp
+        termsOfUseAccepted
+        setCurrentLocation={mockSetCurrentLocation as any}
+        setNavigationTab={mockSetNavigationTab as any}
+        fetchAnnouncements={mockFetchAnnouncements as any}
+      />
+    );
+    const view = render(navigator);
+    const weatherOptions = () => mockWeatherStack.mock.calls.at(-1)![0].nativeWeatherOptions;
+    expect(weatherOptions().unstable_headerRightItems).toBeUndefined();
+    expect(weatherOptions().headerShown).toBe(layout !== 'vertical');
+
+    mockVerticalBarLayout = true;
+    view.rerender(React.cloneElement(navigator));
+    expect(weatherOptions().unstable_headerRightItems({})).toHaveLength(2);
+    expect(weatherOptions().headerShown).toBe(true);
+
+    mockVerticalBarLayout = false;
+    view.rerender(React.cloneElement(navigator));
+    expect(weatherOptions().unstable_headerRightItems).toBeUndefined();
+    expect(weatherOptions().headerShown).toBe(layout !== 'vertical');
   });
 
   it('waits for Mac detection before running launch effects', () => {

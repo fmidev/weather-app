@@ -6,7 +6,10 @@ import {
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
-import { selectCurrent } from '@store/location/selector';
+import {
+  selectCurrent,
+  selectLocationUpdateCount,
+} from '@store/location/selector';
 import { selectAnnouncements } from '@store/announcements/selectors';
 
 import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
@@ -35,6 +38,7 @@ import { useTranslation } from 'react-i18next';
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
   location: selectCurrent(state),
+  locationUpdateCount: selectLocationUpdateCount(state),
 });
 
 const mapDispatchToProps = {
@@ -61,6 +65,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   resetObservations,
   location,
   announcements,
+  locationUpdateCount = 0,
 }) => {
   const { i18n } = useTranslation();
   const isFocused = useIsFocused();
@@ -73,7 +78,19 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const [observationVisible, setObservationVisible] = useState(false);
   const observationRef = useRef<ViewInstance>(null);
   const scrollViewRef = useRef<ScrollViewInstance>(null);
+  const lastLocationUpdateCount = useRef(locationUpdateCount);
   const { shouldReload } = useReloader();
+
+  useEffect(() => {
+    if (
+      !isFocused ||
+      lastLocationUpdateCount.current === locationUpdateCount
+    ) {
+      return;
+    }
+    lastLocationUpdateCount.current = locationUpdateCount;
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+  }, [locationUpdateCount, isFocused]);
 
   const { weather: weatherConfig, warnings: warningsConfig, news: newsConfig } = Config.getAll();
   const showMeteorologistSnapshot = weatherConfig.meteorologist?.url &&
@@ -254,6 +271,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       >
         <ScrollView
           testID="weather_scrollview"
+          ref={scrollViewRef}
           style={[styles.container]}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}

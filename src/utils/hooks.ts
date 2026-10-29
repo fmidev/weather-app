@@ -8,6 +8,8 @@ import {
 import type { LayoutChangeEvent, ViewProps } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+export { usesVerticalBarLayout } from './usesVerticalBarLayout';
+
 const ACCESSIBILITY_LOCALES: Record<string, string> = {
   fi: 'fi-FI',
   sv: 'sv-SE',

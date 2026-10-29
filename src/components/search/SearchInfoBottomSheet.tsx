@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
-import Text from '@components/common/AppText'
+import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
 import { GRAY_1, CustomTheme } from '@assets/colors';
@@ -18,7 +20,10 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
   const { colors, dark } = useTheme() as CustomTheme;
 
   return (
-    <View testID="search_info_bottom_sheet" style={styles.sheetListContainer}>
+    <SafeAreaView
+      testID="search_info_bottom_sheet"
+      style={styles.sheetListContainer}
+      edges={['left', 'right']}>
       <View style={styles.closeButtonContainer}>
         <CloseButton
           testID="search_info_bottom_sheet_close_button"
@@ -127,7 +132,7 @@ const SearchInfoBottomSheet: React.FC<SearchInfoSheetProps> = ({ onClose }) => {
           </Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

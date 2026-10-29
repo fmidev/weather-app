@@ -418,6 +418,7 @@ jest.mock('@utils/reloader', () => ({
 
 jest.mock('@store/location/selector', () => ({
   selectCurrent: jest.fn(),
+  selectLocationUpdateCount: jest.fn(),
   selectFavorites: jest.fn(),
   selectLoading: jest.fn(),
   selectRecent: jest.fn(),

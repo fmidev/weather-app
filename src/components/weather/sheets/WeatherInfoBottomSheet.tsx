@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  View, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  useWindowDimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { SvgProps } from 'react-native-svg';
@@ -118,7 +123,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
 
   return (
     <View testID="weather_info_bottom_sheet" style={styles.wrapper}>
-      <View style={styles.sheetListContainer}>
+      <SafeAreaView edges={['left', 'right']} style={styles.sheetListContainer}>
         <View style={styles.closeButtonContainer}>
           <CloseButton
             testID="weather_info_bottom_sheet_close_button"
@@ -137,8 +142,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             <View style={styles.sheetTitle}>
               <Text
                 accessibilityRole="header"
-                style={[styles.title, { color: colors.primaryText }]}
-              >
+                style={[styles.title, { color: colors.primaryText }]}>
                 {t('weatherInfoBottomSheet.precipitationStripTitle')}
               </Text>
             </View>
@@ -246,8 +250,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             <View style={styles.sheetTitle}>
               <Text
                 accessibilityRole="header"
-                style={[styles.title, { color: colors.primaryText }]}
-              >
+                style={[styles.title, { color: colors.primaryText }]}>
                 {t('weatherInfoBottomSheet.hourlyForecastInfoTitle')}
               </Text>
             </View>
@@ -265,8 +268,9 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.hourlyForecastedTemperature', {
-                    unit:
-                      t(`unitAbbreviations:${units?.temperature.unitAbb ?? defaultUnits.temperature}`),
+                    unit: t(
+                      `unitAbbreviations:${units?.temperature.unitAbb ?? defaultUnits.temperature}`
+                    ),
                   })}
                 </Text>
               </View>
@@ -285,7 +289,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <Text style={[styles.text, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.feelsLikeTemperature', {
-                    unit: t(`unitAbbreviations:${temperatureUnit}`)
+                    unit: t(`unitAbbreviations:${temperatureUnit}`),
                   })}
                 </Text>
               </View>
@@ -305,7 +309,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                   </View>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('weatherInfoBottomSheet.windSpeedAndDirection', {
-                      unit: t(`unitAbbreviations:${windUnit}`)
+                      unit: t(`unitAbbreviations:${windUnit}`),
                     })}
                   </Text>
                 </View>
@@ -516,8 +520,8 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
               </View>
             )}
 
-            {(activeConstants.includes(RELATIVE_HUMIDITY)
-              || activeConstants.includes(HUMIDITY)) &&  (
+            {(activeConstants.includes(RELATIVE_HUMIDITY) ||
+              activeConstants.includes(HUMIDITY)) && (
               <View style={styles.row}>
                 <View style={styles.iconWrapper}>
                   <Text
@@ -580,10 +584,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <View style={[styles.row]}>
                   <Text
-                    style={[
-                      styles.unitText,
-                      { color: colors.hourListText },
-                    ]}>
+                    style={[styles.unitText, { color: colors.hourListText }]}>
                     0–2
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -592,10 +593,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <View style={[styles.row]}>
                   <Text
-                    style={[
-                      styles.unitText,
-                      { color: colors.hourListText },
-                    ]}>
+                    style={[styles.unitText, { color: colors.hourListText }]}>
                     3–5
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -604,10 +602,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <View style={[styles.row]}>
                   <Text
-                    style={[
-                      styles.unitText,
-                      { color: colors.hourListText },
-                    ]}>
+                    style={[styles.unitText, { color: colors.hourListText }]}>
                     6–7
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -616,10 +611,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <View style={[styles.row]}>
                   <Text
-                    style={[
-                      styles.unitText,
-                      { color: colors.hourListText },
-                    ]}>
+                    style={[styles.unitText, { color: colors.hourListText }]}>
                     10–8
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -628,10 +620,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                 </View>
                 <View style={[styles.row]}>
                   <Text
-                    style={[
-                      styles.unitText,
-                      { color: colors.hourListText },
-                    ]}>
+                    style={[styles.unitText, { color: colors.hourListText }]}>
                     ≥11
                   </Text>
                   <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -756,8 +745,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             <View style={styles.sheetTitle}>
               <Text
                 accessibilityRole="header"
-                style={[styles.title, { color: colors.primaryText }]}
-              >
+                style={[styles.title, { color: colors.primaryText }]}>
                 {t('weatherInfoBottomSheet.timezone')}
               </Text>
             </View>
@@ -775,8 +763,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             <View style={[styles.sheetTitle, styles.withMarginBottom]}>
               <Text
                 accessibilityRole="header"
-                style={[styles.title, { color: colors.primaryText }]}
-              >
+                style={[styles.title, { color: colors.primaryText }]}>
                 {t('weatherInfoBottomSheet.currentWeatherSymbolsTitle')}
               </Text>
             </View>
@@ -799,18 +786,31 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
                             styles.bold,
                             styles.flex1,
                             { color: colors.hourListText },
-                          ]}>{`${t(`symbols:${item.key}`)}`}
+                          ]}>
+                          {`${t(`symbols:${item.key}`)}`}
                         </Text>
                       </View>
-                      <View key={item.key} style={[styles.row, styles.symbolRow]}>
+                      <View
+                        key={item.key}
+                        style={[styles.row, styles.symbolRow]}>
                         <View style={styles.symbolContainer}>
-                          <Text style={[styles.symbolText, styles.symbolGap, { color: colors.hourListText }]}>
+                          <Text
+                            style={[
+                              styles.symbolText,
+                              styles.symbolGap,
+                              { color: colors.hourListText },
+                            ]}>
                             {t('weatherInfoBottomSheet.dayTime')}
                           </Text>
                           <item.day width={symbolSize} height={symbolSize} />
                         </View>
                         <View style={styles.symbolContainer}>
-                          <Text style={[styles.symbolText, styles.symbolGap, { color: colors.hourListText }]}>
+                          <Text
+                            style={[
+                              styles.symbolText,
+                              styles.symbolGap,
+                              { color: colors.hourListText },
+                            ]}>
                             {t('weatherInfoBottomSheet.nightTime')}
                           </Text>
                           <item.night width={symbolSize} height={symbolSize} />
@@ -851,7 +851,7 @@ const WeatherInfoBottomSheet: React.FC<WeatherInfoBottomSheetProps> = ({
             )}
           </TouchableOpacity>
         </ScrollView>
-      </View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -863,12 +863,11 @@ const styles = StyleSheet.create({
   sheetListContainer: {
     flex: 1,
     marginTop: -10,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
   },
   closeButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginRight: -2,
   },
   sheetTitle: {
     flexDirection: 'row',
@@ -981,7 +980,7 @@ const styles = StyleSheet.create({
   bold: {
     fontFamily: BOLD_FONT,
     fontWeight: 'bold',
-  }
+  },
 });
 
 export default connector(WeatherInfoBottomSheet);

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useAccessibilityLanguage } from '@utils/hooks';
 import PanelHeader from '@components/common/PanelHeader';
@@ -19,6 +19,7 @@ import {
   selectLoading,
 } from '@store/warnings/selectors';
 import CapWarningsLegend from './CapWarningsLegend';
+import useWarningsInfo from '../useWarningsInfo';
 import MapView from './MapView';
 import TextList from './TextList';
 import LocalWarningsBar from './LocalWarningsBar';
@@ -42,7 +43,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   loading,
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
-  const legendSheetRef = useRef<RBSheet>(null);
+  const { infoSheetRef: legendSheetRef, openInfo } = useWarningsInfo();
 
   const { t, i18n } = useTranslation('warnings');
   const locale = i18n.language;
@@ -149,7 +150,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
               accessibilityLabel={t('infoAccessibilityLabel')}
               accessibilityHint={t('infoAccessibilityHint')}
               style={styles.infoButton}
-              onPress={() => legendSheetRef.current?.open()}>
+              onPress={openInfo}>
               <Icon
                 name="info"
                 color={colors.primaryText}
