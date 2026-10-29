@@ -1,15 +1,29 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, ImageBackground, useWindowDimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  useWindowDimensions,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
 import AccessibleView from '@components/common/AccessibleView';
 import { State } from '@store/types';
-import { selectIsWaningMoonPhase, selectLoading, selectNextHourForecast } from '@store/forecast/selectors';
+import {
+  selectIsWaningMoonPhase,
+  selectLoading,
+  selectNextHourForecast,
+} from '@store/forecast/selectors';
 import { selectClockType } from '@store/settings/selectors';
 
-import { sunBackground, sunBackgroundDark, moonPhaseImages } from '@assets/images/backgrounds';
+import {
+  sunBackground,
+  sunBackgroundDark,
+  moonPhaseImages,
+} from '@assets/images/backgrounds';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme, WHITE, BLACK } from '@assets/colors';
 import { resolveMoonPhase } from '@utils/moon';
@@ -37,7 +51,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
   loading,
   forecast,
   waningMoonPhase,
-  clockType
+  clockType,
 }) => {
   const ICON_SIZE = 16;
   const { fontScale } = useWindowDimensions();
@@ -51,7 +65,13 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 
   if (loading || !forecast) {
     return (
-      <View style={[styles.flex, styles.row, styles.center, { backgroundColor: colors.background }]}>
+      <View
+        style={[
+          styles.flex,
+          styles.row,
+          styles.center,
+          { backgroundColor: colors.background },
+        ]}>
         <View style={styles.sunBox}>
           <Skeleton width={boxWidth} height={boxHeight} radius={10} />
         </View>
@@ -62,7 +82,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
     );
   }
 
-  const { excludeDayDuration, excludePolarNightAndMidnightSun } = Config.get('weather').forecast;
+  const { excludeDayDuration, excludePolarNightAndMidnightSun } =
+    Config.get('weather').forecast;
 
   const sunrise = moment(`${forecast.sunrise}Z`);
   const sunset = moment(`${forecast.sunset}Z`);
@@ -75,184 +96,219 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
   const sunsetDay = moment(sunset).format('D');
   const isSunriseAndDayInSameDay = sunriseDay === sunsetDay;
 
-  const isPolarNight = (excludePolarNightAndMidnightSun === undefined || !excludePolarNightAndMidnightSun)
-                        &&!isSunriseAndDayInSameDay && sunset.isBefore(sunrise);
-  const isMidnightSun = (excludePolarNightAndMidnightSun === undefined || !excludePolarNightAndMidnightSun)
-                        && !isSunriseAndDayInSameDay && sunrise.isBefore(sunset) && sunriseSunsetDiff >= 36;
+  const isPolarNight =
+    (excludePolarNightAndMidnightSun === undefined ||
+      !excludePolarNightAndMidnightSun) &&
+    !isSunriseAndDayInSameDay &&
+    sunset.isBefore(sunrise);
+  const isMidnightSun =
+    (excludePolarNightAndMidnightSun === undefined ||
+      !excludePolarNightAndMidnightSun) &&
+    !isSunriseAndDayInSameDay &&
+    sunrise.isBefore(sunset) &&
+    sunriseSunsetDiff >= 36;
 
   const dateFormat = clockType === 12 ? `D.M.YYYY h:mm a` : `D.M.YYYY HH:mm`;
 
   const timeFormat = clockType === 12 ? 'h.mm' : 'HH:mm';
   const accessibleTimeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
 
-  const moonPhase = resolveMoonPhase(forecast.moonPhase as number, waningMoonPhase);
+  const moonPhase = resolveMoonPhase(
+    forecast.moonPhase as number,
+    waningMoonPhase
+  );
   const moonBackground = moonPhaseImages[moonPhase];
   const iconSize = Math.min(ICON_SIZE * fontScale, 32);
-  const moonPhaseWidth = Math.min(fontScale * 80, boxWidth/1.8);
+  const moonPhaseWidth = Math.min(fontScale * 80, boxWidth / 1.8);
 
   return (
-    <View style={[styles.container, styles.flex, styles.center, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      edges={['left', 'right']}
+      style={[
+        styles.container,
+        styles.flex,
+        styles.center,
+        { backgroundColor: colors.background },
+      ]}>
       <AccessibleView
-        style={[styles.box, styles.sunBox, { width: boxWidth, height: boxHeight }]}
-        accessible
-      >
-        <ImageBackground source={dark ? sunBackgroundDark : sunBackground}
+        style={[
+          styles.box,
+          styles.sunBox,
+          { width: boxWidth, height: boxHeight },
+        ]}
+        accessible>
+        <ImageBackground
+          source={dark ? sunBackgroundDark : sunBackground}
           resizeMode="cover"
           style={styles.flex}
-          imageStyle={styles.background}
-        >
-          <AccessibleView style={styles.info} accessible accessibilityRole="header">
-            <Text style={[styles.text, { color: colors.primaryText}]}>
+          imageStyle={styles.background}>
+          <AccessibleView
+            style={styles.info}
+            accessible
+            accessibilityRole="header">
+            <Text style={[styles.text, { color: colors.primaryText }]}>
               {t('dayLength')}
             </Text>
           </AccessibleView>
-            {isPolarNight && !isMidnightSun && (
-              <AccessibleView accessible>
-                <AccessibleView accessible style={styles.sunInfo}>
-                  <Icon
-                    width={iconSize}
-                    height={iconSize}
-                    name="polar-night"
-                    style={[styles.sunIcon, { color: colors.primaryText}]}
-                  />
-                  <Text style={[styles.text, { color: colors.primaryText}]}>
-                    {t('weatherInfoBottomSheet.polarNight')}
-                  </Text>
-                </AccessibleView>
+          {isPolarNight && !isMidnightSun && (
+            <AccessibleView accessible>
+              <AccessibleView accessible style={styles.sunInfo}>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  name="polar-night"
+                  style={[styles.sunIcon, { color: colors.primaryText }]}
+                />
+                <Text style={[styles.text, { color: colors.primaryText }]}>
+                  {t('weatherInfoBottomSheet.polarNight')}
+                </Text>
+              </AccessibleView>
+              <AccessibleView style={[styles.sunInfo]} accessible>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  name="sun-arrow-up"
+                  style={[styles.sunIcon, { color: colors.primaryText }]}
+                />
+                <Text
+                  accessibilityLabel={`${t('sunrise')} ${formatAccessibleDateTime(sunrise, t, clockType === 24)}`}
+                  style={[styles.text, { color: colors.primaryText }]}>
+                  {sunrise.format(dateFormat)}
+                </Text>
+              </AccessibleView>
+            </AccessibleView>
+          )}
+
+          {isMidnightSun && !isPolarNight && (
+            <AccessibleView accessible>
+              <AccessibleView accessible style={styles.sunInfo}>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  name="midnight-sun"
+                  style={[styles.sunIcon, { color: colors.primaryText }]}
+                />
+                <Text style={[styles.text, { color: colors.primaryText }]}>
+                  {t('weatherInfoBottomSheet.nightlessNight')}
+                </Text>
+              </AccessibleView>
+              <AccessibleView style={[styles.sunInfo]} accessible>
+                <Icon
+                  width={iconSize}
+                  height={iconSize}
+                  name="sun-arrow-down"
+                  style={[styles.sunIcon, { color: colors.primaryText }]}
+                />
+                <Text
+                  accessibilityLabel={`${t('sunset')} ${formatAccessibleDateTime(sunset, t, clockType === 24)}`}
+                  style={[styles.text, { color: colors.primaryText }]}>
+                  {sunset.format(dateFormat)}
+                </Text>
+              </AccessibleView>
+            </AccessibleView>
+          )}
+
+          {!isPolarNight && !isMidnightSun && (
+            <View>
+              <View style={[styles.row]}>
                 <AccessibleView style={[styles.sunInfo]} accessible>
                   <Icon
                     width={iconSize}
                     height={iconSize}
                     name="sun-arrow-up"
-                    style={[styles.sunIcon, { color: colors.primaryText}]}
+                    style={[styles.sunIcon, { color: colors.primaryText }]}
                   />
                   <Text
-                    accessibilityLabel={`${t('sunrise')} ${formatAccessibleDateTime(sunrise, t, clockType === 24)}`}
-                    style={[styles.text, { color: colors.primaryText}]}>
-                    {sunrise.format(dateFormat)}
+                    accessibilityLabel={`${t('sunrise')} ${t(
+                      'time:atSpoken'
+                    )} ${sunrise.format(accessibleTimeFormat)}`}
+                    style={[styles.text, { color: colors.primaryText }]}>
+                    {sunrise.format(timeFormat)}
                   </Text>
-                </AccessibleView>
-              </AccessibleView>
-            )}
-
-            {isMidnightSun && !isPolarNight && (
-              <AccessibleView accessible>
-                <AccessibleView accessible style={styles.sunInfo}>
-                  <Icon
-                    width={iconSize}
-                    height={iconSize}
-                    name="midnight-sun"
-                    style={[styles.sunIcon, { color: colors.primaryText}]}
-                  />
-                  <Text style={[styles.text, { color: colors.primaryText}]}>
-                    {t('weatherInfoBottomSheet.nightlessNight')}
-                  </Text>
+                  {clockType === 12 && (
+                    <Text
+                      style={[styles.smallText, { color: colors.primaryText }]}
+                      accessible={false}
+                      importantForAccessibility="no"
+                      accessibilityLabel="">
+                      {sunrise.format('a')}
+                    </Text>
+                  )}
                 </AccessibleView>
                 <AccessibleView style={[styles.sunInfo]} accessible>
                   <Icon
                     width={iconSize}
                     height={iconSize}
                     name="sun-arrow-down"
-                    style={[styles.sunIcon, { color: colors.primaryText}]}
+                    style={[styles.sunIcon, { color: colors.primaryText }]}
                   />
                   <Text
-                    accessibilityLabel={`${t('sunset')} ${formatAccessibleDateTime(sunset, t, clockType === 24)}`}
-                    style={[styles.text, { color: colors.primaryText}]}>
-                    {sunset.format(dateFormat)}
+                    accessibilityLabel={`${t('sunset')} ${t(
+                      'time:atSpoken'
+                    )} ${sunset.format(accessibleTimeFormat)}`}
+                    style={[styles.text, { color: colors.primaryText }]}>
+                    {sunset.format(timeFormat)}
                   </Text>
+                  {clockType === 12 && (
+                    <Text
+                      style={[styles.smallText, { color: colors.primaryText }]}
+                      accessible={false}
+                      importantForAccessibility="no"
+                      accessibilityLabel="">
+                      {sunset.format('a')}
+                    </Text>
+                  )}
                 </AccessibleView>
-              </AccessibleView>
-            )}
-
-            {!isPolarNight && !isMidnightSun && (
-              <View>
-                <View style={[styles.row]}>
-                  <AccessibleView style={[styles.sunInfo]} accessible>
-                    <Icon
-                      width={iconSize}
-                      height={iconSize}
-                      name="sun-arrow-up"
-                      style={[styles.sunIcon, { color: colors.primaryText}]}
-                    />
-                    <Text
-                      accessibilityLabel={`${t('sunrise')} ${t(
-                        'time:atSpoken'
-                      )} ${sunrise.format(accessibleTimeFormat)}`}
-                      style={[styles.text, { color: colors.primaryText}]}>
-                      {sunrise.format(timeFormat)}
-                    </Text>
-                    { clockType === 12 && (
-                      <Text
-                        style={[styles.smallText, { color: colors.primaryText}]}
-                        accessible={false}
-                        importantForAccessibility="no"
-                        accessibilityLabel=""
-                      >
-                        {sunrise.format('a')}
-                      </Text>
-                    )}
-                  </AccessibleView>
-                  <AccessibleView style={[styles.sunInfo]} accessible>
-                    <Icon
-                      width={iconSize}
-                      height={iconSize}
-                      name="sun-arrow-down"
-                      style={[styles.sunIcon, { color: colors.primaryText}]}
-                    />
-                    <Text
-                      accessibilityLabel={`${t('sunset')} ${t(
-                        'time:atSpoken'
-                      )} ${sunset.format(accessibleTimeFormat)}`}
-                      style={[styles.text, { color: colors.primaryText}]}>
-                      {sunset.format(timeFormat)}
-                    </Text>
-                    { clockType === 12 && (
-                      <Text
-                        style={[styles.smallText, { color: colors.primaryText}]}
-                        accessible={false}
-                        importantForAccessibility="no"
-                        accessibilityLabel=""
-                      >
-                        {sunset.format('a')}
-                      </Text>
-                    )}
-                  </AccessibleView>
-                </View>
-                {(excludeDayDuration === undefined || !excludeDayDuration) && (
-                  <AccessibleView style={styles.sunInfo} accessible>
-                    <Icon
+              </View>
+              {(excludeDayDuration === undefined || !excludeDayDuration) && (
+                <AccessibleView style={styles.sunInfo} accessible>
+                  <Icon
                     width={iconSize}
                     height={iconSize}
-                      name="time"
-                      style={[styles.sunIcon, { color: colors.primaryText}]}
-                    />
-                    <Text
-                      accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
-                        'time:hoursSpoken'
-                      )} ${dayMinutes} ${t('time:minutesSpoken')}`}
-                      style={[styles.text, { color: colors.primaryText}]}>
-                      {`${dayHours} h ${dayMinutes} min`}
-                    </Text>
-                  </AccessibleView>
-                )}
-              </View>
+                    name="time"
+                    style={[styles.sunIcon, { color: colors.primaryText }]}
+                  />
+                  <Text
+                    accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
+                      'time:hoursSpoken'
+                    )} ${dayMinutes} ${t('time:minutesSpoken')}`}
+                    style={[styles.text, { color: colors.primaryText }]}>
+                    {`${dayHours} h ${dayMinutes} min`}
+                  </Text>
+                </AccessibleView>
+              )}
+            </View>
           )}
         </ImageBackground>
       </AccessibleView>
-      <View style={[styles.box, styles.moonBox, { width: boxWidth, height: boxHeight }]} >
-        <ImageBackground source={moonBackground} resizeMode="cover" style={styles.flex} imageStyle={styles.background}>
+      <View
+        style={[
+          styles.box,
+          styles.moonBox,
+          { width: boxWidth, height: boxHeight },
+        ]}>
+        <ImageBackground
+          source={moonBackground}
+          resizeMode="cover"
+          style={styles.flex}
+          imageStyle={styles.background}>
           <AccessibleView style={styles.info} accessible>
             <Text style={[styles.text, { color: WHITE }]}>
               {t('moonPhase')}
             </Text>
             <Text
               accessibilityLabel={t(`sunAndMoon.${moonPhase}`)}
-              style={[styles.text, styles.moonPhase, { width: moonPhaseWidth }]}>
-                {t(`sunAndMoon.${moonPhase}`)}</Text>
+              style={[
+                styles.text,
+                styles.moonPhase,
+                { width: moonPhaseWidth },
+              ]}>
+              {t(`sunAndMoon.${moonPhase}`)}
+            </Text>
           </AccessibleView>
         </ImageBackground>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -276,7 +332,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     columnGap: 8,
-    marginHorizontal: 8,
+    marginHorizontal: 16,
   },
   row: {
     flexDirection: 'row',
@@ -315,7 +371,7 @@ const styles = StyleSheet.create({
   moonPhase: {
     width: 80,
     color: WHITE,
-    marginTop: 8
+    marginTop: 8,
   },
 });
 

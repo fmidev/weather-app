@@ -157,10 +157,10 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
-  SafeAreaView: ({ children }: any) => {
+  SafeAreaView: ({ children, ...props }: any) => {
     const ReactActual = require('react');
     const { View } = require('react-native');
-    return ReactActual.createElement(View, null, children);
+    return ReactActual.createElement(View, props, children);
   },
   useSafeAreaInsets: () => ({
     bottom: 0,
