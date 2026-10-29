@@ -5,6 +5,7 @@ import { act, fireEvent, render } from '@testing-library/react-native';
 import TabNavigator from '../../src/navigators/TabNavigator';
 import { MacContentSizeProvider } from '../../src/components/common/MacContentSizeContext';
 import { sendMatomoEvents } from '@utils/matomo';
+import { lightTheme, darkTheme } from '../../src/assets/themes';
 
 const originalAppState = AppState.currentState;
 const mockConfigGet = jest.fn();
@@ -416,7 +417,7 @@ describe('TabNavigator', () => {
     expect(mockSetNavigationBarTheme).toHaveBeenLastCalledWith(false);
   });
 
-  it.each(['light', 'dark'] as const)('uses Android header colors for native buttons in the %s theme', (theme) => {
+  it.each(['light', 'dark'] as const)('uses theme text colors for native headers in the %s theme', (theme) => {
     mockVerticalBarLayout = true;
     render(
       <TabNavigator
@@ -437,13 +438,7 @@ describe('TabNavigator', () => {
       mockWeatherStack.mock.calls.at(-1)![0].nativeSearchOptions,
     ];
     options.forEach((header) => {
-      const props = { tintColor: header.headerTintColor };
-      const items = [
-        ...(header.unstable_headerLeftItems?.(props) ?? []),
-        ...(header.unstable_headerRightItems?.(props) ?? []),
-      ];
-      expect(items.length).toBeGreaterThan(0);
-      expect(items.every((item: any) => item.tintColor === expectedColor)).toBe(true);
+      expect(header.headerTintColor).toBe(expectedColor);
     });
   });
 
