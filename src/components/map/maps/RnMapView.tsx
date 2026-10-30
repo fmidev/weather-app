@@ -19,11 +19,13 @@ import {
   selectActiveOverlay,
   selectDisplayLocation,
   selectOverlay,
+  selectAnimateToArea,
 } from '@store/map/selectors';
 import {
   updateOverlays as updateOverlaysAction,
   updateRegion as updateRegionAction,
   updateSelectedCallout as updateSelectedCalloutAction,
+  setAnimateToArea as setAnimateToAreaAction,
 } from '@store/map/actions';
 
 import darkMapStyle from '@utils/dark_map_style.json';
@@ -55,12 +57,14 @@ const mapStateToProps = (state: State) => ({
   overlay: selectOverlay(state),
   activeOverlay: selectActiveOverlay(state),
   timezone: selectTimeZone(state),
+  animateToArea: selectAnimateToArea(state),
 });
 
 const mapDispatchToProps = {
   updateOverlays: updateOverlaysAction,
   updateRegion: updateRegionAction,
   updateSelectedCallout: updateSelectedCalloutAction,
+  setAnimateToArea: setAnimateToAreaAction,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -81,6 +85,8 @@ const RnMapView: React.FC<MapViewProps> = ({
   timezone,
   updateRegion,
   updateSelectedCallout,
+  animateToArea,
+  setAnimateToArea,
   infoSheetRef,
   mapLayersSheetRef,
 }) => {
@@ -93,6 +99,7 @@ const RnMapView: React.FC<MapViewProps> = ({
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
 
   const location = currentLocation ?? Config.get('location').default;
+  const centeredLocationRef = useRef<typeof location | undefined>(undefined);
 
   const initialRegion = {
     latitude: location.lat ?? INITIAL_REGION.latitude,
@@ -134,11 +141,14 @@ const RnMapView: React.FC<MapViewProps> = ({
   ]);
 
   useEffect(() => {
-    if (location && mapRef.current) {
+    if (location && mapRef.current && isFocused) {
+      if (!animateToArea && centeredLocationRef.current === location) return;
+      centeredLocationRef.current = location;
       const { lat: latitude, lon: longitude } = location;
       mapRef.current.animateToRegion({ ...ANIMATE_ZOOM, latitude, longitude });
+      if (animateToArea) setAnimateToArea(false);
     }
-  }, [location]);
+  }, [location, isFocused, animateToArea, setAnimateToArea]);
 
   const handleZoomIn = () => {
     if (mapRef.current) {

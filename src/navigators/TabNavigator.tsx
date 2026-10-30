@@ -46,6 +46,7 @@ import {
   useIsRunningOnMac,
 } from '@components/common/MacContentSizeContext';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
+import { setAnimateToArea as setAnimateToAreaAction } from '@store/map/actions';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
 import {
@@ -92,6 +93,7 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = {
   setCurrentLocation: setCurrentLocationAction,
+  setAnimateToArea: setAnimateToAreaAction,
   setNavigationTab: setNavigationTabAction,
   fetchAnnouncements: fetchAnnouncementsAction,
 };
@@ -106,6 +108,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 
 const Navigator: React.FC<Props> = ({
   setCurrentLocation,
+  setAnimateToArea,
   setNavigationTab,
   theme,
   initialTab,
@@ -258,8 +261,10 @@ const Navigator: React.FC<Props> = ({
     () =>
       ({
         navigation,
+        centerMap = false,
       }: {
         navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
+        centerMap?: boolean;
       }) => ({
         ...CommonHeaderOptions,
         // eslint-disable-next-line react/no-unstable-nested-components
@@ -270,7 +275,15 @@ const Navigator: React.FC<Props> = ({
             icon="locate"
             onPress={() => {
               trackMatomoEvent('User action', 'Map', 'Geolocation');
-              getGeolocation(setCurrentLocation, t, undefined, () => store.getState().location.current);
+              getGeolocation(
+                (location, isGeolocation) => {
+                  setCurrentLocation(location, isGeolocation);
+                  if (centerMap) setAnimateToArea(true);
+                },
+                t,
+                undefined,
+                () => store.getState().location.current
+              );
             }}
           />
         ),
@@ -296,7 +309,7 @@ const Navigator: React.FC<Props> = ({
           />
         ),
       }),
-    [CommonHeaderOptions, setCurrentLocation, t, store]
+    [CommonHeaderOptions, setCurrentLocation, setAnimateToArea, t, store]
   );
 
   const SearchScreenOptions = useMemo(
@@ -337,7 +350,7 @@ const Navigator: React.FC<Props> = ({
 
   const mapScreenOptions = useMemo(
     () => ({
-      ...LocationHeaderOptions({ navigation: navigationRef as any }),
+      ...LocationHeaderOptions({ navigation: navigationRef as any, centerMap: true }),
       // eslint-disable-next-line react/no-unstable-nested-components
       header: (props: StackHeaderProps) => <AnnouncementsHeader {...props} />,
     })
