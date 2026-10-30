@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
+import { useAccessibilityLanguage } from '@utils/hooks';
 import CloseButton from '@components/common/CloseButton';
 import {
   CustomTheme,
@@ -23,6 +24,7 @@ import TypeColorRow from '../TypeColorRow';
 import { BOLD_FONT } from '@assets/constants';
 
 const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors } = useTheme() as CustomTheme;
   const severityColors = [
     CAP_WARNING_NEUTRAL,
@@ -38,93 +40,95 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableOpacity activeOpacity={1} accessible={false}>
           <View style={[styles.contentContainer, styles.borderBottom]}>
-            <Text style={[styles.headingText, { color: colors.primaryText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:dailyTitle')}
             </Text>
             <View style={styles.legendRow}>
               <CapSeverityBar severities={[0, 0, 0, 0]} />
               <Text
-                style={[
-                  styles.severityBarLegendText,
-                  { color: colors.hourListText },
-                ]}>
+                accessibilityLanguage={accessibilityLanguage}
+                style={[styles.severityBarLegendText, { color: colors.hourListText }]}>
                 {t('warnings:severities:0')}
               </Text>
             </View>
             <View style={styles.legendRow}>
               <CapSeverityBar severities={[1, 1, 1, 1]} />
               <Text
-                style={[
-                  styles.severityBarLegendText,
-                  { color: colors.hourListText },
-                ]}>
+                accessibilityLanguage={accessibilityLanguage}
+                style={[styles.severityBarLegendText, { color: colors.hourListText }]}>
                 {t('warnings:severities:1')}
               </Text>
             </View>
             <View style={styles.legendRow}>
               <CapSeverityBar severities={[2, 2, 2, 2]} />
               <Text
-                style={[
-                  styles.severityBarLegendText,
-                  { color: colors.hourListText },
-                ]}>
+                accessibilityLanguage={accessibilityLanguage}
+                style={[styles.severityBarLegendText, { color: colors.hourListText }]}>
                 {t('warnings:severities:2')}
               </Text>
             </View>
             <View style={styles.legendRow}>
               <CapSeverityBar severities={[3, 3, 3, 3]} />
               <Text
-                style={[
-                  styles.severityBarLegendText,
-                  { color: colors.hourListText },
-                ]}>
+                accessibilityLanguage={accessibilityLanguage}
+                style={[styles.severityBarLegendText, { color: colors.hourListText }]}>
                 {t('warnings:severities:3')}
               </Text>
             </View>
             <View>
-              <Text style={{ color: colors.hourListText }}>
+              <Text
+                accessibilityLanguage={accessibilityLanguage}
+                style={{ color: colors.hourListText }}>
                 {t('warnings:capInfo:example')}
               </Text>
             </View>
             <View style={styles.legendRow}>
               <CapSeverityBar severities={[0, 0, 1, 1]} />
               <Text
-                style={[
-                  styles.severityBarLegendText,
-                  { color: colors.hourListText },
-                ]}>
+                accessibilityLanguage={accessibilityLanguage}
+                style={[styles.severityBarLegendText, { color: colors.hourListText }]}>
                 {t('warnings:capInfo:example1Text')}
               </Text>
             </View>
             <View style={styles.legendRow}>
               <CapSeverityBar severities={[1, 1, 2, 3]} />
               <Text
-                style={[
-                  styles.severityBarLegendText,
-                  { color: colors.hourListText },
-                ]}>
+                accessibilityLanguage={accessibilityLanguage}
+                style={[styles.severityBarLegendText, { color: colors.hourListText }]}>
                 {t('warnings:capInfo:example2Text')}
               </Text>
             </View>
           </View>
           <View style={styles.contentContainer}>
-            <Text style={[styles.headingText, { color: colors.primaryText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningExplanationsOnLand')}
             </Text>
-            <Text style={{ color: colors.hourListText }}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={{ color: colors.hourListText }}>
               // TODO: add warning symbols{' '}
             </Text>
           </View>
           <View style={styles.contentContainer}>
-            <Text style={[styles.headingText, { color: colors.primaryText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningExplanationsAtSea')}
             </Text>
-            <Text style={{ color: colors.hourListText }}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={{ color: colors.hourListText }}>
               // TODO: add warning symbols
             </Text>
           </View>
           <View style={[styles.contentContainer, styles.borderBottom]}>
-            <Text style={[styles.headingText, { color: colors.primaryText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:warningColorsExplanation')}
             </Text>
             <View>
@@ -141,10 +145,14 @@ const CapWarningsLegend = ({ onClose }: { onClose: () => void }) => {
             </View>
           </View>
           <View style={[styles.contentContainer]}>
-            <Text style={[styles.headingText, { color: colors.primaryText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.headingText, { color: colors.primaryText }]}>
               {t('warnings:capInfo:timezone')}
             </Text>
-            <Text style={{ color: colors.hourListText }}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={{ color: colors.hourListText }}>
               {t('warnings:capInfo:timezoneText')}
             </Text>
           </View>

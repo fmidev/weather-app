@@ -40,6 +40,7 @@
 		A2E2E99E2CFDF6070096E794 /* WidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2B3FF962CC7D1DA00EC1293 /* WidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A2E488092D002CA100A66016 /* SettingsIntentExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A2042C6C2CFF2EEE00C41A9E /* SettingsIntentExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A2E4880C2D00319300A66016 /* WidgetIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A2F695BC2CFEE1520064BAFE /* WidgetIntents.intentdefinition */; };
+		A2ED3F6C3086042A007C53DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ED3F6B3086042A007C53DC /* SceneDelegate.swift */; };
 		A2F695BD2CFEE1520064BAFE /* WidgetIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A2F695BC2CFEE1520064BAFE /* WidgetIntents.intentdefinition */; };
 		A41FA36F27FD733200B08157 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		A454032C25E66E860005997E /* SwiftEnabler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A454032B25E66E860005997E /* SwiftEnabler.swift */; };
@@ -134,6 +135,7 @@
 		A2B3FFB12CC8E6AE00EC1293 /* WeatherWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWidgetBundle.swift; sourceTree = "<group>"; };
 		A2B3FFB82CC9138800EC1293 /* defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = defaults.swift; sourceTree = "<group>"; };
 		A2B3FFBA2CC9174D00EC1293 /* network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = network.swift; sourceTree = "<group>"; };
+		A2ED3F6B3086042A007C53DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A2F695BB2CFEE1520064BAFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/WidgetIntents.intentdefinition; sourceTree = "<group>"; };
 		A2F695C12CFEE17F0064BAFE /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/WidgetIntents.strings; sourceTree = "<group>"; };
 		A2F695C32CFEE17F0064BAFE /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/WidgetIntents.strings; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 		13B07FAE1A68108700A75B9A /* MobileWeather */ = {
 			isa = PBXGroup;
 			children = (
+				A2ED3F6B3086042A007C53DC /* SceneDelegate.swift */,
 				A273C5EE2CF74B5C002C95C2 /* MobileWeather.entitlements */,
 				A443E2B425DBFF2200B0BCF9 /* Fonts */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -642,7 +645,6 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-timing/React-timing_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
@@ -672,7 +674,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-timing_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
@@ -867,6 +868,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2ED3F6C3086042A007C53DC /* SceneDelegate.swift in Sources */,
 				A292E7562D5F16C000DC288E /* AppDelegate.swift in Sources */,
 				A454032C25E66E860005997E /* SwiftEnabler.swift in Sources */,
 				F10000012F00000000000001 /* IOSCompatibilityMode.swift in Sources */,

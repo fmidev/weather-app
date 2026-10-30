@@ -21,6 +21,7 @@ import { useTheme, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { getDistance } from 'geolib';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import WMSOverlay from '@components/map/layers/WMSOverlay';
 import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
 import MapControls from '@components/map/ui/MapControls';
@@ -44,7 +45,11 @@ import {
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
 import getMapStyle from '@network/MapStyleApi';
-import { DEFAULT_WMS_BEFORE_ID, getMapStyleUrl, mergeMapStyles } from '@utils/mapStyle';
+import {
+  DEFAULT_WMS_BEFORE_ID,
+  getMapStyleUrl,
+  mergeMapStyles,
+} from '@utils/mapStyle';
 import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
 import type { Position } from 'geojson';
@@ -110,6 +115,7 @@ const MlMapView: React.FC<MapViewProps> = ({
   infoSheetRef,
   mapLayersSheetRef,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { i18n } = useTranslation();
   const { dark } = useTheme();
   const isFocused = useIsFocused();
@@ -139,7 +145,7 @@ const MlMapView: React.FC<MapViewProps> = ({
   const styleKey = JSON.stringify([baseStyleUrl, overlayStyleUrl]);
   // Keep the mounted map and camera while the next style is fetched.
   const mapStyle = overlayStyleUrl
-    ? loadedStyle?.style ?? baseStyleUrl
+    ? (loadedStyle?.style ?? baseStyleUrl)
     : baseStyleUrl;
   const stylePending = !!overlayStyleUrl && loadedStyle?.key !== styleKey;
   const styleReady = !stylePending && readyStyle === mapStyle && !!mapStyle;
@@ -153,9 +159,11 @@ const MlMapView: React.FC<MapViewProps> = ({
         getMapStyle(overlayStyleUrl),
       ]);
       if (!active) return;
-      let nextStyle: { style: string | StyleSpecification; beforeId?: string } = {
-        style: baseResult.status === 'fulfilled' ? baseResult.value : baseStyleUrl,
-      };
+      let nextStyle: { style: string | StyleSpecification; beforeId?: string } =
+        {
+          style:
+            baseResult.status === 'fulfilled' ? baseResult.value : baseStyleUrl,
+        };
       if (
         baseResult.status === 'fulfilled' &&
         overlayResult.status === 'fulfilled'
@@ -163,7 +171,11 @@ const MlMapView: React.FC<MapViewProps> = ({
         try {
           nextStyle = mergeMapStyles(baseResult.value, overlayResult.value);
         } catch (error) {
-          trackMatomoEvent('Error', 'Map', `Map style merge failed: ${String(error)}`);
+          trackMatomoEvent(
+            'Error',
+            'Map',
+            `Map style merge failed: ${String(error)}`
+          );
         }
       }
       setLoadedStyle({ key: styleKey, ...nextStyle });
@@ -186,22 +198,25 @@ const MlMapView: React.FC<MapViewProps> = ({
   }, [sessionId]);
 
   useEffect(() => {
-    const headerIds = Object.entries(fmiApiKey ?? {}).flatMap(([source, key]) => {
-      const baseUrl = sources?.[source]?.replace(/\/+$/, '');
-      if (!baseUrl || !key) return [];
+    const headerIds = Object.entries(fmiApiKey ?? {}).flatMap(
+      ([source, key]) => {
+        const baseUrl = sources?.[source]?.replace(/\/+$/, '');
+        if (!baseUrl || !key) return [];
 
-      const id = `fmi-apikey-${source}`;
-      const escapedUrl = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      TransformRequestManager.addHeader({
-        id,
-        match: `(?i)^${escapedUrl}/wms\\?(?:[^#]*&)?request=GetMap(?:&|$)`,
-        name: 'fmi-apikey',
-        value: key,
-      });
-      return [id];
-    });
+        const id = `fmi-apikey-${source}`;
+        const escapedUrl = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        TransformRequestManager.addHeader({
+          id,
+          match: `(?i)^${escapedUrl}/wms\\?(?:[^#]*&)?request=GetMap(?:&|$)`,
+          name: 'fmi-apikey',
+          value: key,
+        });
+        return [id];
+      }
+    );
 
-    return () => headerIds.forEach((id) => TransformRequestManager.removeHeader(id));
+    return () =>
+      headerIds.forEach((id) => TransformRequestManager.removeHeader(id));
   }, [sources, fmiApiKey]);
 
   const initialRegion = useMemo(
@@ -335,17 +350,23 @@ const MlMapView: React.FC<MapViewProps> = ({
   }, [location]);
 
   if (!mapStyle || !baseMap) {
-    return <Text>MapLibre requires baseMap configuration</Text>;
+    return (
+      <Text accessibilityLanguage={accessibilityLanguage}>
+        MapLibre requires baseMap configuration
+      </Text>
+    );
   }
 
-  const overlayBeforeId = loadedStyle?.key === styleKey ? loadedStyle.beforeId : undefined;
+  const overlayBeforeId =
+    loadedStyle?.key === styleKey ? loadedStyle.beforeId : undefined;
   // URL styles retain the historical boundary. For loaded JSON, only use it
   // when it exists; minimal base styles must still be able to render WMS.
-  const beforeId = overlayBeforeId ?? (
-    typeof mapStyle === 'string' || mapStyle.layers.some(({ id }) => id === DEFAULT_WMS_BEFORE_ID)
+  const beforeId =
+    overlayBeforeId ??
+    (typeof mapStyle === 'string' ||
+    mapStyle.layers.some(({ id }) => id === DEFAULT_WMS_BEFORE_ID)
       ? DEFAULT_WMS_BEFORE_ID
-      : null
-  );
+      : null);
 
   return (
     <View style={styles.mapContainer}>

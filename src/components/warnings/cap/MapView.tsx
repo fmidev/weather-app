@@ -4,6 +4,7 @@ import Map, { Geojson } from 'react-native-maps';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment-timezone';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { Config } from '@config';
 import { useTheme } from '@react-navigation/native';
 import { CapWarning, Severity } from '@store/warnings/types';
@@ -49,6 +50,7 @@ const MapView: React.FC<MapViewProps> = ({
   dates,
   capData,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { default: defaultLocation } = Config.get('location');
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const [selectedFilters, setSelectedFilters] = useState<
@@ -226,7 +228,11 @@ const MapView: React.FC<MapViewProps> = ({
       </Map>
       { loading && !capData ? (
         Platform.OS === 'android' ?
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator
+            accessibilityLanguage={accessibilityLanguage}
+            size="large"
+            color={colors.primary}
+          />
           : (
             <View
               pointerEvents="none"
@@ -234,7 +240,11 @@ const MapView: React.FC<MapViewProps> = ({
                 styles.loadingOverlay,
                 { backgroundColor: backgroundOverlayColor },
               ]}>
-                <ActivityIndicator size="large" color={colors.primary} />
+                <ActivityIndicator
+                  accessibilityLanguage={accessibilityLanguage}
+                  size="large"
+                  color={colors.primary}
+                />
             </View>
           )
       ) : (

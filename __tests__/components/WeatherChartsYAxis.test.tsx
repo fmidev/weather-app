@@ -1,6 +1,6 @@
 import React from 'react';
 import * as ReactNative from 'react-native';
-import { StyleSheet } from 'react-native';
+import { PixelRatio, StyleSheet } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import ChartYAxis from '@components/weather/charts/ChartYAxis';
@@ -150,6 +150,48 @@ test('positions temperature labels at the actual Victory scale coordinates', () 
       (scale.range[1] - scale.range[0]);
     expect(actualCenter).toBeCloseTo(expectedCenter);
   });
+});
+
+test('keeps axis layout stable when native text heights contain rounding noise', () => {
+  jest.spyOn(PixelRatio, 'get').mockReturnValue(3);
+  const onTopPaddingChange = jest.fn();
+  const view = render(
+    <ChartYAxis
+      chartType="temperature"
+      domain={{ y: [-5, 15] }}
+      yScale={{ domain: [-5, 15], range: [248, 40] }}
+      observation={false}
+      precipitationMaximum={5}
+      onTopPaddingChange={onTopPaddingChange}
+    />
+  );
+  const measure = (titleHeight: number, tickHeight: number) => {
+    fireEvent(view.getByText('°C'), 'layout', {
+      nativeEvent: { layout: { height: titleHeight } },
+    });
+    fireEvent(view.getByText('15'), 'layout', {
+      nativeEvent: { layout: { height: tickHeight } },
+    });
+  };
+
+  measure(15.3333740234375, 16.66668701171875);
+  const top = StyleSheet.flatten(view.getByText('15').props.style).top;
+  const padding = onTopPaddingChange.mock.calls.at(-1)[0];
+  onTopPaddingChange.mockClear();
+
+  // Scrolling and repositioning text must not resize the chart for float noise.
+  for (let i = 0; i < 60; i += 1) {
+    measure(15.33331298828125, 16.6666259765625);
+    measure(15.3333740234375, 16.66668701171875);
+  }
+  expect(StyleSheet.flatten(view.getByText('15').props.style).top).toBe(top);
+  expect(onTopPaddingChange).not.toHaveBeenCalled();
+
+  // Real text size changes still update label centering and title clearance.
+  measure(30, 24);
+  const resizedTop = StyleSheet.flatten(view.getByText('15').props.style).top;
+  expect(resizedTop + 12).toBe(40);
+  expect(onTopPaddingChange.mock.calls.at(-1)[0]).toBeGreaterThan(padding);
 });
 
 test('shows five-hPa labels for a narrow pressure observation range', () => {

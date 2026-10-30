@@ -19,6 +19,7 @@ class MainApplication : Application(), ReactApplication {
       packageList =
         PackageList(this).packages.apply {
           add(NavigationBarPackage())
+          add(AppLanguagePackage())
         },
     )
   }

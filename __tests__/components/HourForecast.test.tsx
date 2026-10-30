@@ -28,6 +28,7 @@ jest.mock('@store/settings/selectors', () => ({
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
+    i18n: { resolvedLanguage: 'fi' },
     t: (key: string) =>
       key.startsWith('unitAbbreviations:')
         ? key.replace('unitAbbreviations:', '')
@@ -52,6 +53,7 @@ jest.mock('@utils/units', () => ({
 }));
 
 jest.mock('@utils/accessibility', () => ({
+  ...jest.requireActual('@utils/accessibility'),
   formatAccessibleTemperature: (value: string) => value,
 }));
 
@@ -84,5 +86,6 @@ describe('HourForecast', () => {
     expect(getByTestId('weather-symbol-2')).toBeTruthy();
     expect(getByText(/5°C/)).toBeTruthy();
     expect(getByA11yLabel(/forecast:at/)).toBeTruthy();
+    expect(getByA11yLabel(/forecast:at/).props.accessibilityLanguage).toBe('fi-FI');
   });
 });

@@ -1,13 +1,16 @@
 import React from 'react';
-import { Appearance } from 'react-native';
+import { Appearance, AppState } from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
 import TabNavigatorComponent from '../../src/navigators/TabNavigator';
 import { MacContentSizeProvider } from '../../src/components/common/MacContentSizeContext';
+import { sendMatomoEvents } from '@utils/matomo';
 
+const originalAppState = AppState.currentState;
 const mockConfigGet = jest.fn();
 const mockFetchAnnouncements = jest.fn();
 const mockGetGeolocation = jest.fn();
+const mockStore = { getState: jest.fn() };
 const mockI18nOn = jest.fn();
 const mockI18nOff = jest.fn();
 const mockLaunchArgumentsValue = jest.fn();
@@ -27,8 +30,13 @@ let mockTranslationReady = true;
 const TabNavigator = (props: Omit<React.ComponentProps<typeof TabNavigatorComponent>, 'setAnimateToArea'>) =>
   <TabNavigatorComponent {...props} setAnimateToArea={mockSetAnimateToArea} />;
 
+jest.mock('@react-navigation/elements', () => ({
+  HeaderBackButton: () => null,
+}));
+
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
+  useStore: () => mockStore,
 }));
 
 jest.mock('@store/settings/selectors', () => ({
@@ -322,6 +330,7 @@ describe('TabNavigator', () => {
     mockConfigGet.mockReset();
     mockFetchAnnouncements.mockClear();
     mockGetGeolocation.mockClear();
+    mockStore.getState.mockReturnValue({ location: { current: undefined } });
     mockI18nOn.mockClear();
     mockI18nOff.mockClear();
     mockLaunchArgumentsValue.mockReset();
@@ -336,6 +345,7 @@ describe('TabNavigator', () => {
     mockTrackMatomoEvent.mockClear();
     mockSetNavigationBarTheme.mockClear();
     mockWarningsTabIcon.mockClear();
+    jest.mocked(sendMatomoEvents).mockClear();
     mockTranslationReady = true;
 
     mockLaunchArgumentsValue.mockReturnValue({});
@@ -348,7 +358,35 @@ describe('TabNavigator', () => {
   });
 
   afterEach(() => {
+    AppState.currentState = originalAppState;
     jest.restoreAllMocks();
+  });
+
+  it.each([null, undefined])('handles an initial app state of %s before backgrounding', (initialState) => {
+    AppState.currentState = initialState;
+    const listenerSpy = jest.spyOn(AppState, 'addEventListener');
+    render(
+      <TabNavigator
+        initialTab="Weather"
+        theme="light"
+        didLaunchApp={false}
+        termsOfUseAccepted={false}
+        setCurrentLocation={mockSetCurrentLocation}
+        setNavigationTab={mockSetNavigationTab}
+        fetchAnnouncements={mockFetchAnnouncements}
+      />
+    );
+    const listener = listenerSpy.mock.calls.find(([event]) => event === 'change')?.[1];
+    expect(listener).toBeDefined();
+
+    act(() => listener?.('background'));
+    expect(sendMatomoEvents).not.toHaveBeenCalled();
+
+    act(() => {
+      listener?.('active');
+      listener?.('background');
+    });
+    expect(sendMatomoEvents).toHaveBeenCalledTimes(1);
   });
 
   it('updates navigation bar icons when the app theme changes', () => {
@@ -456,7 +494,8 @@ describe('TabNavigator', () => {
     expect(mockGetGeolocation).toHaveBeenCalledWith(
       mockSetCurrentLocation,
       expect.any(Function),
-      true
+      true,
+      expect.any(Function)
     );
     expect(mockFetchAnnouncements).toHaveBeenCalled();
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
@@ -589,6 +628,13 @@ describe('TabNavigator', () => {
     expect(mockSetAnimateToArea).not.toHaveBeenCalled();
 
     const location = { id: 99, name: 'Helsinki', lat: 60.17, lon: 24.94 };
+    expect(mockGetGeolocation).toHaveBeenCalledWith(
+      expect.any(Function), expect.any(Function), undefined, expect.any(Function)
+    );
+    const getCurrentLocation = mockGetGeolocation.mock.calls[0][3];
+    expect(getCurrentLocation()).toBeUndefined();
+    mockStore.getState.mockReturnValue({ location: { current: location } });
+    expect(getCurrentLocation()).toBe(location);
     act(() => mockGetGeolocation.mock.calls[0][0](location, true));
     expect(mockSetCurrentLocation).toHaveBeenCalledWith(location, true);
     if (screen === 'Map') {

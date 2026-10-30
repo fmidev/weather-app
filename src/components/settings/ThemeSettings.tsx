@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   rowWrapper: {
     marginHorizontal: 20,

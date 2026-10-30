@@ -28,6 +28,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
   useOrientation: () => false,
 }));
 

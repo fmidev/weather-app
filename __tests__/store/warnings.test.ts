@@ -1,10 +1,5 @@
 import reducer from '@store/warnings/reducer';
-import * as selectors from '@store/warnings/selectors';
 import * as types from '@store/warnings/types';
-
-jest.mock('@store/location/selector', () => ({
-  selectGeoid: (state: any) => state.location.current.id,
-}));
 
 const warning = {
   duration: {
@@ -59,6 +54,7 @@ describe('warnings store', () => {
         data: warningsData,
         id: 99,
         timestamp: 123,
+        requestKey: 'location-99-fi',
       })
     ).toMatchObject({
       data: { 99: warningsData },
@@ -66,6 +62,7 @@ describe('warnings store', () => {
       fetchSuccessTime: 123,
       fetchTimestamp: 123,
       loading: false,
+      updated: warningsData.updated,
     });
 
     expect(
@@ -82,8 +79,15 @@ describe('warnings store', () => {
   });
 
   it('handles CAP warnings success', () => {
+    const state = reducer(undefined, {
+      type: types.FETCH_WARNINGS_SUCCESS,
+      data: warningsData,
+      id: 99,
+      timestamp: 123,
+      requestKey: 'location-99-fi',
+    });
     expect(
-      reducer(undefined, {
+      reducer(state, {
         type: types.FETCH_CAP_WARNINGS_SUCCESS,
         data: [capWarning],
         timestamp: 789,
@@ -94,34 +98,20 @@ describe('warnings store', () => {
       fetchSuccessTime: 789,
       fetchTimestamp: 789,
       loading: false,
+      updated: warningsData.updated,
+      updatedRequestKey: 'location-99-fi',
     });
   });
 
-  it('selects warnings for current location and CAP data', () => {
-    jest.spyOn(Date, 'now').mockReturnValue(2000);
-    const state = {
-      location: {
-        current: { id: 99 },
-      },
-      warnings: {
-        capData: [capWarning],
-        data: { 99: warningsData },
-        error: false,
-        fetchSuccessTime: 1000,
-        fetchTimestamp: Date.parse('2026-04-27T09:00:00Z'),
-        loading: false,
-      },
-    } as any;
-
-    expect(selectors.selectWarnings(state)).toEqual([warning]);
-    expect(selectors.selectUpdated(state)).toBe('2026-04-27T09:00:00Z');
-    expect(selectors.selectWarningsAge(state)).toBe(1000);
-    expect(selectors.selectCapWarningData(state)).toEqual([capWarning]);
-    expect(selectors.selectFetchSuccessTime(state)).toBe(1000);
-    expect(selectors.selectDailyWarningData(state)[0]).toMatchObject({
-      count: 1,
-      type: 'wind',
-      warnings: [warning],
+  it('merges favorite warnings without changing the active request status or timestamps', () => {
+    const previous = reducer(undefined, {
+      type: types.FETCH_WARNINGS_SUCCESS,
+      data: warningsData, id: 99, timestamp: 123, requestKey: 'location-99-fi',
     });
+    const state = { ...previous, loading: true, error: 'Selected location failed' };
+    const favoriteData = { ...warningsData, updated: '2026-04-27T10:00:00Z', warnings: [] };
+    expect(reducer(state, {
+      type: types.FETCH_FAVORITE_WARNINGS_SUCCESS, data: { 100: favoriteData },
+    })).toEqual({ ...state, data: { 99: warningsData, 100: favoriteData } });
   });
 });

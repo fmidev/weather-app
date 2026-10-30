@@ -246,6 +246,12 @@ interface Feedback {
   faqUrl?: {
     [locale: string]: string;
   };
+  accessibility?: {
+    [locale: string]: {
+      email: string;
+      subject: string;
+    };
+  };
 }
 
 interface News {
@@ -285,7 +291,7 @@ interface MapInfoBottomSheet {
 interface MarkdownSettings {
   termsOfUse: boolean;
   aboutTheApplication: boolean;
-  accessibility: boolean;
+  accessibility?: boolean; // For backward compatibility
 }
 
 interface DateTimeFormats {
@@ -364,6 +370,7 @@ export interface ConfigType {
     fmiApiKey?: string;
     layout?: 'default' | 'vertical' | 'legacyWithoutBackgroundColor';
     backgroundImagesEnabled?: boolean;
+    favoritesPanelEnabled?: boolean;
     forecast: {
       ageWarning?: number;
       maxAge?: number;

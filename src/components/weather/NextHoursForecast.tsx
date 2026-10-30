@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { ActivityIndicator, View, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
 import { selectLoading, selectNextHoursForecast } from '@store/forecast/selectors';
 import HourForecast from './forecast/HourForecast';
@@ -28,6 +29,7 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentHour, // To force re-render when the hour changes
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const HOUR_FORECAST_WIDTH = 70;
   const TIMESTEP_COUNT_FOR_PHONES = 12;
   const { t } = useTranslation('forecast');
@@ -40,7 +42,10 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   if (loading || !forecast) {
     return (
       <View style={[styles.container]}>
-        <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+        <ActivityIndicator
+          accessibilityLanguage={accessibilityLanguage}
+          accessibilityLabel={t('weather:loading')}
+        />
       </View>
     );
   }
