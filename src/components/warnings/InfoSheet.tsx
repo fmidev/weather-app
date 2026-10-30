@@ -8,7 +8,7 @@ import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
 
 import { CustomTheme, GREEN, ORANGE, RED, YELLOW } from '@assets/colors';
-import useOrientation from '@utils/hooks';
+import { useOrientation } from '@utils/hooks';
 import { WarningType } from '@store/warnings/types';
 import { knownWarningTypes } from '@store/warnings/constants';
 import SeverityBar from './SeverityBar';

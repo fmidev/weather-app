@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect, ConnectedProps, useStore } from 'react-redux';
 import {
   AccessibilityInfo,
   View,
@@ -110,6 +110,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   navigation,
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
+  const store = useStore<State>();
   const isRunningOnMac = useIsRunningOnMac();
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
@@ -276,7 +277,12 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                 'Search',
                 'Geolocation - accessibility tap'
               );
-              getGeolocation(setCurrentLocation, t);
+              getGeolocation(
+                setCurrentLocation,
+                t,
+                undefined,
+                () => store.getState().location.current
+              );
               navigation.goBack();
             }}>
             <Text style={[styles.title, { color: colors.text }]}>
@@ -293,7 +299,12 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                   'Search',
                   'Geolocation - button'
                 );
-                getGeolocation(setCurrentLocation, t);
+                getGeolocation(
+                  setCurrentLocation,
+                  t,
+                  undefined,
+                  () => store.getState().location.current
+                );
                 navigation.goBack();
               }}
             />

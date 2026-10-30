@@ -11,6 +11,7 @@ const originalAppState = AppState.currentState;
 const mockConfigGet = jest.fn();
 const mockFetchAnnouncements = jest.fn();
 const mockGetGeolocation = jest.fn();
+const mockStore = { getState: jest.fn() };
 const mockI18nOn = jest.fn();
 const mockI18nOff = jest.fn();
 const mockLaunchArgumentsValue = jest.fn();
@@ -34,8 +35,13 @@ jest.mock('@utils/hooks', () => ({
   usesVerticalBarLayout: () => mockVerticalBarLayout,
 }));
 
+jest.mock('@react-navigation/elements', () => ({
+  HeaderBackButton: () => null,
+}));
+
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
+  useStore: () => mockStore,
 }));
 
 jest.mock('@store/settings/selectors', () => ({
@@ -338,6 +344,7 @@ describe('TabNavigator', () => {
     mockConfigGet.mockReset();
     mockFetchAnnouncements.mockClear();
     mockGetGeolocation.mockClear();
+    mockStore.getState.mockReturnValue({ location: { current: undefined } });
     mockI18nOn.mockClear();
     mockI18nOff.mockClear();
     mockLaunchArgumentsValue.mockReset();
@@ -527,7 +534,8 @@ describe('TabNavigator', () => {
     expect(mockGetGeolocation).toHaveBeenCalledWith(
       mockSetCurrentLocation,
       expect.any(Function),
-      true
+      true,
+      expect.any(Function)
     );
     expect(mockFetchAnnouncements).toHaveBeenCalled();
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
@@ -598,7 +606,14 @@ describe('TabNavigator', () => {
     const [locate, search] = [...leftItems, ...rightItems];
     mockGetGeolocation.mockClear();
     act(() => locate.onPress());
-    expect(mockGetGeolocation).toHaveBeenCalledWith(mockSetCurrentLocation, expect.any(Function));
+    expect(mockGetGeolocation).toHaveBeenCalledWith(
+      mockSetCurrentLocation, expect.any(Function), undefined, expect.any(Function)
+    );
+    const getCurrentLocation = mockGetGeolocation.mock.calls[0][3];
+    expect(getCurrentLocation()).toBeUndefined();
+    const latestLocation = { id: 99, name: 'Helsinki', lat: 60.17, lon: 24.94 };
+    mockStore.getState.mockReturnValue({ location: { current: latestLocation } });
+    expect(getCurrentLocation()).toBe(latestLocation);
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Map', 'Geolocation');
     act(() => search.onPress());
     expect(mockNavigationDispatch).toHaveBeenCalledWith({ type: 'NAVIGATE', payload: { name: 'Search' } });
@@ -643,7 +658,14 @@ describe('TabNavigator', () => {
     }));
     mockGetGeolocation.mockClear();
     act(() => locate.onPress());
-    expect(mockGetGeolocation).toHaveBeenCalledWith(mockSetCurrentLocation, expect.any(Function));
+    expect(mockGetGeolocation).toHaveBeenCalledWith(
+      mockSetCurrentLocation, expect.any(Function), undefined, expect.any(Function)
+    );
+    const getCurrentLocation = mockGetGeolocation.mock.calls[0][3];
+    expect(getCurrentLocation()).toBeUndefined();
+    const latestLocation = { id: 99, name: 'Helsinki', lat: 60.17, lon: 24.94 };
+    mockStore.getState.mockReturnValue({ location: { current: latestLocation } });
+    expect(getCurrentLocation()).toBe(latestLocation);
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Warnings', 'Geolocation');
     act(() => search.onPress());
     expect(mockNavigationDispatch).toHaveBeenCalledWith({ type: 'NAVIGATE', payload: { name: 'Search' } });
@@ -693,7 +715,14 @@ describe('TabNavigator', () => {
     mockGetGeolocation.mockClear();
     act(() => locate.onPress());
     expect(mockGetGeolocation).toHaveBeenCalledTimes(1);
-    expect(mockGetGeolocation).toHaveBeenCalledWith(mockSetCurrentLocation, expect.any(Function));
+    expect(mockGetGeolocation).toHaveBeenCalledWith(
+      mockSetCurrentLocation, expect.any(Function), undefined, expect.any(Function)
+    );
+    const getCurrentLocation = mockGetGeolocation.mock.calls[0][3];
+    expect(getCurrentLocation()).toBeUndefined();
+    const latestLocation = { id: 99, name: 'Helsinki', lat: 60.17, lon: 24.94 };
+    mockStore.getState.mockReturnValue({ location: { current: latestLocation } });
+    expect(getCurrentLocation()).toBe(latestLocation);
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Weather', 'Geolocation');
 
     act(() => search.onPress());

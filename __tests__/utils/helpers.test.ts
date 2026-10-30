@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { AccessibilityInfo, Alert } from 'react-native';
 import Geolocation from 'react-native-nitro-geolocation/compat';
 import moment from 'moment';
 import type { TFunction } from 'i18next';
@@ -9,6 +9,8 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 import { Config } from '../../src/config';
+import * as WeatherApi from '../../src/network/WeatherApi';
+import type { Location } from '../../src/store/location/types';
 
 import {
   convertValueToUnitPrecision,
@@ -108,6 +110,106 @@ describe('helpers getGeolocation', () => {
       'Geolocation',
       'permission request failed'
     );
+  });
+
+  describe('nearby current location', () => {
+    const current: Location = {
+      id: 1, name: 'Helsinki', area: 'Uusimaa', country: 'FI',
+      lat: 60, lon: 25, timezone: 'Europe/Helsinki',
+    };
+
+    beforeEach(() => {
+      (checkMultiple as jest.Mock).mockResolvedValue({
+        [PERMISSIONS.IOS.LOCATION_WHEN_IN_USE]: RESULTS.GRANTED,
+      });
+      jest.spyOn(Config, 'get').mockReturnValue({ source: 'api' } as any);
+      jest.spyOn(AccessibilityInfo, 'announceForAccessibility').mockImplementation(jest.fn());
+      jest.spyOn(WeatherApi, 'getCurrentPosition').mockResolvedValue({
+        2: [{
+          name: 'New place', region: 'New region', country: 'Finland', iso2: 'FI',
+          localtz: 'Europe/Helsinki',
+        }] as any,
+      });
+    });
+
+    const reportPosition = async (
+      latitude: number,
+      longitude: number,
+      getCurrentLocation: () => Location | undefined = () => current
+    ) => {
+      await getGeolocation(callback, t, undefined, getCurrentLocation);
+      const onPosition = jest.mocked(Geolocation.getCurrentPosition).mock.calls[0][0];
+      onPosition({ coords: { latitude, longitude } } as any);
+      await flushAsync();
+    };
+
+    it.each([
+      ['same position', 60],
+      ['less than 100 metres before rounding', 60.000895],
+      ['exactly 100 metres', 60.00089831528412],
+    ] as const)('reuses current data at the %s without a reverse lookup', async (_name, latitude) => {
+      await reportPosition(latitude, 25);
+
+      expect(WeatherApi.getCurrentPosition).not.toHaveBeenCalled();
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith(current, true);
+      expect(callback.mock.calls[0][0]).toBe(current);
+      expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
+        'navigation:locatedTo Helsinki, Uusimaa'
+      );
+    });
+
+    it('fetches place details beyond 100 metres and keeps rounding GPS coordinates', async () => {
+      await reportPosition(60.000904, 25.000001);
+
+      expect(WeatherApi.getCurrentPosition).toHaveBeenCalledWith(60.0009, 25);
+      expect(callback).toHaveBeenCalledWith({
+        id: 2, name: 'New place', area: 'New region', country: 'FI',
+        lat: 60.0009, lon: 25, timezone: 'Europe/Helsinki',
+      }, true);
+    });
+
+    it.each([
+      { name: 'missing', location: undefined },
+      { name: 'invalid latitude', location: { ...current, lat: NaN } },
+      { name: 'invalid longitude', location: { ...current, lon: Infinity } },
+    ])('fetches place details when current location is $name', async ({ location }) => {
+      await reportPosition(60, 25, () => location);
+      expect(WeatherApi.getCurrentPosition).toHaveBeenCalledWith(60, 25);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('reads the latest current location when the GPS result arrives', async () => {
+      const getCurrentLocation = jest.fn< Location | undefined, [] >().mockReturnValue(undefined);
+      await getGeolocation(callback, t, true, getCurrentLocation);
+      expect(getCurrentLocation).not.toHaveBeenCalled();
+      getCurrentLocation.mockReturnValue(current);
+      jest.mocked(Geolocation.getCurrentPosition).mock.calls[0][0]({
+        coords: { latitude: current.lat, longitude: current.lon },
+      } as any);
+
+      expect(WeatherApi.getCurrentPosition).not.toHaveBeenCalled();
+      expect(callback).toHaveBeenCalledWith(current, true);
+    });
+
+    it('accepts zero coordinates and announces a location without an area', async () => {
+      const equator = { ...current, lat: 0, lon: 0, area: '' };
+      await reportPosition(0, 0, () => equator);
+      expect(WeatherApi.getCurrentPosition).not.toHaveBeenCalled();
+      expect(callback).toHaveBeenCalledWith(equator, true);
+      expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
+        'navigation:locatedTo Helsinki'
+      );
+    });
+
+    it('retains the server lookup when no current-location getter was provided', async () => {
+      await getGeolocation(callback, t);
+      jest.mocked(Geolocation.getCurrentPosition).mock.calls[0][0]({
+        coords: { latitude: current.lat, longitude: current.lon },
+      } as any);
+      await flushAsync();
+      expect(WeatherApi.getCurrentPosition).toHaveBeenCalledWith(60, 25);
+    });
   });
 });
 

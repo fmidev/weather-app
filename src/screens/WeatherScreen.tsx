@@ -1,21 +1,38 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
-  View, ViewInstance, ScrollView, ScrollViewInstance, StyleSheet, Platform, useWindowDimensions, NativeSyntheticEvent, NativeScrollEvent
+  View,
+  type ViewInstance,
+  ScrollView,
+  type ScrollViewInstance,
+  StyleSheet,
+  Platform,
+  useWindowDimensions,
+  type NativeSyntheticEvent,
+  type NativeScrollEvent,
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
 import {
   selectCurrent,
+  selectFavorites,
   selectLocationUpdateCount,
 } from '@store/location/selector';
+import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
+import type { Location } from '@store/location/types';
 import { selectAnnouncements } from '@store/announcements/selectors';
 
-import { fetchForecast as fetchForecastAction } from '@store/forecast/actions';
+import {
+  fetchAllForecasts as fetchAllForecastsAction,
+  fetchForecast as fetchForecastAction,
+} from '@store/forecast/actions';
 import { fetchObservation as fetchObservationAction } from '@store/observation/actions';
 import { resetObservations as resetObservationsAction } from '@store/observation/actions';
-import { fetchWarnings as fetchWarningsAction } from '@store/warnings/actions';
+import {
+  fetchWarnings as fetchWarningsAction,
+  fetchFavoriteWarnings as fetchFavoriteWarningsAction,
+} from '@store/warnings/actions';
 import { fetchMeteorologistSnapshot as fetchMeteorologistSnapshotAction } from '@store/meteorologist/actions';
 import { fetchNews as fetchNewsAction } from '@store/news/actions';
 
@@ -27,6 +44,7 @@ import ForecastPanelWithVerticalLayout from '@components/weather/ForecastPanelWi
 import ObservationPanel from '@components/weather/ObservationPanel';
 import SunAndMoonPanel from '@components/weather/SunAndMoonPanel';
 import News from '@components/news/News';
+import FavoritesPanel from '@components/weather/FavoritesPanel';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
@@ -34,20 +52,25 @@ import Announcements from '@components/announcements/Announcements';
 import WarningIconsPanel from '@components/warnings/WarningIconsPanel';
 import MeteorologistSnapshot from '@components/weather/MeteorologistSnapshot';
 import { useTranslation } from 'react-i18next';
+import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
   location: selectCurrent(state),
   locationUpdateCount: selectLocationUpdateCount(state),
+  favorites: selectFavorites(state),
 });
 
 const mapDispatchToProps = {
   fetchForecast: fetchForecastAction,
+  fetchAllForecasts: fetchAllForecastsAction,
   fetchObservation: fetchObservationAction,
   fetchWarnings: fetchWarningsAction,
+  fetchFavoriteWarnings: fetchFavoriteWarningsAction,
   fetchMeteorologistSnapshot: fetchMeteorologistSnapshotAction,
   fetchNews: fetchNewsAction,
   resetObservations: resetObservationsAction,
+  setCurrentLocation: setCurrentLocationAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -58,22 +81,28 @@ type WeatherScreenProps = PropsFromRedux;
 
 const WeatherScreen: React.FC<WeatherScreenProps> = ({
   fetchForecast,
+  fetchAllForecasts,
   fetchObservation,
   fetchWarnings,
+  fetchFavoriteWarnings,
   fetchMeteorologistSnapshot,
   fetchNews,
   resetObservations,
+  setCurrentLocation,
   location,
+  favorites,
   announcements,
   locationUpdateCount = 0,
 }) => {
   const { i18n } = useTranslation();
   const isFocused = useIsFocused();
-  const { width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const [forecastUpdated, setForecastUpdated] = useState<number>(Date.now());
   const [observationUpdated, setObservationUpdated] = useState<number>(0);
   const [warningsUpdated, setWarningsUpdated] = useState<number>(Date.now());
-  const [meteorologistUpdated, setMeteorologistUpdated] = useState<number>(Date.now());
+  const [meteorologistUpdated, setMeteorologistUpdated] = useState<number>(
+    Date.now()
+  );
   const [newsUpdated, setNewsUpdated] = useState<number>(Date.now());
   const [observationVisible, setObservationVisible] = useState(false);
   const observationRef = useRef<ViewInstance>(null);
@@ -92,29 +121,62 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
   }, [locationUpdateCount, isFocused]);
 
-  const { weather: weatherConfig, warnings: warningsConfig, news: newsConfig } = Config.getAll();
-  const showMeteorologistSnapshot = weatherConfig.meteorologist?.url &&
-                                    location.country === 'FI' &&
-                                    i18n.language === 'fi';
-  const showLocalWarnings = warningsConfig.enabled &&
-                            Object.keys(warningsConfig.apiUrl).includes(location.country);
+  const {
+    weather: weatherConfig,
+    warnings: warningsConfig,
+    news: newsConfig,
+  } = Config.getAll();
+  const showMeteorologistSnapshot =
+    weatherConfig.meteorologist?.url &&
+    location.country === 'FI' &&
+    i18n.language === 'fi';
+  const showLocalWarnings =
+    warningsConfig.enabled &&
+    Object.keys(warningsConfig.apiUrl).includes(location.country);
   const isWideDisplay = () => width > 700;
 
-  const updateForecast = useCallback(() => {
-    const geoid = location.id;
-    const forecastLocation = {
-      geoid,
-      latlon: `${location.lat},${location.lon}`
-    }
+  const selectFavoriteLocation = useCallback(
+    (favorite: Location, scrollToTop = true) => {
+      // Handle favorite scrolling here instead of in the location update effect.
+      lastLocationUpdateCount.current =
+        Math.max(lastLocationUpdateCount.current, locationUpdateCount) + 1;
+      setCurrentLocation({ ...favorite });
+      if (scrollToTop) {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      }
+      trackMatomoEvent(
+        'User action',
+        'Weather',
+        'Select location - favourites'
+      );
+    },
+    [locationUpdateCount, setCurrentLocation]
+  );
 
-    fetchForecast(forecastLocation, location.country);
+  const updateForecasts = useCallback(() => {
+    if (weatherConfig.favoritesPanelEnabled === false) {
+      fetchForecast(
+        { geoid: location.id, latlon: `${location.lat},${location.lon}` },
+        location.country
+      );
+    } else {
+      const locationIds = new Set<string>();
+      const locations = [location, ...favorites].filter(({ id }) => {
+        const key = String(id);
+        if (locationIds.has(key)) return false;
+
+        locationIds.add(key);
+        return true;
+      });
+      fetchAllForecasts(locations);
+    }
     setForecastUpdated(Date.now());
   }, [
     fetchForecast,
-    location.id,
-    location.lat,
-    location.lon,
-    location.country,
+    fetchAllForecasts,
+    favorites,
+    location,
+    weatherConfig.favoritesPanelEnabled,
     setForecastUpdated,
   ]);
 
@@ -122,8 +184,8 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     if (weatherConfig.observation.enabled) {
       const observationLocation = {
         geoid: location.id,
-        latlon: `${location.lat},${location.lon}`
-      }
+        latlon: `${location.lat},${location.lon}`,
+      };
 
       fetchObservation(observationLocation, location.country);
       setObservationUpdated(Date.now());
@@ -138,12 +200,25 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   ]);
 
   const updateWarnings = useCallback(() => {
-    if (warningsConfig.enabled && warningsConfig.apiUrl[location.country]) {
+    if (!warningsConfig.enabled) return;
+
+    if (warningsConfig.apiUrl[location.country]) {
       fetchWarnings(location);
-      setWarningsUpdated(Date.now());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchWarnings, location.lat, location.lon, warningsConfig]);
+    if (weatherConfig.favoritesPanelEnabled !== false) {
+      fetchFavoriteWarnings(
+        favorites.filter(({ id }) => String(id) !== String(location.id))
+      );
+    }
+    setWarningsUpdated(Date.now());
+  }, [
+    fetchWarnings,
+    fetchFavoriteWarnings,
+    favorites,
+    location,
+    warningsConfig,
+    weatherConfig.favoritesPanelEnabled,
+  ]);
 
   const updateMeteorologistSnapshot = useCallback(() => {
     if (showMeteorologistSnapshot) {
@@ -167,108 +242,160 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
     const forecastUpdateTime =
       forecastUpdated +
       (weatherConfig.forecast.updateInterval ?? 5) * 60 * 1000;
-    const meteorologistUpdateTime = meteorologistUpdated +
+    const meteorologistUpdateTime =
+      meteorologistUpdated +
       (weatherConfig.meteorologist?.updateInterval ?? 10) * 60 * 1000;
     const warningsUpdateTime =
       warningsUpdated + (warningsConfig.updateInterval ?? 5) * 60 * 1000;
     const newsUpdateTime =
       newsUpdated + (newsConfig.updateInterval ?? 30) * 60 * 1000;
 
-    const lazyLoadObservations = weatherConfig.layout === 'vertical'
-                                  && (weatherConfig.observation.lazyLoad === true
-                                    || weatherConfig.observation.lazyLoad === undefined);
+    const lazyLoadObservations =
+      weatherConfig.layout === 'vertical' &&
+      (weatherConfig.observation.lazyLoad === true ||
+        weatherConfig.observation.lazyLoad === undefined);
 
     if (isFocused) {
       if (now > forecastUpdateTime || shouldReload > forecastUpdateTime) {
-        updateForecast();
+        updateForecasts();
       }
-      if ((!lazyLoadObservations || observationVisible) &&
-        (now > observationUpdateTime || shouldReload > observationUpdateTime)) {
+      if (
+        (!lazyLoadObservations || observationVisible) &&
+        (now > observationUpdateTime || shouldReload > observationUpdateTime)
+      ) {
         updateObservation();
       }
       if (now > warningsUpdateTime || shouldReload > warningsUpdateTime) {
         updateWarnings();
       }
-      if (now > meteorologistUpdateTime || shouldReload > meteorologistUpdateTime) {
+      if (
+        now > meteorologistUpdateTime ||
+        shouldReload > meteorologistUpdateTime
+      ) {
         updateMeteorologistSnapshot();
       }
       if (now > newsUpdateTime || shouldReload > newsUpdateTime) {
         updateNews();
       }
     }
-  }, [isFocused, forecastUpdated, observationUpdated, warningsUpdated, meteorologistUpdated,
-    shouldReload, weatherConfig, warningsConfig, updateForecast, updateObservation, updateWarnings,
-    updateMeteorologistSnapshot, newsUpdated, newsConfig.updateInterval, updateNews, observationVisible]);
+  }, [
+    isFocused,
+    forecastUpdated,
+    observationUpdated,
+    warningsUpdated,
+    meteorologistUpdated,
+    shouldReload,
+    weatherConfig,
+    warningsConfig,
+    updateForecasts,
+    updateObservation,
+    updateWarnings,
+    updateMeteorologistSnapshot,
+    newsUpdated,
+    newsConfig.updateInterval,
+    updateNews,
+    observationVisible,
+  ]);
 
   useEffect(() => {
     setObservationUpdated(0);
     resetObservations();
-    updateForecast();
+    updateForecasts();
     updateWarnings();
     updateMeteorologistSnapshot();
     updateNews();
-  }, [location, updateForecast, updateObservation, updateWarnings, updateMeteorologistSnapshot,
-     updateNews, resetObservations]);
+  }, [
+    location,
+    updateForecasts,
+    updateObservation,
+    updateWarnings,
+    updateMeteorologistSnapshot,
+    updateNews,
+    resetObservations,
+  ]);
+
+  const updateObservationVisibility = (viewportHeight?: number) => {
+    scrollViewRef.current
+      ?.getNativeScrollRef()
+      ?.measure((_sx, _sy, _sw, measuredHeight, _spx, svPageY) => {
+        const height = viewportHeight ?? measuredHeight;
+        observationRef.current?.measure(
+          (_x, _y, _w, targetH, _px, targetPageY) => {
+            const elementTopInViewport = targetPageY - svPageY;
+            const elementBottomInViewport = elementTopInViewport + targetH;
+            const visible =
+              elementBottomInViewport > 0 && elementTopInViewport < height;
+            setObservationVisible(visible);
+          }
+        );
+      });
+  };
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const viewportHeight = e.nativeEvent.layoutMeasurement.height;
-
-    scrollViewRef.current?.measure((_sx, _sy, _sw, _svH, _spx, svPageY) => {
-      observationRef.current?.measure((_x, _y, _w, targetH, _px, targetPageY) => {
-        const elementTopInViewport = targetPageY - svPageY;
-        const elementBottomInViewport = elementTopInViewport + targetH;
-        const visible = elementBottomInViewport > 0 && elementTopInViewport < viewportHeight;
-        setObservationVisible(visible);
-      });
-    });
+    updateObservationVisibility(e.nativeEvent.layoutMeasurement.height);
   };
 
   const currentHour = new Date().getHours();
 
   return weatherConfig.layout === 'vertical' ? (
-      <View testID="weather_view">
-        <ScrollView
-          testID="weather_scrollview"
-          ref={scrollViewRef}
-          onScroll={handleScroll}
-          style={[styles.container]}
-          contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={announcements && [0]}>
-          <Announcements style={styles.announcements} />
-          <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
-          <ForecastPanelWithVerticalLayout currentHour={currentHour}/>
-          {isWideDisplay() && showLocalWarnings && showMeteorologistSnapshot ? (
-            <View style={styles.grid}>
-              <View style={styles.gridItem}>
-                <WarningIconsPanel gridLayout />
-              </View>
-              <View style={styles.gridItem}>
-                <MeteorologistSnapshot gridLayout />
-              </View>
+    <View testID="weather_view">
+      <ScrollView
+        testID="weather_scrollview"
+        ref={scrollViewRef}
+        onScroll={handleScroll}
+        onLayout={() => updateObservationVisibility()}
+        onContentSizeChange={() => updateObservationVisibility()}
+        style={[styles.container]}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={announcements && [0]}>
+        <Announcements style={styles.announcements} />
+        <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
+
+        {weatherConfig.favoritesPanelEnabled !== false && (
+          <FavoritesPanel
+            onSelectLocation={selectFavoriteLocation}
+            scrollToTop={false}
+          />
+        )}
+
+        <ForecastPanelWithVerticalLayout currentHour={currentHour} />
+
+        {isWideDisplay() && showLocalWarnings && showMeteorologistSnapshot ? (
+          <View style={styles.grid}>
+            <View style={styles.gridItem}>
+              <WarningIconsPanel gridLayout />
             </View>
-          ) :
-            <>
-              { showLocalWarnings && <WarningIconsPanel /> }
-              { showMeteorologistSnapshot && <MeteorologistSnapshot /> }
-            </>
-          }
-          <SunAndMoonPanel />
-          <View ref={observationRef} collapsable={false}>
-            <ObservationPanel />
+            <View style={styles.gridItem}>
+              <MeteorologistSnapshot gridLayout />
+            </View>
           </View>
-          <News />
-        </ScrollView>
-      </View>
-    ) : (
+        ) : (
+          <>
+            {showLocalWarnings && <WarningIconsPanel />}
+            {showMeteorologistSnapshot && <MeteorologistSnapshot />}
+          </>
+        )}
+        <SunAndMoonPanel />
+        <View
+          ref={observationRef}
+          collapsable={false}
+          testID="observation-panel-container">
+          <ObservationPanel />
+        </View>
+        <News />
+      </ScrollView>
+    </View>
+  ) : (
     <GradientWrapper>
       <View
         testID="weather_view"
         style={
-          Platform.OS === 'android' && weatherConfig.layout !== 'legacyWithoutBackgroundColor'
-            ? styles.legacyAndroid : null
-        }
-      >
+          Platform.OS === 'android' &&
+          weatherConfig.layout !== 'legacyWithoutBackgroundColor'
+            ? styles.legacyAndroid
+            : null
+        }>
         <ScrollView
           testID="weather_scrollview"
           ref={scrollViewRef}
@@ -278,7 +405,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
           stickyHeaderIndices={announcements && [0]}>
           <Announcements style={styles.announcements} />
           <NextHourForecastPanel currentHour={currentHour} />
-          <ForecastPanel currentHour={currentHour}/>
+          <ForecastPanel currentHour={currentHour} />
           <ObservationPanel />
         </ScrollView>
       </View>

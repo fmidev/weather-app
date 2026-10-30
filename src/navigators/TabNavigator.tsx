@@ -14,7 +14,7 @@ import {
   ViewStyle,
   AppState,
 } from 'react-native';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect, ConnectedProps, useStore } from 'react-redux';
 import {
   CommonActions,
   NavigationContainer,
@@ -22,7 +22,9 @@ import {
 } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { HeaderBackButton } from '@react-navigation/elements';
 import {
+  StackHeaderLeftProps,
   StackHeaderProps,
   StackNavigationOptions,
   StackNavigationProp,
@@ -86,6 +88,11 @@ import HeaderTitle from '@components/common/HeaderTitle';
 import packageJSON from '../../package.json';
 import { MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
+// Avoid the iOS pointer hover effect changing Fabric's native child indices.
+const renderSearchBackButton = (props: StackHeaderLeftProps) => (
+  <HeaderBackButton {...props} style={[props.style, styles.searchBackButton]} />
+);
+
 const mapStateToProps = (state: State) => ({
   initialTab: selectInitialTab(state),
   theme: selectTheme(state),
@@ -118,6 +125,7 @@ const Navigator: React.FC<Props> = ({
 }) => {
   const isRunningOnMac = useIsRunningOnMac();
   const verticalBarLayout = usesVerticalBarLayout();
+  const store = useStore<State>();
   const isPlatformDetectionComplete = useIsPlatformDetectionComplete();
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
@@ -192,11 +200,12 @@ const Navigator: React.FC<Props> = ({
           Platform.OS + ' - ' + packageJSON.version
         );
       }
-      getGeolocation(setCurrentLocation, t, true);
+      getGeolocation(setCurrentLocation, t, true, () => store.getState().location.current);
       fetchAnnouncements();
     }
   }, [
     didLaunchApp,
+    store,
     setCurrentLocation,
     t,
     didChangeLanguage,
@@ -285,7 +294,7 @@ const Navigator: React.FC<Props> = ({
             icon="locate"
             onPress={() => {
               trackMatomoEvent('User action', 'Map', 'Geolocation');
-              getGeolocation(setCurrentLocation, t);
+              getGeolocation(setCurrentLocation, t, undefined, () => store.getState().location.current);
             }}
           />
         ),
@@ -313,7 +322,7 @@ const Navigator: React.FC<Props> = ({
           />
         ),
       }),
-    [CommonHeaderOptions, setCurrentLocation, t]
+    [CommonHeaderOptions, setCurrentLocation, t, store]
   );
 
   const SearchScreenOptions = useMemo(
@@ -321,6 +330,7 @@ const Navigator: React.FC<Props> = ({
       ...CommonHeaderOptions,
       path: 'search',
       headerBackTitleVisible: false,
+      headerLeft: Platform.OS === 'ios' ? renderSearchBackButton : undefined,
       // eslint-disable-next-line react/no-unstable-nested-components
       headerTitle: () => (
         <HeaderTitle title={t('navigation:search')} isDark={useDarkTheme} />
@@ -379,7 +389,12 @@ const Navigator: React.FC<Props> = ({
           icon: { type: 'sfSymbol', name: 'dot.scope' },
           onPress: () => {
             trackMatomoEvent('User action', screen, 'Geolocation');
-            getGeolocation(setCurrentLocation, t);
+            getGeolocation(
+              setCurrentLocation,
+              t,
+              undefined,
+              () => store.getState().location.current
+            );
           },
         },
         {
@@ -394,7 +409,7 @@ const Navigator: React.FC<Props> = ({
           },
         },
       ],
-    [navigationRef, setCurrentLocation, t]
+    [navigationRef, setCurrentLocation, t, store]
   );
 
   const nativeMapOptions = useMemo<NativeStackNavigationOptions>(
@@ -774,6 +789,9 @@ const Navigator: React.FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
+  searchBackButton: {
+    cursor: 'auto',
+  },
   tabText: {
     fontFamily: MEDIUM_FONT,
     fontSize: 14,

@@ -1,5 +1,9 @@
 {
   "weather": {
+    "favoriteLocations": "Suosikkipaikkakunnat",
+    "forecastUnavailable": "Ennustetta ei ole saatavilla",
+    "selectFavoriteLocationHint": "Näytä paikkakunnan ennuste ja siirry näkymän alkuun",
+    "selectFavoriteLocationWithoutScrollHint": "Näytä paikkakunnan ennuste",
     "charts": {
       "forecastAccessibilityLabel": "10 vuorokauden sääennusteen esitys graafina",
       "observationAccessibilityLabel": "{{ parameter }} havainto graafina",

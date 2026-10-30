@@ -344,9 +344,13 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       )}
 
       {observationsMissing && (
-        <View style={styles.observationContainer}>
+        <View
+          style={[
+            styles.observationContainer,
+            styles.noObservationsContainer,
+          ]}>
           <Text
-            style={[styles.observationText, { color: colors.hourListText }]}>
+            style={[styles.noObservationsText, { color: colors.hourListText }]}>
             {t('noObservations')}
           </Text>
         </View>
@@ -377,6 +381,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginBottom: 8,
     flex: 1,
+  },
+  noObservationsContainer: {
+    marginHorizontal: 16,
+  },
+  noObservationsText: {
+    fontSize: 16,
+    fontFamily: REGULAR_FONT,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,

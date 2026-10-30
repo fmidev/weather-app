@@ -114,4 +114,31 @@ const useVerticalBarLayout = (): boolean => {
 
 export { useVerticalBarLayout as usesVerticalBarLayout };
 
-export default useOrientation;
+export const useHorizontalScrollEdges = (initialOffset = 0) => {
+  const scrollMetrics = useRef({
+    width: 0,
+    contentWidth: 0,
+    offset: initialOffset,
+  });
+  const [scrollEdges, setScrollEdges] = useState({ left: false, right: false });
+  const updateScrollEdges = useCallback(
+    (metrics: Partial<typeof scrollMetrics.current>) => {
+      scrollMetrics.current = { ...scrollMetrics.current, ...metrics };
+      const { width, contentWidth, offset } = scrollMetrics.current;
+      const maxOffset = Math.max(0, contentWidth - width);
+      const clampedOffset = Math.max(0, Math.min(offset, maxOffset));
+      // Allow for fractional layout values and overscroll at either end.
+      const left = width > 0 && clampedOffset > 1;
+      const right = width > 0 && maxOffset - clampedOffset > 1;
+      setScrollEdges((current) =>
+        current.left === left && current.right === right
+          ? current
+          : { left, right }
+      );
+    },
+    []
+  );
+
+  return { scrollEdges, updateScrollEdges };
+};
+
