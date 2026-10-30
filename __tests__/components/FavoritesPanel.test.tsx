@@ -9,7 +9,7 @@ import forecastReducer from '../../src/store/forecast/reducer';
 import locationReducer from '../../src/store/location/reducer';
 import settingsReducer from '../../src/store/settings/reducer';
 import warningsReducer from '../../src/store/warnings/reducer';
-import { GREEN, ORANGE, RED, TRANSPARENT, YELLOW } from '../../src/assets/colors';
+import { GREEN, ORANGE, RED, YELLOW } from '../../src/assets/colors';
 import {
   FETCH_FAVORITE_WARNINGS_SUCCESS,
   LocationWarnings,
@@ -27,7 +27,11 @@ import type { UnitMap } from '../../src/store/settings/types';
 
 let mockLanguage = 'fi';
 let mockFontScale = 1;
-let mockForecastBackground = '#93B8D1';
+let mockBackground = '#ffffff';
+let mockDark = false;
+let mockCardColor = '#ffffff';
+let mockPrimaryText = '#101010';
+const mockSecondaryBorder = '#cccccc';
 const mockSelectedFavoriteBorder = '#303193';
 
 jest.mock('@utils/helpers', () => ({
@@ -67,16 +71,27 @@ jest.mock('@assets/images', () => ({
   },
 }));
 
+jest.mock('react-native-linear-gradient', () => ({
+  __esModule: true,
+  default: ({ children, ...props }: any) => {
+    const { View } = require('react-native');
+    return <View {...props}>{children}</View>;
+  },
+}));
+
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({
+    dark: mockDark,
     colors: {
+      background: mockBackground,
+      card: mockCardColor,
+      secondaryBorder: mockSecondaryBorder,
       cardHeader: '#f0f0f0',
       border: '#cccccc',
-      primaryText: '#101010',
+      primaryText: mockPrimaryText,
       secondaryText: '#666666',
       cardShadow: '#D8E7F2',
       selectedFavoriteBorder: mockSelectedFavoriteBorder,
-      forecastBackground: mockForecastBackground,
     },
   }),
 }));
@@ -172,7 +187,10 @@ describe('FavoritesPanel', () => {
   beforeEach(() => {
     mockLanguage = 'fi';
     mockFontScale = 1;
-    mockForecastBackground = '#93B8D1';
+    mockBackground = '#ffffff';
+    mockDark = false;
+    mockCardColor = '#ffffff';
+    mockPrimaryText = '#101010';
     jest.useFakeTimers().setSystemTime(new Date('2030-01-01T12:00:00Z'));
   });
 
@@ -240,7 +258,7 @@ describe('FavoritesPanel', () => {
     ).toMatchObject({
       width: 110,
       minHeight: 80,
-      backgroundColor: mockForecastBackground,
+      backgroundColor: mockCardColor,
     });
     expect(
       view.getAllByTestId(/favorite-forecast-/).map((card) => card.props.testID)
@@ -259,8 +277,8 @@ describe('FavoritesPanel', () => {
           const card = view.getByTestId(`favorite-forecast-${favoriteId}`);
           const selected = String(favoriteId) === String(selectedId);
           expect(StyleSheet.flatten(card.props.style)).toMatchObject({
-            borderWidth: selected ? 2 : 0,
-            borderColor: selected ? mockSelectedFavoriteBorder : TRANSPARENT,
+            borderWidth: selected ? 2 : 1,
+            borderColor: selected ? mockSelectedFavoriteBorder : mockSecondaryBorder,
           });
           expect(card.props.accessibilityState).toEqual({ selected });
         });
@@ -555,18 +573,56 @@ describe('FavoritesPanel', () => {
     expect(view.getByA11yLabel(new RegExp(`^${location.name},`))).toBeTruthy();
   });
 
-  it.each(['#93B8D1', '#353944', '#898D9B'])(
-    'uses white text on background %s',
-    (background) => {
-      mockForecastBackground = background;
-      const view = mountPanel({ favorites: [helsinki], data: { 1: [step()] } });
+  it.each([
+    { cardColor: '#ffffff', textColor: '#101010' },
+    { cardColor: '#353944', textColor: '#ffffff' },
+    { cardColor: '#898D9B', textColor: '#ffffff' },
+  ])('uses theme colors for cards with background $cardColor', ({ cardColor, textColor }) => {
+    mockCardColor = cardColor;
+    mockPrimaryText = textColor;
+    const view = mountPanel({ favorites: [helsinki], data: { 1: [step()] } });
 
-      expect(
-        StyleSheet.flatten(view.getByText('Helsinki').props.style).color
-      ).toBe('#FFFFFF');
-      expect(StyleSheet.flatten(view.getByText('5°C').props.style).color).toBe(
-        '#FFFFFF'
-      );
-    }
-  );
+    expect(StyleSheet.flatten(view.getByTestId('favorite-forecast-1').props.style).backgroundColor).toBe(cardColor);
+    expect(StyleSheet.flatten(view.getByText('Helsinki').props.style).color).toBe(textColor);
+    expect(StyleSheet.flatten(view.getByText('5°C').props.style).color).toBe(textColor);
+  });
+
+  it.each([
+    [0, false, true],
+    [200, true, true],
+    [700, true, false],
+    [-20, false, true],
+    [720, true, false],
+  ])('shows fades only for available content at offset %s', (offset, left, right) => {
+    const view = mountPanel({ favorites: [helsinki, tampere] });
+    fireEvent.scroll(view.getByTestId('favorites-forecast-list'), {
+      nativeEvent: {
+        contentOffset: { x: offset, y: 0 },
+        contentSize: { width: 1000, height: 80 },
+        layoutMeasurement: { width: 300, height: 80 },
+      },
+    });
+    expect(!!view.queryByTestId('favorites-forecast-left-fade')).toBe(left);
+    expect(!!view.queryByTestId('favorites-forecast-right-fade')).toBe(right);
+  });
+
+  it('updates fades when the available width or content changes', () => {
+    const view = mountPanel({ favorites: [helsinki, tampere] });
+    const list = view.getByTestId('favorites-forecast-list');
+    const layout = (width: number) => fireEvent(list, 'layout', {
+      nativeEvent: { layout: { width, height: 80, x: 0, y: 0 } },
+    });
+    expect(view.queryByTestId('favorites-forecast-right-fade')).toBeNull();
+    fireEvent(list, 'contentSizeChange', 1000, 80);
+    layout(300);
+    expect(view.queryByTestId('favorites-forecast-left-fade')).toBeNull();
+    expect(view.getByTestId('favorites-forecast-right-fade')).toBeTruthy();
+    layout(1200);
+    expect(view.queryByTestId('favorites-forecast-right-fade')).toBeNull();
+    layout(300);
+    expect(view.getByTestId('favorites-forecast-right-fade')).toBeTruthy();
+    fireEvent(list, 'contentSizeChange', 200, 80);
+    expect(view.queryByTestId('favorites-forecast-left-fade')).toBeNull();
+    expect(view.queryByTestId('favorites-forecast-right-fade')).toBeNull();
+  });
 });

@@ -1,16 +1,16 @@
-import React, { memo, useCallback, useRef, useState } from 'react';
+import React, { memo } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   View,
   StyleSheet,
   FlatList,
-  processColor,
   useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
-import LinearGradient from 'react-native-linear-gradient';
+import HorizontalScrollFades from '@components/common/HorizontalScrollFades';
+import { useHorizontalScrollEdges } from '@utils/hooks';
 
 import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
@@ -52,7 +52,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
   initialScrollHour,
 }) => {
   const { fontScale } = useWindowDimensions();
-  const { colors, dark } = useTheme() as CustomTheme;
+  const { colors } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
   const { excludeDayLength } = Config.get('weather').forecast;
 
@@ -66,49 +66,11 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
           );
         });
   const hourColumnWidth = Math.min(fontScale * 48, 62);
-  const scrollMetrics = useRef({
-    width: 0,
-    contentWidth: 0,
-    offset: Math.max(0, initialScrollIndex) * hourColumnWidth,
-  });
-  const [scrollEdges, setScrollEdges] = useState({ left: false, right: false });
-  const updateScrollEdges = useCallback(
-    (metrics: Partial<typeof scrollMetrics.current>) => {
-      scrollMetrics.current = { ...scrollMetrics.current, ...metrics };
-      const { width, contentWidth, offset } = scrollMetrics.current;
-      const maxOffset = Math.max(0, contentWidth - width);
-      const clampedOffset = Math.max(0, Math.min(offset, maxOffset));
-      // Allow for fractional layout values and overscroll at either end.
-      const left = width > 0 && clampedOffset > 1;
-      const right = width > 0 && maxOffset - clampedOffset > 1;
-      setScrollEdges((current) =>
-        current.left === left && current.right === right
-          ? current
-          : { left, right }
-      );
-    },
-    []
+  const { scrollEdges, updateScrollEdges } = useHorizontalScrollEdges(
+    Math.max(0, initialScrollIndex) * hourColumnWidth
   );
 
   if (!data || data.length === 0) return null;
-
-  const backgroundColor = processColor(colors.background);
-  const backgroundRgb =
-    typeof backgroundColor === 'number'
-      ? // Decode the packed native color so the fade keeps the same RGB values.
-        // eslint-disable-next-line no-bitwise
-        `${(backgroundColor >>> 16) & 255}, ${(backgroundColor >>> 8) & 255}, ${backgroundColor & 255}`
-      : undefined;
-  const transparentBackground = backgroundRgb
-    ? `rgba(${backgroundRgb}, 0)`
-    : 'transparent';
-  const fadeColors = dark
-    ? [
-        colors.background,
-        backgroundRgb ? `rgba(${backgroundRgb}, 0.65)` : colors.background,
-        transparentBackground,
-      ]
-    : [colors.background, transparentBackground];
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
@@ -437,42 +399,10 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({
             horizontal
             showsHorizontalScrollIndicator={false}
           />
-          {scrollEdges.left && (
-            <LinearGradient
-              testID="hourly-forecast-left-fade"
-              pointerEvents="none"
-              accessible={false}
-              accessibilityElementsHidden
-              importantForAccessibility="no-hide-descendants"
-              colors={fadeColors}
-              locations={dark ? [0, 0.45, 1] : undefined}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[
-                styles.scrollFade,
-                dark && styles.darkScrollFade,
-                styles.leftFade,
-              ]}
-            />
-          )}
-          {scrollEdges.right && (
-            <LinearGradient
-              testID="hourly-forecast-right-fade"
-              pointerEvents="none"
-              accessible={false}
-              accessibilityElementsHidden
-              importantForAccessibility="no-hide-descendants"
-              colors={[...fadeColors].reverse()}
-              locations={dark ? [0, 0.55, 1] : undefined}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[
-                styles.scrollFade,
-                dark && styles.darkScrollFade,
-                styles.rightFade,
-              ]}
-            />
-          )}
+          <HorizontalScrollFades
+            edges={scrollEdges}
+            testIDPrefix="hourly-forecast"
+          />
         </View>
       </View>
       {displayParams
@@ -496,21 +426,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-  },
-  scrollFade: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: 30,
-  },
-  darkScrollFade: {
-    width: 40,
-  },
-  leftFade: {
-    left: 0,
-  },
-  rightFade: {
-    right: 0,
   },
   justifyContentCenter: {
     justifyContent: 'center',

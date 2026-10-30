@@ -119,15 +119,15 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   const selectFavoriteLocation = useCallback(
     (favorite: Location, scrollToTop = true) => {
+      setCurrentLocation({ ...favorite });
+      if (scrollToTop) {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      }
       trackMatomoEvent(
         'User action',
         'Weather',
         'Select location - favourites'
       );
-      setCurrentLocation({ ...favorite });
-      if (scrollToTop) {
-        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-      }
     },
     [setCurrentLocation]
   );
@@ -332,7 +332,10 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         <NextHourForecastPanelWithWeatherBackground currentHour={currentHour} />
 
         {weatherConfig.favoritesPanelEnabled !== false && (
-          <FavoritesPanel onSelectLocation={selectFavoriteLocation} />
+          <FavoritesPanel
+            onSelectLocation={selectFavoriteLocation}
+            scrollToTop={false}
+          />
         )}
 
         <ForecastPanelWithVerticalLayout currentHour={currentHour} />
