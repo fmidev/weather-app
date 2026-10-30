@@ -370,6 +370,7 @@ export interface ConfigType {
     fmiApiKey?: string;
     layout?: 'default' | 'vertical' | 'legacyWithoutBackgroundColor';
     backgroundImagesEnabled?: boolean;
+    favoritesPanelEnabled?: boolean;
     forecast: {
       ageWarning?: number;
       maxAge?: number;

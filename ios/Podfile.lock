@@ -59,7 +59,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - MapLibreReactNative (11.4.0):
+  - MapLibreReactNative (11.5.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1496,9 +1496,9 @@ PODS:
     - Yoga
   - react-native-launch-arguments (4.1.1):
     - React
-  - react-native-maps (1.29.8):
-    - react-native-maps/Maps (= 1.29.8)
-  - react-native-maps/Generated (1.29.8):
+  - react-native-maps (1.29.11):
+    - react-native-maps/Maps (= 1.29.11)
+  - react-native-maps/Generated (1.29.11):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1521,7 +1521,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-maps/Maps (1.29.8):
+  - react-native-maps/Maps (1.29.11):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1545,7 +1545,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-mmkv (3.3.1):
+  - react-native-mmkv (3.3.3):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1570,7 +1570,7 @@ PODS:
     - Yoga
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-safe-area-context (5.10.0):
+  - react-native-safe-area-context (5.10.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1584,8 +1584,8 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-safe-area-context/common (= 5.10.0)
-    - react-native-safe-area-context/fabric (= 5.10.0)
+    - react-native-safe-area-context/common (= 5.10.1)
+    - react-native-safe-area-context/fabric (= 5.10.1)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1595,7 +1595,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/common (5.10.0):
+  - react-native-safe-area-context/common (5.10.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1618,7 +1618,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/fabric (5.10.0):
+  - react-native-safe-area-context/fabric (5.10.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1642,7 +1642,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-skia (2.13.1):
+  - react-native-skia (2.14.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2159,7 +2159,7 @@ PODS:
     - SDWebImageSVGCoder (~> 1.7.0)
     - SDWebImageWebPCoder (~> 0.14)
     - Yoga
-  - RNGestureHandler (3.3.0):
+  - RNGestureHandler (3.4.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2206,7 +2206,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNPermissions (5.6.2):
+  - RNPermissions (5.6.3):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2334,7 +2334,7 @@ PODS:
     - ReactNativeDependencies
     - RNWorklets
     - Yoga
-  - RNScreens (4.28.0):
+  - RNScreens (4.30.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2357,9 +2357,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNScreens/common (= 4.28.0)
+    - RNScreens/common (= 4.30.0)
     - Yoga
-  - RNScreens/common (4.28.0):
+  - RNScreens/common (4.30.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2383,7 +2383,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNSVG (15.15.5):
+  - RNSVG (15.16.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2405,9 +2405,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNSVG/common (= 15.15.5)
+    - RNSVG/common (= 15.16.0)
     - Yoga
-  - RNSVG/common (15.15.5):
+  - RNSVG/common (15.16.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2925,7 +2925,7 @@ SPEC CHECKSUMS:
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: af5937a13536ef73f3784d69cc342b98961acf33
   logicwind-react-native-matomo-tracker: 5b432dd9208025c1029db284de1aa550ae302d2e
-  MapLibreReactNative: 885e1934f87f007bf3751b3e8962cbe7fa89576e
+  MapLibreReactNative: 3db92e44829c7f35197313f7e338fefabeaf009d
   MatomoTracker: dbf4093d2c36b78244ce481d7a10086fad825c7f
   NitroGeolocation: 3e6bd89fe3ce8691d9ae612edf09716d19bbb825
   NitroModules: c32f969b7c536e0b6b401a9dfdb35bb4eba071ef
@@ -2971,11 +2971,11 @@ SPEC CHECKSUMS:
   React-mutationobservernativemodule: 11d77d3f7360578f07847843544ada23cc473049
   react-native-config: 9ed4219cdbe9f3fe862bb9d11cbf75422c0c545d
   react-native-launch-arguments: eab68037b01ea7c78a0b3b55da3a5e967e9aaf92
-  react-native-maps: 0d705e2045204046037773c3c74ff3c67617353c
-  react-native-mmkv: dc9b2f24a0ecd3b7535e6d321ea4fe3742206bd4
+  react-native-maps: 123a214930bf78aa1c044a43dc861b985938e704
+  react-native-mmkv: ec4d4e5d4f08c8dcd3fd69e92733bb6b248fc3f1
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
-  react-native-safe-area-context: abb719c2a29a686cd4d77d4fce0eb5d94d2173d6
-  react-native-skia: c3b6af86e9957a781a6b3bb4edea5d50abe97730
+  react-native-safe-area-context: b1c9f15a36e597e9cef4c5526e209ef2645bc2e0
+  react-native-skia: fd920143533672f86f4a86fdc7a3324f512646b6
   react-native-webview: 3a3d1fd130d39e4dcabeebe89e6b245478ee177e
   React-NativeModulesApple: 52f3def085f129de1307e3eb78e26729ff70f421
   React-networking: 1e6441349ac72bfd4f7a79c300c3dd76993a7058
@@ -3018,13 +3018,13 @@ SPEC CHECKSUMS:
   RNCMaskedView: 89bb912716973f9715102cfe932f3ca6793b21f9
   RNDefaultPreference: ee13d69e6693d193cd223d10e15e5b3c012d31ba
   RNFastImage: 2aad2bc7fcf6fd99c538d7ec5f862e5b1f5a64e8
-  RNGestureHandler: e19fcf39b0212e0eb8bc7ca1e645500eb492f6be
+  RNGestureHandler: b5512a093e6923dd1c31fbdd8e6186cd0ebb3541
   RNLocalize: 6b1ada941cb6116aace7d9f508a9fdd24d792ff8
-  RNPermissions: 0c7b69b5e2f37bc87b6aea99003383055f04088b
+  RNPermissions: b930ddd210421abb0cf5e086d5b26073a9034ad1
   RNReactNativeHapticFeedback: 1375baff2051b7211dd7f53c6302f76dc980ce65
   RNReanimated: 3018727dbf272754d0f31ef73f619e49ade7baf0
-  RNScreens: 3d3d94d97ee39a20fa35de959c32e356439991c7
-  RNSVG: 8b5f2fdb9f0245a863cdd6e9c48a7689821a08b0
+  RNScreens: 6d0d3b7819284dbf9f222899eb819f069fce4b8b
+  RNSVG: c35beed3dcf6fd14b50ca1fc0d4214a17ec5334d
   RNVectorIcons: 8e7890bf2ce85e41df79133e7778070c37dc8d70
   RNWorklets: 488806637a21eb17812a48dadca7cb8c698c8cfd
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf

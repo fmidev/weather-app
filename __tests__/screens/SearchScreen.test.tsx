@@ -4,7 +4,7 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
 import SearchScreen from '../../src/screens/SearchScreen';
-import { mockGetGeolocation, resetScreenMocks } from './screenTestMocks';
+import { mockGetGeolocation, mockLocationStore, resetScreenMocks } from './screenTestMocks';
 
 describe('SearchScreen', () => {
   beforeEach(() => {
@@ -65,8 +65,13 @@ describe('SearchScreen', () => {
     fireEvent.press(getByTestId('icon-button-locate'));
     expect(mockGetGeolocation).toHaveBeenCalledWith(
       props.setCurrentLocation,
+      expect.any(Function),
+      undefined,
       expect.any(Function)
     );
+    const current = { id: 3, name: 'Current location' };
+    mockLocationStore.getState.mockReturnValue({ location: { current } });
+    expect(mockGetGeolocation.mock.calls[0][3]()).toBe(current);
   });
 });
 

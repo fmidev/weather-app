@@ -56,15 +56,18 @@ describe('WarningsApi', () => {
     });
   });
 
-  it('fetches warnings by location and country', async () => {
+  it.each(['FI', 'SE'])('fetches local warnings from warnings.apiUrl for %s', async (country) => {
+    mockConfigGet.mockReturnValue({
+      apiUrl: { FI: 'https://warnings.example/fi', SE: 'https://warnings.example/se' },
+    });
     mockAxiosClient.mockResolvedValueOnce({ data: { data: warningsData } });
 
-    await expect(getWarnings(location)).resolves.toEqual({ data: warningsData });
+    await expect(getWarnings({ ...location, country })).resolves.toEqual({ data: warningsData });
     expect(mockTrackMatomoEvent).not.toHaveBeenCalled();
 
     expect(mockAxiosClient).toHaveBeenCalledWith(
       {
-        url: 'https://warnings.example/fi',
+        url: `https://warnings.example/${country.toLowerCase()}`,
         params: expect.objectContaining({
           latlon: '60.1,24.9',
           lang: 'en',

@@ -6,6 +6,7 @@ import {
   FETCH_WARNINGS,
   FETCH_WARNINGS_SUCCESS,
   FETCH_WARNINGS_ERROR,
+  FETCH_FAVORITE_WARNINGS_SUCCESS,
   FETCH_CAP_WARNINGS,
   FETCH_CAP_WARNINGS_SUCCESS,
 } from './types';
@@ -41,7 +42,10 @@ export default (
         state.updatedRequestKey === action.requestKey &&
         state.data[action.id]
       ) {
-        const sameDay = moment(state.fetchTimestamp).isSame(action.timestamp, 'day');
+        const sameDay = moment(state.fetchTimestamp).isSame(
+          action.timestamp,
+          'day'
+        );
         // Record every successful refresh while preserving data and the calendar day.
         return {
           ...state,
@@ -63,6 +67,14 @@ export default (
         },
         fetchTimestamp: action.timestamp,
         fetchSuccessTime: action.timestamp,
+      };
+    }
+
+    case FETCH_FAVORITE_WARNINGS_SUCCESS: {
+      // Favorite refreshes must not change the selected location's loading or freshness state.
+      return {
+        ...state,
+        data: { ...state.data, ...action.data },
       };
     }
 
@@ -94,5 +106,5 @@ export default (
 
 export const warningsPersist: PersistConfig = {
   key: 'warnings',
-  whitelist: [],
+  whitelist: ['data', 'fetchTimestamp', 'fetchSuccessTime'],
 };

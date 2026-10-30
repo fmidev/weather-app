@@ -7,6 +7,7 @@ const mockConverter = jest.fn();
 const mockFormatAccessibleTemperature = jest.fn();
 const mockGetForecastParameterUnitTranslationKey = jest.fn();
 const mockGetGeolocation = jest.fn();
+const mockStore = { getState: jest.fn() };
 const mockNavigate = jest.fn();
 const mockNextHourForecastBar = jest.fn();
 const mockNextHoursForecast = jest.fn();
@@ -31,6 +32,7 @@ let mockWindowDimensions = {
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
+  useStore: () => mockStore,
 }));
 
 jest.mock('@store/forecast/selectors', () => ({
@@ -345,6 +347,8 @@ describe('NextHourForecastPanelWithWeatherBackground', () => {
     );
     expect(mockGetGeolocation).toHaveBeenCalledWith(
       mockSetCurrentLocation,
+      expect.any(Function),
+      undefined,
       expect.any(Function)
     );
 

@@ -3,14 +3,16 @@ import thunk, { ThunkMiddleware } from 'redux-thunk';
 import moment from 'moment-timezone';
 
 import i18n from '@i18n';
+import { Config } from '@config';
 import getWarnings from '@network/WarningsApi';
-import { fetchWarnings } from '@store/warnings/actions';
+import { fetchWarnings, fetchFavoriteWarnings } from '@store/warnings/actions';
 import reducer from '@store/warnings/reducer';
 import { selectDailyWarningData } from '@store/warnings/selectors';
 import { Location } from '@store/location/types';
 import { WarningsActionTypes, WarningsData } from '@store/warnings/types';
 
 jest.mock('@i18n', () => ({ __esModule: true, default: { language: 'fi' } }));
+jest.mock('@config', () => ({ Config: { get: jest.fn() } }));
 jest.mock('@network/WarningsApi', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@network/CapWarningsApi', () => ({ __esModule: true, default: jest.fn() }));
 
@@ -281,4 +283,126 @@ describe('fetchWarnings', () => {
     expect(store.getState().warnings.data).toBe(previousData);
     expect(store.getState().warnings.fetchSuccessTime).toBe(retryTime);
   });
+});
+
+describe('fetchFavoriteWarnings', () => {
+  const favorite = { ...location, id: 100, name: 'Tampere', lat: 61.5, lon: 23.8 };
+  const otherFavorite = { ...favorite, id: 101, name: 'Turku', lat: 60.45, lon: 22.27 };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    i18n.language = 'fi';
+    jest.mocked(Config.get).mockReturnValue({
+      enabled: true, apiUrl: { FI: 'https://warnings.example/fi' }, updateInterval: 5,
+    });
+    mockGetWarnings.mockResolvedValue({ data });
+  });
+
+  it('stores warnings by favorite ID without changing the selected location status', async () => {
+    const store = createWarningsStore();
+    await store.dispatch(fetchWarnings(location));
+    const previous = store.getState().warnings;
+    const emptyWarnings = { ...data, warnings: [] };
+    mockGetWarnings.mockResolvedValueOnce({ data: emptyWarnings });
+
+    await store.dispatch(fetchFavoriteWarnings([favorite, otherFavorite]));
+
+    expect(store.getState().warnings).toEqual({
+      ...previous,
+      data: { ...previous.data, [favorite.id]: emptyWarnings, [otherFavorite.id]: data },
+    });
+    expect(store.getState().warnings.data[location.id]).toBe(previous.data[location.id]);
+    expect(mockGetWarnings).toHaveBeenCalledWith(favorite, expect.any(AbortController));
+  });
+
+  it('skips duplicate IDs, unsupported countries and invalid coordinates', async () => {
+    const store = createWarningsStore();
+    await store.dispatch(fetchFavoriteWarnings([
+      favorite, { ...favorite, id: String(favorite.id) },
+      { ...otherFavorite, country: 'SE' },
+      { ...otherFavorite, lat: NaN },
+      { ...otherFavorite, lon: Infinity },
+    ]));
+    expect(mockGetWarnings).toHaveBeenCalledTimes(1);
+    expect(store.getState().warnings.data).toEqual({ [favorite.id]: data });
+  });
+
+  it('does not request warnings when warnings are disabled', async () => {
+    jest.mocked(Config.get).mockReturnValue({ enabled: false });
+    const store = createWarningsStore();
+    const previous = store.getState();
+    await store.dispatch(fetchFavoriteWarnings([favorite]));
+    expect(mockGetWarnings).not.toHaveBeenCalled();
+    expect(store.getState()).toBe(previous);
+  });
+
+  it('retains cached warnings on an individual failure while storing other responses', async () => {
+    const store = createWarningsStore();
+    await store.dispatch(fetchFavoriteWarnings([favorite]));
+    mockGetWarnings.mockRejectedValueOnce(new Error('Unavailable'));
+    await store.dispatch(fetchFavoriteWarnings([favorite, otherFavorite]));
+    expect(store.getState().warnings).toMatchObject({
+      data: { [favorite.id]: data, [otherFavorite.id]: data }, error: false, loading: false,
+    });
+  });
+
+  it('leaves the state unchanged when all requests fail', async () => {
+    const store = createWarningsStore();
+    const previous = store.getState();
+    mockGetWarnings.mockRejectedValue(new Error('Unavailable'));
+    await store.dispatch(fetchFavoriteWarnings([favorite]));
+    expect(store.getState()).toBe(previous);
+  });
+
+  it('does not cancel or finish the selected location request', async () => {
+    const store = createWarningsStore();
+    const selectedResponse = deferredResponse();
+    mockGetWarnings.mockReturnValueOnce(selectedResponse.promise);
+    const selectedRequest = store.dispatch(fetchWarnings(location));
+    const selectedController = mockGetWarnings.mock.calls[0][1]!;
+    await store.dispatch(fetchFavoriteWarnings([favorite]));
+    expect(selectedController.signal.aborted).toBe(false);
+    expect(store.getState().warnings.loading).toBe(true);
+    selectedResponse.resolve({ data });
+    await selectedRequest;
+    expect(store.getState().warnings).toMatchObject({
+      data: { [location.id]: data, [favorite.id]: data }, loading: false,
+    });
+  });
+
+  it('keeps the favorite request active when the selected location is fetched', async () => {
+    const store = createWarningsStore();
+    const favoriteResponse = deferredResponse();
+    mockGetWarnings.mockReturnValueOnce(favoriteResponse.promise);
+    const favoriteRequest = store.dispatch(fetchFavoriteWarnings([favorite]));
+    const favoriteController = mockGetWarnings.mock.calls[0][1]!;
+    await store.dispatch(fetchWarnings(location));
+    expect(favoriteController.signal.aborted).toBe(false);
+    favoriteResponse.resolve({ data });
+    await favoriteRequest;
+    expect(store.getState().warnings.data).toEqual({ [location.id]: data, [favorite.id]: data });
+  });
+
+  it.each(['favorites', 'language', 'empty favorites'])(
+    'cancels the previous batch and ignores late results when %s changes', async (context) => {
+      const store = createWarningsStore();
+      const oldResponse = deferredResponse();
+      mockGetWarnings.mockReturnValueOnce(oldResponse.promise);
+      const oldRequest = store.dispatch(fetchFavoriteWarnings([favorite]));
+      const oldController = mockGetWarnings.mock.calls[0][1]!;
+      const latestData = { ...data, warnings: [] };
+      mockGetWarnings.mockResolvedValueOnce({ data: latestData });
+      if (context === 'language') i18n.language = 'sv';
+
+      await store.dispatch(fetchFavoriteWarnings(context === 'empty favorites' ? [] : [favorite]));
+      expect(oldController.signal.aborted).toBe(true);
+      const latestState = store.getState();
+      expect(latestState.warnings.data[favorite.id]).toBe(
+        context === 'empty favorites' ? undefined : latestData
+      );
+      oldResponse.resolve({ data });
+      await oldRequest;
+      expect(store.getState()).toBe(latestState);
+    }
+  );
 });

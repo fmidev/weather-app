@@ -1,6 +1,4 @@
 const reactNative = require('@react-native/eslint-config/flat');
-const typescriptPlugin = require('@typescript-eslint/eslint-plugin');
-const flowPlugin = require('eslint-plugin-ft-flow');
 const { configs, plugins } = require('eslint-config-airbnb-extended');
 const prettier = require('eslint-config-prettier');
 
@@ -22,17 +20,18 @@ module.exports = [
       'e2e/**',
     ],
   },
-  // React Native still bundles the Flow plugin's ESLint 8 release. Use the
-  // project's ESLint 9 compatible version while keeping its existing rules.
+  // Keep React Native's JavaScript parser while omitting Flow-only lint support.
   ...reactNative.map(config => config.plugins?.['ft-flow'] ? {
     ...config,
-    plugins: { ...config.plugins, 'ft-flow': flowPlugin },
+    plugins: Object.fromEntries(
+      Object.entries(config.plugins).filter(([name]) => name !== 'ft-flow')
+    ),
+    rules: Object.fromEntries(
+      Object.entries(config.rules).filter(([name]) => !name.startsWith('ft-flow/'))
+    ),
   } : config),
   plugins.stylistic,
   plugins.importX,
-  {
-    plugins: { '@typescript-eslint': typescriptPlugin },
-  },
   // Match the previous airbnb-typescript layer without enabling Airbnb's full
   // JavaScript and React presets as part of the configuration migration.
   ...configs.base.typescript,
@@ -61,6 +60,12 @@ module.exports = [
       '@typescript-eslint/no-wrapper-object-types': 'off',
       '@typescript-eslint/prefer-destructuring': 'off',
       '@typescript-eslint/prefer-find': 'off',
+      '@typescript-eslint/no-use-before-define': [
+        'error',
+        { functions: true, classes: true, variables: false },
+      ],
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/default-param-last': 'warn',
     },
   },
   {
@@ -75,18 +80,21 @@ module.exports = [
       'react-native/no-color-literals': 'error',
       'no-trailing-spaces': 'error',
       'no-multiple-empty-lines': 'error',
-      'no-use-before-define': 'off',
-      '@typescript-eslint/no-use-before-define': [
-        'error',
-        { functions: true, classes: true, variables: false },
-      ],
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/default-param-last': 'warn',
       'import-x/no-extraneous-dependencies': [
         'error',
         { devDependencies: ['mockserver/**'] },
       ],
+    },
+  },
+  {
+    files: ['**/*.{js,jsx,cjs,mjs}'],
+    rules: {
+      'no-use-before-define': [
+        'error',
+        { functions: true, classes: true, variables: false },
+      ],
+      'no-unused-vars': 'error',
+      'default-param-last': 'warn',
     },
   },
 ];
