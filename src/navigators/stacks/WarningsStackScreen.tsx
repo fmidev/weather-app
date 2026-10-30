@@ -1,13 +1,19 @@
 import React from 'react';
-import { createStackNavigator, type StackNavigationOptions } from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  type StackNavigationOptions,
+} from '@react-navigation/stack';
+import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import WarningsScreen from '@screens/WarningsScreen';
 import SearchScreen from '@screens/SearchScreen';
 import type { StackScreenListener } from './types';
 
-type WarningsStackScreenProps = {
+export type WarningsStackScreenProps = {
   warningsOptions: StackNavigationOptions;
   searchOptions: StackNavigationOptions;
+  nativeWarningsOptions: NativeStackNavigationOptions;
+  nativeSearchOptions: NativeStackNavigationOptions;
   stackScreenListener: StackScreenListener;
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Markdown from 'react-native-marked';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -23,13 +24,16 @@ const AboutScreen: React.FC = () => {
   renderer.setTextColor(colors.primaryText);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      { markdown?.aboutTheApplication ? (
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={['left', 'right']}>
+      {markdown?.aboutTheApplication ? (
         <View style={styles.markdownContainer}>
-         <Markdown
+          <Markdown
             value={
-              aboutTheApplicationDocuments[i18n.language as keyof typeof aboutTheApplicationDocuments]
-              || aboutTheApplicationDocuments.en
+              aboutTheApplicationDocuments[
+                i18n.language as keyof typeof aboutTheApplicationDocuments
+              ] || aboutTheApplicationDocuments.en
             }
             renderer={renderer}
             flatListProps={{
@@ -50,8 +54,7 @@ const AboutScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}>
           <Text
             accessibilityRole="header"
-            style={[styles.title, { color: colors.text }]}
-          >
+            style={[styles.title, { color: colors.text }]}>
             {t('about:title')}
           </Text>
           <Text style={[styles.text, { color: colors.text }]}>
@@ -64,7 +67,7 @@ const AboutScreen: React.FC = () => {
           </Text>
         </ScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

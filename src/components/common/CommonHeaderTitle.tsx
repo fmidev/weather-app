@@ -47,7 +47,11 @@ const CommonHeaderTitle: React.FC<CommonHeaderProps> = ({
 
   return (
     <View
-      style={[styles.container, !isLandscape && styles.portraitWidth]}
+      style={[
+        styles.container,
+        Platform.OS !== 'ios' && styles.minimumWidth,
+        Platform.OS !== 'ios' && !isLandscape && styles.portraitWidth,
+      ]}
       pointerEvents="box-none">
       <AccessibleTouchableOpacity
         accessibilityRole="button"
@@ -88,8 +92,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    minWidth: '90%',
     alignSelf: 'center',
+  },
+  minimumWidth: {
+    minWidth: '90%',
   },
   title: {
     fontSize: 16,

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -105,9 +106,10 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                       },
                       draggableIcon: styles.draggableIcon,
                     }}>
-                    <View
+                    <SafeAreaView
                       style={styles.sheetListContainer}
-                      testID="unit_sheet_container">
+                      testID="unit_sheet_container"
+                      edges={['left', 'right']}>
                       <View style={styles.sheetCloseButtonContainer}>
                         <CloseButton
                           onPress={() => sheetRefs[key].current.close()}
@@ -160,7 +162,7 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                           </View>
                         )
                       )}
-                    </View>
+                    </SafeAreaView>
                   </RBSheet>
                 )}
               </AccessibleTouchableOpacity>
@@ -208,7 +210,7 @@ const styles = StyleSheet.create({
   sheetCloseButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginRight: 20,
+    marginRight: 8,
   },
   sheetTitle: {
     flexDirection: 'row',

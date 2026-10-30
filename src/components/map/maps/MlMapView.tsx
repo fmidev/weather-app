@@ -333,7 +333,10 @@ const MlMapView: React.FC<MapViewProps> = ({
         )}
       </Map>
       <MapControls
-        onLayersPressed={() => mapLayersSheetRef.current?.open()}
+        onLayersPressed={() => {
+          trackMatomoEvent('User action', 'Map', 'Open layers panel');
+          mapLayersSheetRef.current?.open();
+        }}
         onInfoPressed={() => {
           trackMatomoEvent('User action', 'Map', 'Open info panel');
           infoSheetRef.current?.open();

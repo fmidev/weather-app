@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   findNodeHandle,
+  NativeEventEmitter,
   NativeModules,
   Platform,
   useWindowDimensions,
@@ -62,6 +63,57 @@ export const useAccessibilityHintLanguage = (
   return Platform.OS === 'android' ? handleLayout : onLayout;
 };
 
+type VerticalBarLayoutModule = {
+  getUsesVerticalBarLayout: () => Promise<boolean>;
+  addListener: (eventName: string) => void;
+  removeListeners: (count: number) => void;
+};
+
+/** Whether iOS places system controls in a vertical bar in the active window. */
+const useVerticalBarLayout = (): boolean => {
+  const [vertical, setVertical] = useState(false);
+  const nativeModule =
+    Platform.OS === 'ios'
+      ? (NativeModules.VerticalBarLayout as VerticalBarLayoutModule | undefined)
+      : undefined;
+
+  useEffect(() => {
+    if (!nativeModule) return;
+
+    let active = true;
+    let receivedChange = false;
+    const emitter = new NativeEventEmitter(nativeModule);
+    const subscription = emitter.addListener(
+      'verticalBarLayoutDidChange',
+      (value: unknown) => {
+        if (!active || typeof value !== 'boolean') return;
+        receivedChange = true;
+        setVertical(value);
+      }
+    );
+
+    const readLayout = async () => {
+      try {
+        const value = await nativeModule.getUsesVerticalBarLayout();
+        // A layout change takes precedence over an older initial response.
+        if (active && !receivedChange) setVertical(value);
+      } catch {
+        // Keep the map controls available if the native query fails.
+      }
+    };
+    readLayout();
+
+    return () => {
+      active = false;
+      subscription.remove();
+    };
+  }, [nativeModule]);
+
+  return nativeModule ? vertical : false;
+};
+
+export { useVerticalBarLayout as usesVerticalBarLayout };
+
 export const useHorizontalScrollEdges = (initialOffset = 0) => {
   const scrollMetrics = useRef({
     width: 0,
@@ -90,4 +142,3 @@ export const useHorizontalScrollEdges = (initialOffset = 0) => {
   return { scrollEdges, updateScrollEdges };
 };
 
-export default useOrientation;

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 import {
   Appearance,
   Platform,
@@ -9,8 +15,13 @@ import {
   AppState,
 } from 'react-native';
 import { connect, ConnectedProps, useStore } from 'react-redux';
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import {
+  CommonActions,
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { HeaderBackButton } from '@react-navigation/elements';
 import {
   StackHeaderLeftProps,
@@ -48,6 +59,7 @@ import {
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import { fetchAnnouncements as fetchAnnouncementsAction } from '@store/announcements/actions';
 import { getGeolocation } from '@utils/helpers';
+import { usesVerticalBarLayout } from '@utils/hooks';
 import {
   PRIMARY_BLUE,
   WHITE,
@@ -61,9 +73,7 @@ import {
   selectDidLaunchApp,
   selectTermsOfUseAccepted,
 } from '@store/navigation/selectors';
-import {
-  setNavigationTab as setNavigationTabAction,
-} from '@store/navigation/actions';
+import { setNavigationTab as setNavigationTabAction } from '@store/navigation/actions';
 import { NavigationTabValues, NavigationTab } from '@store/navigation/types';
 import ErrorComponent from '@components/common/ErrorComponent';
 
@@ -114,6 +124,7 @@ const Navigator: React.FC<Props> = ({
   fetchAnnouncements,
 }) => {
   const isRunningOnMac = useIsRunningOnMac();
+  const verticalBarLayout = usesVerticalBarLayout();
   const store = useStore<State>();
   const isPlatformDetectionComplete = useIsPlatformDetectionComplete();
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
@@ -122,7 +133,9 @@ const Navigator: React.FC<Props> = ({
   const searchInfoSheetRef = useRef<RBSheet>(null);
   const navigationRef = useNavigationContainerRef();
   const [navReady, setNavReady] = React.useState(false);
-  const [currentRoute, setCurrentRoute] = React.useState<Route<string> | null>(null);
+  const [currentRoute, setCurrentRoute] = React.useState<Route<string> | null>(
+    null
+  );
   const appState = useRef(AppState.currentState);
   const isDark = (currentTheme: string | undefined): boolean =>
     currentTheme === 'dark' ||
@@ -148,14 +161,17 @@ const Navigator: React.FC<Props> = ({
     fetchAnnouncements();
   }, [fetchAnnouncements]);
 
-  const navigationTabChanged = useCallback((state: NavigationState | undefined) => {
-    const r = navigationRef.getCurrentRoute();
-    setCurrentRoute(r ?? null);
-    const navigationTab = state?.routeNames[state?.index] as NavigationTab;
-    if (Number.isInteger(NavigationTabValues[navigationTab])) {
-      setNavigationTab(navigationTab);
-    }
-  }, [navigationRef, setNavigationTab]);
+  const navigationTabChanged = useCallback(
+    (state: NavigationState | undefined) => {
+      const r = navigationRef.getCurrentRoute();
+      setCurrentRoute(r ?? null);
+      const navigationTab = state?.routeNames[state?.index] as NavigationTab;
+      if (Number.isInteger(NavigationTabValues[navigationTab])) {
+        setNavigationTab(navigationTab);
+      }
+    },
+    [navigationRef, setNavigationTab]
+  );
 
   const closeSearchInfoSheet = useCallback(() => {
     searchInfoSheetRef.current?.close();
@@ -169,16 +185,20 @@ const Navigator: React.FC<Props> = ({
   }, [handleLanguageChanged, i18n]);
 
   useEffect(() => {
-    if (
-      didLaunchApp &&
-      !didChangeLanguage &&
-      isPlatformDetectionComplete
-    ) {
+    if (didLaunchApp && !didChangeLanguage && isPlatformDetectionComplete) {
       trackMatomoEvent('Init', 'Geolocation', 'Launch app');
       if (isRunningOnMac) {
-        trackMatomoEvent('Init', 'Platform', 'MacOS' + ' - ' + packageJSON.version);
+        trackMatomoEvent(
+          'Init',
+          'Platform',
+          'MacOS' + ' - ' + packageJSON.version
+        );
       } else {
-        trackMatomoEvent('Init', 'Platform', Platform.OS +' - '+packageJSON.version);
+        trackMatomoEvent(
+          'Init',
+          'Platform',
+          Platform.OS + ' - ' + packageJSON.version
+        );
       }
       getGeolocation(setCurrentLocation, t, true, () => store.getState().location.current);
       fetchAnnouncements();
@@ -195,7 +215,7 @@ const Navigator: React.FC<Props> = ({
   ]);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (appState.current?.match(/active/) && nextAppState === 'background') {
         // Make sure that events are sent before app goes to background
         sendMatomoEvents();
@@ -224,7 +244,7 @@ const Navigator: React.FC<Props> = ({
     // Update theme when changed in settings
     const colorScheme = Appearance.getColorScheme();
     if (theme === 'automatic') {
-        setUseDarkTheme(isDark(colorScheme || undefined));
+      setUseDarkTheme(isDark(colorScheme || undefined));
     } else {
       setUseDarkTheme(isDark(theme));
     }
@@ -244,7 +264,9 @@ const Navigator: React.FC<Props> = ({
       headerStyle: {
         ...styles.header,
         shadowColor:
-          useDarkTheme || Platform.OS === 'android' ? SHADOW_DARK : SHADOW_LIGHT,
+          useDarkTheme || Platform.OS === 'android'
+            ? SHADOW_DARK
+            : SHADOW_LIGHT,
       },
       headerTitleAlign: 'center',
       headerBackImage: HeaderBackImage,
@@ -259,7 +281,9 @@ const Navigator: React.FC<Props> = ({
       ({
         navigation,
       }: {
-        navigation: StackNavigationProp<MapStackParamList | WeatherStackParamList>;
+        navigation: StackNavigationProp<
+          MapStackParamList | WeatherStackParamList
+        >;
       }) => ({
         ...CommonHeaderOptions,
         // eslint-disable-next-line react/no-unstable-nested-components
@@ -276,10 +300,12 @@ const Navigator: React.FC<Props> = ({
         ),
         // eslint-disable-next-line react/no-unstable-nested-components
         headerTitle: () => (
-          <CommonHeaderTitle onPress={() => {
-            trackMatomoEvent('User action', 'Map', 'Open search - location');
-            navigation.navigate('Search');
-          }} />
+          <CommonHeaderTitle
+            onPress={() => {
+              trackMatomoEvent('User action', 'Map', 'Open search - location');
+              navigation.navigate('Search');
+            }}
+          />
         ),
         // eslint-disable-next-line react/no-unstable-nested-components
         headerRight: () => (
@@ -306,7 +332,9 @@ const Navigator: React.FC<Props> = ({
       headerBackTitleVisible: false,
       headerLeft: Platform.OS === 'ios' ? renderSearchBackButton : undefined,
       // eslint-disable-next-line react/no-unstable-nested-components
-      headerTitle: () => <HeaderTitle title={t('navigation:search')} isDark={useDarkTheme} />,
+      headerTitle: () => (
+        <HeaderTitle title={t('navigation:search')} isDark={useDarkTheme} />
+      ),
       // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: () => (
         <HeaderButton
@@ -315,7 +343,11 @@ const Navigator: React.FC<Props> = ({
           accessibilityHint={t('navigation:searchInfoAccessibilityHint')}
           icon="info"
           onPress={() => {
-            trackMatomoEvent('User action', 'Search', 'Open search info bottomsheet');
+            trackMatomoEvent(
+              'User action',
+              'Search',
+              'Open search info bottomsheet'
+            );
             searchInfoSheetRef.current?.open();
           }}
         />
@@ -340,14 +372,136 @@ const Navigator: React.FC<Props> = ({
       ...LocationHeaderOptions({ navigation: navigationRef as any }),
       // eslint-disable-next-line react/no-unstable-nested-components
       header: (props: StackHeaderProps) => <AnnouncementsHeader {...props} />,
-    })
-    , [LocationHeaderOptions, navigationRef]);
+    }),
+    [LocationHeaderOptions, navigationRef]
+  );
 
-  const weatherScreenOptions = useMemo(() =>
-    weatherLayout === 'vertical'
-      ? { headerShown: false }
-      : LocationHeaderOptions({ navigation: navigationRef as any }),
-    [LocationHeaderOptions, navigationRef, weatherLayout]);
+  const nativeLocationHeaderItems = useCallback(
+    (
+      screen: 'Map' | 'Weather' | 'Warnings'
+    ): NonNullable<NativeStackNavigationOptions['unstable_headerRightItems']> =>
+      () => [
+        {
+          type: 'button',
+          label: t('navigation:locate'),
+          accessibilityLabel: t('navigation:locate'),
+          accessibilityHint: t('navigation:locateAccessibilityLabel'),
+          icon: { type: 'sfSymbol', name: 'dot.scope' },
+          onPress: () => {
+            trackMatomoEvent('User action', screen, 'Geolocation');
+            getGeolocation(
+              setCurrentLocation,
+              t,
+              undefined,
+              () => store.getState().location.current
+            );
+          },
+        },
+        {
+          type: 'button',
+          label: t('navigation:search'),
+          accessibilityLabel: t('navigation:search'),
+          accessibilityHint: t('navigation:searchAccessibilityLabel'),
+          icon: { type: 'sfSymbol', name: 'magnifyingglass' },
+          onPress: () => {
+            trackMatomoEvent('User action', screen, 'Open search - button');
+            navigationRef.dispatch(CommonActions.navigate('Search'));
+          },
+        },
+      ],
+    [navigationRef, setCurrentLocation, t, store]
+  );
+
+  const nativeMapOptions = useMemo<NativeStackNavigationOptions>(
+    () => ({
+      headerShown: true,
+      headerTitle: LocationHeaderOptions({ navigation: navigationRef as any })
+        .headerTitle,
+      headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+      unstable_headerLeftItems: (props) =>
+        nativeLocationHeaderItems('Map')(props).slice(
+          0,
+          verticalBarLayout ? 2 : 1
+        ),
+      unstable_headerRightItems: verticalBarLayout
+        ? undefined
+        : (props) => nativeLocationHeaderItems('Map')(props).slice(1),
+    }),
+    [
+      LocationHeaderOptions,
+      navigationRef,
+      nativeLocationHeaderItems,
+      useDarkTheme,
+      verticalBarLayout,
+    ]
+  );
+
+  const weatherScreenOptions = useMemo(
+    () =>
+      weatherLayout === 'vertical'
+        ? { headerShown: false }
+        : LocationHeaderOptions({ navigation: navigationRef as any }),
+    [LocationHeaderOptions, navigationRef, weatherLayout]
+  );
+
+  const nativeWeatherOptions = useMemo<NativeStackNavigationOptions>(
+    () => ({
+      headerShown: weatherLayout !== 'vertical' || verticalBarLayout,
+      headerTransparent: weatherLayout === 'vertical',
+      title: weatherLayout === 'vertical' ? '' : t('navigation:weather'),
+      headerTitle:
+        weatherLayout === 'vertical'
+          ? undefined
+          : LocationHeaderOptions({ navigation: navigationRef as any })
+              .headerTitle,
+      headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+      unstable_headerLeftItems:
+        !verticalBarLayout && weatherLayout !== 'vertical'
+          ? (props) => nativeLocationHeaderItems('Weather')(props).slice(0, 1)
+          : undefined,
+      unstable_headerRightItems: weatherLayout !== 'vertical' || verticalBarLayout
+        ? (props) =>
+            nativeLocationHeaderItems('Weather')(props).slice(
+              verticalBarLayout ? 0 : 1
+            )
+        : undefined,
+    }),
+    [
+      LocationHeaderOptions,
+      navigationRef,
+      nativeLocationHeaderItems,
+      t,
+      useDarkTheme,
+      verticalBarLayout,
+      weatherLayout,
+    ]
+  );
+
+  const nativeSearchOptions = useMemo<NativeStackNavigationOptions>(
+    () => ({
+      title: t('navigation:search'),
+      headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+      headerTitleStyle: { fontFamily: BOLD_FONT },
+      headerBackButtonDisplayMode: 'minimal',
+      unstable_headerRightItems: () => [
+        {
+          type: 'button',
+          label: t('navigation:searchInfoAccessibilityHint'),
+          accessibilityLabel: t('navigation:searchInfoAccessibilityHint'),
+          icon: { type: 'sfSymbol', name: 'info.circle' },
+          onPress: () => {
+            trackMatomoEvent(
+              'User action',
+              'Search',
+              'Open search info bottomsheet'
+            );
+            searchInfoSheetRef.current?.open();
+          },
+        },
+      ],
+    }),
+    [t, useDarkTheme]
+  );
 
   const warningsScreenOptions = useMemo(
     () => ({
@@ -355,23 +509,51 @@ const Navigator: React.FC<Props> = ({
       // eslint-disable-next-line react/no-unstable-nested-components
       header: (props: StackHeaderProps) => <AnnouncementsHeader {...props} />,
     }),
-    [LocationHeaderOptions, navigationRef] );
-
-  const tabBarStyle = useMemo(
-    () => {
-      if ((Platform.OS === 'android' && Platform.Version < 35) || isRunningOnMac) {
-        return { height: 70 };
-      }
-      return {};
-    },
-    [isRunningOnMac]
+    [LocationHeaderOptions, navigationRef]
   );
+
+  const nativeWarningsOptions = useMemo<NativeStackNavigationOptions>(
+    () => ({
+      headerShown: true,
+      headerTitle: LocationHeaderOptions({ navigation: navigationRef as any })
+        .headerTitle,
+      headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
+      unstable_headerLeftItems: verticalBarLayout
+        ? undefined
+        : (props) => nativeLocationHeaderItems('Warnings')(props).slice(0, 1),
+      unstable_headerRightItems: (props) =>
+        nativeLocationHeaderItems('Warnings')(props).slice(
+          verticalBarLayout ? 0 : 1
+        ),
+    }),
+    [
+      LocationHeaderOptions,
+      navigationRef,
+      nativeLocationHeaderItems,
+      useDarkTheme,
+      verticalBarLayout,
+    ]
+  );
+
+  const tabBarStyle = useMemo(() => {
+    if (
+      (Platform.OS === 'android' && Platform.Version < 35) ||
+      isRunningOnMac
+    ) {
+      return { height: 70 };
+    }
+    return {};
+  }, [isRunningOnMac]);
 
   if (!ready || !theme) {
     return null;
   }
 
-  if ((!didLaunchApp || !termsOfUseAccepted) && onboardingWizardEnabled && launchArgs?.e2e !== true) {
+  if (
+    (!didLaunchApp || !termsOfUseAccepted) &&
+    onboardingWizardEnabled &&
+    launchArgs?.e2e !== true
+  ) {
     return (
       <NavigationContainer theme={useDarkTheme ? darkTheme : lightTheme}>
         <SetupStackScreen
@@ -397,12 +579,13 @@ const Navigator: React.FC<Props> = ({
 
   return (
     <>
-      <StatusBar
-        barStyle={useDarkTheme ? 'light-content' : 'dark-content'}
-      />
+      <StatusBar barStyle={useDarkTheme ? 'light-content' : 'dark-content'} />
       <NavigationContainer
         ref={navigationRef}
-        onReady={() => { setNavReady(true); handleState(); }}
+        onReady={() => {
+          setNavReady(true);
+          handleState();
+        }}
         onStateChange={navigationTabChanged}
         theme={useDarkTheme ? darkTheme : lightTheme}
         /* @ts-ignore */
@@ -410,7 +593,7 @@ const Navigator: React.FC<Props> = ({
         <Tab.Navigator
           initialRouteName={initialTab}
           screenOptions={{
-            tabBarHideOnKeyboard: true,
+            tabBarHideOnKeyboard: false,
             tabBarActiveTintColor: useDarkTheme
               ? darkTheme.colors.tabBarActive
               : lightTheme.colors.tabBarActive,
@@ -471,11 +654,12 @@ const Navigator: React.FC<Props> = ({
               tabPress: () => {
                 trackMatomoEvent('User action', 'Navigation', 'Weather');
               },
-            }}
-          >
+            }}>
             {() => (
               <WeatherStackScreen
                 weatherOptions={weatherScreenOptions}
+                nativeWeatherOptions={nativeWeatherOptions}
+                nativeSearchOptions={nativeSearchOptions}
                 searchOptions={SearchScreenOptions}
                 stackScreenListener={stackScreenListener}
               />
@@ -505,11 +689,12 @@ const Navigator: React.FC<Props> = ({
               tabPress: () => {
                 trackMatomoEvent('User action', 'Navigation', 'Map');
               },
-            }}
-          >
+            }}>
             {() => (
               <MapStackScreen
                 mapOptions={mapScreenOptions}
+                nativeMapOptions={nativeMapOptions}
+                nativeSearchOptions={nativeSearchOptions}
                 searchOptions={SearchScreenOptions}
                 stackScreenListener={stackScreenListener}
               />
@@ -540,14 +725,15 @@ const Navigator: React.FC<Props> = ({
                 ),
               }}
               listeners={{
-              tabPress: () => {
-                trackMatomoEvent('User action', 'Navigation', 'Warnings');
-              },
-            }}
-            >
+                tabPress: () => {
+                  trackMatomoEvent('User action', 'Navigation', 'Warnings');
+                },
+              }}>
               {() => (
                 <WarningsStackScreen
                   warningsOptions={warningsScreenOptions}
+                  nativeWarningsOptions={nativeWarningsOptions}
+                  nativeSearchOptions={nativeSearchOptions}
                   searchOptions={SearchScreenOptions}
                   stackScreenListener={stackScreenListener}
                 />
@@ -578,8 +764,7 @@ const Navigator: React.FC<Props> = ({
               tabPress: () => {
                 trackMatomoEvent('User action', 'Navigation', 'Others');
               },
-            }}
-          >
+            }}>
             {() => (
               <OthersStackScreen
                 commonHeaderOptions={CommonHeaderOptions}
@@ -591,7 +776,7 @@ const Navigator: React.FC<Props> = ({
         </Tab.Navigator>
         <RBSheet
           ref={searchInfoSheetRef}
-          height={700}
+          height={250}
           closeOnDragDown
           customStyles={{
             container: {
@@ -602,14 +787,9 @@ const Navigator: React.FC<Props> = ({
             },
             draggableIcon: styles.draggableIcon,
           }}>
-          <SearchInfoBottomSheet
-            onClose={closeSearchInfoSheet}
-          />
+          <SearchInfoBottomSheet onClose={closeSearchInfoSheet} />
         </RBSheet>
-        <ErrorComponent
-          navReady={navReady}
-          currentRoute={currentRoute}
-        />
+        <ErrorComponent navReady={navReady} currentRoute={currentRoute} />
       </NavigationContainer>
     </>
   );
@@ -642,7 +822,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 1,
     elevation: 8,
-  }
+  },
 });
 
 export default connector(Navigator);

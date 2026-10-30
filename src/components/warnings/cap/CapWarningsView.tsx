@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAccessibilityLanguage } from '@utils/hooks';
 import PanelHeader from '@components/common/PanelHeader';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ import {
   selectLoading,
 } from '@store/warnings/selectors';
 import CapWarningsLegend from './CapWarningsLegend';
+import useWarningsInfo from '../useWarningsInfo';
 import MapView from './MapView';
 import TextList from './TextList';
 import LocalWarningsBar from './LocalWarningsBar';
@@ -42,7 +44,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   loading,
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
-  const legendSheetRef = useRef<RBSheet>(null);
+  const { infoSheetRef: legendSheetRef, openInfo } = useWarningsInfo();
 
   const { t, i18n } = useTranslation('warnings');
   const locale = i18n.language;
@@ -50,7 +52,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   const { colors } = useTheme() as CustomTheme;
 
   const capViewSettings = Config.get('warnings')?.capViewSettings;
-  const { default: defaultLocation} = Config.get('location');
+  const { default: defaultLocation } = Config.get('location');
 
   let textViewTitle = `${t('warningsForNDays', {
     days: capViewSettings?.numberOfDays,
@@ -91,12 +93,12 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   const dates = getDateIndicatorDates();
 
   return (
-    <View>
-      { capViewSettings?.localWarningsEnabled
-        && defaultLocation?.country === currentLocation.country
-        && capViewSettings?.localWarningsAfterCountry !== true && (
-        <LocalWarningsBar legendSheetRef={legendSheetRef} />
-      )}
+    <SafeAreaView edges={['left', 'right']}>
+      {capViewSettings?.localWarningsEnabled &&
+        defaultLocation?.country === currentLocation.country &&
+        capViewSettings?.localWarningsAfterCountry !== true && (
+          <LocalWarningsBar legendSheetRef={legendSheetRef} />
+        )}
       <View>
         <PanelHeader title={t('panelTitleCap')} justifyCenter />
         <View
@@ -117,7 +119,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
                 styles.centeredContent,
                 styles.dataSourcePanelUpdatedRow,
               ]}>
-              { !loading && (
+              {!loading && (
                 <>
                   <Text
                     accessibilityLanguage={accessibilityLanguage}
@@ -149,7 +151,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
               accessibilityLabel={t('infoAccessibilityLabel')}
               accessibilityHint={t('infoAccessibilityHint')}
               style={styles.infoButton}
-              onPress={() => legendSheetRef.current?.open()}>
+              onPress={openInfo}>
               <Icon
                 name="info"
                 color={colors.primaryText}
@@ -163,11 +165,11 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         <PanelHeader title={textViewTitle} justifyCenter />
         <TextList capData={capWarnings} dates={dates} />
       </View>
-      { capViewSettings?.localWarningsEnabled
-        && defaultLocation?.country === currentLocation.country
-        && capViewSettings?.localWarningsAfterCountry && (
-        <LocalWarningsBar legendSheetRef={legendSheetRef} />
-      )}
+      {capViewSettings?.localWarningsEnabled &&
+        defaultLocation?.country === currentLocation.country &&
+        capViewSettings?.localWarningsAfterCountry && (
+          <LocalWarningsBar legendSheetRef={legendSheetRef} />
+        )}
       <RBSheet
         ref={legendSheetRef}
         height={600}
@@ -181,7 +183,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         }}>
         <CapWarningsLegend onClose={() => legendSheetRef.current?.close()} />
       </RBSheet>
-    </View>
+    </SafeAreaView>
   );
 };
 

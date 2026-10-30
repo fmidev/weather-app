@@ -92,7 +92,7 @@ type NextHourForecastPanelProps = PropsFromRedux & {
   currentHour: number;
 };
 
-const BACKGROUND_IMAGE_HEIGHT = 400;
+const BACKGROUND_IMAGE_HEIGHT = 380;
 
 const NextHourForecastPanelWithWeatherBackground: React.FC<
   NextHourForecastPanelProps
@@ -142,8 +142,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
     );
   }
 
-  const safetyPadding = Platform.OS === 'android' ? 8 : 0;
-  const paddingTop = insets.top === 0 ? 32 : safetyPadding;
+  const paddingTop = insets.top === 0 ? 32 : insets.top;
   const paddingBottom = Platform.OS === 'android' ? 32 : 0;
   const defaultUnits = Config.get('settings').units;
   const temperatureUnit =
@@ -199,8 +198,9 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
   const textColor = WHITE;
   const imageOverlayColor = 'rgba(0,0,0,0.3)';
   const contentHeight = Math.max(
-    BACKGROUND_IMAGE_HEIGHT,
-    Math.max(Math.min(fontScale, 1.5), 1) * BACKGROUND_IMAGE_HEIGHT
+    BACKGROUND_IMAGE_HEIGHT + insets.top,
+    Math.max(Math.min(fontScale, 1.5), 1) *
+      (BACKGROUND_IMAGE_HEIGHT + insets.top)
   );
   const iconSize = Math.min(
     isRunningOnMac
@@ -246,7 +246,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
           />
         </>
       )}
-      <SafeAreaView
+      <View
         style={[
           styles.container,
           {
@@ -264,7 +264,12 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
             backgroundColor={imageOverlayColor}
             onPress={() => {
               trackMatomoEvent('User action', 'Weather', 'Geolocation');
-              getGeolocation(setCurrentLocation, t, undefined, () => store.getState().location.current);
+              getGeolocation(
+                setCurrentLocation,
+                t,
+                undefined,
+                () => store.getState().location.current
+              );
             }}
             iconSize={iconSize}
             circular
@@ -354,7 +359,7 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
             </View>
           </View>
         </AccessibleView>
-      </SafeAreaView>
+      </View>
       <View style={[styles.overlay, { backgroundColor: imageOverlayColor }]}>
         <NextHourForecastBar
           forecast={nextHourForecast}
@@ -366,22 +371,26 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
   );
 
   return backgroundImagesEnabled && weatherBackground ? (
-    <ImageBackground
-      testID="next-hour-forecast-background"
-      source={weatherBackground}
-      resizeMode="cover"
-      style={styles.backgroundImage}>
-      {content}
-    </ImageBackground>
+    <SafeAreaView edges={['left', 'right']}>
+      <ImageBackground
+        testID="next-hour-forecast-background"
+        source={weatherBackground}
+        resizeMode="cover"
+        style={styles.backgroundImage}>
+        {content}
+      </ImageBackground>
+    </SafeAreaView>
   ) : (
-    <View
-      testID="next-hour-forecast-background"
-      style={[
-        styles.backgroundImage,
-        { backgroundColor: colors.forecastBackground },
-      ]}>
-      {content}
-    </View>
+    <SafeAreaView edges={['left', 'right']}>
+      <View
+        testID="next-hour-forecast-background"
+        style={[
+          styles.backgroundImage,
+          { backgroundColor: colors.forecastBackground },
+        ]}>
+        {content}
+      </View>
+    </SafeAreaView>
   );
 };
 

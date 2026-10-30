@@ -44,6 +44,7 @@ const mountWithFavorites = (favorites: Location[]) => {
     fetchWarnings: jest.fn(),
     fetchFavoriteWarnings: jest.fn(),
     location: currentLocation,
+    locationUpdateCount: 0,
     resetObservations: jest.fn(),
     setCurrentLocation: jest.fn(),
   };
@@ -78,6 +79,22 @@ const mountWithFavorites = (favorites: Location[]) => {
     },
   };
 };
+
+const createProps = () => ({
+  announcements: undefined as any,
+  favorites: [],
+  fetchForecast: jest.fn(),
+  fetchAllForecasts: jest.fn(),
+  fetchFavoriteWarnings: jest.fn(),
+  setCurrentLocation: jest.fn(),
+  fetchMeteorologistSnapshot: jest.fn(),
+  fetchNews: jest.fn(),
+  fetchObservation: jest.fn(),
+  fetchWarnings: jest.fn(),
+  location: { country: 'FI', id: 1, lat: 60.1, lon: 24.9 } as any,
+  resetObservations: jest.fn(),
+  locationUpdateCount: 5,
+});
 
 describe('WeatherScreen', () => {
   beforeEach(() => {
@@ -169,6 +186,59 @@ describe('WeatherScreen', () => {
     expect(queryByTestId('sun-and-moon-panel')).toBeNull();
   });
 
+  it.each(['vertical', 'legacy'])('scrolls to the top after geolocation and search selections in the %s layout, including the same location', (layout) => {
+    const config = mockConfigGetAll();
+    mockConfigGetAll.mockReturnValue({
+      ...config,
+      weather: { ...config.weather, layout },
+    });
+    const props = createProps();
+    const view = render(<WeatherScreen {...props} />);
+    const scrollTo = view.UNSAFE_getByType(ScrollView).instance.scrollTo;
+    expect(scrollTo).not.toHaveBeenCalled();
+    const forecastRequests = props.fetchAllForecasts.mock.calls.length;
+
+    view.rerender(<WeatherScreen {...props} locationUpdateCount={6} />);
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenLastCalledWith({ x: 0, y: 0, animated: true });
+    expect(props.fetchAllForecasts).toHaveBeenCalledTimes(forecastRequests);
+
+    const manuallySelected = { ...props, location: { ...props.location, id: 2 } };
+    view.rerender(<WeatherScreen {...manuallySelected} locationUpdateCount={7} />);
+    expect(scrollTo).toHaveBeenCalledTimes(2);
+
+    const requestsAfterSelection = props.fetchAllForecasts.mock.calls.length;
+    view.rerender(<WeatherScreen {...manuallySelected} locationUpdateCount={8} />);
+    expect(scrollTo).toHaveBeenCalledTimes(3);
+    expect(props.fetchAllForecasts).toHaveBeenCalledTimes(requestsAfterSelection);
+  });
+
+  it('scrolls once when returning after selecting a location and keeps the scroll position when search is cancelled', () => {
+    const props = createProps();
+    const view = render(<WeatherScreen {...props} />);
+    const scrollTo = view.UNSAFE_getByType(ScrollView).instance.scrollTo;
+
+    mockState.focused = false;
+    view.rerender(<WeatherScreen {...props} />);
+    mockState.focused = true;
+    view.rerender(<WeatherScreen {...props} />);
+    expect(scrollTo).not.toHaveBeenCalled();
+
+    mockState.focused = false;
+    view.rerender(<WeatherScreen {...props} locationUpdateCount={6} />);
+    expect(scrollTo).not.toHaveBeenCalled();
+
+    mockState.focused = true;
+    view.rerender(<WeatherScreen {...props} locationUpdateCount={6} />);
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+
+    mockState.focused = false;
+    view.rerender(<WeatherScreen {...props} locationUpdateCount={6} />);
+    mockState.focused = true;
+    view.rerender(<WeatherScreen {...props} locationUpdateCount={6} />);
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+  });
+
   describe('favorites panel visibility', () => {
     it.each([
       { enabled: true, visible: true },
@@ -244,9 +314,17 @@ describe('WeatherScreen', () => {
 
       expect(screen.props.setCurrentLocation).toHaveBeenCalledTimes(1);
       expect(screen.props.setCurrentLocation).toHaveBeenCalledWith(favorite);
+      screen.view.rerender(
+        <WeatherScreen
+          {...screen.props}
+          location={favorite}
+          locationUpdateCount={1}
+        />
+      );
       if (scrollToTop === false) {
         expect(scrollTo).not.toHaveBeenCalled();
       } else {
+        expect(scrollTo).toHaveBeenCalledTimes(1);
         expect(scrollTo).toHaveBeenCalledWith({ y: 0, animated: true });
       }
       expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
@@ -254,6 +332,17 @@ describe('WeatherScreen', () => {
         'Weather',
         'Select location - favourites'
       );
+
+      scrollTo.mockClear();
+      screen.view.rerender(
+        <WeatherScreen
+          {...screen.props}
+          location={favorite}
+          locationUpdateCount={2}
+        />
+      );
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      expect(scrollTo).toHaveBeenCalledWith({ x: 0, y: 0, animated: true });
     }
   );
 

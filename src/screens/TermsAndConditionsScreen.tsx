@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ScrollView,
   View,
@@ -9,7 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Markdown from "react-native-marked";
+import Markdown from 'react-native-marked';
 import type { TextInstance } from 'react-native';
 
 import Text from '@components/common/AppText';
@@ -58,91 +59,94 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
     <View
       testID="terms_and_conditions_view"
       style={[styles.container, { backgroundColor: colors.background }]}>
-      { markdown?.termsOfUse ?
-          <View style={styles.markdown}>
-            <Markdown
-              value={termsOfUseDocuments[i18n.language as keyof typeof termsOfUseDocuments] || termsOfUseDocuments.en}
-              renderer={renderer}
-              flatListProps={{
-                style: {
-                  backgroundColor: colors.background,
-                },
-              }}
-            />
-          </View>
-        : (
-          <ScrollView
-            style={styles.scrollContainer}
-            contentContainerStyle={styles.withPaddingBottom}
-            showsVerticalScrollIndicator={false}>
-            <Text
-              ref={titleRef}
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('generalTitle')}
-            </Text>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('generalDescription')}
-            </Text>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('contentsTitle')}
-            </Text>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('contentsDescription')}
-            </Text>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('personalInfoTitle')}
-            </Text>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('personalInfoDescription')}
-            </Text>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('immaterialRightsTitle')}
-            </Text>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('immaterialRightsDescription')}
-            </Text>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('liabilityTitle')}
-            </Text>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('liabilityDescription')}
-            </Text>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('rightToChangesTitle')}
-            </Text>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('rightToChangesDescription')}
-            </Text>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('applicableLawTitle')}
-            </Text>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('applicableLawDescription')}
-            </Text>
-            <Text
-              style={[styles.title, { color: colors.text }]}
-              accessibilityRole="header">
-              {t('contactDetailsTitle')}
-            </Text>
-            <Text style={[styles.body, { color: colors.hourListText }]}>
-              {t('contactDetailsDescription')}
-            </Text>
-          </ScrollView>
-        )
-      }
+      {markdown?.termsOfUse ? (
+        <SafeAreaView edges={['left', 'right']} style={styles.markdown}>
+          <Markdown
+            value={
+              termsOfUseDocuments[
+                i18n.language as keyof typeof termsOfUseDocuments
+              ] || termsOfUseDocuments.en
+            }
+            renderer={renderer}
+            flatListProps={{
+              style: {
+                backgroundColor: colors.background,
+              },
+            }}
+          />
+        </SafeAreaView>
+      ) : (
+        <ScrollView
+          style={styles.scrollContainer}
+          contentContainerStyle={styles.withPaddingBottom}
+          showsVerticalScrollIndicator={false}>
+          <Text
+            ref={titleRef}
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header">
+            {t('generalTitle')}
+          </Text>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('generalDescription')}
+          </Text>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header">
+            {t('contentsTitle')}
+          </Text>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('contentsDescription')}
+          </Text>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header">
+            {t('personalInfoTitle')}
+          </Text>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('personalInfoDescription')}
+          </Text>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header">
+            {t('immaterialRightsTitle')}
+          </Text>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('immaterialRightsDescription')}
+          </Text>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header">
+            {t('liabilityTitle')}
+          </Text>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('liabilityDescription')}
+          </Text>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header">
+            {t('rightToChangesTitle')}
+          </Text>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('rightToChangesDescription')}
+          </Text>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header">
+            {t('applicableLawTitle')}
+          </Text>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('applicableLawDescription')}
+          </Text>
+          <Text
+            style={[styles.title, { color: colors.text }]}
+            accessibilityRole="header">
+            {t('contactDetailsTitle')}
+          </Text>
+          <Text style={[styles.body, { color: colors.hourListText }]}>
+            {t('contactDetailsDescription')}
+          </Text>
+        </ScrollView>
+      )}
       {showActions && (
         <View
           style={[
@@ -152,7 +156,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
               backgroundColor: colors.background,
             },
           ]}>
-          { errorMessage !== '' && (
+          {errorMessage !== '' && (
             <Text style={[styles.error, { color: errorColor }]}>
               {t(errorMessage)}
             </Text>
@@ -163,7 +167,14 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
               onPress={onAccept}
               accessibilityRole="button"
               accessibilityHint={t('acceptButtonAccessibilityHint')}>
-              <View style={[styles.button, { borderColor: colors.text, marginBottom: closeButtonMarginBottom }]}>
+              <View
+                style={[
+                  styles.button,
+                  {
+                    borderColor: colors.text,
+                    marginBottom: closeButtonMarginBottom,
+                  },
+                ]}>
                 <Text style={[styles.buttonText, { color: colors.text }]}>
                   {t('accept')}
                 </Text>
@@ -176,7 +187,14 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
               }}
               accessibilityRole="button"
               accessibilityHint={t('declineButtonAccessibilityHint')}>
-              <View style={[styles.button, { borderColor: colors.text, marginBottom: closeButtonMarginBottom }]}>
+              <View
+                style={[
+                  styles.button,
+                  {
+                    borderColor: colors.text,
+                    marginBottom: closeButtonMarginBottom,
+                  },
+                ]}>
                 <Text style={[styles.buttonText, { color: colors.text }]}>
                   {t('decline')}
                 </Text>
@@ -251,7 +269,7 @@ const styles = StyleSheet.create({
     fontFamily: MEDIUM_FONT,
     paddingHorizontal: 16,
     paddingBottom: 8,
-  }
+  },
 });
 
 export default TermsAndConditionsScreen;
