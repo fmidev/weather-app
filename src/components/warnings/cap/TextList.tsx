@@ -4,7 +4,6 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  useWindowDimensions,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -51,7 +50,6 @@ const TextList = ({
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
   const { colors } = useTheme() as CustomTheme;
-  const { width } = useWindowDimensions();
   const [xOffset, setXOffset] = useState<number>(0);
   const { t } = useTranslation('warnings');
   const severities = [...severityList].reverse();
@@ -96,7 +94,7 @@ const TextList = ({
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={[styles.dateIndicatorRow, { width: width - 136 }]}
+          style={styles.dateIndicatorRow}
           onScroll={(e) => setXOffset(e.nativeEvent.contentOffset.x)}>
           {dates.map(({ time, weekday, date, relativeDay }) => (
             <DateIndicator
@@ -148,6 +146,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginLeft: 64,
+    // Match the accordion arrow: 24-point icon, 20-point padding and 14-point margin.
+    marginRight: 58,
   },
   dateIndicatorEntry: {
     display: 'flex',

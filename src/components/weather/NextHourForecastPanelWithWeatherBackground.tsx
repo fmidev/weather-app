@@ -92,7 +92,7 @@ type NextHourForecastPanelProps = PropsFromRedux & {
   currentHour: number;
 };
 
-const BACKGROUND_IMAGE_HEIGHT = 400;
+const BACKGROUND_IMAGE_HEIGHT = 380;
 
 const NextHourForecastPanelWithWeatherBackground: React.FC<
   NextHourForecastPanelProps
@@ -264,7 +264,12 @@ const NextHourForecastPanelWithWeatherBackground: React.FC<
             backgroundColor={imageOverlayColor}
             onPress={() => {
               trackMatomoEvent('User action', 'Weather', 'Geolocation');
-              getGeolocation(setCurrentLocation, t, undefined, () => store.getState().location.current);
+              getGeolocation(
+                setCurrentLocation,
+                t,
+                undefined,
+                () => store.getState().location.current
+              );
             }}
             iconSize={iconSize}
             circular

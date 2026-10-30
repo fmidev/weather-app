@@ -455,8 +455,15 @@ const Navigator: React.FC<Props> = ({
           : LocationHeaderOptions({ navigation: navigationRef as any })
               .headerTitle,
       headerTintColor: useDarkTheme ? WHITE : PRIMARY_BLUE,
-      unstable_headerRightItems: verticalBarLayout
-        ? nativeLocationHeaderItems('Weather')
+      unstable_headerLeftItems:
+        !verticalBarLayout && weatherLayout !== 'vertical'
+          ? (props) => nativeLocationHeaderItems('Weather')(props).slice(0, 1)
+          : undefined,
+      unstable_headerRightItems: weatherLayout !== 'vertical' || verticalBarLayout
+        ? (props) =>
+            nativeLocationHeaderItems('Weather')(props).slice(
+              verticalBarLayout ? 0 : 1
+            )
         : undefined,
     }),
     [

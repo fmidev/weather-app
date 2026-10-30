@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, ScrollViewInstance, useWindowDimensions } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, ScrollViewInstance } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
@@ -43,7 +43,6 @@ const WarningItem: React.FC<WarningItemProps> = ({
   showAreas = true,
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
-  const { width } = useWindowDimensions();
   const { capViewSettings } = Config.get('warnings');
   const { t, i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
@@ -95,17 +94,13 @@ const WarningItem: React.FC<WarningItemProps> = ({
           severity={infoEn.severity}
           size={32}
         />
-        <View style={[styles.headingMainContent, { width: width - 136 }]}>
+        <View style={styles.headingMainContent}>
           {includeSeverityBars && (
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               scrollEnabled={false}
-              style={[
-                styles.row,
-                styles.severityBarContainer,
-                { width: width - 136 },
-              ]}
+              style={[styles.row, styles.severityBarContainer]}
               ref={scrollViewRef}>
               {dailySeverities?.map((daySeverities, index) => (
                 <CapSeverityBar
@@ -192,7 +187,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginVertical: 15,
     marginLeft: 16,
-    flexGrow: 1,
+    flex: 1,
+    minWidth: 0,
   },
   headingTitle: {
     fontFamily: BOLD_FONT,

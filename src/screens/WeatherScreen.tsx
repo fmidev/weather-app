@@ -11,6 +11,7 @@ import {
   type NativeSyntheticEvent,
   type NativeScrollEvent,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
@@ -111,10 +112,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const { shouldReload } = useReloader();
 
   useEffect(() => {
-    if (
-      !isFocused ||
-      lastLocationUpdateCount.current === locationUpdateCount
-    ) {
+    if (!isFocused || lastLocationUpdateCount.current === locationUpdateCount) {
       return;
     }
     lastLocationUpdateCount.current = locationUpdateCount;
@@ -387,29 +385,31 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       </ScrollView>
     </View>
   ) : (
-    <GradientWrapper>
-      <View
-        testID="weather_view"
-        style={
-          Platform.OS === 'android' &&
-          weatherConfig.layout !== 'legacyWithoutBackgroundColor'
-            ? styles.legacyAndroid
-            : null
-        }>
-        <ScrollView
-          testID="weather_scrollview"
-          ref={scrollViewRef}
-          style={[styles.container]}
-          contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={announcements && [0]}>
-          <Announcements style={styles.announcements} />
-          <NextHourForecastPanel currentHour={currentHour} />
-          <ForecastPanel currentHour={currentHour} />
-          <ObservationPanel />
-        </ScrollView>
-      </View>
-    </GradientWrapper>
+    <SafeAreaView edges={['left', 'right']}>
+      <GradientWrapper>
+        <View
+          testID="weather_view"
+          style={
+            Platform.OS === 'android' &&
+            weatherConfig.layout !== 'legacyWithoutBackgroundColor'
+              ? styles.legacyAndroid
+              : null
+          }>
+          <ScrollView
+            testID="weather_scrollview"
+            ref={scrollViewRef}
+            style={[styles.container]}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+            stickyHeaderIndices={announcements && [0]}>
+            <Announcements style={styles.announcements} />
+            <NextHourForecastPanel currentHour={currentHour} />
+            <ForecastPanel currentHour={currentHour} />
+            <ObservationPanel />
+          </ScrollView>
+        </View>
+      </GradientWrapper>
+    </SafeAreaView>
   );
 };
 

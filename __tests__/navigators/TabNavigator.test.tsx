@@ -672,8 +672,13 @@ describe('TabNavigator', () => {
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Warnings', 'Open search - button');
   });
 
-  it.each(['default', 'vertical'])('provides native weather buttons without adding a JS header in the %s layout', (layout) => {
-    mockVerticalBarLayout = true;
+  it.each([
+    { layout: 'default', verticalBarLayout: false },
+    { layout: 'default', verticalBarLayout: true },
+    { layout: 'vertical', verticalBarLayout: true },
+    { layout: 'legacyWithoutBackgroundColor', verticalBarLayout: false },
+  ])('provides native weather buttons in the $layout layout with sidebar=$verticalBarLayout', ({ layout, verticalBarLayout }) => {
+    mockVerticalBarLayout = verticalBarLayout;
     mockConfigGet.mockImplementation((key: string) => {
       if (key === 'weather') return { layout };
       return { enabled: true };
@@ -696,7 +701,11 @@ describe('TabNavigator', () => {
     expect(typeof nativeWeatherOptions.headerTitle).toBe(layout === 'vertical' ? 'undefined' : 'function');
     expect(nativeWeatherOptions.headerRight).toBeUndefined();
 
-    const [locate, search] = nativeWeatherOptions.unstable_headerRightItems({});
+    const leftItems = nativeWeatherOptions.unstable_headerLeftItems?.({}) ?? [];
+    const rightItems = nativeWeatherOptions.unstable_headerRightItems({});
+    expect(leftItems).toHaveLength(verticalBarLayout ? 0 : 1);
+    expect(rightItems).toHaveLength(verticalBarLayout ? 2 : 1);
+    const [locate, search] = [...leftItems, ...rightItems];
     expect(locate).toEqual(expect.objectContaining({
       type: 'button',
       icon: { type: 'sfSymbol', name: 'dot.scope' },
@@ -738,7 +747,7 @@ describe('TabNavigator', () => {
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Search', 'Open search info bottomsheet');
   });
 
-  it.each(['default', 'vertical'])('shows native weather actions only with the sidebar in the %s layout', (layout) => {
+  it.each(['default', 'legacyWithoutBackgroundColor', undefined, 'vertical'])('shows native weather actions for the %s layout and responds to sidebar changes', (layout) => {
     mockConfigGet.mockImplementation((key: string) => {
       if (key === 'weather') return { layout };
       return { enabled: true };
@@ -756,17 +765,28 @@ describe('TabNavigator', () => {
     );
     const view = render(navigator);
     const weatherOptions = () => mockWeatherStack.mock.calls.at(-1)![0].nativeWeatherOptions;
-    expect(weatherOptions().unstable_headerRightItems).toBeUndefined();
+    expect(weatherOptions().unstable_headerLeftItems?.({}) ?? []).toHaveLength(
+      layout === 'vertical' ? 0 : 1
+    );
+    expect(weatherOptions().unstable_headerRightItems?.({}) ?? []).toHaveLength(
+      layout === 'vertical' ? 0 : 1
+    );
     expect(weatherOptions().headerShown).toBe(layout !== 'vertical');
 
     mockVerticalBarLayout = true;
     view.rerender(React.cloneElement(navigator));
+    expect(weatherOptions().unstable_headerLeftItems).toBeUndefined();
     expect(weatherOptions().unstable_headerRightItems({})).toHaveLength(2);
     expect(weatherOptions().headerShown).toBe(true);
 
     mockVerticalBarLayout = false;
     view.rerender(React.cloneElement(navigator));
-    expect(weatherOptions().unstable_headerRightItems).toBeUndefined();
+    expect(weatherOptions().unstable_headerLeftItems?.({}) ?? []).toHaveLength(
+      layout === 'vertical' ? 0 : 1
+    );
+    expect(weatherOptions().unstable_headerRightItems?.({}) ?? []).toHaveLength(
+      layout === 'vertical' ? 0 : 1
+    );
     expect(weatherOptions().headerShown).toBe(layout !== 'vertical');
   });
 
