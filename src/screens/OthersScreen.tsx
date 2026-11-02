@@ -35,7 +35,7 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView edges={['right', 'left']}>
-      <View testID="others_view" style={styles.container}>
+      <View testID="others_view" style={styles.container} collapsable={false}>
         <View>
           <View
             style={[
@@ -65,134 +65,136 @@ const OthersScreen: React.FC<Props> = ({ navigation }) => {
             </AccessibleTouchableOpacity>
           </View>
 
-          <View
-            style={[
-              styles.withBorderBottom,
-              { borderBottomColor: colors.border },
-            ]}>
-            <View style={styles.row}>
-              <Text
-                accessibilityRole="header"
-                style={[styles.text, { color: colors.text }]}>{`${t(
-                'about'
-              )}`}</Text>
+          <View collapsable={false}>
+            <View
+              style={[
+                styles.withBorderBottom,
+                { borderBottomColor: colors.border },
+              ]}>
+              <View style={styles.row}>
+                <Text
+                  accessibilityRole="header"
+                  style={[styles.text, { color: colors.text }]}>{`${t(
+                  'about'
+                )}`}</Text>
+              </View>
             </View>
-          </View>
-          <View
-            style={[
-              styles.withBorderBottom,
-              styles.withMarginLeft,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              delayPressIn={100}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Settings', 'Navigate to ABOUT');
-                navigation.navigate('About')
-              }}
-              testID="navigation_about"
-              accessibilityRole="menuitem"
-              accessibilityHint={`${t('navigateTo')} ${t('general')}`}>
-              <View style={styles.row}>
-                <Text
-                  style={[styles.textRegular, { color: colors.text }]}>{`${t(
-                  'general'
-                )}`}</Text>
-                <Icon
-                  name="arrow-forward"
-                  width={22}
-                  height={22}
-                  style={{ color: colors.text }}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.withBorderBottom,
-              styles.withMarginLeft,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              delayPressIn={100}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Settings', 'Navigate to TOC');
-                navigation.navigate('TermsAndConditions')
-              }}
-              testID="navigation_terms_and_conditions"
-              accessibilityRole="menuitem"
-              accessibilityHint={`${t('navigateTo')} ${t(
-                'termsAndConditions'
-              )}`}>
-              <View style={styles.row}>
-                <Text
-                  style={[styles.textRegular, { color: colors.text }]}>{`${t(
+            <View
+              style={[
+                styles.withBorderBottom,
+                styles.withMarginLeft,
+                { borderBottomColor: colors.border },
+              ]}>
+              <AccessibleTouchableOpacity
+                delayPressIn={100}
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Settings', 'Navigate to ABOUT');
+                  navigation.navigate('About')
+                }}
+                testID="navigation_about"
+                accessibilityRole="menuitem"
+                accessibilityHint={`${t('navigateTo')} ${t('general')}`}>
+                <View style={styles.row}>
+                  <Text
+                    style={[styles.textRegular, { color: colors.text }]}>{`${t(
+                    'general'
+                  )}`}</Text>
+                  <Icon
+                    name="arrow-forward"
+                    width={22}
+                    height={22}
+                    style={{ color: colors.text }}
+                  />
+                </View>
+              </AccessibleTouchableOpacity>
+            </View>
+            <View
+              style={[
+                styles.withBorderBottom,
+                styles.withMarginLeft,
+                { borderBottomColor: colors.border },
+              ]}>
+              <AccessibleTouchableOpacity
+                delayPressIn={100}
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Settings', 'Navigate to TOC');
+                  navigation.navigate('TermsAndConditions')
+                }}
+                testID="navigation_terms_and_conditions"
+                accessibilityRole="menuitem"
+                accessibilityHint={`${t('navigateTo')} ${t(
                   'termsAndConditions'
-                )}`}</Text>
-                <Icon
-                  name="arrow-forward"
-                  width={22}
-                  height={22}
-                  style={{ color: colors.text }}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          </View>
+                )}`}>
+                <View style={styles.row}>
+                  <Text
+                    style={[styles.textRegular, { color: colors.text }]}>{`${t(
+                    'termsAndConditions'
+                  )}`}</Text>
+                  <Icon
+                    name="arrow-forward"
+                    width={22}
+                    height={22}
+                    style={{ color: colors.text }}
+                  />
+                </View>
+              </AccessibleTouchableOpacity>
+            </View>
 
-          {/* <View
-            style={[
-              styles.withBorderBottom,
-              styles.withMarginLeft,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              delayPressIn={100}
-              onPress={() => navigation.navigate('About')}
-              accessibilityRole="menuitem"
-              accessibilityHint={`${t('navigateTo')} ${t('dataPrivacy')}`}>
-              <View style={styles.row}>
-                <Text
-                  style={[styles.textRegular, { color: colors.text }]}>{`${t(
-                  'dataPrivacy'
-                )}`}</Text>
-                <Icon
-                  name="arrow-forward"
-                  width={22}
-                  height={22}
-                  style={{ color: colors.text }}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
-          </View> */}
+            {/* <View
+              style={[
+                styles.withBorderBottom,
+                styles.withMarginLeft,
+                { borderBottomColor: colors.border },
+              ]}>
+              <AccessibleTouchableOpacity
+                delayPressIn={100}
+                onPress={() => navigation.navigate('About')}
+                accessibilityRole="menuitem"
+                accessibilityHint={`${t('navigateTo')} ${t('dataPrivacy')}`}>
+                <View style={styles.row}>
+                  <Text
+                    style={[styles.textRegular, { color: colors.text }]}>{`${t(
+                    'dataPrivacy'
+                  )}`}</Text>
+                  <Icon
+                    name="arrow-forward"
+                    width={22}
+                    height={22}
+                    style={{ color: colors.text }}
+                  />
+                </View>
+              </AccessibleTouchableOpacity>
+            </View> */}
 
-          <View
-            style={[
-              styles.withBorderBottom,
-              styles.withMarginLeft,
-              { borderBottomColor: colors.border },
-            ]}>
-            <AccessibleTouchableOpacity
-              delayPressIn={100}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Settings', 'Navigate to ACCESSIBILITY');
-                navigation.navigate('Accessibility')
-              }}
-              testID="navigation_accessibility"
-              accessibilityRole="menuitem"
-              accessibilityHint={`${t('navigateTo')} ${t('accessibility')}`}>
-              <View style={styles.row}>
-                <Text
-                  style={[styles.textRegular, { color: colors.text }]}>{`${t(
-                  'accessibility'
-                )}`}</Text>
-                <Icon
-                  name="arrow-forward"
-                  width={22}
-                  height={22}
-                  style={{ color: colors.text }}
-                />
-              </View>
-            </AccessibleTouchableOpacity>
+            <View
+              style={[
+                styles.withBorderBottom,
+                styles.withMarginLeft,
+                { borderBottomColor: colors.border },
+              ]}>
+              <AccessibleTouchableOpacity
+                delayPressIn={100}
+                onPress={() => {
+                  trackMatomoEvent('User action', 'Settings', 'Navigate to ACCESSIBILITY');
+                  navigation.navigate('Accessibility')
+                }}
+                testID="navigation_accessibility"
+                accessibilityRole="menuitem"
+                accessibilityHint={`${t('navigateTo')} ${t('accessibility')}`}>
+                <View style={styles.row}>
+                  <Text
+                    style={[styles.textRegular, { color: colors.text }]}>{`${t(
+                    'accessibility'
+                  )}`}</Text>
+                  <Icon
+                    name="arrow-forward"
+                    width={22}
+                    height={22}
+                    style={{ color: colors.text }}
+                  />
+                </View>
+              </AccessibleTouchableOpacity>
+            </View>
           </View>
 
           {feedback?.enabled && (
