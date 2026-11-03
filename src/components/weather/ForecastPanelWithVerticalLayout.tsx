@@ -4,7 +4,7 @@ import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
 
 import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
@@ -88,8 +88,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
-  const paramSheetRef = useRef<RBSheet>(null);
-  const weatherInfoSheetRef = useRef<RBSheet>(null);
+  const paramSheetRef = useRef<BottomSheetRef>(null);
+  const weatherInfoSheetRef = useRef<BottomSheetRef>(null);
   const { ageWarning, forecastLengthTitle } = Config.get('weather').forecast;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
@@ -326,34 +326,28 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
             />
           )}
       </View>
-      <RBSheet
+      <BottomSheet
         ref={paramSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <ParamsBottomSheet onClose={() => paramSheetRef.current?.close()} />
-      </RBSheet>
-      <RBSheet
+      </BottomSheet>
+      <BottomSheet
         ref={weatherInfoSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <WeatherInfoBottomSheet
           onClose={() => weatherInfoSheetRef.current?.close()}
         />
-      </RBSheet>
+      </BottomSheet>
     </View>
   );
 };

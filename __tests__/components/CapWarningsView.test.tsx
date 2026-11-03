@@ -54,7 +54,7 @@ jest.mock('moment', () => {
   return wrappedMoment;
 });
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactLib = require('react');
   const { View } = require('react-native');
 

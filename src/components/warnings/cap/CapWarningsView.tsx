@@ -10,7 +10,7 @@ import Icon from '@assets/Icon';
 import { State } from '@store/types';
 import { selectCurrent } from '@store/location/selector';
 import { connect, ConnectedProps } from 'react-redux';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
 import { Config } from '@config';
 import moment from 'moment-timezone';
 import {
@@ -42,7 +42,7 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
   loading,
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
-  const legendSheetRef = useRef<RBSheet>(null);
+  const legendSheetRef = useRef<BottomSheetRef>(null);
 
   const { t, i18n } = useTranslation('warnings');
   const locale = i18n.language;
@@ -168,19 +168,12 @@ const CapWarningsView: React.FC<CapWarningsViewProps> = ({
         && capViewSettings?.localWarningsAfterCountry && (
         <LocalWarningsBar legendSheetRef={legendSheetRef} />
       )}
-      <RBSheet
+      <BottomSheet
         ref={legendSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            borderTopRightRadius: 10,
-            borderTopLeftRadius: 10,
-            backgroundColor: colors.background,
-          },
-        }}>
+        backgroundStyle={{ backgroundColor: colors.background }}>
         <CapWarningsLegend onClose={() => legendSheetRef.current?.close()} />
-      </RBSheet>
+      </BottomSheet>
     </View>
   );
 };

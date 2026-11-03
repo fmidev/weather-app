@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
@@ -26,11 +26,11 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
   const { excludeUnits } = Config.get('settings');
   const hiddenUnits = getUnitsHiddenInSettings();
   const sheetRefs = {
-    temperature: useRef<RBSheet>(null),
-    precipitation: useRef<RBSheet>(null),
-    wind: useRef<RBSheet>(null),
-    pressure: useRef<RBSheet>(null),
-  } as { [key: string]: React.RefObject<RBSheet> };
+    temperature: useRef<BottomSheetRef>(null),
+    precipitation: useRef<BottomSheetRef>(null),
+    wind: useRef<BottomSheetRef>(null),
+    pressure: useRef<BottomSheetRef>(null),
+  } as { [key: string]: React.RefObject<BottomSheetRef | null> };
 
   const unitKeys = Object.keys(units);
   const unitTypesByKey = (key: string): UnitType[] | undefined =>
@@ -43,7 +43,7 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
       `Select unit - ${key} (${unit.unitAbb})`
     );
     onChangeUnits(key, unit);
-    sheetRefs[key].current.close();
+    sheetRefs[key].current?.close();
   };
 
   return (
@@ -74,7 +74,7 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
               ]}>
               <AccessibleTouchableOpacity
                 onPress={() => {
-                  sheetRefs[key].current.open();
+                  sheetRefs[key].current?.open();
                 }}
                 testID={`settings_set_${key}`}>
                 <View style={styles.row}>
@@ -94,23 +94,20 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                   </Text>
                 </View>
                 {unitTypesByKey(key) && (
-                  <RBSheet
+                  <BottomSheet
                     ref={sheetRefs[key]}
                     height={400}
-                    closeOnDragDown
-                    customStyles={{
-                      container: {
-                        ...styles.sheetContainer,
-                        backgroundColor: colors.background,
-                      },
-                      draggableIcon: styles.draggableIcon,
-                    }}>
-                    <View
+                    backgroundStyle={{
+                      ...styles.sheetContainer,
+                      backgroundColor: colors.background,
+                    }}
+                    handleIndicatorStyle={styles.draggableIcon}>
+                    <ScrollView
                       style={styles.sheetListContainer}
                       testID="unit_sheet_container">
                       <View style={styles.sheetCloseButtonContainer}>
                         <CloseButton
-                          onPress={() => sheetRefs[key].current.close()}
+                          onPress={() => sheetRefs[key].current?.close()}
                           accessibilityLabel={t(
                             'settings.closeUnitBottomSheetAccessibilityLabel'
                           )}
@@ -160,8 +157,8 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                           </View>
                         )
                       )}
-                    </View>
-                  </RBSheet>
+                    </ScrollView>
+                  </BottomSheet>
                 )}
               </AccessibleTouchableOpacity>
             </View>

@@ -46,7 +46,7 @@ import { useTranslation } from 'react-i18next';
 import type { Position } from 'geojson';
 import { trackMatomoEvent } from '@utils/matomo';
 
-import type RBSheet from 'react-native-raw-bottom-sheet';
+import type { BottomSheetRef } from '@components/common/BottomSheet';
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -85,8 +85,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MapViewProps = PropsFromRedux & {
-  infoSheetRef: React.RefObject<RBSheet | null>;
-  mapLayersSheetRef: React.RefObject<RBSheet | null>;
+  infoSheetRef: React.RefObject<BottomSheetRef | null>;
+  mapLayersSheetRef: React.RefObject<BottomSheetRef | null>;
 };
 
 // MapView using Maplibre

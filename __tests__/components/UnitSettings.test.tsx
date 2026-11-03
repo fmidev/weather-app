@@ -49,7 +49,7 @@ jest.mock('@components/common/ScalableIcon', () => ({
   },
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactActual = require('react');
   const { View } = require('react-native');
 

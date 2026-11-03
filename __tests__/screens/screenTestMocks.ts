@@ -329,7 +329,7 @@ jest.mock('react-native-permissions', () => ({
   },
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactActual = require('react');
   return {
     __esModule: true,
