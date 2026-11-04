@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import {
   TouchableOpacity,
   TouchableOpacityProps,
+  ViewInstance,
   StyleSheet,
 } from 'react-native';
 
@@ -10,7 +11,7 @@ import {
   useAccessibilityLanguage,
 } from '@utils/hooks';
 
-const AccessibleTouchableOpacity: React.FC<TouchableOpacityProps> = (props) => {
+const AccessibleTouchableOpacity = forwardRef<ViewInstance, TouchableOpacityProps>((props, ref) => {
   const { style } = props;
   const accessibilityLanguage = useAccessibilityLanguage();
   const onLayout = useAccessibilityHintLanguage(
@@ -20,6 +21,7 @@ const AccessibleTouchableOpacity: React.FC<TouchableOpacityProps> = (props) => {
   return (
     <TouchableOpacity
       {...props}
+      ref={ref}
       accessibilityLanguage={
         props.accessibilityLanguage ?? accessibilityLanguage
       }
@@ -27,7 +29,8 @@ const AccessibleTouchableOpacity: React.FC<TouchableOpacityProps> = (props) => {
       style={[styles.minDimensions, style]}
     />
   );
-};
+});
+AccessibleTouchableOpacity.displayName = 'AccessibleTouchableOpacity';
 const styles = StyleSheet.create({
   minDimensions: {
     minHeight: 44,
