@@ -3,6 +3,7 @@ import { ImageBackground } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import SunAndMoonPanel from '../../src/components/weather/SunAndMoonPanel';
+import AccessibleView from '../../src/components/common/AccessibleView';
 
 const mockConfigGet = jest.fn();
 const mockFormatAccessibleDateTime = jest.fn();
@@ -159,8 +160,11 @@ describe('SunAndMoonPanel', () => {
 
     expect(view.getByText('dayLength')).toBeTruthy();
     expect(view.getByText('18 h 30 min')).toBeTruthy();
-    expect(view.getByA11yLabel(/sunrise time:atSpoken/)).toBeTruthy();
-    expect(view.getByA11yLabel(/sunset time:atSpoken/)).toBeTruthy();
+    const sunCard = view.getByA11yLabel(/^dayLength\./);
+    expect(sunCard.props.accessible).toBe(true);
+    expect(sunCard.props.accessibilityLabel).toMatch(
+      /^dayLength\. sunrise time:atSpoken \d{2}:\d{2}\. sunset time:atSpoken \d{2}:\d{2}\. dayLength 18 time:hoursSpoken 30 time:minutesSpoken$/
+    );
     expect(view.getByText('moonPhase')).toBeTruthy();
     expect(view.getByText('sunAndMoon.full')).toBeTruthy();
     expect(view.getByTestId('icon-sun-arrow-up')).toBeTruthy();
@@ -170,7 +174,9 @@ describe('SunAndMoonPanel', () => {
 
     const backgrounds = view.UNSAFE_getAllByType(ImageBackground);
     expect(backgrounds[0].props.source).toEqual({ source: 'sun-light' });
+    expect(backgrounds[0].props.importantForAccessibility).toBe('no-hide-descendants');
     expect(backgrounds[1].props.source).toEqual({ source: 'moon-full' });
+    expect(backgrounds[1].props.importantForAccessibility).toBeUndefined();
   });
 
   it('renders polar night branch', () => {
@@ -191,6 +197,9 @@ describe('SunAndMoonPanel', () => {
     expect(view.getByText('weatherInfoBottomSheet.polarNight')).toBeTruthy();
     expect(view.getByTestId('icon-polar-night')).toBeTruthy();
     expect(view.getByA11yLabel('sunrise accessible date')).toBeTruthy();
+    expect(view.getByA11yLabel(/^dayLength\./).props.accessibilityLabel).toBe(
+      'dayLength. weatherInfoBottomSheet.polarNight. sunrise accessible date'
+    );
   });
 
   it('renders midnight sun branch and 12 hour suffixes', () => {
@@ -211,6 +220,9 @@ describe('SunAndMoonPanel', () => {
     expect(view.getByText('weatherInfoBottomSheet.nightlessNight')).toBeTruthy();
     expect(view.getByTestId('icon-midnight-sun')).toBeTruthy();
     expect(view.getByA11yLabel('sunset accessible date')).toBeTruthy();
+    expect(view.getByA11yLabel(/^dayLength\./).props.accessibilityLabel).toBe(
+      'dayLength. weatherInfoBottomSheet.nightlessNight. sunset accessible date'
+    );
   });
 
   it('hides day duration when excluded', () => {
@@ -232,5 +244,54 @@ describe('SunAndMoonPanel', () => {
 
     expect(view.queryByText('18 h 30 min')).toBeNull();
     expect(view.queryByTestId('icon-time')).toBeNull();
+    expect(view.getByA11yLabel(/^dayLength\./).props.accessibilityLabel).not.toContain('time:hoursSpoken');
+  });
+
+  it('includes am and pm in the combined sun card description with a 12 hour clock', () => {
+    const view = render(
+      <SunAndMoonPanel
+        loading={false}
+        forecast={normalForecast as any}
+        waningMoonPhase={false}
+        clockType={12 as any}
+      />
+    );
+
+    expect(view.getByA11yLabel(/^dayLength\./).props.accessibilityLabel).toMatch(
+      /sunrise time:atSpoken \d{1,2}\.\d{2} (am|pm)\. sunset time:atSpoken \d{1,2}\.\d{2} (am|pm)\./
+    );
+  });
+
+  it.each([
+    ['normal day', normalForecast],
+    ['polar night', {
+      ...normalForecast,
+      sunrise: '2035-12-02T10:00:00',
+      sunset: '2035-12-01T12:00:00',
+      dayLength: 0,
+    }],
+    ['midnight sun', {
+      ...normalForecast,
+      sunrise: '2035-06-01T00:00:00',
+      sunset: '2035-06-03T13:00:00',
+      dayLength: 1440,
+    }],
+  ])('keeps only the sun card focusable with a %s', (_description, forecast) => {
+    const view = render(<SunAndMoonPanel
+      loading={false}
+      forecast={forecast as any}
+      waningMoonPhase={false}
+      clockType={24 as any}
+    />);
+    const sunCard = view.getByA11yLabel(/^dayLength\./);
+    expect(sunCard.props.accessible).toBe(true);
+
+    const content = sunCard.findByType(ImageBackground);
+    const innerGroups = content.findAllByType(AccessibleView);
+    expect(innerGroups.length).toBeGreaterThan(0);
+    innerGroups.forEach(group => {
+      expect(group.props.accessible).toBe(false);
+      expect(group.props.focusable).toBe(false);
+    });
   });
 });
