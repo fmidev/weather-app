@@ -30,7 +30,9 @@ import {
   StackNavigationProp,
 } from '@react-navigation/stack';
 import type { NavigationState, Route } from '@react-navigation/routers';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet, {
+  type BottomSheetRef,
+} from '@components/common/BottomSheet';
 
 import { useTranslation } from 'react-i18next';
 import { LaunchArguments } from 'react-native-launch-arguments';
@@ -133,7 +135,7 @@ const Navigator: React.FC<Props> = ({
   const { t, ready, i18n } = useTranslation(['navigation', 'setUp'], {
     useSuspense: false,
   });
-  const searchInfoSheetRef = useRef<RBSheet>(null);
+  const searchInfoSheetRef = useRef<BottomSheetRef>(null);
   const navigationRef = useNavigationContainerRef();
   const [navReady, setNavReady] = React.useState(false);
   const [currentRoute, setCurrentRoute] = React.useState<Route<string> | null>(
@@ -796,21 +798,18 @@ const Navigator: React.FC<Props> = ({
             )}
           </Tab.Screen>
         </Tab.Navigator>
-        <RBSheet
+        <BottomSheet
           ref={searchInfoSheetRef}
           height={250}
-          closeOnDragDown
-          customStyles={{
-            container: {
-              ...styles.sheetContainer,
-              backgroundColor: useDarkTheme
-                ? darkTheme.colors.headerBackground
-                : lightTheme.colors.headerBackground,
-            },
-            draggableIcon: styles.draggableIcon,
-          }}>
+          backgroundStyle={{
+            ...styles.sheetContainer,
+            backgroundColor: useDarkTheme
+              ? darkTheme.colors.headerBackground
+              : lightTheme.colors.headerBackground,
+          }}
+          handleIndicatorStyle={styles.draggableIcon}>
           <SearchInfoBottomSheet onClose={closeSearchInfoSheet} />
-        </RBSheet>
+        </BottomSheet>
         <ErrorComponent navReady={navReady} currentRoute={currentRoute} />
       </NavigationContainer>
     </>

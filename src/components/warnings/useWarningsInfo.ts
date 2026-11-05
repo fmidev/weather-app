@@ -1,6 +1,6 @@
 import { useCallback, useContext, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import type { BottomSheetRef } from '@components/common/BottomSheet';
 
 import { ScreenHeaderItemsContext } from '@navigators/ScreenHeaderItemsContext';
 import { usesVerticalBarLayout } from '@utils/hooks';
@@ -10,7 +10,7 @@ const useWarningsInfo = (enabled = true) => {
   const { t } = useTranslation('warnings');
   const setHeaderItems = useContext(ScreenHeaderItemsContext);
   const verticalBarLayout = usesVerticalBarLayout();
-  const infoSheetRef = useRef<RBSheet>(null);
+  const infoSheetRef = useRef<BottomSheetRef>(null);
   const openInfo = useCallback(() => {
     trackMatomoEvent('User action', 'Warnings', 'Open warnings info panel');
     infoSheetRef.current?.open();

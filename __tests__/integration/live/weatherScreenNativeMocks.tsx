@@ -45,7 +45,7 @@ jest.mock('@utils/matomo', () => ({
   trackMatomoEvent: (...args: unknown[]) => mockTrackMatomoEvent(...args),
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactActual = require('react');
   // Closed sheets do not render their contents on the screen.
   return ReactActual.forwardRef((_props: unknown, ref: unknown) => {

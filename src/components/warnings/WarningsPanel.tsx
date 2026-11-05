@@ -25,7 +25,7 @@ import Icon from '@components/common/ScalableIcon';
 import Skeleton from '@components/common/Skeleton';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet from '@components/common/BottomSheet';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
@@ -248,19 +248,16 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           <DayDetails warnings={dailyWarnings[selectedDay].warnings} />
         </View>
       </View>
-      <RBSheet
+      <BottomSheet
         ref={infoSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <InfoSheet onClose={() => infoSheetRef.current?.close()} />
-      </RBSheet>
+      </BottomSheet>
     </View>
   );
 };

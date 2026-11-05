@@ -2150,6 +2150,11 @@
     deepmerge "^4.3.1"
     svgo "^3.0.2"
 
+"@swmansion/react-native-bottom-sheet@0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@swmansion/react-native-bottom-sheet/-/react-native-bottom-sheet-0.17.1.tgz#1535af73185f0e710cf0c61e932322a2d542c507"
+  integrity sha512-WVEV5yPje8gW8TB7tTjUhdw+2u3XqYa4mLA31jqMzANl9AI0hd2SWbZ0uJXo1LH7KO88nMVKUmfs13RpHdpZUg==
+
 "@testing-library/react-native@8.0.0":
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/@testing-library/react-native/-/react-native-8.0.0.tgz#f1b8f6bcc9f0ef6026b0ec7d072faf4af0e622fa"
@@ -7735,11 +7740,6 @@ react-native-permissions@5.6.3:
   version "5.6.3"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-5.6.3.tgz#f30d23c79364293b969c5e0fcce5c0b79c5904ac"
   integrity sha512-jCl5TCbRsgBr3kgJdLmdyLa+QMW/jiTjKdQqXGrm7x1XMUwKlumnQWx1BRRcIv7eclnLN1NZud3KVaCkp8+wHA==
-
-react-native-raw-bottom-sheet@2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.2.1.tgz#20151ee421895b9b06614f3114841fdc55bd8070"
-  integrity sha512-9MkumyiXEmtSx01cTYOzauUXPRckLSQP1DrRc9zq7TMqtcKk0n67tMyzy8qsrgEPLs63+Kjr/eJc6PlaSgpZ5g==
 
 react-native-reanimated-table@0.0.2:
   version "0.0.2"

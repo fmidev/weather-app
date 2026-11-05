@@ -21,8 +21,6 @@ const LegacyInfo: React.FC = () => {
   const { layers } = Config.get('map');
 
   const timeseriesEnabled = layers.some((layer) => layer.type === 'Timeseries');
-
-  // get selected layer
   const layerId = useSelector((state: State) => selectActiveOverlay(state));
   const layer = layers.find((l) => l.id === layerId);
 
@@ -36,7 +34,7 @@ const LegacyInfo: React.FC = () => {
           {t('infoBottomSheet.mapLayersInfoTitle')}
         </Text>
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {layer?.legend?.hasPrecipitationFin && (
           <View style={styles.withMarginBottom}>
             <Text style={[styles.text, { color: colors.hourListText }]}>

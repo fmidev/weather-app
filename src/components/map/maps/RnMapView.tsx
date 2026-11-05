@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Platform } from 'react-native';
 import MapView, { Camera, Region } from 'react-native-maps';
 import type { MapPressEvent } from 'react-native-maps';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import type { BottomSheetRef } from '@components/common/BottomSheet';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import { getDistance } from 'geolib';
 import moment from 'moment';
@@ -70,8 +70,8 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type MapViewProps = PropsFromRedux & {
-  infoSheetRef: React.RefObject<RBSheet | null>;
-  mapLayersSheetRef: React.RefObject<RBSheet | null>;
+  infoSheetRef: React.RefObject<BottomSheetRef | null>;
+  mapLayersSheetRef: React.RefObject<BottomSheetRef | null>;
 };
 
 // MapView using react-native-maps

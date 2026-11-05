@@ -1,6 +1,6 @@
 import { useCallback, useContext, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import type { BottomSheetRef } from '@components/common/BottomSheet';
 
 import { ScreenHeaderItemsContext } from '@navigators/ScreenHeaderItemsContext';
 import { usesVerticalBarLayout } from '@utils/hooks';
@@ -11,8 +11,8 @@ const useForecastSettings = (displayFormat: string) => {
   const setHeaderItems = useContext(ScreenHeaderItemsContext);
   const verticalBarLayout = usesVerticalBarLayout();
   const showInHeader = verticalBarLayout && setHeaderItems !== null;
-  const paramSheetRef = useRef<RBSheet>(null);
-  const weatherInfoSheetRef = useRef<RBSheet>(null);
+  const paramSheetRef = useRef<BottomSheetRef>(null);
+  const weatherInfoSheetRef = useRef<BottomSheetRef>(null);
   const disabled = displayFormat === 'chart';
 
   const openParameters = useCallback(() => {

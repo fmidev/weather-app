@@ -116,7 +116,7 @@ jest.mock('@components/map/ui/MapControls', () => ({
 
 jest.mock('@utils/dark_map_style.json', () => ([]));
 
-jest.mock('react-native-raw-bottom-sheet', () => 'RBSheet');
+jest.mock('@components/common/BottomSheet', () => 'RBSheet');
 
 jest.mock('moment', () => ({
   tz: {

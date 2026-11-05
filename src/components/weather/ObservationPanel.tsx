@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
@@ -100,7 +100,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
-  const stationSheetRef = useRef<RBSheet>(null);
+  const stationSheetRef = useRef<BottomSheetRef>(null);
   const { enabled, parameters } = Config.get('weather').observation;
   const { layout } = Config.get('weather');
 
@@ -356,22 +356,19 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
         </View>
       )}
 
-      <RBSheet
+      <BottomSheet
         ref={stationSheetRef}
         height={600}
-        closeOnDragDown
-        dragFromTopOnly
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        scrollableNegotiation="none"
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <ObservationStationListBottomSheet
           onClose={() => stationSheetRef.current?.close()}
         />
-      </RBSheet>
+      </BottomSheet>
     </View>
   );
 };

@@ -45,7 +45,7 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactMock = require('react');
   const { View } = require('react-native');
   return ReactMock.forwardRef(({ children }: any, forwardedRef: any) => {

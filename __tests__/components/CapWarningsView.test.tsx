@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ScreenHeaderItemsContext } from '../../src/navigators/ScreenHeaderItemsContext';
 import CapWarningsView from '../../src/components/warnings/cap/CapWarningsView';
@@ -13,6 +14,13 @@ jest.mock('@utils/matomo', () => ({ trackMatomoEvent: jest.fn() }));
 const mockConfigGet = jest.fn();
 const mockSheetOpen = jest.fn();
 const mockSheetClose = jest.fn();
+
+jest.mock('react-native-safe-area-context', () => ({
+  SafeAreaView: ({ children, ...props }: any) => {
+    const { View } = require('react-native');
+    return <View {...props}>{children}</View>;
+  },
+}));
 
 jest.mock('@config', () => ({
   Config: {
@@ -61,7 +69,7 @@ jest.mock('moment', () => {
   return wrappedMoment;
 });
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactLib = require('react');
   const { View } = require('react-native');
 
@@ -160,7 +168,13 @@ describe('CapWarningsView', () => {
   });
 
   it('renders cap content and opens legend sheet from info button', () => {
-    const { getByLabelText, getByTestId, getAllByTestId, getByText } = render(
+    const {
+      getByLabelText,
+      getByTestId,
+      getAllByTestId,
+      getByText,
+      UNSAFE_getByType: getByType,
+    } = render(
       <CapWarningsView
         loading={false}
         updated="2024-01-02T12:00:00Z"
@@ -173,6 +187,7 @@ describe('CapWarningsView', () => {
     expect(getByTestId('cap-map-view').props.children).toBe('3-1');
     expect(getByTestId('cap-text-list').props.children).toBe('3-1');
     expect(getByText('3 day warnings - Helsinki')).toBeTruthy();
+    expect(getByType(SafeAreaView).props.edges).toEqual(['left', 'right']);
 
     fireEvent.press(getByLabelText('infoAccessibilityLabel'));
     expect(mockSheetOpen).toHaveBeenCalled();
