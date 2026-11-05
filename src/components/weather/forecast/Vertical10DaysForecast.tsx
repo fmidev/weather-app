@@ -15,6 +15,7 @@ import { Config } from '@config';
 import { converter, toPrecision } from '@utils/units';
 import PrecipitationStrip from './PrecipitationStrip';
 import { selectUnits } from '@store/settings/selectors';
+import { selectTimeZone } from '@store/location/selector';
 import { State } from '@store/types';
 import {
   selectDisplayParams,
@@ -39,6 +40,7 @@ const mapStateToProps = (state: State) => ({
   displayParams: selectDisplayParams(state),
   forecastByDay: selectForecastByDay(state),
   showSingleHourlyForecast: selectShowSingleHourlyForecast(state),
+  timezone: selectTimeZone(state),
 });
 
 const connector = connect(mapStateToProps, {});
@@ -67,6 +69,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   invalidData,
   forecastByDay,
   showSingleHourlyForecast,
+  timezone,
 }) => {
   const { width, fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
@@ -88,22 +91,27 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
   const precipitationUnit =
     units?.precipitation.unitAbb ?? defaultUnits.precipitation;
 
-  const [expandedDayIndexes, setExpandedDayIndexes] = useState<Set<number>>(
-    () => new Set()
-  );
+  const [expandedDays, setExpandedDays] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
-    if (!showSingleHourlyForecast) return;
+    const availableDays = new Set(
+      dayData.map(({ timeStamp }) =>
+        moment.unix(timeStamp).tz(timezone).format('YYYY-MM-DD')
+      )
+    );
 
-    setExpandedDayIndexes((currentIndexes) => {
-      if (currentIndexes.size <= 1) return currentIndexes;
-
-      const firstExpandedIndex = currentIndexes.values().next().value;
-      return firstExpandedIndex === undefined
-        ? new Set()
-        : new Set([firstExpandedIndex]);
+    setExpandedDays((currentDays) => {
+      const visibleDays = [...currentDays].filter((day) =>
+        availableDays.has(day)
+      );
+      const nextDays = showSingleHourlyForecast
+        ? visibleDays.slice(0, 1)
+        : visibleDays;
+      return nextDays.length === currentDays.size
+        ? currentDays
+        : new Set(nextDays);
     });
-  }, [showSingleHourlyForecast]);
+  }, [dayData, timezone, showSingleHourlyForecast]);
 
   const rowRenderer = ({
     item,
@@ -135,7 +143,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
       totalPrecipitation,
       precipitationMissing,
     } = item;
-    const stepMoment = moment.unix(timeStamp).locale(locale);
+    const stepMoment = moment.unix(timeStamp).tz(timezone).locale(locale);
+    const dayKey = stepMoment.format('YYYY-MM-DD');
     const DaySmartSymbol = weatherSymbolGetter(
       (smartSymbol || 0).toString(),
       dark
@@ -173,8 +182,8 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
 
     const symbolSize = Math.min(64, fontScale * 44);
     const rowHeight = fontScale ? 80 : 70;
-    const isExpanded = expandedDayIndexes.has(index);
-    const forecastKey = moment.unix(timeStamp).format('D.M.');
+    const isExpanded = expandedDays.has(dayKey);
+    const forecastKey = stepMoment.format('D.M.');
     const hourlyForecast = forecastByDay
       ? (forecastByDay[forecastKey] ?? [])
       : [];
@@ -224,7 +233,7 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
       .join('. ');
 
     return (
-      <View key={stepMoment.unix()}>
+      <View key={dayKey}>
         <AccessibleTouchableOpacity
           accessible
           accessibilityLabel={dailyForecastLabel}
@@ -241,17 +250,17 @@ const Vertical10DaysForecast: React.FC<DaySelectorListProps> = ({
               'Weather',
               `${isExpanded ? 'Hide' : 'Show'} hourly forecast - day ${index + 1}`
             );
-            setExpandedDayIndexes((currentIndexes) => {
+            setExpandedDays((currentDays) => {
               if (showSingleHourlyForecast) {
-                return currentIndexes.has(index) ? new Set() : new Set([index]);
+                return currentDays.has(dayKey) ? new Set() : new Set([dayKey]);
               }
-              const nextIndexes = new Set(currentIndexes);
-              if (nextIndexes.has(index)) {
-                nextIndexes.delete(index);
+              const nextDays = new Set(currentDays);
+              if (nextDays.has(dayKey)) {
+                nextDays.delete(dayKey);
               } else {
-                nextIndexes.add(index);
+                nextDays.add(dayKey);
               }
-              return nextIndexes;
+              return nextDays;
             });
           }}>
           <View
