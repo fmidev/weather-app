@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { View, StyleSheet, AccessibilityInfo, findNodeHandle, type TextInstance } from 'react-native';
+import { View, StyleSheet, AccessibilityInfo, type TextInstance } from 'react-native';
 import { useTheme, useNavigation, useFocusEffect } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
@@ -25,11 +25,8 @@ const AccessibilityScreen: React.FC = () => {
     focusFrame.current = requestAnimationFrame(() => {
       focusFrame.current = null;
       if (!state.active || !state.transitionComplete || state.focused || !headingRef.current) return;
-      const reactTag = findNodeHandle(headingRef.current);
-      if (reactTag != null) {
-        state.focused = true;
-        AccessibilityInfo.setAccessibilityFocus(reactTag);
-      }
+      state.focused = true;
+      AccessibilityInfo.sendAccessibilityEvent(headingRef.current, 'focus');
     });
   }, []);
 

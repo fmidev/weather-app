@@ -2,6 +2,7 @@ import './screenTestMocks';
 
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { AccessibilityInfo } from 'react-native';
 
 import OnboardingScreen from '../../src/screens/OnboardingScreen';
 import {
@@ -15,7 +16,10 @@ import {
 describe('OnboardingScreen', () => {
   beforeEach(() => {
     resetScreenMocks();
+    jest.spyOn(AccessibilityInfo, 'sendAccessibilityEvent').mockImplementation(() => {});
   });
+
+  afterEach(() => jest.restoreAllMocks());
 
   it('advances onboarding pages and navigates from last page', () => {
     const navigation = { navigate: jest.fn() };
@@ -29,12 +33,19 @@ describe('OnboardingScreen', () => {
 
     fireEvent.press(getByTestId('onboarding_next_button'));
     expect(getByTestId('onboarding_title_text').props.children).toBe('mapTitle');
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        props: expect.objectContaining({ testID: 'onboarding_title_text' }),
+      }),
+      'focus'
+    );
 
     fireEvent.press(getByTestId('onboarding_next_button'));
     fireEvent.press(getByTestId('onboarding_next_button'));
     fireEvent.press(getByTestId('onboarding_next_button'));
 
     expect(navigation.navigate).toHaveBeenCalledWith('SetupScreen');
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(3);
   });
 
   it('navigates to setup from skip button', () => {
