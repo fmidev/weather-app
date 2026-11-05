@@ -1,14 +1,22 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { ActivityIndicator, View, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import {
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  useWindowDimensions,
+  ScrollView,
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
-import { selectLoading, selectNextHoursForecast } from '@store/forecast/selectors';
+import {
+  selectLoading,
+  selectNextHoursForecast,
+} from '@store/forecast/selectors';
 import HourForecast from './forecast/HourForecast';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import { trackMatomoEvent } from '@utils/matomo';
 
 const mapStateToProps = (state: State) => ({
   loading: selectLoading(state),
@@ -37,7 +45,7 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
   const insets = useSafeAreaInsets();
 
   // keep last tracked timestamp in a ref (doesn’t trigger re-renders)
-//  const lastTracked = useRef(0);
+  //  const lastTracked = useRef(0);
 
   if (loading || !forecast) {
     return (
@@ -52,22 +60,21 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
 
   const isWideDisplay = () => width > 500;
   const safeAreaWidth = width - insets.left - insets.right;
-  const count = !isWideDisplay() ?
-                TIMESTEP_COUNT_FOR_PHONES
-                : Math.min(forecast.length - 1, Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH));
+  const count = !isWideDisplay()
+    ? TIMESTEP_COUNT_FOR_PHONES
+    : Math.min(
+        forecast.length - 1,
+        Math.floor(safeAreaWidth / HOUR_FORECAST_WIDTH)
+      );
 
   return isWideDisplay() ? (
-    <View testID="next_hours_forecast" style={
-      [styles.container, styles.row, { paddingLeft: insets.left, paddingRight: insets.right }]
-    }>
-      { forecast.slice(1, count + 1).map(item => (
-        <HourForecast key={item.epochtime} timeStep={item} />)
-      )}
+    <View testID="next_hours_forecast" style={[styles.container, styles.row]}>
+      {forecast.slice(1, count + 1).map((item) => (
+        <HourForecast key={item.epochtime} timeStep={item} />
+      ))}
     </View>
   ) : (
-    <View testID="next_hours_forecast" style={
-      [styles.container, styles.row, { paddingLeft: insets.left, paddingRight: insets.right }]
-    }>
+    <View testID="next_hours_forecast" style={[styles.container, styles.row]}>
       <ScrollView
         testID="next_hours_forecast"
         horizontal
@@ -75,9 +82,9 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
         // onScroll={handleScroll}
         // scrollEventThrottle={500} // event check every 0.5 sec is enough
       >
-        { forecast.slice(1, count + 1).map(item => (
-          <HourForecast key={item.epochtime} timeStep={item} />)
-        )}
+        {forecast.slice(1, count + 1).map((item) => (
+          <HourForecast key={item.epochtime} timeStep={item} />
+        ))}
       </ScrollView>
     </View>
   );
@@ -85,7 +92,6 @@ const NextHoursForecast: React.FC<NextHoursForecastProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10,
   },
   row: {
     flexDirection: 'row',

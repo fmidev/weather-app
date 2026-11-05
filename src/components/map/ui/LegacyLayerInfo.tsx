@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from '@assets/Icon';
 import { View, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -26,7 +27,10 @@ const LegacyInfo: React.FC = () => {
   const layer = layers.find((l) => l.id === layerId);
 
   return (
-    <View testID="legacy_layer_info" style={styles.wrapper}>
+    <SafeAreaView
+      testID="legacy_layer_info"
+      edges={['left', 'right']}
+      style={styles.wrapper}>
       <View style={styles.sheetTitle}>
         <Text style={[styles.title, { color: colors.text }]}>
           {t('infoBottomSheet.mapLayersInfoTitle')}
@@ -36,18 +40,14 @@ const LegacyInfo: React.FC = () => {
         {layer?.legend?.hasPrecipitationFin && (
           <View style={styles.withMarginBottom}>
             <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t(
-                'infoBottomSheet.precipitation.precipitationFin.description'
-              )}
+              {t('infoBottomSheet.precipitation.precipitationFin.description')}
             </Text>
           </View>
         )}
         {layer?.legend?.hasPrecipitationScan && (
           <View style={styles.withMarginBottom}>
             <Text style={[styles.text, { color: colors.hourListText }]}>
-              {t(
-                'infoBottomSheet.precipitation.precipitationScan.description'
-              )}
+              {t('infoBottomSheet.precipitation.precipitationScan.description')}
             </Text>
           </View>
         )}
@@ -88,9 +88,7 @@ const LegacyInfo: React.FC = () => {
             </View>
             <View style={styles.withMarginBottom}>
               <Text style={[styles.text, { color: colors.hourListText }]}>
-                {t(
-                  'infoBottomSheet.precipitation.precipitationScan.forecast'
-                )}
+                {t('infoBottomSheet.precipitation.precipitationScan.forecast')}
               </Text>
             </View>
           </View>
@@ -157,20 +155,17 @@ const LegacyInfo: React.FC = () => {
               <View style={styles.sheetTitle}>
                 <Text
                   maxFontSizeMultiplier={1.5}
-                  style={[styles.text, { color: colors.hourListText }]}
-                >
+                  style={[styles.text, { color: colors.hourListText }]}>
                   {t('map:infoBottomSheet:precipitation:light')}
                 </Text>
                 <Text
                   maxFontSizeMultiplier={1.5}
-                  style={[styles.text, { color: colors.hourListText }]}
-                >
+                  style={[styles.text, { color: colors.hourListText }]}>
                   {t('map:infoBottomSheet:precipitation:moderate')}
                 </Text>
                 <Text
                   maxFontSizeMultiplier={1.5}
-                  style={[styles.text, { color: colors.hourListText }]}
-                >
+                  style={[styles.text, { color: colors.hourListText }]}>
                   {t('map:infoBottomSheet:precipitation:strong')}
                 </Text>
               </View>
@@ -299,64 +294,43 @@ const LegacyInfo: React.FC = () => {
             <View style={styles.rowWrapper}>
               <View style={styles.column}>
                 <View style={[styles.row, styles.windArrowContainer]}>
-                  <Icon
-                    name="wind-arrow-0"
-                    style={styles.windArrowIcon}
-                  />
+                  <Icon name="wind-arrow-0" style={styles.windArrowIcon} />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('infoBottomSheet.windArrows.arrow0')}
                   </Text>
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
-                  <Icon
-                    name="wind-arrow-1"
-                    style={styles.windArrowIcon}
-                  />
+                  <Icon name="wind-arrow-1" style={styles.windArrowIcon} />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('infoBottomSheet.windArrows.arrow1')}
                   </Text>
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
-                  <Icon
-                    name="wind-arrow-2"
-                    style={styles.windArrowIcon}
-                  />
+                  <Icon name="wind-arrow-2" style={styles.windArrowIcon} />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('infoBottomSheet.windArrows.arrow2')}
                   </Text>
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
-                  <Icon
-                    name="wind-arrow-3"
-                    style={styles.windArrowIcon}
-                  />
+                  <Icon name="wind-arrow-3" style={styles.windArrowIcon} />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('infoBottomSheet.windArrows.arrow3')}
                   </Text>
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
-                  <Icon
-                    name="wind-arrow-4"
-                    style={styles.windArrowIcon}
-                  />
+                  <Icon name="wind-arrow-4" style={styles.windArrowIcon} />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('infoBottomSheet.windArrows.arrow4')}
                   </Text>
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
-                  <Icon
-                    name="wind-arrow-5"
-                    style={styles.windArrowIcon}
-                  />
+                  <Icon name="wind-arrow-5" style={styles.windArrowIcon} />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('infoBottomSheet.windArrows.arrow5')}
                   </Text>
                 </View>
                 <View style={[styles.row, styles.windArrowContainer]}>
-                  <Icon
-                    name="wind-arrow-6"
-                    style={styles.windArrowIcon}
-                  />
+                  <Icon name="wind-arrow-6" style={styles.windArrowIcon} />
                   <Text style={[styles.text, { color: colors.hourListText }]}>
                     {t('infoBottomSheet.windArrows.arrow6')}
                   </Text>
@@ -411,7 +385,7 @@ const LegacyInfo: React.FC = () => {
           </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -23,6 +23,7 @@ const INITIAL_STATE: LocationState = {
   current: undefined,
   isGeolocation: undefined,
   loading: false,
+  locationUpdateCount: 0,
 };
 
 const cleanAreaFromTimeseries = (location: TimeseriesLocation) =>
@@ -79,6 +80,8 @@ export default (
     case SET_CURRENT_LOCATION: {
       const { location } = action;
       delete location.isGeolocation;
+      const locationUpdateCount = (state.locationUpdateCount ?? 0) + 1;
+      const isGeolocation = action.isGeolocation || false;
 
       if (typeof location.id === 'number' && Number.isNaN(location.id)) {
         location.name = `${roundCoordinates(location.lat)}, ${roundCoordinates(
@@ -90,9 +93,9 @@ export default (
         location.name === state.current?.name && // App language may have changed
         roundCoordinates(location.lat) === state.current?.lat &&
         roundCoordinates(location.lon) === state.current?.lon &&
-        action.isGeolocation === state.isGeolocation
+        isGeolocation === Boolean(state.isGeolocation)
       ) {
-        return state; // No change
+        return { ...state, locationUpdateCount };
       }
 
       return {
@@ -102,7 +105,8 @@ export default (
           lon: roundCoordinates(location.lon),
           lat: roundCoordinates(location.lat),
         },
-        isGeolocation: action.isGeolocation || false,
+        isGeolocation,
+        locationUpdateCount,
       };
     }
 

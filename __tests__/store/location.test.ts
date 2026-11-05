@@ -145,7 +145,7 @@ describe('location reducer', () => {
     });
   });
 
-  it('should handle SET_CURRENT_LOCATION with rounded coordinates and no-op same location', () => {
+  it('records every successful geolocation while preserving the current location when unchanged', () => {
     const nextLocation = {
       ...location,
       id: 20,
@@ -167,13 +167,42 @@ describe('location reducer', () => {
     });
     expect(updated.current).not.toHaveProperty('isGeolocation');
     expect(updated.isGeolocation).toBe(true);
-    expect(
-      reducer(updated, {
-        type: types.SET_CURRENT_LOCATION,
-        location: { ...updated.current! },
-        isGeolocation: true,
-      })
-    ).toBe(updated);
+    expect(updated.locationUpdateCount).toBe(1);
+    const repeated = reducer(updated, {
+      type: types.SET_CURRENT_LOCATION,
+      location: { ...updated.current! },
+      isGeolocation: true,
+    });
+    expect(repeated.current).toBe(updated.current);
+    expect(repeated.locationUpdateCount).toBe(2);
+  });
+
+  it.each([false, undefined])('records repeated manual selections with isGeolocation=%s without replacing an unchanged location', (isGeolocation) => {
+    const previous = { ...defaultState, locationUpdateCount: 2 };
+    const selected = reducer(previous, {
+      type: types.SET_CURRENT_LOCATION,
+      location: { ...location, id: 20 },
+      isGeolocation: false,
+    });
+    expect(selected.locationUpdateCount).toBe(3);
+    const repeated = reducer(selected, {
+      type: types.SET_CURRENT_LOCATION,
+      location: { ...selected.current! },
+      isGeolocation,
+    });
+    expect(repeated.locationUpdateCount).toBe(4);
+    expect(repeated.current).toBe(selected.current);
+  });
+
+  it('preserves an unchanged manual location when the previous geolocation flag is unset', () => {
+    const next = reducer(defaultState, {
+      type: types.SET_CURRENT_LOCATION,
+      location: { ...location },
+      isGeolocation: false,
+    });
+
+    expect(next.current).toBe(defaultState.current);
+    expect(next.locationUpdateCount).toBe(1);
   });
 
   it('should handle SET_CURRENT_LOCATION for coordinate-only locations', () => {
@@ -204,13 +233,16 @@ describe('location reducer', () => {
     expect(next.current?.id).toBe(location.id);
   });
 
-  it('keeps the location unchanged when GPS differences round to the same coordinates', () => {
+  it('records a GPS update without replacing the location when differences round to the same coordinates', () => {
     const previous = { ...defaultState, isGeolocation: true };
-    expect(reducer(previous, {
+    const next = reducer(previous, {
       type: types.SET_CURRENT_LOCATION,
       location: { ...location, lat: location.lat + 0.000001, lon: location.lon + 0.000001 },
       isGeolocation: true,
-    })).toBe(previous);
+    });
+
+    expect(next.current).toBe(previous.current);
+    expect(next).toEqual({ ...previous, locationUpdateCount: 1 });
   });
 
   it('should handle DELETE_ALL_RECENT_SEARCHES', () => {
@@ -334,6 +366,7 @@ describe('location reducer', () => {
     expect(selectors.selectSearch(state)).toEqual(defaultState.search);
     expect(selectors.selectLoading(state)).toBe(false);
     expect(selectors.selectIsGeolocation(state)).toBe(true);
+    expect(selectors.selectLocationUpdateCount(state)).toBe(0);
     expect(selectors.selectStoredGeoids(state)).toEqual([0, 1, 2, 3, 4, 1, 50]);
   });
 
@@ -346,6 +379,12 @@ describe('location reducer', () => {
         },
       } as any)
     ).toEqual(location);
+  });
+
+  it('selects the location update count', () => {
+    expect(selectors.selectLocationUpdateCount({
+      location: { ...defaultState, locationUpdateCount: 3 },
+    } as any)).toBe(3);
   });
 
   it('dispatches synchronous location actions', () => {

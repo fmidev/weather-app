@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useIsFocused, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '@assets/colors';
 
@@ -82,17 +83,17 @@ const WarningsScreen: React.FC<WarningsScreenProps> = ({
     <View testID="warnings_view" style={styles.safeArea}>
       <ScrollView
         testID="warnings_scrollview"
-        style={[styles.container, { backgroundColor: colors.screenBackground }]}
+        style={[styles.container, { backgroundColor: colors.background }]}
         showsVerticalScrollIndicator={false}>
         {useCapView ? (
           <CapWarningsView />
         ) : (
-          <>
+          <SafeAreaView edges={['left', 'right']}>
             {showWarningsPanel && <WarningsPanel />}
             <WarningsWebViewPanel
               updateInterval={(warningsConfig.updateInterval ?? 5) * 60 * 1000}
             />
-          </>
+          </SafeAreaView>
         )}
       </ScrollView>
     </View>

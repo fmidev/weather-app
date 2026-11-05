@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Linking, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { Config } from '@config';
@@ -30,7 +31,7 @@ const FeedbackScreen: React.FC = () => {
   const faqUrl = feedback?.faqUrl?.[i18n.language] || '';
 
   return (
-    <View testID="feedback_view">
+    <SafeAreaView testID="feedback_view" edges={['left', 'right']}>
       <View style={styles.container}>
         <Text
           style={[
@@ -62,7 +63,11 @@ const FeedbackScreen: React.FC = () => {
             testID="feedback_faq_button"
             accessibilityRole="link"
             onPress={() => {
-              trackMatomoEvent('User action', 'Settings', 'Open URL - '+faqUrl);
+              trackMatomoEvent(
+                'User action',
+                'Settings',
+                'Open URL - ' + faqUrl
+              );
               Linking.openURL(faqUrl);
             }}
             accessibilityHint={t('openFAQHint')}>
@@ -70,26 +75,26 @@ const FeedbackScreen: React.FC = () => {
               style={[
                 styles.link,
                 styles.withLargeMarginBottom,
-                { borderBottomColor: colors.primary }
+                { borderBottomColor: colors.primary },
               ]}>
               <Text
                 maxFontSizeMultiplier={1.5}
                 style={[
                   styles.linkText,
                   {
-                    color: linkTextColor
+                    color: linkTextColor,
                   },
                 ]}>
                 {t('openFAQ')}
               </Text>
-                <Icon
-                  name="open-in-new"
-                  style={styles.withMarginLeft}
-                  color={linkTextColor}
-                  width={18}
-                  height={18}
-                  maxFontSizeMultiplier={1.5}
-                />
+              <Icon
+                name="open-in-new"
+                style={styles.withMarginLeft}
+                color={linkTextColor}
+                width={18}
+                height={18}
+                maxFontSizeMultiplier={1.5}
+              />
             </View>
           </AccessibleTouchableOpacity>
         )}
@@ -98,7 +103,11 @@ const FeedbackScreen: React.FC = () => {
           testID="feedback_button"
           accessibilityRole="button"
           onPress={() => {
-            trackMatomoEvent('User action', 'Settings', 'Open URL - '+mailToUrl);
+            trackMatomoEvent(
+              'User action',
+              'Settings',
+              'Open URL - ' + mailToUrl
+            );
             Linking.openURL(mailToUrl);
           }}
           accessibilityHint={t('moveToHint')}>
@@ -114,7 +123,7 @@ const FeedbackScreen: React.FC = () => {
           </View>
         </AccessibleTouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

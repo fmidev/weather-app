@@ -6,7 +6,10 @@ import {
   View,
   Platform,
 } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import Permissions, { PERMISSIONS } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
@@ -36,13 +39,15 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   setUpDone,
   termsOfUseChanged,
 }) => {
-  const { languageSpecificLogo, backgroundImageProperties } = Config.get('onboardingWizard');
+  const { languageSpecificLogo, backgroundImageProperties } =
+    Config.get('onboardingWizard');
   const { t, i18n } = useTranslation('setUp');
   const { colors, dark } = useTheme() as CustomTheme;
   const [pageIndex, setPageIndex] = useState<number>(0);
   const isLandscape = useOrientation();
   const insets = useSafeAreaInsets();
-  const showLanguageSpecificLogo = languageSpecificLogo && providerLogos[i18n.language];
+  const showLanguageSpecificLogo =
+    languageSpecificLogo && providerLogos[i18n.language];
 
   const rowBottomPosition = Math.round(insets.bottom) + 16;
 
@@ -119,8 +124,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   styles.secondaryButton,
                   { borderBottomColor: colors.primary },
                 ]}>
-                <Text
-                  style={[styles.textHighlight, { color: colors.text }]}>
+                <Text style={[styles.textHighlight, { color: colors.text }]}>
                   {secondaryButtonText}
                 </Text>
               </View>
@@ -186,8 +190,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                   styles.secondaryButton,
                   { borderBottomColor: colors.primary },
                 ]}>
-                <Text
-                  style={[styles.textHighlight, { color: colors.text }]}>
+                <Text style={[styles.textHighlight, { color: colors.text }]}>
                   {secondaryButtonText}
                 </Text>
               </View>
@@ -204,17 +207,20 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
         style={styles.imageBackground}
         resizeMode="contain"
         source={
-          backgroundImageProperties ? undefined :
-            dark ? require(`../assets/images/weather-background-dark.png`) : require(`../assets/images/weather-background-light.png`)
+          backgroundImageProperties
+            ? undefined
+            : dark
+              ? require(`../assets/images/weather-background-dark.png`)
+              : require(`../assets/images/weather-background-light.png`)
         }>
-        { backgroundImageProperties &&
+        {backgroundImageProperties && (
           <Image
             style={[
               styles.customBackgroundImage,
               {
                 top: backgroundImageProperties?.top ?? 0,
-                height: backgroundImageProperties?.height ?? '100%'
-              }
+                height: backgroundImageProperties?.height ?? '100%',
+              },
             ]}
             resizeMode="contain"
             source={
@@ -223,25 +229,34 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                 : require(`../assets/images/weather-background-light.png`)
             }
           />
-        }
+        )}
         <Image
           source={
             dark
-              ? showLanguageSpecificLogo ? providerLogos[i18n.language].dark : require(`../assets/images/provider-logo-dark.png`)
-              : showLanguageSpecificLogo ? providerLogos[i18n.language].light : require(`../assets/images/provider-logo-light.png`)
+              ? showLanguageSpecificLogo
+                ? providerLogos[i18n.language].dark
+                : require(`../assets/images/provider-logo-dark.png`)
+              : showLanguageSpecificLogo
+                ? providerLogos[i18n.language].light
+                : require(`../assets/images/provider-logo-light.png`)
           }
           resizeMode="contain"
           style={styles.logo}
         />
       </ImageBackground>
-      <View
+      <SafeAreaView
+        edges={['left', 'right']}
         style={[
           styles.innerContainer,
           isLandscape && styles.innerContainerLandscape,
         ]}>
         {pageIndex === 0 && (
           <PermissionComponent
-            title={ termsOfUseChanged ? t('termsAndConditionsChanged') : t('termsAndConditions')}
+            title={
+              termsOfUseChanged
+                ? t('termsAndConditionsChanged')
+                : t('termsAndConditions')
+            }
             description={t('termsAndConditionsDescription')}
             primaryButtonText={t('readTermsAndConditions')}
             onPrimaryButtonPress={() => {
@@ -263,11 +278,16 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             secondaryButtonTestID="setup_secondary_button"
           />
         )}
-      </View>
-      { !termsOfUseChanged && (
+      </SafeAreaView>
+      {!termsOfUseChanged && (
         <View
           testID="setup_pagination"
-          style={[styles.row, styles.center, styles.height10, { bottom: rowBottomPosition }]}>
+          style={[
+            styles.row,
+            styles.center,
+            styles.height10,
+            { bottom: rowBottomPosition },
+          ]}>
           <View
             testID="setup_pagination_0"
             style={[
@@ -403,8 +423,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 120,
     width: '100%',
-    height: 200
-  }
+    height: 200,
+  },
 });
 
 export default SetupScreen;

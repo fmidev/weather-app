@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Config } from '@config';
 import CloseButton from '@components/common/CloseButton';
@@ -19,19 +20,17 @@ const InfoBottomSheet: React.FC<InfoBottomSheetProps> = ({ onClose }) => {
   return (
     <View testID="info_bottom_sheet" style={styles.wrapper}>
       <View style={styles.sheetListContainer}>
-        <View style={styles.closeButtonContainer}>
+        <SafeAreaView
+          style={styles.closeButtonContainer}
+          edges={['left', 'right']}>
           <CloseButton
             testID="info_bottom_sheet_close_button"
             maxScaleFactor={1.5}
             onPress={onClose}
             accessibilityLabel={t('infoBottomSheet.closeAccessibilityLabel')}
           />
-        </View>
-        {markdownUrl ? (
-          <MarkdownLayerInfo />
-        ) : (
-          <LegacyLayerInfo />
-        )}
+        </SafeAreaView>
+        {markdownUrl ? <MarkdownLayerInfo /> : <LegacyLayerInfo />}
       </View>
     </View>
   );
