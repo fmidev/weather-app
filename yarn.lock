@@ -7726,10 +7726,10 @@ react-native-mmkv@3.3.3:
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-3.3.3.tgz#1f0326f6314e23725af8145964343224d074e6cd"
   integrity sha512-GMsfOmNzx0p5+CtrCFRVtpOOMYNJXuksBVARSQrCFaZwjUyHJdQzcN900GGaFFNTxw2fs8s5Xje//RDKj9+PZA==
 
-react-native-nitro-geolocation@1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/react-native-nitro-geolocation/-/react-native-nitro-geolocation-1.4.3.tgz#90e05137c61526de6b91947d5f5ec06f38f1bc00"
-  integrity sha512-8r09M6fjf7krCXRuF3RskuJpcxE8dvwQtRJnlrk+U3tO4v+ltyXhRRGmAMlO2Y/PEv1II8sgnIgil58RaLPI4A==
+react-native-nitro-geolocation@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-nitro-geolocation/-/react-native-nitro-geolocation-2.0.3.tgz#a0cd5e254a90b262b08e51b0690a7673203615df"
+  integrity sha512-l/Wjaw/2Hw9aTQlQIzLtYMtuq8ecg5tAGjBZpxM3kh8wrfFh2tqSqvWehMDtngk+xJ0cJuR91yJdamRHUnt2kQ==
 
 react-native-nitro-modules@0.37.1:
   version "0.37.1"
