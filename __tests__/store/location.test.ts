@@ -177,7 +177,7 @@ describe('location reducer', () => {
     expect(repeated.locationUpdateCount).toBe(2);
   });
 
-  it('records manual selections, including repeated selections, without replacing an unchanged location', () => {
+  it.each([false, undefined])('records repeated manual selections with isGeolocation=%s without replacing an unchanged location', (isGeolocation) => {
     const previous = { ...defaultState, locationUpdateCount: 2 };
     const selected = reducer(previous, {
       type: types.SET_CURRENT_LOCATION,
@@ -188,9 +188,21 @@ describe('location reducer', () => {
     const repeated = reducer(selected, {
       type: types.SET_CURRENT_LOCATION,
       location: { ...selected.current! },
+      isGeolocation,
     });
     expect(repeated.locationUpdateCount).toBe(4);
     expect(repeated.current).toBe(selected.current);
+  });
+
+  it('preserves an unchanged manual location when the previous geolocation flag is unset', () => {
+    const next = reducer(defaultState, {
+      type: types.SET_CURRENT_LOCATION,
+      location: { ...location },
+      isGeolocation: false,
+    });
+
+    expect(next.current).toBe(defaultState.current);
+    expect(next.locationUpdateCount).toBe(1);
   });
 
   it('should handle SET_CURRENT_LOCATION for coordinate-only locations', () => {
@@ -210,6 +222,27 @@ describe('location reducer', () => {
       lon: 24.9876,
       name: '60.1234, 24.9876',
     });
+  });
+
+  it.each(['lat', 'lon'] as const)('updates new GPS %s within the same named location', (coordinate) => {
+    const previous = { ...defaultState, isGeolocation: true };
+    const nextLocation = { ...location, [coordinate]: location[coordinate] + 0.001234 };
+    const next = reducer(previous, { type: types.SET_CURRENT_LOCATION, location: nextLocation, isGeolocation: true });
+    expect(next).not.toBe(previous);
+    expect(next.current?.[coordinate]).toBe(location[coordinate] + 0.0012);
+    expect(next.current?.id).toBe(location.id);
+  });
+
+  it('records a GPS update without replacing the location when differences round to the same coordinates', () => {
+    const previous = { ...defaultState, isGeolocation: true };
+    const next = reducer(previous, {
+      type: types.SET_CURRENT_LOCATION,
+      location: { ...location, lat: location.lat + 0.000001, lon: location.lon + 0.000001 },
+      isGeolocation: true,
+    });
+
+    expect(next.current).toBe(previous.current);
+    expect(next).toEqual({ ...previous, locationUpdateCount: 1 });
   });
 
   it('should handle DELETE_ALL_RECENT_SEARCHES', () => {

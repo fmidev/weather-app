@@ -10,6 +10,8 @@ const mockSelectTimeZone = jest.fn((state: any) => state.mock.timezone);
 const mockSelectDisplayLocation = jest.fn((state: any) => state.mock.displayLocation);
 const mockSelectOverlay = jest.fn((state: any) => state.mock.overlay);
 const mockSelectActiveOverlay = jest.fn((state: any) => state.mock.activeOverlay);
+const mockSelectAnimateToArea = jest.fn((state: any) => state.mock.animateToArea ?? false);
+const mockSetAnimateToArea = jest.fn((animate: boolean) => ({ type: 'ANIMATE_TO_AREA', animate }));
 const mockUpdateOverlays = jest.fn((...args: any[]) => ({
   type: 'MAP/UPDATE_OVERLAYS',
   payload: { overlayId: args[0], library: args[1] },
@@ -57,12 +59,14 @@ jest.mock('@store/map/selectors', () => ({
   selectDisplayLocation: (state: any) => mockSelectDisplayLocation(state),
   selectOverlay: (state: any) => mockSelectOverlay(state),
   selectActiveOverlay: (state: any) => mockSelectActiveOverlay(state),
+  selectAnimateToArea: (state: any) => mockSelectAnimateToArea(state),
 }));
 
 jest.mock('@store/map/actions', () => ({
   updateOverlays: (...args: any[]) => mockUpdateOverlays(...args),
   updateRegion: (...args: any[]) => mockUpdateRegion(...args),
   updateSelectedCallout: (...args: any[]) => mockUpdateSelectedCallout(...args),
+  setAnimateToArea: (animate: boolean) => mockSetAnimateToArea(animate),
 }));
 
 jest.mock('@utils/matomo', () => ({
@@ -376,5 +380,44 @@ describe('RnMapView', () => {
       'Map',
       'Open info panel'
     );
+  });
+
+  it('centers repeated requests at an unchanged location once each and consumes them', () => {
+    const state = { mock: {
+      currentLocation: { lat: 60.17, lon: 24.94 }, displayLocation: false,
+      overlay: undefined, activeOverlay: undefined, timezone: 'Europe/Helsinki', animateToArea: false,
+    } };
+    const element = () => <Provider store={createStore(state) as any}>
+      <RnMapView infoSheetRef={{ current: null }} mapLayersSheetRef={{ current: null }} />
+    </Provider>;
+    const screen = render(element());
+    mockMapRefApi.animateToRegion.mockClear();
+    for (let request = 0; request < 2; request += 1) {
+      state.mock.animateToArea = true;
+      screen.rerender(element());
+      expect(mockSetAnimateToArea).toHaveBeenLastCalledWith(false);
+      state.mock.animateToArea = false;
+      screen.rerender(element());
+      expect(mockMapRefApi.animateToRegion).toHaveBeenCalledTimes(request + 1);
+    }
+    expect(mockMapRefApi.animateToRegion).toHaveBeenLastCalledWith(expect.objectContaining({ latitude: 60.17, longitude: 24.94 }));
+  });
+
+  it('keeps a center request pending while the map is unfocused', () => {
+    mockUseIsFocused.mockReturnValue(false);
+    const state = { mock: {
+      currentLocation: { lat: 60.17, lon: 24.94 }, displayLocation: false,
+      overlay: undefined, activeOverlay: undefined, timezone: 'Europe/Helsinki', animateToArea: true,
+    } };
+    const element = () => <Provider store={createStore(state) as any}>
+      <RnMapView infoSheetRef={{ current: null }} mapLayersSheetRef={{ current: null }} />
+    </Provider>;
+    const screen = render(element());
+    expect(mockMapRefApi.animateToRegion).not.toHaveBeenCalled();
+    expect(mockSetAnimateToArea).not.toHaveBeenCalled();
+    mockUseIsFocused.mockReturnValue(true);
+    screen.rerender(element());
+    expect(mockMapRefApi.animateToRegion).toHaveBeenCalledTimes(1);
+    expect(mockSetAnimateToArea).toHaveBeenCalledWith(false);
   });
 });

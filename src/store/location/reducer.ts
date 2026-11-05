@@ -91,7 +91,9 @@ export default (
       } else if (
         location.id === state.current?.id &&
         location.name === state.current?.name && // App language may have changed
-        isGeolocation === state.isGeolocation
+        roundCoordinates(location.lat) === state.current?.lat &&
+        roundCoordinates(location.lon) === state.current?.lon &&
+        isGeolocation === Boolean(state.isGeolocation)
       ) {
         return { ...state, locationUpdateCount };
       }
