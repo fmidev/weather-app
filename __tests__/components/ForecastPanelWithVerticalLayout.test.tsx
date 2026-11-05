@@ -1,10 +1,17 @@
 import React from 'react';
+import { ScreenHeaderItemsContext } from '../../src/navigators/ScreenHeaderItemsContext';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import ForecastPanelWithVerticalLayout from '../../src/components/weather/ForecastPanelWithVerticalLayout';
 import moment from '../../src/utils/moment';
 
 const mockConfigGet = jest.fn();
+let mockVerticalBarLayout = false;
+
+jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
+  usesVerticalBarLayout: () => mockVerticalBarLayout,
+}));
 const mockFormatAccessibleDateTime = jest.fn();
 const mockPanelHeader = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
@@ -201,6 +208,7 @@ const baseProps = {
 
 describe('ForecastPanelWithVerticalLayout', () => {
   beforeEach(() => {
+    mockVerticalBarLayout = false;
     mockConfigGet.mockReset();
     mockFormatAccessibleDateTime.mockReset();
     mockPanelHeader.mockClear();
@@ -294,5 +302,57 @@ describe('ForecastPanelWithVerticalLayout', () => {
         currentDayOffset: 2,
       })
     );
+  });
+
+  it('keeps settings in the forecast alongside the vertical header and always enables info', () => {
+    mockVerticalBarLayout = true;
+    const setItems = jest.fn();
+    const view = render(
+      <ScreenHeaderItemsContext.Provider value={setItems}>
+        <ForecastPanelWithVerticalLayout {...baseProps} />
+      </ScreenHeaderItemsContext.Provider>
+    );
+
+    expect(view.getByTestId('params_button')).toBeTruthy();
+    expect(view.getByTestId('info_button')).toBeTruthy();
+    const items = setItems.mock.calls.at(-1)![0];
+    expect(items).toEqual([
+      expect.objectContaining({ accessibilityLabel: 'paramsAccessibilityLabel', disabled: false }),
+      expect.objectContaining({ accessibilityLabel: 'infoAccessibilityLabel', disabled: false }),
+    ]);
+    items[0].onPress();
+    items[1].onPress();
+    expect(mockRBSheetOpen).toHaveBeenCalledTimes(2);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+      'User action', 'Weather', 'Open forecast parameter settings'
+    );
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
+      'User action', 'Weather', 'Open forecast info bottomsheet'
+    );
+
+    view.rerender(
+      <ScreenHeaderItemsContext.Provider value={setItems}>
+        <ForecastPanelWithVerticalLayout {...baseProps} displayFormat="chart" />
+      </ScreenHeaderItemsContext.Provider>
+    );
+    const chartItems = setItems.mock.calls.at(-1)![0];
+    expect(chartItems[0].disabled).toBe(true);
+    expect(chartItems[1].disabled).toBe(false);
+    fireEvent.press(view.getByTestId('info_button'));
+    chartItems[1].onPress();
+    expect(mockRBSheetOpen).toHaveBeenCalledTimes(4);
+
+    mockVerticalBarLayout = false;
+    view.rerender(
+      <ScreenHeaderItemsContext.Provider value={setItems}>
+        <ForecastPanelWithVerticalLayout {...baseProps} />
+      </ScreenHeaderItemsContext.Provider>
+    );
+    expect(setItems).toHaveBeenLastCalledWith([]);
+    expect(view.getByTestId('params_button')).toBeTruthy();
+    expect(view.getByTestId('info_button')).toBeTruthy();
+
+    view.unmount();
+    expect(setItems).toHaveBeenLastCalledWith([]);
   });
 });

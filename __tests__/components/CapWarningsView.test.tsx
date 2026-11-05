@@ -1,11 +1,26 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { ScreenHeaderItemsContext } from '../../src/navigators/ScreenHeaderItemsContext';
 import CapWarningsView from '../../src/components/warnings/cap/CapWarningsView';
 
+let mockVerticalBarLayout = false;
+jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
+  usesVerticalBarLayout: () => mockVerticalBarLayout,
+}));
+jest.mock('@utils/matomo', () => ({ trackMatomoEvent: jest.fn() }));
 const mockConfigGet = jest.fn();
 const mockSheetOpen = jest.fn();
 const mockSheetClose = jest.fn();
+
+jest.mock('react-native-safe-area-context', () => ({
+  SafeAreaView: ({ children, ...props }: any) => {
+    const { View } = require('react-native');
+    return <View {...props}>{children}</View>;
+  },
+}));
 
 jest.mock('@config', () => ({
   Config: {
@@ -125,6 +140,7 @@ jest.mock('../../src/components/warnings/cap/LocalWarningsBar', () => ({
 
 describe('CapWarningsView', () => {
   beforeEach(() => {
+    mockVerticalBarLayout = false;
     mockConfigGet.mockReset();
     mockSheetOpen.mockClear();
     mockSheetClose.mockClear();
@@ -152,7 +168,13 @@ describe('CapWarningsView', () => {
   });
 
   it('renders cap content and opens legend sheet from info button', () => {
-    const { getByLabelText, getByTestId, getAllByTestId, getByText } = render(
+    const {
+      getByLabelText,
+      getByTestId,
+      getAllByTestId,
+      getByText,
+      UNSAFE_getByType: getByType,
+    } = render(
       <CapWarningsView
         loading={false}
         updated="2024-01-02T12:00:00Z"
@@ -165,6 +187,7 @@ describe('CapWarningsView', () => {
     expect(getByTestId('cap-map-view').props.children).toBe('3-1');
     expect(getByTestId('cap-text-list').props.children).toBe('3-1');
     expect(getByText('3 day warnings - Helsinki')).toBeTruthy();
+    expect(getByType(SafeAreaView).props.edges).toEqual(['left', 'right']);
 
     fireEvent.press(getByLabelText('infoAccessibilityLabel'));
     expect(mockSheetOpen).toHaveBeenCalled();
@@ -205,5 +228,28 @@ describe('CapWarningsView', () => {
     );
 
     expect(getAllByTestId('local-warnings-bar')).toHaveLength(1);
+  });
+
+  it('offers the CAP legend in the sidebar and retains the inline info button', () => {
+    mockVerticalBarLayout = true;
+    const setItems = jest.fn();
+    const view = render(
+      <ScreenHeaderItemsContext.Provider value={setItems}>
+        <CapWarningsView
+          loading={false}
+          updated="2024-01-02T12:00:00Z"
+          currentLocation={{ name: 'Helsinki', country: 'FI' } as any}
+          capWarnings={[]}
+        />
+      </ScreenHeaderItemsContext.Provider>
+    );
+    expect(view.getByLabelText('infoAccessibilityLabel')).toBeTruthy();
+    const items = setItems.mock.calls.at(-1)![0];
+    expect(items).toHaveLength(1);
+    items[0].onPress();
+    fireEvent.press(view.getByLabelText('infoAccessibilityLabel'));
+    expect(mockSheetOpen).toHaveBeenCalledTimes(2);
+    view.unmount();
+    expect(setItems).toHaveBeenLastCalledWith([]);
   });
 });
