@@ -131,4 +131,5 @@ export interface LocationState {
   current: Location | undefined;
   isGeolocation?: boolean;
   loading: boolean;
+  locationUpdateCount?: number;
 }

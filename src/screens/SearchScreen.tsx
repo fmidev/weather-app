@@ -9,6 +9,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
@@ -171,7 +172,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const inputFontSize = isRunningOnMac ? MAC_CONTENT_SIZE_MULTIPLIER * 16 : 16;
 
   return (
-    <View testID="search_view" style={styles.container}>
+    <SafeAreaView
+      testID="search_view"
+      edges={['left', 'right']}
+      style={styles.container}>
       <Text
         accessible={false}
         style={[
@@ -375,7 +379,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           )}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

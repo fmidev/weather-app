@@ -29,6 +29,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
+import useWarningsInfo from './useWarningsInfo';
 import { trackMatomoEvent } from '@utils/matomo';
 import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
@@ -55,7 +56,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
-  const infoSheetRef = useRef<RBSheet>(null);
+  const { infoSheetRef, openInfo } = useWarningsInfo(!loading && !error);
   const headerRef = useRef<ViewInstance>(null);
 
   moment.locale(i18n.language);
@@ -133,10 +134,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               testID="warnings_info_button"
               accessibilityRole="button"
               accessibilityLabel={t('infoAccessibilityLabel')}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Warnings', 'Open warnings info panel');
-                infoSheetRef.current?.open();
-              }}>
+              onPress={openInfo}>
               <View style={[styles.iconPadding]}>
                 <Icon
                   name="info"
