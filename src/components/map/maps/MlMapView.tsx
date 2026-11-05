@@ -15,6 +15,7 @@ import {
   type MapRef,
   type CameraRef,
   InitialViewState,
+  type StyleSpecification,
 } from '@maplibre/maplibre-react-native';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
@@ -32,15 +33,23 @@ import {
   selectActiveOverlay,
   selectDisplayLocation,
   selectOverlay,
+  selectAnimateToArea,
 } from '@store/map/selectors';
 import {
   updateOverlays as updateOverlaysAction,
   updateRegion as updateRegionAction,
   updateSelectedCallout as updateSelectedCalloutAction,
+  setAnimateToArea as setAnimateToAreaAction,
 } from '@store/map/actions';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
+import getMapStyle from '@network/MapStyleApi';
+import {
+  DEFAULT_WMS_BEFORE_ID,
+  getMapStyleUrl,
+  mergeMapStyles,
+} from '@utils/mapStyle';
 import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
 import type { Position } from 'geojson';
@@ -73,12 +82,14 @@ const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
   timezone: selectTimeZone(state),
   sessionId: selectSessionId(state),
+  animateToArea: selectAnimateToArea(state),
 });
 
 const mapDispatchToProps = {
   updateOverlays: updateOverlaysAction,
   updateRegion: updateRegionAction,
   updateSelectedCallout: updateSelectedCalloutAction,
+  setAnimateToArea: setAnimateToAreaAction,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -99,6 +110,8 @@ const MlMapView: React.FC<MapViewProps> = ({
   updateOverlays,
   timezone,
   sessionId,
+  animateToArea,
+  setAnimateToArea,
   infoSheetRef,
   mapLayersSheetRef,
 }) => {
@@ -107,7 +120,8 @@ const MlMapView: React.FC<MapViewProps> = ({
   const { dark } = useTheme();
   const isFocused = useIsFocused();
   const { shouldReload } = useReloader();
-  const { updateInterval, sources, fmiApiKey } = Config.get('map');
+  const { updateInterval, sources, fmiApiKey, baseMap, overlayMap } =
+    Config.get('map');
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM_LEVEL);
   const mapRef = useRef<MapRef>(null);
@@ -116,11 +130,61 @@ const MlMapView: React.FC<MapViewProps> = ({
   const [mapBounds, setMapBounds] = useState<
     [northEast: Position, southWest: Position] | undefined
   >(undefined);
-  const [styleReady, setStyleReady] = useState(false);
+  const [readyStyle, setReadyStyle] = useState<string | StyleSpecification>();
+  const [loadedStyle, setLoadedStyle] = useState<{
+    key: string;
+    style: string | StyleSpecification;
+    beforeId?: string;
+  }>();
   const [mapReady, setMapReady] = useState(false);
 
   const location = currentLocation ?? Config.get('location').default;
-  const { baseMap } = Config.get('map');
+  const centeredLocationRef = useRef<typeof location | undefined>(undefined);
+  const baseStyleUrl = getMapStyleUrl(baseMap, dark, i18n.language);
+  const overlayStyleUrl = getMapStyleUrl(overlayMap, dark, i18n.language);
+  const styleKey = JSON.stringify([baseStyleUrl, overlayStyleUrl]);
+  // Keep the mounted map and camera while the next style is fetched.
+  const mapStyle = overlayStyleUrl
+    ? (loadedStyle?.style ?? baseStyleUrl)
+    : baseStyleUrl;
+  const stylePending = !!overlayStyleUrl && loadedStyle?.key !== styleKey;
+  const styleReady = !stylePending && readyStyle === mapStyle && !!mapStyle;
+
+  useEffect(() => {
+    if (!baseStyleUrl || !overlayStyleUrl) return undefined;
+    let active = true;
+    const loadStyle = async () => {
+      const [baseResult, overlayResult] = await Promise.allSettled([
+        getMapStyle(baseStyleUrl),
+        getMapStyle(overlayStyleUrl),
+      ]);
+      if (!active) return;
+      let nextStyle: { style: string | StyleSpecification; beforeId?: string } =
+        {
+          style:
+            baseResult.status === 'fulfilled' ? baseResult.value : baseStyleUrl,
+        };
+      if (
+        baseResult.status === 'fulfilled' &&
+        overlayResult.status === 'fulfilled'
+      ) {
+        try {
+          nextStyle = mergeMapStyles(baseResult.value, overlayResult.value);
+        } catch (error) {
+          trackMatomoEvent(
+            'Error',
+            'Map',
+            `Map style merge failed: ${String(error)}`
+          );
+        }
+      }
+      setLoadedStyle({ key: styleKey, ...nextStyle });
+    };
+    loadStyle();
+    return () => {
+      active = false;
+    };
+  }, [baseStyleUrl, overlayStyleUrl, styleKey]);
 
   useEffect(() => {
     TransformRequestManager.addHeader({
@@ -134,22 +198,25 @@ const MlMapView: React.FC<MapViewProps> = ({
   }, [sessionId]);
 
   useEffect(() => {
-    const headerIds = Object.entries(fmiApiKey ?? {}).flatMap(([source, key]) => {
-      const baseUrl = sources?.[source]?.replace(/\/+$/, '');
-      if (!baseUrl || !key) return [];
+    const headerIds = Object.entries(fmiApiKey ?? {}).flatMap(
+      ([source, key]) => {
+        const baseUrl = sources?.[source]?.replace(/\/+$/, '');
+        if (!baseUrl || !key) return [];
 
-      const id = `fmi-apikey-${source}`;
-      const escapedUrl = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      TransformRequestManager.addHeader({
-        id,
-        match: `(?i)^${escapedUrl}/wms\\?(?:[^#]*&)?request=GetMap(?:&|$)`,
-        name: 'fmi-apikey',
-        value: key,
-      });
-      return [id];
-    });
+        const id = `fmi-apikey-${source}`;
+        const escapedUrl = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        TransformRequestManager.addHeader({
+          id,
+          match: `(?i)^${escapedUrl}/wms\\?(?:[^#]*&)?request=GetMap(?:&|$)`,
+          name: 'fmi-apikey',
+          value: key,
+        });
+        return [id];
+      }
+    );
 
-    return () => headerIds.forEach((id) => TransformRequestManager.removeHeader(id));
+    return () =>
+      headerIds.forEach((id) => TransformRequestManager.removeHeader(id));
   }, [sources, fmiApiKey]);
 
   const initialRegion = useMemo(
@@ -195,14 +262,17 @@ const MlMapView: React.FC<MapViewProps> = ({
   ]);
 
   useEffect(() => {
-    if (!location || !cameraRef.current || !mapReady) return;
+    if (!location || !cameraRef.current || !mapReady || !isFocused) return;
+    if (!animateToArea && centeredLocationRef.current === location) return;
+    centeredLocationRef.current = location;
 
     cameraRef.current.flyTo({
       center: [location.lon, location.lat],
       zoom: DEFAULT_ZOOM_LEVEL,
       duration: 1000,
     });
-  }, [location, mapReady]);
+    if (animateToArea) setAnimateToArea(false);
+  }, [location, mapReady, isFocused, animateToArea, setAnimateToArea]);
 
   const updateBoundsFromRef = useCallback(async () => {
     const bounds = await mapRef.current?.getBounds();
@@ -279,16 +349,24 @@ const MlMapView: React.FC<MapViewProps> = ({
     } as InitialViewState;
   }, [location]);
 
-  if (!baseMap) {
-    return <Text accessibilityLanguage={accessibilityLanguage}>MapLibre requires baseMap configuration</Text>;
+  if (!mapStyle || !baseMap) {
+    return (
+      <Text accessibilityLanguage={accessibilityLanguage}>
+        MapLibre requires baseMap configuration
+      </Text>
+    );
   }
 
-  const mapStyle =
-    baseMap.url +
-    (dark ? baseMap.darkStyle : baseMap.lightStyle).replace(
-      '{lang}',
-      i18n.language
-    );
+  const overlayBeforeId =
+    loadedStyle?.key === styleKey ? loadedStyle.beforeId : undefined;
+  // URL styles retain the historical boundary. For loaded JSON, only use it
+  // when it exists; minimal base styles must still be able to render WMS.
+  const beforeId =
+    overlayBeforeId ??
+    (typeof mapStyle === 'string' ||
+    mapStyle.layers.some(({ id }) => id === DEFAULT_WMS_BEFORE_ID)
+      ? DEFAULT_WMS_BEFORE_ID
+      : null);
 
   return (
     <View style={styles.mapContainer}>
@@ -297,7 +375,8 @@ const MlMapView: React.FC<MapViewProps> = ({
         ref={mapRef}
         style={styles.map}
         mapStyle={mapStyle}
-        onDidFinishLoadingStyle={() => setStyleReady(true)}
+        onWillStartLoadingMap={() => setReadyStyle(undefined)}
+        onDidFinishLoadingStyle={() => setReadyStyle(mapStyle)}
         onDidFinishRenderingFrameFully={onDidFinishRenderingFrame}
         onRegionDidChange={onRegionDidChange}
         touchRotate={false}
@@ -313,7 +392,11 @@ const MlMapView: React.FC<MapViewProps> = ({
         />
 
         {styleReady && overlay?.type === 'WMS' && (
-          <WMSOverlay overlay={overlay} library="maplibre" />
+          <WMSOverlay
+            overlay={overlay}
+            library="maplibre"
+            beforeId={beforeId}
+          />
         )}
         {styleReady && overlay?.type === 'Timeseries' && mapBounds && (
           <TimeseriesOverlay

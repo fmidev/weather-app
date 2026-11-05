@@ -2,7 +2,7 @@ import React from 'react';
 import { Appearance, AppState } from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
-import TabNavigator from '../../src/navigators/TabNavigator';
+import TabNavigatorComponent from '../../src/navigators/TabNavigator';
 import { MacContentSizeProvider } from '../../src/components/common/MacContentSizeContext';
 import { sendMatomoEvents } from '@utils/matomo';
 
@@ -17,12 +17,18 @@ const mockLaunchArgumentsValue = jest.fn();
 const mockRBSheetClose = jest.fn();
 const mockRBSheetOpen = jest.fn();
 const mockSetCurrentLocation = jest.fn();
+const mockSetAnimateToArea = jest.fn();
+const mockMapStackProps = jest.fn();
+const mockWeatherStackProps = jest.fn();
 const mockSetNavigationTab = jest.fn();
 const mockTabScreens = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
 const mockSetNavigationBarTheme = jest.fn();
 const mockWarningsTabIcon = jest.fn();
 let mockTranslationReady = true;
+
+const TabNavigator = (props: Omit<React.ComponentProps<typeof TabNavigatorComponent>, 'setAnimateToArea'>) =>
+  <TabNavigatorComponent {...props} setAnimateToArea={mockSetAnimateToArea} />;
 
 jest.mock('@react-navigation/elements', () => ({
   HeaderBackButton: () => null,
@@ -40,6 +46,8 @@ jest.mock('@store/settings/selectors', () => ({
 jest.mock('@store/location/actions', () => ({
   setCurrentLocation: jest.fn(() => ({ type: 'SET_CURRENT_LOCATION' })),
 }));
+
+jest.mock('@store/map/actions', () => ({ setAnimateToArea: jest.fn() }));
 
 jest.mock('@store/announcements/actions', () => ({
   fetchAnnouncements: jest.fn(() => ({ type: 'FETCH_ANNOUNCEMENTS' })),
@@ -264,7 +272,8 @@ jest.mock('@components/search/SearchInfoBottomSheet', () => ({
 
 jest.mock('../../src/navigators/stacks/MapStackScreen', () => ({
   __esModule: true,
-  default: () => {
+  default: (props: any) => {
+    mockMapStackProps(props);
     const { Text } = require('react-native');
     return <Text testID="map-stack">map</Text>;
   },
@@ -272,7 +281,8 @@ jest.mock('../../src/navigators/stacks/MapStackScreen', () => ({
 
 jest.mock('../../src/navigators/stacks/WeatherStackScreen', () => ({
   __esModule: true,
-  default: () => {
+  default: (props: any) => {
+    mockWeatherStackProps(props);
     const { Text } = require('react-native');
     return <Text testID="weather-stack">weather</Text>;
   },
@@ -320,12 +330,16 @@ describe('TabNavigator', () => {
     mockConfigGet.mockReset();
     mockFetchAnnouncements.mockClear();
     mockGetGeolocation.mockClear();
+    mockStore.getState.mockReturnValue({ location: { current: undefined } });
     mockI18nOn.mockClear();
     mockI18nOff.mockClear();
     mockLaunchArgumentsValue.mockReset();
     mockRBSheetClose.mockClear();
     mockRBSheetOpen.mockClear();
     mockSetCurrentLocation.mockClear();
+    mockSetAnimateToArea.mockClear();
+    mockMapStackProps.mockClear();
+    mockWeatherStackProps.mockClear();
     mockSetNavigationTab.mockClear();
     mockTabScreens.mockClear();
     mockTrackMatomoEvent.mockClear();
@@ -595,5 +609,40 @@ describe('TabNavigator', () => {
 
     expect(view.queryByTestId('navigation_warnings')).toBeNull();
     expect(mockWarningsTabIcon).not.toHaveBeenCalled();
+  });
+
+  it.each(['Map', 'Weather'])('requests centering only after successful geolocation from the Map header (%s)', (screen) => {
+    render(<TabNavigator
+      initialTab="Map" theme="light" didLaunchApp termsOfUseAccepted
+      setCurrentLocation={mockSetCurrentLocation}
+      setNavigationTab={mockSetNavigationTab}
+      fetchAnnouncements={mockFetchAnnouncements}
+    />);
+    mockGetGeolocation.mockClear();
+    const options = screen === 'Map'
+      ? mockMapStackProps.mock.calls.at(-1)![0].mapOptions
+      : mockWeatherStackProps.mock.calls.at(-1)![0].weatherOptions;
+    const header = render(options.headerLeft());
+    fireEvent.press(header.getByTestId('header-button-locate'));
+    expect(mockSetCurrentLocation).not.toHaveBeenCalled();
+    expect(mockSetAnimateToArea).not.toHaveBeenCalled();
+
+    const location = { id: 99, name: 'Helsinki', lat: 60.17, lon: 24.94 };
+    expect(mockGetGeolocation).toHaveBeenCalledWith(
+      expect.any(Function), expect.any(Function), undefined, expect.any(Function)
+    );
+    const getCurrentLocation = mockGetGeolocation.mock.calls[0][3];
+    expect(getCurrentLocation()).toBeUndefined();
+    mockStore.getState.mockReturnValue({ location: { current: location } });
+    expect(getCurrentLocation()).toBe(location);
+    act(() => mockGetGeolocation.mock.calls[0][0](location, true));
+    expect(mockSetCurrentLocation).toHaveBeenCalledWith(location, true);
+    if (screen === 'Map') {
+      expect(mockSetAnimateToArea).toHaveBeenCalledWith(true);
+      expect(mockSetCurrentLocation.mock.invocationCallOrder[0]).toBeLessThan(mockSetAnimateToArea.mock.invocationCallOrder[0]);
+      fireEvent.press(header.getByTestId('header-button-locate'));
+      act(() => mockGetGeolocation.mock.calls[1][0](location, true));
+      expect(mockSetAnimateToArea).toHaveBeenCalledTimes(2);
+    } else expect(mockSetAnimateToArea).not.toHaveBeenCalled();
   });
 });

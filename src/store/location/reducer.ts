@@ -88,6 +88,8 @@ export default (
       } else if (
         location.id === state.current?.id &&
         location.name === state.current?.name && // App language may have changed
+        roundCoordinates(location.lat) === state.current?.lat &&
+        roundCoordinates(location.lon) === state.current?.lon &&
         action.isGeolocation === state.isGeolocation
       ) {
         return state; // No change
