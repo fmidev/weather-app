@@ -117,7 +117,7 @@ jobs:
 
       # Set up Java 17
       - name: Set up Java 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin" # You can use 'adopt', 'zulu', or another distribution if needed
@@ -140,13 +140,13 @@ jobs:
 
       # Decode upload keystore and Play Store json -key
       - name: Decode Service Account Key JSON File
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v2
         id: service_account_json_file
         with:
           fileName: "serviceAccount.json"
           encodedString: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY_JSON }}
       - name: Decode Keystore File
-        uses: timheuer/base64-to-file@v1
+        uses: timheuer/base64-to-file@v2
         id: android_keystore
         with:
           fileName: "android_keystore.keystore"
