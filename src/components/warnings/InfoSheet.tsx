@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -7,7 +8,7 @@ import Text from '@components/common/AppText';
 import CloseButton from '@components/common/CloseButton';
 
 import { CustomTheme, GREEN, ORANGE, RED, YELLOW } from '@assets/colors';
-import useOrientation from '@utils/hooks';
+import { useOrientation } from '@utils/hooks';
 import { WarningType } from '@store/warnings/types';
 import { knownWarningTypes } from '@store/warnings/constants';
 import SeverityBar from './SeverityBar';
@@ -21,7 +22,7 @@ type InfoSheetProps = {
 
 const showPhysical = (type: WarningType): boolean => {
   return type.toLowerCase().includes('wind');
-}
+};
 
 const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   const { t } = useTranslation('map');
@@ -52,7 +53,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
           maxScaleFactor={1.5}
           type={type}
           severity={1}
-          physical={ showPhysical(type) ? physical : undefined }
+          physical={showPhysical(type) ? physical : undefined}
         />
       </View>
       <Text style={[styles.text, { color: colors.hourListText }]}>
@@ -62,19 +63,19 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
   );
 
   return (
-    <View testID="warnings_info_bottom_sheet" style={styles.wrapper}>
+    <SafeAreaView
+      testID="warnings_info_bottom_sheet"
+      style={styles.wrapper}
+      edges={['left', 'right']}>
+      <View style={styles.closeButtonContainer}>
+        <CloseButton
+          testID="warnings_info_bottom_sheet_close_button"
+          maxScaleFactor={1.5}
+          onPress={onClose}
+          accessibilityLabel={t('map:infoBottomSheet:closeAccessibilityLabel')}
+        />
+      </View>
       <View style={styles.sheetListContainer}>
-        <View style={styles.closeButtonContainer}>
-          <CloseButton
-            testID="warnings_info_bottom_sheet_close_button"
-            maxScaleFactor={1.5}
-            onPress={onClose}
-            accessibilityLabel={t(
-              'map:infoBottomSheet:closeAccessibilityLabel'
-            )}
-          />
-        </View>
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={isLandscape && styles.landscape}>
@@ -82,8 +83,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
             <View style={styles.sheetTitle}>
               <Text
                 accessibilityRole="header"
-                style={[styles.title, { color: colors.text }]}
-              >
+                style={[styles.title, { color: colors.text }]}>
                 {t('warnings:info:dailyTitle')}
               </Text>
             </View>
@@ -124,8 +124,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
             <View style={styles.sheetTitle}>
               <Text
                 accessibilityRole="header"
-                style={[styles.title, { color: colors.text }]}
-              >
+                style={[styles.title, { color: colors.text }]}>
                 {t('warnings:info:mapTitle')}
               </Text>
             </View>
@@ -150,8 +149,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
             <View style={styles.sheetTitle}>
               <Text
                 accessibilityRole="header"
-                style={[styles.title, { color: colors.text }]}
-              >
+                style={[styles.title, { color: colors.text }]}>
                 {t('warnings:info:timezone')}
               </Text>
             </View>
@@ -164,7 +162,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ onClose }) => {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

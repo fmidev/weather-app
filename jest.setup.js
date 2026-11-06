@@ -1,5 +1,9 @@
 /* global jest */
 
+jest.mock('@swmansion/react-native-bottom-sheet', () => ({
+  ModalBottomSheet: 'ModalBottomSheet',
+}));
+
 import '@utils/moment';
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';

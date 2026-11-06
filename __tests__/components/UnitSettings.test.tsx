@@ -1,11 +1,20 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import UnitSettings from '../../src/components/settings/UnitSettings';
 import { trackMatomoEvent } from '../../src/utils/matomo';
 
 const mockSheetOpen = jest.fn();
 const mockSheetClose = jest.fn();
+
+jest.mock('react-native-safe-area-context', () => ({
+  SafeAreaView: ({ children, ...props }: any) => {
+    const { View } = require('react-native');
+    return <View {...props}>{children}</View>;
+  },
+}));
 
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({
@@ -49,7 +58,7 @@ jest.mock('@components/common/ScalableIcon', () => ({
   },
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactActual = require('react');
   const { View } = require('react-native');
 
@@ -93,13 +102,19 @@ describe('UnitSettings', () => {
       },
     };
 
-    const { getByTestId, queryByText } = render(
+    const { getByTestId, queryByText, UNSAFE_getAllByType: getAllByType } = render(
       <UnitSettings units={units} onChangeUnits={onChangeUnits} />
     );
 
     expect(getByTestId('settings_units_header')).toBeTruthy();
     expect(queryByText('settings:precipitationIntensity')).toBeNull();
     expect(queryByText('F')).toBeNull();
+    const safeAreaContainers = getAllByType(SafeAreaView);
+    expect(safeAreaContainers).toHaveLength(2);
+    safeAreaContainers.forEach((container) => {
+      expect(container.props.edges).toEqual(['left', 'right']);
+      expect(container.findByType(ScrollView).props.testID).toBe('unit_sheet_container');
+    });
 
     fireEvent.press(getByTestId('settings_set_temperature'));
     expect(mockSheetOpen).toHaveBeenCalledTimes(1);

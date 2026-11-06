@@ -135,7 +135,7 @@ jest.mock('@components/common/AppText', () => ({
   },
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactActual = require('react');
   return {
     __esModule: true,
