@@ -2,6 +2,7 @@ export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
 
 export const GET_FAVORITES = 'GET_FAVORITES';
 export const ADD_FAVORITE = 'ADD_FAVORITE';
+export const REORDER_FAVORITES = 'REORDER_FAVORITES';
 export const DELETE_FAVORITE = 'DELETE_FAVORITE';
 export const DELETE_ALL_FAVORITES = 'DELETE_ALL_FAVORITES';
 
@@ -64,6 +65,12 @@ interface DeleteFavorite {
   id: number | string;
 }
 
+interface ReorderFavorites {
+  type: typeof REORDER_FAVORITES;
+  from: number;
+  to: number;
+}
+
 interface DeleteAllFavorites {
   type: typeof DELETE_ALL_FAVORITES;
 }
@@ -112,6 +119,7 @@ interface SetLoading {
 
 export type LocationActionTypes =
   | AddFavorite
+  | ReorderFavorites
   | DeleteAllFavorites
   | DeleteAllRecentSearches
   | DeleteFavorite

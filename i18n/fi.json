@@ -508,6 +508,10 @@
     "unSelected": "Ei valittu",
     "addToFavorites": "Lisää {{ location }} omiin paikkoihin",
     "removeFromFavorites": "Poista {{ location }} omista paikoista",
+    "reorderFavorite": "Muuta suosikin {{ location }} järjestystä",
+    "reorderFavoriteHint": "Muuta järjestystä raahaamalla tai siirtämällä suosikkia ylös tai alas.",
+    "moveFavoriteUp": "Siirrä suosikkia ylös",
+    "moveFavoriteDown": "Siirrä suosikkia alas",
     "selectedLocation": "Valittu paikka: {{ location }}",
     "loading": "Ladataan hakutuloksia",
     "infoSheet": {

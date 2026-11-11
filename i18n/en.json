@@ -508,6 +508,10 @@
     "unSelected": "Not selected",
     "addToFavorites": "Add {{ location }} to My Places",
     "removeFromFavorites": "Remove {{ location }} from My Places",
+    "reorderFavorite": "Reorder favorite {{ location }}",
+    "reorderFavoriteHint": "Drag to reorder, or move the favorite up or down.",
+    "moveFavoriteUp": "Move favorite up",
+    "moveFavoriteDown": "Move favorite down",
     "selectedLocation": "Selected location: {{ location }}",
     "loading": "Loading search results",
     "infoSheet": {

@@ -15,7 +15,7 @@ type ClearProps =
   | { clearTitle?: undefined; onClear?: never }
   | { clearTitle?: string; onClear: () => void };
 
-type AreaListProps = ClearProps & {
+export type AreaListProps = ClearProps & {
   elements: Location[];
   title: string;
   onSelect: (element: Location) => void;
@@ -23,6 +23,77 @@ type AreaListProps = ClearProps & {
   iconNameGetter?: (element: Location) => string;
   iconName?: string;
   testID?: string;
+  renderItem?: (element: Location, index: number) => React.ReactNode;
+};
+
+export const AreaListItem: React.FC<{
+  element: Location;
+  onSelect: (element: Location) => void;
+  onIconPress: (element: Location) => void;
+  iconName: string;
+  leadingAccessory?: React.ReactNode;
+}> = ({ element, onSelect, onIconPress, iconName, leadingAccessory }) => {
+  const { t } = useTranslation('searchScreen');
+  const { colors } = useTheme() as CustomTheme;
+  const name =
+    element.area && element.area !== element.name
+      ? `${element.name}, ${element.area}`
+      : element.name;
+
+  return (
+    <View
+      style={[styles.withBorderBottom, { borderBottomColor: colors.border }]}>
+      <View style={styles.listItem}>
+        {leadingAccessory}
+        <AccessibleTouchableOpacity
+          accessibilityRole="button"
+          accessibilityHint={t('choose')}
+          onPress={() => onSelect(element)}
+          style={styles.locationContainer}>
+          <View style={styles.listItem}>
+            {element.isGeolocation && (
+              <Icon
+                name="map-marker"
+                style={[styles.listLocationIcon, { color: colors.text }]}
+                height={12}
+              />
+            )}
+            <Text
+              testID="search_result_text"
+              style={[styles.resultText, { color: colors.text }]}>
+              {name}
+            </Text>
+          </View>
+        </AccessibleTouchableOpacity>
+        <AccessibleTouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel={
+            iconName === 'star-unselected'
+              ? t('addToFavorites', { location: name })
+              : t('removeFromFavorites', { location: name })
+          }
+          onPress={() => onIconPress(element)}>
+          <View
+            style={[
+              styles.actionButtonContainer,
+              { borderLeftColor: colors.border },
+            ]}>
+            <Icon
+              name={iconName}
+              size={20}
+              style={[
+                styles.iconStyle,
+                {
+                  color:
+                    iconName === 'star-unselected' ? GRAY_1 : colors.primary,
+                },
+              ]}
+            />
+          </View>
+        </AccessibleTouchableOpacity>
+      </View>
+    </View>
+  );
 };
 
 const AreaList: React.FC<AreaListProps> = ({
@@ -35,6 +106,7 @@ const AreaList: React.FC<AreaListProps> = ({
   clearTitle,
   onClear,
   testID,
+  renderItem,
 }) => {
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
@@ -54,92 +126,37 @@ const AreaList: React.FC<AreaListProps> = ({
           styles.listItem,
           { borderBottomColor: colors.border },
         ]}>
-          <View style={styles.shrink}>
-            <Text
-              accessibilityRole="header"
-              style={[styles.title, { color: colors.text }]}
-            >
-              {title}
-            </Text>
-          </View>
-          <View style={styles.remember}>
-            <Text
-              accessibilityRole="header"
-              style={[styles.regular, { color: colors.hourListText }]}>
-              {t('remember')}
-            </Text>
-          </View>
+        <View style={styles.shrink}>
+          <Text
+            accessibilityRole="header"
+            style={[styles.title, { color: colors.text }]}>
+            {title}
+          </Text>
+        </View>
+        <View style={styles.remember}>
+          <Text
+            accessibilityRole="header"
+            style={[styles.regular, { color: colors.hourListText }]}>
+            {t('remember')}
+          </Text>
+        </View>
       </View>
 
       <View>
-        {elements.map((element: Location) => {
-          const name =
-            element.area && element.area !== element.name
-              ? `${element.name}, ${element.area}`
-              : element.name;
-          return (
-            <View
-              key={`${title}-${element.id}`}
-              style={[
-                styles.withBorderBottom,
-                { borderBottomColor: colors.border },
-              ]}>
-              <View style={styles.listItem}>
-                <AccessibleTouchableOpacity
-                  accessibilityRole="button"
-                  accessibilityHint={t('choose')}
-                  onPress={() => onSelect(element)}
-                  style={styles.locationContainer}>
-                  <View style={styles.listItem}>
-                    {element.isGeolocation && (
-                      <Icon
-                        name="map-marker"
-                        style={[
-                          styles.listLocationIcon,
-                          { color: colors.text },
-                        ]}
-                        height={12}
-                      />
-                    )}
-                    <Text
-                      testID="search_result_text"
-                      style={[styles.resultText, { color: colors.text }]}>
-                      {name}
-                    </Text>
-                  </View>
-                </AccessibleTouchableOpacity>
-                <AccessibleTouchableOpacity
-                  accessibilityRole="button"
-                  accessibilityLabel={
-                    iconRight(element) === 'star-unselected'
-                      ? t('addToFavorites', { location: name })
-                      : t('removeFromFavorites', { location: name })
-                  }
-                  onPress={() => onIconPress(element)}>
-                  <View
-                    style={[
-                      styles.actionButtonContainer,
-                      { borderLeftColor: colors.border },
-                    ]}>
-                    <Icon
-                      name={iconRight(element)}
-                      size={20}
-                      style={[
-                        styles.iconStyle,
-                        {
-                          color:
-                            iconRight(element) === 'star-unselected'
-                              ? GRAY_1
-                              : colors.primary,
-                        },
-                      ]}
-                    />
-                  </View>
-                </AccessibleTouchableOpacity>
-              </View>
-            </View>
-          );
-        })}
+        {elements.map((element, index) => (
+          <React.Fragment key={element.id}>
+            {renderItem ? (
+              renderItem(element, index)
+            ) : (
+              <AreaListItem
+                element={element}
+                onSelect={onSelect}
+                onIconPress={onIconPress}
+                iconName={iconRight(element)}
+              />
+            )}
+          </React.Fragment>
+        ))}
       </View>
 
       {clearTitle && onClear && (
@@ -171,6 +188,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   regular: {
     fontSize: 16,
@@ -213,7 +231,7 @@ const styles = StyleSheet.create({
     height: 24,
   },
   shrink: {
-    flexShrink: 1
+    flexShrink: 1,
   },
   remember: {
     flexGrow: 1,

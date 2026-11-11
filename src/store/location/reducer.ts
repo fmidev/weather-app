@@ -1,6 +1,7 @@
 import { PersistConfig } from '@store/types';
 import {
   ADD_FAVORITE,
+  REORDER_FAVORITES,
   DELETE_ALL_FAVORITES,
   DELETE_FAVORITE,
   UPDATE_RECENT_SEARCHES,
@@ -44,6 +45,20 @@ export default (
         ...state,
         favorites: [...state.favorites, location].slice(-action.max),
       };
+    }
+
+    case REORDER_FAVORITES: {
+      const { from, to } = action;
+      if (
+        from === to || !Number.isInteger(from) || !Number.isInteger(to) ||
+        from < 0 || to < 0 ||
+        from >= state.favorites.length || to >= state.favorites.length
+      ) return state;
+
+      const favorites = [...state.favorites];
+      const [favorite] = favorites.splice(from, 1);
+      favorites.splice(to, 0, favorite);
+      return { ...state, favorites };
     }
 
     case DELETE_FAVORITE: {

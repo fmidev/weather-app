@@ -11,6 +11,7 @@ import {
   Location,
   LocationActionTypes,
   ADD_FAVORITE,
+  REORDER_FAVORITES,
   DELETE_FAVORITE,
   DELETE_ALL_FAVORITES,
   UPDATE_RECENT_SEARCHES,
@@ -36,6 +37,11 @@ export const addFavorite =
 export const deleteFavorite =
   (id: number | string) => (dispatch: Dispatch<LocationActionTypes>) => {
     dispatch({ type: DELETE_FAVORITE, id });
+  };
+
+export const reorderFavorites =
+  (from: number, to: number) => (dispatch: Dispatch<LocationActionTypes>) => {
+    dispatch({ type: REORDER_FAVORITES, from, to });
   };
 
 export const deleteAllFavorites =

@@ -36,6 +36,7 @@ import {
 
 import {
   addFavorite as addFavoriteAction,
+  reorderFavorites as reorderFavoritesAction,
   deleteFavorite as deleteFavoriteAction,
   deleteAllFavorites as deleteAllFavoritesAction,
   updateRecentSearches as updateRecentSearchesAction,
@@ -49,6 +50,7 @@ import { Location } from '@store/location/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '@store/map/actions';
 
 import AreaList from '@components/search/AreaList';
+import FavoriteList from '@components/search/FavoriteList';
 
 import { getGeolocation } from '@utils/helpers';
 import { CustomTheme } from '@assets/colors';
@@ -69,6 +71,7 @@ const mapStateToProps = (state: State) => ({
 
 const mapDispatchToProps = {
   addFavorite: addFavoriteAction,
+  reorderFavorites: reorderFavoritesAction,
   deleteFavorite: deleteFavoriteAction,
   deleteAllFavorites: deleteAllFavoritesAction,
   setAnimateToArea: setAnimateToAreaAction,
@@ -97,6 +100,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   search,
   loading,
   addFavorite,
+  reorderFavorites,
   deleteFavorite,
   deleteAllFavorites,
   setAnimateToArea,
@@ -114,6 +118,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
+  const [draggingFavorite, setDraggingFavorite] = useState(false);
   const [debouncedValue, setDebouncedValue] = React.useState('');
 
   React.useEffect(() => {
@@ -236,6 +241,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         )}
       </View>
       <ScrollView
+        scrollEnabled={!draggingFavorite}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <View style={styles.results}>
@@ -302,9 +308,14 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
             </View>
           </AccessibleTouchableOpacity>
           {favorites.length > 0 && (
-            <AreaList
+            <FavoriteList
               elements={favorites}
               title={t('favorites')}
+              onDragStateChange={setDraggingFavorite}
+              onReorder={(from, to) => {
+                trackMatomoEvent('User action', 'Search', 'Reorder favourites');
+                reorderFavorites(from, to);
+              }}
               onSelect={(location) => {
                 trackMatomoEvent(
                   'User action',
@@ -322,7 +333,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
                 deleteFavorite(location.id);
                 updateRecentSearches(location);
               }}
-              iconName="star-selected"
               clearTitle={t('clearFavorites')}
               onClear={() => {
                 trackMatomoEvent(
@@ -400,6 +410,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   searchIcon: {
     marginRight: 8,
@@ -438,6 +449,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
 });
 
