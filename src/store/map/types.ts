@@ -1,4 +1,5 @@
 import { Region } from 'react-native-maps';
+import type { MapTileFormat, VectorTileSettings } from '@config';
 
 export const UPDATE_SLIDER_TIME = 'UPDATE_SLIDER_TIME';
 export const ANIMATE_TO_AREA = 'ANIMATE_TO_AREA';
@@ -82,7 +83,22 @@ export interface Layer {
   start?: string;
   end?: string;
   styles: string | { dark: string; light: string };
+  vectorStyles?: {
+    dark: VectorLayerStyle[];
+    light: VectorLayerStyle[];
+  };
 }
+
+export type VectorLayerStyle = {
+  id?: string;
+  type: 'fill' | 'line';
+  'source-layer': string;
+  paint?: Record<string, any>;
+  layout?: Record<string, any>;
+  filter?: any[];
+  minzoom?: number;
+  maxzoom?: number;
+};
 
 export interface TimeseriesLayer {
   start?: string;
@@ -110,6 +126,8 @@ export interface MapOverlay {
   data?: TimeseriesData[];
   step: number;
   tileSize?: number;
+  tileFormat?: MapTileFormat;
+  mvt?: VectorTileSettings;
 }
 
 export interface Error {

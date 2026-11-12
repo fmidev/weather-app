@@ -234,6 +234,45 @@ describe('TimeSlider', () => {
     );
   });
 
+  it('continues from the first step after reaching the last step', () => {
+    const store = createStore({
+      mock: {
+        activeOverlayId: 1,
+        sliderTime: 1710007200,
+        overlay: {
+          step: 60,
+          observation: { end: '2024-03-09T16:00:00Z' },
+        },
+        clockType: 24,
+        animationSpeed: 50,
+      },
+    });
+
+    const { getByA11yLabel, UNSAFE_getByType: unsafeGetByType } = render(
+      <Provider store={store as any}>
+        <TimeSlider />
+      </Provider>
+    );
+    const scrollView = unsafeGetByType(ScrollView);
+
+    fireEvent.scroll(scrollView, {
+      nativeEvent: { contentOffset: { x: 120 } },
+    });
+    fireEvent.press(getByA11yLabel('Play'));
+    mockUpdateSliderTime.mockClear();
+
+    for (let tick = 0; tick < 35; tick += 1) {
+      act(() => {
+        jest.advanceTimersByTime(50);
+      });
+      fireEvent(scrollView, 'momentumScrollEnd', {
+        nativeEvent: { contentOffset: { x: 120 } },
+      });
+    }
+
+    expect(mockUpdateSliderTime).toHaveBeenCalledWith(1710000000);
+  });
+
   it('pauses animation when app goes to background', () => {
     const store = createStore({
       mock: {

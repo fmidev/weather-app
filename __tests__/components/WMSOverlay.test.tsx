@@ -166,6 +166,114 @@ describe('WMSOverlay', () => {
     );
   });
 
+  it('passes the tile format to WMS tiles', () => {
+    const store = createStore({
+      mock: {
+        activeOverlayId: 1,
+        sliderTime: 1735693200,
+      },
+    });
+    const vectorLayers = [
+      {
+        id: 'precipitation',
+        type: 'fill',
+        'source-layer': 'precipitation_rate',
+      },
+    ];
+    const vectorOverlay = {
+      ...overlay,
+      tileFormat: 'pbf',
+      mvt: { value: 'temperature_numeric_pos' },
+      observation: {
+        ...overlay.observation,
+        vectorStyles: { light: vectorLayers, dark: vectorLayers },
+      },
+      forecast: {
+        ...overlay.forecast,
+        vectorStyles: { light: vectorLayers, dark: vectorLayers },
+      },
+    };
+
+    render(
+      <Provider store={store as any}>
+        <WMSOverlay overlay={vectorOverlay as any} library="maplibre" />
+      </Provider>
+    );
+
+    expect(mockMemoizedWMSTile).toHaveBeenCalledTimes(3);
+    expect(mockMemoizedWMSTile).toHaveBeenCalledWith(
+      expect.objectContaining({
+        library: 'maplibre',
+        tileFormat: 'pbf',
+        mvt: { value: 'temperature_numeric_pos' },
+        vectorLayers,
+      })
+    );
+    expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        opacity: 1,
+        urlTemplate: expect.stringContaining('time=2025-01-01T01:00:00.000Z'),
+      })
+    );
+    expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        opacity: 0,
+        urlTemplate: expect.stringContaining('time=2025-01-01T00:00:00.000Z'),
+      })
+    );
+    expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
+      3,
+      expect.objectContaining({
+        opacity: 0,
+        urlTemplate: expect.stringContaining('time=2025-01-01T02:00:00.000Z'),
+      })
+    );
+  });
+
+  it('preloads the first vector tile while displaying the last one', () => {
+    const store = createStore({
+      mock: {
+        activeOverlayId: 1,
+        sliderTime: 1735700400, // last tile
+      },
+    });
+    const vectorOverlay = {
+      ...overlay,
+      tileFormat: 'pbf',
+    };
+
+    render(
+      <Provider store={store as any}>
+        <WMSOverlay overlay={vectorOverlay as any} library="maplibre" />
+      </Provider>
+    );
+
+    expect(mockMemoizedWMSTile).toHaveBeenCalledTimes(3);
+    expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        opacity: 1,
+        urlTemplate: expect.stringContaining('time=2025-01-01T03:00:00.000Z'),
+      })
+    );
+    expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        opacity: 0,
+        urlTemplate: expect.stringContaining('time=2025-01-01T02:00:00.000Z'),
+      })
+    );
+    expect(mockMemoizedWMSTile).toHaveBeenNthCalledWith(
+      3,
+      expect.objectContaining({
+        opacity: 0,
+        urlTemplate: expect.stringContaining('time=2025-01-01T00:00:00.000Z'),
+      })
+    );
+  });
+
   it('renders only current, previous and next tile on ios for react-native-maps', () => {
     setPlatformOS('ios');
 
