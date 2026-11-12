@@ -4,6 +4,7 @@ import { act, fireEvent, render } from '@testing-library/react-native';
 
 import FavoriteList from '@components/search/FavoriteList';
 import type { Location } from '@store/location/types';
+import type { DragAutoScroll } from '@utils/hooks';
 
 const mockIcon = (props: any) => <Text {...props}>icon</Text>;
 const mockConfigGet = jest.fn();
@@ -60,7 +61,7 @@ const mockDropAnimation = (deferred = false) => {
   return { complete: () => act(() => complete()), stop, timing };
 };
 
-const mountList = (locations = elements) => {
+const mountList = (locations = elements, autoScroll?: DragAutoScroll) => {
   const props = {
     elements: locations,
     title: 'Favorites',
@@ -68,6 +69,7 @@ const mountList = (locations = elements) => {
     onIconPress: jest.fn(),
     onReorder: jest.fn(),
     onDragStateChange: jest.fn(),
+    autoScroll,
   };
   const view = render(<FavoriteList {...props} />);
   locations.forEach(({ id }, index) => {
@@ -186,6 +188,109 @@ describe('FavoriteList', () => {
     fireEvent(handle, 'responderRelease');
     expect(view.props.onReorder).toHaveBeenCalledWith(0, 1);
   });
+
+  it.each([
+    [1, 200, 650, 0, 10],
+    [11, 650, 200, 10, 0],
+  ])(
+    'moves favorite %s across a long list when only the scroll offset changes',
+    (id, initial, final, from, to) => {
+      const locations = Array.from({ length: 11 }, (_, index) => ({
+        ...elements[0],
+        id: index + 1,
+      }));
+      let offset = initial;
+      const autoScroll: DragAutoScroll = {
+        getOffset: () => offset,
+        start: jest.fn(),
+        move: jest.fn(),
+        stop: jest.fn(),
+      };
+      const view = mountList(locations, autoScroll);
+      const handle = view.getByTestId(`favorite-drag-handle-${id}`);
+      fireEvent(handle, 'responderGrant', { nativeEvent: { pageY: 300 } });
+      expect(autoScroll.start).toHaveBeenCalledWith(300, expect.any(Function));
+      const onScroll = (autoScroll.start as jest.Mock).mock.calls[0][1];
+      offset = final;
+      act(() => onScroll(offset));
+      expect(
+        StyleSheet.flatten(view.getByTestId(`favorite-row-${id}`).props.style)
+          .transform
+      ).toEqual([{ translateY: final - initial }]);
+      expect(view.props.onReorder).not.toHaveBeenCalled();
+      fireEvent(handle, 'responderRelease');
+      expect(autoScroll.stop).toHaveBeenCalled();
+      expect(view.props.onReorder).toHaveBeenCalledWith(from, to);
+    }
+  );
+
+  it('combines the latest finger position with scrolling and allows returning to the original position', () => {
+    let offset = 200;
+    const autoScroll: DragAutoScroll = {
+      getOffset: () => offset,
+      start: jest.fn(),
+      move: jest.fn(),
+      stop: jest.fn(),
+    };
+    const view = mountList(elements, autoScroll);
+    const handle = view.getByTestId('favorite-drag-handle-1');
+    fireEvent(handle, 'responderGrant', { nativeEvent: { pageY: 100 } });
+    fireEvent(handle, 'responderMove', { nativeEvent: { pageY: 120 } });
+    const onScroll = (autoScroll.start as jest.Mock).mock.calls[0][1];
+    offset = 245;
+    act(() => onScroll(offset));
+    expect(
+      StyleSheet.flatten(view.getByTestId('favorite-row-1').props.style)
+        .transform
+    ).toEqual([{ translateY: 65 }]);
+    expect(
+      StyleSheet.flatten(view.getByTestId('favorite-row-2').props.style)
+        .transform
+    ).toEqual([{ translateY: -45 }]);
+    offset = 200;
+    act(() => onScroll(offset));
+    expect(
+      StyleSheet.flatten(view.getByTestId('favorite-row-1').props.style)
+        .transform
+    ).toEqual([{ translateY: 20 }]);
+    fireEvent(handle, 'responderRelease');
+    expect(view.props.onReorder).not.toHaveBeenCalled();
+  });
+
+  it.each(['release', 'terminate', 'update', 'unmount'])(
+    'stops edge scrolling on %s',
+    (action) => {
+      const autoScroll: DragAutoScroll = {
+        getOffset: () => 0,
+        start: jest.fn(),
+        move: jest.fn(),
+        stop: jest.fn(),
+      };
+      const animation = mockDropAnimation(true);
+      const view = mountList(elements, autoScroll);
+      const handle = view.getByTestId('favorite-drag-handle-1');
+      fireEvent(handle, 'responderGrant', { nativeEvent: { pageY: 100 } });
+      fireEvent(handle, 'responderMove', { nativeEvent: { pageY: 170 } });
+      expect(autoScroll.move).toHaveBeenCalledWith(170);
+      if (action === 'unmount') view.unmount();
+      else if (action === 'update')
+        view.update(
+          <FavoriteList {...view.props} elements={elements.slice(1)} />
+        );
+      else
+        fireEvent(
+          handle,
+          action === 'release' ? 'responderRelease' : 'responderTerminate'
+        );
+      // Stop at release, without waiting for the settling animation to finish.
+      expect(autoScroll.stop).toHaveBeenCalled();
+      expect(view.props.onReorder).not.toHaveBeenCalled();
+      animation.complete();
+      if (action === 'release')
+        expect(view.props.onReorder).toHaveBeenCalledWith(0, 1);
+      else expect(view.props.onReorder).not.toHaveBeenCalled();
+    }
+  );
 
   it('settles into the drop position without resetting the native transform before the new order arrives', () => {
     const animation = mockDropAnimation(true);

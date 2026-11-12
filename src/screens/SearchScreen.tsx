@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 
-import { useAccessibilityLanguage } from '@utils/hooks';
+import { useAccessibilityLanguage, useDragAutoScroll } from '@utils/hooks';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
@@ -119,6 +119,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const [value, setValue] = useState('');
   const [draggingFavorite, setDraggingFavorite] = useState(false);
+  const favoriteScroll = useDragAutoScroll();
   const [debouncedValue, setDebouncedValue] = React.useState('');
 
   React.useEffect(() => {
@@ -241,6 +242,11 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
         )}
       </View>
       <ScrollView
+        ref={favoriteScroll.scrollViewRef}
+        onLayout={favoriteScroll.onLayout}
+        onContentSizeChange={favoriteScroll.onContentSizeChange}
+        onScroll={favoriteScroll.onScroll}
+        scrollEventThrottle={16}
         scrollEnabled={!draggingFavorite}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
@@ -312,6 +318,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               elements={favorites}
               title={t('favorites')}
               onDragStateChange={setDraggingFavorite}
+              autoScroll={favoriteScroll.autoScroll}
               onReorder={(from, to) => {
                 trackMatomoEvent('User action', 'Search', 'Reorder favourites');
                 reorderFavorites(from, to);

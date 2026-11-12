@@ -71,6 +71,8 @@ describe('SearchScreen', () => {
     const props = createProps({ favorites: [{ id: 1, name: 'Helsinki' }, { id: 2, name: 'Oulu' }] });
     const view = render(<SearchScreen {...props as any} />);
     const list = view.UNSAFE_getByType(FavoriteList);
+    fireEvent.scroll(view.UNSAFE_getByType(ScrollView), { nativeEvent: { contentOffset: { y: 120 } } });
+    expect(list.props.autoScroll.getOffset()).toBe(120);
     act(() => list.props.onReorder(1, 0));
     expect(props.reorderFavorites).toHaveBeenCalledWith(1, 0);
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Search', 'Reorder favourites');

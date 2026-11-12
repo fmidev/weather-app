@@ -13,7 +13,7 @@ import Icon from '@components/common/ScalableIcon';
 import { Config } from '@config';
 import { CustomTheme } from '@assets/colors';
 import type { Location } from '@store/location/types';
-import { useAccessibilityLanguage } from '@utils/hooks';
+import { useAccessibilityLanguage, type DragAutoScroll } from '@utils/hooks';
 import AreaList, { AreaListItem, AreaListProps } from './AreaList';
 
 type Props = AreaListProps & {
@@ -22,9 +22,17 @@ type Props = AreaListProps & {
   iconNameGetter?: never;
   onReorder: (from: number, to: number) => void;
   onDragStateChange: (dragging: boolean) => void;
+  autoScroll?: DragAutoScroll;
 };
 
-type Drag = { from: number; to: number; startY: number; elements: Location[] };
+type Drag = {
+  from: number;
+  to: number;
+  startY: number;
+  pageY: number;
+  startScrollOffset: number;
+  elements: Location[];
+};
 type RowLayout = { y: number; height: number };
 
 const FavoriteList: React.FC<Props> = ({
@@ -33,6 +41,7 @@ const FavoriteList: React.FC<Props> = ({
   onIconPress,
   onReorder,
   onDragStateChange,
+  autoScroll,
   ...props
 }) => {
   const { t } = useTranslation('searchScreen');
@@ -68,6 +77,7 @@ const FavoriteList: React.FC<Props> = ({
 
   const cancelDrag = useCallback(() => {
     if (!drag.current) return;
+    autoScroll?.stop();
     drag.current = null;
     settling.current = false;
     dropAnimation.current?.stop();
@@ -76,21 +86,25 @@ const FavoriteList: React.FC<Props> = ({
     // native view back before React commits the new order and removes its transform.
     setDragState(null);
     onDragStateChange(false);
-  }, [onDragStateChange]);
+  }, [autoScroll, onDragStateChange]);
 
   // Cancel if the list changes, reordering is disabled, or the component is removed.
   useEffect(() => () => cancelDrag(), [elements, reorderEnabled, cancelDrag]);
 
-  const moveDrag = (pageY: number) => {
+  const moveDrag = (
+    pageY: number,
+    scrollOffset = autoScroll?.getOffset() ?? 0
+  ) => {
     const current = drag.current;
     if (!current || settling.current) return;
+    current.pageY = pageY;
     const rows = elements.map(({ id }) => layouts.current.get(id)!);
     const source = rows[current.from];
     const last = rows[rows.length - 1];
     const offset = Math.max(
       rows[0].y - source.y,
       Math.min(
-        pageY - current.startY,
+        pageY - current.startY + scrollOffset - current.startScrollOffset,
         last.y + last.height - source.y - source.height
       )
     );
@@ -113,6 +127,7 @@ const FavoriteList: React.FC<Props> = ({
   const finishDrag = () => {
     const current = drag.current;
     if (!current || settling.current) return;
+    autoScroll?.stop();
     const source = layouts.current.get(elements[current.from].id)!;
     const target = layouts.current.get(elements[current.to].id)!;
     const toValue =
@@ -226,14 +241,21 @@ const FavoriteList: React.FC<Props> = ({
                         from: index,
                         to: index,
                         startY: pageY,
+                        pageY,
+                        startScrollOffset: autoScroll?.getOffset() ?? 0,
                         elements,
                       };
                       setDragState(drag.current);
                       onDragStateChange(true);
+                      autoScroll?.start(pageY, (scrollOffset) => {
+                        if (drag.current)
+                          moveDrag(drag.current.pageY, scrollOffset);
+                      });
                     }}
-                    onResponderMove={({ nativeEvent: { pageY } }) =>
-                      moveDrag(pageY)
-                    }
+                    onResponderMove={({ nativeEvent: { pageY } }) => {
+                      autoScroll?.move(pageY);
+                      moveDrag(pageY);
+                    }}
                     onResponderRelease={finishDrag}
                     onResponderTerminate={cancelDrag}>
                     <Icon
