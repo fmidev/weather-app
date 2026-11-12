@@ -5085,10 +5085,10 @@ gensync@^1.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-geolib@3.3.14:
-  version "3.3.14"
-  resolved "https://registry.yarnpkg.com/geolib/-/geolib-3.3.14.tgz#1ecba6b9cdbe7da65150d8b06fc9633b157971c5"
-  integrity sha512-uQ1772h3OjhWvL/HhSRZTMjBKIKoc4wFksLDqzqOkuG/2TgBbTwFamU0Disx3sNFk/BOweHyhKoVaYDuLIpsxQ==
+geolib@4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/geolib/-/geolib-4.0.2.tgz#56f1824e1d5b01ad69a30c85f3eff457f5026f5e"
+  integrity sha512-QvBQvSO03XO8TV+/Dk6UOgAolqZlXDOs2ebvLg6Qd6WDulbpdcutjYLXo90GzUjF2rr7NAZMENk+MAKHjShoVw==
 
 get-caller-file@^2.0.1, get-caller-file@^2.0.5:
   version "2.0.5"
