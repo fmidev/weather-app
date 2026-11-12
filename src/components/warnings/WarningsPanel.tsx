@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   ViewInstance,
@@ -56,8 +56,10 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
+  const [detailsFocusRequest, setDetailsFocusRequest] = useState(0);
   const { infoSheetRef, openInfo } = useWarningsInfo(!loading && !error);
   const headerRef = useRef<ViewInstance>(null);
+  const detailsRef = useRef<ViewInstance>(null);
 
   moment.locale(i18n.language);
 
@@ -65,14 +67,30 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
     setSelectedDay(route.params?.day || 0);
   }, [route.params?.day, setSelectedDay]);
 
-  useFocusEffect(() => {
+  useFocusEffect(useCallback(() => {
+    if (loading || error) return;
     if (headerRef && headerRef.current) {
       const reactTag = findNodeHandle(headerRef.current);
       if (reactTag) {
         AccessibilityInfo.setAccessibilityFocus(reactTag);
       }
     }
-  });
+  }, [loading, error]));
+
+  useEffect(() => {
+    if (detailsFocusRequest === 0) return;
+
+    // Wait until the selected day's accessible content has been committed.
+    const frame = requestAnimationFrame(() => {
+      if (!detailsRef.current) return;
+      const reactTag = findNodeHandle(detailsRef.current);
+      if (reactTag != null) {
+        AccessibilityInfo.setAccessibilityFocus(reactTag);
+      }
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [detailsFocusRequest]);
 
   if (loading) {
     return (
@@ -103,6 +121,8 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   return (
     <View
       testID="warnings_panel"
+      accessible={false}
+      importantForAccessibility="no"
       style={[
         styles.cardWrapper,
         {
@@ -161,11 +181,12 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                 borderColor: colors.border,
               },
             ]}>
-            {dailyWarnings.map(({ severity, date, count }, index) => (
+            {dailyWarnings.map(({ severity, date, count, warnings }, index) => (
               <View key={date}>
                 {count > 0 && (
                   <View
                     accessibilityElementsHidden
+                    importantForAccessibility="no-hide-descendants"
                     style={[
                       styles.countBadge,
                       {
@@ -184,12 +205,19 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                   onPress={() => {
                     trackMatomoEvent('User action', 'Warnings', 'Select day '+(index+1)+' / ('+count+' warnings) / '+severity);
                     setSelectedDay(index);
+                    setDetailsFocusRequest(request => request + 1);
                   }}
                   accessibilityRole="button"
                   accessibilityState={{ selected: index === selectedDay }}
-                  accessibilityLabel={`${moment(date).format(
-                    'dddd DD MMMM'
-                  )}, ${t('hasWarnings')}: ${count}, ${t('warnings:severities:'+severity)}`}
+                  accessibilityLabel={[
+                    moment(date).format('dddd DD MMMM'),
+                    `${t('hasWarnings')}: ${count}`,
+                    t('warnings:severities:'+severity),
+                    ...Array.from(
+                      new Set(warnings.map(({ type }) => type)),
+                      type => t(`types.${type}`)
+                    ),
+                  ].join(', ')}
                   accessibilityHint={
                     index === selectedDay ? '' : t('dateOpenHint')
                   }>
@@ -245,7 +273,10 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               </View>
             ))}
           </View>
-          <DayDetails warnings={dailyWarnings[selectedDay].warnings} />
+          <DayDetails
+            warnings={dailyWarnings[selectedDay].warnings}
+            accessibilityFocusRef={detailsRef}
+          />
         </View>
       </View>
       <BottomSheet

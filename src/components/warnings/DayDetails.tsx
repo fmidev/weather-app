@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ViewInstance } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
+import AccessibleView from '@components/common/AccessibleView';
 
 import { CustomTheme } from '@assets/colors';
 import { Warning } from '@store/warnings/types';
@@ -27,9 +28,10 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type DayDetailsProps = PropsFromRedux & {
   warnings: Warning[];
+  accessibilityFocusRef?: React.Ref<ViewInstance>;
 };
 
-const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
+const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings, accessibilityFocusRef }) => {
   const { t, i18n } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
   const [openWarnings, setOpenWarnings] = useState<{
@@ -46,18 +48,26 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
   return (
     <View style={styles.container}>
       {warnings.length === 0 && (
-        <View>
+        <AccessibleView ref={accessibilityFocusRef} accessible>
           <Text style={[styles.description, { color: colors.hourListText }]}>
             {t('warnings:noWarningsText')}
           </Text>
-        </View>
+        </AccessibleView>
       )}
       {warnings.map(({ description, type, severity, duration, physical }, index) => (
         <View
           key={`${type}-${duration.startTime}-${duration.endTime}-${severity}`}>
           <View style={styles.flex}>
             <AccessibleTouchableOpacity
+              ref={index === 0 ? accessibilityFocusRef : undefined}
               accessibilityRole="button"
+              accessibilityLabel={`${t(`types.${type}`)} - ${t(
+                'valid'
+              )} ${moment(duration.startTime).format(
+                `DD MMMM ${timeFormat}`
+              )} - ${moment(duration.endTime).format(
+                `DD MMMM ${timeFormat}`
+              )}`}
               accessibilityHint={
                 openWarnings[index]
                   ? t('lessAccessibilityHint')
@@ -83,14 +93,7 @@ const DayDetails: React.FC<DayDetailsProps> = ({ clockType, warnings }) => {
               </View>
               <View style={styles.flex}>
                 <Text
-                  style={[styles.headerText, { color: colors.hourListText }]}
-                  accessibilityLabel={`${t(`types.${type}`)} - ${t(
-                    'valid'
-                  )} ${moment(duration.startTime).format(
-                    `DD MMMM ${timeFormat}`
-                  )} - ${moment(duration.endTime).format(
-                    `DD MMMM ${timeFormat}`
-                  )}`}>
+                  style={[styles.headerText, { color: colors.hourListText }]}>
                   <Text style={styles.bold}>{`${t(`types.${type}`)}`}</Text>
                   {` – ${t('valid')} ${
                     moment(duration.startTime).formatDateTime('dateTime', locale)
