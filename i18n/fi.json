@@ -1,5 +1,9 @@
 {
   "weather": {
+    "favoriteLocations": "Suosikkipaikkakunnat",
+    "forecastUnavailable": "Ennustetta ei ole saatavilla",
+    "selectFavoriteLocationHint": "Näytä paikkakunnan ennuste ja siirry näkymän alkuun",
+    "selectFavoriteLocationWithoutScrollHint": "Näytä paikkakunnan ennuste",
     "charts": {
       "forecastAccessibilityLabel": "10 vuorokauden sääennusteen esitys graafina",
       "observationAccessibilityLabel": "{{ parameter }} havainto graafina",
@@ -56,7 +60,7 @@
   },
   "forecast": {
     "nextHourForecast": "Ennuste",
-    "nextHourForecastDescription": "Sää tällä hetkellä",
+    "nextHourForecastDescription": "Sääennuste kello {{time}}",
     "precipitation": "sadetta",
     "celsius": "Celsius-astetta",
     "fahrenheit": "Fahrenheit-astetta",
@@ -101,9 +105,24 @@
     "today": "Tänään",
     "tomorrow": "Huomenna",
     "precipitationMissing": "Sademäärä puuttuu",
+    "precipitationStrip": {
+      "morning": "aamupäivällä",
+      "afternoon": "iltapäivällä",
+      "evening": "illalla",
+      "night": "yöllä",
+      "periodList": "{{first}} ja {{last}}",
+      "rainDuring": "Sadetta {{periods}}",
+      "rainAllDay": "Sataa koko päivän ajan",
+      "rainAlmostAllDay": "Sataa lähes koko päivän ajan",
+      "noRainAllDay": "Ei sadetta koko päivänä",
+      "noRainDuring": "Ei sadetta {{periods}}",
+      "totalPrecipitation": "kokonaissademäärä {{amount}} {{unit}}",
+      "missingTotal": "kokonaissademäärä puuttuu"
+    },
     "popMissing": "Sateen todennäköisyys puuttuu",
     "minus": "miinus",
     "showHourlyForecast": "Näytä päiväkohtainen tuntiennuste",
+    "hideHourlyForecast": "Piilota päiväkohtainen tuntiennuste",
     "params": {
       "temperature": "lämpötila: {{ value }} {{ unit }}.",
       "feelsLike": "tuntuu kuin: {{ value }} {{ unit }}.",
@@ -134,6 +153,8 @@
       "pressure": "Ilmanpaine ({{ unit }})",
       "uvCumulated": "UV indeksi",
       "dayLength": "Päivän pituus",
+      "otherSettingsTitle": "Muut asetukset",
+      "showSingleHourlyForecast": "Näytä vain yksi tuntiennuste",
       "selectAccessibilityHint": "Kaksoisnapauta valitaksesi",
       "unSelectAccessibilityHint": "Kaksoisnapauta poistaaksesi valinta",
       "restoreDefaultHint": "Palauta oletusvalinta"
@@ -354,7 +375,11 @@
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
     "maplibre": "MapLibre",
-    "mapLibrarySettingHint": "Vaihda sovelluksen karttakirjastoksi:"
+    "mapLibrarySettingHint": "Vaihda sovelluksen karttakirjastoksi:",
+    "forecastBackground": "Seuraavan tunnin ennusteen tausta",
+    "forecastBackgroundImage": "Taustakuva",
+    "forecastBackgroundGradient": "Taustaväri",
+    "forecastBackgroundHint": "Vaihda seuraavan tunnin ennusteen taustaksi:"
   },
   "map": {
     "searchButtonAccessibilityLabel": "Hae paikkaa",
@@ -445,7 +470,7 @@
         "arrow4": "Kovaa tuulta 14-21 m/s",
         "arrow5": "Myrskyä 21-32 m/s",
         "arrow6": "Hirmumyrskyä 32-> m/s",
-        "layerInfo" : {
+        "layerInfo": {
           "short": "Tasolla esitetään tuulen suunta ja voimakkuus 1h aika-askeleella seuraavasta alkavasta tunnista 24h eteenpäin.",
           "long": "Tasolla esitetään tuulen suunta ja voimakkuus 3h aika-askeleella seuraavasta alkavasta tunnista kolme päivää eteenpäin."
         }
@@ -457,7 +482,7 @@
         "temperatureMinus20": "-10°C",
         "temperature0": "0°C",
         "temperature20": "20°C",
-        "layerInfo" : {
+        "layerInfo": {
           "short": "Tasolla esitetään lämpötila 1h aika-askeleella seuraavasta alkavasta tunnista 24h eteenpäin.",
           "long": "Tasolla esitetään lämpötila 3h aika-askeleella seuraavasta alkavasta tunnista kolme päivää eteenpäin."
         }
@@ -709,6 +734,8 @@
     "tryAgain": "Yritä uudelleen"
   },
   "accessibility": {
+    "switchOn": "Päällä",
+    "switchOff": "Pois päältä",
     "link1": "Laki digitaalisten palvelujen tarjoamisesta (306/2019)",
     "link2": "Saavutettavuusvaatimukset-verkkosivusto",
     "openInBrowser": "Avaa selaimessa"
@@ -736,9 +763,11 @@
     "hoursSpoken": "tuntia",
     "minutesSpoken": "minuuttia"
   },
-  "unitAbbreviations": {
-  },
+  "unitAbbreviations": {},
   "markdownRenderer": {
-    "radarLegendDescription": "Sateen voimakkuuden asteikko"
+    "moveToHint": "Siirry laitteen sähköpostiohjelmaan",
+    "openInBrowser": "Avaa selaimessa",
+    "radarLegendDescription": "Sateen voimakkuuden asteikko",
+    "version": "versio"
   }
 }

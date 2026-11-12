@@ -1,7 +1,13 @@
 import { Platform } from 'react-native';
 import { isAxiosError } from 'axios';
+import Ajv from 'ajv/dist/2020';
 
-import { ForecastLocation, TimeStepDataSet } from '@store/forecast/types';
+import {
+  ForecastLocation,
+  TimeStepData,
+  TimeStepDataSet,
+  WeatherData,
+} from '@store/forecast/types';
 import {
   ObservationLocation,
   ObservationDataRaw,
@@ -9,29 +15,132 @@ import {
 import { Config } from '@config';
 import i18n from '@i18n';
 import axiosClient from '@utils/axiosClient';
-import { TimeseriesLocation } from '@store/location/types';
+import { trackMatomoEvent } from '@utils/matomo';
+import { Location, TimeseriesLocation } from '@store/location/types';
 import packageJSON from '../../package.json';
-import { findNearestGeoMagneticObservationStation, GeoMagneticStation, isAuroraBorealisLikely } from '@utils/geoMagneticStations';
+import forecastSchema from '../schemas/timeseries-forecast.schema.json';
+import favoriteForecastSchema from '../schemas/timeseries-favorite-forecast.schema.json';
+import uvSchema from '../schemas/timeseries-uv.schema.json';
+import geoMagneticObservationsSchema from '../schemas/timeseries-geomagnetic-observations.schema.json';
+import observationsSchema from '../schemas/timeseries-observations.schema.json';
+import dailyObservationsSchema from '../schemas/timeseries-daily-observations.schema.json';
+import reverseGeolocationSchema from '../schemas/timeseries-reverse-geolocation.schema.json';
+import {
+  findNearestGeoMagneticObservationStation,
+  isAuroraBorealisLikely,
+} from '@utils/geoMagneticStations';
+
+const ajv = new Ajv();
+const validateForecast = ajv.compile(forecastSchema);
+const validateFavoriteForecasts = ajv.compile<WeatherData>(
+  favoriteForecastSchema
+);
+const validateUVForecast = ajv.compile(uvSchema);
+const validateGeoMagneticObservations = ajv.compile(
+  geoMagneticObservationsSchema
+);
+const validateObservations = ajv.compile(observationsSchema);
+const validateDailyObservations = ajv.compile(dailyObservationsSchema);
+const validateReverseGeolocation = ajv.compile<{
+  [geoid: string]: TimeseriesLocation[];
+}>(reverseGeolocationSchema);
 
 const isLocationValid = (
   location: ForecastLocation | ObservationLocation
-): boolean =>
-  location.latlon !== undefined;
+): boolean => location.latlon !== undefined;
+
+const FORECAST_META_PARAMS = [
+  'epochtime',
+  'localtime',
+  'sunrise',
+  'sunset',
+  'sunriseToday',
+  'sunsetToday',
+  'dayLength',
+  'moonPhase',
+  'modtime',
+  'dark',
+];
+
+export const getAuroraBorealisLikelihood = async (
+  location: ForecastLocation,
+  country: string
+): Promise<boolean> => {
+  const {
+    apiUrl,
+    fmiApiKey,
+    observation: { geoMagneticObservations },
+  } = Config.get('weather');
+  if (
+    !location.latlon ||
+    geoMagneticObservations?.enabled !== true ||
+    !geoMagneticObservations.countryCodes.includes(country)
+  )
+    return false;
+
+  const [lat, lon] = location.latlon.split(',');
+  const station = findNearestGeoMagneticObservationStation(
+    parseFloat(lat),
+    parseFloat(lon)
+  );
+  try {
+    const { data } = await axiosClient(
+      {
+        url: apiUrl,
+        ...(fmiApiKey !== undefined
+          ? { headers: { 'fmi-apikey': fmiApiKey } }
+          : {}),
+        params: {
+          starttime: '-1h',
+          param: 'distance,epochtime,fmisid,name,geomagneticRIndex',
+          fmisid: station?.fmisid,
+          producer: geoMagneticObservations.producer,
+          who: packageJSON.name,
+          format: 'json',
+          lang: i18n.language,
+          timestep: 'data',
+          ignoreError400: true,
+        },
+      },
+      undefined,
+      'Timeseries'
+    );
+    if (
+      !station ||
+      (geoMagneticObservations.schemaValidation !== false &&
+        !validateGeoMagneticObservations(data)) ||
+      !Array.isArray(data) ||
+      data.length === 0
+    )
+      return false;
+
+    return isAuroraBorealisLikely(
+      data[data.length - 1].geomagneticRIndex,
+      station
+    );
+  } catch {
+    // Geomagnetic observations must not prevent loading an otherwise valid forecast.
+    return false;
+  }
+};
 
 export const getForecast = async (
   location: ForecastLocation,
-  country: string,
-  retry: string | false = false // producer name or false if not a retry
-): Promise<{forecast: TimeStepDataSet, location: ForecastLocation, isAuroraBorealisLikely: boolean}> => {
+  country: string
+): Promise<{
+  forecast: TimeStepDataSet;
+  location: ForecastLocation;
+  isAuroraBorealisLikely: boolean;
+}> => {
   const { language } = i18n;
   const {
     apiUrl,
-    forecast: { timePeriod, data: dataSettings },
-    observation: { geoMagneticObservations }
+    fmiApiKey,
+    forecast: { timePeriod, data: dataSettings, schemaValidation },
   } = Config.get('weather');
 
   if (!isLocationValid(location)) {
-    return {forecast: [], location, isAuroraBorealisLikely: false};
+    return { forecast: [], location, isAuroraBorealisLikely: false };
   }
 
   const params = {
@@ -40,29 +149,18 @@ export const getForecast = async (
     format: 'json',
     lang: language,
     tz: 'utc',
-    who: `${packageJSON.name}-${Platform.OS}${retry ? '-retry' : ''}`,
+    who: `${packageJSON.name}-${Platform.OS}`,
   };
+  const apiKeyConfig =
+    fmiApiKey !== undefined ? { headers: { 'fmi-apikey': fmiApiKey } } : {};
 
-  const metaParams = [
-    [
-      'epochtime',
-      'localtime',
-      'sunrise',
-      'sunset',
-      'sunriseToday',
-      'sunsetToday',
-      'dayLength',
-      'moonPhase',
-      'modtime',
-      'dark',
-    ],
-    ['epochtime'],
-  ];
+  const metaParams = [FORECAST_META_PARAMS, ['epochtime']];
 
-  const queries = dataSettings.flatMap(({ parameters, producer }, index) =>
-    !retry || producer === retry ?
-      axiosClient({
+  const queries = dataSettings.map(({ parameters, producer }, index) =>
+    axiosClient(
+      {
         url: apiUrl,
+        ...apiKeyConfig,
         params: {
           ...params,
           producer: producer || 'default',
@@ -70,55 +168,39 @@ export const getForecast = async (
         },
       },
       undefined,
-      'Timeseries')
-    : []
+      'Timeseries'
+    )
   );
 
-  // Aurora borealis information is required for the forecast
-  // and therefore geomagnetic observations are fetched here
-
-  let nearestGeoMagneticStation: GeoMagneticStation | undefined;
-
-  const geoMagneticObservationsEnabled = geoMagneticObservations?.countryCodes.includes(country)
-                                          && location.latlon !== undefined
-                                          && geoMagneticObservations?.enabled === true
-                                          && retry === false;
-
-  if (geoMagneticObservationsEnabled && location.latlon) {
-    const [lat, lon] = location.latlon.split(',');
-    nearestGeoMagneticStation = findNearestGeoMagneticObservationStation(
-      parseFloat(lat),
-      parseFloat(lon)
-    );
-  }
-  const geoMagneticParams = {
-    starttime: '-1h',
-    param: ['distance','epochtime','fmisid','name','geomagneticRIndex'].join(','),
-    fmisid: nearestGeoMagneticStation?.fmisid,
-    producer: geoMagneticObservations?.producer,
-    who: packageJSON.name,
-    format: 'json',
-    lang: language,
-    timestep: 'data',
-    ignoreError400: true,
-  };
-
-  queries.push(
-    geoMagneticObservationsEnabled
-      ? axiosClient({ url: apiUrl, params: geoMagneticParams }, undefined, 'Timeseries')
-      : Promise.resolve({ data: {} }),
-  );
-
-  const results = await Promise.allSettled(queries);
-
-  const lastIndex = results.length - 1;
+  const [results, auroraLikely] = await Promise.all([
+    Promise.allSettled(queries),
+    getAuroraBorealisLikelihood(location, country),
+  ]);
   let error = '';
 
   const forecastData = results.flatMap((result, index) => {
-    if (index === lastIndex) {
-      return [];
-    }
     if (result.status === 'fulfilled') {
+      const producer = dataSettings[index].producer || 'default';
+      if (
+        schemaValidation !== false &&
+        producer === 'default' &&
+        !validateForecast(result.value.data)
+      ) {
+        error += `Forecast validation failed: ${ajv.errorsText(
+          validateForecast.errors
+        )}\n`;
+        return [];
+      }
+      if (
+        schemaValidation !== false &&
+        producer === 'uv' &&
+        !validateUVForecast(result.value.data)
+      ) {
+        error += `UV forecast validation failed: ${ajv.errorsText(
+          validateUVForecast.errors
+        )}\n`;
+        return [];
+      }
       return result.value;
     }
     if (result.status === 'rejected') {
@@ -128,7 +210,10 @@ export const getForecast = async (
         error += 'Code: ' + reason.code + '\n';
         error += 'Url: ' + reason.config?.url + '\n';
         error += 'Status: ' + reason.response?.status + '\n';
-        error += 'Data: ' + String(reason.response?.data ?? '').substring(0, 100) + '\n';
+        error +=
+          'Data: ' +
+          String(reason.response?.data ?? '').substring(0, 100) +
+          '\n';
       } else {
         error += 'Message: ' + String(reason) + '\n';
       }
@@ -137,25 +222,116 @@ export const getForecast = async (
   });
 
   if (error) {
+    trackMatomoEvent('Error', 'Timeseries', error);
     throw new Error(error);
   }
 
-  const geoMagneticResult = results[lastIndex];
-  const geoMagneticObservationData = geoMagneticObservationsEnabled && geoMagneticResult.status === 'fulfilled' ? geoMagneticResult.value : null;
-
   const forecast = forecastData.map(({ data }) => data);
+  return { forecast, location, isAuroraBorealisLikely: auroraLikely };
+};
 
-  if (geoMagneticObservationsEnabled && nearestGeoMagneticStation
-    && geoMagneticObservationData !== null && geoMagneticObservationData.data.length > 0) {
-    const { data } = geoMagneticObservationData;
-    return {
-      location,
-      forecast,
-      isAuroraBorealisLikely: isAuroraBorealisLikely(data[data.length - 1].geomagneticRIndex, nearestGeoMagneticStation),
-    };
-  }
+export const getAllForecasts = async (
+  locations: Location[]
+): Promise<WeatherData> => {
+  const validLocations = locations.filter(
+    ({ lat, lon }) => Number.isFinite(lat) && Number.isFinite(lon)
+  );
+  if (validLocations.length === 0) return {};
 
-  return { forecast, location, isAuroraBorealisLikely: false };
+  const {
+    apiUrl,
+    fmiApiKey,
+    forecast: { timePeriod, data: dataSettings, schemaValidation },
+  } = Config.get('weather');
+  const coordinates = Array.from(
+    new Set(validLocations.map(({ lat, lon }) => `${lat},${lon}`))
+  ).sort();
+  const producers = new Map<string, Set<string>>();
+  dataSettings.forEach(({ producer, parameters }) => {
+    const name = producer || 'default';
+    const existing = producers.get(name) ?? new Set<string>();
+    parameters.forEach((parameter) => existing.add(parameter));
+    producers.set(name, existing);
+  });
+
+  const results = await Promise.all(
+    Array.from(producers, async ([producer, parameters], index) => {
+      const { data } = await axiosClient(
+        {
+          url: apiUrl,
+          ...(fmiApiKey !== undefined
+            ? { headers: { 'fmi-apikey': fmiApiKey } }
+            : {}),
+          params: {
+            latlons: coordinates.join(','),
+            param: Array.from(
+              new Set([
+                'latlon',
+                ...(index === 0 ? FORECAST_META_PARAMS : ['epochtime']),
+                ...parameters,
+              ])
+            ).join(','),
+            attributes: 'latlon',
+            producer,
+            endtime: timePeriod,
+            format: 'json',
+            lang: i18n.language,
+            tz: 'utc',
+            who: `${packageJSON.name}-${Platform.OS}`,
+          },
+        },
+        undefined,
+        'Timeseries'
+      );
+
+      if (schemaValidation !== false) {
+        let valid = validateFavoriteForecasts(data);
+        let errors = validateFavoriteForecasts.errors;
+        const validateProducer =
+          producer === 'default'
+            ? validateForecast
+            : producer === 'uv'
+              ? validateUVForecast
+              : undefined;
+        if (valid && validateProducer) {
+          valid = Object.values(data as WeatherData).every((steps) =>
+            validateProducer(steps)
+          );
+          errors = validateProducer.errors;
+        }
+        if (!valid) {
+          const error = `Favorite forecast validation failed: ${ajv.errorsText(errors)}\n`;
+          trackMatomoEvent('Error', 'Timeseries', error);
+          throw new Error(error);
+        }
+      }
+      return data as WeatherData;
+    })
+  );
+
+  const forecastsByCoordinates = new Map<string, Map<number, TimeStepData>>();
+  results.forEach((data) => {
+    Object.entries(data).forEach(([coordinate, steps]) => {
+      // SmartMet formats coordinate keys with spaces and five decimal places.
+      const key = coordinate.split(',').map(Number).join(',');
+      const merged =
+        forecastsByCoordinates.get(key) ?? new Map<number, TimeStepData>();
+      steps.forEach((step) => {
+        merged.set(step.epochtime, { ...merged.get(step.epochtime), ...step });
+      });
+      forecastsByCoordinates.set(key, merged);
+    });
+  });
+  return Object.fromEntries(
+    validLocations.map(({ id, lat, lon }) => [
+      typeof id === 'number' && Number.isNaN(id) ? 0 : id,
+      Array.from(
+        forecastsByCoordinates
+          .get(`${Number(lat.toFixed(5))},${Number(lon.toFixed(5))}`)
+          ?.values() ?? []
+      ).sort((a, b) => a.epochtime - b.epochtime),
+    ])
+  );
 };
 
 export const getObservation = async (
@@ -164,6 +340,7 @@ export const getObservation = async (
 ): Promise<Array<ObservationDataRaw | boolean>> => {
   const {
     apiUrl,
+    fmiApiKey,
     observation: {
       enabled,
       numberOfStations,
@@ -172,6 +349,7 @@ export const getObservation = async (
       timePeriod,
       parameters,
       dailyParameters,
+      schemaValidation,
       identifier = 'fmisid',
     },
   } = Config.get('weather');
@@ -180,6 +358,9 @@ export const getObservation = async (
   if (!enabled || !isLocationValid(location)) {
     return [{}, {}];
   }
+
+  const apiKeyConfig =
+    fmiApiKey !== undefined ? { headers: { 'fmi-apikey': fmiApiKey } } : {};
 
   let observationProducer = producer;
   if (typeof producer === 'object') {
@@ -227,14 +408,50 @@ export const getObservation = async (
   };
 
   const [observationData, dailyObservationData] = await Promise.all([
-    axiosClient({ url: apiUrl, params: hourlyParams }, undefined, 'Timeseries'),
+    axiosClient(
+      { url: apiUrl, ...apiKeyConfig, params: hourlyParams },
+      undefined,
+      'Timeseries'
+    ),
     dailyObservationsEnabled
-      ? axiosClient({ url: apiUrl, params: dailyParams }, undefined, 'Timeseries')
+      ? axiosClient(
+          { url: apiUrl, ...apiKeyConfig, params: dailyParams },
+          undefined,
+          'Timeseries'
+        )
       : Promise.resolve({ data: {} }),
   ]);
 
   if (observationData === null || dailyObservationData === null) {
+    trackMatomoEvent(
+      'Error',
+      'Timeseries',
+      'Observation data retrieval failed'
+    );
     throw new Error('Observation data retrieval failed');
+  }
+
+  let error = '';
+  if (
+    schemaValidation !== false &&
+    !validateObservations(observationData.data)
+  ) {
+    error += `Observation validation failed: ${ajv.errorsText(
+      validateObservations.errors
+    )}\n`;
+  }
+  if (
+    schemaValidation !== false &&
+    dailyObservationsEnabled &&
+    !validateDailyObservations(dailyObservationData.data)
+  ) {
+    error += `Daily observation validation failed: ${ajv.errorsText(
+      validateDailyObservations.errors
+    )}\n`;
+  }
+  if (error) {
+    trackMatomoEvent('Error', 'Timeseries', error);
+    throw new Error(error);
   }
 
   return [observationData.data, dailyObservationData.data];
@@ -261,8 +478,9 @@ export const getCurrentPosition = async (
   latitude: number,
   longitude: number
 ): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
-  const { apiUrl } = Config.get('weather');
-  const { useInKeyword, keyword, maxDistance } = Config.get('location');
+  const { apiUrl, fmiApiKey } = Config.get('weather');
+  const { useInKeyword, keyword, maxDistance, schemaValidation } =
+    Config.get('location');
   const { language } = i18n;
 
   const params = {
@@ -273,10 +491,25 @@ export const getCurrentPosition = async (
     ...(maxDistance !== undefined ? { maxdistance: maxDistance } : {}),
   };
 
-  const { data } = await axiosClient({
-    url: apiUrl,
-    params,
-  }, undefined, 'Timeseries');
+  const { data } = await axiosClient(
+    {
+      url: apiUrl,
+      params,
+      ...(fmiApiKey !== undefined
+        ? { headers: { 'fmi-apikey': fmiApiKey } }
+        : {}),
+    },
+    undefined,
+    'Timeseries'
+  );
+
+  if (schemaValidation !== false && !validateReverseGeolocation(data)) {
+    const error = `Reverse geolocation validation failed: ${ajv.errorsText(
+      validateReverseGeolocation.errors
+    )}\n`;
+    trackMatomoEvent('Error', 'Timeseries', error);
+    throw new Error(error);
+  }
 
   return data;
 };
@@ -284,7 +517,7 @@ export const getCurrentPosition = async (
 export const getLocationsLocales = async (
   geoids: number[]
 ): Promise<{ [geoid: string]: TimeseriesLocation[] }> => {
-  const { apiUrl } = Config.get('weather');
+  const { apiUrl, fmiApiKey } = Config.get('weather');
   const { language } = i18n;
 
   const params = {
@@ -293,7 +526,17 @@ export const getLocationsLocales = async (
     lang: language,
   };
 
-  const { data } = await axiosClient({ url: apiUrl, params }, undefined, 'Timeseries');
+  const { data } = await axiosClient(
+    {
+      url: apiUrl,
+      params,
+      ...(fmiApiKey !== undefined
+        ? { headers: { 'fmi-apikey': fmiApiKey } }
+        : {}),
+    },
+    undefined,
+    'Timeseries'
+  );
 
   return data;
 };

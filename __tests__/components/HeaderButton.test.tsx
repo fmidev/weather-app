@@ -8,6 +8,7 @@ const mockUseOrientation = jest.fn();
 const mockIcon = jest.fn((props) => <Text {...props} testID="header-button-icon">icon</Text>);
 
 jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
   useOrientation: () => mockUseOrientation(),
 }));
 

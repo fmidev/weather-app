@@ -1,11 +1,15 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 
-import MapStackScreen from '../../src/navigators/stacks/MapStackScreen';
-import WeatherStackScreen from '../../src/navigators/stacks/WeatherStackScreen';
-import WarningsStackScreen from '../../src/navigators/stacks/WarningsStackScreen';
 import OthersStackScreen from '../../src/navigators/stacks/OthersStackScreen';
 import SetupStackScreen from '../../src/navigators/stacks/SetupStackScreen';
+
+// eslint-disable-next-line import-x/extensions -- Select the JS implementation instead of Jest's default iOS variant.
+const WeatherStackScreen = require('../../src/navigators/stacks/WeatherStackScreen.tsx').default;
+// eslint-disable-next-line import-x/extensions -- Select the JS implementation instead of Jest's default iOS variant.
+const MapStackScreen = require('../../src/navigators/stacks/MapStackScreen.tsx').default;
+// eslint-disable-next-line import-x/extensions -- Select the JS implementation instead of Jest's default iOS variant.
+const WarningsStackScreen = require('../../src/navigators/stacks/WarningsStackScreen.tsx').default;
 
 const mockStackScreens = jest.fn();
 const mockHeaderTitle = jest.fn();
@@ -128,6 +132,8 @@ describe('navigator stack screens', () => {
       <MapStackScreen
         mapOptions={{ title: 'map' } as any}
         searchOptions={{ title: 'search' } as any}
+        nativeMapOptions={{ title: 'map' }}
+        nativeSearchOptions={{ title: 'search' }}
         stackScreenListener={jest.fn() as any}
       />
     );
@@ -146,11 +152,15 @@ describe('navigator stack screens', () => {
         <WeatherStackScreen
           weatherOptions={{ title: 'weather' } as any}
           searchOptions={{ title: 'search' } as any}
+          nativeWeatherOptions={{ title: 'weather' }}
+          nativeSearchOptions={{ title: 'search' }}
           stackScreenListener={jest.fn() as any}
         />
         <WarningsStackScreen
           warningsOptions={{ title: 'warnings' } as any}
           searchOptions={{ title: 'search' } as any}
+          nativeWarningsOptions={{ title: 'warnings' }}
+          nativeSearchOptions={{ title: 'search' }}
           stackScreenListener={jest.fn() as any}
         />
       </>

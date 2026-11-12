@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  AppState,
-} from 'react-native';
+import { StyleSheet, ScrollView, Platform, AppState } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
@@ -17,12 +12,14 @@ import {
   selectTheme,
   selectClockType,
   selectMapLibrary,
+  selectForecastBackgroundImages,
 } from '@store/settings/selectors';
 import {
   updateUnits as updateUnitsAction,
   updateTheme as updateThemeAction,
   updateClockType as updateClockTypeAction,
   updateMapLibrary as updateMapLibraryAction,
+  updateForecastBackgroundImages as updateForecastBackgroundImagesAction,
 } from '@store/settings/actions';
 import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
 import { UnitType } from '@store/settings/types';
@@ -35,6 +32,9 @@ import UnitSettings from '@components/settings/UnitSettings';
 import LanguageSettings from '@components/settings/LanguageSettings';
 import ThemeSettings from '@components/settings/ThemeSettings';
 import TimeSettings from '@components/settings/TimeSettings';
+import ForecastBackgroundSettings from '@components/settings/ForecastBackgroundSettings';
+import defaultConfig from '../../defaultConfig';
+//import MapSettings from '@components/settings/MapSettings';
 import MapSettings from '@components/settings/MapSettings';
 
 const LOCATION_ALWAYS = 'location_always';
@@ -47,6 +47,7 @@ const mapStateToProps = (state: State) => ({
   geoids: selectStoredGeoids(state),
   clockType: selectClockType(state),
   mapLibrary: selectMapLibrary(state),
+  forecastBackgroundImages: selectForecastBackgroundImages(state),
 });
 
 const mapDispatchToProps = {
@@ -55,6 +56,7 @@ const mapDispatchToProps = {
   updateLocationsLocales: updateLocationsLocalesAction,
   updateClockType: updateClockTypeAction,
   updateMapLibrary: updateMapLibraryAction,
+  updateForecastBackgroundImages: updateForecastBackgroundImagesAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -68,14 +70,16 @@ const SettingsScreen: React.FC<Props> = ({
   theme,
   geoids,
   units,
-
+  forecastBackgroundImages,
+  updateForecastBackgroundImages,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mapLibrary,
   updateUnits,
   updateClockType,
   updateTheme,
   updateLocationsLocales,
-
-  updateMapLibrary
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateMapLibrary,
 }) => {
   const [locationPermission, setLocationPermission] = useState<
     string | undefined
@@ -133,9 +137,7 @@ const SettingsScreen: React.FC<Props> = ({
     await i18n.changeLanguage(lang);
     // geoid = 0 is non location database location and without name
     updateLocationsLocales(
-      geoids.filter(
-        (id): id is number => typeof id === 'number' && id !== 0
-      )
+      geoids.filter((id): id is number => typeof id === 'number' && id !== 0)
     );
     initMatomo(); // re-init matomo to use correct siteId
     try {
@@ -178,12 +180,11 @@ const SettingsScreen: React.FC<Props> = ({
   } as { [key: string]: string };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['left', 'right']} style={styles.container}>
       <ScrollView
         testID="settings_scrollview"
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}>
-
         <LocationSettings
           locationPermission={locationPermission}
           locationPermissionsDisplayString={locationPermissionsDisplayString}
@@ -202,21 +203,27 @@ const SettingsScreen: React.FC<Props> = ({
           />
         )}
 
-        <TimeSettings
-          clockType={clockType}
-          updateClockType={updateClockType}
-        />
+        <TimeSettings clockType={clockType} updateClockType={updateClockType} />
 
         {showUnitSettings && units && (
           <UnitSettings units={units} onChangeUnits={onChangeUnits} />
         )}
 
-        <MapSettings
-          mapLibrary={mapLibrary}
-          updateMapLibrary={updateMapLibrary}
-        />
+        {defaultConfig.weather.backgroundImagesEnabled !== false && (
+          <ForecastBackgroundSettings
+            forecastBackgroundImages={forecastBackgroundImages}
+            updateForecastBackgroundImages={updateForecastBackgroundImages}
+          />
+        )}
+
+        {Config.get('map').baseMap && (
+          <MapSettings
+            mapLibrary={mapLibrary}
+            updateMapLibrary={updateMapLibrary}
+          />
+        )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

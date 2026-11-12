@@ -6,6 +6,7 @@ import { Marker, LatLng } from 'react-native-maps';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@assets/colors';
 import { converter, toPrecision } from '@utils/units';
@@ -51,6 +52,7 @@ const TimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   updateSelectedCallout,
   units,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { t } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
 
@@ -111,21 +113,25 @@ return (
       <View style={styles.mainRow}>
           {WeatherSymbol ? <WeatherSymbol width={40} height={40} /> : null}
         <Text
+          accessibilityLanguage={accessibilityLanguage}
           accessibilityLabel={`${temperatureValue} ${t(
             `observation:paramUnits:°${temperatureUnit}`
           )}`}
-          style={[styles.tempText, { color: colors.text }]}
-        >
+          style={[styles.tempText, { color: colors.text }]}>
           {`${temperatureValue}°${temperatureUnit}`}
         </Text>
       </View>
 
       {selectedCallout === name && (
         <View style={styles.calloutContainer}>
-          <Text style={[styles.calloutTitle, { color: colors.text }]}>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={[styles.calloutTitle, { color: colors.text }]}>
             {name}
           </Text>
-          <Text style={[styles.calloutText, { color: colors.text }]}>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={[styles.calloutText, { color: colors.text }]}>
             {`${t(`symbols:${smartSymbol}`)}`}
           </Text>
           <View style={styles.windSpeedRow}>
@@ -138,11 +144,11 @@ return (
               }}
             />
             <Text
+              accessibilityLanguage={accessibilityLanguage}
               style={[styles.calloutText, { color: colors.text }]}
               accessibilityLabel={`${windSpeedValue} ${t(
                 `observation:paramUnits:${windUnit}`
-              )}`}
-            >
+              )}`}>
               {`${windSpeedValue} ${windUnit}`}
             </Text>
           </View>

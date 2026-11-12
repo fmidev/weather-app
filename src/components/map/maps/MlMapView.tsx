@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text } from 'react-native';
 import {
@@ -10,11 +16,13 @@ import {
   type MapRef,
   type CameraRef,
   InitialViewState,
+  type StyleSpecification,
 } from '@maplibre/maplibre-react-native';
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import { getDistance } from 'geolib';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import WMSOverlay from '@components/map/layers/WMSOverlay';
 import TimeseriesOverlay from '@components/map/layers/TimeseriesOverlay';
 import MapControls from '@components/map/ui/MapControls';
@@ -26,21 +34,29 @@ import {
   selectActiveOverlay,
   selectDisplayLocation,
   selectOverlay,
+  selectAnimateToArea,
 } from '@store/map/selectors';
 import {
   updateOverlays as updateOverlaysAction,
   updateRegion as updateRegionAction,
   updateSelectedCallout as updateSelectedCalloutAction,
+  setAnimateToArea as setAnimateToAreaAction,
 } from '@store/map/actions';
 
 import { Config } from '@config';
 import { useReloader } from '@utils/reloader';
+import getMapStyle from '@network/MapStyleApi';
+import {
+  DEFAULT_WMS_BEFORE_ID,
+  getMapStyleUrl,
+  mergeMapStyles,
+} from '@utils/mapStyle';
 import Icon from '@assets/Icon';
 import { useTranslation } from 'react-i18next';
-import type { Position } from "geojson";
+import type { Position } from 'geojson';
 import { trackMatomoEvent } from '@utils/matomo';
 
-import type RBSheet from 'react-native-raw-bottom-sheet';
+import type { BottomSheetRef } from '@components/common/BottomSheet';
 
 const windArrowLightImage = require('@assets/images/icons/wind-arrow-light.png');
 const windArrowDarkImage = require('@assets/images/icons/wind-arrow-dark.png');
@@ -70,20 +86,22 @@ const mapStateToProps = (state: State) => ({
   activeOverlay: selectActiveOverlay(state),
   timezone: selectTimeZone(state),
   sessionId: selectSessionId(state),
+  animateToArea: selectAnimateToArea(state),
 });
 
 const mapDispatchToProps = {
   updateOverlays: updateOverlaysAction,
   updateRegion: updateRegionAction,
   updateSelectedCallout: updateSelectedCalloutAction,
+  setAnimateToArea: setAnimateToAreaAction,
 };
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type MapViewProps = PropsFromRedux & {
-  infoSheetRef: React.RefObject<RBSheet | null>,
-  mapLayersSheetRef: React.RefObject<RBSheet | null>
+  infoSheetRef: React.RefObject<BottomSheetRef | null>;
+  mapLayersSheetRef: React.RefObject<BottomSheetRef | null>;
 };
 
 // MapView using Maplibre
@@ -96,25 +114,81 @@ const MlMapView: React.FC<MapViewProps> = ({
   updateOverlays,
   timezone,
   sessionId,
+  animateToArea,
+  setAnimateToArea,
   infoSheetRef,
   mapLayersSheetRef,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { i18n } = useTranslation();
   const { dark } = useTheme();
   const isFocused = useIsFocused();
   const { shouldReload } = useReloader();
-  const { updateInterval } = Config.get('map');
+  const { updateInterval, sources, fmiApiKey, baseMap, overlayMap } =
+    Config.get('map');
   const [markerOutOfBounds, setMarkerOutOfBounds] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(DEFAULT_ZOOM_LEVEL);
   const mapRef = useRef<MapRef>(null);
   const cameraRef = useRef<CameraRef>(null);
   const [mapUpdated, setMapUpdated] = useState<number>(Date.now());
-  const [mapBounds, setMapBounds] = useState<[northEast: Position, southWest: Position] | undefined>(undefined);
-  const [styleReady, setStyleReady] = useState(false);
+  const [mapBounds, setMapBounds] = useState<
+    [northEast: Position, southWest: Position] | undefined
+  >(undefined);
+  const [readyStyle, setReadyStyle] = useState<string | StyleSpecification>();
+  const [loadedStyle, setLoadedStyle] = useState<{
+    key: string;
+    style: string | StyleSpecification;
+    beforeId?: string;
+  }>();
   const [mapReady, setMapReady] = useState(false);
 
   const location = currentLocation ?? Config.get('location').default;
-  const { baseMap } = Config.get('map');
+  const centeredLocationRef = useRef<typeof location | undefined>(undefined);
+  const baseStyleUrl = getMapStyleUrl(baseMap, dark, i18n.language);
+  const overlayStyleUrl = getMapStyleUrl(overlayMap, dark, i18n.language);
+  const styleKey = JSON.stringify([baseStyleUrl, overlayStyleUrl]);
+  // Keep the mounted map and camera while the next style is fetched.
+  const mapStyle = overlayStyleUrl
+    ? (loadedStyle?.style ?? baseStyleUrl)
+    : baseStyleUrl;
+  const stylePending = !!overlayStyleUrl && loadedStyle?.key !== styleKey;
+  const styleReady = !stylePending && readyStyle === mapStyle && !!mapStyle;
+
+  useEffect(() => {
+    if (!baseStyleUrl || !overlayStyleUrl) return undefined;
+    let active = true;
+    const loadStyle = async () => {
+      const [baseResult, overlayResult] = await Promise.allSettled([
+        getMapStyle(baseStyleUrl),
+        getMapStyle(overlayStyleUrl),
+      ]);
+      if (!active) return;
+      let nextStyle: { style: string | StyleSpecification; beforeId?: string } =
+        {
+          style:
+            baseResult.status === 'fulfilled' ? baseResult.value : baseStyleUrl,
+        };
+      if (
+        baseResult.status === 'fulfilled' &&
+        overlayResult.status === 'fulfilled'
+      ) {
+        try {
+          nextStyle = mergeMapStyles(baseResult.value, overlayResult.value);
+        } catch (error) {
+          trackMatomoEvent(
+            'Error',
+            'Map',
+            `Map style merge failed: ${String(error)}`
+          );
+        }
+      }
+      setLoadedStyle({ key: styleKey, ...nextStyle });
+    };
+    loadStyle();
+    return () => {
+      active = false;
+    };
+  }, [baseStyleUrl, overlayStyleUrl, styleKey]);
 
   useEffect(() => {
     TransformRequestManager.addHeader({
@@ -127,16 +201,41 @@ const MlMapView: React.FC<MapViewProps> = ({
     return () => TransformRequestManager.removeHeader(SESSION_COOKIE_HEADER_ID);
   }, [sessionId]);
 
-  const initialRegion = useMemo(() => ({
-    latitude: location.lat ?? INITIAL_REGION.latitude,
-    longitude: location.lon ?? INITIAL_REGION.longitude,
-    longitudeDelta: location
-      ? ANIMATE_ZOOM.longitudeDelta
-      : INITIAL_REGION.longitudeDelta,
-    latitudeDelta: location
-      ? ANIMATE_ZOOM.latitudeDelta
-      : INITIAL_REGION.latitudeDelta,
-  }), [location]);
+  useEffect(() => {
+    const headerIds = Object.entries(fmiApiKey ?? {}).flatMap(
+      ([source, key]) => {
+        const baseUrl = sources?.[source]?.replace(/\/+$/, '');
+        if (!baseUrl || !key) return [];
+
+        const id = `fmi-apikey-${source}`;
+        const escapedUrl = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        TransformRequestManager.addHeader({
+          id,
+          match: `(?i)^${escapedUrl}/wms\\?(?:[^#]*&)?request=GetMap(?:&|$)`,
+          name: 'fmi-apikey',
+          value: key,
+        });
+        return [id];
+      }
+    );
+
+    return () =>
+      headerIds.forEach((id) => TransformRequestManager.removeHeader(id));
+  }, [sources, fmiApiKey]);
+
+  const initialRegion = useMemo(
+    () => ({
+      latitude: location.lat ?? INITIAL_REGION.latitude,
+      longitude: location.lon ?? INITIAL_REGION.longitude,
+      longitudeDelta: location
+        ? ANIMATE_ZOOM.longitudeDelta
+        : INITIAL_REGION.longitudeDelta,
+      latitudeDelta: location
+        ? ANIMATE_ZOOM.latitudeDelta
+        : INITIAL_REGION.latitudeDelta,
+    }),
+    [location]
+  );
 
   useEffect(() => {
     if (activeOverlay) {
@@ -167,14 +266,17 @@ const MlMapView: React.FC<MapViewProps> = ({
   ]);
 
   useEffect(() => {
-    if (!location || !cameraRef.current || !mapReady) return;
+    if (!location || !cameraRef.current || !mapReady || !isFocused) return;
+    if (!animateToArea && centeredLocationRef.current === location) return;
+    centeredLocationRef.current = location;
 
     cameraRef.current.flyTo({
       center: [location.lon, location.lat],
       zoom: DEFAULT_ZOOM_LEVEL,
       duration: 1000,
     });
-  }, [location, mapReady]);
+    if (animateToArea) setAnimateToArea(false);
+  }, [location, mapReady, isFocused, animateToArea, setAnimateToArea]);
 
   const updateBoundsFromRef = useCallback(async () => {
     const bounds = await mapRef.current?.getBounds();
@@ -192,27 +294,32 @@ const MlMapView: React.FC<MapViewProps> = ({
     }
   }, [mapReady, updateBoundsFromRef]);
 
-  const onRegionDidChange = useCallback((event: any) => {
-    if (!styleReady || !mapReady) return;
+  const onRegionDidChange = useCallback(
+    (event: any) => {
+      if (!styleReady || !mapReady) return;
 
-    const { zoom, bounds } = event.nativeEvent;
+      const { zoom, bounds } = event.nativeEvent;
 
-    if (!bounds) return;
-    const northEast: Position = [bounds[2], bounds[3]];
-    const southWest: Position = [bounds[0], bounds[1]];
-    setMapBounds([northEast, southWest]);
+      if (!bounds) return;
+      const northEast: Position = [bounds[2], bounds[3]];
+      const southWest: Position = [bounds[0], bounds[1]];
+      setMapBounds([northEast, southWest]);
 
-    const [lon, lat] = event.nativeEvent.center;
-    const distance = getDistance(initialRegion, {latitude: lat, longitude: lon});
-    if (distance >= 10000) {
-      setMarkerOutOfBounds(true);
-    } else {
-      setMarkerOutOfBounds(false);
-    }
+      const [lon, lat] = event.nativeEvent.center;
+      const distance = getDistance(initialRegion, {
+        latitude: lat,
+        longitude: lon,
+      });
+      if (distance >= 10000) {
+        setMarkerOutOfBounds(true);
+      } else {
+        setMarkerOutOfBounds(false);
+      }
 
-    if (zoom) setZoomLevel(zoom);
-
-  }, [styleReady, mapReady, initialRegion]);
+      if (zoom) setZoomLevel(zoom);
+    },
+    [styleReady, mapReady, initialRegion]
+  );
 
   const animateToCurrentLocation = () => {
     cameraRef.current?.flyTo({
@@ -246,12 +353,24 @@ const MlMapView: React.FC<MapViewProps> = ({
     } as InitialViewState;
   }, [location]);
 
-  if (!baseMap) {
-    return <Text>MapLibre requires baseMap configuration</Text>
+  if (!mapStyle || !baseMap) {
+    return (
+      <Text accessibilityLanguage={accessibilityLanguage}>
+        MapLibre requires baseMap configuration
+      </Text>
+    );
   }
 
-  const mapStyle = baseMap.url+(dark ? baseMap.darkStyle : baseMap.lightStyle)
-                    .replace('{lang}', i18n.language);
+  const overlayBeforeId =
+    loadedStyle?.key === styleKey ? loadedStyle.beforeId : undefined;
+  // URL styles retain the historical boundary. For loaded JSON, only use it
+  // when it exists; minimal base styles must still be able to render WMS.
+  const beforeId =
+    overlayBeforeId ??
+    (typeof mapStyle === 'string' ||
+    mapStyle.layers.some(({ id }) => id === DEFAULT_WMS_BEFORE_ID)
+      ? DEFAULT_WMS_BEFORE_ID
+      : null);
 
   return (
     <View style={styles.mapContainer}>
@@ -260,14 +379,14 @@ const MlMapView: React.FC<MapViewProps> = ({
         ref={mapRef}
         style={styles.map}
         mapStyle={mapStyle}
-        onDidFinishLoadingStyle={() => setStyleReady(true)}
+        onWillStartLoadingMap={() => setReadyStyle(undefined)}
+        onDidFinishLoadingStyle={() => setReadyStyle(mapStyle)}
         onDidFinishRenderingFrameFully={onDidFinishRenderingFrame}
         onRegionDidChange={onRegionDidChange}
         touchRotate={false}
         touchPitch={false}
         attribution={false}
-        logo={false}
-      >
+        logo={false}>
         <Camera
           ref={cameraRef}
           initialViewState={cameraDefaults}
@@ -283,7 +402,13 @@ const MlMapView: React.FC<MapViewProps> = ({
             }}
           />
         )}
-        {styleReady && overlay?.type === 'WMS' && <WMSOverlay overlay={overlay} library="maplibre" />}
+        {styleReady && overlay?.type === 'WMS' && (
+          <WMSOverlay
+            overlay={overlay}
+            library="maplibre"
+            beforeId={beforeId}
+          />
+        )}
         {styleReady && overlay?.type === 'Timeseries' && mapBounds && (
           <TimeseriesOverlay
             overlay={overlay}
@@ -296,23 +421,25 @@ const MlMapView: React.FC<MapViewProps> = ({
           <ViewAnnotation
             id="location-marker"
             lngLat={[initialRegion.longitude, initialRegion.latitude]}
-            anchor="bottom"
-          >
+            anchor="bottom">
             <Icon name="map-marker" size={22} />
           </ViewAnnotation>
         )}
       </Map>
       <MapControls
-        onLayersPressed={() => mapLayersSheetRef.current?.open()}
+        onLayersPressed={() => {
+          trackMatomoEvent('User action', 'Map', 'Open layers panel');
+          mapLayersSheetRef.current?.open();
+        }}
         onInfoPressed={() => {
           trackMatomoEvent('User action', 'Map', 'Open info panel');
-          infoSheetRef.current?.open()
+          infoSheetRef.current?.open();
         }}
         onZoomIn={() => {
           trackMatomoEvent('User action', 'Map', 'Zoom IN');
           handleZoomIn();
         }}
-        onZoomOut={() =>{
+        onZoomOut={() => {
           trackMatomoEvent('User action', 'Map', 'Zoom OUT');
           handleZoomOut();
         }}
@@ -338,8 +465,8 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 });
 
 export default connector(MlMapView);

@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView, ScrollViewInstance } from 'react-native';
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 
 import { CustomTheme } from '@assets/colors';
@@ -16,6 +18,10 @@ import { selectUnits } from '@store/settings/selectors';
 import { State } from '@store/types';
 import { selectForecastInvalidData } from '@store/forecast/selectors';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
+import {
+  formatAccessiblePrecipitation,
+  formatAccessibleTemperature,
+} from '@utils/accessibility';
 
 const mapStateToProps = (state: State) => ({
   units: selectUnits(state),
@@ -48,10 +54,11 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   units,
   invalidData,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
-  const dayStripRef = useRef<ScrollView>(null);
+  const dayStripRef = useRef<ScrollViewInstance>(null);
 
   const activeParameters = Config.get('weather').forecast.data.flatMap(
     ({ parameters }) => parameters
@@ -60,9 +67,16 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
   const defaultUnits = Config.get('settings').units;
   const temperatureUnit =
     units?.temperature.unitAbb ?? defaultUnits.temperature;
+  const precipitationUnit =
+    units?.precipitation?.unitAbb ?? defaultUnits.precipitation;
 
   useEffect(() => {
-    if (activeDayIndex >= 0 && dayData && dayData.length && dayStripRef.current) {
+    if (
+      activeDayIndex >= 0 &&
+      dayData &&
+      dayData.length &&
+      dayStripRef.current
+    ) {
       dayStripRef.current.scrollTo({
         x: activeDayIndex * 100,
         animated: true,
@@ -111,12 +125,43 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
 
     const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
     const dateFormat = locale === 'en' ? 'D MMM' : 'D.M.';
+    const dateDescription = stepMoment.locale(locale).format('dddd, Do MMMM');
+    const weatherDescription = t(`symbols:${smartSymbol ?? 0}`);
+    const temperatureDescription = activeParameters.includes('temperature')
+      ? t('forecast:fromTo', {
+          min: formatAccessibleTemperature(convertedMinTemperature, t),
+          max: formatAccessibleTemperature(convertedMaxTemperature, t),
+          unit: t(
+            temperatureUnit === 'C' ? 'forecast:celsius' : 'forecast:fahrenheit'
+          ),
+        })
+      : '';
+    const precipitationDescription = activeParameters.includes(
+      'precipitation1h'
+    )
+      ? invalidData
+        ? t('forecast:precipitationMissing')
+        : formatAccessiblePrecipitation(
+            item.precipitationData,
+            precipitationUnit,
+            locale,
+            t
+          )
+      : '';
+    const dayDescription = [
+      dateDescription,
+      weatherDescription,
+      temperatureDescription,
+      precipitationDescription,
+    ]
+      .filter(Boolean)
+      .join('. ');
 
     return (
-      <View
+      <AccessibleView
         key={timeStamp}
-        accessible
-        accessibilityRole="button"
+        accessible={false}
+        focusable={false}
         style={[
           styles.dayBlock,
           isActive ? styles.activeBlock : undefined,
@@ -131,49 +176,58 @@ const DaySelectorList: React.FC<DaySelectorListProps> = ({
         ]}>
         <AccessibleTouchableOpacity
           accessible
+          accessibilityRole="button"
+          accessibilityLabel={dayDescription}
           accessibilityState={{ selected: isActive }}
           onPress={() => setActiveDayIndex(index)}>
           <Text
+            accessibilityLanguage={accessibilityLanguage}
+            accessible={false}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
             style={[
               styles.dateText,
               {
                 color: colors.primaryText,
               },
             ]}
-            accessibilityLabel={stepMoment
-              .locale(locale)
-              .format('dddd, Do MMMM')}>
+            accessibilityLabel={dateDescription}>
             {stepMoment.locale(locale).format(weekdayAbbreviationFormat)}{' '}
-            <Text style={[styles.bold, { color: colors.primaryText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.bold, { color: colors.primaryText }]}>
               {stepMoment.locale(locale).format(dateFormat)}
             </Text>
           </Text>
-          <View
+          <AccessibleView
+            accessible={false}
+            focusable={false}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
             style={styles.alignCenter}
-            accessibilityLabel={`${t(`symbols:${smartSymbol}`)}`}>
+            accessibilityLabel={weatherDescription}>
             {DaySmartSymbol ? <DaySmartSymbol width={40} height={40} /> : null}
-          </View>
+          </AccessibleView>
           {activeParameters.includes('temperature') && (
             <Text
+              accessibilityLanguage={accessibilityLanguage}
+              accessible={false}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
               style={[styles.forecastText, { color: colors.primaryText }]}
-              accessibilityLabel={t('forecast:fromTo', {
-                min: convertedMinTemperature,
-                max: convertedMaxTemperature,
-                unit: t(
-                  temperatureUnit === 'C'
-                    ? 'forecast:celsius'
-                    : 'forecast:fahrenheit'
-                ),
-              })}>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${t(`unitAbbreviations:${temperatureUnit}`)}`}</Text>
+              accessibilityLabel={
+                temperatureDescription
+              }>{`${convertedMinTemperature} ... ${convertedMaxTemperature}°${t(`unitAbbreviations:${temperatureUnit}`)}`}</Text>
           )}
         </AccessibleTouchableOpacity>
         {activeParameters.includes('precipitation1h') && (
           <PrecipitationStrip
+            accessible={false}
             precipitationData={item.precipitationData}
             style={styles.precipitationStrip}
           />
         )}
-      </View>
+      </AccessibleView>
     );
   };
 

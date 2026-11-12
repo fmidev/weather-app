@@ -112,6 +112,7 @@ jest.mock('@assets/images', () => {
 });
 
 jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
   useOrientation: () => false,
 }));
 

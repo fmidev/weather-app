@@ -5,12 +5,14 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider, useSelector } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
+import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import ReduxThunk from 'redux-thunk';
 
 import '@i18n';
 import '@utils/moment';
 import { ConfigProvider } from '@config';
 import reducers from './src/store';
+import forecastCacheMiddleware from '@store/forecast/cacheMiddleware';
 import TabNavigator from './src/navigators/TabNavigator';
 import { configureMapLibreLogging } from '@utils/map';
 import { isRunningInIOSCompatibilityMode } from '@utils/iosCompatibilityMode';
@@ -48,7 +50,7 @@ const App: React.FC = () => {
       createStore(
         reducers,
         {},
-        composeEnhancers(applyMiddleware(ReduxThunk))
+        composeEnhancers(applyMiddleware(ReduxThunk, forecastCacheMiddleware))
       ),
     [composeEnhancers]
   );
@@ -83,14 +85,16 @@ const App: React.FC = () => {
 
   return (
     <Provider store={store}>
-      <AppContent
-        isPlatformDetectionComplete={isPlatformDetectionComplete}>
-        <PersistGate loading={null} persistor={persistor}>
-          <ConfigProvider defaultConfig={defaultConfig}>
-            <TabNavigator />
-          </ConfigProvider>
-        </PersistGate>
-      </AppContent>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <AppContent
+          isPlatformDetectionComplete={isPlatformDetectionComplete}>
+          <PersistGate loading={null} persistor={persistor}>
+            <ConfigProvider defaultConfig={defaultConfig}>
+              <TabNavigator />
+            </ConfigProvider>
+          </PersistGate>
+        </AppContent>
+      </SafeAreaProvider>
     </Provider>
   );
 };

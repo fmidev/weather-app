@@ -99,6 +99,12 @@ describe('chart utils', () => {
       expect(chartYDomain([2, 8], 'uv')).toEqual({ y: [0, 10] });
     });
 
+    it('starts weather charts at zero for nonnegative temperature values', () => {
+      expect(chartYDomain([0, 12], 'weather')).toEqual({ y: [0, 15] });
+      expect(chartYDomain([0.5, 12], 'weather')).toEqual({ y: [0, 15] });
+      expect(chartYDomain([-0.5, 12], 'weather')).toEqual({ y: [-5, 15] });
+    });
+
     it('aligns secondary weather chart domain to temperature tick count', () => {
       expect(
         secondaryYDomainForWeatherChart([1.2, 6.1], { y: [-10, 20] })

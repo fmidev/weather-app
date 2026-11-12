@@ -5,14 +5,18 @@ import {
   Text,
   StyleSheet,
   VirtualizedList,
+  VirtualizedListInstance,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  useWindowDimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import Icon from '@assets/Icon';
 import { State } from '@store/types';
 import { TimeStepData } from '@store/forecast/types';
@@ -48,6 +52,8 @@ type ForecastByHourListProps = PropsFromRedux & {
   isOpen: boolean;
   activeDayIndex: number;
   setActiveDayIndex: (i: number) => void;
+  daySelectionRequest?: number;
+  dayStartIndexes?: number[];
   currentDayOffset: number;
   currentHour: number;
 };
@@ -57,6 +63,8 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   isOpen,
   activeDayIndex,
   setActiveDayIndex,
+  daySelectionRequest = 0,
+  dayStartIndexes,
   currentDayOffset,
   displayParams,
   clockType,
@@ -64,38 +72,60 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentHour, // just for re-rendering every hour
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const { fontScale } = useWindowDimensions();
   const { colors, dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('forecast');
   const { t: unitTranslate } = useTranslation('unitAbbreviations');
   const { excludeDayLength } = Config.get('weather').forecast;
 
-  const virtualizedList = useRef<VirtualizedList<TimeStepData>>(null);
+  const virtualizedList = useRef<VirtualizedListInstance>(null);
+  const handledDaySelectionRequest = useRef(0);
+  const programmaticScrollTarget = useRef<number | null>(null);
+  const hourColumnWidth = Math.min(fontScale * 52, 62);
 
   useEffect(() => {
-    if (activeDayIndex !== currentIndex && data.length > 0) {
-      const calculatedIndex = !activeDayIndex
-        ? 0
-        : currentDayOffset + (activeDayIndex - 1) * 24;
+    const isNewDaySelection =
+      daySelectionRequest !== handledDaySelectionRequest.current;
+
+    if (
+      (activeDayIndex !== currentIndex || isNewDaySelection) &&
+      data.length > 0
+    ) {
+      const calculatedIndex =
+        dayStartIndexes?.[activeDayIndex] ??
+        (!activeDayIndex ? 0 : currentDayOffset + (activeDayIndex - 1) * 24);
 
       const index =
         calculatedIndex > data.length ? data.length - 1 : calculatedIndex;
       if (index >= 0 && virtualizedList.current) {
+        if (isNewDaySelection) {
+          programmaticScrollTarget.current = activeDayIndex;
+        }
         virtualizedList.current.scrollToIndex({
           index,
-          animated: false,
+          animated: isNewDaySelection,
         });
       }
     }
-  }, [activeDayIndex, currentIndex, data, currentDayOffset]);
+    handledDaySelectionRequest.current = daySelectionRequest;
+  }, [
+    activeDayIndex,
+    currentIndex,
+    data,
+    currentDayOffset,
+    dayStartIndexes,
+    daySelectionRequest,
+  ]);
 
   if (!isOpen && !data) return null;
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const DayDurationRow = () => {
-    const calculatedStepIndex = !currentIndex
-      ? 0
-      : currentDayOffset + (currentIndex - 1) * 24 + 12;
+    const calculatedStepIndex =
+      (dayStartIndexes?.[currentIndex] ??
+        (!currentIndex ? 0 : currentDayOffset + (currentIndex - 1) * 24)) + 12;
     const adjustedStepIndex =
       calculatedStepIndex > data.length ? data.length - 1 : calculatedStepIndex;
 
@@ -172,7 +202,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
           style={[styles.row, styles.listContainer, styles.paddingHorizontal]}>
           {isPolarNight && !isMidnightSun && (
             <>
-              <View
+              <AccessibleView
                 accessible
                 style={[styles.row, styles.alignCenter, styles.listContainer]}>
                 <Icon
@@ -187,15 +217,12 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.panelText, styles.bold, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.polarNight')}
                 </Text>
-              </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              </AccessibleView>
+              <AccessibleView style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -208,22 +235,19 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   accessibilityLabel={`${t('sunrise')} ${t(
                     'at'
                   )} ${sunrise.format(dateFormat)}`}
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
+                  style={[styles.panelText, styles.bold, { color: colors.hourListText }]}>
                   {sunrise.format(dateFormat)}
                 </Text>
-              </View>
+              </AccessibleView>
             </>
           )}
           {isMidnightSun && !isPolarNight && (
             <>
-              <View
+              <AccessibleView
                 accessible
                 style={[styles.row, styles.alignCenter, styles.listContainer]}>
                 <Icon
@@ -238,15 +262,12 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.panelText, styles.bold, { color: colors.hourListText }]}>
                   {t('weatherInfoBottomSheet.nightlessNight')}
                 </Text>
-              </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              </AccessibleView>
+              <AccessibleView style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -259,17 +280,14 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   accessibilityLabel={`${t('sunset')} ${t(
                     'at'
                   )} ${sunset.format(dateFormat)}`}
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
+                  style={[styles.panelText, styles.bold, { color: colors.hourListText }]}>
                   {sunset.format(dateFormat)}
                 </Text>
-              </View>
+              </AccessibleView>
             </>
           )}
           {!isPolarNight && !isMidnightSun && (
@@ -280,7 +298,7 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                 styles.maxWidth,
                 styles.justifyContentCenter,
               ]}>
-              <View
+              <AccessibleView
                 style={[
                   styles.row,
                   styles.alignCenter,
@@ -299,18 +317,15 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   accessibilityLabel={`${t('sunrise')} ${t(
                     'at'
                   )} ${sunrise.format(timeFormat)}`}
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
+                  style={[styles.panelText, styles.bold, { color: colors.hourListText }]}>
                   {sunrise.format(timeFormat)}
                 </Text>
-              </View>
-              <View style={[styles.row, styles.alignCenter]} accessible>
+              </AccessibleView>
+              <AccessibleView style={[styles.row, styles.alignCenter]} accessible>
                 <Icon
                   width={14}
                   height={14}
@@ -321,20 +336,17 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                   ]}
                 />
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   accessibilityLabel={`${t('sunset')} ${t(
                     'at'
                   )} ${sunset.format(timeFormat)}`}
-                  style={[
-                    styles.panelText,
-                    styles.bold,
-                    { color: colors.hourListText },
-                  ]}>
+                  style={[styles.panelText, styles.bold, { color: colors.hourListText }]}>
                   {sunset.format(timeFormat)}
                 </Text>
-              </View>
+              </AccessibleView>
               {(excludeDayDuration === undefined || !excludeDayDuration) && (
                 <>
-                  <View
+                  <AccessibleView
                     style={[
                       styles.row,
                       styles.alignCenter,
@@ -352,17 +364,14 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
                       ]}
                     />
                     <Text
+                      accessibilityLanguage={accessibilityLanguage}
                       accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
                         'hours'
                       )} ${dayMinutes} ${t('minutes')}`}
-                      style={[
-                        styles.panelText,
-                        styles.bold,
-                        { color: colors.hourListText },
-                      ]}>
+                      style={[styles.panelText, styles.bold, { color: colors.hourListText }]}>
                       {`${dayHours} ${unitTranslate('h')} ${dayMinutes} ${unitTranslate('min')}`}
                     </Text>
-                  </View>
+                  </AccessibleView>
                 </>
               )}
             </View>
@@ -375,16 +384,37 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
   const handleOnScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (programmaticScrollTarget.current !== null) return;
+
     const { contentOffset } = nativeEvent;
-    let dayIndex = Math.ceil(
-      ((contentOffset.x + 1) / 52 - currentDayOffset) / 24
+    const firstVisibleItemIndex = Math.floor(
+      (contentOffset.x + 1) / hourColumnWidth
     );
-    dayIndex = dayIndex >= 0 ? dayIndex : 0;
+    let dayIndex = dayStartIndexes
+      ? dayStartIndexes.reduce(
+          (selectedIndex, startIndex, index) =>
+            startIndex <= firstVisibleItemIndex ? index : selectedIndex,
+          0
+        )
+      : Math.ceil((firstVisibleItemIndex - currentDayOffset) / 24);
+    dayIndex = Math.max(dayIndex, 0);
 
     if (dayIndex !== currentIndex) setCurrentIndex(dayIndex);
     if (dayIndex !== activeDayIndex) {
       setActiveDayIndex(dayIndex);
     }
+  };
+
+  const handleMomentumScrollEnd = () => {
+    const targetDayIndex = programmaticScrollTarget.current;
+    if (targetDayIndex === null) return;
+
+    programmaticScrollTarget.current = null;
+    setCurrentIndex(targetDayIndex);
+  };
+
+  const handleScrollBeginDrag = () => {
+    programmaticScrollTarget.current = null;
   };
 
   if (!isOpen) return null;
@@ -414,9 +444,11 @@ const ForecastByHourList: React.FC<ForecastByHourListProps> = ({
             horizontal
             showsHorizontalScrollIndicator={false}
             onScroll={handleOnScroll}
+            onScrollBeginDrag={handleScrollBeginDrag}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
             getItemLayout={(_, index: number) => ({
-              length: 52,
-              offset: index * 52,
+              length: hourColumnWidth,
+              offset: index * hourColumnWidth,
               index,
             })}
           />

@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet from '@components/common/BottomSheet';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
 
 import {
@@ -27,6 +28,7 @@ import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecas
 import { Config } from '@config';
 import { selectClockType } from '@store/settings/selectors';
 import PanelHeader from './common/PanelHeader';
+import useForecastSettings from './common/useForecastSettings';
 import DaySelectorList from './forecast/DaySelectorList';
 import ForecastByHourList from './forecast/ForecastByHourList';
 import ChartList from './forecast/ChartList';
@@ -75,18 +77,29 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
   updateDisplayFormat,
   currentHour, // just for re-rendering every hour
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
   const locale = i18n.language;
   const [activeDayIndex, setActiveDayIndex] = useState<number>(0);
+  const [daySelectionRequest, setDaySelectionRequest] = useState(0);
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
-  const paramSheetRef = useRef<RBSheet>(null);
-  const weatherInfoSheetRef = useRef<RBSheet>(null);
+  const {
+    paramSheetRef,
+    weatherInfoSheetRef,
+    openParameters,
+    openInfo,
+  } = useForecastSettings(displayFormat);
   const { ageWarning, forecastLengthTitle } = Config.get('weather').forecast;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
+
+  const selectDay = (index: number) => {
+    setActiveDayIndex(index);
+    setDaySelectionRequest((request) => request + 1);
+  };
 
   useEffect(() => {
     if (forecastByDay) {
@@ -105,6 +118,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
       day: k,
       data: forecastByDay[k],
     }));
+  const dayStartIndexes = sections
+    ? sections.map((_, index) =>
+        sections
+          .slice(0, index)
+          .reduce((total, section) => total + section.data.length, 0)
+      )
+    : undefined;
 
   const forecastLastUpdated = {
     time: forecastLastUpdatedMoment
@@ -160,14 +180,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                   },
                 ]}>
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   style={[
                     styles.forecastText,
                     displayFormat === TABLE && styles.selectedText,
                     {
                       color:
-                        displayFormat === TABLE
-                          ? colors.primaryText
-                          : colors.hourListText,
+                        displayFormat === TABLE ? colors.primaryText : colors.hourListText,
                     },
                   ]}>
                   {t('table')}
@@ -200,14 +219,13 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
                   },
                 ]}>
                 <Text
+                  accessibilityLanguage={accessibilityLanguage}
                   style={[
                     styles.forecastText,
                     displayFormat === CHART && styles.selectedText,
                     {
                       color:
-                        displayFormat === CHART
-                          ? colors.primaryText
-                          : colors.hourListText,
+                        displayFormat === CHART ? colors.primaryText : colors.hourListText,
                     },
                   ]}>
                   {t('chart')}
@@ -225,10 +243,7 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               accessibilityLabel={t('paramsAccessibilityLabel')}
               accessibilityHint={t('paramsBottomSheet.subTitle')}
               style={styles.bottomSheetButton}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Open forecast parameter settings');
-                paramSheetRef.current?.open();
-              }}
+              onPress={openParameters}
               disabled={displayFormat === CHART}>
               <Icon
                 name="settings"
@@ -247,18 +262,10 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
               accessibilityLabel={t('infoAccessibilityLabel')}
               accessibilityHint={t('infoAccessibilityHint')}
               style={styles.bottomSheetButton}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Open forecast info bottomsheet');
-                weatherInfoSheetRef.current?.open();
-              }}
-              disabled={displayFormat === CHART}>
+              onPress={openInfo}>
               <Icon
                 name="info"
-                color={
-                  displayFormat === CHART
-                    ? colors.secondaryBorder
-                    : colors.primaryText
-                }
+                color={colors.primaryText}
                 height={24}
                 width={24}
               />
@@ -270,14 +277,17 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
         {headerLevelForecast && headerLevelForecast.length > 0 && (
           <DaySelectorList
             activeDayIndex={activeDayIndex}
-            setActiveDayIndex={setActiveDayIndex}
+            setActiveDayIndex={selectDay}
             dayData={headerLevelForecast}
           />
         )}
       </View>
       <View style={[styles.forecastContainer]}>
         {loading && (
-          <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+          <ActivityIndicator
+            accessibilityLanguage={accessibilityLanguage}
+            accessibilityLabel={t('weather:loading')}
+          />
         )}
         {sections && sections.length > 0 && displayFormat === TABLE && (
           <ForecastByHourList
@@ -285,6 +295,8 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             isOpen
             activeDayIndex={activeDayIndex}
             setActiveDayIndex={(i:number) => setActiveDayIndex(i)}
+            daySelectionRequest={daySelectionRequest}
+            dayStartIndexes={dayStartIndexes}
             currentDayOffset={sections[0].data.length}
             currentHour={currentHour}
           />
@@ -302,34 +314,28 @@ const ForecastPanel: React.FC<ForecastPanelProps> = ({
             />
           )}
       </View>
-      <RBSheet
+      <BottomSheet
         ref={paramSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <ParamsBottomSheet onClose={() => paramSheetRef.current?.close()} />
-      </RBSheet>
-      <RBSheet
+      </BottomSheet>
+      <BottomSheet
         ref={weatherInfoSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <WeatherInfoBottomSheet
           onClose={() => weatherInfoSheetRef.current?.close()}
         />
-      </RBSheet>
+      </BottomSheet>
     </View>
   );
 };

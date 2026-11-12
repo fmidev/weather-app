@@ -168,6 +168,25 @@ const defaultConfig: ConfigType = {
       sv: 'FMI väder respons',
       en: 'FMI Weather feedback',
     },
+    faqUrl: {
+      fi: 'https://www.ilmatieteenlaitos.fi/kysymyksia_mobiilisovelluksesta',
+      sv: 'https://sv.ilmatieteenlaitos.fi/fr%C3%A5gor-om-mobilapplikationen',
+      en: 'https://en.ilmatieteenlaitos.fi/mobile-application-questions',
+    },
+    accessibility: {
+      fi: {
+        email: 'accessibility@someorg.fi',
+        subject: 'Saavutettavuus-palaute',
+      },
+      sv: {
+        email: 'accessibility@someorg.fi',
+        subject: 'Feedback om tillgänglighet',
+      },
+      en: {
+        email: 'accessibility@someorg.fi',
+        subject: 'Accessibility feedback',
+      },
+    },
   },
   analytics: {
     enabled: false,

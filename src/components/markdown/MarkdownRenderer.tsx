@@ -1,7 +1,14 @@
-import React, { ReactNode } from 'react';
-import { View, StyleSheet, type TextStyle, Linking } from 'react-native';
+import React, { ReactNode, type RefObject } from 'react';
+import {
+  View,
+  StyleSheet,
+  type TextStyle,
+  type TextInstance,
+  Linking,
+} from 'react-native';
 import { Renderer, type RendererInterface } from 'react-native-marked';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Icon from '@components/common/ScalableIcon';
 import Text from '@components/common/AppText';
 import { trackMatomoEvent } from '@utils/matomo';
@@ -13,8 +20,10 @@ import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const HEX_RE = /^#[0-9a-fA-F]{6}$/;
 const ICON_TOKEN_RE = /\[icon:([a-z0-9-]+)(?:\|(\d+)(?:\|(\d+))?)?\]/g;
-const CUSTOM_LEGEND_TOKEN_RE = /\[((?:radar-legend|legend):[^\]]+)\]\(([^)]+)\)/g;
+const CUSTOM_LEGEND_TOKEN_RE =
+  /\[((?:radar-legend|legend):[^\]]+)\]\(([^)]+)\)/g;
 const TEMPERATURE_LEGEND_TOKEN = '[temperature-legend]';
+const ACCESSIBILITY_FEEDBACK_TOKEN = '[accessibility-feedback]';
 const URL_WITH_SCHEME_RE = /^(https?:\/\/|mailto:|tel:)/i;
 
 type ParsedTrackedLink = {
@@ -52,9 +61,10 @@ const parseTrackedLink = (rawHref: string): ParsedTrackedLink | null => {
   const [rawUrl, ...actionParts] = parts;
   if (!rawUrl) return null;
 
-  const normalizedUrl = rawUrl.startsWith('/') && URL_WITH_SCHEME_RE.test(rawUrl.slice(1))
-    ? rawUrl.slice(1)
-    : rawUrl;
+  const normalizedUrl =
+    rawUrl.startsWith('/') && URL_WITH_SCHEME_RE.test(rawUrl.slice(1))
+      ? rawUrl.slice(1)
+      : rawUrl;
 
   return {
     url: normalizedUrl,
@@ -62,34 +72,36 @@ const parseTrackedLink = (rawHref: string): ParsedTrackedLink | null => {
   };
 };
 
-function RadarScaleLegend(props: Readonly<{
-  colors: string[];
-  labels: string[];
-  accessibilityLabel: string;
-  textStyle?: TextStyle;
-}>) {
+function RadarScaleLegend(
+  props: Readonly<{
+    colors: string[];
+    labels: string[];
+    accessibilityLabel: string;
+    textStyle?: TextStyle;
+  }>
+) {
   const { colors, labels, accessibilityLabel, textStyle } = props;
 
   const left = labels[0] ?? '';
   const center =
-    labels.length >= 2
-      ? labels[Math.floor((labels.length - 1) / 2)]
-      : '';
+    labels.length >= 2 ? labels[Math.floor((labels.length - 1) / 2)] : '';
   const right = labels.length >= 3 ? labels[labels.length - 1] : '';
 
   return (
-    <View style={styles.legendRoot} accessible accessibilityRole="text">
-      <View
+    <AccessibleView
+      style={styles.legendRoot}
+      accessible
+      accessibilityRole="text">
+      <AccessibleView
         style={styles.scaleRow}
-        accessibilityLabel={accessibilityLabel}
-      >
+        accessibilityLabel={accessibilityLabel}>
         {colors.map((c, i) => (
           <View
             key={`${c}-${i}`}
             style={[styles.scaleSegment, { backgroundColor: c }]}
           />
         ))}
-      </View>
+      </AccessibleView>
 
       <View style={styles.labelsRow}>
         <Text style={[styles.labelText, textStyle]} numberOfLines={1}>
@@ -102,50 +114,65 @@ function RadarScaleLegend(props: Readonly<{
           {right}
         </Text>
       </View>
-    </View>
+    </AccessibleView>
   );
 }
 
-function IconInline(props: Readonly<{
-  name: string;
-  width?: number;
-  height?: number;
-  textStyle?: TextStyle;
-}>) {
+function IconInline(
+  props: Readonly<{
+    name: string;
+    width?: number;
+    height?: number;
+    textStyle?: TextStyle;
+  }>
+) {
   const { name, width = 16, height = 16, textStyle } = props;
 
   if (!Icon) {
     // Fallback: show the token name as text (or return null if you prefer)
-    return (
-      <Text style={[styles.text, textStyle]}>
-        [{name}]
-      </Text>
-    );
+    return <Text style={[styles.text, textStyle]}>[{name}]</Text>;
   }
 
   return (
-    <View style={styles.iconInlineRow} accessible accessibilityRole="text">
+    <AccessibleView
+      style={styles.iconInlineRow}
+      accessible
+      accessibilityRole="text">
       <View style={styles.iconWrap}>
         <Icon name={name} width={width} height={height} />
       </View>
-    </View>
+    </AccessibleView>
   );
 }
 
 export class MarkdownRenderer extends Renderer implements RendererInterface {
   private readonly textStyle?: TextStyle;
 
+  private readonly headingRef?: RefObject<TextInstance | null>;
+
+  private readonly onHeadingLayout?: () => void;
+
   private textColor?: string;
 
   private headingColor?: string;
+
+  private accessibilityEmail = '';
+
+  private accessibilitySubject = '';
 
   private keyCounter = 0;
 
   private t?: (text: string) => string;
 
-  constructor(options?: { textStyle?: TextStyle }) {
+  constructor(options?: {
+    textStyle?: TextStyle;
+    headingRef?: RefObject<TextInstance | null>;
+    onHeadingLayout?: () => void;
+  }) {
     super();
     this.textStyle = options?.textStyle;
+    this.headingRef = options?.headingRef;
+    this.onHeadingLayout = options?.onHeadingLayout;
   }
 
   private nextKey() {
@@ -161,29 +188,67 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     this.headingColor = color;
   }
 
+  setAccessibilityEmail(email: string) {
+    this.accessibilityEmail = email;
+  }
+
+  setAccessibilitySubject(subject: string) {
+    this.accessibilitySubject = subject;
+  }
+
   setTranslationFunction(t: (text: string) => string) {
     this.t = t;
   }
 
-  heading = (children: string | ReactNode[], stylesOverride?: TextStyle, level?: number) => {
+  heading = (
+    children: string | ReactNode[],
+    stylesOverride?: TextStyle,
+    level?: number
+  ) => {
+    // Only the first mounted main heading owns the document's focus target.
+    let headingNode: TextInstance | null = null;
+    const headingRef = level === 1 ? this.headingRef : undefined;
+    const setHeadingRef = headingRef
+      ? (node: TextInstance | null) => {
+          if (node && !headingRef.current) headingRef.current = node;
+          else if (!node && headingRef.current === headingNode)
+            headingRef.current = null;
+          headingNode = node;
+        }
+      : undefined;
+
     const size =
-      level === 1 ? 24 :
-      level === 2 ? 22 :
-      level === 3 ? 20 :
-      level === 4 ? 18 :
-      level === 5 ? 16 : 15;
+      level === 1
+        ? 24
+        : level === 2
+          ? 22
+          : level === 3
+            ? 20
+            : level === 4
+              ? 18
+              : level === 5
+                ? 16
+                : 15;
 
     return (
       <Text
         key={this.nextKey()}
+        ref={setHeadingRef}
+        onLayout={
+          headingRef
+            ? () => {
+                if (headingNode && headingRef.current === headingNode)
+                  this.onHeadingLayout?.();
+              }
+            : undefined
+        }
         style={[
           styles.heading,
           { fontSize: size },
           this.headingColor ? { color: this.headingColor } : null,
           this.textStyle,
         ]}
-        accessibilityRole="header"
-      >
+        accessibilityRole="header">
         {React.Children.toArray(children)}
       </Text>
     );
@@ -191,16 +256,23 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
 
   text = (text: string) => {
     if (
-      !text.includes('[icon:')
-      && !text.includes(TEMPERATURE_LEGEND_TOKEN)
-      && !text.includes('[radar-legend:')
-      && !text.includes('[legend:')
+      !text.includes('[icon:') &&
+      !text.includes(TEMPERATURE_LEGEND_TOKEN) &&
+      !text.includes(ACCESSIBILITY_FEEDBACK_TOKEN) &&
+      !text.includes('[radar-legend:') &&
+      !text.includes('[legend:')
     ) {
-      return <Text
-        key={this.nextKey()}
-        style={[styles.text, this.textStyle, this.textColor ? { color: this.textColor } : null]}>
+      return (
+        <Text
+          key={this.nextKey()}
+          style={[
+            styles.text,
+            this.textStyle,
+            this.textColor ? { color: this.textColor } : null,
+          ]}>
           {text}
-        </Text>;
+        </Text>
+      );
     }
 
     const nodes: React.ReactNode[] = [];
@@ -213,24 +285,40 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
       const iconMatch = ICON_TOKEN_RE.exec(rest);
       const radarLegendMatch = CUSTOM_LEGEND_TOKEN_RE.exec(rest);
       const legendIndex = rest.indexOf(TEMPERATURE_LEGEND_TOKEN);
+      const feedbackIndex = rest.indexOf(ACCESSIBILITY_FEEDBACK_TOKEN);
 
       const nextIconIndex = iconMatch ? iconMatch.index : -1;
-      const nextRadarLegendIndex = radarLegendMatch ? radarLegendMatch.index : -1;
+      const nextRadarLegendIndex = radarLegendMatch
+        ? radarLegendMatch.index
+        : -1;
       const nextLegendIndex = legendIndex;
 
-      if (nextIconIndex === -1 && nextLegendIndex === -1 && nextRadarLegendIndex === -1) {
+      if (
+        nextIconIndex === -1 &&
+        nextLegendIndex === -1 &&
+        nextRadarLegendIndex === -1 &&
+        feedbackIndex === -1
+      ) {
         nodes.push(
           <Text
             key={`txt-end-${tokenIndex}`}
-            style={[styles.text, this.textStyle, this.textColor ? { color: this.textColor } : null]}
-          >
+            style={[
+              styles.text,
+              this.textStyle,
+              this.textColor ? { color: this.textColor } : null,
+            ]}>
             {rest}
           </Text>
         );
         break;
       }
 
-      const nextTokenIndex = [nextIconIndex, nextLegendIndex, nextRadarLegendIndex]
+      const nextTokenIndex = [
+        nextIconIndex,
+        nextLegendIndex,
+        nextRadarLegendIndex,
+        feedbackIndex,
+      ]
         .filter((index) => index !== -1)
         .sort((a, b) => a - b)[0];
 
@@ -241,16 +329,36 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
         nodes.push(
           <Text
             key={`txt-${tokenIndex}`}
-            style={[styles.text, this.textStyle, this.textColor ? { color: this.textColor } : null]}
-          >
+            style={[
+              styles.text,
+              this.textStyle,
+              this.textColor ? { color: this.textColor } : null,
+            ]}>
             {rest.slice(0, nextTokenIndex)}
           </Text>
         );
       }
 
-      if (useLegend) {
+      if (nextTokenIndex === feedbackIndex) {
+        const versionLabel = this.t?.('markdownRenderer:version') ?? 'version';
+        const subject =
+          `${this.accessibilitySubject} [${versionLabel}: ${packageJSON.version}]`.trim();
         nodes.push(
-          <View key={`temperature-legend-${tokenIndex}`} style={styles.blockToken}>
+          <React.Fragment key={`accessibility-feedback-${tokenIndex}`}>
+            {this.accessibilityEmail
+              ? this.link(
+                  this.accessibilityEmail,
+                  `mailto:${this.accessibilityEmail}?subject=${encodeURIComponent(subject)}|Settings`
+                )
+              : this.text('E-mail not configured')}
+          </React.Fragment>
+        );
+        rest = rest.slice(nextTokenIndex + ACCESSIBILITY_FEEDBACK_TOKEN.length);
+      } else if (useLegend) {
+        nodes.push(
+          <View
+            key={`temperature-legend-${tokenIndex}`}
+            style={styles.blockToken}>
             <TemperatureLegend />
           </View>
         );
@@ -261,17 +369,21 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
         const labels = parseLabels(rawLabels);
 
         if (colors.length >= 2) {
-          const textStyle = this.textColor ? {
-            ...this.textStyle,
-            color: this.textColor,
-          } : this.textStyle;
+          const textStyle = this.textColor
+            ? {
+                ...this.textStyle,
+                color: this.textColor,
+              }
+            : this.textStyle;
 
           nodes.push(
             <RadarScaleLegend
               key={`radar-legend-${tokenIndex}`}
               colors={colors}
               labels={labels}
-              accessibilityLabel={this.t ? this.t('markdownRenderer.radarLegendDescription') : ''}
+              accessibilityLabel={
+                this.t ? this.t('markdownRenderer.radarLegendDescription') : ''
+              }
               textStyle={textStyle}
             />
           );
@@ -279,8 +391,11 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
           nodes.push(
             <Text
               key={`radar-legend-fallback-${tokenIndex}`}
-              style={[styles.text, this.textStyle, this.textColor ? { color: this.textColor } : null]}
-            >
+              style={[
+                styles.text,
+                this.textStyle,
+                this.textColor ? { color: this.textColor } : null,
+              ]}>
               {radarLegendMatch[0]}
             </Text>
           );
@@ -307,21 +422,29 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
       tokenIndex += 1;
     }
 
-    return <View key={this.nextKey()} style={styles.inlineContainer}>{nodes}</View>;
+    return (
+      <View key={this.nextKey()} style={styles.inlineContainer}>
+        {nodes}
+      </View>
+    );
   };
 
   link = (children: string | ReactNode[], href: string) => {
-    const contentText =
-      typeof children === 'string' ? children : undefined;
+    const contentText = typeof children === 'string' ? children : undefined;
 
-    if (contentText?.startsWith('radar-legend:') || contentText?.startsWith('legend:')) {
+    if (
+      contentText?.startsWith('radar-legend:') ||
+      contentText?.startsWith('legend:')
+    ) {
       const colors = parseColors(contentText);
       const labels = parseLabels(href);
 
-      const textStyle = this.textColor ? {
-        ...this.textStyle,
-        color: this.textColor,
-      } : this.textStyle;
+      const textStyle = this.textColor
+        ? {
+            ...this.textStyle,
+            color: this.textColor,
+          }
+        : this.textStyle;
 
       if (colors.length >= 2) {
         return (
@@ -329,7 +452,9 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
             key={this.nextKey()}
             colors={colors}
             labels={labels}
-            accessibilityLabel={this.t ? this.t('markdownRenderer.radarLegendDescription') : ''}
+            accessibilityLabel={
+              this.t ? this.t('markdownRenderer.radarLegendDescription') : ''
+            }
             textStyle={textStyle}
           />
         );
@@ -337,6 +462,7 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
     }
 
     const trackedLink = parseTrackedLink(href);
+    const isMailLink = trackedLink?.url.startsWith('mailto:') ?? false;
     const linkChildren = React.Children.toArray(children);
 
     const onPress = () => {
@@ -346,7 +472,7 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
 
       let { url } = trackedLink;
 
-      if (url.startsWith('mailto:')) {
+      if (isMailLink) {
         url = url.replace('{version}', packageJSON.version);
       }
 
@@ -365,11 +491,13 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
       <AccessibleTouchableOpacity
         key={trackedLink?.url || this.nextKey()}
         accessibilityRole="link"
-        accessibilityHint={this.t ? this.t('markdonwRenderer.openInBrowser') : undefined}
-        onPress={onPress}
-      >
-        <View
-          style={[styles.link, { borderBottomColor: this.headingColor }]}>
+        accessibilityHint={this.t?.(
+          isMailLink
+            ? 'markdownRenderer:moveToHint'
+            : 'markdownRenderer:openInBrowser'
+        )}
+        onPress={onPress}>
+        <View style={[styles.link, { borderBottomColor: this.headingColor }]}>
           <Text
             maxFontSizeMultiplier={1.5}
             style={[
@@ -380,7 +508,7 @@ export class MarkdownRenderer extends Renderer implements RendererInterface {
             ]}>
             {linkChildren}
           </Text>
-          { !trackedLink?.url.startsWith('mailto:') && (
+          {!isMailLink && (
             <Icon
               name="open-in-new"
               color={this.textColor}
@@ -399,14 +527,14 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: REGULAR_FONT,
     fontSize: 15,
-    lineHeight: 20
+    lineHeight: 20,
   },
   heading: {
     fontFamily: BOLD_FONT,
     marginVertical: 8,
   },
   legendRoot: {
-    marginVertical: 6
+    marginVertical: 6,
   },
   scaleRow: {
     flexDirection: 'row',
@@ -416,7 +544,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   scaleSegment: {
-    flex: 1
+    flex: 1,
   },
   labelsRow: {
     width: '100%',
@@ -426,7 +554,7 @@ const styles = StyleSheet.create({
   },
   labelText: {
     fontSize: 13,
-    lineHeight: 18
+    lineHeight: 18,
   },
   inlineContainer: {
     flexDirection: 'row',

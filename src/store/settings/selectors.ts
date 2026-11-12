@@ -45,6 +45,11 @@ export const selectSessionId = createSelector(
   (settings) => settings.sessionId
 );
 
+export const selectForecastBackgroundImages = createSelector(
+  selectSettingsDomain,
+  (settings) => settings.forecastBackgroundImages
+);
+
 export const selectIsRunningOnMac = createSelector(
   selectSettingsDomain,
   (settings) => settings.isRunningOnMac

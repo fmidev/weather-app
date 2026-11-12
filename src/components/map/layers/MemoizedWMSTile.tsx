@@ -7,6 +7,7 @@ import {
 } from '@maplibre/maplibre-react-native';
 import type { MapTileFormat, VectorTileSettings } from '@config';
 import type { VectorLayerStyle } from '@store/map/types';
+import { DEFAULT_WMS_BEFORE_ID } from '@utils/mapStyle';
 
 type MemoizedWMSTileProps = {
   tileId: string;
@@ -17,6 +18,8 @@ type MemoizedWMSTileProps = {
   vectorLayers?: VectorLayerStyle[];
   mvt?: VectorTileSettings;
   library?: 'maplibre' | 'react-native-maps';
+  // null disables the legacy boundary when a loaded style has no such layer.
+  beforeId?: string | null;
 };
 
 const parseMvtReference = (
@@ -45,6 +48,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
   vectorLayers,
   mvt,
   library = 'react-native-maps',
+  beforeId = DEFAULT_WMS_BEFORE_ID,
 }) => {
   const items = urlTemplate.split('?');
   const key = items.length > 1 ? items[1] : urlTemplate;
@@ -89,7 +93,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
             ...layer,
             id: `${layerId}-${id ?? index}`,
             source: sourceId,
-            beforeId: 'places_region',
+            beforeId: beforeId ?? undefined,
             paint: {
               ...paint,
               [opacityProperty]: combinedOpacity,
@@ -111,7 +115,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
               type: 'symbol',
               source: sourceId,
               'source-layer': mvtSourceLayer,
-              beforeId: 'places_region',
+              beforeId: beforeId ?? undefined,
               layout: {
                 'text-field': textField,
                 'text-font': ['Noto Sans Regular'],
@@ -140,7 +144,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
               type: 'symbol',
               source: sourceId,
               'source-layer': windSourceLayer,
-              beforeId: 'places_region',
+              beforeId: beforeId ?? undefined,
               layout: {
                 'icon-image': 'mvt-wind-arrow',
                 'icon-size': 0.5,
@@ -175,7 +179,7 @@ const MemoizedWMSTile: React.FC<MemoizedWMSTileProps> = ({
         id={layerId}
         key={layerId}
         source={sourceId}
-        beforeId="places_region"
+        beforeId={beforeId ?? undefined}
         paint={{
           'raster-opacity': opacity ?? 0,
           'raster-opacity-transition': {

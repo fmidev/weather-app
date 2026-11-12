@@ -10,7 +10,7 @@ import Text from '@components/common/AppText';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import type { NewsItem } from '@store/news/types';
 import { trackMatomoEvent } from '@utils/matomo';
-import { formatAccessibleDate } from '@utils/helpers';
+import { formatAccessibleDate } from '@utils/accessibility';
 import { REGULAR_FONT, MEDIUM_FONT } from '@assets/constants';
 
 type NewsProps = {

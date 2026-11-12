@@ -6,6 +6,7 @@ import { isPointInPolygon } from 'geolib';
 import moment from 'moment-timezone';
 import { connect, ConnectedProps } from 'react-redux';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import Skeleton from '@components/common/Skeleton';
 import Icon from '@components/common/ScalableIcon'
@@ -251,7 +252,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
               },
             ]}>
             {daySummaries.map(({ date, count, severities, highestSeverity }, index) => (
-              <View
+              <AccessibleView
                 key={date}
                 style={styles.dayColumn}
                 accessible
@@ -329,7 +330,7 @@ const LocalWarningsBar: React.FC<LocalWarningsBarProps> = ({
                     </View>
                   </View>
                 </AccessibleTouchableOpacity>
-              </View>
+              </AccessibleView>
             ))}
           </View>
         </View>

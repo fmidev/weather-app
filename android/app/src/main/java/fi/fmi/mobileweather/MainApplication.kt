@@ -9,6 +9,7 @@ import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
+import fi.fmi.mobileweather.widgets.WidgetNotification
 
 class MainApplication : Application(), ReactApplication {
 
@@ -17,8 +18,8 @@ class MainApplication : Application(), ReactApplication {
       context = applicationContext,
       packageList =
         PackageList(this).packages.apply {
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // add(MyReactNativePackage())
+          add(NavigationBarPackage())
+          add(AppLanguagePackage())
         },
     )
   }
@@ -26,6 +27,6 @@ class MainApplication : Application(), ReactApplication {
   override fun onCreate() {
     super.onCreate()
     loadReactNative(this)
+    WidgetNotification.scheduleActiveWidgetUpdates(this)
   }
 }
-

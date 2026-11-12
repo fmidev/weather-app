@@ -1,5 +1,6 @@
 import React from 'react';
-import { Switch, Text } from 'react-native';
+import type { ReactTestInstance } from 'react-test-renderer';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
 
@@ -99,8 +100,16 @@ const createStore = (state: any) => ({
   subscribe: () => () => {},
 });
 
+const parentViewStyle = (node: ReactTestInstance) => {
+  let parent = node.parent;
+  while (parent && parent.type !== View) parent = parent.parent;
+  expect(parent).not.toBeNull();
+  return StyleSheet.flatten(parent!.props.style);
+};
+
 describe('MapLayersBottomSheet', () => {
   beforeEach(() => {
+    jest.replaceProperty(Platform, 'OS', 'android');
     jest.clearAllMocks();
     mockWindowDimensions.mockReturnValue({ width: 390, height: 844 });
     mockSafeAreaInsets.mockReturnValue({
@@ -153,37 +162,41 @@ describe('MapLayersBottomSheet', () => {
     expect(mergedStyle.paddingTop).toBe(8);
   });
 
-  it('updates location layer from switch and tracks matomo event', () => {
+  it.each([true, false])('updates location from the named switch and tracks the new value (initial value: %s)', (value) => {
     const store = createStore({
       mock: {
         activeOverlay: 3,
-        mapLayers: { location: true, weather: true, radar: false },
+        mapLayers: { location: value, weather: true, radar: false },
         animationSpeed: 50,
       },
     });
 
-    const { UNSAFE_getByType: unsafeGetByType } = render(
+    const { getByA11yLabel } = render(
       <Provider store={store as any}>
         <MapLayersBottomSheet onClose={() => {}} />
       </Provider>
     );
 
-    fireEvent(unsafeGetByType(Switch), 'valueChange');
+    const control = getByA11yLabel('Show own location');
+    expect(control.props.accessibilityRole).toBe('switch');
+    expect(control.props.accessibilityState.checked).toBe(value);
+    expect(control.props.accessibilityHint).toBe(value ? 'Hide current location' : 'Show current location');
+    fireEvent.press(control);
 
     expect(mockTrackMatomoEvent).toHaveBeenCalledWith(
       'User action',
       'Map',
-      'Show own location - false'
+      `Show own location - ${!value}`
     );
     expect(mockUpdateMapLayers).toHaveBeenCalledWith({
-      location: false,
+      location: !value,
       weather: true,
       radar: false,
     });
     expect(store.dispatch).toHaveBeenCalledWith({
       type: 'MAP/UPDATE_MAP_LAYERS',
       payload: {
-        location: false,
+        location: !value,
         weather: true,
         radar: false,
       },
@@ -216,5 +229,28 @@ describe('MapLayersBottomSheet', () => {
     const mergedStyle = Object.assign({}, ...styleArray);
 
     expect(mergedStyle.paddingTop).toBe(12);
+  });
+
+  it.each([390, 700])('reserves the close button hit area above the first controls at width %s', (width) => {
+    mockWindowDimensions.mockReturnValue({ width, height: 844 });
+    const store = createStore({ mock: {
+      activeOverlay: 3,
+      mapLayers: { location: true, weather: true, radar: false },
+      animationSpeed: 50,
+    } });
+    const { getByText, getByTestId } = render(
+      <Provider store={store as any}>
+        <MapLayersBottomSheet onClose={() => {}} />
+      </Provider>
+    );
+    // Android's spatial Tab order must not put the close button and switch on the same row.
+    const closeStyle = parentViewStyle(getByTestId('layers_bottom_sheet_close_button'));
+    const locationHeaderStyle = parentViewStyle(getByText('Location'));
+    expect(closeStyle.top).toBeGreaterThanOrEqual(0);
+    expect(locationHeaderStyle.minHeight).toBeGreaterThanOrEqual(closeStyle.top + 44);
+    if (width > 500) {
+      const layersHeaderStyle = parentViewStyle(getByText('Map layers'));
+      expect(layersHeaderStyle.minHeight).toBeGreaterThanOrEqual(closeStyle.top + 44);
+    }
   });
 });

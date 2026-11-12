@@ -4,6 +4,7 @@ import type { Location } from '../location/types';
 export const FETCH_WARNINGS = 'FETCH_WARNINGS';
 export const FETCH_WARNINGS_SUCCESS = 'FETCH_WARNINGS_SUCCESS';
 export const FETCH_WARNINGS_ERROR = 'FETCH_WARNINGS_ERROR';
+export const FETCH_FAVORITE_WARNINGS_SUCCESS = 'FETCH_FAVORITE_WARNINGS_SUCCESS';
 
 export const FETCH_CAP_WARNINGS = 'FETCH_CAP_WARNINGS';
 export const FETCH_CAP_WARNINGS_SUCCESS = 'FETCH_CAP_WARNINGS_SUCCESS';
@@ -17,12 +18,18 @@ interface FetchWarningsSuccess {
   data: WarningsData;
   id: number | string;
   timestamp: number;
+  requestKey: string;
 }
 
 interface FetchWarningsError {
   type: typeof FETCH_WARNINGS_ERROR;
   error: Error;
   timestamp: number;
+}
+
+interface FetchFavoriteWarningsSuccess {
+  type: typeof FETCH_FAVORITE_WARNINGS_SUCCESS;
+  data: LocationWarnings;
 }
 
 interface FetchCapWarnings {
@@ -39,6 +46,7 @@ export type WarningsActionTypes =
   | FetchWarnings
   | FetchWarningsSuccess
   | FetchWarningsError
+  | FetchFavoriteWarningsSuccess
   | FetchCapWarnings
   | FetchCapWarningsSuccess;
 
@@ -110,6 +118,8 @@ export interface Error {
 export interface WarningsState {
   data: LocationWarnings;
   capData: CapWarning[] | undefined;
+  updated: string | undefined;
+  updatedRequestKey: string | undefined;
   loading: boolean;
   error: boolean | Error | string;
   fetchTimestamp: number;

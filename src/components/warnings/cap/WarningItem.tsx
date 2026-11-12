@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, ScrollViewInstance } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import Icon from '@assets/Icon';
 import { Config } from '@config';
 import { CustomTheme, GRAYISH_BLUE } from '@assets/colors';
@@ -18,7 +19,7 @@ type WarningItemProps = {
   areasDescription?: string;
   warning: CapWarning;
   warningCount?: number;
-  scrollViewRef?: React.RefObject<ScrollView | null>;
+  scrollViewRef?: React.RefObject<ScrollViewInstance | null>;
   timespan: string;
   includeSeverityBars: boolean;
   dailySeverities?: number[][];
@@ -41,7 +42,7 @@ const WarningItem: React.FC<WarningItemProps> = ({
   showDescription,
   showAreas = true,
 }) => {
-  const { width } = useWindowDimensions();
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { capViewSettings } = Config.get('warnings');
   const { t, i18n } = useTranslation();
   const { colors } = useTheme() as CustomTheme;
@@ -93,17 +94,13 @@ const WarningItem: React.FC<WarningItemProps> = ({
           severity={infoEn.severity}
           size={32}
         />
-        <View style={[styles.headingMainContent, { width: width - 136 }]}>
+        <View style={styles.headingMainContent}>
           {includeSeverityBars && (
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               scrollEnabled={false}
-              style={[
-                styles.row,
-                styles.severityBarContainer,
-                { width: width - 136 },
-              ]}
+              style={[styles.row, styles.severityBarContainer]}
               ref={scrollViewRef}>
               {dailySeverities?.map((daySeverities, index) => (
                 <CapSeverityBar
@@ -113,7 +110,9 @@ const WarningItem: React.FC<WarningItemProps> = ({
               ))}
             </ScrollView>
           )}
-          <Text style={[styles.headingTitle, { color: colors.hourListText }]}>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={[styles.headingTitle, { color: colors.hourListText }]}>
             {(info.event as WarningType) ? info.event : ''}
             {capViewSettings?.warningBlockWarningCountEnabled !== false &&
             warningCount &&
@@ -121,11 +120,15 @@ const WarningItem: React.FC<WarningItemProps> = ({
               ? ` (${warningCount} pcs)`
               : ''}
           </Text>
-          <Text style={[styles.headingText, { color: colors.hourListText }]}>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={[styles.headingText, { color: colors.hourListText }]}>
             {timespan}
           </Text>
           { showAreas && (
-            <Text style={[styles.headingText, { color: colors.hourListText }]}>
+            <Text
+              accessibilityLanguage={accessibilityLanguage}
+              style={[styles.headingText, { color: colors.hourListText }]}>
               {capViewSettings?.hideLongArealist &&
               areaCount > MAX_AREA_COUNT_FOR_HIDE_LONG_AREA_LIST
                 ? t('warnings:capInfo:areas', { count: areaCount })
@@ -151,7 +154,9 @@ const WarningItem: React.FC<WarningItemProps> = ({
             styles.warningDescription,
             { backgroundColor: colors.background },
           ]}>
-          <Text style={{ color: colors.hourListText }}>{info.description}</Text>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={{ color: colors.hourListText }}>{info.description}</Text>
         </View>
       )}
     </View>
@@ -182,7 +187,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginVertical: 15,
     marginLeft: 16,
-    flexGrow: 1,
+    flex: 1,
+    minWidth: 0,
   },
   headingTitle: {
     fontFamily: BOLD_FONT,

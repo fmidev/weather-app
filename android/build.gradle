@@ -2,12 +2,12 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "36.0.0"
+        buildToolsVersion = "37.0.0"
         minSdkVersion = 24
-        compileSdkVersion = 36
+        compileSdkVersion = 37
         targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.1.20"
+        kotlinVersion = "2.2.0"
         playServicesLocationVersion = "21.3.0"
     }
 
@@ -30,6 +30,14 @@ allprojects {
             // All of Detox' artifacts are provided via the npm module
             url "$rootDir/../node_modules/detox/Detox-android"
         }
+    }
+}
+
+project(":react-native-nitro-geolocation") {
+    plugins.withId("com.android.library") {
+        // Geolocation does not inherit the root NDK version. Keep its C++ runtime
+        // compatible with React Native's bundled libc++_shared.so.
+        android.ndkVersion = rootProject.ext.ndkVersion
     }
 }
 

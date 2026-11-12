@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
 import { useTheme } from '@react-navigation/native';
 import { connect, ConnectedProps } from 'react-redux';
 
@@ -24,8 +24,8 @@ type MapScreenProps = ConnectedProps<typeof connector>;
 const MapScreen: React.FC<MapScreenProps> = ({ mapLibrary }) => {
   const { colors } = useTheme();
   const { fontScale } = useWindowDimensions();
-  const mapLayersSheetRef = useRef<RBSheet>(null);
-  const infoSheetRef = useRef<RBSheet>(null);
+  const mapLayersSheetRef = useRef<BottomSheetRef>(null);
+  const infoSheetRef = useRef<BottomSheetRef>(null);
 
   const largeFonts = fontScale > 1.5;
 
@@ -43,36 +43,30 @@ const MapScreen: React.FC<MapScreenProps> = ({ mapLibrary }) => {
         />
       )}
 
-      <RBSheet
+      <BottomSheet
         ref={infoSheetRef}
         height={600}
-        closeOnDragDown
-        dragFromTopOnly
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        scrollableNegotiation="none"
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <InfoBottomSheet onClose={() => infoSheetRef.current?.close()} />
-      </RBSheet>
+      </BottomSheet>
 
-      <RBSheet
+      <BottomSheet
         ref={mapLayersSheetRef}
         height={largeFonts ? 530 : 500}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <MapLayersBottomSheet
           onClose={() => mapLayersSheetRef.current?.close()}
         />
-      </RBSheet>
+      </BottomSheet>
     </>
   );
 };

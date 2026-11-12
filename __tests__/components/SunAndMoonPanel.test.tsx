@@ -84,7 +84,7 @@ jest.mock('@utils/moon', () => ({
   resolveMoonPhase: (...args: any[]) => mockResolveMoonPhase(...args),
 }));
 
-jest.mock('@utils/helpers', () => ({
+jest.mock('@utils/accessibility', () => ({
   formatAccessibleDateTime: (...args: any[]) =>
     mockFormatAccessibleDateTime(...args),
 }));

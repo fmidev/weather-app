@@ -293,4 +293,36 @@ describe('MemoizedWMSTile', () => {
       })
     );
   });
+
+  it.each([
+    ['overlay-roads', 'overlay-roads'],
+    [undefined, 'places_region'],
+    [null, undefined],
+  ])('positions the raster layer with the overlay or legacy boundary (%s)', (beforeId, expected) => {
+    render(<MemoizedWMSTile tileId="frame" urlTemplate="https://maps.example/wms" library="maplibre" beforeId={beforeId} />);
+    expect(mockLayer).toHaveBeenLastCalledWith(expect.objectContaining({ beforeId: expected }));
+  });
+
+  it.each([
+    ['overlay-roads', 'overlay-roads'],
+    [undefined, 'places_region'],
+    [null, undefined],
+  ])('positions vector, text and wind layers with the overlay or legacy boundary (%s)', (beforeId, expected) => {
+    render(
+      <MemoizedWMSTile
+        tileId="wind-frame"
+        urlTemplate="https://example.test/wms?format=pbf"
+        tileFormat="pbf"
+        vectorLayers={[{ type: 'fill', 'source-layer': 'wind' }]}
+        mvt={{ value: 'wind.speed', windDirection: 'wind.direction' }}
+        library="maplibre"
+        beforeId={beforeId}
+      />
+    );
+
+    expect(mockLayer).toHaveBeenCalledTimes(3);
+    for (const [props] of mockLayer.mock.calls) {
+      expect(props).toEqual(expect.objectContaining({ beforeId: expected }));
+    }
+  });
 });

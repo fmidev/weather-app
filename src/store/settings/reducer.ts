@@ -1,5 +1,6 @@
 import { PersistConfig } from '@store/types';
 import { getDefaultUnits } from '@utils/units';
+import defaultConfig from '../../../defaultConfig';
 import {
   UPDATE_UNITS,
   UPDATE_THEME,
@@ -7,6 +8,7 @@ import {
   SettingsActionTypes,
   UPDATE_CLOCK_TYPE,
   UPDATE_MAP_LIBRARY,
+  UPDATE_FORECAST_BACKGROUND_IMAGES,
   SET_IS_RUNNING_ON_MAC,
 } from './types';
 
@@ -20,6 +22,7 @@ const INITIAL_STATE: SettingsState = {
   theme: undefined,
   clockType: undefined,
   mapLibrary: 'react-native-maps',
+  forecastBackgroundImages: defaultConfig.weather.backgroundImagesEnabled ?? true,
   sessionId: generateSessionId(),
   isRunningOnMac: false,
 };
@@ -65,6 +68,13 @@ export default (
       };
     }
 
+    case UPDATE_FORECAST_BACKGROUND_IMAGES: {
+      return {
+        ...state,
+        forecastBackgroundImages: action.enabled,
+      };
+    }
+
     default: {
       return state;
     }
@@ -73,5 +83,11 @@ export default (
 
 export const settingsPersist: PersistConfig = {
   key: 'settings',
-  whitelist: ['theme', 'clockType', 'units', 'mapLibrary'],
+  whitelist: [
+    'theme',
+    'clockType',
+    'units',
+    'mapLibrary',
+    'forecastBackgroundImages',
+  ],
 };

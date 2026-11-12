@@ -3,6 +3,8 @@ import {
   FETCH_FORECAST,
   FETCH_FORECAST_SUCCESS,
   FETCH_FORECAST_ERROR,
+  FETCH_ALL_FORECASTS_SUCCESS,
+  RETAIN_FORECAST_LOCATIONS,
   ForecastActionTypes,
   ForecastState,
   WeatherData,
@@ -10,6 +12,7 @@ import {
   RESTORE_DEFAULT_DISPLAY_PARAMS,
   UPDATE_FORECAST_DISPLAY_FORMAT,
   UPDATE_FORECAST_CHART_PARAMETER,
+  UPDATE_SHOW_SINGLE_HOURLY_FORECAST,
   DisplayParameters,
   TimeStepData,
   ForecastLocation,
@@ -25,17 +28,34 @@ const INITIAL_STATE: ForecastState = {
   error: false,
   displayParams: [],
   displayFormat: 'table',
+  showSingleHourlyForecast: false,
   chartDisplayParam: undefined,
   fetchTimestamp: Date.now(),
   fetchSuccessTime: 0,
 };
 
-const formatData = (dataSets: TimeStepDataSet, location: ForecastLocation): WeatherData => {
+const normalizeGeoid = (geoid?: number | string) =>
+  typeof geoid === 'number' && Number.isNaN(geoid) ? 0 : (geoid ?? 0);
+
+const retainLocations = <T>(
+  data: Record<string, T> | undefined,
+  locationIds: Set<string>
+): Record<string, T> | undefined => {
+  if (!data || Object.keys(data).every((id) => locationIds.has(id))) {
+    return data;
+  }
+
+  return Object.fromEntries(
+    Object.entries(data).filter(([id]) => locationIds.has(id))
+  );
+};
+
+const formatData = (
+  dataSets: TimeStepDataSet,
+  location: ForecastLocation
+): WeatherData => {
   const weatherData: WeatherData = {};
-  const rawGeoid = location.geoid;
-  const normalizedGeoid =
-    typeof rawGeoid === 'number' && Number.isNaN(rawGeoid) ? 0 : rawGeoid ?? 0;
-  const id = String(normalizedGeoid);
+  const id = String(normalizeGeoid(location.geoid));
   const stepsByEpoch = new Map<number, TimeStepData>();
 
   dataSets.forEach((steps) => {
@@ -62,15 +82,17 @@ export default (
 ): ForecastState => {
   switch (action.type) {
     case FETCH_FORECAST: {
+      if (action.background) return state;
+
       return {
         ...state,
-        loading: true,
+        loading: !action.hasCachedData,
         error: false,
       };
     }
 
     case FETCH_FORECAST_SUCCESS: {
-      const geoid = action.data.location.geoid ?? 0;
+      const geoid = normalizeGeoid(action.data.location.geoid);
       return {
         ...state,
         data: {
@@ -79,16 +101,60 @@ export default (
         },
         auroraBorealisData: {
           ...state.auroraBorealisData,
-          [geoid]: action.data.isAuroraBorealisLikely
+          [geoid]: action.data.isAuroraBorealisLikely,
         },
-        fetchTimestamp: action.timestamp,
-        fetchSuccessTime: action.timestamp,
-        loading: false,
-        error: false,
+        ...(action.background
+          ? {}
+          : {
+              fetchTimestamp: action.timestamp,
+              fetchSuccessTime: action.timestamp,
+              loading: false,
+              error: false,
+            }),
       };
     }
 
+    case FETCH_ALL_FORECASTS_SUCCESS: {
+      return {
+        ...state,
+        data: { ...state.data, ...action.data },
+        ...(action.auroraBorealisData
+          ? {
+              auroraBorealisData: {
+                ...state.auroraBorealisData,
+                ...action.auroraBorealisData,
+              },
+            }
+          : {}),
+        ...(action.background
+          ? {}
+          : {
+              fetchTimestamp: action.timestamp,
+              fetchSuccessTime: action.timestamp,
+              loading: false,
+              error: false,
+            }),
+      };
+    }
+
+    case RETAIN_FORECAST_LOCATIONS: {
+      const locationIds = new Set(
+        action.locationIds.map((id) => String(normalizeGeoid(id)))
+      );
+      const data = retainLocations(state.data, locationIds);
+      const auroraBorealisData = retainLocations(
+        state.auroraBorealisData,
+        locationIds
+      );
+
+      return data === state.data && auroraBorealisData === state.auroraBorealisData
+        ? state
+        : { ...state, data, auroraBorealisData };
+    }
+
     case FETCH_FORECAST_ERROR: {
+      if (action.background) return state;
+
       return {
         ...state,
         loading: false,
@@ -137,6 +203,13 @@ export default (
       };
     }
 
+    case UPDATE_SHOW_SINGLE_HOURLY_FORECAST: {
+      return {
+        ...state,
+        showSingleHourlyForecast: action.value,
+      };
+    }
+
     default: {
       return state;
     }
@@ -145,5 +218,14 @@ export default (
 
 export const forecastPersist: PersistConfig = {
   key: 'forecast',
-  whitelist: ['displayParams', 'displayFormat', 'chartDisplayParam'],
+  whitelist: [
+    'data',
+    'auroraBorealisData',
+    'displayParams',
+    'displayFormat',
+    'chartDisplayParam',
+    'showSingleHourlyForecast',
+    'fetchTimestamp',
+    'fetchSuccessTime',
+  ],
 };

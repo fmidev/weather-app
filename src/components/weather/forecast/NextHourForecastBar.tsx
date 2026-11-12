@@ -6,6 +6,7 @@ import { useTheme } from '@react-navigation/native';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
+import AccessibleView from '@components/common/AccessibleView';
 import { State } from '@store/types';
 
 import { selectCurrent } from '@store/location/selector';
@@ -107,7 +108,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
   return (
     <View style={styles.container}>
       <View style={[ styles.bar, styles.justifySpaceBetween ]}>
-        <View
+        <AccessibleView
           accessible
           style={styles.row}
           accessibilityLabel={
@@ -156,8 +157,8 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
               </View>
             </View>
           )}
-        </View>
-      <View accessible style={styles.row}>
+        </AccessibleView>
+      <AccessibleView accessible style={styles.row}>
         { (wide || !showUv) && activeParameters.includes('precipitation1h') && (
           <>
             <Icon
@@ -186,7 +187,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
             </Text>
           </>
         )}
-      </View>
+      </AccessibleView>
       <View style={styles.row}>
         { (wide || showUv) && activeParameters.includes('uvCumulated') && (
           <Text
@@ -203,7 +204,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
       </View>
       {activeParameters.includes('feelsLike') && (
         <View style={styles.row}>
-          <View
+          <AccessibleView
             accessible
             accessibilityLabel={`${t('feelsLike')} ${numericOrDash(
               feelsLikeValue
@@ -222,7 +223,7 @@ const NextHourForecastBar: React.FC<NextHourForecastBarProps> = ({
               </Text>
               <Text>{`°${t(`unitAbbreviations:${temperatureUnit}`)}`}</Text>
             </Text>
-          </View>
+          </AccessibleView>
           <Icon
             name={getFeelsLikeIconName(forecast, currentTime.toObject())}
             style={styles.feelsLikeIcon}

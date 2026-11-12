@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import moment from 'moment-timezone';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet from '@components/common/BottomSheet';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { State } from '@store/types';
 
 import {
@@ -28,13 +29,14 @@ import { updateDisplayFormat as updateDisplayFormatAction } from '@store/forecas
 import { Config } from '@config';
 import { selectClockType } from '@store/settings/selectors';
 import PanelHeader from './common/PanelHeader';
+import useForecastSettings from './common/useForecastSettings';
 import ChartList from './forecast/ChartList';
 import ParamsBottomSheet from './sheets/ParamsBottomSheet';
 import WeatherInfoBottomSheet from './sheets/WeatherInfoBottomSheet';
 import Vertical10DaysForecast from './forecast/Vertical10DaysForecast';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { trackMatomoEvent } from '@utils/matomo';
-import { formatAccessibleDateTime } from '@utils/helpers';
+import { formatAccessibleDateTime } from '@utils/accessibility';
 import { REGULAR_FONT, BOLD_FONT } from '@assets/constants';
 
 const TABLE = 'table';
@@ -78,6 +80,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentHour, // just for re-rendering every hour
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const insets = useSafeAreaInsets();
   const { colors } = useTheme() as CustomTheme;
   const { t, i18n } = useTranslation('forecast');
@@ -86,8 +89,12 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | undefined>(
     undefined
   );
-  const paramSheetRef = useRef<RBSheet>(null);
-  const weatherInfoSheetRef = useRef<RBSheet>(null);
+  const {
+    paramSheetRef,
+    weatherInfoSheetRef,
+    openParameters,
+    openInfo,
+  } = useForecastSettings(displayFormat);
   const { ageWarning, forecastLengthTitle } = Config.get('weather').forecast;
 
   const dateKeys = forecastByDay && Object.keys(forecastByDay);
@@ -118,7 +125,12 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
   };
 
   const accessibleLastUpdated = forecastLastUpdatedMoment
-    ? formatAccessibleDateTime(forecastLastUpdatedMoment, t, clockType === 24, false)
+    ? formatAccessibleDateTime(
+        forecastLastUpdatedMoment,
+        t,
+        clockType === 24,
+        false
+      )
     : '';
 
   return (
@@ -134,7 +146,9 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
       ]}>
       <PanelHeader
         title={t('panelHeader', { forecastLength: forecastLengthTitle || 10 })}
-        accessibleTitle={t('accessiblePanelHeader', { forecastLength: forecastLengthTitle || 10 })}
+        accessibleTitle={t('accessiblePanelHeader', {
+          forecastLength: forecastLengthTitle || 10,
+        })}
         lastUpdated={forecastLastUpdated}
         accessibleLastUpdated={accessibleLastUpdated}
         thin
@@ -150,8 +164,12 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               }`}
               activeOpacity={1}
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Show forecast in TABLE format');
-                updateDisplayFormat(TABLE)
+                trackMatomoEvent(
+                  'User action',
+                  'Weather',
+                  'Show forecast in TABLE format'
+                );
+                updateDisplayFormat(TABLE);
               }}
               style={styles.withMarginRight}>
               <View
@@ -160,7 +178,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                   {
                     backgroundColor:
                       displayFormat === TABLE
-                        ? colors.timeStepBackground : colors.inputButtonBackground,
+                        ? colors.timeStepBackground
+                        : colors.inputButtonBackground,
                     borderColor:
                       displayFormat === TABLE
                         ? colors.chartSecondaryLine
@@ -191,8 +210,12 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               }`}
               activeOpacity={1}
               onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Show forecast in CHART format');
-                updateDisplayFormat(CHART)
+                trackMatomoEvent(
+                  'User action',
+                  'Weather',
+                  'Show forecast in CHART format'
+                );
+                updateDisplayFormat(CHART);
               }}>
               <View
                 style={[
@@ -200,7 +223,8 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
                   {
                     backgroundColor:
                       displayFormat === CHART
-                        ? colors.timeStepBackground : colors.inputButtonBackground,
+                        ? colors.timeStepBackground
+                        : colors.inputButtonBackground,
                     borderColor:
                       displayFormat === CHART
                         ? colors.chartSecondaryLine
@@ -231,10 +255,7 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               accessibilityLabel={t('paramsAccessibilityLabel')}
               accessibilityHint={t('paramsBottomSheet.subTitle')}
               style={styles.bottomSheetButton}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Open forecast parameter settings');
-                paramSheetRef.current?.open();
-              }}
+              onPress={openParameters}
               disabled={displayFormat === CHART}>
               <Icon
                 name="settings"
@@ -254,18 +275,10 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
               accessibilityLabel={t('infoAccessibilityLabel')}
               accessibilityHint={t('infoAccessibilityHint')}
               style={styles.bottomSheetButton}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Weather', 'Open forecast info bottomsheet');
-                weatherInfoSheetRef.current?.open();
-              }}
-              disabled={displayFormat === CHART}>
+              onPress={openInfo}>
               <Icon
                 name="info"
-                color={
-                  displayFormat === CHART
-                    ? colors.secondaryBorder
-                    : colors.primaryText
-                }
+                color={colors.primaryText}
                 height={24}
                 width={24}
                 maxScaleFactor={1.5}
@@ -276,11 +289,16 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
       </View>
       <View style={[styles.forecastContainer]}>
         {loading && (
-          <ActivityIndicator accessibilityLabel={t('weather:loading')} />
+          <ActivityIndicator
+            accessibilityLanguage={accessibilityLanguage}
+            accessibilityLabel={t('weather:loading')}
+          />
         )}
-        {headerLevelForecast && headerLevelForecast.length > 0 && displayFormat === TABLE && (
-          <Vertical10DaysForecast dayData={headerLevelForecast} />
-        )}
+        {headerLevelForecast &&
+          headerLevelForecast.length > 0 &&
+          displayFormat === TABLE && (
+            <Vertical10DaysForecast dayData={headerLevelForecast} />
+          )}
         {sections &&
           sections.length > 0 &&
           headerLevelForecast &&
@@ -289,39 +307,33 @@ const ForecastPanelWithVerticalLayout: React.FC<ForecastPanelProps> = ({
             <ChartList
               data={data}
               activeDayIndex={activeDayIndex}
-              setActiveDayIndex={(i:number) => setActiveDayIndex(i)}
+              setActiveDayIndex={(i: number) => setActiveDayIndex(i)}
               currentDayOffset={sections[0].data.length}
             />
           )}
       </View>
-      <RBSheet
+      <BottomSheet
         ref={paramSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <ParamsBottomSheet onClose={() => paramSheetRef.current?.close()} />
-      </RBSheet>
-      <RBSheet
+      </BottomSheet>
+      <BottomSheet
         ref={weatherInfoSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <WeatherInfoBottomSheet
           onClose={() => weatherInfoSheetRef.current?.close()}
         />
-      </RBSheet>
+      </BottomSheet>
     </View>
   );
 };

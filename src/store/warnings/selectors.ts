@@ -2,7 +2,7 @@ import { selectGeoid } from '@store/location/selector';
 import { Selector, createSelector } from 'reselect';
 import moment from 'moment';
 import { State } from '../types';
-import { Warning, WarningsState } from './types';
+import { LocationWarnings, Warning, WarningsState } from './types';
 import { knownWarningTypes, severityList } from './constants';
 
 const selectWarningsDomain: Selector<State, WarningsState> = (state) =>
@@ -23,6 +23,39 @@ const selectData = createSelector(
   (warnings) => warnings.data
 );
 
+const LOCATION_WARNINGS_MAX_AGE = 12 * 60 * 60 * 1000;
+
+const selectFreshLocationWarnings = createSelector(
+  [
+    (data: LocationWarnings) => data,
+    (_data: LocationWarnings, now: number) => now,
+  ],
+  (data, now): LocationWarnings =>
+    Object.fromEntries(
+      Object.entries(data).filter(
+        ([, warnings]) =>
+          warnings &&
+          Date.parse(warnings.updated) >= now - LOCATION_WARNINGS_MAX_AGE
+      )
+    ),
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (
+        previous: LocationWarnings,
+        next: LocationWarnings
+      ) =>
+        Object.keys(previous).length === Object.keys(next).length &&
+        Object.entries(previous).every(
+          ([id, warnings]) => next[id] === warnings
+        ),
+    },
+  }
+);
+
+// Pass time explicitly so expiry is checked even when Redux state has not changed.
+export const selectLocationWarnings = (state: State): LocationWarnings =>
+  selectFreshLocationWarnings(selectData(state), Date.now());
+
 export const selectWarnings = createSelector(
   [selectData, selectGeoid],
   (items, geoid) => items?.[geoid]?.warnings || []
@@ -33,9 +66,8 @@ export const selectUpdated = createSelector(
   (items, geoid) => items?.[geoid]?.updated || null
 );
 
-const selectFetchTimestamp = createSelector(
-  selectWarningsDomain,
-  (warnings) => warnings.fetchTimestamp
+const selectFetchDay = createSelector(selectWarningsDomain, (warnings) =>
+  moment(warnings.fetchTimestamp).startOf('day').valueOf()
 );
 
 export const selectWarningsAge = createSelector(
@@ -87,9 +119,12 @@ const getWarningDataForDays = (
     );
 
     dailyWarnings.sort((a, b) => {
-      const severityDiff = severityList.indexOf(b.severity) - severityList.indexOf(a.severity);
+      const severityDiff =
+        severityList.indexOf(b.severity) - severityList.indexOf(a.severity);
       if (severityDiff !== 0) return severityDiff;
-      return knownWarningTypes.indexOf(a.type) - knownWarningTypes.indexOf(b.type);
+      return (
+        knownWarningTypes.indexOf(a.type) - knownWarningTypes.indexOf(b.type)
+      );
     });
 
     return {
@@ -104,8 +139,8 @@ const getWarningDataForDays = (
 };
 
 export const selectDailyWarningData = createSelector(
-  [selectWarnings, selectFetchTimestamp],
-  (warnings, fetchTime) => getWarningDataForDays(warnings, 5, fetchTime)
+  [selectWarnings, selectFetchDay],
+  (warnings, fetchDay) => getWarningDataForDays(warnings, 5, fetchDay)
 );
 
 export const selectCurrentDayWarningData = createSelector(

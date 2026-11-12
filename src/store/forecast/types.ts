@@ -4,12 +4,16 @@ import * as displayParameters from './constants';
 export const FETCH_FORECAST = 'FETCH_FORECAST';
 export const FETCH_FORECAST_SUCCESS = 'FETCH_FORECAST_SUCCESS';
 export const FETCH_FORECAST_ERROR = 'FETCH_FORECAST_ERROR';
+export const FETCH_ALL_FORECASTS_SUCCESS = 'FETCH_ALL_FORECASTS_SUCCESS';
+export const RETAIN_FORECAST_LOCATIONS = 'RETAIN_FORECAST_LOCATIONS';
 export const UPDATE_DISPLAY_PARAMS = 'UPDATE_DISPLAY_PARAMETERS';
 export const RESTORE_DEFAULT_DISPLAY_PARAMS =
   'RESTORE_DEFAULT_DISPLAY_PARAMETERS';
 export const UPDATE_FORECAST_DISPLAY_FORMAT = 'UPDATE_FORECAST_DISPLAY_FORMAT';
 export const UPDATE_FORECAST_CHART_PARAMETER =
   'UPDATE_FORECAST_CHART_PARAMETER';
+export const UPDATE_SHOW_SINGLE_HOURLY_FORECAST =
+  'UPDATE_SHOW_SINGLE_HOURLY_FORECAST';
 
 type DisplayParametersKeys = keyof typeof displayParameters;
 export type DisplayParameters = (typeof displayParameters)[Exclude<
@@ -19,22 +23,39 @@ export type DisplayParameters = (typeof displayParameters)[Exclude<
 
 interface FetchForecast {
   type: typeof FETCH_FORECAST;
+  background?: boolean;
+  hasCachedData?: boolean;
 }
 
 interface FetchForecastSuccess {
   type: typeof FETCH_FORECAST_SUCCESS;
+  background?: boolean;
   data: {
-    location: ForecastLocation,
-    forecast: TimeStepDataSet,
-    isAuroraBorealisLikely: boolean
+    location: ForecastLocation;
+    forecast: TimeStepDataSet;
+    isAuroraBorealisLikely: boolean;
   };
   timestamp: number;
 }
 
 interface FetchForecastError {
   type: typeof FETCH_FORECAST_ERROR;
+  background?: boolean;
   error: Error;
   timestamp: number;
+}
+
+interface FetchAllForecastsSuccess {
+  type: typeof FETCH_ALL_FORECASTS_SUCCESS;
+  data: WeatherData;
+  auroraBorealisData?: AuroraBorealisData;
+  timestamp: number;
+  background?: boolean;
+}
+
+interface RetainForecastLocations {
+  type: typeof RETAIN_FORECAST_LOCATIONS;
+  locationIds: (number | string)[];
 }
 
 interface UpdateDisplayParams {
@@ -57,14 +78,22 @@ interface UpdateForecastChartParameter {
   value: ChartType;
 }
 
+interface UpdateShowSingleHourlyForecast {
+  type: typeof UPDATE_SHOW_SINGLE_HOURLY_FORECAST;
+  value: boolean;
+}
+
 export type ForecastActionTypes =
   | FetchForecast
   | FetchForecastSuccess
   | FetchForecastError
+  | FetchAllForecastsSuccess
+  | RetainForecastLocations
   | UpdateDisplayParams
   | RestoreDefaultDisplayParams
   | UpdateDisplayFormat
-  | UpdateForecastChartParameter;
+  | UpdateForecastChartParameter
+  | UpdateShowSingleHourlyForecast;
 
 export interface ForecastParameters {
   temperature: number;
@@ -126,6 +155,7 @@ export interface ForecastState {
   error: boolean | Error | string;
   displayParams: [number, DisplayParameters][];
   displayFormat: 'table' | 'chart';
+  showSingleHourlyForecast: boolean;
   chartDisplayParam: ChartType | undefined;
   fetchTimestamp: number;
   fetchSuccessTime: number;

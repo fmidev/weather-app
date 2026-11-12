@@ -4,7 +4,9 @@ import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
 import SearchScreen from '../../src/screens/SearchScreen';
-import { mockGetGeolocation, resetScreenMocks } from './screenTestMocks';
+import { mockGetGeolocation, mockLocationStore, mockTrackMatomoEvent, resetScreenMocks } from './screenTestMocks';
+
+jest.unmock('@components/common/AccessibleTouchableOpacity');
 
 describe('SearchScreen', () => {
   beforeEach(() => {
@@ -47,7 +49,7 @@ describe('SearchScreen', () => {
     expect(props.navigation.goBack).toHaveBeenCalled();
   });
 
-  it('toggles favorites and uses geolocation action', () => {
+  it('toggles favorites', () => {
     const helsinki = { area: 'Uusimaa', id: 1, name: 'Helsinki' };
     const oulu = { area: 'Oulu', id: 2, name: 'Oulu' };
     const props = createProps({
@@ -61,12 +63,33 @@ describe('SearchScreen', () => {
 
     fireEvent.press(getByTestId('icon-2'));
     expect(props.deleteFavorite).toHaveBeenCalledWith(2);
+  });
 
-    fireEvent.press(getByTestId('icon-button-locate'));
+  it.each(['press', 'click'] as const)('locates once from the labeled row via %s', (interaction) => {
+    const props = createProps();
+    const { getByLabelText } = render(<SearchScreen {...props as any} />);
+    const button = getByLabelText('locate');
+
+    expect(button.props.accessibilityRole).toBe('button');
+    if (interaction === 'press') {
+      fireEvent.press(button);
+    } else {
+      fireEvent(button, 'click', { nativeEvent: {}, currentTarget: 1, target: 1 });
+    }
+
+    expect(mockGetGeolocation).toHaveBeenCalledTimes(1);
     expect(mockGetGeolocation).toHaveBeenCalledWith(
       props.setCurrentLocation,
+      expect.any(Function),
+      undefined,
       expect.any(Function)
     );
+    const current = { id: 3, name: 'Current location' };
+    mockLocationStore.getState.mockReturnValue({ location: { current } });
+    expect(mockGetGeolocation.mock.calls[0][3]()).toBe(current);
+    expect(props.navigation.goBack).toHaveBeenCalledTimes(1);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledTimes(1);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Search', 'Geolocation - button');
   });
 });
 

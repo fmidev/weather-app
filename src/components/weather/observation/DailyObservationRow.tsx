@@ -1,3 +1,4 @@
+import AccessibleView from '@components/common/AccessibleView';
 import { TimeStepData } from '@store/observation/types';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
@@ -95,7 +96,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
 
     if (compactLayout) {
       return (
-        <View
+        <AccessibleView
           key={param}
           accessible
           accessibilityLabel={accessibilityLabel}
@@ -118,7 +119,7 @@ const DailyObservationRow: React.FC<DailyObservationRowProps> = ({
             ]}>
             {cellValue}
           </Text>
-        </View>
+        </AccessibleView>
       );
     }
 

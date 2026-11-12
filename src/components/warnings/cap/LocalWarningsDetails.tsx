@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import { CustomTheme } from '@assets/colors';
 import { ClockType } from '@store/settings/types';
@@ -57,7 +58,7 @@ const LocalWarningsDetails: React.FC<LocalWarningsDetailsProps> = ({
       {warnings.map((warning, index) => {
         const info = Array.isArray(warning.info) ? warning.info[0] : warning.info;
         return (
-          <View
+          <AccessibleView
             key={`${warning.identifier}-${info.area.areaDesc}`}
             accessible
             accessibilityLabel={`${info.event}, ${t(`warnings:severities:${severityList.indexOf(info.severity)}`)}, ${warningTimeSpans[index]}`}>
@@ -69,7 +70,7 @@ const LocalWarningsDetails: React.FC<LocalWarningsDetailsProps> = ({
               showAreas={false}
               timespan={warningTimeSpans[index]}
             />
-          </View>
+          </AccessibleView>
         );
       })}
     </>

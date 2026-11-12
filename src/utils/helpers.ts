@@ -7,6 +7,7 @@ import {
   RESULTS,
 } from 'react-native-permissions';
 import { TFunction } from 'i18next';
+import { getDistance } from 'geolib';
 
 import { Location } from '@store/location/types';
 import {
@@ -29,12 +30,25 @@ import { roundCoordinates } from './number';
 
 const getPosition = async (
   callback: (arg0: Location, arg1: boolean) => void,
-  t: TFunction<string[] | string>
+  t: TFunction<string[] | string>,
+  getCurrentLocation?: () => Location | undefined
 ) => {
   const isRunningOnMac = await isRunningInIOSCompatibilityMode();
 
   Geolocation.getCurrentPosition(
     (position: { coords: { latitude: number; longitude: number } }) => {
+      const current = getCurrentLocation?.();
+      if (
+        current && Number.isFinite(current.lat) && Number.isFinite(current.lon) &&
+        getDistance(position.coords, { latitude: current.lat, longitude: current.lon }, 0.01) <= 100
+      ) {
+        AccessibilityInfo.announceForAccessibility(
+          `${t('navigation:locatedTo')} ${current.name}${current.area ? `, ${current.area}` : ''}`
+        );
+        callback(current, true);
+        return;
+      }
+
       let { latitude, longitude } = position.coords;
       latitude = roundCoordinates(latitude);
       longitude = roundCoordinates(longitude);
@@ -127,7 +141,8 @@ const alertNoPermission = (t: TFunction<string[] | string>) =>
 export const getGeolocation = async (
   callback: (arg0: Location, arg1: boolean) => void,
   t: TFunction<string[] | string>,
-  failSilently?: boolean
+  failSilently?: boolean,
+  getCurrentLocation?: () => Location | undefined
 ) => {
   Geolocation.setRNConfiguration({
     skipPermissionRequests: true, // Let react-native-permissions handle this
@@ -146,7 +161,7 @@ export const getGeolocation = async (
   const values = Object.values(results);
 
   if (values.some((value) => value === RESULTS.GRANTED)) {
-    return getPosition(callback, t);
+    return getPosition(callback, t, getCurrentLocation);
   }
   if (!failSilently && values.every((value) => value === RESULTS.DENIED)) {
     const permission =
@@ -157,7 +172,7 @@ export const getGeolocation = async (
       .then((res) => {
         if (res === RESULTS.GRANTED) {
           trackMatomoEvent('Notice', 'Geolocation', 'COARSE_LOCATION_OK');
-          getPosition(callback, t);
+          getPosition(callback, t, getCurrentLocation);
         }
         if (res === RESULTS.BLOCKED) {
           trackMatomoEvent(
@@ -362,20 +377,6 @@ export const getParameterUnit = (
     default:
       return '';
   }
-};
-
-export const formatAccessibleTemperature = (
-  val: string | number | undefined | null,
-  t: (key: string) => string
-): string => {
-  if (val === null || val === undefined || val === '') return '-';
-
-  const num = Number(val);
-  if (isNaN(num)) return '-';
-
-  const valuePart =
-    num < 0 ? `${t('forecast:minus')} ${Math.abs(num)}` : `${num}`;
-  return `${valuePart}`;
 };
 
 // https://gist.github.com/johndyer/0dffbdd98c2046f41180c051f378f343
@@ -604,30 +605,4 @@ export const msToBeaufort = (speed: number): number => {
   ];
 
   return thresholds.findIndex((limit) => speed < limit);
-};
-
-export const formatAccessibleDate = (
-  m: moment.Moment,
-  includeYear = true
-): string => {
-  return m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
-};
-
-export const formatAccessibleDateTime = (
-  m: moment.Moment,
-  t: (key: string) => string,
-  is24Hour = true,
-  includeYear = true
-): string => {
-  const datePart = m.format(includeYear ? 'dddd, LL' : 'dddd, D. MMMM');
-
-  if (is24Hour) return datePart + ' ' + m.format('H:mm');
-
-  return (
-    datePart +
-    ' ' +
-    m.format('h:mm ') +
-    ' ' +
-    (m.hours() >= 12 ? t('time:pmSpoken') : t('time:amSpoken'))
-  );
 };

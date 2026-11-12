@@ -4,13 +4,18 @@ import { persistReducer } from 'redux-persist';
 
 import SettingsReducer, { settingsPersist } from './settings/reducer';
 import ForecastReducer, { forecastPersist } from './forecast/reducer';
+import { migrationStorage } from './migrationStorage';
 import ObservationReducer, { observationPersist } from './observation/reducer';
 import MapReducer, { mapPersist } from './map/reducer';
 import LocationReducer, { locationPersist } from './location/reducer';
 import NavigationReducer, { navigationPersist } from './navigation/reducer';
 import WarningsReducer, { warningsPersist } from './warnings/reducer';
-import AnnouncementsReducer, { announcementsPersist } from './announcements/reducer';
-import MeteorologistReducer, { meteorologistPersist } from './meteorologist/reducer';
+import AnnouncementsReducer, {
+  announcementsPersist,
+} from './announcements/reducer';
+import MeteorologistReducer, {
+  meteorologistPersist,
+} from './meteorologist/reducer';
 import NewsReducer, { newsPersist } from './news/reducer';
 
 import { PersistConfig } from './types';
@@ -38,7 +43,7 @@ export default combineReducers({
     SettingsReducer
   ),
   forecast: persistReducer(
-    persistReducerConfig(forecastPersist),
+    { ...forecastPersist, storage: migrationStorage },
     ForecastReducer
   ),
   observation: persistReducer(
@@ -54,10 +59,7 @@ export default combineReducers({
     persistReducerConfig(navigationPersist),
     NavigationReducer
   ),
-  warnings: persistReducer(
-    persistReducerConfig(warningsPersist),
-    WarningsReducer
-  ),
+  warnings: persistReducer(mmkvReducerConfig(warningsPersist), WarningsReducer),
   announcements: persistReducer(
     mmkvReducerConfig(announcementsPersist),
     AnnouncementsReducer
@@ -66,8 +68,5 @@ export default combineReducers({
     persistReducerConfig(meteorologistPersist),
     MeteorologistReducer
   ),
-  news: persistReducer(
-    mmkvReducerConfig(newsPersist),
-    NewsReducer
-  ),
+  news: persistReducer(mmkvReducerConfig(newsPersist), NewsReducer),
 });

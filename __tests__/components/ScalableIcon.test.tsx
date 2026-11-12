@@ -6,14 +6,40 @@ import { render } from '@testing-library/react-native';
 import ScalableIcon from '../../src/components/common/ScalableIcon';
 import { MacContentSizeProvider } from '../../src/components/common/MacContentSizeContext';
 
-const mockIcon = jest.fn((props) => <Text {...props} testID="scalable-icon">icon</Text>);
+const mockIcon = jest.fn((props) => (
+  <Text {...props} testID="scalable-icon">
+    icon
+  </Text>
+));
 
 jest.mock('@assets/Icon', () => ({
   __esModule: true,
   default: (props: any) => mockIcon(props),
 }));
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ i18n: { resolvedLanguage: 'fi' } }),
+}));
+
 describe('ScalableIcon', () => {
+  it('uses the app language and forwards an explicit language override', () => {
+    const originalPlatform = ReactNative.Platform.OS;
+    Object.defineProperty(ReactNative.Platform, 'OS', { value: 'ios' });
+    try {
+      const view = render(<ScalableIcon name="menu" />);
+      expect(
+        view.getByTestId('scalable-icon').props.accessibilityLanguage
+      ).toBe('fi-FI');
+      view.rerender(<ScalableIcon name="menu" accessibilityLanguage="sv-SE" />);
+      expect(
+        view.getByTestId('scalable-icon').props.accessibilityLanguage
+      ).toBe('sv-SE');
+    } finally {
+      Object.defineProperty(ReactNative.Platform, 'OS', {
+        value: originalPlatform,
+      });
+    }
+  });
   beforeEach(() => {
     mockIcon.mockClear();
   });
@@ -88,9 +114,7 @@ describe('ScalableIcon', () => {
 
   it('scales icon dimensions by an additional 1.3 when running on Mac', () => {
     render(
-      <MacContentSizeProvider
-        isRunningOnMac
-        isPlatformDetectionComplete>
+      <MacContentSizeProvider isRunningOnMac isPlatformDetectionComplete>
         <ScalableIcon
           name="menu"
           width={20}

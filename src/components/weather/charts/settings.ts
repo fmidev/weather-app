@@ -1,19 +1,6 @@
-import TemperatureChart from './TemperatureChart';
-import PrecipitationChart from './PrecipitationChart';
-import WindChart from './WindChart';
-import HumidityChart from './HumidityChart';
-import PressureChart from './PressureChart';
-import VisCloudChart from './VisCloudChart';
-import CloudHeightChart from './CloudHeightChart';
-import DailyChart from './DailyChart';
-import { ChartSettings, ChartType, Parameter } from './types';
-import SnowDepthChart from './SnowDepth';
-import UvChart from './UvChart';
-import WeatherChart from './WeatherChart';
+import { ChartType, Parameter } from './types';
 
-type TypeParameters = {
-  [key in ChartType]: Parameter[];
-};
+type TypeParameters = { [key in ChartType]: Parameter[] };
 
 export const observationTypeParameters: TypeParameters = {
   pressure: ['pressure'],
@@ -26,12 +13,7 @@ export const observationTypeParameters: TypeParameters = {
   cloud: ['cloudHeight'],
   uv: [],
   weather: ['temperature', 'dewPoint', 'precipitation1h'],
-  daily: [
-    'rrday',
-    'maximumTemperature',
-    'minimumTemperature',
-    'minimumGroundTemperature06',
-  ],
+  daily: ['rrday', 'maximumTemperature', 'minimumTemperature', 'minimumGroundTemperature06'],
 };
 
 export const forecastTypeParameters: TypeParameters = {
@@ -47,76 +29,3 @@ export const forecastTypeParameters: TypeParameters = {
   weather: [],
   daily: [],
 };
-
-const chartSettings = (
-  chartType: ChartType,
-  observation: boolean | undefined
-): ChartSettings => {
-  const params = observation
-    ? observationTypeParameters[chartType]
-    : forecastTypeParameters[chartType];
-
-  switch (chartType) {
-    case 'precipitation':
-      return {
-        params,
-        Component: PrecipitationChart,
-      };
-    case 'pressure':
-      return {
-        params,
-        Component: PressureChart,
-      };
-    case 'humidity':
-      return {
-        params,
-        Component: HumidityChart,
-      };
-    case 'visCloud':
-      return {
-        params,
-        Component: VisCloudChart,
-      };
-    case 'cloud':
-      return {
-        params,
-        Component: CloudHeightChart,
-      };
-    case 'temperature':
-      return {
-        params,
-        Component: TemperatureChart,
-      };
-    case 'wind':
-      return {
-        params,
-        Component: WindChart,
-      };
-    case 'snowDepth':
-      return {
-        params,
-        Component: SnowDepthChart,
-      };
-    case 'uv':
-      return {
-        params,
-        Component: UvChart,
-      };
-    case 'weather':
-      return {
-        params,
-        Component: WeatherChart,
-      };
-    case 'daily': {
-      return {
-        params,
-        Component: DailyChart,
-      };
-    }
-    default: {
-      return { params: [], Component: TemperatureChart };
-    }
-  }
-};
-
-export default chartSettings;

@@ -1,5 +1,7 @@
 # AGENTS.md
+
 ## Project overview
+
 This is a open source React Native weather application.
 The app shows weather forecasts, weather observations, warnings and weather animations.
 The app aims to be an easy-to-use and reliable weather app for the general public.
@@ -7,6 +9,7 @@ The app is used by several meteorological institutes through their own forks.
 Accessibility is important, because the application is provided by public authorities.
 
 ## Tech stack
+
 - React Native
 - TypeScript
 - React Navigation
@@ -27,8 +30,10 @@ The app includes custom feature flag implementation and settings are defined in 
 
 The app uses Smartmet Server as backend, documentation:
 
-https://github.com/fmidev/smartmet-plugin-timeseries
-https://github.com/fmidev/smartmet-plugin-wms
+- https://github.com/fmidev/smartmet-plugin-timeseries
+- https://github.com/fmidev/smartmet-plugin-wms
+
+When making API calls, follow the best practices described in the [HTTP Caching Guide](https://github.com/fmidev/smartmet-server/blob/master/docs/HTTP-Caching-Guide.md).
 
 # Architecture
 
@@ -47,6 +52,7 @@ Start Metro: yarn start
 Run iOS: yarn ios
 Run Android: yarn android`
 Run tests: yarn test
+Run integration tests: yarn test:integration:live
 Run linting: yarn lint
 
 ## Coding conventions
@@ -60,6 +66,7 @@ Run linting: yarn lint
 - Use standard Date API instead of moment.js when possible.
 - Comment code in english.
 - Use async/await instead of chained promises.
+- When modifying Android widgets, review and update the R8 rules in `android/widgets/consumer-rules.pro` as needed to match the implementation.
 
 ## UI and Design Rules
 
@@ -69,9 +76,10 @@ Run linting: yarn lint
 ## Testing
 
 - Create tests for new features.
-- Unit tests should be placed in __tests__ directory.
+- Unit tests should be placed in `__tests__` directory; for widgets use their conventions.
 - One test file for one component or ts-module.
 - Don't combine tests for multiple components or modules in one test file.
+- Live integration tests are placed in `__tests__/integration/live` directory. Don't create new integration tests if not asked, but check that current integration tests are relevant after changing or adding features.
 
 # Localization
 
@@ -102,5 +110,5 @@ Run linting: yarn lint
 
 Run relevant checks when possible:
 
-yarn lint
-yarn test
+- yarn lint
+- yarn test

@@ -4,6 +4,7 @@ import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
+import AccessibleView from '@components/common/AccessibleView';
 import { State } from '@store/types';
 
 import { WHITE } from '@assets/colors';
@@ -13,7 +14,7 @@ import { weatherSymbolGetter } from '@assets/images';
 import { Config } from '@config';
 import { converter, getForecastParameterUnitTranslationKey, toPrecision } from '@utils/units';
 import Text from '@components/common/AppText';
-import { formatAccessibleTemperature } from '@utils/helpers';
+import { formatAccessibleTemperature } from '@utils/accessibility';
 import { MEDIUM_FONT, SEMIBOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
@@ -65,7 +66,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
   const symbolSize = Math.min(fontScale * 36, 62);
 
   return (
-    <View
+    <AccessibleView
       style={styles.container}
       accessible
       accessibilityLabel={accessibilityLabel}
@@ -82,7 +83,7 @@ const HourForecast: React.FC<NextHoursForecastProps> = ({
           {`${convertedTemperature}°${t(`unitAbbreviations:${temperatureUnit}`)}`}
         </Text>
       </View>
-    </View>
+    </AccessibleView>
   );
 };
 const styles = StyleSheet.create({

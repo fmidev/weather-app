@@ -49,6 +49,7 @@ describe('settings reducer', () => {
           theme: 'automatic',
           clockType: 24,
           mapLibrary: 'react-native-maps',
+          forecastBackgroundImages: true,
           sessionId: 123,
           isRunningOnMac: false,
         },
@@ -78,6 +79,7 @@ describe('settings reducer', () => {
       },
       clockType: 24,
       mapLibrary: 'react-native-maps',
+      forecastBackgroundImages: true,
       sessionId: 123,
       isRunningOnMac: false,
     });
@@ -92,6 +94,7 @@ describe('settings reducer', () => {
       theme: 'light',
       clockType: undefined,
       mapLibrary: 'react-native-maps',
+      forecastBackgroundImages: true,
       sessionId: expect.any(Number),
       isRunningOnMac: false,
     });
@@ -106,6 +109,7 @@ describe('settings reducer', () => {
       theme: undefined,
       clockType: 24,
       mapLibrary: 'react-native-maps',
+      forecastBackgroundImages: true,
       sessionId: expect.any(Number),
       isRunningOnMac: false,
     });
@@ -122,6 +126,7 @@ describe('settings reducer', () => {
       theme: undefined,
       clockType: undefined,
       mapLibrary: 'maplibre',
+      forecastBackgroundImages: true,
       sessionId: expect.any(Number),
       isRunningOnMac: false,
     });

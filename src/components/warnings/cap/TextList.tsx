@@ -4,10 +4,10 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  useWindowDimensions,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { BLACK, GRAYISH_BLUE, CustomTheme } from '@assets/colors';
 import { CapWarning } from '@store/warnings/types';
 import WarningBlock from './WarningBlock';
@@ -23,15 +23,20 @@ const DateIndicator = ({
   date: string;
   relativeDay: string;
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { capViewSettings } = Config.get('warnings');
   const { colors } = useTheme() as CustomTheme;
   const width = capViewSettings?.useRelativeDays ? null : 45;
   return (
     <View style={[styles.dateIndicatorEntry, { width }]}>
-      <Text style={[styles.capitalized, { color: colors.hourListText }]}>
+      <Text
+        accessibilityLanguage={accessibilityLanguage}
+        style={[styles.capitalized, { color: colors.hourListText }]}>
         {capViewSettings?.useRelativeDays ? relativeDay : weekDay}
       </Text>
-      <Text style={{ color: colors.hourListText }}>{date}</Text>
+      <Text
+        accessibilityLanguage={accessibilityLanguage}
+        style={{ color: colors.hourListText }}>{date}</Text>
     </View>
   );
 };
@@ -43,8 +48,8 @@ const TextList = ({
   capData?: CapWarning[];
   dates: { time: number; date: string; weekday: string, relativeDay: string }[];
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { colors } = useTheme() as CustomTheme;
-  const { width } = useWindowDimensions();
   const [xOffset, setXOffset] = useState<number>(0);
   const { t } = useTranslation('warnings');
   const severities = [...severityList].reverse();
@@ -89,7 +94,7 @@ const TextList = ({
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={[styles.dateIndicatorRow, { width: width - 136 }]}
+          style={styles.dateIndicatorRow}
           onScroll={(e) => setXOffset(e.nativeEvent.contentOffset.x)}>
           {dates.map(({ time, weekday, date, relativeDay }) => (
             <DateIndicator
@@ -116,7 +121,9 @@ const TextList = ({
             styles.noActiveWarningsPanel,
             { backgroundColor: colors.background },
           ]}>
-          <Text style={styles.blackText}>{t('noWarningsText')}</Text>
+          <Text
+            accessibilityLanguage={accessibilityLanguage}
+            style={styles.blackText}>{t('noWarningsText')}</Text>
         </View>
       )}
     </>
@@ -139,6 +146,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginLeft: 64,
+    // Match the accordion arrow: 24-point icon, 20-point padding and 14-point margin.
+    marginRight: 58,
   },
   dateIndicatorEntry: {
     display: 'flex',

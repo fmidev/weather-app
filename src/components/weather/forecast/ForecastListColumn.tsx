@@ -4,6 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
+import AccessibleView from '@components/common/AccessibleView';
 import Text from '@components/common/AppText';
 import Icon from '@assets/Icon';
 
@@ -12,7 +13,8 @@ import { DisplayParameters, TimeStepData } from '@store/forecast/types';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@assets/colors';
 import * as constants from '@store/forecast/constants';
-import { isOdd, getWindDirection, formatAccessibleTemperature } from '@utils/helpers';
+import { isOdd, getWindDirection } from '@utils/helpers';
+import { formatAccessibleTemperature } from '@utils/accessibility';
 import { roundToNearestTen } from '@utils/number';
 import { Config } from '@config';
 import {
@@ -28,7 +30,7 @@ type ForecastListColumnProps = {
   data: TimeStepData;
   displayParams: [number, DisplayParameters][];
   units?: UnitMap;
-  modal?: boolean;
+  compact?: boolean;
 };
 
 const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
@@ -36,7 +38,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   data,
   displayParams,
   units,
-  modal, // Different styling for modal
+  compact,
 }) => {
   const { fontScale } = useWindowDimensions();
   const { t, i18n } = useTranslation();
@@ -57,18 +59,19 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
   );
 
   const height = Math.min(fontScale * 52, 78);
+  const timeRowHeight = Math.min(fontScale * 52, 52);
   const width = Math.min(fontScale * 52, 62);
-  const modalWidth = Math.min(fontScale * 48, 62);
+  const compactWidth = Math.min(fontScale * 48, 62);
   const windIconSize = Math.min(fontScale * 20, 30);
   const symbolSize = Math.min(fontScale * 40, 50);
 
   return (
-    <View
+    <AccessibleView
       accessible
       key={data.epochtime}
       style={[
-        modal ? styles.modalHourColumn : styles.hourColumn,
-        ...(!modal===true && (time === '00' || time === '12 am')
+        compact ? styles.compactHourColumn : styles.hourColumn,
+        ...(!compact && (time === '00' || time === '12 am')
           ? [
               styles.dayChangeBorder,
               {
@@ -77,13 +80,17 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
               },
             ]
           : [{ borderColor: colors.border }]),
-        { width: modal ? modalWidth : width }
+        { width: compact ? compactWidth : width },
       ]}>
-      <View style={[
-        styles.hourBlock,
-        { height },
-        modal !== true && { backgroundColor: colors.listTint },
-      ]}>
+      <View
+        testID="forecast-time-row"
+        style={[
+          styles.hourBlock,
+          {
+            height: timeRowHeight,
+            backgroundColor: colors.listTint,
+          },
+        ]}>
         <Text
           accessibilityLabel={`${t('forecast:at')} ${time}`}
           style={[styles.hourText, { color: colors.hourListText }]}>
@@ -95,7 +102,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
         .map(([i, param], index) => {
           if (param === constants.SMART_SYMBOL) {
             return (
-              <View
+              <AccessibleView
                 key={`${param}-${i}`}
                 accessible
                 accessibilityRole="image"
@@ -107,8 +114,10 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     height,
                   },
                 ]}>
-                {SmartSymbol ? <SmartSymbol width={symbolSize} height={symbolSize} /> : null}
-              </View>
+                {SmartSymbol ? (
+                  <SmartSymbol width={symbolSize} height={symbolSize} />
+                ) : null}
+              </AccessibleView>
             );
           }
           if (param === constants.WIND_SPEED_AND_DIRECTION) {
@@ -128,7 +137,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             );
 
             return (
-              <View
+              <AccessibleView
                 accessible
                 accessibilityLabel={
                   data.windCompass8
@@ -170,11 +179,12 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     {convertedWindSpeed}
                   </Text>
                 )}
-              </View>
+              </AccessibleView>
             );
           }
           if (param === constants.TEMPERATURE) {
-            const temperatureUnit = units?.temperature.unitAbb ?? defaultUnits.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ?? defaultUnits.temperature;
             const convertedTemperature =
               data.temperature || data.temperature === 0
                 ? toPrecision(
@@ -184,7 +194,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   )
                 : '-';
             return (
-              <View
+              <AccessibleView
                 key={`${param}-${i}`}
                 accessible
                 accessibilityLabel={t('forecast:params:temperature', {
@@ -199,18 +209,19 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
                   style={[styles.regularText, { color: colors.hourListText }]}>
                   {`${convertedTemperature}°`}
                 </Text>
-              </View>
+              </AccessibleView>
             );
           }
           if (param === constants.FEELS_LIKE) {
-            const temperatureUnit = units?.temperature.unitAbb ?? defaultUnits.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ?? defaultUnits.temperature;
             const convertedFeelsLike =
               data.feelsLike || data.feelsLike === 0
                 ? toPrecision(
@@ -220,7 +231,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   )
                 : '-';
             return (
-              <View
+              <AccessibleView
                 key={`${param}-${i}`}
                 accessible
                 accessibilityLabel={t('forecast:params:feelsLike', {
@@ -235,7 +246,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
@@ -243,12 +254,13 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     styles.regularText,
                     { color: colors.hourListText },
                   ]}>{`${convertedFeelsLike}°`}</Text>
-              </View>
+              </AccessibleView>
             );
           }
 
           if (param === constants.DEW_POINT) {
-            const temperatureUnit = units?.temperature.unitAbb ?? defaultUnits.temperature;
+            const temperatureUnit =
+              units?.temperature.unitAbb ?? defaultUnits.temperature;
             const convertedDewPoint =
               data.dewPoint || data.dewPoint === 0
                 ? toPrecision(
@@ -258,22 +270,22 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   )
                 : '-';
             return (
-              <View
+              <AccessibleView
                 key={`${param}-${i}`}
                 accessible
                 accessibilityLabel={t('forecast:params:dewpoint', {
-                    value: formatAccessibleTemperature(convertedDewPoint, t),
-                    unit: t(
-                      `forecast:${getForecastParameterUnitTranslationKey(
-                        temperatureUnit
-                      )}`
-                    ),
-                  })}
+                  value: formatAccessibleTemperature(convertedDewPoint, t),
+                  unit: t(
+                    `forecast:${getForecastParameterUnitTranslationKey(
+                      temperatureUnit
+                    )}`
+                  ),
+                })}
                 style={[
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
@@ -281,7 +293,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                     styles.regularText,
                     { color: colors.hourListText },
                   ]}>{`${convertedDewPoint}°`}</Text>
-              </View>
+              </AccessibleView>
             );
           }
 
@@ -299,20 +311,21 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
-                  accessibilityLabel={formattedValue === '-'
-                    ? t('forecast:popMissing')
-                    : t('forecast:params:pop', {
-                      value: formattedValue,
-                      unit: '%',
-                    })}
-                  style={[
-                    styles.regularText,
-                    { color: colors.hourListText },
-                  ]}>{formattedValue}</Text>
+                  accessibilityLabel={
+                    formattedValue === '-'
+                      ? t('forecast:popMissing')
+                      : t('forecast:params:pop', {
+                          value: formattedValue,
+                          unit: '%',
+                        })
+                  }
+                  style={[styles.regularText, { color: colors.hourListText }]}>
+                  {formattedValue}
+                </Text>
               </View>
             );
           }
@@ -340,7 +353,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
                   styles.hourBlock,
                   {
                     backgroundColor: isOdd(index) ? colors.listTint : undefined,
-                    height
+                    height,
                   },
                 ]}>
                 <Text
@@ -425,7 +438,7 @@ const ForecastListColumn: React.FC<ForecastListColumnProps> = ({
             </View>
           );
         })}
-    </View>
+    </AccessibleView>
   );
 };
 
@@ -443,7 +456,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     alignItems: 'center',
   },
-  modalHourColumn: {
+  compactHourColumn: {
     width: 48,
     borderRightWidth: 0,
     borderTopWidth: 0,

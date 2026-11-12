@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 
 import ForecastListColumn from '../../src/components/weather/forecast/ForecastListColumn';
 import * as constants from '../../src/store/forecast/constants';
@@ -87,10 +88,14 @@ jest.mock('@utils/units', () => ({
     mockGetForecastParameterUnitTranslationKey(...args),
 }));
 
+jest.mock('@utils/accessibility', () => ({
+  ...jest.requireActual('@utils/accessibility'),
+  formatAccessibleTemperature: (value: string) => value,
+}));
+
 jest.mock('@utils/helpers', () => ({
   isOdd: (value: number) => value % 2 === 1,
   getWindDirection: (...args: any[]) => mockGetWindDirection(...args),
-  formatAccessibleTemperature: (value: string) => value,
 }));
 
 jest.mock('@utils/number', () => ({
@@ -198,5 +203,32 @@ describe('ForecastListColumn', () => {
     );
     expect(missingPop.getByText('-')).toBeTruthy();
     expect(missingPop.getByA11yLabel('forecast:popMissing')).toBeTruthy();
+  });
+
+  it('keeps the time row height consistent in compact mode', () => {
+    const regularView = render(
+      <ForecastListColumn
+        clockType={24 as any}
+        data={{ epochtime: 2000000000 } as any}
+        displayParams={[]}
+      />
+    );
+    const compactView = render(
+      <ForecastListColumn
+        compact
+        clockType={24 as any}
+        data={{ epochtime: 2000000000 } as any}
+        displayParams={[]}
+      />
+    );
+
+    const regularStyle = StyleSheet.flatten(
+      regularView.getByTestId('forecast-time-row').props.style
+    );
+    const compactStyle = StyleSheet.flatten(
+      compactView.getByTestId('forecast-time-row').props.style
+    );
+    expect(compactStyle.height).toBe(regularStyle.height);
+    expect(compactStyle.height).toBeLessThanOrEqual(52);
   });
 });

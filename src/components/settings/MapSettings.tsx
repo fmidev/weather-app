@@ -70,11 +70,7 @@ const MapSettings: React.FC<Props> = ({ mapLibrary, updateMapLibrary }) => {
               {nativeMapLabel}
             </Text>
             {mapLibrary === 'react-native-maps' && (
-              <Icon
-                name="checkmark"
-                size={22}
-                style={{ color: colors.text }}
-              />
+              <Icon name="checkmark" size={22} style={{ color: colors.text }} />
             )}
           </View>
         </AccessibleTouchableOpacity>
@@ -100,11 +96,7 @@ const MapSettings: React.FC<Props> = ({ mapLibrary, updateMapLibrary }) => {
               {t('settings:maplibre')}
             </Text>
             {mapLibrary === 'maplibre' && (
-              <Icon
-                name="checkmark"
-                size={22}
-                style={{ color: colors.text }}
-              />
+              <Icon name="checkmark" size={22} style={{ color: colors.text }} />
             )}
           </View>
         </AccessibleTouchableOpacity>
@@ -117,6 +109,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: BOLD_FONT,
+    fontWeight: 'bold',
   },
   rowWrapper: {
     marginHorizontal: 20,

@@ -7,6 +7,7 @@ import { Marker } from '@maplibre/maplibre-react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { weatherSymbolGetter } from '@assets/images';
 import { CustomTheme } from '@assets/colors';
 import { converter, toPrecision } from '@utils/units';
@@ -48,6 +49,7 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
   windSpeedMS,
   units,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { t } = useTranslation();
   const { colors, dark } = useTheme() as CustomTheme;
 
@@ -98,20 +100,22 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
             <View style={styles.mainRow}>
               {WeatherSymbol ? <WeatherSymbol width={40} height={40} /> : null}
               <Text
+                accessibilityLanguage={accessibilityLanguage}
                 style={[styles.tempText, { color: colors.text }]}
-                accessibilityLabel={
-                  `${temperatureValue} ${t(`observation:paramUnits:°${temperatureUnit}`)}`
-                }
-              >
+                accessibilityLabel={`${temperatureValue} ${t(`observation:paramUnits:°${temperatureUnit}`)}`}>
                 {`${temperatureValue}°${temperatureUnit}`}
               </Text>
             </View>
             { open && (
               <View style={styles.calloutContainer}>
-                <Text style={[styles.calloutTitle, { color: colors.text }]}>
+                <Text
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.calloutTitle, { color: colors.text }]}>
                   {name}
                 </Text>
-                <Text style={[styles.calloutText, { color: colors.text }]}>
+                <Text
+                  accessibilityLanguage={accessibilityLanguage}
+                  style={[styles.calloutText, { color: colors.text }]}>
                   {`${t(`symbols:${smartSymbol}`)}`}
                 </Text>
                 <View style={styles.windSpeedRow}>
@@ -124,11 +128,11 @@ const MlTimeseriesMarker: React.FC<TimeseriesMarkerProps> = ({
                     }}
                   />
                   <Text
+                    accessibilityLanguage={accessibilityLanguage}
                     style={[styles.calloutText, { color: colors.text }]}
                     accessibilityLabel={`${windSpeedValue} ${t(
                       `observation:paramUnits:${windUnit}`
-                    )}`}
-                  >
+                    )}`}>
                     {`${windSpeedValue} ${windUnit}`}
                   </Text>
                 </View>

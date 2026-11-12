@@ -3,6 +3,8 @@ export const INIT_SETTINGS = 'INIT_SETTINGS';
 export const UPDATE_UNITS = 'UPDATE_UNITS';
 export const UPDATE_THEME = 'UPDATE_THEME';
 export const UPDATE_MAP_LIBRARY = 'UPDATE_MAP_LIBRARY';
+export const UPDATE_FORECAST_BACKGROUND_IMAGES =
+  'UPDATE_FORECAST_BACKGROUND_IMAGES';
 export const SET_IS_RUNNING_ON_MAC = 'SET_IS_RUNNING_ON_MAC';
 
 export type ClockType = 12 | 24;
@@ -44,6 +46,11 @@ interface UpdateMapLibrary {
   library: MapLibrary;
 }
 
+interface UpdateForecastBackgroundImages {
+  type: typeof UPDATE_FORECAST_BACKGROUND_IMAGES;
+  enabled: boolean;
+}
+
 interface SetIsRunningOnMac {
   type: typeof SET_IS_RUNNING_ON_MAC;
   isRunningOnMac: boolean;
@@ -58,6 +65,7 @@ export type SettingsActionTypes =
   | UpdateTheme
   | UpdateClockType
   | UpdateMapLibrary
+  | UpdateForecastBackgroundImages
   | SetIsRunningOnMac;
 
 export interface SettingsState {
@@ -65,6 +73,7 @@ export interface SettingsState {
   units: UnitMap | undefined;
   theme?: Theme;
   mapLibrary: MapLibrary;
+  forecastBackgroundImages: boolean;
   sessionId: number; // smartmet-session-id for wms-layer requests
   isRunningOnMac: boolean;
 }

@@ -20,6 +20,9 @@ describe('FeedbackScreen', () => {
   it('opens feedback mail link with configured localized subject', () => {
     const { getByTestId } = render(<FeedbackScreen />);
 
+    expect(getByTestId('feedback_button').props.accessibilityHint).toBe(
+      'moveToHint'
+    );
     fireEvent.press(getByTestId('feedback_button'));
 
     expect(Linking.openURL).toHaveBeenCalledWith(

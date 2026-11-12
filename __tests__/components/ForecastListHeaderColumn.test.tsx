@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 
 import ForecastListHeaderColumn from '../../src/components/weather/forecast/ForecastListHeaderColumn';
 import * as constants from '../../src/store/forecast/constants';
@@ -10,6 +11,7 @@ jest.mock('@react-navigation/native', () => ({
       border: '#cccccc',
       hourListText: '#111111',
       listTint: '#eeeeee',
+      dayForecastBackground: '#dddddd',
     },
     dark: false,
   }),
@@ -19,14 +21,6 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
   }),
-}));
-
-jest.mock('react-native-linear-gradient', () => ({
-  __esModule: true,
-  default: ({ children }: any) => {
-    const { View } = require('react-native');
-    return <View testID="linear-gradient">{children}</View>;
-  },
 }));
 
 jest.mock('@components/common/AppText', () => ({
@@ -86,7 +80,11 @@ describe('ForecastListHeaderColumn', () => {
       />
     );
 
-    expect(view.getByTestId('linear-gradient')).toBeTruthy();
+    expect(
+      StyleSheet.flatten(view.getByTestId('forecast-header-column').props.style)
+        .backgroundColor
+    ).toBe('#dddddd');
+    expect(view.queryByTestId('linear-gradient')).toBeNull();
     expect(view.getByTestId('icon-clock')).toBeTruthy();
     expect(view.getByTestId('icon-wind')).toBeTruthy();
     expect(view.getByTestId('icon-gust')).toBeTruthy();
@@ -99,5 +97,23 @@ describe('ForecastListHeaderColumn', () => {
     expect(view.getByText('hPa')).toBeTruthy();
     expect(view.getByText('UV')).toBeTruthy();
     expect(view.queryByTestId('icon-time')).toBeNull();
+  });
+
+  it('keeps the time row height consistent in compact mode', () => {
+    const regularView = render(
+      <ForecastListHeaderColumn displayParams={[]} />
+    );
+    const compactView = render(
+      <ForecastListHeaderColumn compact displayParams={[]} />
+    );
+
+    const regularStyle = StyleSheet.flatten(
+      regularView.getByTestId('forecast-header-time-row').props.style
+    );
+    const compactStyle = StyleSheet.flatten(
+      compactView.getByTestId('forecast-header-time-row').props.style
+    );
+    expect(compactStyle.height).toBe(regularStyle.height);
+    expect(compactStyle.height).toBeLessThanOrEqual(52);
   });
 });

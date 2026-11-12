@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Smartmet Server timeseries observations",
+  "type": "object",
+  "propertyNames": {
+    "pattern": "^[0-9]+$"
+  },
+  "additionalProperties": {
+    "$ref": "#/$defs/stationNames"
+  },
+  "$defs": {
+    "stationNames": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/stationTypes"
+      }
+    },
+    "stationTypes": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/distances"
+      }
+    },
+    "distances": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[0-9]+(\\.[0-9]+)?$"
+      },
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/observation"
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "epochtime",
+        "dewPoint",
+        "humidity",
+        "precipitation1h",
+        "pressure",
+        "ri_10min",
+        "snowDepth",
+        "temperature",
+        "totalCloudCover",
+        "visibility",
+        "windCompass8",
+        "windDirection",
+        "windGust",
+        "windSpeedMS"
+      ],
+      "properties": {
+        "epochtime": {
+          "type": "integer"
+        },
+        "cloudHeight": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "dewPoint": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "humidity": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "precipitation1h": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "precipitationIntensity": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "pressure": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "ri_10min": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "snowDepth": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "temperature": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "totalCloudCover": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "visibility": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "windCompass8": {
+          "type": ["string", "null"],
+          "maxLength": 2
+        },
+        "windDirection": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "windGust": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "windSpeedMS": {
+          "$ref": "#/$defs/nullableNumber"
+        }
+      }
+    },
+    "nullableNumber": {
+      "type": ["number", "null"]
+    }
+  }
+}

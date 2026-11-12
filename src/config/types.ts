@@ -99,7 +99,7 @@ export interface MapLayer {
   mvt?: VectorTileSettings;
 }
 
-export interface BaseMap {
+export interface MapStyle {
   url: string;
   lightStyle: string;
   darkStyle: string;
@@ -109,6 +109,7 @@ interface GeoMagneticObservations {
   enabled: boolean;
   producer: string;
   countryCodes: string[];
+  schemaValidation?: boolean;
 }
 
 interface Observation {
@@ -122,6 +123,7 @@ interface Observation {
   dailyParameters?: (keyof DailyObservationParameters)[];
   geoMagneticObservations?: GeoMagneticObservations;
   lazyLoad?: boolean;
+  schemaValidation?: boolean;
 }
 
 interface ObservationEnabled extends Observation {
@@ -170,6 +172,7 @@ interface Warnings {
   ageWarning?: number;
   webViewUrl?: string;
   capViewSettings?: CapViewSettings;
+  schemaValidation?: boolean;
 }
 
 interface WarningsEnabled extends Warnings {
@@ -182,6 +185,7 @@ interface WarningsDisabled extends Partial<Warnings> {
 
 interface Announcements {
   updateInterval: number;
+  schemaValidation?: boolean;
   api: {
     [locale: string]: string;
   };
@@ -253,6 +257,12 @@ interface Feedback {
   faqUrl?: {
     [locale: string]: string;
   };
+  accessibility?: {
+    [locale: string]: {
+      email: string;
+      subject: string;
+    };
+  };
 }
 
 interface News {
@@ -262,6 +272,7 @@ interface News {
   numberOfNews: number;
   updateInterval: number;
   outdated: number;
+  schemaValidation?: boolean;
 }
 
 interface NewsEnabled extends News {
@@ -275,6 +286,7 @@ interface NewsDisabled extends Partial<News> {
 interface MeteorologistSnapshotConfig {
   url: string;
   updateInterval: number;
+  schemaValidation?: boolean;
 }
 
 interface Analytics {
@@ -290,7 +302,7 @@ interface MapInfoBottomSheet {
 interface MarkdownSettings {
   termsOfUse: boolean;
   aboutTheApplication: boolean;
-  accessibility: boolean;
+  accessibility?: boolean; // For backward compatibility
 }
 
 interface DateTimeFormats {
@@ -346,24 +358,30 @@ export interface ConfigType {
     source: 'smartmet' | 'json';
     default: Location;
     apiUrl: string;
+    fmiApiKey?: string;
     keyword: string;
     maxRecent: number;
     maxFavorite: number;
     maxDistance?: number;
     useInKeyword?: boolean;
+    schemaValidation?: boolean;
   };
   map: {
     updateInterval: number;
     sources: { [name: string]: string };
+    fmiApiKey?: { [name: string]: string };
     layerGroups: LayerGroup[];
     layers: MapLayer[];
-    baseMap?: BaseMap;
+    baseMap?: MapStyle;
+    overlayMap?: MapStyle;
     infoBottomSheet?: MapInfoBottomSheet;
   };
   weather: {
     apiUrl: string;
+    fmiApiKey?: string;
     layout?: 'default' | 'vertical' | 'legacyWithoutBackgroundColor';
     backgroundImagesEnabled?: boolean;
+    favoritesPanelEnabled?: boolean;
     forecast: {
       ageWarning?: number;
       maxAge?: number;
@@ -381,6 +399,7 @@ export interface ConfigType {
       infoBottomSheet?: {
         showAllSymbols?: boolean;
       };
+      schemaValidation?: boolean;
     };
     observation: ObservationEnabled | ObservationDisabled;
     meteorologist?: MeteorologistSnapshotConfig;

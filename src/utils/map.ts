@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import moment from 'moment';
 import { XMLParser } from 'fast-xml-parser';
-import { LogManager } from "@maplibre/maplibre-react-native";
+import { LogManager } from '@maplibre/maplibre-react-native';
 
 import { Layer, MapOverlay, VectorLayerStyle } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
@@ -122,7 +122,10 @@ export const getSliderMaxUnix = (
 export const getSliderStepSeconds = (sliderStep: number): number =>
   ([5, 15, 30, 60, 180].includes(sliderStep) ? sliderStep : 15) * 60;
 
-export const getOverlayData = async (activeOverlay: number, library: MapLibrary) => {
+export const getOverlayData = async (
+  activeOverlay: number,
+  library: MapLibrary
+) => {
   const { sources, layers } = Config.get('map');
   const [overlay] = layers.filter(
     ({ id }) => !activeOverlay || activeOverlay === id
@@ -168,8 +171,15 @@ export const getTimeseriesData = async (
   };
 
   const url = `${sources[layer.source]}/timeseries`;
+  const fmiApiKey = Config.get('map').fmiApiKey?.smartmet;
   const { data, headers } = await axiosClient(
-    { url, params },
+    {
+      url,
+      params,
+      ...(fmiApiKey !== undefined
+        ? { headers: { 'fmi-apikey': fmiApiKey } }
+        : {}),
+    },
     undefined,
     'Timeseries'
   );
@@ -251,7 +261,10 @@ const parseWmsTimeBounds = (dimText: string): TimeBounds => {
     // - start/end/period
     // - start/end
     // - individual time step
-    const parts = seg.split('/').map((p) => p.trim()).filter(Boolean);
+    const parts = seg
+      .split('/')
+      .map((p) => p.trim())
+      .filter(Boolean);
 
     if (parts.length === 1) {
       return { start: parts[0], end: parts[0] };
@@ -272,6 +285,7 @@ export const getWMSLayerUrlsAndBounds = async (
   overlay: MapLayer,
   library: MapLibrary
 ): Promise<Map<number, MapOverlay> | undefined> => {
+  const { fmiApiKey } = Config.get('map');
   const capabilitiesData = new Map();
   const overlayMap = new Map();
 
@@ -300,31 +314,39 @@ export const getWMSLayerUrlsAndBounds = async (
 
   await Promise.all(
     activeSources.map(async (src) => {
-      const { data } = await axiosClient({
-        url: `${sources[src]}/wms`,
-        params: {
-          service: 'WMS',
-          request: 'GetCapabilities',
-          layout: 'recursive',
-          enableintervals: '1',
-          who: `${packageJSON.name}-${Platform.OS}`,
-          ...(src.includes('smartmet')
-            ? {
-                namespace: `/${[
-                  ...new Set(
-                    allLayerNames.map((layerName) =>
-                      layerName.substring(0, layerName.lastIndexOf(':'))
-                    )
-                  ),
-                ].join('|')}/`
-              }
+      const { data } = await axiosClient(
+        {
+          url: `${sources[src]}/wms`,
+          ...(fmiApiKey?.[src] !== undefined
+            ? { headers: { 'fmi-apikey': fmiApiKey[src] } }
             : {}),
+          params: {
+            service: 'WMS',
+            request: 'GetCapabilities',
+            layout: 'recursive',
+            enableintervals: '1',
+            who: `${packageJSON.name}-${Platform.OS}`,
+            ...(src.includes('smartmet')
+              ? {
+                  namespace: `/${[
+                    ...new Set(
+                      allLayerNames.map((layerName) =>
+                        layerName.substring(0, layerName.lastIndexOf(':'))
+                      )
+                    ),
+                  ].join('|')}/`,
+                }
+              : {}),
+          },
         },
-      }, undefined, 'WMS');
+        undefined,
+        'WMS'
+      );
 
       const parsedResponse = parser.parse(data);
 
-      const rootLayer: RawWmsLayer = parsedResponse.WMS_Capabilities.Capability.Layer;
+      const rootLayer: RawWmsLayer =
+        parsedResponse.WMS_Capabilities.Capability.Layer;
       const allLayers = flattenLayers(rootLayer);
       const filteredLayers = allLayers.filter((L: WmsLayer) =>
         allLayerNames.includes(L.Name)
@@ -342,10 +364,13 @@ export const getWMSLayerUrlsAndBounds = async (
         .find((src: WmsLayer) => src.Name === layerSrc.layer);
 
       const dimensionArray: WmsDimension[] = Array.isArray(wmsLayer.Dimension)
-        ? wmsLayer.Dimension : wmsLayer.Dimension
-        ? [wmsLayer.Dimension as WmsDimension] : [];
+        ? wmsLayer.Dimension
+        : wmsLayer.Dimension
+          ? [wmsLayer.Dimension as WmsDimension]
+          : [];
 
-      const timeDimension = dimensionArray.find((dim) => dim.name === 'time') ?? dimensionArray[0];
+      const timeDimension =
+        dimensionArray.find((dim) => dim.name === 'time') ?? dimensionArray[0];
       const { layerStart, layerEnd } = parseWmsTimeBounds(timeDimension.text);
 
       const referenceTimeDimension = dimensionArray.find(
@@ -455,8 +480,7 @@ export const configureMapLibreLogging = () => {
     const { tag, message } = event;
 
     const shouldSuppress =
-      tag === "Mbgl" &&
-      message.includes("Failed to load tile")
+      tag === 'Mbgl' && message.includes('Failed to load tile');
 
     return shouldSuppress;
   });

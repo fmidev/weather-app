@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleProp, ViewStyle, TextStyle, useWindowDimensions } from 'react-native';
 import { IconProps } from 'react-native-vector-icons/Icon';
+import { useAccessibilityLanguage } from '@utils/hooks';
 
 import Icon from '@assets/Icon';
 import { MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
@@ -16,6 +17,7 @@ type CustomIconProps = IconProps & {
 };
 
 const ScalableIcon: React.FC<CustomIconProps> = (props) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   let { maxScaleFactor, width, height, size } = props;
   const { fontScale } = useWindowDimensions();
   const isRunningOnMac = useIsRunningOnMac();
@@ -32,6 +34,7 @@ const ScalableIcon: React.FC<CustomIconProps> = (props) => {
   return (
     <Icon
       {...props}
+      accessibilityLanguage={props.accessibilityLanguage ?? accessibilityLanguage}
       width={width}
       height={height}
       size={size}

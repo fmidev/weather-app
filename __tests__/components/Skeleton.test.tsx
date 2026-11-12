@@ -1,10 +1,22 @@
 import React from 'react';
-import { AccessibilityInfo, Animated, StyleSheet } from 'react-native';
+import {
+  AccessibilityInfo,
+  Animated,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import { act, render } from '@testing-library/react-native';
 
 import Skeleton from '../../src/components/common/Skeleton';
 
 const mockUseTheme = jest.fn();
+
+const mockAnimationLoop = () =>
+  jest.spyOn(Animated, 'loop').mockReturnValue({
+    start: jest.fn(),
+    stop: jest.fn(),
+    reset: jest.fn(),
+  } as ReturnType<typeof Animated.loop>);
 
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => mockUseTheme(),
@@ -57,5 +69,31 @@ describe('Skeleton', () => {
     await act(async () => {});
 
     expect(stopAnimation).toHaveBeenCalled();
+  });
+
+  it('does not animate on Android', () => {
+    jest.replaceProperty(Platform, 'OS', 'android');
+    const timing = jest.spyOn(Animated, 'timing');
+    const loop = jest.spyOn(Animated, 'loop');
+    const stopAnimation = jest.spyOn(Animated.Value.prototype, 'stopAnimation');
+
+    render(<Skeleton />);
+
+    expect(timing).not.toHaveBeenCalled();
+    expect(loop).not.toHaveBeenCalled();
+    expect(stopAnimation).toHaveBeenCalled();
+  });
+
+  it('uses the native animation driver on iOS', () => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    mockAnimationLoop();
+    const timing = jest.spyOn(Animated, 'timing');
+
+    render(<Skeleton />);
+
+    expect(timing).toHaveBeenCalledTimes(2);
+    timing.mock.calls.forEach(([, config]) => {
+      expect(config.useNativeDriver).toBe(true);
+    });
   });
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { CustomTheme, GRAYISH_BLUE } from '@assets/colors';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CapSeverityBar from './CapSeverityBar';
@@ -26,6 +27,7 @@ const DaySelector = ({
   date: string;
   last?: boolean;
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { capViewSettings } = Config.get('warnings');
   const { colors } = useTheme() as CustomTheme;
   const width = capViewSettings?.useRelativeDays ? 110 : 70;
@@ -49,13 +51,13 @@ const DaySelector = ({
           },
         ]}>
         <Text
-          style={[
-            styles.text,
-            { color: colors.primaryText },
-          ]}>
+          accessibilityLanguage={accessibilityLanguage}
+          style={[styles.text, { color: colors.primaryText }]}>
           {capViewSettings?.useRelativeDays ? relativeDay : weekday}
         </Text>
-        <Text style={[styles.text, { color: colors.primaryText }]}>{date}</Text>
+        <Text
+          accessibilityLanguage={accessibilityLanguage}
+          style={[styles.text, { color: colors.primaryText }]}>{date}</Text>
         <View style={styles.severityBarContainer}>
           <CapSeverityBar severities={severities ?? [0, 0, 0, 0]} />
         </View>

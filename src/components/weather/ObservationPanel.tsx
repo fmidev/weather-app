@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
 import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { useAccessibilityLanguage } from '@utils/hooks';
+import AccessibleView from '@components/common/AccessibleView';
 import { selectCurrent } from '@store/location/selector';
 import {
   selectChartDisplayParameter,
@@ -89,6 +91,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   clockType,
   preferredDailyParameters,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const isDaily =
     chartParameter === 'daily' ||
     (chartParameter && preferredDailyParameters.includes(chartParameter));
@@ -97,7 +100,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
   const { t, i18n } = useTranslation('observation');
   const locale = i18n.language;
   const decimalSeparator = locale === 'en' ? '.' : ',';
-  const stationSheetRef = useRef<RBSheet>(null);
+  const stationSheetRef = useRef<BottomSheetRef>(null);
   const { enabled, parameters } = Config.get('weather').observation;
   const { layout } = Config.get('weather');
 
@@ -196,9 +199,9 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       }>
       <PanelHeader title={t('panelHeader')} thin={layout === 'vertical'} />
       <View style={styles.panelContainer}>
-        {loading && <ActivityIndicator />}
+        {loading && <ActivityIndicator accessibilityLanguage={accessibilityLanguage} />}
         {stationList.length > 0 && (
-          <View
+          <AccessibleView
             accessible
             accessibilityRole="menu"
             accessibilityLabel={`${t('observationStation')}: ${title}`}
@@ -216,7 +219,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
                 rounded={layout === 'vertical'}
               />
             </View>
-          </View>
+          </AccessibleView>
         )}
         <Latest data={data} dailyData={dailyData} />
       </View>
@@ -341,30 +344,31 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       )}
 
       {observationsMissing && (
-        <View style={styles.observationContainer}>
+        <View
+          style={[
+            styles.observationContainer,
+            styles.noObservationsContainer,
+          ]}>
           <Text
-            style={[styles.observationText, { color: colors.hourListText }]}>
+            style={[styles.noObservationsText, { color: colors.hourListText }]}>
             {t('noObservations')}
           </Text>
         </View>
       )}
 
-      <RBSheet
+      <BottomSheet
         ref={stationSheetRef}
         height={600}
-        closeOnDragDown
-        dragFromTopOnly
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        scrollableNegotiation="none"
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <ObservationStationListBottomSheet
           onClose={() => stationSheetRef.current?.close()}
         />
-      </RBSheet>
+      </BottomSheet>
     </View>
   );
 };
@@ -374,6 +378,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginBottom: 8,
     flex: 1,
+  },
+  noObservationsContainer: {
+    marginHorizontal: 16,
+  },
+  noObservationsText: {
+    fontSize: 16,
+    fontFamily: REGULAR_FONT,
   },
   contentSelectionContainer: {
     borderWidth: 1.5,

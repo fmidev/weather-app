@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Smartmet Server favorite forecasts grouped by coordinates",
+  "type": "object",
+  "additionalProperties": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": ["epochtime"],
+      "properties": {
+        "epochtime": { "type": "integer" }
+      }
+    }
+  }
+}

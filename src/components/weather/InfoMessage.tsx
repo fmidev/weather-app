@@ -2,18 +2,22 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { useAccessibilityLanguage } from '@utils/hooks';
 import { CustomTheme, GRAY_1_OPACITY_15, GRAY_4, WHITE } from '@assets/colors';
 import { REGULAR_FONT } from '@assets/constants';
 
 const InfoMessage: React.FC<{ translationKey: string }> = ({
   translationKey,
 }) => {
+  const accessibilityLanguage = useAccessibilityLanguage();
   const { dark } = useTheme() as CustomTheme;
   const { t } = useTranslation('observation');
 
   return (
     <View style={[styles.infoView]}>
-      <Text style={[styles.infoText, { color: dark ? WHITE : GRAY_4 }]}>
+      <Text
+        accessibilityLanguage={accessibilityLanguage}
+        style={[styles.infoText, { color: dark ? WHITE : GRAY_4 }]}>
         {t(translationKey)}
       </Text>
     </View>
