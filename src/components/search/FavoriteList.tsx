@@ -4,17 +4,17 @@ import {
   Animated,
   Easing,
   StyleSheet,
-  View,
   type ViewInstance,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import Icon from '@components/common/ScalableIcon';
+import AccessibleView from '@components/common/AccessibleView';
 import { Config } from '@config';
 import { CustomTheme } from '@assets/colors';
 import type { Location } from '@store/location/types';
-import { useAccessibilityLanguage, type DragAutoScroll } from '@utils/hooks';
+import type { DragAutoScroll } from '@utils/hooks';
 import AreaList, { AreaListItem, AreaListProps } from './AreaList';
 
 type Props = AreaListProps & {
@@ -47,7 +47,6 @@ const FavoriteList: React.FC<Props> = ({
 }) => {
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
-  const accessibilityLanguage = useAccessibilityLanguage();
   const reorderEnabled =
     Config.get('weather').favoritesPanelEnabled !== false &&
     elements.length > 1;
@@ -195,11 +194,10 @@ const FavoriteList: React.FC<Props> = ({
               iconName="star-selected"
               leadingAccessory={
                 reorderEnabled && (
-                  <View
+                  <AccessibleView
                     testID={`favorite-drag-handle-${element.id}`}
                     style={styles.handle}
                     accessible
-                    accessibilityLanguage={accessibilityLanguage}
                     accessibilityRole="adjustable"
                     accessibilityLabel={t('reorderFavorite', {
                       location: name,
@@ -272,7 +270,7 @@ const FavoriteList: React.FC<Props> = ({
                       accessible={false}
                       style={{ color: colors.text }}
                     />
-                  </View>
+                  </AccessibleView>
                 )
               }
             />

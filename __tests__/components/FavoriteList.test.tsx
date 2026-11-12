@@ -1,5 +1,12 @@
 import React from 'react';
-import { AccessibilityInfo, Animated, StyleSheet, Text } from 'react-native';
+import {
+  AccessibilityInfo,
+  Animated,
+  NativeModules,
+  Platform,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
 import FavoriteList from '@components/search/FavoriteList';
@@ -98,6 +105,36 @@ describe('FavoriteList', () => {
   });
 
   afterEach(() => jest.restoreAllMocks());
+
+  it('localizes the Android reorder hint and preserves drag and accessibility actions', () => {
+    const originalPlatform = Platform.OS;
+    const originalModule = NativeModules.AppLanguage;
+    const localizeAccessibilityHint = jest.fn();
+    Object.defineProperty(Platform, 'OS', { value: 'android' });
+    NativeModules.AppLanguage = { localizeAccessibilityHint };
+    jest.spyOn(require('react-native'), 'findNodeHandle').mockReturnValue(42);
+    try {
+      const view = mountList();
+      const handle = view.getByTestId('favorite-drag-handle-1');
+      expect(handle.props.accessibilityHint).toBe('reorderFavoriteHint');
+      expect(localizeAccessibilityHint).not.toHaveBeenCalled();
+      fireEvent(handle, 'layout', {
+        currentTarget: 42,
+        nativeEvent: { layout: { x: 0, y: 0, width: 44, height: 45 } },
+      });
+      expect(localizeAccessibilityHint).toHaveBeenCalledWith(42);
+      view.drag(1, 70);
+      expect(view.props.onReorder).toHaveBeenCalledWith(0, 1);
+      view.props.onReorder.mockClear();
+      fireEvent(handle, 'accessibilityAction', {
+        nativeEvent: { actionName: 'increment' },
+      });
+      expect(view.props.onReorder).toHaveBeenCalledWith(0, 1);
+    } finally {
+      Object.defineProperty(Platform, 'OS', { value: originalPlatform });
+      NativeModules.AppLanguage = originalModule;
+    }
+  });
 
   it.each([0, 1, 2, 3])(
     'shows handles only with multiple favorites (%s)',
