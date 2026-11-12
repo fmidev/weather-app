@@ -11,10 +11,15 @@ import {
   type NativeSyntheticEvent,
   type NativeScrollEvent,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useIsFocused } from '@react-navigation/native';
 
 import { State } from '@store/types';
-import { selectCurrent, selectFavorites } from '@store/location/selector';
+import {
+  selectCurrent,
+  selectFavorites,
+  selectLocationUpdateCount,
+} from '@store/location/selector';
 import { setCurrentLocation as setCurrentLocationAction } from '@store/location/actions';
 import type { Location } from '@store/location/types';
 import { selectAnnouncements } from '@store/announcements/selectors';
@@ -53,6 +58,7 @@ import { trackMatomoEvent } from '@utils/matomo';
 const mapStateToProps = (state: State) => ({
   announcements: selectAnnouncements(state),
   location: selectCurrent(state),
+  locationUpdateCount: selectLocationUpdateCount(state),
   favorites: selectFavorites(state),
 });
 
@@ -87,6 +93,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   location,
   favorites,
   announcements,
+  locationUpdateCount = 0,
 }) => {
   const { i18n } = useTranslation();
   const isFocused = useIsFocused();
@@ -101,7 +108,16 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
   const [observationVisible, setObservationVisible] = useState(false);
   const observationRef = useRef<ViewInstance>(null);
   const scrollViewRef = useRef<ScrollViewInstance>(null);
+  const lastLocationUpdateCount = useRef(locationUpdateCount);
   const { shouldReload } = useReloader();
+
+  useEffect(() => {
+    if (!isFocused || lastLocationUpdateCount.current === locationUpdateCount) {
+      return;
+    }
+    lastLocationUpdateCount.current = locationUpdateCount;
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+  }, [locationUpdateCount, isFocused]);
 
   const {
     weather: weatherConfig,
@@ -119,6 +135,9 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
 
   const selectFavoriteLocation = useCallback(
     (favorite: Location, scrollToTop = true) => {
+      // Handle favorite scrolling here instead of in the location update effect.
+      lastLocationUpdateCount.current =
+        Math.max(lastLocationUpdateCount.current, locationUpdateCount) + 1;
       setCurrentLocation({ ...favorite });
       if (scrollToTop) {
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
@@ -129,7 +148,7 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
         'Select location - favourites'
       );
     },
-    [setCurrentLocation]
+    [locationUpdateCount, setCurrentLocation]
   );
 
   const updateForecasts = useCallback(() => {
@@ -366,28 +385,31 @@ const WeatherScreen: React.FC<WeatherScreenProps> = ({
       </ScrollView>
     </View>
   ) : (
-    <GradientWrapper>
-      <View
-        testID="weather_view"
-        style={
-          Platform.OS === 'android' &&
-          weatherConfig.layout !== 'legacyWithoutBackgroundColor'
-            ? styles.legacyAndroid
-            : null
-        }>
-        <ScrollView
-          testID="weather_scrollview"
-          style={[styles.container]}
-          contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={announcements && [0]}>
-          <Announcements style={styles.announcements} />
-          <NextHourForecastPanel currentHour={currentHour} />
-          <ForecastPanel currentHour={currentHour} />
-          <ObservationPanel />
-        </ScrollView>
-      </View>
-    </GradientWrapper>
+    <SafeAreaView edges={['left', 'right']}>
+      <GradientWrapper>
+        <View
+          testID="weather_view"
+          style={
+            Platform.OS === 'android' &&
+            weatherConfig.layout !== 'legacyWithoutBackgroundColor'
+              ? styles.legacyAndroid
+              : null
+          }>
+          <ScrollView
+            testID="weather_scrollview"
+            ref={scrollViewRef}
+            style={[styles.container]}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+            stickyHeaderIndices={announcements && [0]}>
+            <Announcements style={styles.announcements} />
+            <NextHourForecastPanel currentHour={currentHour} />
+            <ForecastPanel currentHour={currentHour} />
+            <ObservationPanel />
+          </ScrollView>
+        </View>
+      </GradientWrapper>
+    </SafeAreaView>
   );
 };
 

@@ -11,6 +11,11 @@ export const selectIsGeolocation = createSelector(
   (location) => location.isGeolocation
 );
 
+export const selectLocationUpdateCount = createSelector(
+  selectLocationDomain,
+  (location) => location.locationUpdateCount ?? 0
+);
+
 export const selectLoading = createSelector(
   selectLocationDomain,
   (location) => location.loading

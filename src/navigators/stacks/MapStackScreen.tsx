@@ -1,13 +1,19 @@
 import React from 'react';
-import { createStackNavigator, type StackNavigationOptions } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  type StackNavigationOptions,
+} from '@react-navigation/stack';
+import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import MapScreen from '@screens/MapScreen';
 import SearchScreen from '@screens/SearchScreen';
 import type { StackScreenListener } from './types';
 
-type MapStackScreenProps = {
+export type MapStackScreenProps = {
   mapOptions: StackNavigationOptions;
   searchOptions: StackNavigationOptions;
+  nativeMapOptions: NativeStackNavigationOptions;
+  nativeSearchOptions: NativeStackNavigationOptions;
   stackScreenListener: StackScreenListener;
 };
 

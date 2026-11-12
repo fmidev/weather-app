@@ -9,17 +9,21 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '@react-navigation/native';
 
 import { useAccessibilityLanguage } from '@utils/hooks';
-import AccessibleView from '@components/common/AccessibleView';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import Text from '@components/common/AppText';
 import Icon from '@components/common/ScalableIcon';
 import CloseButton from '@components/common/CloseButton';
 
-import type { MapStackParamList, WeatherStackParamList } from '@navigators/stacks/types';
+import type {
+  MapStackParamList,
+  WeatherStackParamList,
+} from '@navigators/stacks/types';
 
 import { State } from '@store/types';
 
@@ -45,12 +49,15 @@ import { Location } from '@store/location/types';
 import { setAnimateToArea as setAnimateToAreaAction } from '@store/map/actions';
 
 import AreaList from '@components/search/AreaList';
-import IconButton from '@components/common/IconButton';
 
 import { getGeolocation } from '@utils/helpers';
 import { CustomTheme } from '@assets/colors';
 import { trackMatomoEvent } from '@utils/matomo';
-import { REGULAR_FONT, BOLD_FONT, MAC_CONTENT_SIZE_MULTIPLIER } from '@assets/constants';
+import {
+  REGULAR_FONT,
+  BOLD_FONT,
+  MAC_CONTENT_SIZE_MULTIPLIER,
+} from '@assets/constants';
 import { useIsRunningOnMac } from '@components/common/MacContentSizeContext';
 
 const mapStateToProps = (state: State) => ({
@@ -148,14 +155,27 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
     navigation.goBack();
   };
 
-  const isFavorite = (location: Location) => favorites.some(
-    ({ id }) => id === location.id
-  );
+  const handleLocate = () => {
+    trackMatomoEvent('User action', 'Search', 'Geolocation - button');
+    getGeolocation(
+      setCurrentLocation,
+      t,
+      undefined,
+      () => store.getState().location.current
+    );
+    navigation.goBack();
+  };
+
+  const isFavorite = (location: Location) =>
+    favorites.some(({ id }) => id === location.id);
 
   const inputFontSize = isRunningOnMac ? MAC_CONTENT_SIZE_MULTIPLIER * 16 : 16;
 
   return (
-    <View testID="search_view" style={styles.container}>
+    <SafeAreaView
+      testID="search_view"
+      edges={['left', 'right']}
+      style={styles.container}>
       <Text
         accessible={false}
         style={[
@@ -199,10 +219,12 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           onChangeText={(text) => setValue(text)}
           underlineColorAndroid="transparent"
         />
-        {loading && <ActivityIndicator
-                      accessibilityLanguage={accessibilityLanguage}
-                      accessibilityLabel={t('loading')}
-                    />}
+        {loading && (
+          <ActivityIndicator
+            accessibilityLanguage={accessibilityLanguage}
+            accessibilityLabel={t('loading')}
+          />
+        )}
         {value.length > 0 && (
           <CloseButton
             testID="search_clear_button"
@@ -223,15 +245,27 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               elements={search}
               title={t('searchResults')}
               onSelect={(location) => {
-                trackMatomoEvent('User action', 'Search', 'Select location - search results')
-                handleSelectLocation(location, true)
+                trackMatomoEvent(
+                  'User action',
+                  'Search',
+                  'Select location - search results'
+                );
+                handleSelectLocation(location, true);
               }}
               onIconPress={(location) => {
                 if (isFavorite(location)) {
-                  trackMatomoEvent('User action', 'Search', 'Remove favourite - search results');
+                  trackMatomoEvent(
+                    'User action',
+                    'Search',
+                    'Remove favourite - search results'
+                  );
                   deleteFavorite(location.id);
                 } else {
-                  trackMatomoEvent('User action', 'Search', 'Add favourite - search results');
+                  trackMatomoEvent(
+                    'User action',
+                    'Search',
+                    'Add favourite - search results'
+                  );
                   addFavorite(location);
                 }
               }}
@@ -243,48 +277,60 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
           {!loading && !/^\s*$/.test(value) && search.length === 0 && (
             <Text style={{ color: colors.text }}>{t('noResults')}</Text>
           )}
-          <AccessibleView
+          <AccessibleTouchableOpacity
+            testID="search_locate_button"
             style={styles.locateRow}
-            accessible
             accessibilityRole="button"
-            onAccessibilityTap={() => {
-              trackMatomoEvent('User action', 'Search', 'Geolocation - accessibility tap');
-              getGeolocation(setCurrentLocation, t, undefined, () => store.getState().location.current);
-              navigation.goBack();
-            }}>
+            accessibilityLabel={t('locate')}
+            onPress={handleLocate}>
             <Text style={[styles.title, { color: colors.text }]}>
               {t('locate')}
             </Text>
-            <IconButton
-              icon="locate"
-              accessibilityLabel=""
-              iconColor={colors.text}
-              backgroundColor={colors.inputBackground}
-              onPress={() => {
-                trackMatomoEvent('User action', 'Search', 'Geolocation - button');
-                getGeolocation(setCurrentLocation, t, undefined, () => store.getState().location.current);
-                navigation.goBack();
-              }}
-            />
-          </AccessibleView>
+            <View
+              style={[
+                styles.locateIcon,
+                { backgroundColor: colors.inputBackground },
+              ]}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants">
+              <Icon
+                name="locate"
+                width={22}
+                height={22}
+                style={{ color: colors.text }}
+              />
+            </View>
+          </AccessibleTouchableOpacity>
           {favorites.length > 0 && (
             <AreaList
               elements={favorites}
               title={t('favorites')}
               onSelect={(location) => {
-                trackMatomoEvent('User action', 'Search', 'Select location - favourites');
-                handleSelectLocation(location, false)
+                trackMatomoEvent(
+                  'User action',
+                  'Search',
+                  'Select location - favourites'
+                );
+                handleSelectLocation(location, false);
               }}
               onIconPress={(location) => {
-                trackMatomoEvent('User action', 'Search', 'Remove favourite - favourites')
+                trackMatomoEvent(
+                  'User action',
+                  'Search',
+                  'Remove favourite - favourites'
+                );
                 deleteFavorite(location.id);
                 updateRecentSearches(location);
               }}
               iconName="star-selected"
               clearTitle={t('clearFavorites')}
               onClear={() => {
-                trackMatomoEvent('User action', 'Search', 'Remove all favourites')
-                deleteAllFavorites()
+                trackMatomoEvent(
+                  'User action',
+                  'Search',
+                  'Remove all favourites'
+                );
+                deleteAllFavorites();
               }}
             />
           )}
@@ -293,15 +339,27 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               elements={recent.slice(0).reverse()}
               title={t('recentSearches')}
               onSelect={(location) => {
-                trackMatomoEvent('User action', 'Search', 'Select location - recent searches');
-                handleSelectLocation(location, false)
+                trackMatomoEvent(
+                  'User action',
+                  'Search',
+                  'Select location - recent searches'
+                );
+                handleSelectLocation(location, false);
               }}
               onIconPress={(location) => {
                 if (isFavorite(location)) {
-                  trackMatomoEvent('User action', 'Search', 'Remove favourite - recent searches');
+                  trackMatomoEvent(
+                    'User action',
+                    'Search',
+                    'Remove favourite - recent searches'
+                  );
                   deleteFavorite(location.id);
                 } else {
-                  trackMatomoEvent('User action', 'Search', 'Add favourite - recent searches');
+                  trackMatomoEvent(
+                    'User action',
+                    'Search',
+                    'Add favourite - recent searches'
+                  );
                   addFavorite(location);
                 }
               }}
@@ -310,14 +368,18 @@ const SearchScreen: React.FC<SearchScreenProps> = ({
               }
               clearTitle={t('clearRecentSearches')}
               onClear={() => {
-                trackMatomoEvent('User action', 'Search', 'Remove search history');
-                deleteAllRecentSearches()
+                trackMatomoEvent(
+                  'User action',
+                  'Search',
+                  'Remove search history'
+                );
+                deleteAllRecentSearches();
               }}
             />
           )}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -359,7 +421,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft: 16,
     marginTop: 12,
-    height: 44,
+    minHeight: 48,
+  },
+  locateIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   closeButton: {
     marginLeft: 11,

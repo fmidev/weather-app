@@ -4,7 +4,16 @@ import { act, fireEvent, render } from '@testing-library/react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { trackMatomoEvent } from '@utils/matomo';
 
+import { ScreenHeaderItemsContext } from '../../src/navigators/ScreenHeaderItemsContext';
 import WarningsPanel from '../../src/components/warnings/WarningsPanel';
+
+const mockSheetOpen = jest.fn();
+let mockVerticalBarLayout = false;
+
+jest.mock('@utils/hooks', () => ({
+  ...jest.requireActual('@utils/hooks'),
+  usesVerticalBarLayout: () => mockVerticalBarLayout,
+}));
 
 jest.mock('react-redux', () => ({
   connect: () => (Component: any) => Component,
@@ -43,12 +52,13 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactMock = require('react');
   const { View } = require('react-native');
-  return ReactMock.forwardRef(({ children }: any, forwardedRef: any) => (
-    <View ref={forwardedRef}>{children}</View>
-  ));
+  return ReactMock.forwardRef(({ children }: any, forwardedRef: any) => {
+    ReactMock.useImperativeHandle(forwardedRef, () => ({ open: mockSheetOpen }));
+    return <View>{children}</View>;
+  });
 });
 
 jest.mock('../../src/components/warnings/SeverityBar', () => () => null);
@@ -91,6 +101,7 @@ describe('WarningsPanel', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     jest.clearAllMocks();
+    mockVerticalBarLayout = false;
     jest.spyOn(require('react-native'), 'findNodeHandle').mockReturnValue(42);
     jest.spyOn(AccessibilityInfo, 'setAccessibilityFocus').mockImplementation(() => {});
     jest.spyOn(globalThis, 'requestAnimationFrame').mockImplementation(callback =>
@@ -223,4 +234,52 @@ describe('WarningsPanel', () => {
     act(() => jest.advanceTimersByTime(20));
     expect(AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
   });
+
+  it('keeps the inline info button and adds the same action to the vertical header', () => {
+    mockVerticalBarLayout = true;
+    const setItems = jest.fn();
+    const headerProps = {
+      dailyWarnings: [{ date: '2026-10-29', severity: 0, count: 0, warnings: [] }],
+      location: { name: 'Helsinki' }, loading: false, error: false,
+    } as any;
+    const view = render(
+      <ScreenHeaderItemsContext.Provider value={setItems}>
+        <WarningsPanel {...headerProps} />
+      </ScreenHeaderItemsContext.Provider>
+    );
+    const items = setItems.mock.calls.at(-1)![0];
+    expect(items).toEqual([expect.objectContaining({
+      accessibilityLabel: 'infoAccessibilityLabel',
+      icon: { type: 'sfSymbol', name: 'info.circle' },
+    })]);
+    fireEvent.press(view.getByTestId('warnings_info_button'));
+    items[0].onPress();
+    expect(mockSheetOpen).toHaveBeenCalledTimes(2);
+    expect(require('@utils/matomo').trackMatomoEvent).toHaveBeenCalledWith(
+      'User action', 'Warnings', 'Open warnings info panel'
+    );
+
+    mockVerticalBarLayout = false;
+    view.rerender(
+      <ScreenHeaderItemsContext.Provider value={setItems}>
+        <WarningsPanel {...headerProps} />
+      </ScreenHeaderItemsContext.Provider>
+    );
+    expect(setItems).toHaveBeenLastCalledWith([]);
+    expect(view.getByTestId('warnings_info_button')).toBeTruthy();
+  });
+
+  it.each([{ loading: true, error: false }, { loading: false, error: true }])(
+    'does not offer a header action without a mounted info sheet (%o)',
+    (state) => {
+      mockVerticalBarLayout = true;
+      const setItems = jest.fn();
+      render(
+        <ScreenHeaderItemsContext.Provider value={setItems}>
+          <WarningsPanel {...({ dailyWarnings: [], location: { name: 'Helsinki' }, ...state } as any)} />
+        </ScreenHeaderItemsContext.Provider>
+      );
+      expect(setItems).toHaveBeenLastCalledWith([]);
+    }
+  );
 });

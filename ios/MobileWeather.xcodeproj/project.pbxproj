@@ -56,6 +56,7 @@
 		BFD98EF8D9DDD60D677C76DE /* libPods-MobileWeather.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 974E3F089372FFCFD0AECBEB /* libPods-MobileWeather.a */; };
 		F10000012F00000000000001 /* IOSCompatibilityMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000032F00000000000003 /* IOSCompatibilityMode.swift */; };
 		F10000022F00000000000002 /* IOSCompatibilityModeBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = F10000042F00000000000004 /* IOSCompatibilityModeBridge.m */; };
+		F20000012F00000000000001 /* VerticalBarLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = F20000022F00000000000002 /* VerticalBarLayout.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,6 +162,7 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F10000032F00000000000003 /* IOSCompatibilityMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSCompatibilityMode.swift; sourceTree = "<group>"; };
 		F10000042F00000000000004 /* IOSCompatibilityModeBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IOSCompatibilityModeBridge.m; sourceTree = "<group>"; };
+		F20000022F00000000000002 /* VerticalBarLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VerticalBarLayout.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -268,6 +270,7 @@
 				A292E7552D5F16C000DC288E /* AppDelegate.swift */,
 				F10000032F00000000000003 /* IOSCompatibilityMode.swift */,
 				F10000042F00000000000004 /* IOSCompatibilityModeBridge.m */,
+				F20000022F00000000000002 /* VerticalBarLayout.m */,
 			);
 			path = MobileWeather;
 			sourceTree = "<group>";
@@ -873,6 +876,7 @@
 				A454032C25E66E860005997E /* SwiftEnabler.swift in Sources */,
 				F10000012F00000000000001 /* IOSCompatibilityMode.swift in Sources */,
 				F10000022F00000000000002 /* IOSCompatibilityModeBridge.m in Sources */,
+				F20000012F00000000000001 /* VerticalBarLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
