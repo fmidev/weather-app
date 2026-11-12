@@ -5,6 +5,7 @@ import {
   Easing,
   StyleSheet,
   View,
+  type ViewInstance,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -51,6 +52,7 @@ const FavoriteList: React.FC<Props> = ({
     Config.get('weather').favoritesPanelEnabled !== false &&
     elements.length > 1;
   const layouts = useRef(new Map<string | number, RowLayout>());
+  const rowsRef = useRef<ViewInstance>(null);
   const drag = useRef<Drag | null>(null);
   const dropAnimation = useRef<Animated.CompositeAnimation | null>(null);
   const settling = useRef(false);
@@ -154,6 +156,7 @@ const FavoriteList: React.FC<Props> = ({
   return (
     <AreaList
       {...props}
+      rowsRef={rowsRef}
       elements={elements}
       onSelect={onSelect}
       onIconPress={onIconPress}
@@ -247,10 +250,14 @@ const FavoriteList: React.FC<Props> = ({
                       };
                       setDragState(drag.current);
                       onDragStateChange(true);
-                      autoScroll?.start(pageY, (scrollOffset) => {
-                        if (drag.current)
-                          moveDrag(drag.current.pageY, scrollOffset);
-                      });
+                      autoScroll?.start(
+                        pageY,
+                        (scrollOffset) => {
+                          if (drag.current)
+                            moveDrag(drag.current.pageY, scrollOffset);
+                        },
+                        rowsRef.current
+                      );
                     }}
                     onResponderMove={({ nativeEvent: { pageY } }) => {
                       autoScroll?.move(pageY);

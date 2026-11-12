@@ -209,7 +209,11 @@ describe('FavoriteList', () => {
       const view = mountList(locations, autoScroll);
       const handle = view.getByTestId(`favorite-drag-handle-${id}`);
       fireEvent(handle, 'responderGrant', { nativeEvent: { pageY: 300 } });
-      expect(autoScroll.start).toHaveBeenCalledWith(300, expect.any(Function));
+      expect(autoScroll.start).toHaveBeenCalledWith(
+        300,
+        expect.any(Function),
+        expect.objectContaining({ measureInWindow: expect.any(Function) })
+      );
       const onScroll = (autoScroll.start as jest.Mock).mock.calls[0][1];
       offset = final;
       act(() => onScroll(offset));

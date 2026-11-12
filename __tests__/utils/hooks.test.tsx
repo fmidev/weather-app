@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, DeviceEventEmitter, NativeModules, Platform, findNodeHandle } from 'react-native';
-import type { LayoutChangeEvent, ViewProps } from 'react-native';
+import type { LayoutChangeEvent, ViewInstance, ViewProps } from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { createInstance } from 'i18next';
 import { I18nextProvider } from 'react-i18next';
@@ -302,7 +302,20 @@ const mountScroll = ({
   fireEvent(scroll, 'layout', { nativeEvent: { layout: { height } } });
   fireEvent(scroll, 'contentSizeChange', 320, contentHeight);
   emitScroll(offset);
-  return { ...view, controller: controller!, scrollTo, measure, emitScroll };
+  const rowsView = (top: number, rowsHeight: number) =>
+    ({
+      measureInWindow: jest.fn((callback) =>
+        callback(0, 100 + top - controller.getOffset(), 320, rowsHeight)
+      ),
+    }) as unknown as ViewInstance;
+  return {
+    ...view,
+    controller: controller!,
+    scrollTo,
+    measure,
+    emitScroll,
+    rowsView,
+  };
 };
 
 describe('useDragAutoScroll', () => {
@@ -317,6 +330,7 @@ describe('useDragAutoScroll', () => {
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     frames = new Map();
     nextFrame = 0;
     time = 0;
@@ -400,6 +414,71 @@ describe('useDragAutoScroll', () => {
   it('does not scroll content that fits in the viewport', () => {
     const view = mountScroll({ contentHeight: 200 });
     act(() => view.controller.start(390, jest.fn()));
+    advanceFrame();
+    expect(view.scrollTo).not.toHaveBeenCalled();
+    expect(frames.size).toBe(0);
+  });
+
+  it.each([
+    [390, 399, 400, 110],
+    [110, 201, 200, 390],
+  ])(
+    'stops at the draggable list boundary at pageY %s and allows reversing direction',
+    (pageY, offset, boundary, reverseY) => {
+      // The draggable rows occupy [200, 700] within a much longer ScrollView.
+      // The remaining space represents search results above and recent searches below.
+      const view = mountScroll({ offset });
+      const rows = view.rowsView(200, 500);
+      const onScroll = jest.fn();
+      act(() => view.controller.start(pageY, onScroll, rows));
+      advanceFrame();
+      expect(view.scrollTo).toHaveBeenLastCalledWith({
+        y: boundary,
+        animated: false,
+      });
+      view.emitScroll(boundary);
+      expect(onScroll).toHaveBeenLastCalledWith(boundary);
+      view.scrollTo.mockClear();
+      advanceFrame();
+      advanceFrame();
+      expect(view.scrollTo).not.toHaveBeenCalled();
+      expect(frames.size).toBe(0);
+      act(() => view.controller.move(reverseY));
+      advanceFrame();
+      const next = (view.scrollTo.mock.calls[0][0] as { y: number }).y;
+      expect(next).toBeGreaterThanOrEqual(200);
+      expect(next).toBeLessThanOrEqual(400);
+      expect((next - boundary) * (reverseY > pageY ? 1 : -1)).toBeGreaterThan(
+        0
+      );
+    }
+  );
+
+  it.each([110, 390])(
+    'keeps a short, fully visible list in place at pageY %s despite surrounding content',
+    (pageY) => {
+      const view = mountScroll({ offset: 100 });
+      act(() =>
+        view.controller.start(pageY, jest.fn(), view.rowsView(200, 90))
+      );
+      advanceFrame();
+      expect(view.scrollTo).not.toHaveBeenCalled();
+      expect(frames.size).toBe(0);
+    }
+  );
+
+  it('waits for row measurements and ignores them after the drag is stopped', () => {
+    const view = mountScroll();
+    const rows = view.rowsView(200, 500);
+    let complete = () => {};
+    jest.spyOn(rows, 'measureInWindow').mockImplementation((callback) => {
+      complete = () => callback(0, 300, 320, 500);
+    });
+    act(() => view.controller.start(390, jest.fn(), rows));
+    advanceFrame();
+    expect(view.scrollTo).not.toHaveBeenCalled();
+    act(() => view.controller.stop());
+    act(() => complete());
     advanceFrame();
     expect(view.scrollTo).not.toHaveBeenCalled();
     expect(frames.size).toBe(0);

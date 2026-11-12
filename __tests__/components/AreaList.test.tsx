@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { Text, View, type ViewInstance } from 'react-native';
+import { fireEvent, render, within } from '@testing-library/react-native';
 
 import AreaList from '../../src/components/search/AreaList';
 
@@ -141,5 +141,27 @@ describe('AreaList', () => {
 
     fireEvent.press(getByText('Clear all'));
     expect(onClear).toHaveBeenCalledTimes(1);
+  });
+
+  it('exposes only the location rows for measuring drag boundaries', () => {
+    const rowsRef = React.createRef<ViewInstance>();
+    const view = render(
+      <AreaList
+        rowsRef={rowsRef}
+        elements={[{ id: 1, name: 'Helsinki', area: '' }] as any}
+        title="Favorites"
+        clearTitle="Clear favorites"
+        onClear={jest.fn()}
+        onSelect={jest.fn()}
+        onIconPress={jest.fn()}
+      />
+    );
+    const rows = view.UNSAFE_getAllByType(View).find(
+      (node) => node.instance === rowsRef.current
+    )!;
+    expect(rows.props.collapsable).toBe(false);
+    expect(within(rows).getByText('Helsinki')).toBeTruthy();
+    expect(within(rows).queryByText('Favorites')).toBeNull();
+    expect(within(rows).queryByText('Clear favorites')).toBeNull();
   });
 });

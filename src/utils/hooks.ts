@@ -11,6 +11,7 @@ import type {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollViewInstance,
+  ViewInstance,
   ViewProps,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -150,7 +151,11 @@ export const useHorizontalScrollEdges = (initialOffset = 0) => {
 
 export type DragAutoScroll = {
   getOffset: () => number;
-  start: (pageY: number, onScroll: (offset: number) => void) => void;
+  start: (
+    pageY: number,
+    onScroll: (offset: number) => void,
+    rowsView?: ViewInstance | null
+  ) => void;
   move: (pageY: number) => void;
   stop: () => void;
 };
@@ -159,6 +164,9 @@ type Drag = {
   pageY: number;
   onScroll: (offset: number) => void;
   measured: boolean;
+  rowsView?: ViewInstance | null;
+  rowsTop?: number;
+  rowsBottom?: number;
   lastTime?: number;
 };
 
@@ -194,10 +202,17 @@ export const useDragAutoScroll = () => {
         ? 16
         : Math.min(32, time - current.lastTime);
     current.lastTime = time;
-    const next = Math.max(
-      0,
-      Math.min(Math.max(0, contentHeight - height), offset + speed * elapsed)
+    const minOffset = Math.max(0, current.rowsTop ?? 0);
+    const maxOffset = Math.min(
+      Math.max(0, contentHeight - height),
+      (current.rowsBottom ?? contentHeight) - height
     );
+    // A short list can already fit between both edges. Never jump to a bound
+    // in the opposite direction when the pointer requests further scrolling.
+    const next =
+      speed > 0
+        ? Math.max(offset, Math.min(maxOffset, offset + speed * elapsed))
+        : Math.min(offset, Math.max(minOffset, offset + speed * elapsed));
     if (speed === 0 || next === offset) {
       current.lastTime = undefined;
       return;
@@ -215,19 +230,38 @@ export const useDragAutoScroll = () => {
 
   const measureViewport = useCallback(() => {
     const current = drag.current;
+    if (!current) return;
+    current.measured = false;
     scrollViewRef.current?.measureInWindow((_x, top, _width, height) => {
-      if (!current || drag.current !== current) return;
+      if (drag.current !== current) return;
       bounds.current.top = top;
       bounds.current.height = height;
-      current.measured = true;
-      schedule();
+      if (current.rowsView) {
+        current.rowsView.measureInWindow(
+          (_rowsX, rowsTop, _rowsWidth, rowsHeight) => {
+            if (drag.current !== current) return;
+            // Convert the row container's window position to content coordinates.
+            current.rowsTop = rowsTop - top + bounds.current.offset;
+            current.rowsBottom = current.rowsTop + rowsHeight;
+            current.measured = true;
+            schedule();
+          }
+        );
+      } else {
+        current.measured = true;
+        schedule();
+      }
     });
   }, [schedule]);
 
   const start = useCallback(
-    (pageY: number, onScroll: (offset: number) => void) => {
+    (
+      pageY: number,
+      onScroll: (offset: number) => void,
+      rowsView?: ViewInstance | null
+    ) => {
       stop();
-      drag.current = { pageY, onScroll, measured: false };
+      drag.current = { pageY, onScroll, rowsView, measured: false };
       measureViewport();
     },
     [measureViewport, stop]
@@ -261,9 +295,9 @@ export const useDragAutoScroll = () => {
   const onContentSizeChange = useCallback(
     (_width: number, height: number) => {
       bounds.current.contentHeight = height;
-      schedule();
+      if (drag.current) measureViewport();
     },
-    [schedule]
+    [measureViewport]
   );
 
   useEffect(() => stop, [stop]);

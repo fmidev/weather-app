@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, type ViewInstance } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@react-navigation/native';
 
@@ -24,6 +24,7 @@ export type AreaListProps = ClearProps & {
   iconName?: string;
   testID?: string;
   renderItem?: (element: Location, index: number) => React.ReactNode;
+  rowsRef?: React.Ref<ViewInstance>;
 };
 
 export const AreaListItem: React.FC<{
@@ -107,6 +108,7 @@ const AreaList: React.FC<AreaListProps> = ({
   onClear,
   testID,
   renderItem,
+  rowsRef,
 }) => {
   const { t } = useTranslation('searchScreen');
   const { colors } = useTheme() as CustomTheme;
@@ -142,7 +144,7 @@ const AreaList: React.FC<AreaListProps> = ({
         </View>
       </View>
 
-      <View>
+      <View ref={rowsRef} collapsable={!rowsRef}>
         {elements.map((element, index) => (
           <React.Fragment key={element.id}>
             {renderItem ? (
