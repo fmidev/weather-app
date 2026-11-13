@@ -4,7 +4,6 @@ import {
   Image,
   StyleSheet,
   View,
-  findNodeHandle,
   AccessibilityInfo,
 } from 'react-native';
 import {
@@ -102,10 +101,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
       navigation.navigate('SetupScreen');
     } else {
       if (titleRef && titleRef.current) {
-        const reactTag = findNodeHandle(titleRef.current);
-        if (reactTag) {
-          AccessibilityInfo.setAccessibilityFocus(reactTag);
-        }
+        AccessibilityInfo.sendAccessibilityEvent(titleRef.current, 'focus');
       }
       setPageIndex((index) => index + 1);
     }

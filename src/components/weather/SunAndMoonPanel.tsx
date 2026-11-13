@@ -68,7 +68,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
       <View
         style={[
           styles.flex,
-          styles.row,
+          styles.container,
           styles.center,
           { backgroundColor: colors.background },
         ]}>
@@ -112,6 +112,29 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
 
   const timeFormat = clockType === 12 ? 'h.mm' : 'HH:mm';
   const accessibleTimeFormat = clockType === 12 ? 'h.mm a' : 'HH:mm';
+  const sunriseDescription = `${t('sunrise')} ${
+    isPolarNight
+      ? formatAccessibleDateTime(sunrise, t, clockType === 24)
+      : `${t('time:atSpoken')} ${sunrise.format(accessibleTimeFormat)}`
+  }`;
+  const sunsetDescription = `${t('sunset')} ${
+    isMidnightSun
+      ? formatAccessibleDateTime(sunset, t, clockType === 24)
+      : `${t('time:atSpoken')} ${sunset.format(accessibleTimeFormat)}`
+  }`;
+  const dayDurationDescription = `${t('dayLength')} ${dayHours} ${t(
+    'time:hoursSpoken'
+  )} ${dayMinutes} ${t('time:minutesSpoken')}`;
+  const sunDetails = isPolarNight
+    ? [t('weatherInfoBottomSheet.polarNight'), sunriseDescription]
+    : isMidnightSun
+      ? [t('weatherInfoBottomSheet.nightlessNight'), sunsetDescription]
+      : [
+          sunriseDescription,
+          sunsetDescription,
+          ...(!excludeDayDuration ? [dayDurationDescription] : []),
+        ];
+  const sunAccessibilityLabel = [t('dayLength'), ...sunDetails].join('. ');
 
   const moonPhase = resolveMoonPhase(
     forecast.moonPhase as number,
@@ -136,23 +159,25 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
           styles.sunBox,
           { width: boxWidth, height: boxHeight },
         ]}
-        accessible>
+        accessible
+        accessibilityLabel={sunAccessibilityLabel}>
         <ImageBackground
+          importantForAccessibility="no-hide-descendants"
           source={dark ? sunBackgroundDark : sunBackground}
           resizeMode="cover"
           style={styles.flex}
           imageStyle={styles.background}>
           <AccessibleView
             style={styles.info}
-            accessible
-            accessibilityRole="header">
+            accessible={false}
+            focusable={false}>
             <Text style={[styles.text, { color: colors.primaryText }]}>
               {t('dayLength')}
             </Text>
           </AccessibleView>
           {isPolarNight && !isMidnightSun && (
-            <AccessibleView accessible>
-              <AccessibleView accessible style={styles.sunInfo}>
+            <AccessibleView accessible={false} focusable={false}>
+              <AccessibleView accessible={false} focusable={false} style={styles.sunInfo}>
                 <Icon
                   width={iconSize}
                   height={iconSize}
@@ -163,7 +188,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                   {t('weatherInfoBottomSheet.polarNight')}
                 </Text>
               </AccessibleView>
-              <AccessibleView style={[styles.sunInfo]} accessible>
+              <AccessibleView style={[styles.sunInfo]} accessible={false} focusable={false}>
                 <Icon
                   width={iconSize}
                   height={iconSize}
@@ -171,7 +196,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                   style={[styles.sunIcon, { color: colors.primaryText }]}
                 />
                 <Text
-                  accessibilityLabel={`${t('sunrise')} ${formatAccessibleDateTime(sunrise, t, clockType === 24)}`}
+                  accessibilityLabel={sunriseDescription}
                   style={[styles.text, { color: colors.primaryText }]}>
                   {sunrise.format(dateFormat)}
                 </Text>
@@ -180,8 +205,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
           )}
 
           {isMidnightSun && !isPolarNight && (
-            <AccessibleView accessible>
-              <AccessibleView accessible style={styles.sunInfo}>
+            <AccessibleView accessible={false} focusable={false}>
+              <AccessibleView accessible={false} focusable={false} style={styles.sunInfo}>
                 <Icon
                   width={iconSize}
                   height={iconSize}
@@ -192,7 +217,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                   {t('weatherInfoBottomSheet.nightlessNight')}
                 </Text>
               </AccessibleView>
-              <AccessibleView style={[styles.sunInfo]} accessible>
+              <AccessibleView style={[styles.sunInfo]} accessible={false} focusable={false}>
                 <Icon
                   width={iconSize}
                   height={iconSize}
@@ -200,7 +225,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                   style={[styles.sunIcon, { color: colors.primaryText }]}
                 />
                 <Text
-                  accessibilityLabel={`${t('sunset')} ${formatAccessibleDateTime(sunset, t, clockType === 24)}`}
+                  accessibilityLabel={sunsetDescription}
                   style={[styles.text, { color: colors.primaryText }]}>
                   {sunset.format(dateFormat)}
                 </Text>
@@ -211,7 +236,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
           {!isPolarNight && !isMidnightSun && (
             <View>
               <View style={[styles.row]}>
-                <AccessibleView style={[styles.sunInfo]} accessible>
+                <AccessibleView style={[styles.sunInfo]} accessible={false} focusable={false}>
                   <Icon
                     width={iconSize}
                     height={iconSize}
@@ -219,9 +244,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.sunIcon, { color: colors.primaryText }]}
                   />
                   <Text
-                    accessibilityLabel={`${t('sunrise')} ${t(
-                      'time:atSpoken'
-                    )} ${sunrise.format(accessibleTimeFormat)}`}
+                    accessibilityLabel={sunriseDescription}
                     style={[styles.text, { color: colors.primaryText }]}>
                     {sunrise.format(timeFormat)}
                   </Text>
@@ -235,7 +258,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     </Text>
                   )}
                 </AccessibleView>
-                <AccessibleView style={[styles.sunInfo]} accessible>
+                <AccessibleView style={[styles.sunInfo]} accessible={false} focusable={false}>
                   <Icon
                     width={iconSize}
                     height={iconSize}
@@ -243,9 +266,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.sunIcon, { color: colors.primaryText }]}
                   />
                   <Text
-                    accessibilityLabel={`${t('sunset')} ${t(
-                      'time:atSpoken'
-                    )} ${sunset.format(accessibleTimeFormat)}`}
+                    accessibilityLabel={sunsetDescription}
                     style={[styles.text, { color: colors.primaryText }]}>
                     {sunset.format(timeFormat)}
                   </Text>
@@ -261,7 +282,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                 </AccessibleView>
               </View>
               {(excludeDayDuration === undefined || !excludeDayDuration) && (
-                <AccessibleView style={styles.sunInfo} accessible>
+                <AccessibleView style={styles.sunInfo} accessible={false} focusable={false}>
                   <Icon
                     width={iconSize}
                     height={iconSize}
@@ -269,9 +290,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
                     style={[styles.sunIcon, { color: colors.primaryText }]}
                   />
                   <Text
-                    accessibilityLabel={`${t('dayLength')} ${dayHours} ${t(
-                      'time:hoursSpoken'
-                    )} ${dayMinutes} ${t('time:minutesSpoken')}`}
+                    accessibilityLabel={dayDurationDescription}
                     style={[styles.text, { color: colors.primaryText }]}>
                     {`${dayHours} h ${dayMinutes} min`}
                   </Text>

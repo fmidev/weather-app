@@ -1,16 +1,28 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme, useNavigation, NavigationProp } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  findNodeHandle,
+  type LayoutChangeEvent,
+} from 'react-native';
+import {
+  useTheme,
+  useNavigation,
+  NavigationProp,
+} from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { useAccessibilityLanguage } from '@utils/hooks';
-import AccessibleView from '@components/common/AccessibleView';
+import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { CustomTheme } from '@assets/colors';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,
   selectError,
   selectLoading,
+  selectUpdated,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
@@ -28,6 +40,8 @@ const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
   loading: selectLoading(state),
   error: selectError(state),
+  // The daily selector returns five days even before the first response.
+  hasData: selectUpdated(state) !== null,
 });
 
 const connector = connect(mapStateToProps, {});
@@ -42,13 +56,30 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
   dailyWarnings,
   loading,
   error,
+  hasData,
   gridLayout,
 }) => {
   const accessibilityLanguage = useAccessibilityLanguage();
   const insets = useSafeAreaInsets();
+  const marginRight = gridLayout ? 8 : insets.right + 16;
   const { t, i18n } = useTranslation('warnings');
   const { colors } = useTheme() as CustomTheme;
   const navigation = useNavigation<NavigationProp<TabParamList>>();
+  const [dayNodeHandles, setDayNodeHandles] = useState<Record<number, number>>(
+    {}
+  );
+
+  const registerDay = useCallback((index: number, event: LayoutChangeEvent) => {
+    if (Platform.OS !== 'android') return;
+    const nodeHandle = findNodeHandle(event.currentTarget);
+    if (nodeHandle == null) return;
+
+    setDayNodeHandles((current) =>
+      current[index] === nodeHandle
+        ? current
+        : { ...current, [index]: nodeHandle }
+    );
+  }, []);
 
   useEffect(() => {
     if (i18n.language !== moment.locale()) {
@@ -56,57 +87,82 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
     }
   }, [i18n.language]);
 
-  if (loading) {
+  if (loading && !hasData) {
     return (
-      <View style={[styles.cardWrapper, styles.noPadding, {
-        marginLeft: insets.left + 16,
-        marginRight: insets.right + 16
-      }]}>
+      <View
+        style={[
+          styles.cardWrapper,
+          styles.noPadding,
+          {
+            marginLeft: insets.left + 16,
+            marginRight: insets.right + 16,
+          },
+        ]}>
         <Skeleton width="100%" height={160} radius={10} />
       </View>
     );
   }
 
-  if (error) {
+  if (error && !hasData) {
     return (
       <View
         testID="warnings_panel"
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={[styles.cardWrapper, styles.errorCard, {
-          backgroundColor: colors.warningCard,
-          marginLeft: insets.left + 16,
-          marginRight: gridLayout ? 8 : insets.right + 16,
-        }]}
-      >
-        <Text style={[styles.errorText, { color: colors.primaryText }]}>{t('loadingError')}</Text>
+
+        style={[
+          styles.cardWrapper,
+          styles.errorCard,
+          {
+            backgroundColor: colors.warningCard,
+            marginLeft: insets.left + 16,
+            marginRight,
+          },
+        ]}>
+        <Text style={[styles.errorText, { color: colors.primaryText }]}>
+          {t('loadingError')}
+        </Text>
       </View>
-    )
+    );
   }
 
   const openWarnings = () => {
     trackMatomoEvent('User action', 'Weather', 'Open warnings -page');
     navigation.navigate('Warnings');
-  }
+  };
 
   const locale = i18n.language;
   const weekdayAbbreviationFormat = locale === 'en' ? 'ddd' : 'dd';
   return (
     <TouchableOpacity
+      accessible={false}
+      focusable={false}
+      importantForAccessibility="no"
       accessibilityLanguage={accessibilityLanguage}
       onPress={openWarnings}>
       <View
         testID="warnings_panel"
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={[styles.cardWrapper, {
-          backgroundColor: colors.warningCard,
-          marginLeft: insets.left + 16,
-          marginRight: gridLayout ? 8 : insets.right + 16,
-        }]}
-      >
+
+        style={[
+          styles.cardWrapper,
+          {
+            backgroundColor: colors.warningCard,
+            marginLeft: insets.left + 16,
+            marginRight,
+          },
+        ]}>
         <View style={styles.cardContainer}>
-          <AccessibleView
+          <AccessibleTouchableOpacity
             accessible
-            accessibilityRole="header">
+            style={styles.headerContainer}
+            accessibilityState={{ busy: loading }}
+            accessibilityRole="header"
+            accessibilityLabel={`${t('panelTitleSlim')}, ${
+              dailyWarnings[0].warnings[0]?.description ?? t('noWarningsText')
+            }`}
+            accessibilityHint={t('navigateToWarningsPage')}
+            nextFocusForward={
+              Platform.OS === 'android' ? dayNodeHandles[0] : undefined
+            }
+            onPress={openWarnings}>
             <Text
               style={[
                 styles.headerText,
@@ -117,12 +173,12 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
               {t('panelTitleSlim')}
             </Text>
             <DayDetailsDescription warnings={dailyWarnings[0].warnings} />
-          </AccessibleView>
+          </AccessibleTouchableOpacity>
           <View
             style={[
               styles.weekWarningsContainer,
               {
-                borderColor: colors.warningCardBorder
+                borderColor: colors.warningCardBorder,
               },
             ]}>
             <View
@@ -132,64 +188,83 @@ const WarningIconsPanel: React.FC<WarningIconsPanelProps> = ({
                   borderColor: colors.warningCardBorder,
                 },
               ]}>
-              {dailyWarnings.map(({ severity, type, date, count, warnings }, index) => (
-                <AccessibleView
-                  key={date}
-                  accessible
-                  accessibilityLabel={`${moment(date).format('dddd DD MMMM')}, ${t('hasWarnings')}: ${count}${
-                    count > 0 ? ', ' + warnings[0].description : ''
-                  }`}
-                >
-                  {count > 0 && (
+              {dailyWarnings.map(
+                ({ severity, type, date, count, warnings }, index) => (
+                  <AccessibleTouchableOpacity
+                    key={date}
+                    accessible
+                    style={styles.dayButton}
+                    accessibilityRole="button"
+                    accessibilityHint={t('navigateToWarningsPage')}
+                    nextFocusForward={
+                      Platform.OS === 'android'
+                        ? dayNodeHandles[index + 1]
+                        : undefined
+                    }
+                    onLayout={(event) => registerDay(index, event)}
+                    onPress={openWarnings}
+                    accessibilityLabel={`${moment(date).format('dddd D. MMMM')}, ${t('hasWarnings')}: ${count}${
+                      count > 0 ? ', ' + warnings[0].description : ''
+                    }`}>
+                    {count > 0 && (
+                      <View
+                        accessibilityElementsHidden
+                        importantForAccessibility="no-hide-descendants"
+                        style={[
+                          styles.countBadge,
+                          {
+                            borderColor: colors.primaryText,
+                            backgroundColor: colors.background,
+                          },
+                        ]}>
+                        <Text
+                          maxFontSizeMultiplier={1.5}
+                          style={[
+                            styles.badgeText,
+                            { color: colors.primaryText },
+                          ]}>
+                          {count}
+                        </Text>
+                      </View>
+                    )}
                     <View
                       accessibilityElementsHidden
+                      importantForAccessibility="no-hide-descendants"
                       style={[
-                        styles.countBadge,
+                        styles.warningsSingleDayContainer,
+                        index === 0 && styles.startBorderRadius,
+                        index === 4 && styles.endBorderRadius,
+                        index < 4 && styles.withBorderRight,
                         {
-                          borderColor: colors.primaryText,
-                          backgroundColor: colors.background,
+                          borderRightColor: colors.warningCardBorder,
                         },
                       ]}>
+                      <View style={[styles.activeBorder]} />
                       <Text
-                        maxFontSizeMultiplier={1.5}
-                        style={[styles.badgeText, { color: colors.primaryText }]}>
-                        {count}
+                        style={[
+                          styles.cardText,
+                          styles.medium,
+                          styles.dayWarningHeaderText,
+                          {
+                            color: colors.primaryText,
+                          },
+                        ]}>
+                        {moment(date).format(weekdayAbbreviationFormat)}
                       </Text>
+                      <View style={styles.iconContainer}>
+                        <WarningIcon
+                          maxScaleFactor={1.5}
+                          type={type}
+                          severity={severity}
+                          {...(type === 'wind' || type === 'seaWind'
+                            ? { physical: warnings[0].physical }
+                            : {})}
+                        />
+                      </View>
                     </View>
-                  )}
-                  <View
-                    style={[
-                      styles.warningsSingleDayContainer,
-                      index === 0 && styles.startBorderRadius,
-                      index === 4 && styles.endBorderRadius,
-                      index < 4 && styles.withBorderRight,
-                      {
-                        borderRightColor: colors.warningCardBorder,
-                      },
-                    ]}>
-                    <View style={[styles.activeBorder]} />
-                    <Text
-                      style={[
-                        styles.cardText,
-                        styles.medium,
-                        styles.dayWarningHeaderText,
-                        {
-                          color: colors.primaryText,
-                        },
-                      ]}>
-                      {moment(date).format(weekdayAbbreviationFormat)}
-                    </Text>
-                    <View style={styles.iconContainer}>
-                      <WarningIcon
-                        maxScaleFactor={1.5}
-                        type={type}
-                        severity={severity}
-                        {...(type === 'wind' || type === 'seaWind' ? { physical: warnings[0].physical } : {})}
-                      />
-                    </View>
-                  </View>
-                </AccessibleView>
-              ))}
+                  </AccessibleTouchableOpacity>
+                )
+              )}
             </View>
           </View>
         </View>
@@ -206,7 +281,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     minHeight: 160,
   },
-  errorCard : {
+  errorCard: {
     padding: 16,
   },
   noPadding: {
@@ -242,6 +317,14 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     paddingVertical: 8,
+  },
+  headerContainer: {
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
+  },
+  dayButton: {
+    flex: 1,
+    alignItems: 'stretch',
   },
   cardText: {
     fontSize: 14,
@@ -291,7 +374,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     paddingTop: 6,
-  }
+  },
 });
 
 export default connector(WarningIconsPanel);

@@ -2,13 +2,29 @@ import './screenTestMocks';
 
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { AccessibilityInfo } from 'react-native';
 
 import TermsAndConditionsScreen from '../../src/screens/TermsAndConditionsScreen';
-import { mockConfigGet, resetScreenMocks } from './screenTestMocks';
+import { mockConfigGet, mockUseFocusEffect, resetScreenMocks } from './screenTestMocks';
 
 describe('TermsAndConditionsScreen', () => {
   beforeEach(() => {
     resetScreenMocks();
+    mockUseFocusEffect.mockImplementation((callback) => {
+      React.useEffect(callback, [callback]);
+    });
+    jest.spyOn(AccessibilityInfo, 'sendAccessibilityEvent').mockImplementation(() => {});
+  });
+
+  afterEach(() => jest.restoreAllMocks());
+
+  it('sends the accessibility focus event to the title view', () => {
+    const view = render(<TermsAndConditionsScreen />);
+
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledWith(
+      view.getByText('generalTitle').instance,
+      'focus'
+    );
   });
 
   it('renders terms content and calls accept handler', () => {

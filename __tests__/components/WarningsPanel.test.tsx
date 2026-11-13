@@ -1,9 +1,11 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { AccessibilityInfo } from 'react-native';
 
 import { ScreenHeaderItemsContext } from '../../src/navigators/ScreenHeaderItemsContext';
 import WarningsPanel from '../../src/components/warnings/WarningsPanel';
 
+const mockRoute = { params: { day: 0 } };
 const mockSheetOpen = jest.fn();
 let mockVerticalBarLayout = false;
 
@@ -34,8 +36,11 @@ jest.mock('@react-navigation/native', () => ({
       border: '#dddddd',
     },
   }),
-  useRoute: () => ({ params: {} }),
-  useFocusEffect: jest.fn(),
+  useRoute: () => mockRoute,
+  useFocusEffect: (callback: () => void | (() => void)) => {
+    const { useEffect } = require('react');
+    useEffect(callback, [callback]);
+  },
 }));
 
 jest.mock('react-i18next', () => ({
@@ -60,20 +65,52 @@ jest.mock('../../src/components/warnings/InfoSheet', () => () => null);
 jest.mock('@components/common/ScalableIcon', () => () => null);
 jest.mock('@components/common/AccessibleTouchableOpacity', () => ({
   __esModule: true,
-  default: (props: any) => {
+  default: ({ children, ...props }: any) => {
     const { Pressable } = require('react-native');
-    return <Pressable {...props} />;
+    return <Pressable {...props}>{children}</Pressable>;
   },
 }));
 jest.mock('@utils/matomo', () => ({
   trackMatomoEvent: jest.fn(),
 }));
 
+const baseProps = {
+  dailyWarnings: Array.from({ length: 5 }, (_, index) => ({
+    date: Date.parse('2035-06-01T00:00:00Z') + index * 86400000,
+    severity: 0,
+    type: undefined,
+    count: 0,
+    warnings: [],
+  })),
+  location: { name: 'Helsinki' } as any,
+  loading: false,
+  error: false as const,
+};
+
+const renderPanel = (overrides: Partial<typeof baseProps> = {}) =>
+  render(<WarningsPanel {...baseProps} {...overrides} />, {
+    createNodeMock: () => ({}),
+  });
+
+const layoutHeader = (view: ReturnType<typeof render>) =>
+  fireEvent(view.getByA11yRole('header'), 'layout', {
+    currentTarget: 42,
+    nativeEvent: { layout: { x: 0, y: 0, width: 200, height: 40 } },
+  });
+
 describe('WarningsPanel', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockRoute.params.day = 0;
     mockVerticalBarLayout = false;
+    jest.spyOn(require('react-native'), 'findNodeHandle').mockReturnValue(42);
+    jest.spyOn(AccessibilityInfo, 'sendAccessibilityEvent').mockImplementation(() => {});
   });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('uses the common skeletons while warnings are loading', () => {
     const { getAllByTestId } = render(
       <WarningsPanel
@@ -87,6 +124,47 @@ describe('WarningsPanel', () => {
     );
 
     expect(getAllByTestId('skeleton')).toHaveLength(3);
+  });
+
+  it('does not refocus the header when the user selects another day', () => {
+    const view = renderPanel();
+    layoutHeader(view);
+    const secondDay = view.getAllByA11yRole('button')[2];
+
+    fireEvent.press(secondDay);
+
+    expect(secondDay.props.accessibilityState).toEqual({ selected: true });
+    layoutHeader(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not refocus the header when warning data or route day changes', () => {
+    const view = renderPanel();
+    layoutHeader(view);
+
+    mockRoute.params.day = 2;
+    view.rerender(
+      <WarningsPanel
+        {...baseProps}
+        dailyWarnings={baseProps.dailyWarnings.map((day) => ({ ...day, count: 1 }))}
+      />
+    );
+
+    expect(view.getAllByA11yRole('button')[3].props.accessibilityState)
+      .toEqual({ selected: true });
+    layoutHeader(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits for the initial load and header layout before focusing', () => {
+    const view = renderPanel({ loading: true });
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+
+    view.rerender(<WarningsPanel {...baseProps} />);
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+    layoutHeader(view);
+
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
   });
 
   it('keeps the inline info button and adds the same action to the vertical header', () => {

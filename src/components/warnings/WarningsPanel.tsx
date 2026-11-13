@@ -1,12 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  ViewInstance,
-  StyleSheet,
-  AccessibilityInfo,
-  findNodeHandle,
-} from 'react-native';
-import { useTheme, useRoute, useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { useTheme, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import AccessibleView from '@components/common/AccessibleView';
@@ -31,6 +25,7 @@ import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
 import useWarningsInfo from './useWarningsInfo';
 import { trackMatomoEvent } from '@utils/matomo';
+import { useAccessibilityFocusOnScreenEntry } from '@utils/hooks';
 import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
 
 const mapStateToProps = (state: State) => ({
@@ -57,7 +52,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
   const { infoSheetRef, openInfo } = useWarningsInfo(!loading && !error);
-  const headerRef = useRef<ViewInstance>(null);
+  const headerFocus = useAccessibilityFocusOnScreenEntry();
 
   moment.locale(i18n.language);
 
@@ -65,25 +60,21 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
     setSelectedDay(route.params?.day || 0);
   }, [route.params?.day, setSelectedDay]);
 
-  useFocusEffect(() => {
-    if (headerRef && headerRef.current) {
-      const reactTag = findNodeHandle(headerRef.current);
-      if (reactTag) {
-        AccessibilityInfo.setAccessibilityFocus(reactTag);
-      }
-    }
-  });
-
   if (loading) {
     return (
-      <View style={{backgroundColor: colors.background}}>
+      <View style={{ backgroundColor: colors.background }}>
         <View style={[styles.loading, styles.loadingFirst]}>
           <Skeleton width="100%" height={40} radius={10} />
         </View>
         <View style={styles.loading}>
           <Skeleton width="100%" height={65} radius={10} />
         </View>
-        <View style={[styles.loading, styles.loadingLast, { borderColor: colors.border}]}>
+        <View
+          style={[
+            styles.loading,
+            styles.loadingLast,
+            { borderColor: colors.border },
+          ]}>
           <Skeleton width="100%" height={20} radius={10} />
         </View>
       </View>
@@ -93,9 +84,11 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   if (error) {
     return (
       <View testID="warnings_panel" style={styles.errorCard}>
-        <Text style={[styles.errorText, { color: colors.primaryText }]}>{t('loadingError')}</Text>
+        <Text style={[styles.errorText, { color: colors.primaryText }]}>
+          {t('loadingError')}
+        </Text>
       </View>
-    )
+    );
   }
 
   const locale = i18n.language;
@@ -117,7 +110,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               <View style={styles.filler} />
             </View>
             <AccessibleView
-              ref={headerRef}
+              {...headerFocus}
               style={[styles.flex, styles.alignItems]}
               accessible
               accessibilityRole="header">
@@ -182,14 +175,23 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                 )}
                 <AccessibleTouchableOpacity
                   onPress={() => {
-                    trackMatomoEvent('User action', 'Warnings', 'Select day '+(index+1)+' / ('+count+' warnings) / '+severity);
+                    trackMatomoEvent(
+                      'User action',
+                      'Warnings',
+                      'Select day ' +
+                        (index + 1) +
+                        ' / (' +
+                        count +
+                        ' warnings) / ' +
+                        severity
+                    );
                     setSelectedDay(index);
                   }}
                   accessibilityRole="button"
                   accessibilityState={{ selected: index === selectedDay }}
                   accessibilityLabel={`${moment(date).format(
                     'dddd DD MMMM'
-                  )}, ${t('hasWarnings')}: ${count}, ${t('warnings:severities:'+severity)}`}
+                  )}, ${t('hasWarnings')}: ${count}, ${t('warnings:severities:' + severity)}`}
                   accessibilityHint={
                     index === selectedDay ? '' : t('dateOpenHint')
                   }>
@@ -225,7 +227,10 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
                           color: colors.text,
                         },
                       ]}>
-                      {moment(date).formatDateTime('weekdayAbbreviation', locale)}
+                      {moment(date).formatDateTime(
+                        'weekdayAbbreviation',
+                        locale
+                      )}
                     </Text>
                     <Text
                       maxFontSizeMultiplier={1.5}
@@ -272,7 +277,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     elevation: 3,
   },
-  errorCard : {
+  errorCard: {
     padding: 16,
   },
   errorText: {
@@ -304,7 +309,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontFamily: BOLD_FONT,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   flex: {
     flex: 1,
