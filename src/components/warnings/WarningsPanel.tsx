@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTheme, useRoute } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -19,10 +19,11 @@ import Icon from '@components/common/ScalableIcon';
 import Skeleton from '@components/common/Skeleton';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { selectCurrent } from '@store/location/selector';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet from '@components/common/BottomSheet';
 import SeverityBar from './SeverityBar';
 import DayDetails from './DayDetails';
 import InfoSheet from './InfoSheet';
+import useWarningsInfo from './useWarningsInfo';
 import { trackMatomoEvent } from '@utils/matomo';
 import { useAccessibilityFocusOnScreenEntry } from '@utils/hooks';
 import { REGULAR_FONT, MEDIUM_FONT, BOLD_FONT } from '@assets/constants';
@@ -50,7 +51,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
   const { colors } = useTheme() as CustomTheme;
   const route: any = useRoute();
   const [selectedDay, setSelectedDay] = useState<number>(0);
-  const infoSheetRef = useRef<RBSheet>(null);
+  const { infoSheetRef, openInfo } = useWarningsInfo(!loading && !error);
   const headerFocus = useAccessibilityFocusOnScreenEntry();
 
   moment.locale(i18n.language);
@@ -126,14 +127,7 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
               testID="warnings_info_button"
               accessibilityRole="button"
               accessibilityLabel={t('infoAccessibilityLabel')}
-              onPress={() => {
-                trackMatomoEvent(
-                  'User action',
-                  'Warnings',
-                  'Open warnings info panel'
-                );
-                infoSheetRef.current?.open();
-              }}>
+              onPress={openInfo}>
               <View style={[styles.iconPadding]}>
                 <Icon
                   name="info"
@@ -259,19 +253,16 @@ const WarningsPanel: React.FC<WarningsPanelProps> = ({
           <DayDetails warnings={dailyWarnings[selectedDay].warnings} />
         </View>
       </View>
-      <RBSheet
+      <BottomSheet
         ref={infoSheetRef}
         height={600}
-        closeOnDragDown
-        customStyles={{
-          container: {
-            ...styles.sheetContainer,
-            backgroundColor: colors.background,
-          },
-          draggableIcon: styles.draggableIcon,
-        }}>
+        backgroundStyle={{
+          ...styles.sheetContainer,
+          backgroundColor: colors.background,
+        }}
+        handleIndicatorStyle={styles.draggableIcon}>
         <InfoSheet onClose={() => infoSheetRef.current?.close()} />
-      </RBSheet>
+      </BottomSheet>
     </View>
   );
 };

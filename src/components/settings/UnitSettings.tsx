@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
@@ -26,11 +27,11 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
   const { excludeUnits } = Config.get('settings');
   const hiddenUnits = getUnitsHiddenInSettings();
   const sheetRefs = {
-    temperature: useRef<RBSheet>(null),
-    precipitation: useRef<RBSheet>(null),
-    wind: useRef<RBSheet>(null),
-    pressure: useRef<RBSheet>(null),
-  } as { [key: string]: React.RefObject<RBSheet> };
+    temperature: useRef<BottomSheetRef>(null),
+    precipitation: useRef<BottomSheetRef>(null),
+    wind: useRef<BottomSheetRef>(null),
+    pressure: useRef<BottomSheetRef>(null),
+  } as { [key: string]: React.RefObject<BottomSheetRef | null> };
 
   const unitKeys = Object.keys(units);
   const unitTypesByKey = (key: string): UnitType[] | undefined =>
@@ -43,7 +44,7 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
       `Select unit - ${key} (${unit.unitAbb})`
     );
     onChangeUnits(key, unit);
-    sheetRefs[key].current.close();
+    sheetRefs[key].current?.close();
   };
 
   return (
@@ -74,7 +75,7 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
               ]}>
               <AccessibleTouchableOpacity
                 onPress={() => {
-                  sheetRefs[key].current.open();
+                  sheetRefs[key].current?.open();
                 }}
                 testID={`settings_set_${key}`}>
                 <View style={styles.row}>
@@ -94,74 +95,73 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                   </Text>
                 </View>
                 {unitTypesByKey(key) && (
-                  <RBSheet
+                  <BottomSheet
                     ref={sheetRefs[key]}
                     height={400}
-                    closeOnDragDown
-                    customStyles={{
-                      container: {
-                        ...styles.sheetContainer,
-                        backgroundColor: colors.background,
-                      },
-                      draggableIcon: styles.draggableIcon,
-                    }}>
-                    <View
+                    backgroundStyle={{
+                      ...styles.sheetContainer,
+                      backgroundColor: colors.background,
+                    }}
+                    handleIndicatorStyle={styles.draggableIcon}>
+                    <SafeAreaView
                       style={styles.sheetListContainer}
-                      testID="unit_sheet_container">
-                      <View style={styles.sheetCloseButtonContainer}>
-                        <CloseButton
-                          onPress={() => sheetRefs[key].current.close()}
-                          accessibilityLabel={t(
-                            'settings.closeUnitBottomSheetAccessibilityLabel'
-                          )}
-                        />
-                      </View>
-                      <View
-                        style={styles.sheetTitle}
-                        testID={`${key}_unit_sheet_title`}>
-                        <Text style={[styles.title, { color: colors.text }]}>
-                          {t(`settings:${key}`)}
-                        </Text>
-                      </View>
-                      {unitTypesByKey(key)?.map((type) =>
-                        excludeUnits?.includes(
-                          type.unitAbb as MeasurementUnit
-                        ) ? null : (
-                          <View
-                            key={type.unitId}
-                            style={[
-                              styles.rowWrapper,
-                              styles.withBorderBottom,
-                              { borderBottomColor: colors.border },
-                            ]}>
-                            <AccessibleTouchableOpacity
-                              onPress={() => handleUnitChange(key, type)}
-                              testID={`settings_units_${key}_${type.unit}`}>
-                              <View style={styles.row}>
-                                <Text
-                                  accessibilityLabel={t(
-                                    `observation:paramUnits.${
-                                      key === 'temperature' ? '°' : ''
-                                    }${type.unitAbb}`
+                      edges={['left', 'right']}>
+                      <ScrollView testID="unit_sheet_container">
+                        <View style={styles.sheetCloseButtonContainer}>
+                          <CloseButton
+                            onPress={() => sheetRefs[key].current?.close()}
+                            accessibilityLabel={t(
+                              'settings.closeUnitBottomSheetAccessibilityLabel'
+                            )}
+                          />
+                        </View>
+                        <View
+                          style={styles.sheetTitle}
+                          testID={`${key}_unit_sheet_title`}>
+                          <Text style={[styles.title, { color: colors.text }]}>
+                            {t(`settings:${key}`)}
+                          </Text>
+                        </View>
+                        {unitTypesByKey(key)?.map((type) =>
+                          excludeUnits?.includes(
+                            type.unitAbb as MeasurementUnit
+                          ) ? null : (
+                            <View
+                              key={type.unitId}
+                              style={[
+                                styles.rowWrapper,
+                                styles.withBorderBottom,
+                                { borderBottomColor: colors.border },
+                              ]}>
+                              <AccessibleTouchableOpacity
+                                onPress={() => handleUnitChange(key, type)}
+                                testID={`settings_units_${key}_${type.unit}`}>
+                                <View style={styles.row}>
+                                  <Text
+                                    accessibilityLabel={t(
+                                      `observation:paramUnits.${
+                                        key === 'temperature' ? '°' : ''
+                                      }${type.unitAbb}`
+                                    )}
+                                    style={[styles.text, { color: colors.text }]}>
+                                    {key === 'temperature' ? '°' : ''}
+                                    {type.unitAbb}
+                                  </Text>
+                                  {units[key].unitId === type.unitId && (
+                                    <Icon
+                                      name="checkmark"
+                                      size={22}
+                                      style={{ color: colors.text }}
+                                    />
                                   )}
-                                  style={[styles.text, { color: colors.text }]}>
-                                  {key === 'temperature' ? '°' : ''}
-                                  {type.unitAbb}
-                                </Text>
-                                {units[key].unitId === type.unitId && (
-                                  <Icon
-                                    name="checkmark"
-                                    size={22}
-                                    style={{ color: colors.text }}
-                                  />
-                                )}
-                              </View>
-                            </AccessibleTouchableOpacity>
-                          </View>
-                        )
-                      )}
-                    </View>
-                  </RBSheet>
+                                </View>
+                              </AccessibleTouchableOpacity>
+                            </View>
+                          )
+                        )}
+                      </ScrollView>
+                    </SafeAreaView>
+                  </BottomSheet>
                 )}
               </AccessibleTouchableOpacity>
             </View>
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   sheetCloseButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginRight: 20,
+    marginRight: 8,
   },
   sheetTitle: {
     flexDirection: 'row',

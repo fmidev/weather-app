@@ -160,10 +160,10 @@ jest.mock('@react-navigation/native', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
-  SafeAreaView: ({ children }: any) => {
+  SafeAreaView: ({ children, ...props }: any) => {
     const ReactActual = require('react');
     const { View } = require('react-native');
-    return ReactActual.createElement(View, null, children);
+    return ReactActual.createElement(View, props, children);
   },
   useSafeAreaInsets: () => ({
     bottom: 0,
@@ -329,7 +329,7 @@ jest.mock('react-native-permissions', () => ({
   },
 }));
 
-jest.mock('react-native-raw-bottom-sheet', () => {
+jest.mock('@components/common/BottomSheet', () => {
   const ReactActual = require('react');
   return {
     __esModule: true,
@@ -421,6 +421,7 @@ jest.mock('@utils/reloader', () => ({
 
 jest.mock('@store/location/selector', () => ({
   selectCurrent: jest.fn(),
+  selectLocationUpdateCount: jest.fn(),
   selectFavorites: jest.fn(),
   selectLoading: jest.fn(),
   selectRecent: jest.fn(),

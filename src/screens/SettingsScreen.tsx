@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet, ScrollView, Platform, AppState } from 'react-native';
+import { StyleSheet, ScrollView, Platform, AppState } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
@@ -179,7 +180,7 @@ const SettingsScreen: React.FC<Props> = ({
   } as { [key: string]: string };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={['left', 'right']} style={styles.container}>
       <ScrollView
         testID="settings_scrollview"
         style={styles.scrollContainer}
@@ -222,7 +223,7 @@ const SettingsScreen: React.FC<Props> = ({
           />
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

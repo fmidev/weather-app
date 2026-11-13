@@ -1,12 +1,11 @@
 import './searchScreenNativeMocks';
 
-import { AccessibilityInfo, Keyboard, View } from 'react-native';
+import { AccessibilityInfo, Keyboard } from 'react-native';
 import { act, cleanup, fireEvent, waitFor, within } from '@testing-library/react-native';
 import Geolocation from 'react-native-nitro-geolocation/compat';
 import { Config } from '@config';
 import i18n from '@i18n';
 import AreaList from '@components/search/AreaList';
-import IconButton from '@components/common/IconButton';
 import type { AutoComplete, Location } from '@store/location/types';
 import { roundCoordinates } from '@utils/number';
 import { mountSearchScreen } from './searchScreenHarness';
@@ -194,7 +193,7 @@ describe('SearchScreen with live defaultConfig APIs', () => {
     expect(screen.view.queryByTestId('search_results')).toBeNull();
   });
 
-  it.each(['press', 'accessibilityTap'] as const)('resolves default coordinates through the live timeseries API (%s)', async (interaction) => {
+  it.each(['press', 'click'] as const)('resolves default coordinates through the live timeseries API (%s)', async (interaction) => {
     const { lat, lon } = defaultConfig.location.default;
     // Public default coordinates stand in for device GPS; the reverse lookup
     // and its schema validation use the actual WeatherApi and HTTP transport.
@@ -203,12 +202,12 @@ describe('SearchScreen with live defaultConfig APIs', () => {
       coords: { latitude: lat, longitude: lon, accuracy: 1, altitude: null,
         altitudeAccuracy: null, heading: null, speed: null },
     }));
+    const button = screen.view.getByLabelText(i18n.t('searchScreen:locate'));
+    expect(button.props.accessibilityRole).toBe('button');
     if (interaction === 'press') {
-      const button = screen.view.UNSAFE_getAllByType(IconButton).find((node) => node.props.icon === 'locate');
-      fireEvent.press(button!);
+      fireEvent.press(button);
     } else {
-      const row = screen.view.UNSAFE_getAllByType(View).find((node) => typeof node.props.onAccessibilityTap === 'function');
-      fireEvent(row!, 'accessibilityTap');
+      fireEvent(button, 'click', { nativeEvent: {}, currentTarget: 1, target: 1 });
     }
     await waitFor(() => expect(screen.store.getState().location.isGeolocation).toBe(true), {
       timeout: REQUEST_TIMEOUT_MS, interval: 100,
@@ -226,6 +225,6 @@ describe('SearchScreen with live defaultConfig APIs', () => {
       lat: roundCoordinates(lat), lon: roundCoordinates(lon),
     }));
     expect(screen.navigation.goBack).toHaveBeenCalledTimes(1);
-    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Search', `Geolocation - ${interaction === 'press' ? 'button' : 'accessibility tap'}`);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Search', 'Geolocation - button');
   });
 });

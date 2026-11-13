@@ -6,6 +6,7 @@ import {
   ImageBackground,
   useWindowDimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 
@@ -144,7 +145,8 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
   const moonPhaseWidth = Math.min(fontScale * 80, boxWidth / 1.8);
 
   return (
-    <View
+    <SafeAreaView
+      edges={['left', 'right']}
       style={[
         styles.container,
         styles.flex,
@@ -325,7 +327,7 @@ const SunAndMoonPanel: React.FC<NextHoursForecastProps> = ({
           </AccessibleView>
         </ImageBackground>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -349,7 +351,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     columnGap: 8,
-    marginHorizontal: 8,
+    marginHorizontal: 16,
   },
   row: {
     flexDirection: 'row',
