@@ -159,7 +159,7 @@ const FavoritesPanel: React.FC<Props> = ({
                   styles.card,
                   selected && styles.selectedCard,
                   {
-                    width: 110 * scale,
+                    width: 112 * scale,
                     minHeight: 80 * scale,
                     backgroundColor: colors.card,
                     borderColor: selected

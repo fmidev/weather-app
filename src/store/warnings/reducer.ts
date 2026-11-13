@@ -7,6 +7,7 @@ import {
   FETCH_WARNINGS_SUCCESS,
   FETCH_WARNINGS_ERROR,
   FETCH_FAVORITE_WARNINGS_SUCCESS,
+  RETAIN_WARNING_LOCATIONS,
   FETCH_CAP_WARNINGS,
   FETCH_CAP_WARNINGS_SUCCESS,
 } from './types';
@@ -75,6 +76,18 @@ export default (
       return {
         ...state,
         data: { ...state.data, ...action.data },
+      };
+    }
+
+    case RETAIN_WARNING_LOCATIONS: {
+      const locationIds = new Set(action.locationIds.map(String));
+      if (Object.keys(state.data).every((id) => locationIds.has(id))) return state;
+
+      return {
+        ...state,
+        data: Object.fromEntries(
+          Object.entries(state.data).filter(([id]) => locationIds.has(id))
+        ),
       };
     }
 

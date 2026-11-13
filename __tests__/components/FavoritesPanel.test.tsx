@@ -230,7 +230,7 @@ describe('FavoritesPanel', () => {
     expect(view.toJSON()).toBeNull();
   });
 
-  it('shows only favorites with their next future forecast in themed 110x80 boxes', () => {
+  it('shows only favorites with their next future forecast in themed 112x80 boxes', () => {
     const view = mountPanel({
       favorites: [tampere, helsinki],
       data: {
@@ -256,7 +256,7 @@ describe('FavoritesPanel', () => {
     expect(
       StyleSheet.flatten(view.getByTestId('favorite-forecast-1').props.style)
     ).toMatchObject({
-      width: 110,
+      width: 112,
       minHeight: 80,
       backgroundColor: mockCardColor,
     });
@@ -567,7 +567,7 @@ describe('FavoritesPanel', () => {
     expect(
       StyleSheet.flatten(view.getByTestId('favorite-forecast-1').props.style)
     ).toMatchObject({
-      width: 220,
+      width: 224,
       minHeight: 160,
     });
     expect(view.getByA11yLabel(new RegExp(`^${location.name},`))).toBeTruthy();

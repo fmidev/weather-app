@@ -5,6 +5,7 @@ export const FETCH_WARNINGS = 'FETCH_WARNINGS';
 export const FETCH_WARNINGS_SUCCESS = 'FETCH_WARNINGS_SUCCESS';
 export const FETCH_WARNINGS_ERROR = 'FETCH_WARNINGS_ERROR';
 export const FETCH_FAVORITE_WARNINGS_SUCCESS = 'FETCH_FAVORITE_WARNINGS_SUCCESS';
+export const RETAIN_WARNING_LOCATIONS = 'RETAIN_WARNING_LOCATIONS';
 
 export const FETCH_CAP_WARNINGS = 'FETCH_CAP_WARNINGS';
 export const FETCH_CAP_WARNINGS_SUCCESS = 'FETCH_CAP_WARNINGS_SUCCESS';
@@ -32,6 +33,11 @@ interface FetchFavoriteWarningsSuccess {
   data: LocationWarnings;
 }
 
+interface RetainWarningLocations {
+  type: typeof RETAIN_WARNING_LOCATIONS;
+  locationIds: Location['id'][];
+}
+
 interface FetchCapWarnings {
   type: typeof FETCH_CAP_WARNINGS;
 }
@@ -47,6 +53,7 @@ export type WarningsActionTypes =
   | FetchWarningsSuccess
   | FetchWarningsError
   | FetchFavoriteWarningsSuccess
+  | RetainWarningLocations
   | FetchCapWarnings
   | FetchCapWarningsSuccess;
 

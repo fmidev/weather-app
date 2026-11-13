@@ -1,9 +1,11 @@
 import './screenTestMocks';
 
 import React from 'react';
+import { ScrollView } from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 
 import SearchScreen from '../../src/screens/SearchScreen';
+import FavoriteList from '@components/search/FavoriteList';
 import { mockGetGeolocation, mockLocationStore, mockTrackMatomoEvent, resetScreenMocks } from './screenTestMocks';
 
 jest.unmock('@components/common/AccessibleTouchableOpacity');
@@ -65,6 +67,21 @@ describe('SearchScreen', () => {
     expect(props.deleteFavorite).toHaveBeenCalledWith(2);
   });
 
+  it('saves and tracks a favorite reorder and disables scrolling during dragging', () => {
+    const props = createProps({ favorites: [{ id: 1, name: 'Helsinki' }, { id: 2, name: 'Oulu' }] });
+    const view = render(<SearchScreen {...props as any} />);
+    const list = view.UNSAFE_getByType(FavoriteList);
+    fireEvent.scroll(view.UNSAFE_getByType(ScrollView), { nativeEvent: { contentOffset: { y: 120 } } });
+    expect(list.props.autoScroll.getOffset()).toBe(120);
+    act(() => list.props.onReorder(1, 0));
+    expect(props.reorderFavorites).toHaveBeenCalledWith(1, 0);
+    expect(mockTrackMatomoEvent).toHaveBeenCalledWith('User action', 'Search', 'Reorder favourites');
+    act(() => list.props.onDragStateChange(true));
+    expect(view.UNSAFE_getByType(ScrollView).props.scrollEnabled).toBe(false);
+    act(() => list.props.onDragStateChange(false));
+    expect(view.UNSAFE_getByType(ScrollView).props.scrollEnabled).toBe(true);
+  });
+
   it.each(['press', 'click'] as const)('locates once from the labeled row via %s', (interaction) => {
     const props = createProps();
     const { getByLabelText } = render(<SearchScreen {...props as any} />);
@@ -95,6 +112,7 @@ describe('SearchScreen', () => {
 
 const createProps = (overrides: Record<string, any> = {}) => ({
   addFavorite: jest.fn(),
+  reorderFavorites: jest.fn(),
   deleteAllFavorites: jest.fn(),
   deleteAllRecentSearches: jest.fn(),
   deleteFavorite: jest.fn(),

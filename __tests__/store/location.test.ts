@@ -107,6 +107,30 @@ describe('location reducer', () => {
     });
   });
 
+  it.each([[0, 4, [1, 2, 3, 4, 0]], [4, 1, [0, 4, 1, 2, 3]]])(
+    'reorders favorites from %s to %s without mutating the previous state', (from, to, ids) => {
+      const state = reducer(defaultState, { type: types.REORDER_FAVORITES, from, to });
+      expect(state.favorites.map(({ id }) => id)).toEqual(ids);
+      expect(defaultState.favorites.map(({ id }) => id)).toEqual([0, 1, 2, 3, 4]);
+      expect(state.favorites.find(({ id }) => id === 0)).toBe(defaultState.favorites[0]);
+      expect(state.current).toBe(defaultState.current);
+      expect(state.recent).toBe(defaultState.recent);
+    }
+  );
+
+  it.each([[1, 1], [-1, 1], [1, -1], [5, 0], [0, 5], [0.5, 1], [0, NaN]])(
+    'ignores unchanged or invalid favorite positions (%s, %s)', (from, to) => {
+      expect(reducer(defaultState, { type: types.REORDER_FAVORITES, from, to }))
+        .toBe(defaultState);
+    }
+  );
+
+  it('dispatches the favorite reorder action', () => {
+    const dispatch = jest.fn();
+    actions.reorderFavorites(2, 0)(dispatch);
+    expect(dispatch).toHaveBeenCalledWith({ type: types.REORDER_FAVORITES, from: 2, to: 0 });
+  });
+
   it('should handle DELETE_ALL_FAVORITES', () => {
     expect(
       reducer(defaultState, {
