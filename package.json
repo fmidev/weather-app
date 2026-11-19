@@ -81,7 +81,7 @@
     "victory-native": "42.0.1"
   },
   "devDependencies": {
-    "@babel/core": "7.29.7",
+    "@babel/core": "7.29.13",
     "@babel/preset-env": "7.29.7",
     "@babel/runtime": "8.1.2",
     "@react-native-community/cli": "20.2.0",
