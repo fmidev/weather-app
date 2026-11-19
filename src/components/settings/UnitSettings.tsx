@@ -150,7 +150,11 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                                 testID={`settings_units_${key}_${type.unit}`}>
                                 <View style={styles.row}>
                                   <Text
-accessibilityLabel={t(`observation:paramUnits.${key === 'temperature' ? '°' : ''}${type.unitAbb}`)}
+                                    accessibilityLabel={t(
+                                      `observation:paramUnits.${
+                                        key === 'temperature' ? '°' : ''
+                                      }${type.unitAbb}`
+                                    )}
                                     style={[
                                       styles.text,
                                       { color: colors.text },
