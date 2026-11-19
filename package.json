@@ -82,7 +82,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.29.13",
-    "@babel/preset-env": "7.29.7",
+    "@babel/preset-env": "7.29.14",
     "@babel/runtime": "8.1.2",
     "@react-native-community/cli": "21.0.0",
     "@react-native-community/cli-platform-android": "20.2.0",
