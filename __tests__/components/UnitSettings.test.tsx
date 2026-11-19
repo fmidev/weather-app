@@ -5,6 +5,7 @@ import { I18nextProvider } from 'react-i18next';
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import sv from '../../i18n/sv.json';
 import UnitSettings from '../../src/components/settings/UnitSettings';
 import { trackMatomoEvent } from '../../src/utils/matomo';
 
@@ -162,7 +163,7 @@ describe('UnitSettings', () => {
       await i18n.init({
         lng: 'sv',
         fallbackLng: false,
-        resources: { sv: { unitAbbreviations: translations } },
+        resources: { sv: { ...sv, unitAbbreviations: translations } },
       });
       const onChangeUnits = jest.fn();
       const view = render(
@@ -178,21 +179,45 @@ describe('UnitSettings', () => {
     });
 
     it.each([
-      ['temperature_celsius', 'C', 'Celsius', '°Celsius'],
-      ['temperature_fahrenheit', 'F', 'Fahrenheit', '°Fahrenheit'],
-      ['precipitation_inch', 'in', 'tum', 'tum'],
-      ['wind_kilometers per hour', 'km/h', 'km/t', 'km/t'],
-      ['pressure_millimeter of mercury', 'mmHg', 'mm Hg', 'mm Hg'],
+      ['temperature_celsius', 'C', 'Celsius', '°Celsius', 'grader Celsius'],
+      [
+        'temperature_fahrenheit',
+        'F',
+        'Fahrenheit',
+        '°Fahrenheit',
+        'grader Fahrenheit',
+      ],
+      ['precipitation_inch', 'in', 'tum', 'tum', 'tum'],
+      [
+        'wind_kilometers per hour',
+        'km/h',
+        'km/t',
+        'km/t',
+        'kilometer per timme',
+      ],
+      [
+        'pressure_millimeter of mercury',
+        'mmHg',
+        'mm Hg',
+        'mm Hg',
+        'millimeter kvicksilver',
+      ],
     ])(
-      'renders translated text and accessibility label for %s',
-      async (option, abbreviation, translation, expectedLabel) => {
+      'renders the translated abbreviation and full accessibility label for %s',
+      async (
+        option,
+        abbreviation,
+        translation,
+        expectedText,
+        accessibilityLabel
+      ) => {
         const view = await renderWithTranslations({
           [abbreviation]: translation,
         });
         const row = within(view.getByTestId(`settings_units_${option}`));
 
-        expect(row.getByText(expectedLabel)).toBeTruthy();
-        expect(row.getByLabelText(expectedLabel)).toBeTruthy();
+        expect(row.getByText(expectedText)).toBeTruthy();
+        expect(row.getByLabelText(accessibilityLabel)).toBeTruthy();
       }
     );
 
@@ -213,12 +238,16 @@ describe('UnitSettings', () => {
         ['pressure_inch of mercury', 'inHg'],
         ['pressure_millimeter of mercury', 'mmHg'],
         ['pressure_millibar', 'mbar'],
-      ].forEach(([option, expectedLabel]) => {
+      ].forEach(([option, expectedText]) => {
         const row = within(view.getByTestId(`settings_units_${option}`));
 
-        expect(row.getByText(expectedLabel)).toBeTruthy();
-        expect(row.getByLabelText(expectedLabel)).toBeTruthy();
+        expect(row.getByText(expectedText)).toBeTruthy();
       });
+
+      const windOption = within(
+        view.getByTestId('settings_units_wind_kilometers per hour')
+      );
+      expect(windOption.getByLabelText('kilometer per timme')).toBeTruthy();
     });
 
     it('selects a translated option using the original unit data', async () => {
