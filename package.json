@@ -44,7 +44,7 @@
     "axios-cache-interceptor": "1.13.0",
     "fast-xml-parser": "5.12.0",
     "geolib": "4.0.2",
-    "i18next": "23.10.1",
+    "i18next": "27.1.3",
     "moment": "2.31.0",
     "moment-timezone": "0.6.6",
     "react": "19.3.0",
