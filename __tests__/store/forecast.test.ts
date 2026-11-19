@@ -1,3 +1,5 @@
+import moment from 'moment-timezone';
+
 import reducer from '@store/forecast/reducer';
 import * as actions from '@store/forecast/actions';
 import * as selectors from '@store/forecast/selectors';
@@ -58,6 +60,11 @@ describe('forecast reducer', () => {
         ],
       },
     });
+  });
+
+  afterEach(() => {
+    moment.tz.setDefault();
+    jest.useRealTimers();
   });
 
   it('should handle FETCH_FORECAST', () => {
@@ -343,6 +350,54 @@ describe('forecast reducer', () => {
     expect(selectors.selectIsWaningMoonPhase(state)).toBe(true);
   });
 
+  it('groups cached hours and summarizes days in the selected timezone', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-11-14T20:00:00Z'));
+    moment.tz.setDefault('UTC');
+    const beforeMidnight = createStep({
+      epochtime: Date.parse('2023-11-14T21:00:00Z') / 1000,
+      localtime: '20231114T230000',
+      modtime: '2023-11-14T19:00:00',
+      temperature: 2,
+    });
+    const midnight = createStep({
+      ...beforeMidnight,
+      epochtime: Date.parse('2023-11-14T22:00:00Z') / 1000,
+      localtime: '20231115T000000',
+      temperature: 8,
+    });
+    const endOfNextDay = createStep({
+      ...beforeMidnight,
+      epochtime: Date.parse('2023-11-15T21:00:00Z') / 1000,
+      localtime: '20231115T230000',
+      temperature: 5,
+    });
+    const state = createState({
+      data: { 99: [beforeMidnight, midnight, endOfNextDay] },
+    });
+    const helsinki = {
+      ...state,
+      location: {
+        ...state.location,
+        current: { ...state.location.current, timezone: 'Europe/Helsinki' },
+      },
+    };
+
+    expect(selectors.selectForecastByDay(helsinki)).toEqual({
+      '14.11.': [beforeMidnight],
+      '15.11.': [midnight, endOfNextDay],
+    });
+    expect(selectors.selectHeaderLevelForecast(helsinki)).toMatchObject([
+      { timeStamp: beforeMidnight.epochtime, maxTemperature: 2 },
+      { timeStamp: midnight.epochtime, maxTemperature: 8 },
+    ]);
+
+    expect(selectors.selectForecast(state)).toBe(selectors.selectForecast(helsinki));
+    expect(selectors.selectForecastByDay(state)).toEqual({
+      '14.11.': [beforeMidnight, midnight],
+      '15.11.': [endOfNextDay],
+    });
+  });
+
   it('omits a daily forecast without a 23:00 time step', () => {
     jest.useFakeTimers().setSystemTime(new Date('2023-11-14T12:00:00Z'));
     const firstTimestamp = Date.parse('2023-11-15T12:00:00Z') / 1000;
@@ -517,6 +572,7 @@ const createState = (forecastOverrides: Partial<types.ForecastState> = {}) =>
     location: {
       current: {
         id: 99,
+        timezone: 'UTC',
       },
     },
   }) as any;
