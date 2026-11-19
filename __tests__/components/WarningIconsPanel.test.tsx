@@ -1,23 +1,20 @@
 import React from 'react';
 import { Platform, TouchableOpacity } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
+import { Provider } from 'react-redux';
+import { combineReducers, createStore } from 'redux';
 
-import WarningIconsPanel from '../../src/components/warnings/WarningIconsPanel';
+import ConnectedWarningIconsPanel from '../../src/components/warnings/WarningIconsPanel';
+import warningsReducer from '@store/warnings/reducer';
+import {
+  FETCH_FAVORITE_WARNINGS_SUCCESS,
+  FETCH_WARNINGS_ERROR,
+  FETCH_WARNINGS_SUCCESS,
+} from '@store/warnings/types';
 
 const mockNavigate = jest.fn();
 const mockTrackMatomoEvent = jest.fn();
 const mockMomentLocale = jest.fn();
-
-jest.mock('react-redux', () => ({
-  connect: () => (Component: any) => Component,
-}));
-
-jest.mock('@store/warnings/selectors', () => ({
-  selectDailyWarningData: jest.fn(),
-  selectError: jest.fn(),
-  selectLoading: jest.fn(),
-  selectUpdated: jest.fn(),
-}));
 
 jest.mock('@react-navigation/native', () => ({
   useTheme: () => ({
@@ -103,6 +100,43 @@ jest.mock('@utils/matomo', () => ({
   trackMatomoEvent: (...args: any[]) => mockTrackMatomoEvent(...args),
 }));
 
+const WarningIconsPanel = ConnectedWarningIconsPanel.WrappedComponent;
+
+const renderAfterRefreshFailure = (updated: string) => {
+  const refreshTime = Date.parse('2026-04-28T06:00:00Z');
+  jest.spyOn(Date, 'now').mockReturnValue(refreshTime);
+  const store = createStore(
+    combineReducers({
+      location: (state = { current: { id: 99 } }) => state,
+      warnings: warningsReducer,
+    })
+  );
+  store.dispatch({
+    type: FETCH_WARNINGS_SUCCESS,
+    id: 99,
+    data: { updated, warnings: [], error: 0 },
+    timestamp: Date.parse(updated),
+    requestKey: '99',
+  });
+  store.dispatch({
+    type: FETCH_FAVORITE_WARNINGS_SUCCESS,
+    data: {
+      100: { updated: '2026-04-28T05:00:00Z', warnings: [], error: 0 },
+    },
+  });
+  store.dispatch({
+    type: FETCH_WARNINGS_ERROR,
+    timestamp: refreshTime,
+    error: { code: 503, message: 'Unavailable' },
+  });
+
+  return render(
+    <Provider store={store}>
+      <ConnectedWarningIconsPanel />
+    </Provider>
+  );
+};
+
 describe('WarningIconsPanel', () => {
   const cachedDays = [{
     severity: 2,
@@ -145,6 +179,20 @@ describe('WarningIconsPanel', () => {
 
     expect(getByTestId('warnings_panel')).toBeTruthy();
     expect(getByText('Loading error')).toBeTruthy();
+  });
+
+  it('shows a refresh error when the selected location cache has expired', () => {
+    const view = renderAfterRefreshFailure('2026-04-27T17:00:00Z');
+
+    expect(view.getByText('Loading error')).toBeTruthy();
+    expect(view.queryByLabelText('Warnings, noWarningsText')).toBeNull();
+  });
+
+  it('keeps a fresh response without warnings visible after a refresh fails', () => {
+    const view = renderAfterRefreshFailure('2026-04-28T04:00:00Z');
+
+    expect(view.getByLabelText('Warnings, noWarningsText')).toBeTruthy();
+    expect(view.queryByText('Loading error')).toBeNull();
   });
 
   it('renders warning summary and navigates to warnings page on press', () => {

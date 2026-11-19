@@ -17,12 +17,13 @@ import { useTranslation } from 'react-i18next';
 import { useAccessibilityLanguage } from '@utils/hooks';
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import { CustomTheme } from '@assets/colors';
+import { selectGeoid } from '@store/location/selector';
 import { State } from '@store/types';
 import {
   selectDailyWarningData,
   selectError,
   selectLoading,
-  selectUpdated,
+  selectLocationWarnings,
 } from '@store/warnings/selectors';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
@@ -40,8 +41,8 @@ const mapStateToProps = (state: State) => ({
   dailyWarnings: selectDailyWarningData(state),
   loading: selectLoading(state),
   error: selectError(state),
-  // The daily selector returns five days even before the first response.
-  hasData: selectUpdated(state) !== null,
+  // A fresh response can also have an empty warnings list.
+  hasData: selectLocationWarnings(state)[selectGeoid(state)] !== undefined,
 });
 
 const connector = connect(mapStateToProps, {});
