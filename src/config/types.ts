@@ -480,7 +480,8 @@ interface Analytics {
 interface MapInfoBottomSheet {
   /**
    * Markdown URL template with {lang} and {layer} placeholders.
-   * The first colon in a WMS layer name becomes a hyphen; Timeseries layers use 'timeseries'.
+   * All colons in a WMS layer name become hyphens.
+   * Timeseries layers use 'timeseries'.
    */
   url: string;
 }
