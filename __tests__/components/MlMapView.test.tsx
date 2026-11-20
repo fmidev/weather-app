@@ -51,6 +51,10 @@ const mockTimeseriesOverlay = jest.fn((props) => (
 const mockMapControls = jest.fn<any, any[]>(() => (
   <Text testID="map-controls">controls</Text>
 ));
+const mockImages = jest.fn<any, any[]>(() => null);
+
+jest.mock('@assets/images/icons/wind-arrow-light.png', () => 'wind-arrow-light');
+jest.mock('@assets/images/icons/wind-arrow-dark.png', () => 'wind-arrow-dark');
 
 const mockMapRefApi = {
   getBounds: jest.fn(),
@@ -175,6 +179,7 @@ jest.mock('@maplibre/maplibre-react-native', () => {
   return {
     Map,
     Camera,
+    Images: (props: any) => mockImages(props),
     ViewAnnotation,
     TransformRequestManager: {
       addHeader: (...args: any[]) => mockAddHeader(...args),
@@ -251,7 +256,11 @@ describe('MlMapView', () => {
       mock: {
         currentLocation: { lat: 60.1699, lon: 24.9384 },
         displayLocation: true,
-        overlay: { type: 'WMS', step: 60 },
+        overlay: {
+          type: 'WMS',
+          step: 60,
+          mvt: { windDirection: 'windarrow_forecast.direction' },
+        },
         activeOverlay: 3,
         timezone: 'Europe/Helsinki',
         sessionId: 1234567,
@@ -287,11 +296,57 @@ describe('MlMapView', () => {
     await waitFor(() => {
       expect(mockWMSOverlay).toHaveBeenCalledWith(
         expect.objectContaining({
-          overlay: { type: 'WMS', step: 60 },
+          overlay: {
+            type: 'WMS',
+            step: 60,
+            mvt: { windDirection: 'windarrow_forecast.direction' },
+          },
           library: 'maplibre',
         })
       );
     });
+    expect(mockImages).toHaveBeenCalledWith(
+      expect.objectContaining({
+        images: { 'mvt-wind-arrow': 'wind-arrow-light' },
+      })
+    );
+  });
+
+  it('registers the dark wind arrow image in dark mode', async () => {
+    mockAppearance.dark = true;
+    const store = createStore({
+      mock: {
+        currentLocation: { lat: 60.1699, lon: 24.9384 },
+        displayLocation: true,
+        overlay: {
+          type: 'WMS',
+          step: 60,
+          mvt: { windDirection: 'windarrow_forecast.direction' },
+        },
+        activeOverlay: 3,
+        timezone: 'Europe/Helsinki',
+        sessionId: 1234567,
+      },
+    });
+
+    render(
+      <Provider store={store as any}>
+        <MlMapView
+          infoSheetRef={{ current: null }}
+          mapLayersSheetRef={{ current: null }}
+        />
+      </Provider>
+    );
+
+    await act(async () => {
+      lastMapProps.onDidFinishLoadingStyle();
+    });
+
+    expect(mockImages).toHaveBeenCalledWith(
+      expect.objectContaining({
+        images: { 'mvt-wind-arrow': 'wind-arrow-dark' },
+      })
+    );
   });
 
   it('adds source-specific API keys only to matching WMS GetMap requests', () => {

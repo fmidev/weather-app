@@ -9,6 +9,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { View, StyleSheet, Text } from 'react-native';
 import {
   Camera,
+  Images,
   Map,
   TransformRequestManager,
   ViewAnnotation,
@@ -56,6 +57,9 @@ import type { Position } from 'geojson';
 import { trackMatomoEvent } from '@utils/matomo';
 
 import type { BottomSheetRef } from '@components/common/BottomSheet';
+
+const windArrowLightImage = require('@assets/images/icons/wind-arrow-light.png');
+const windArrowDarkImage = require('@assets/images/icons/wind-arrow-dark.png');
 
 const INITIAL_REGION = {
   latitude: 64.62582958724917,
@@ -391,6 +395,13 @@ const MlMapView: React.FC<MapViewProps> = ({
           duration={0}
         />
 
+        {styleReady && overlay?.type === 'WMS' && overlay.mvt?.windDirection && (
+          <Images
+            images={{
+              'mvt-wind-arrow': dark ? windArrowDarkImage : windArrowLightImage,
+            }}
+          />
+        )}
         {styleReady && overlay?.type === 'WMS' && (
           <WMSOverlay
             overlay={overlay}
