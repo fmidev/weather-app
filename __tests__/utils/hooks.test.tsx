@@ -1,15 +1,35 @@
 import React from 'react';
-import { View, Text, DeviceEventEmitter, NativeModules, Platform, findNodeHandle } from 'react-native';
+import {
+  AccessibilityInfo,
+  View,
+  Text,
+  DeviceEventEmitter,
+  NativeModules,
+  Platform,
+  findNodeHandle,
+} from 'react-native';
 import type { LayoutChangeEvent, ViewProps } from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { createInstance } from 'i18next';
 import { I18nextProvider } from 'react-i18next';
 
 import {
+  useAccessibilityFocusOnScreenEntry,
   useAccessibilityHintLanguage,
   useAccessibilityLanguage,
   usesVerticalBarLayout,
 } from '../../src/utils/hooks';
+
+let mockIsFocused = true;
+
+jest.mock('@react-navigation/native', () => ({
+  useFocusEffect: (callback: () => void | (() => void)) => {
+    const { useEffect } = require('react');
+    const isFocused = mockIsFocused;
+    // Match the hook's callback dependency and focus/blur cleanup behavior.
+    useEffect(() => isFocused ? callback() : undefined, [callback, isFocused]);
+  },
+}));
 
 const LanguageFixture = () => {
   const accessibilityLanguage = useAccessibilityLanguage();
@@ -177,6 +197,137 @@ describe('useAccessibilityHintLanguage', () => {
     fireEvent(view.getByTestId('hinted-view'), 'layout', layoutEvent);
 
     expect(localizeAccessibilityHint).not.toHaveBeenCalled();
+  });
+});
+
+const FocusFixture = ({ visible = true, label = 'Target' }) => {
+  const focusProps = useAccessibilityFocusOnScreenEntry();
+  return visible ? (
+    <View testID="focus-target" accessible accessibilityLabel={label} {...focusProps} />
+  ) : null;
+};
+
+const renderFocusFixture = (visible = true) =>
+  render(<FocusFixture visible={visible} />);
+
+const layoutFocusTarget = (view: ReturnType<typeof render>) =>
+  fireEvent(view.getByTestId('focus-target'), 'layout');
+
+describe('useAccessibilityFocusOnScreenEntry', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockIsFocused = true;
+    jest.spyOn(AccessibilityInfo, 'sendAccessibilityEvent').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('focuses once after the target has completed its first native layout', () => {
+    const findNodeHandleSpy = jest.spyOn(require('react-native'), 'findNodeHandle');
+    const view = renderFocusFixture();
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+
+    layoutFocusTarget(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledWith(
+      view.UNSAFE_getByType(View).instance,
+      'focus'
+    );
+    expect(findNodeHandleSpy).not.toHaveBeenCalled();
+
+    layoutFocusTarget(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits for a target that mounts after the screen is focused', () => {
+    const view = renderFocusFixture(false);
+    view.rerender(<FocusFixture />);
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+
+    layoutFocusTarget(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the same bindings and does not refocus when the target updates', () => {
+    const view = renderFocusFixture();
+    layoutFocusTarget(view);
+    const target = view.getByTestId('focus-target');
+    const onLayout = target.props.onLayout;
+
+    view.rerender(<FocusFixture label="Updated target" />);
+
+    expect(view.getByTestId('focus-target')).toBe(target);
+    expect(target.props.onLayout).toBe(onLayout);
+    layoutFocusTarget(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('cancels pending focus on blur and focuses on the next screen entry', () => {
+    const view = renderFocusFixture(false);
+    mockIsFocused = false;
+    view.rerender(<FocusFixture />);
+    layoutFocusTarget(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+
+    mockIsFocused = true;
+    view.rerender(<FocusFixture />);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('focuses an already laid out target again when returning to the screen', () => {
+    const view = renderFocusFixture();
+    layoutFocusTarget(view);
+
+    mockIsFocused = false;
+    view.rerender(<FocusFixture />);
+    mockIsFocused = true;
+    view.rerender(<FocusFixture />);
+
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(2);
+    layoutFocusTarget(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not refocus when the target remounts during the same screen visit', () => {
+    const view = renderFocusFixture();
+    layoutFocusTarget(view);
+
+    view.rerender(<FocusFixture visible={false} />);
+    view.rerender(<FocusFixture />);
+    layoutFocusTarget(view);
+
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits for a replacement target to lay out on the next screen entry', () => {
+    const view = renderFocusFixture();
+    layoutFocusTarget(view);
+
+    mockIsFocused = false;
+    view.rerender(<FocusFixture visible={false} />);
+    mockIsFocused = true;
+    view.rerender(<FocusFixture visible={false} />);
+    view.rerender(<FocusFixture />);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+
+    layoutFocusTarget(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(2);
+  });
+
+  it('ignores a late layout event after the target unmounts', () => {
+    const view = renderFocusFixture();
+    const onLayout = view.getByTestId('focus-target').props.onLayout;
+    view.rerender(<FocusFixture visible={false} />);
+
+    act(() => onLayout());
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+
+    view.rerender(<FocusFixture />);
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+    layoutFocusTarget(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
   });
 });
 

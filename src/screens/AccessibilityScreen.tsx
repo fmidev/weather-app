@@ -2,7 +2,6 @@ import React, { useCallback, useRef, useState } from 'react';
 import {
   StyleSheet,
   AccessibilityInfo,
-  findNodeHandle,
   type TextInstance,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -54,11 +53,8 @@ const AccessibilityScreen: React.FC = () => {
         !headingRef.current
       )
         return;
-      const reactTag = findNodeHandle(headingRef.current);
-      if (reactTag != null) {
-        state.focused = true;
-        AccessibilityInfo.setAccessibilityFocus(reactTag);
-      }
+      state.focused = true;
+      AccessibilityInfo.sendAccessibilityEvent(headingRef.current, 'focus');
     });
   }, []);
 

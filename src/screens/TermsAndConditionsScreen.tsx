@@ -5,7 +5,6 @@ import {
   View,
   StyleSheet,
   AccessibilityInfo,
-  findNodeHandle,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useFocusEffect } from '@react-navigation/native';
@@ -48,10 +47,7 @@ const TermsAndConditionsScreen: React.FC<TermsAndConditionsScreenProps> = ({
 
   useFocusEffect(() => {
     if (titleRef && titleRef.current) {
-      const reactTag = findNodeHandle(titleRef.current);
-      if (reactTag) {
-        AccessibilityInfo.setAccessibilityFocus(reactTag);
-      }
+      AccessibilityInfo.sendAccessibilityEvent(titleRef.current, 'focus');
     }
   });
 

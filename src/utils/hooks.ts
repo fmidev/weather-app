@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  AccessibilityInfo,
   findNodeHandle,
   NativeEventEmitter,
   NativeModules,
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import type { LayoutChangeEvent, ViewProps } from 'react-native';
+import type { LayoutChangeEvent, ViewInstance, ViewProps } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 const ACCESSIBILITY_LOCALES: Record<string, string> = {
@@ -142,3 +143,50 @@ export const useHorizontalScrollEdges = (initialOffset = 0) => {
   return { scrollEdges, updateScrollEdges };
 };
 
+/**
+ * Attach both returned props to a native view to focus it once per screen entry.
+ * Waits for the target's first layout and cancels pending focus on screen blur.
+ */
+export const useAccessibilityFocusOnScreenEntry = () => {
+  // Other hooks in this module are also used outside navigation.
+  const { useFocusEffect } =
+    require('@react-navigation/native') as typeof import('@react-navigation/native');
+  const targetRef = useRef<ViewInstance | null>(null);
+  const targetReadyRef = useRef(false);
+  const pendingFocusRef = useRef(false);
+
+  const ref = useCallback((target: ViewInstance | null) => {
+    targetRef.current = target;
+    targetReadyRef.current = false;
+  }, []);
+
+  const focusTarget = useCallback(() => {
+    if (
+      !pendingFocusRef.current ||
+      !targetReadyRef.current ||
+      !targetRef.current
+    ) {
+      return;
+    }
+
+    pendingFocusRef.current = false;
+    AccessibilityInfo.sendAccessibilityEvent(targetRef.current, 'focus');
+  }, []);
+
+  const onLayout = useCallback(() => {
+    targetReadyRef.current = true;
+    focusTarget();
+  }, [focusTarget]);
+
+  useFocusEffect(
+    useCallback(() => {
+      pendingFocusRef.current = true;
+      focusTarget();
+      return () => {
+        pendingFocusRef.current = false;
+      };
+    }, [focusTarget])
+  );
+
+  return { ref, onLayout };
+};
