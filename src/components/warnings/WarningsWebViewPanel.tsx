@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { WebView } from 'react-native-webview';
@@ -27,8 +27,8 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
   const isRunningOnMac = useIsRunningOnMac();
   const { fontScale } = useWindowDimensions()
   const [viewHeight, setViewHeight] = useState<number>(2000);
+  const [webViewGeneration, setWebViewGeneration] = useState(0);
   const { dark } = useTheme() as CustomTheme;
-  const webViewRef = useRef(null);
   const { i18n, t } = useTranslation('warnings');
   const locale = ['en', 'fi', 'sv'].includes(i18n.language)
     ? i18n.language
@@ -70,8 +70,9 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
         theme="${dark ? 'dark' : 'light'}"
         font-scale="${Math.min(isRunningOnMac ? fontScale * MAC_CONTENT_SIZE_MULTIPLIER : fontScale, 2)}"
         gray-scale-selector="true"
+        refresh-interval="${updateInterval}"
       ></smartmet-alert-client>
-      <script type="module" src="${webViewUrl}/index.js" refresh-interval="${updateInterval}"></script>
+      <script type="module" src="${webViewUrl}/index.js"></script>
       <script>
         const resizeObserver = new ResizeObserver(entries => {
           const height = entries[0].target.clientHeight;
@@ -82,17 +83,24 @@ const WarningsWebViewPanel: React.FC<WarningsWebViewPanelProps> = ({
     </body>
   </html>`;
 
+  const recreateWebView = () => {
+    // A new WebView loads the inline HTML in a fresh content process.
+    setWebViewGeneration((generation) => generation + 1);
+  };
+
   return (
     <View>
       <PanelHeader title={`${t('allWarnings')}`} justifyCenter />
       <WebView
+        key={webViewGeneration}
         testID="warnings_webview"
-        ref={webViewRef}
         style={{ height: viewHeight, backgroundColor: `transparent` }}
         textZoom={100}
         source={{ html }}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}
+        onContentProcessDidTerminate={recreateWebView}
+        onRenderProcessGone={recreateWebView}
         onMessage={(event) => {
           setViewHeight(Number(event.nativeEvent.data) || 2000);
         }}
