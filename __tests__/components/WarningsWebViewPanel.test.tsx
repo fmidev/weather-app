@@ -80,6 +80,29 @@ describe('WarningsWebViewPanel', () => {
     expect(getByText('Invalid webview URL blocked')).toBeTruthy();
   });
 
+  it.each(['contentProcessDidTerminate', 'renderProcessGone'])(
+    'recreates the WebView with the same HTML after %s',
+    (eventName) => {
+      mockGetConfig.mockReturnValue({
+        webViewUrl: 'https://cdn.fmi.fi/warnings/client',
+      });
+      const { getByTestId } = render(
+        <WarningsWebViewPanel updateInterval={60} />
+      );
+      const webView = getByTestId('warnings_webview');
+      const { source } = webView.props;
+
+      fireEvent(webView, eventName, { nativeEvent: {} });
+
+      const recoveredWebView = getByTestId('warnings_webview');
+      expect(recoveredWebView).not.toBe(webView);
+      expect(recoveredWebView.props.source).toEqual(source);
+
+      fireEvent(recoveredWebView, 'message', { nativeEvent: { data: '640' } });
+      expect(getByTestId('warnings_webview').props.style.height).toBe(640);
+    }
+  );
+
   it('renders webview html for allowed host and updates webview height on message', () => {
     mockTheme.mockReturnValue({
       dark: true,
@@ -102,7 +125,12 @@ describe('WarningsWebViewPanel', () => {
     expect(html).toContain('language="sv"');
     expect(html).toContain('theme="dark"');
     expect(html).toContain('font-scale="2"');
-    expect(html).toContain('src="https://cdn.fmi.fi/warnings/client/index.js" refresh-interval="180"');
+    expect(html.match(/<smartmet-alert-client\b[^>]*>/)?.[0]).toContain(
+      'refresh-interval="180"'
+    );
+    expect(html).toContain(
+      '<script type="module" src="https://cdn.fmi.fi/warnings/client/index.js"></script>'
+    );
     expect(webview.props.style.height).toBe(2000);
 
     fireEvent(webview, 'message', { nativeEvent: { data: '777' } });
