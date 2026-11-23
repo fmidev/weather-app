@@ -48,9 +48,11 @@ jest.mock('@components/common/AppText', () => ({
 
 jest.mock('../../src/components/warnings/WarningIcon', () => ({
   __esModule: true,
-  default: ({ type, severityDescription }: any) => {
+  default: ({ type, severityDescription, physical }: any) => {
     const { Text } = require('react-native');
-    return <Text testID={`warning-icon-${type}-${severityDescription}`}>icon</Text>;
+    return <Text testID={`warning-icon-${type}-${severityDescription}`}>
+      {physical?.windIntensity ?? 'icon'}
+    </Text>;
   },
 }));
 
@@ -111,6 +113,24 @@ describe('DayDetails', () => {
     fireEvent.press(getByHintText('Show less'));
     expect(queryByText('Strong wind in coastal areas.')).toBeNull();
     expect(mockTrackMatomoEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('labels the warning button without the wind speed displayed in its icon', () => {
+    const { getByHintText, getByText } = render(
+      <DayDetails clockType={24 as any} warnings={[{
+        ...warning,
+        physical: { windIntensity: 20 },
+        duration: {
+          startTime: '2035-03-03T10:00:00',
+          endTime: '2035-03-03T20:00:00',
+        },
+      }] as any} />
+    );
+
+    expect(getByText('20')).toBeTruthy();
+    expect(getByHintText('Show more').props.accessibilityLabel).toBe(
+      'Wind warning - Valid 03 March 10:00 - 03 March 20:00'
+    );
   });
 
   it('resets opened rows when warnings prop changes', () => {

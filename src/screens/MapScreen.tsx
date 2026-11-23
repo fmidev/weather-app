@@ -2,42 +2,35 @@ import React, { useRef } from 'react';
 import { StyleSheet, useWindowDimensions } from 'react-native';
 import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
 import { useTheme } from '@react-navigation/native';
-import { connect, ConnectedProps } from 'react-redux';
 
 import MlMapView from '@components/map/maps/MlMapView';
-import RnMapview from '@components/map/maps/RnMapView';
+import RnMapView from '@components/map/maps/RnMapView';
 import InfoBottomSheet from '@components/map/sheets/InfoBottomSheet';
 import MapLayersBottomSheet from '@components/map/sheets/MapLayersBottomSheet';
 import { GRAY_1 } from '@assets/colors';
-import { State } from '@store/types';
+import { Config } from '@config';
+import { useReloader } from '@utils/reloader';
 
-import { selectMapLibrary } from '@store/settings/selectors';
-
-const mapStateToProps = (state: State) => ({
-  mapLibrary: selectMapLibrary(state),
-});
-
-const connector = connect(mapStateToProps);
-
-type MapScreenProps = ConnectedProps<typeof connector>;
-
-const MapScreen: React.FC<MapScreenProps> = ({ mapLibrary }) => {
+const MapScreen: React.FC = () => {
+  // Re-evaluate the map library when dynamic configuration is refreshed.
+  useReloader();
   const { colors } = useTheme();
   const { fontScale } = useWindowDimensions();
   const mapLayersSheetRef = useRef<BottomSheetRef>(null);
   const infoSheetRef = useRef<BottomSheetRef>(null);
+  const { baseMap } = Config.get('map');
 
   const largeFonts = fontScale > 1.5;
 
   return (
     <>
-      {mapLibrary === 'maplibre' ? (
+      {baseMap ? (
         <MlMapView
           infoSheetRef={infoSheetRef}
           mapLayersSheetRef={mapLayersSheetRef}
         />
       ) : (
-        <RnMapview
+        <RnMapView
           infoSheetRef={infoSheetRef}
           mapLayersSheetRef={mapLayersSheetRef}
         />
@@ -46,7 +39,7 @@ const MapScreen: React.FC<MapScreenProps> = ({ mapLibrary }) => {
       <BottomSheet
         ref={infoSheetRef}
         height={600}
-        scrollableNegotiation="none"
+        scrollCoordination="none"
         backgroundStyle={{
           ...styles.sheetContainer,
           backgroundColor: colors.background,
@@ -82,4 +75,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(MapScreen);
+export default MapScreen;

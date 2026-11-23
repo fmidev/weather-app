@@ -11,14 +11,12 @@ import {
   selectUnits,
   selectTheme,
   selectClockType,
-  selectMapLibrary,
   selectForecastBackgroundImages,
 } from '@store/settings/selectors';
 import {
   updateUnits as updateUnitsAction,
   updateTheme as updateThemeAction,
   updateClockType as updateClockTypeAction,
-  updateMapLibrary as updateMapLibraryAction,
   updateForecastBackgroundImages as updateForecastBackgroundImagesAction,
 } from '@store/settings/actions';
 import { updateLocationsLocales as updateLocationsLocalesAction } from '@store/location/actions';
@@ -34,8 +32,6 @@ import ThemeSettings from '@components/settings/ThemeSettings';
 import TimeSettings from '@components/settings/TimeSettings';
 import ForecastBackgroundSettings from '@components/settings/ForecastBackgroundSettings';
 import defaultConfig from '../../defaultConfig';
-//import MapSettings from '@components/settings/MapSettings';
-import MapSettings from '@components/settings/MapSettings';
 
 const LOCATION_ALWAYS = 'location_always';
 const LOCATION_WHEN_IN_USE = 'location_when_in_use';
@@ -46,7 +42,6 @@ const mapStateToProps = (state: State) => ({
   theme: selectTheme(state),
   geoids: selectStoredGeoids(state),
   clockType: selectClockType(state),
-  mapLibrary: selectMapLibrary(state),
   forecastBackgroundImages: selectForecastBackgroundImages(state),
 });
 
@@ -55,7 +50,6 @@ const mapDispatchToProps = {
   updateTheme: updateThemeAction,
   updateLocationsLocales: updateLocationsLocalesAction,
   updateClockType: updateClockTypeAction,
-  updateMapLibrary: updateMapLibraryAction,
   updateForecastBackgroundImages: updateForecastBackgroundImagesAction,
 };
 
@@ -72,14 +66,10 @@ const SettingsScreen: React.FC<Props> = ({
   units,
   forecastBackgroundImages,
   updateForecastBackgroundImages,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  mapLibrary,
   updateUnits,
   updateClockType,
   updateTheme,
   updateLocationsLocales,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateMapLibrary,
 }) => {
   const [locationPermission, setLocationPermission] = useState<
     string | undefined
@@ -213,13 +203,6 @@ const SettingsScreen: React.FC<Props> = ({
           <ForecastBackgroundSettings
             forecastBackgroundImages={forecastBackgroundImages}
             updateForecastBackgroundImages={updateForecastBackgroundImages}
-          />
-        )}
-
-        {Config.get('map').baseMap && (
-          <MapSettings
-            mapLibrary={mapLibrary}
-            updateMapLibrary={updateMapLibrary}
           />
         )}
       </ScrollView>

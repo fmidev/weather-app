@@ -7,7 +7,7 @@ import React, {
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import {
   ModalBottomSheet,
-  type ScrollableNegotiation,
+  type ScrollCoordination,
 } from '@swmansion/react-native-bottom-sheet';
 import { GRAY_1, WHITE } from '@assets/colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -23,7 +23,7 @@ interface BottomSheetProps {
   height: number;
   backgroundStyle?: StyleProp<ViewStyle>;
   handleIndicatorStyle?: StyleProp<ViewStyle>;
-  scrollableNegotiation?: ScrollableNegotiation;
+  scrollCoordination?: ScrollCoordination;
 }
 
 const BottomSheet: React.FC<BottomSheetProps> = ({
@@ -32,7 +32,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   height,
   backgroundStyle,
   handleIndicatorStyle,
-  scrollableNegotiation,
+  scrollCoordination,
 }) => {
   const { bottom } = useSafeAreaInsets();
   const [index, setIndex] = useState<0 | 1 | null>(null);
@@ -66,7 +66,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       index={index}
       detents={[0, height]}
       scrimColor="rgba(0, 0, 0, 0.47)"
-      scrollableNegotiation={scrollableNegotiation}
+      scrollCoordination={scrollCoordination}
       onCloseRequest={close}
       onIndexChange={(nextIndex) => {
         if (nextIndex === 0) close();

@@ -3,7 +3,9 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import BottomSheet, { type BottomSheetRef } from '@components/common/BottomSheet';
+import BottomSheet, {
+  type BottomSheetRef,
+} from '@components/common/BottomSheet';
 
 import AccessibleTouchableOpacity from '@components/common/AccessibleTouchableOpacity';
 import CloseButton from '@components/common/CloseButton';
@@ -122,10 +124,20 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                             {t(`settings:${key}`)}
                           </Text>
                         </View>
-                        {unitTypesByKey(key)?.map((type) =>
-                          excludeUnits?.includes(
-                            type.unitAbb as MeasurementUnit
-                          ) ? null : (
+                        {unitTypesByKey(key)?.map((type) => {
+                          if (
+                            excludeUnits?.includes(
+                              type.unitAbb as MeasurementUnit
+                            )
+                          ) {
+                            return null;
+                          }
+                          const unitLabel = `${key === 'temperature' ? '°' : ''}${t(
+                            `unitAbbreviations:${type.unitAbb}`,
+                            { defaultValue: type.unitAbb }
+                          )}`;
+
+                          return (
                             <View
                               key={type.unitId}
                               style={[
@@ -143,9 +155,11 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                                         key === 'temperature' ? '°' : ''
                                       }${type.unitAbb}`
                                     )}
-                                    style={[styles.text, { color: colors.text }]}>
-                                    {key === 'temperature' ? '°' : ''}
-                                    {type.unitAbb}
+                                    style={[
+                                      styles.text,
+                                      { color: colors.text },
+                                    ]}>
+                                    {unitLabel}
                                   </Text>
                                   {units[key].unitId === type.unitId && (
                                     <Icon
@@ -157,8 +171,8 @@ const UnitSettings: React.FC<Props> = ({ units, onChangeUnits }) => {
                                 </View>
                               </AccessibleTouchableOpacity>
                             </View>
-                          )
-                        )}
+                          );
+                        })}
                       </ScrollView>
                     </SafeAreaView>
                   </BottomSheet>

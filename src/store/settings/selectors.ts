@@ -35,11 +35,6 @@ export const selectClockType = createSelector(
   }
 );
 
-export const selectMapLibrary = createSelector(
-  selectSettingsDomain,
-  (settings) => settings.mapLibrary
-);
-
 export const selectSessionId = createSelector(
   selectSettingsDomain,
   (settings) => settings.sessionId

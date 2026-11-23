@@ -33,7 +33,15 @@ const getDailyWarnings = () => {
 };
 
 const dayLabel = (day: ReturnType<typeof getDailyWarnings>[number]) =>
-  `${moment(day.date).format('dddd DD MMMM')}, ${i18n.t('warnings:hasWarnings')}: ${day.count}, ${i18n.t(`warnings:severities:${day.severity}`)}`;
+  [
+    moment(day.date).format('dddd DD MMMM'),
+    `${i18n.t('warnings:hasWarnings')}: ${day.count}`,
+    i18n.t(`warnings:severities:${day.severity}`),
+    ...Array.from(
+      new Set(day.warnings.map(({ type }) => type)),
+      type => i18n.t(`warnings:types.${type}`)
+    ),
+  ].join(', ');
 
 describe('WarningsScreen with live defaultConfig APIs', () => {
   beforeAll(async () => {
@@ -133,7 +141,9 @@ describe('WarningsScreen with live defaultConfig APIs', () => {
     const scriptUrl = `${defaultConfig.warnings.webViewUrl}/index.js`;
     expect(html).toContain('language="fi"');
     expect(html).toContain(`src="${scriptUrl}"`);
-    expect(html).toContain(`refresh-interval="${defaultConfig.warnings.updateInterval! * 60000}"`);
+    expect(html.match(/<smartmet-alert-client\b[^>]*>/)?.[0]).toContain(
+      `refresh-interval="${defaultConfig.warnings.updateInterval! * 60000}"`
+    );
     const { status, data } = await axiosClient({ url: scriptUrl, responseType: 'text' }, undefined, 'Warnings');
     expect(status).toBe(200);
     expect(typeof data).toBe('string');

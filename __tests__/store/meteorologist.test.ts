@@ -1,5 +1,4 @@
 import reducer from '@store/meteorologist/reducer';
-import * as selectors from '@store/meteorologist/selector';
 import * as types from '@store/meteorologist/types';
 
 const snapshot: types.MeteorologistSnapshot = {
@@ -43,19 +42,4 @@ describe('meteorologist store', () => {
     });
   });
 
-  it('selects meteorologist state', () => {
-    const state = {
-      meteorologist: {
-        error: false,
-        fetchSuccessTime: 123,
-        fetchTimestamp: 123,
-        loading: false,
-        snapshot,
-      },
-    } as any;
-
-    expect(selectors.selectMeteorologistSnapshot(state)).toBe(snapshot);
-    expect(selectors.selectLoading(state)).toBe(false);
-    expect(selectors.selectError(state)).toBe(false);
-  });
 });

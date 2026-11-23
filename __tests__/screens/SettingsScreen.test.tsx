@@ -1,12 +1,10 @@
 import './screenTestMocks';
 
 import React from 'react';
-import { Platform } from 'react-native';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import SettingsScreen from '../../src/screens/SettingsScreen';
 import defaultConfig from '../../defaultConfig';
-import type { MapLibrary } from '../../src/store/settings/types';
 import {
   mockChangeLanguage,
   mockConfigGet,
@@ -21,14 +19,11 @@ const originalBackgroundImagesEnabled =
 
 const createProps = ({
   forecastBackgroundImages = true,
-  mapLibrary = 'react-native-maps',
 }: {
   forecastBackgroundImages?: boolean;
-  mapLibrary?: MapLibrary;
 } = {}) => ({
   clockType: 24,
   geoids: [0, 123, 456],
-  mapLibrary,
   theme: 'light',
   forecastBackgroundImages,
   units: {
@@ -36,7 +31,6 @@ const createProps = ({
   },
   updateClockType: jest.fn(),
   updateLocationsLocales: jest.fn(),
-  updateMapLibrary: jest.fn(),
   updateTheme: jest.fn(),
   updateUnits: jest.fn(),
   updateForecastBackgroundImages: jest.fn(),
@@ -137,38 +131,25 @@ describe('SettingsScreen', () => {
     expect(props.updateForecastBackgroundImages).not.toHaveBeenCalled();
   });
 
-  it('hides map library settings when no base map is configured', async () => {
-    const props = createProps();
-    const { queryByText } = render(<SettingsScreen {...props as any} />);
-
-    await waitFor(() =>
-      expect(mockPermissionsCheckMultiple).toHaveBeenCalledTimes(1)
-    );
-
-    expect(queryByText('settings:mapLibrary')).toBeNull();
-    expect(queryByText('settings:maplibre')).toBeNull();
-    expect(queryByText('settings:appleMaps')).toBeNull();
-    expect(queryByText('settings:googleMaps')).toBeNull();
-    expect(props.updateMapLibrary).not.toHaveBeenCalled();
-  });
-
-  it.each<MapLibrary>(['react-native-maps', 'maplibre'])(
-    'shows map settings with %s selected and forwards a library change when a base map is configured',
-    async (mapLibrary) => {
+  it.each([true, false])(
+    'hides map library settings when base map is configured: %s',
+    async (configured) => {
       const getDefaultConfig = mockConfigGet.getMockImplementation();
       mockConfigGet.mockImplementation((key: string) =>
         key === 'map'
           ? {
-              baseMap: {
-                url: 'https://maps.example.test/styles/',
-                lightStyle: 'light.json',
-                darkStyle: 'dark.json',
-              },
+              baseMap: configured
+                ? {
+                    url: 'https://maps.example.test/styles/',
+                    lightStyle: 'light.json',
+                    darkStyle: 'dark.json',
+                  }
+                : undefined,
             }
           : getDefaultConfig?.(key)
       );
-      const props = createProps({ mapLibrary });
-      const { getByText, getByA11yHint } = render(
+      const props = createProps();
+      const { queryByText } = render(
         <SettingsScreen {...props as any} />
       );
 
@@ -176,34 +157,10 @@ describe('SettingsScreen', () => {
         expect(mockPermissionsCheckMultiple).toHaveBeenCalledTimes(1)
       );
 
-      const nativeMapLabel =
-        Platform.OS === 'ios' ? 'settings:appleMaps' : 'settings:googleMaps';
-      const nativeMapButton = getByA11yHint(
-        `settings:mapLibrarySettingHint ${nativeMapLabel}`
-      );
-      const maplibreButton = getByA11yHint(
-        'settings:mapLibrarySettingHint settings:maplibre'
-      );
-
-      expect(getByText('settings:mapLibrary')).toBeTruthy();
-      expect(getByText(nativeMapLabel)).toBeTruthy();
-      expect(getByText('settings:maplibre')).toBeTruthy();
-      expect(nativeMapButton.props.accessibilityState.selected).toBe(
-        mapLibrary === 'react-native-maps'
-      );
-      expect(maplibreButton.props.accessibilityState.selected).toBe(
-        mapLibrary === 'maplibre'
-      );
-      expect(props.updateMapLibrary).not.toHaveBeenCalled();
-
-      fireEvent.press(
-        mapLibrary === 'react-native-maps' ? maplibreButton : nativeMapButton
-      );
-
-      expect(props.updateMapLibrary).toHaveBeenCalledTimes(1);
-      expect(props.updateMapLibrary).toHaveBeenCalledWith(
-        mapLibrary === 'react-native-maps' ? 'maplibre' : 'react-native-maps'
-      );
+      expect(queryByText('settings:mapLibrary')).toBeNull();
+      expect(queryByText('settings:maplibre')).toBeNull();
+      expect(queryByText('settings:appleMaps')).toBeNull();
+      expect(queryByText('settings:googleMaps')).toBeNull();
     }
   );
 });

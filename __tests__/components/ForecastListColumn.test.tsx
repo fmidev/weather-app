@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text as NativeText, View } from 'react-native';
+import moment from 'moment-timezone';
 
 import ForecastListColumn from '../../src/components/weather/forecast/ForecastListColumn';
 import * as constants from '../../src/store/forecast/constants';
@@ -104,6 +105,7 @@ jest.mock('@utils/number', () => ({
 
 describe('ForecastListColumn', () => {
   beforeEach(() => {
+    moment.tz.setDefault('UTC');
     mockConverter.mockReset();
     mockToPrecision.mockReset();
     mockGetForecastParameterUnitTranslationKey.mockReset();
@@ -117,6 +119,10 @@ describe('ForecastListColumn', () => {
       (unit: string) => unit
     );
     mockGetWindDirection.mockReturnValue(180);
+  });
+
+  afterEach(() => {
+    moment.tz.setDefault();
   });
 
   it('renders forecast values, symbol and accessibility labels', () => {
@@ -176,8 +182,22 @@ describe('ForecastListColumn', () => {
     expect(view.getByText('1013')).toBeTruthy();
     expect(view.getByText('82')).toBeTruthy();
     expect(view.queryByText('500')).toBeNull();
-    expect(view.getByA11yLabel('forecast:params:temperature:5:forecast:C')).toBeTruthy();
-    expect(view.getByA11yLabel(/observation:windDirection:S 4 forecast:m\/s/)).toBeTruthy();
+    const hour = view.getByA11yRole('text');
+    expect(hour.props.accessibilityLabel).toBe(
+      [
+        'forecast:at 03',
+        'symbols:2',
+        'forecast:params:temperature:5:forecast:C',
+        'forecast:params:feelsLike:3:forecast:C',
+        'forecast:params:dewpoint:1:forecast:C',
+        'observation:windDirection:S 4 forecast:m/s',
+        'forecast:params:hourlymaximumgust:9:forecast:m/s',
+        'forecast:params:precipitation1h:1.3:forecast:mm',
+        'forecast:params:pop:<10:%',
+        'forecast:params:pressure:1013:forecast:hPa',
+        'forecast:params:relativeHumidity:82:false',
+      ].join('. ')
+    );
   });
 
   it('formats high and missing precipitation probability values', () => {
@@ -202,7 +222,93 @@ describe('ForecastListColumn', () => {
       />
     );
     expect(missingPop.getByText('-')).toBeTruthy();
-    expect(missingPop.getByA11yLabel('forecast:popMissing')).toBeTruthy();
+    expect(missingPop.getByA11yRole('text').props.accessibilityLabel).toContain(
+      'forecast:popMissing'
+    );
+  });
+
+  it.each([false, true])(
+    'exposes one complete hour and hides its individual fields in compact mode %s',
+    (compact) => {
+      const view = render(
+        <ForecastListColumn
+          compact={compact}
+          clockType={24}
+          data={{ epochtime: 2000000000, temperature: 0, pop: 55 } as any}
+          displayParams={[
+            [0, constants.PRECIPITATION_PROBABILITY],
+            [1, constants.TEMPERATURE],
+            [2, constants.DAY_LENGTH],
+          ]}
+        />
+      );
+
+      const hours = view.getAllByA11yRole('text');
+      expect(hours).toHaveLength(1);
+      const hour = hours[0];
+      expect(hour.props.accessible).toBe(true);
+      expect(hour.props.focusable).toBe(true);
+      expect(hour.props.importantForAccessibility).toBe('yes');
+      expect(hour.props.accessibilityLabel).toBe(
+        'forecast:at 03. forecast:params:pop:60:%. forecast:params:temperature:0:forecast:C'
+      );
+      const content = hour.findByProps({
+        importantForAccessibility: 'no-hide-descendants',
+      });
+      expect(content.props.accessibilityElementsHidden).toBe(true);
+      expect(content.props.accessible).toBe(false);
+      expect(content.props.focusable).toBe(false);
+      expect(
+        content.findAllByType(View).filter(
+          ({ props }) => props.accessible || props.focusable
+        )
+      ).toHaveLength(0);
+      expect(
+        content.findAllByType(NativeText).every(
+          ({ props }) => props.accessible === false
+        )
+      ).toBe(true);
+    }
+  );
+
+  it('updates the whole hour label with selected parameters and units', () => {
+    const props = {
+      clockType: 12 as const,
+      data: {
+        epochtime: 2000000000,
+        temperature: -2,
+        precipitation1h: 1.25,
+      } as any,
+      displayParams: [[0, constants.TEMPERATURE]] as [number, any][],
+    };
+    const view = render(<ForecastListColumn {...props} />);
+    const hour = view.getByA11yRole('text');
+    expect(hour.props.accessibilityLabel).toBe(
+      'forecast:at 3 am. forecast:params:temperature:-2:forecast:C'
+    );
+    mockConverter.mockImplementation((unit, value) =>
+      unit === 'in' ? 0.05 : value
+    );
+
+    view.rerender(
+      <ForecastListColumn
+        {...props}
+        displayParams={[[0, constants.PRECIPITATION_1H]]}
+        units={
+          {
+            precipitation: { unitAbb: 'in', unitPrecision: 2 },
+            temperature: { unitAbb: 'C' },
+            wind: { unitAbb: 'm/s' },
+            pressure: { unitAbb: 'hPa' },
+          } as any
+        }
+      />
+    );
+
+    expect(view.getByA11yRole('text')).toBe(hour);
+    expect(hour.props.accessibilityLabel).toBe(
+      'forecast:at 3 am. forecast:params:precipitation1h:0.05:forecast:in'
+    );
   });
 
   it('keeps the time row height consistent in compact mode', () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
@@ -15,6 +15,7 @@ import { selectClockType } from '@store/settings/selectors';
 import { CustomTheme } from '@assets/colors';
 import Text from '@components/common/AppText';
 import Skeleton from '@components/common/Skeleton';
+import AccessibleView from '@components/common/AccessibleView';
 import Icon from '@assets/Icon';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatAccessibleDateTime } from '@utils/accessibility';
@@ -39,7 +40,6 @@ type MeteorologistSnapshotProps = PropsFromRedux & {
 
 const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   loading,
-  error,
   snapshot,
   clockType,
   gridLayout,
@@ -51,8 +51,15 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
   const marginRight = gridLayout ? insets.right : insets.right + 16;
   const marginTop = 16;
   const minHeight = gridLayout ? 160 : 150;
+  const groupContent = Platform.OS === 'android';
+  const contentAccessibilityProps = {
+    accessible: !groupContent,
+    importantForAccessibility: groupContent ? 'no-hide-descendants' as const : undefined,
+  };
+  const title = 'Meteorologin sääkatsaus';
+  const loadingError = 'Sääkatsauksen hakeminen epäonnistui';
 
-  if (loading) {
+  if (loading && !snapshot) {
     return (
       <View style={{ marginLeft, marginRight, marginTop }}>
         <Skeleton width="100%" height={minHeight} radius={10} />
@@ -60,9 +67,12 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
     );
   }
 
-  if (error || !snapshot) {
+  if (!snapshot) {
     return (
-      <View
+      <AccessibleView
+        accessible={groupContent}
+        accessibilityRole={groupContent ? 'header' : undefined}
+        accessibilityLabel={groupContent ? `${title}. ${loadingError}` : undefined}
         style={[
           styles.box,
           styles.content,
@@ -73,21 +83,32 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
             minHeight,
           },
         ]}>
-        <Text style={[styles.title, { color: colors.primaryText }]}>
-          Meteorologin sääkatsaus
+        <Text {...contentAccessibilityProps} style={[styles.title, { color: colors.primaryText }]}>
+          {title}
         </Text>
-        <Text style={[styles.text, { color: colors.primaryText }]}>
-          Sääkatsauksen hakeminen epäonnistui
+        <Text {...contentAccessibilityProps} style={[styles.text, { color: colors.primaryText }]}>
+          {loadingError}
         </Text>
-      </View>
+      </AccessibleView>
     );
   }
 
   if (snapshot) {
     const updatedMoment = moment(snapshot.date);
+    const accessibleUpdated = formatAccessibleDateTime(updatedMoment, t, clockType === 24);
+    const alertDescription = 'Sääkatsaus sisältää varoituksia';
+    const accessibilityLabel = [
+      title,
+      snapshot.hasAlert ? alertDescription : undefined,
+      accessibleUpdated,
+      snapshot.text,
+    ].filter(Boolean).join('. ');
 
     return (
-      <View
+      <AccessibleView
+        accessible={groupContent}
+        accessibilityRole={groupContent ? 'header' : undefined}
+        accessibilityLabel={groupContent ? accessibilityLabel : undefined}
         style={[
           styles.box,
           styles.content,
@@ -99,28 +120,26 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
           },
         ]}>
         <Text
+          {...contentAccessibilityProps}
           accessibilityRole="header"
           style={[styles.title, { color: colors.primaryText }]}>
-          Meteorologin sääkatsaus
+          {title}
         </Text>
         {snapshot.hasAlert && (
           <Icon
             accessibilityLanguage="fi-FI"
-            accessible={true}
+            {...contentAccessibilityProps}
             accessibilityRole="image"
             style={styles.warningIcon}
-            accessibilityLabel="Sääkatsaus sisältää varoituksia"
+            accessibilityLabel={alertDescription}
             name="warnings"
             size={24}
             color={colors.primaryText}
           />
         )}
         <Text
-          accessibilityLabel={formatAccessibleDateTime(
-            updatedMoment,
-            t,
-            clockType === 24
-          )}
+          {...contentAccessibilityProps}
+          accessibilityLabel={accessibleUpdated}
           style={[styles.updated, { color: colors.primaryText }]}>
           {updatedMoment.formatDateTime(
             'longDateTime',
@@ -128,10 +147,10 @@ const MeteorologistSnapshot: React.FC<MeteorologistSnapshotProps> = ({
             clockType
           )}
         </Text>
-        <Text style={[styles.text, { color: colors.primaryText }]}>
+        <Text {...contentAccessibilityProps} style={[styles.text, { color: colors.primaryText }]}>
           {snapshot.text}
         </Text>
-      </View>
+      </AccessibleView>
     );
   }
 
