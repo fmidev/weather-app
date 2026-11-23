@@ -175,6 +175,7 @@ const accessibilityProps = {
   displayParams: [0, 1, 2] as any,
   showSingleHourlyForecast: false,
   forecastByDay: {},
+  timezone: 'UTC',
 };
 
 describe('Vertical10DaysForecast', () => {
@@ -255,6 +256,7 @@ describe('Vertical10DaysForecast', () => {
     const { getByHintText, getByTestId, getByText, queryByTestId } = render(
       <Vertical10DaysForecast
         dayData={dayData as any}
+        timezone="UTC"
         units={
           {
             temperature: { unitAbb: 'C' },
@@ -355,6 +357,7 @@ describe('Vertical10DaysForecast', () => {
     const view = render(
       <Vertical10DaysForecast
         dayData={dayData as any}
+        timezone="UTC"
         units={
           {
             temperature: { unitAbb: 'C' },
@@ -399,6 +402,7 @@ describe('Vertical10DaysForecast', () => {
     const view = render(
       <Vertical10DaysForecast
         dayData={dayData as any}
+        timezone="UTC"
         units={
           {
             temperature: { unitAbb: 'C' },
@@ -452,6 +456,7 @@ describe('Vertical10DaysForecast', () => {
     const view = render(
       <Vertical10DaysForecast
         dayData={dayData as any}
+        timezone="UTC"
         units={units}
         invalidData={false}
         displayParams={[0, 1, 2] as any}
@@ -468,6 +473,7 @@ describe('Vertical10DaysForecast', () => {
     view.rerender(
       <Vertical10DaysForecast
         dayData={dayData as any}
+        timezone="UTC"
         units={units}
         invalidData={false}
         displayParams={[0, 1, 2] as any}
@@ -488,6 +494,7 @@ describe('Vertical10DaysForecast', () => {
     const timeStamp = 2000000000;
     const view = render(
       <Vertical10DaysForecast
+        timezone="UTC"
         dayData={
           [
             {
@@ -530,6 +537,133 @@ describe('Vertical10DaysForecast', () => {
       data: [{ epochtime: timeStamp }],
       initialScrollHour: undefined,
     });
+  });
+
+  it('preserves the day button and hourly forecast when the first timestep changes within the local day', () => {
+    const firstTimestamp = Date.parse('2035-06-01T22:00:00Z') / 1000;
+    const nextTimestamp = Date.parse('2035-06-02T01:00:00Z') / 1000;
+    const props = {
+      ...accessibilityProps,
+      timezone: 'Europe/Helsinki',
+      dayData: [{ ...accessibilityProps.dayData[0], timeStamp: firstTimestamp }],
+      forecastByDay: { '2.6.': [{ epochtime: firstTimestamp }] } as any,
+    };
+    const view = render(<Vertical10DaysForecast {...props} />);
+    const dayButton = view.getByHintText('Show hourly forecast');
+    fireEvent.press(dayButton);
+    const hourlyContainer = view.getByTestId('hourly-forecast-0');
+    const hourlyContent = view.getByTestId('hourly-forecast-content');
+    expect(mockHourlyForecast).toHaveBeenLastCalledWith({
+      data: props.forecastByDay['2.6.'],
+      initialScrollHour: 8,
+    });
+
+    const updatedHourlyData = [{ epochtime: nextTimestamp }];
+    view.rerender(
+      <Vertical10DaysForecast
+        {...props}
+        dayData={[
+          { ...props.dayData[0], timeStamp: nextTimestamp, maxTemperature: 12 },
+        ]}
+        forecastByDay={{ '2.6.': updatedHourlyData } as any}
+      />
+    );
+
+    expect(view.getByHintText('Hide hourly forecast')).toBe(dayButton);
+    expect(dayButton.props.accessibilityLabel).toContain('12');
+    expect(view.getByTestId('hourly-forecast-0')).toBe(hourlyContainer);
+    expect(view.getByTestId('hourly-forecast-content')).toBe(hourlyContent);
+    expect(mockHourlyForecast).toHaveBeenLastCalledWith({
+      data: updatedHourlyData,
+      initialScrollHour: 8,
+    });
+  });
+
+  it.each([false, true])(
+    'keeps the same date expanded at midnight with single forecast mode %s',
+    (showSingleHourlyForecast) => {
+      const firstTimestamp = Date.parse('2035-06-01T20:00:00Z') / 1000;
+      const secondTimestamp = Date.parse('2035-06-01T21:00:00Z') / 1000;
+      const thirdTimestamp = Date.parse('2035-06-02T21:00:00Z') / 1000;
+      const dayData = [firstTimestamp, secondTimestamp, thirdTimestamp].map(
+        (timeStamp) => ({ ...accessibilityProps.dayData[0], timeStamp })
+      );
+      const props = {
+        ...accessibilityProps,
+        timezone: 'Europe/Helsinki',
+        showSingleHourlyForecast,
+        dayData,
+      };
+      const view = render(<Vertical10DaysForecast {...props} />);
+      const dayButton = view.getAllByHintText('Show hourly forecast')[1];
+      fireEvent.press(dayButton);
+      const hourlyContainer = view.getByTestId('hourly-forecast-1');
+      const hourlyContent = view.getByTestId('hourly-forecast-content');
+
+      view.rerender(
+        <Vertical10DaysForecast
+          {...props}
+          dayData={[
+            { ...dayData[1], timeStamp: secondTimestamp + 3600 },
+            dayData[2],
+          ]}
+        />
+      );
+
+      expect(view.getByHintText('Hide hourly forecast')).toBe(dayButton);
+      expect(view.getByTestId('hourly-forecast-0')).toBe(hourlyContainer);
+      expect(view.getByTestId('hourly-forecast-content')).toBe(hourlyContent);
+      expect(view.queryByTestId('hourly-forecast-1')).toBeNull();
+    }
+  );
+
+  it('does not expand the next date when an expanded date disappears', () => {
+    const firstTimestamp = Date.parse('2035-06-01T23:00:00Z') / 1000;
+    const secondTimestamp = Date.parse('2035-06-02T00:00:00Z') / 1000;
+    const dayData = [firstTimestamp, secondTimestamp].map((timeStamp) => ({
+      ...accessibilityProps.dayData[0],
+      timeStamp,
+    }));
+    const view = render(
+      <Vertical10DaysForecast {...accessibilityProps} dayData={dayData} />
+    );
+    fireEvent.press(view.getAllByHintText('Show hourly forecast')[0]);
+
+    view.rerender(
+      <Vertical10DaysForecast {...accessibilityProps} dayData={[dayData[1]]} />
+    );
+
+    expect(
+      view.getByHintText('Show hourly forecast').props.accessibilityState
+    ).toEqual({ expanded: false });
+    expect(view.queryByTestId('hourly-forecast-0')).toBeNull();
+  });
+
+  it('discards removed dates before selecting the remaining expanded date in single forecast mode', () => {
+    const firstTimestamp = Date.parse('2035-06-01T23:00:00Z') / 1000;
+    const secondTimestamp = Date.parse('2035-06-02T00:00:00Z') / 1000;
+    const dayData = [firstTimestamp, secondTimestamp].map((timeStamp) => ({
+      ...accessibilityProps.dayData[0],
+      timeStamp,
+    }));
+    const view = render(
+      <Vertical10DaysForecast {...accessibilityProps} dayData={dayData} />
+    );
+    fireEvent.press(view.getAllByHintText('Show hourly forecast')[0]);
+    fireEvent.press(view.getByHintText('Show hourly forecast'));
+    const dayButton = view.getAllByHintText('Hide hourly forecast')[1];
+    const hourlyContainer = view.getByTestId('hourly-forecast-1');
+
+    view.rerender(
+      <Vertical10DaysForecast
+        {...accessibilityProps}
+        dayData={[dayData[1]]}
+        showSingleHourlyForecast
+      />
+    );
+
+    expect(view.getByHintText('Hide hourly forecast')).toBe(dayButton);
+    expect(view.getByTestId('hourly-forecast-0')).toBe(hourlyContainer);
   });
 
   it('only includes visible parameters in the day button description', () => {

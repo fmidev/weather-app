@@ -1,12 +1,12 @@
 import React from 'react';
 import { AccessibilityInfo, findNodeHandle } from 'react-native';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { trackMatomoEvent } from '@utils/matomo';
 
 import { ScreenHeaderItemsContext } from '../../src/navigators/ScreenHeaderItemsContext';
 import WarningsPanel from '../../src/components/warnings/WarningsPanel';
 
+const mockRoute = { params: { day: 0 } };
 const mockSheetOpen = jest.fn();
 let mockVerticalBarLayout = false;
 
@@ -41,8 +41,11 @@ jest.mock('@react-navigation/native', () => ({
       border: '#dddddd',
     },
   }),
-  useRoute: () => ({ params: {} }),
-  useFocusEffect: jest.fn(),
+  useRoute: () => mockRoute,
+  useFocusEffect: (callback: () => void | (() => void)) => {
+    const { useEffect } = require('react');
+    useEffect(callback, [callback]);
+  },
 }));
 
 jest.mock('react-i18next', () => ({
@@ -70,6 +73,30 @@ jest.mock('@utils/matomo', () => ({
   trackMatomoEvent: jest.fn(),
 }));
 
+const baseProps = {
+  dailyWarnings: Array.from({ length: 5 }, (_, index) => ({
+    date: Date.parse('2035-06-01T00:00:00Z') + index * 86400000,
+    severity: 0,
+    type: undefined,
+    count: 0,
+    warnings: [],
+  })),
+  location: { name: 'Helsinki' } as any,
+  loading: false,
+  error: false as const,
+};
+
+const renderPanel = (overrides: Partial<typeof baseProps> = {}) =>
+  render(<WarningsPanel {...baseProps} {...overrides} />, {
+    createNodeMock: () => ({}),
+  });
+
+const layoutHeader = (view: ReturnType<typeof render>) =>
+  fireEvent(view.getByA11yRole('header'), 'layout', {
+    currentTarget: 42,
+    nativeEvent: { layout: { x: 0, y: 0, width: 200, height: 40 } },
+  });
+
 describe('WarningsPanel', () => {
   const warning = {
     type: 'wind',
@@ -94,15 +121,17 @@ describe('WarningsPanel', () => {
     error: false,
   };
 
-  const renderPanel = () => render(<WarningsPanel {...props as any} />, {
+  const renderWarningPanel = () => render(<WarningsPanel {...props as any} />, {
     createNodeMock: (element) => ({ props: element.props }),
   });
 
   beforeEach(() => {
     jest.useFakeTimers();
     jest.clearAllMocks();
+    mockRoute.params.day = 0;
     mockVerticalBarLayout = false;
     jest.spyOn(require('react-native'), 'findNodeHandle').mockReturnValue(42);
+    jest.spyOn(AccessibilityInfo, 'sendAccessibilityEvent').mockImplementation(() => {});
     jest.spyOn(AccessibilityInfo, 'setAccessibilityFocus').mockImplementation(() => {});
     jest.spyOn(globalThis, 'requestAnimationFrame').mockImplementation(callback =>
       setTimeout(() => callback(0), 0) as unknown as number
@@ -130,8 +159,49 @@ describe('WarningsPanel', () => {
     expect(getAllByTestId('skeleton')).toHaveLength(3);
   });
 
-  it('appends the translated warning types to the day label', () => {
+  it('does not refocus the header when the user selects another day', () => {
     const view = renderPanel();
+    layoutHeader(view);
+    const secondDay = view.getAllByA11yRole('button')[2];
+
+    fireEvent.press(secondDay);
+
+    expect(secondDay.props.accessibilityState).toEqual({ selected: true });
+    layoutHeader(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not refocus the header when warning data or route day changes', () => {
+    const view = renderPanel();
+    layoutHeader(view);
+
+    mockRoute.params.day = 2;
+    view.rerender(
+      <WarningsPanel
+        {...baseProps}
+        dailyWarnings={baseProps.dailyWarnings.map((day) => ({ ...day, count: 1 }))}
+      />
+    );
+
+    expect(view.getAllByA11yRole('button')[3].props.accessibilityState)
+      .toEqual({ selected: true });
+    layoutHeader(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits for the initial load and header layout before focusing', () => {
+    const view = renderPanel({ loading: true });
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+
+    view.rerender(<WarningsPanel {...baseProps} />);
+    expect(AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
+    layoutHeader(view);
+
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
+  });
+
+  it('appends the translated warning types to the day label', () => {
+    const view = renderWarningPanel();
 
     expect(view.getByA11yLabel(/Wednesday/).props.accessibilityLabel).toBe(
       'Wednesday 04 November, hasWarnings: 2, warnings:severities:moderate, types.wind, types.rain'
@@ -139,7 +209,7 @@ describe('WarningsPanel', () => {
   });
 
   it('excludes the panel wrapper and count badges from Android accessibility while keeping the controls', () => {
-    const view = renderPanel();
+    const view = renderWarningPanel();
     const panel = view.getByTestId('warnings_panel');
     expect(panel.props.accessible).toBe(false);
     expect(panel.props.importantForAccessibility).toBe('no');
@@ -149,17 +219,18 @@ describe('WarningsPanel', () => {
     expect(view.getByA11yLabel(/Wednesday/).props.accessibilityRole).toBe('button');
     expect(view.getByTestId('warnings_info_button').props.accessibilityRole).toBe('button');
 
-    act(() => jest.mocked(useFocusEffect).mock.calls.slice(-1)[0][0]());
-    expect(findNodeHandle).toHaveBeenLastCalledWith(
+    layoutHeader(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenLastCalledWith(
       expect.objectContaining({ props: expect.objectContaining({
         accessible: true,
         accessibilityRole: 'header',
-      }) })
+      }) }),
+      'focus'
     );
   });
 
   it('keeps the day label unchanged when there are no warnings', () => {
-    const view = renderPanel();
+    const view = renderWarningPanel();
 
     expect(view.getByA11yLabel(/Tuesday/).props.accessibilityLabel).toBe(
       'Tuesday 03 November, hasWarnings: 0, warnings:severities:safe'
@@ -186,9 +257,9 @@ describe('WarningsPanel', () => {
   });
 
   it('focuses the first warning after selecting a day, including selecting it again', () => {
-    const view = renderPanel();
+    const view = renderWarningPanel();
+    layoutHeader(view);
     expect(AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
-    const headerFocus = jest.mocked(useFocusEffect).mock.calls[0][0];
 
     fireEvent.press(view.getByA11yLabel(/Wednesday/));
     expect(AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
@@ -201,7 +272,8 @@ describe('WarningsPanel', () => {
       }) })
     );
     expect(AccessibilityInfo.setAccessibilityFocus).toHaveBeenCalledWith(42);
-    expect(jest.mocked(useFocusEffect).mock.calls.slice(-1)[0][0]).toBe(headerFocus);
+    layoutHeader(view);
+    expect(AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
     expect(trackMatomoEvent).toHaveBeenCalledWith(
       'User action', 'Warnings', 'Select day 2 / (2 warnings) / moderate'
     );
@@ -212,7 +284,7 @@ describe('WarningsPanel', () => {
   });
 
   it('focuses the no-warnings message when the selected day has no warnings', () => {
-    const view = renderPanel();
+    const view = renderWarningPanel();
     fireEvent.press(view.getByA11yLabel(/Tuesday/));
     act(() => jest.advanceTimersByTime(20));
 
@@ -228,7 +300,7 @@ describe('WarningsPanel', () => {
   });
 
   it('cancels a pending focus request when the panel unmounts', () => {
-    const view = renderPanel();
+    const view = renderWarningPanel();
     fireEvent.press(view.getByA11yLabel(/Wednesday/));
     view.unmount();
     act(() => jest.advanceTimersByTime(20));

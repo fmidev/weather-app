@@ -54,8 +54,7 @@ describe('AccessibilityScreen', () => {
       mockTransitionListeners.set(event, callback);
       return () => mockTransitionListeners.delete(event);
     });
-    jest.spyOn(ReactNative, 'findNodeHandle').mockReturnValue(42);
-    jest.spyOn(ReactNative.AccessibilityInfo, 'setAccessibilityFocus').mockImplementation(() => {});
+    jest.spyOn(ReactNative.AccessibilityInfo, 'sendAccessibilityEvent').mockImplementation(() => {});
     jest.spyOn(globalThis, 'requestAnimationFrame').mockImplementation((callback) => {
       mockNextFrame += 1;
       mockFrames.set(mockNextFrame, callback);
@@ -142,13 +141,15 @@ describe('AccessibilityScreen', () => {
     if (order === 'layout first') layoutHeading();
     else finishTransition();
     flushFrames();
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
 
     if (order === 'layout first') finishTransition();
     else layoutHeading();
     flushFrames();
-    expect(ReactNative.findNodeHandle).toHaveBeenCalledWith(getRendererOptions().headingRef!.current);
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).toHaveBeenCalledWith(42);
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledWith(
+      getRendererOptions().headingRef!.current,
+      'focus'
+    );
   });
 
   it('does not refocus or replace the renderer on rerenders or repeated layout', () => {
@@ -161,21 +162,23 @@ describe('AccessibilityScreen', () => {
     finishTransition();
     flushFrames();
     expect(MarkdownRenderer).toHaveBeenCalledTimes(1);
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).toHaveBeenCalledTimes(1);
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
   });
 
-  it('waits for a native heading handle before focusing', () => {
-    jest.mocked(ReactNative.findNodeHandle).mockReturnValue(undefined);
+  it('waits for a native heading reference before focusing', () => {
     render(<AccessibilityScreen />);
     layoutHeading();
+    getRendererOptions().headingRef!.current = null;
     finishTransition();
     flushFrames();
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
 
-    jest.mocked(ReactNative.findNodeHandle).mockReturnValue(42);
     layoutHeading();
     flushFrames();
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).toHaveBeenCalledWith(42);
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledWith(
+      getRendererOptions().headingRef!.current,
+      'focus'
+    );
   });
 
   it('cancels pending focus on blur and focuses again when returning without a stack transition', () => {
@@ -185,13 +188,13 @@ describe('AccessibilityScreen', () => {
     mockState.focused = false;
     screen.rerender(<AccessibilityScreen />);
     flushFrames();
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
     expect(mockTransitionListeners.size).toBe(0);
 
     mockState.focused = true;
     screen.rerender(<AccessibilityScreen />);
     flushFrames();
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).toHaveBeenCalledTimes(1);
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).toHaveBeenCalledTimes(1);
   });
 
   it('cancels pending focus and removes listeners on unmount', () => {
@@ -200,7 +203,7 @@ describe('AccessibilityScreen', () => {
     finishTransition();
     screen.unmount();
     flushFrames();
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
     expect(mockTransitionListeners.size).toBe(0);
   });
 
@@ -209,10 +212,10 @@ describe('AccessibilityScreen', () => {
     layoutHeading();
     finishTransition(true);
     flushFrames();
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
     finishTransition();
     getRendererOptions().headingRef!.current = null;
     flushFrames();
-    expect(ReactNative.AccessibilityInfo.setAccessibilityFocus).not.toHaveBeenCalled();
+    expect(ReactNative.AccessibilityInfo.sendAccessibilityEvent).not.toHaveBeenCalled();
   });
 });

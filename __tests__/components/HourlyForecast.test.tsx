@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { FlatList, StyleSheet } from 'react-native';
+import moment from 'moment-timezone';
 
 import HourlyForecast from '../../src/components/weather/forecast/HourlyForecast';
 import * as constants from '../../src/store/forecast/constants';
@@ -121,10 +122,15 @@ const makeData = (count: number) =>
 
 describe('HourlyForecast', () => {
   beforeEach(() => {
+    moment.tz.setDefault('UTC');
     mockBackground = '#ffffff';
     mockDark = false;
     mockForecastListColumn.mockClear();
     mockForecastListHeaderColumn.mockClear();
+  });
+
+  afterEach(() => {
+    moment.tz.setDefault();
   });
 
   it('returns null without data', () => {
@@ -174,6 +180,40 @@ describe('HourlyForecast', () => {
         compact: true,
       })
     );
+  });
+
+  it('preserves the day duration accessibility targets when forecast data changes', () => {
+    const props = {
+      data: makeData(3) as any,
+      displayParams: [[0, constants.DAY_LENGTH]] as any,
+      clockType: 24 as const,
+      units: {} as any,
+    };
+    const view = render(<HourlyForecast {...props} />);
+    const row = view.getByTestId('day_duration');
+    const sunrise = view.getByA11yLabel('sunrise at 03.00');
+    const sunset = view.getByA11yLabel('sunset at 21.00');
+    const duration = view.getByA11yLabel('dayLength 18 hours 0 minutes');
+
+    view.rerender(
+      <HourlyForecast
+        {...props}
+        data={[
+          ...makeData(2),
+          {
+            ...makeData(3)[2],
+            sunrise: '2033-05-18T04:15:00',
+            sunset: '2033-05-18T20:30:00',
+            dayLength: 975,
+          },
+        ] as any}
+      />
+    );
+
+    expect(view.getByTestId('day_duration')).toBe(row);
+    expect(view.getByA11yLabel('sunrise at 04.15')).toBe(sunrise);
+    expect(view.getByA11yLabel('sunset at 20.30')).toBe(sunset);
+    expect(view.getByA11yLabel('dayLength 16 hours 15 minutes')).toBe(duration);
   });
 
   it('omits day duration when it is not configured', () => {

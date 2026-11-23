@@ -1,7 +1,11 @@
 import { Selector, createSelector } from 'reselect';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
-import { selectFavorites, selectGeoid } from '@store/location/selector';
+import {
+  selectFavorites,
+  selectGeoid,
+  selectTimeZone,
+} from '@store/location/selector';
 import { Config } from '@config';
 import { getIndexForDaySmartSymbol } from '@utils/helpers';
 import { State } from '../types';
@@ -106,8 +110,8 @@ export const selectForecastInvalidData = createSelector(
 );
 
 export const selectForecastByDay = createSelector(
-  [selectForecast],
-  (forecast) =>
+  [selectForecast, selectTimeZone],
+  (forecast, timezone) =>
     forecast &&
     forecast.length > 0 &&
     forecast.reduce(
@@ -117,7 +121,7 @@ export const selectForecastByDay = createSelector(
       ): {
         [key: string]: TimeStepData[];
       } => {
-        const day = moment.unix(curr.epochtime).format('D.M.');
+        const day = moment.unix(curr.epochtime).tz(timezone).format('D.M.');
         if (acc[day]) {
           return { ...acc, [day]: acc[day].concat(curr) };
         }
