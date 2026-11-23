@@ -33,7 +33,15 @@ const getDailyWarnings = () => {
 };
 
 const dayLabel = (day: ReturnType<typeof getDailyWarnings>[number]) =>
-  `${moment(day.date).format('dddd DD MMMM')}, ${i18n.t('warnings:hasWarnings')}: ${day.count}, ${i18n.t(`warnings:severities:${day.severity}`)}`;
+  [
+    moment(day.date).format('dddd DD MMMM'),
+    `${i18n.t('warnings:hasWarnings')}: ${day.count}`,
+    i18n.t(`warnings:severities:${day.severity}`),
+    ...Array.from(
+      new Set(day.warnings.map(({ type }) => type)),
+      type => i18n.t(`warnings:types.${type}`)
+    ),
+  ].join(', ');
 
 describe('WarningsScreen with live defaultConfig APIs', () => {
   beforeAll(async () => {
