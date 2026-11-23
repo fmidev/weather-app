@@ -2,6 +2,8 @@ import React from 'react';
 import { Text } from 'react-native';
 import { act, render, waitFor } from '@testing-library/react-native';
 import { Provider } from 'react-redux';
+import Icon from '@assets/Icon';
+import { GRAY_8 } from '@assets/colors';
 
 import MlMapView from '../../src/components/map/maps/MlMapView';
 import getMapStyle from '@network/MapStyleApi';
@@ -244,6 +246,38 @@ describe('MlMapView', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+  });
+
+  it('updates the location marker color when switching between light and dark themes', () => {
+    const store = createStore({
+      mock: {
+        currentLocation: { lat: 60.17, lon: 24.94 },
+        displayLocation: true,
+        timezone: 'Europe/Helsinki',
+        sessionId: 123,
+      },
+    });
+    const element = () => (
+      <Provider store={store as any}>
+        <MlMapView
+          infoSheetRef={{ current: null }}
+          mapLayersSheetRef={{ current: null }}
+        />
+      </Provider>
+    );
+    const screen = render(element());
+    const getMarker = () => screen.UNSAFE_getByType(Icon);
+
+    expect(getMarker().props.name).toBe('map-marker');
+    expect(getMarker().props.color).toBeUndefined();
+
+    mockAppearance.dark = true;
+    screen.rerender(element());
+    expect(getMarker().props.color).toBe(GRAY_8);
+
+    mockAppearance.dark = false;
+    screen.rerender(element());
+    expect(getMarker().props.color).toBeUndefined();
   });
 
   it('dispatches overlay update and renders WMS overlay after style is ready', async () => {

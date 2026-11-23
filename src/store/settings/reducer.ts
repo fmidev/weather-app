@@ -1,4 +1,5 @@
 import { PersistConfig } from '@store/types';
+import type { PersistConfig as ReduxPersistConfig } from 'redux-persist';
 import { getDefaultUnits } from '@utils/units';
 import defaultConfig from '../../../defaultConfig';
 import {
@@ -7,7 +8,6 @@ import {
   SettingsState,
   SettingsActionTypes,
   UPDATE_CLOCK_TYPE,
-  UPDATE_MAP_LIBRARY,
   UPDATE_FORECAST_BACKGROUND_IMAGES,
   SET_IS_RUNNING_ON_MAC,
 } from './types';
@@ -21,7 +21,6 @@ const INITIAL_STATE: SettingsState = {
   units: getDefaultUnits(),
   theme: undefined,
   clockType: undefined,
-  mapLibrary: 'react-native-maps',
   forecastBackgroundImages: defaultConfig.weather.backgroundImagesEnabled ?? true,
   sessionId: generateSessionId(),
   isRunningOnMac: false,
@@ -54,13 +53,6 @@ export default (
       };
     }
 
-    case UPDATE_MAP_LIBRARY: {
-      return {
-        ...state,
-        mapLibrary: action.library,
-      };
-    }
-
     case SET_IS_RUNNING_ON_MAC: {
       return {
         ...state,
@@ -81,13 +73,21 @@ export default (
   }
 };
 
-export const settingsPersist: PersistConfig = {
+export const settingsPersist: PersistConfig &
+  Pick<ReduxPersistConfig<SettingsState>, 'migrate'> = {
   key: 'settings',
   whitelist: [
     'theme',
     'clockType',
     'units',
-    'mapLibrary',
     'forecastBackgroundImages',
   ],
+  migrate: async (state) => {
+    if (!state) return state;
+
+    // Removing a key from the whitelist alone does not prevent its rehydration.
+    const settings = { ...state } as typeof state & { mapLibrary?: unknown };
+    delete settings.mapLibrary;
+    return settings;
+  },
 };

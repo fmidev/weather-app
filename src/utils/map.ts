@@ -3,10 +3,9 @@ import moment from 'moment';
 import { XMLParser } from 'fast-xml-parser';
 import { LogManager } from '@maplibre/maplibre-react-native';
 
-import { MapOverlay } from '@store/map/types';
+import { MapLibrary, MapOverlay } from '@store/map/types';
 import { Config, MapLayer, TimeseriesSource, WMSSource } from '@config';
 import i18n from '@i18n';
-import type { MapLibrary } from '@store/settings/types';
 
 import axiosClient from './axiosClient';
 import packageJSON from '../../package.json';

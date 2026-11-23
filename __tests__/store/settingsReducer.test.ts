@@ -51,7 +51,7 @@ const startStore = async (preference?: boolean) => {
   return store;
 };
 
-describe('settings reducer background image initialization', () => {
+describe('settings reducer initialization and persistence', () => {
   beforeEach(async () => {
     jest.resetModules();
     mockBackgroundImagesEnabled = undefined;
@@ -121,4 +121,32 @@ describe('settings reducer background image initialization', () => {
     expect(store.getState().forecastBackgroundImages).toBe(false);
     expect(store.getState().theme).toBe('dark');
   });
+
+  it.each(['maplibre', 'react-native-maps'])(
+    'drops the legacy map library preference %s when restoring settings',
+    async (mapLibrary) => {
+      await AsyncStorage.setItem(
+        'persist:settings',
+        JSON.stringify({
+          mapLibrary: JSON.stringify(mapLibrary),
+          theme: JSON.stringify('dark'),
+          clockType: JSON.stringify(12),
+          forecastBackgroundImages: JSON.stringify(false),
+        })
+      );
+
+      const store = await startStore();
+
+      expect(store.getState()).not.toHaveProperty('mapLibrary');
+      expect(store.getState()).toMatchObject({
+        theme: 'dark',
+        clockType: 12,
+        forecastBackgroundImages: false,
+      });
+      const storedSettings = JSON.parse(
+        (await AsyncStorage.getItem('persist:settings'))!
+      );
+      expect(storedSettings).not.toHaveProperty('mapLibrary');
+    }
+  );
 });

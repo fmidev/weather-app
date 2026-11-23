@@ -48,7 +48,6 @@ describe('settings reducer', () => {
           units,
           theme: 'automatic',
           clockType: 24,
-          mapLibrary: 'react-native-maps',
           forecastBackgroundImages: true,
           sessionId: 123,
           isRunningOnMac: false,
@@ -78,7 +77,6 @@ describe('settings reducer', () => {
         },
       },
       clockType: 24,
-      mapLibrary: 'react-native-maps',
       forecastBackgroundImages: true,
       sessionId: 123,
       isRunningOnMac: false,
@@ -93,7 +91,6 @@ describe('settings reducer', () => {
       units: defaultUnits,
       theme: 'light',
       clockType: undefined,
-      mapLibrary: 'react-native-maps',
       forecastBackgroundImages: true,
       sessionId: expect.any(Number),
       isRunningOnMac: false,
@@ -108,24 +105,6 @@ describe('settings reducer', () => {
       units: defaultUnits,
       theme: undefined,
       clockType: 24,
-      mapLibrary: 'react-native-maps',
-      forecastBackgroundImages: true,
-      sessionId: expect.any(Number),
-      isRunningOnMac: false,
-    });
-  });
-
-  it('should handle UPDATE_MAP_LIBRARY', () => {
-    expect(
-      reducer(undefined, {
-        type: types.UPDATE_MAP_LIBRARY,
-        library: 'maplibre',
-      })
-    ).toEqual({
-      units: getDefaultUnits(),
-      theme: undefined,
-      clockType: undefined,
-      mapLibrary: 'maplibre',
       forecastBackgroundImages: true,
       sessionId: expect.any(Number),
       isRunningOnMac: false,
@@ -145,7 +124,6 @@ describe('settings reducer', () => {
     const state = {
       settings: {
         clockType: 24,
-        mapLibrary: 'maplibre',
         theme: 'dark',
         sessionId: 456,
         isRunningOnMac: true,
@@ -163,7 +141,6 @@ describe('settings reducer', () => {
     expect(selectors.selectUnits(state)).toEqual(state.settings.units);
     expect(selectors.selectTheme(state)).toBe('dark');
     expect(selectors.selectClockType(state)).toBe(24);
-    expect(selectors.selectMapLibrary(state)).toBe('maplibre');
     expect(selectors.selectSessionId(state)).toBe(456);
     expect(selectors.selectIsRunningOnMac(state)).toBe(true);
   });
@@ -236,7 +213,6 @@ describe('settings reducer', () => {
     actions.updateUnits('temperature', unit)(dispatch);
     actions.updateTheme('automatic')(dispatch);
     actions.updateClockType(12)(dispatch);
-    actions.updateMapLibrary('maplibre')(dispatch);
     actions.setIsRunningOnMac(true)(dispatch);
 
     expect(dispatch).toHaveBeenCalledWith({
@@ -252,10 +228,6 @@ describe('settings reducer', () => {
       clockType: 12,
     });
     expect(dispatch).toHaveBeenCalledWith({
-      type: types.UPDATE_MAP_LIBRARY,
-      library: 'maplibre',
-    });
-    expect(dispatch).toHaveBeenCalledWith({
       type: types.SET_IS_RUNNING_ON_MAC,
       isRunningOnMac: true,
     });
@@ -269,7 +241,6 @@ const createState = (
   ({
     settings: {
       clockType: undefined,
-      mapLibrary: 'react-native-maps',
       theme,
       units: getDefaultUnits(),
       cacheKey,

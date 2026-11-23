@@ -66,10 +66,6 @@ jest.mock('@store/map/selectors', () => ({
   selectOverlaysError: (state: any) => state.mock.overlaysError,
 }));
 
-jest.mock('@store/settings/selectors', () => ({
-  selectMapLibrary: (state: any) => state.mock.mapLibrary,
-}));
-
 const mockFetchForecast = jest.fn((...args: any[]) => ({
   type: 'FORECAST/FETCH',
   payload: { location: args[0], country: args[1] },
@@ -84,7 +80,7 @@ const mockFetchWarnings = jest.fn((...args: any[]) => ({
 }));
 const mockUpdateOverlays = jest.fn((...args: any[]) => ({
   type: 'MAP/UPDATE_OVERLAYS',
-  payload: { activeOverlay: args[0], mapLibrary: args[1] },
+  payload: { activeOverlay: args[0], library: args[1] },
 }));
 
 jest.mock('@store/forecast/actions', () => ({
@@ -165,7 +161,6 @@ describe('ErrorComponent', () => {
         warningsError: undefined,
         activeOverlay: 3,
         overlaysError: undefined,
-        mapLibrary: 'maplibre',
       },
     });
 
@@ -201,7 +196,6 @@ describe('ErrorComponent', () => {
         warningsError: undefined,
         activeOverlay: 7,
         overlaysError: undefined,
-        mapLibrary: 'maplibre',
       },
     });
 
@@ -245,7 +239,6 @@ describe('ErrorComponent', () => {
         warningsError: undefined,
         activeOverlay: 7,
         overlaysError: undefined,
-        mapLibrary: 'maplibre',
       },
     });
 
@@ -266,6 +259,50 @@ describe('ErrorComponent', () => {
     expect(queryByText('Try again')).toBeNull();
   });
 
+  it.each([true, false])(
+    'retries map overlays using base map configuration (%s)',
+    async (configured) => {
+      const defaultConfigGet = mockConfigGet.getMockImplementation();
+      mockConfigGet.mockImplementation((key: string) =>
+        key === 'map'
+          ? {
+              baseMap: configured
+                ? {
+                    url: 'https://maps.example.test/styles/',
+                    lightStyle: 'light.json',
+                    darkStyle: 'dark.json',
+                  }
+                : undefined,
+            }
+          : defaultConfigGet?.(key)
+      );
+      const store = createStore({
+        mock: {
+          location: { id: 42, lat: 60.1699, lon: 24.9384, country: 'FI' },
+          activeOverlay: 7,
+          overlaysError: true,
+        },
+      });
+      const view = render(
+        <Provider store={store as any}>
+          <ErrorComponent
+            navReady
+            currentRoute={{ name: 'StackMap', key: 'map' }}
+          />
+        </Provider>
+      );
+      await flushEffects();
+
+      expect(view.getByText('Map error')).toBeTruthy();
+      fireEvent.press(view.getByText('Try again'));
+
+      expect(mockUpdateOverlays).toHaveBeenCalledWith(
+        7,
+        configured ? 'maplibre' : 'react-native-maps'
+      );
+    }
+  );
+
   describe('available forecasts', () => {
     const forecast = [{ epochtime: 1, temperature: 5 }];
     const initialState = {
@@ -278,7 +315,6 @@ describe('ErrorComponent', () => {
         warningsError: undefined,
         activeOverlay: 7,
         overlaysError: undefined,
-        mapLibrary: 'maplibre',
       },
     };
 

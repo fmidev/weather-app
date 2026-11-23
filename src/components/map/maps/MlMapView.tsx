@@ -51,6 +51,7 @@ import {
   mergeMapStyles,
 } from '@utils/mapStyle';
 import Icon from '@assets/Icon';
+import { GRAY_8 } from '@assets/colors';
 import { useTranslation } from 'react-i18next';
 import type { Position } from 'geojson';
 import { trackMatomoEvent } from '@utils/matomo';
@@ -411,7 +412,11 @@ const MlMapView: React.FC<MapViewProps> = ({
             id="location-marker"
             lngLat={[initialRegion.longitude, initialRegion.latitude]}
             anchor="bottom">
-            <Icon name="map-marker" size={22} />
+            <Icon
+              name="map-marker"
+              size={22}
+              color={dark ? GRAY_8 : undefined}
+            />
           </ViewAnnotation>
         )}
       </Map>

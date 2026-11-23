@@ -6,12 +6,11 @@ import { Region } from 'react-native-maps';
 import type { Position } from "geojson";
 
 import { State } from '@store/types';
-import { MapOverlay } from '@store/map/types';
+import { MapLibrary, MapOverlay } from '@store/map/types';
 import { selectSliderTime, selectRegion } from '@store/map/selectors';
 
 import TimeseriesMarker from './TimeseriesMarker';
 import MlTimeseriesMarker from './MlTimeseriesMarker';
-import { MapLibrary } from '@store/settings/types';
 
 const mapStateToProps = (state: State) => ({
   region: selectRegion(state),
