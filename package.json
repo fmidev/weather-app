@@ -35,7 +35,7 @@
     "@react-navigation/native-stack": "7.21.1",
     "@react-navigation/stack": "7.12.2",
     "@shopify/react-native-skia": "2.14.0",
-    "@swmansion/react-native-bottom-sheet": "0.18.1",
+    "@swmansion/react-native-bottom-sheet": "1.1.0",
     "@testing-library/react-native": "8.0.0",
     "@types/supercluster": "5.0.3",
     "ajv": "8.20.0",
