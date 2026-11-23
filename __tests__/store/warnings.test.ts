@@ -42,6 +42,57 @@ const capWarning = {
 } as types.CapWarning;
 
 describe('warnings store', () => {
+  it('prunes unrelated locations while preserving retained data, CAP warnings and request status', () => {
+    const favoriteData = { ...warningsData, warnings: [] };
+    const state: types.WarningsState = {
+      ...reducer(undefined, {} as types.WarningsActionTypes),
+      data: { 1: warningsData, 2: favoriteData, 3: warningsData },
+      capData: [capWarning],
+      loading: true,
+      error: 'Request failed',
+      updated: warningsData.updated,
+      updatedRequestKey: 'location-1-fi',
+      fetchTimestamp: 123,
+      fetchSuccessTime: 100,
+    };
+    const next = reducer(state, {
+      type: types.RETAIN_WARNING_LOCATIONS, locationIds: ['1', 2],
+    });
+
+    expect(next).toEqual({ ...state, data: { 1: warningsData, 2: favoriteData } });
+    expect(next.data[1]).toBe(warningsData);
+    expect(next.data[2]).toBe(favoriteData);
+    expect(next.capData).toBe(state.capData);
+    expect(Object.keys(state.data)).toEqual(['1', '2', '3']);
+  });
+
+  it('preserves the state reference when no cached locations need removing', () => {
+    const state = {
+      ...reducer(undefined, {} as types.WarningsActionTypes),
+      data: { 1: warningsData },
+    };
+    expect(reducer(state, {
+      type: types.RETAIN_WARNING_LOCATIONS, locationIds: [1, '2'],
+    })).toBe(state);
+  });
+
+  it('handles an empty cache without changing state', () => {
+    const state = reducer(undefined, {} as types.WarningsActionTypes);
+    expect(reducer(state, {
+      type: types.RETAIN_WARNING_LOCATIONS, locationIds: [],
+    })).toBe(state);
+  });
+
+  it('removes all location data when no locations are retained', () => {
+    const state = {
+      ...reducer(undefined, {} as types.WarningsActionTypes),
+      data: { 1: warningsData },
+    };
+    expect(reducer(state, {
+      type: types.RETAIN_WARNING_LOCATIONS, locationIds: [],
+    }).data).toEqual({});
+  });
+
   it('handles warning fetch lifecycle actions', () => {
     expect(reducer(undefined, { type: types.FETCH_WARNINGS })).toMatchObject({
       error: false,
