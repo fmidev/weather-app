@@ -359,7 +359,7 @@ const ObservationPanel: React.FC<ObservationPanelProps> = ({
       <BottomSheet
         ref={stationSheetRef}
         height={600}
-        scrollableNegotiation="none"
+        scrollCoordination="none"
         backgroundStyle={{
           ...styles.sheetContainer,
           backgroundColor: colors.background,

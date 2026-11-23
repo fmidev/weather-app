@@ -39,7 +39,7 @@ const MapScreen: React.FC = () => {
       <BottomSheet
         ref={infoSheetRef}
         height={600}
-        scrollableNegotiation="none"
+        scrollCoordination="none"
         backgroundStyle={{
           ...styles.sheetContainer,
           backgroundColor: colors.background,
