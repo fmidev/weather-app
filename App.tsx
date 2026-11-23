@@ -13,6 +13,7 @@ import '@utils/moment';
 import { ConfigProvider } from '@config';
 import reducers from './src/store';
 import forecastCacheMiddleware from '@store/forecast/cacheMiddleware';
+import warningsCacheMiddleware from '@store/warnings/cacheMiddleware';
 import TabNavigator from './src/navigators/TabNavigator';
 import { configureMapLibreLogging } from '@utils/map';
 import { isRunningInIOSCompatibilityMode } from '@utils/iosCompatibilityMode';
@@ -50,7 +51,9 @@ const App: React.FC = () => {
       createStore(
         reducers,
         {},
-        composeEnhancers(applyMiddleware(ReduxThunk, forecastCacheMiddleware))
+        composeEnhancers(
+          applyMiddleware(ReduxThunk, forecastCacheMiddleware, warningsCacheMiddleware)
+        )
       ),
     [composeEnhancers]
   );

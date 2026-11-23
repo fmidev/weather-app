@@ -508,6 +508,10 @@
     "unSelected": "Ej vald",
     "addToFavorites": "Lägg till {{ location }} de egna platserna",
     "removeFromFavorites": "Ta bort {{ location }} från de egna platserna",
+    "reorderFavorite": "Ändra ordningen för favoriten {{ location }}",
+    "reorderFavoriteHint": "Dra för att ändra ordningen eller flytta favoriten uppåt eller nedåt.",
+    "moveFavoriteUp": "Flytta favoriten uppåt",
+    "moveFavoriteDown": "Flytta favoriten nedåt",
     "selectedLocation": "Vald plats: {{ location }}",
     "loading": "Laddar sökresultat",
     "infoSheet": {
