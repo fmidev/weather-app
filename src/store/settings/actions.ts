@@ -7,9 +7,7 @@ import {
   Theme,
   ClockType,
   UPDATE_CLOCK_TYPE,
-  UPDATE_MAP_LIBRARY,
   UPDATE_FORECAST_BACKGROUND_IMAGES,
-  MapLibrary,
   SET_IS_RUNNING_ON_MAC,
 } from './types';
 
@@ -26,11 +24,6 @@ export const updateUnits =
 export const updateTheme =
   (theme: Theme) => (dispatch: Dispatch<SettingsActionTypes>) => {
     dispatch({ type: UPDATE_THEME, theme });
-  };
-
-export const updateMapLibrary =
-  (library: MapLibrary) => (dispatch: Dispatch<SettingsActionTypes>) => {
-    dispatch({ type: UPDATE_MAP_LIBRARY, library });
   };
 
 export const setIsRunningOnMac =

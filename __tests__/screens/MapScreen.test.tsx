@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 
 import MapScreen from '../../src/screens/MapScreen';
-import { resetScreenMocks } from './screenTestMocks';
+import { mockConfigGet, resetScreenMocks } from './screenTestMocks';
 
 describe('MapScreen', () => {
   beforeEach(() => {
@@ -12,9 +12,14 @@ describe('MapScreen', () => {
   });
 
   it('renders Maplibre map and bottom sheets', () => {
-    const { getByTestId, queryByTestId } = render(
-      <MapScreen mapLibrary="maplibre" />
-    );
+    mockConfigGet.mockReturnValue({
+      baseMap: {
+        url: 'https://maps.example.test/styles/',
+        lightStyle: 'light.json',
+        darkStyle: 'dark.json',
+      },
+    });
+    const { getByTestId, queryByTestId } = render(<MapScreen />);
 
     expect(getByTestId('ml-map-view')).toBeTruthy();
     expect(queryByTestId('rn-map-view')).toBeNull();
@@ -22,11 +27,12 @@ describe('MapScreen', () => {
     expect(getByTestId('map-layers-bottom-sheet')).toBeTruthy();
   });
 
-  it('renders react-native-maps map when configured', () => {
-    const { getByTestId } = render(
-      <MapScreen mapLibrary="react-native-maps" />
-    );
+  it('renders react-native-maps map when no base map is configured', () => {
+    const { getByTestId, queryByTestId } = render(<MapScreen />);
 
     expect(getByTestId('rn-map-view')).toBeTruthy();
+    expect(queryByTestId('ml-map-view')).toBeNull();
+    expect(getByTestId('info-bottom-sheet')).toBeTruthy();
+    expect(getByTestId('map-layers-bottom-sheet')).toBeTruthy();
   });
 });

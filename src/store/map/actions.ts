@@ -17,7 +17,7 @@ import {
   UPDATE_SELECTED_CALLOUT,
   UPDATE_ANIMATION_SPEED,
 } from './types';
-import type { MapLibrary } from '@store/settings/types';
+import type { MapLibrary } from './types';
 
 export const updateSliderTime =
   (time: number) => (dispatch: Dispatch<MapActionTypes>) => {

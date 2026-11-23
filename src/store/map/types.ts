@@ -1,5 +1,7 @@
 import { Region } from 'react-native-maps';
 
+export type MapLibrary = 'react-native-maps' | 'maplibre';
+
 export const UPDATE_SLIDER_TIME = 'UPDATE_SLIDER_TIME';
 export const ANIMATE_TO_AREA = 'ANIMATE_TO_AREA';
 export const UPDATE_MAP_LAYERS = 'UPDATE_MAP_LAYERS';

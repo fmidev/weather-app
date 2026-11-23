@@ -624,7 +624,7 @@ export interface ConfigType {
     layerGroups: LayerGroup[];
     /** Weather overlays available for selection and animation. */
     layers: MapLayer[];
-    /** MapLibre base style, drawn below weather layers. */
+    /** MapLibre base style, drawn below weather layers. Omit to use native maps. */
     baseMap?: MapStyle;
     /** MapLibre overlay style for content drawn above weather layers. */
     overlayMap?: MapStyle;
