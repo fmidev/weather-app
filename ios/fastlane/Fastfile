@@ -101,6 +101,8 @@ platform :ios do
      keychain_password: ENV["IOS_KEYCHAIN_PASSWORD"],
      log_output: true
     )
+
+    sh("security", "find-identity", "-v", "-p", "codesigning", keychain_path)
 	    
    # main app profile
    sigh(
