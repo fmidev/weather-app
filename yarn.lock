@@ -2176,10 +2176,10 @@
     deepmerge "^4.3.1"
     svgo "^3.0.2"
 
-"@swmansion/react-native-bottom-sheet@0.18.1":
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/@swmansion/react-native-bottom-sheet/-/react-native-bottom-sheet-0.18.1.tgz#b3295fc97432130792030e7ce11f460c64d44387"
-  integrity sha512-w73XgtIXbS+RLsyjdlKke0cLALj+5FadEbycjzfMDuvUjF2X0FWCdU04dVcnYALwSaJw4Iloj+CT9+gHNoRjrQ==
+"@swmansion/react-native-bottom-sheet@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@swmansion/react-native-bottom-sheet/-/react-native-bottom-sheet-1.1.0.tgz#3eabdb7aab0febf63e7304c03119f4b51fb23120"
+  integrity sha512-v5snAzLjR2MC7BnLMfztSk9/b5xPDOAL9RSrDF5kr2eVeDsPmdxouNcFa47O8IuxHeTr4+IXzwQmPj7rAQxKDw==
 
 "@testing-library/react-native@8.0.0":
   version "8.0.0"
